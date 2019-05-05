@@ -13,7 +13,8 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    module.aaa.some_action(1, 1)
+    module.aaa.some_action(1,2)
+    DisplayTextToPlayer(Player(0), 0, 0, 'azaza')
 end
 
 function InitTrig_Melee_Initialization()

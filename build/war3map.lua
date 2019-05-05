@@ -14,7 +14,7 @@ function test.some_action(a, b)
     return a+b
 end
 
-local m  = test
+local module  = test
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -29,7 +29,8 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    m.aaa.some_action(1, 1)
+    module.aaa.some_action(1,2)
+    DisplayTextToPlayer(Player(0), 0, 0, 'azaza')
 end
 
 function InitTrig_Melee_Initialization()
