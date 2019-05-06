@@ -2,7 +2,8 @@ import sys
 import os
 from shutil import copyfile
 
-import preparse
+import rename
+import fix_requires
 import parse
 
 argc = len(sys.argv)
@@ -27,10 +28,14 @@ included_list = []
 if os.path.isfile(build_path + 'war3map.lua'):
     os.remove(build_path + 'war3map.lua')
 
-copyfile(main_path + 'war3map.lua', build_path + 'war3map.lua')
+if os.path.isfile(src_path + 'war3map.lua'):
+    copyfile(main_path + 'war3map.lua', build_path + 'war3map.lua')
+else:
+    print('Can not find war3map.lua file.')
+    sys.exit()
 
-preparse.preParseSrc(src_path)
-preparse.fixRequires(build_path, src_path, build_path)
+rename.renameSrc(src_path)
+fix_requires.fixRequires(build_path, src_path, build_path)
 lines = parse.parseFile(build_path + 'war3map.lua', [])
 
 if os.path.isfile(build_path + 'war3map.lua'):

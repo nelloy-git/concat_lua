@@ -1,37 +1,6 @@
 import os
 import utils as u
 
-def preParseSrc(path, build_path = 'build/'):
-    for name in os.listdir(path):
-        full_path = path +  name
-        if os.path.isfile(full_path):
-            if (full_path != path + 'war3map.lua'
-               and not full_path.endswith('blizzard/common.lua')
-               and not full_path.endswith('blizzard/blizzard.lua')):
-                parseFile(full_path, build_path)
-        else:
-            preParseSrc(full_path + '/', build_path)
-
-def parseFile(path, build_path = 'build/'):
-    print('Preparsing ' + path + '...')
-    f = open(path)
-    old_name = u.getModuleName(path)
-    new_name = u.path2Name(path)
-    lines = f.readlines()
-
-    res_path = build_path + path[path.find('/') + 1:path.rfind('/') + 1] + new_name + '.lua'
-    if os.path.isfile(res_path):
-        os.remove(res_path)
-
-    if not os.path.exists(res_path[:res_path.rfind('/') + 1]):
-        os.makedirs(res_path[:res_path.rfind('/') + 1])
-
-    b_file = open(res_path, 'w')
-    lines[0] = 'local ' + new_name + ' = {}\n'
-    lines.remove(lines[len(lines) - 1])
-    for line in lines:
-        b_file.write(line.replace(old_name + '.', new_name + '.'))
-
 def fixRequires(path, src_path = 'src/', build_path = 'build/'):
     for name in os.listdir(path):
         full_path = path + name

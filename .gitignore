@@ -1,2 +1,4 @@
 .vscode/
 .idea/
+/script/__pycache__
+concat_lua.iml
