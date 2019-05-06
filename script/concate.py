@@ -1,4 +1,6 @@
 import sys
+sys.path.insert(0, 'utils')
+
 import os
 from shutil import copyfile
 
@@ -7,36 +9,28 @@ import fix_requires
 import parse
 
 argc = len(sys.argv)
-if argc < 4:
-    build_path = 'build/'
-else:
-    build_path = sys.argv[3]
-
-if argc < 3:
-    src_path = 'src/'
-else: 
-    src_path = sys.argv[2]
-
-if argc < 2:
-    main_path = 'src/'
-else:
-    main_path = sys.argv[1]
-    
-#print(main_path + '\n' + src_path + '\n' + build_path)
-
-included_list = []
-if os.path.isfile(build_path + 'war3map.lua'):
-    os.remove(build_path + 'war3map.lua')
-
-if os.path.isfile(src_path + 'war3map.lua'):
-    copyfile(main_path + 'war3map.lua', build_path + 'war3map.lua')
-else:
-    print('Can not find war3map.lua file.')
+if (argc > 1 and sys.argv[1] == '-h') or argc < 3:
+    print('Arguments:\n1 - source path,\n2 - build path.')
     sys.exit()
 
-rename.renameSrc(src_path)
+src_path = sys.argv[1]
+build_path = sys.argv[2]
+print('Sourse path: %s\nBuild path: %s\n' % (src_path, build_path))
+
+base_src = src_path + 'war3map.lua'
+result_path = build_path + 'war3map.lua'
+if os.path.isfile(result_path):
+    os.remove(result_path)
+
+if os.path.isfile(base_src):
+    copyfile(base_src, result_path)
+else:
+    print('Can not find %s file.' % base_src)
+    sys.exit()
+
+rename.renamePath(src_path, src_path, build_path)
 fix_requires.fixRequires(build_path, src_path, build_path)
-lines = parse.parseFile(build_path + 'war3map.lua', [])
+lines = parse.parseFile(result_path, [], build_path)
 
 if os.path.isfile(build_path + 'war3map.lua'):
     os.remove(build_path + 'war3map.lua')

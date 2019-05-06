@@ -7,31 +7,32 @@ default_ignore = [
     '/blizzard.lua'
 ]
 
-# Renames files for unique names.
-def renameSrc(path, build_path = 'build/', ignore_list = default_ignore):
-    for name in os.listdir(path):
-        full_path = path + name
+# Renames files for unique names. can run only once
+def renamePath(cur_folder, src_path, build_path, ignore_list = default_ignore):
+    for name in os.listdir(cur_folder):
+        full_path = cur_folder + name
         if os.path.isfile(full_path):
             if (not u.isIgnored(full_path, ignore_list)):
-                renameModule(full_path, build_path)
+                renameModule(full_path, src_path, build_path)
         else:
-            renameSrc(full_path + '/', build_path, ignore_list)
+            renamePath(full_path + '/', src_path, build_path, ignore_list)
 
-def renameModule(path, build_path = 'build/'):
+def renameModule(path, src_path, build_path):
     print('Renaming ' + path + '...')
+    rel_path = path[len(src_path):]
     f = open(path)
     old_name = u.getModuleName(path)
-    new_name = u.path2Name(path)
+    new_name = u.path2Name(rel_path)
     lines = f.readlines()
 
-    res_path = build_path + path[path.find('/') + 1:path.rfind('/') + 1] + new_name + '.lua'
-    if os.path.isfile(res_path):
-        os.remove(res_path)
+    real_path = build_path + rel_path[:rel_path.rfind('/') + 1] + new_name + '.lua'
+    if os.path.isfile(real_path):
+        os.remove(real_path)
 
-    if not os.path.exists(res_path[:res_path.rfind('/') + 1]):
-        os.makedirs(res_path[:res_path.rfind('/') + 1])
+    if not os.path.exists(real_path[:real_path.rfind('/') + 1]):
+        os.makedirs(real_path[:real_path.rfind('/') + 1])
 
-    b_file = open(res_path, 'w')
+    b_file = open(real_path, 'w')
     lines[0] = 'local ' + new_name + ' = {}\n'
     lines.remove(lines[len(lines) - 1])
     for line in lines:

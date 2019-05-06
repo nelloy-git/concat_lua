@@ -16,7 +16,7 @@ def path2Name(path):
 
 # Converts path to module name
 def path2Module(path):
-    name_end = path.rfind('.') - 1
+    name_end = path.rfind('.')
     return path.replace('/', '.')[:name_end]
 
 # Function gets path from line with 'require'
