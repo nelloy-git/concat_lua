@@ -29,7 +29,7 @@ else:
     sys.exit()
 
 rename.renamePath(src_path, src_path, build_path)
-fix_requires.fixRequires(build_path, src_path, build_path)
+fix_requires.fixRequires(build_path, build_path)
 lines = parse.parseFile(result_path, [], build_path)
 
 if os.path.isfile(build_path + 'war3map.lua'):
