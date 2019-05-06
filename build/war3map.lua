@@ -1,20 +1,20 @@
-local test = {}
 
-local test_dir_test = {}
+local test_dir_module = {}
 
-test_dir_test.aaa = 5
+local test_dir_module2 = {}
 
-function test_dir_test.some_action(a, b)
-    return a+b
+function test_dir_module2.action()
+
 end
 
-test.aaa  = test_dir_test
+test_dir_module.mod2 = test_dir_module2
 
-function test.some_action(a, b)
-    return a+b
+function test_dir_module.action()
+
 end
 
-local module  = test
+local module = test_dir_module
+local module2 = test_dir_module2
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -29,7 +29,6 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    module.aaa.some_action(1,2)
     DisplayTextToPlayer(Player(0), 0, 0, 'azaza')
 end
 

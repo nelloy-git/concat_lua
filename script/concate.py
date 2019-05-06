@@ -31,7 +31,7 @@ copyfile(main_path + 'war3map.lua', build_path + 'war3map.lua')
 
 preparse.preParseSrc(src_path)
 preparse.fixRequires(build_path, src_path, build_path)
-lines = parse.parseFile(build_path + 'war3map.lua')
+lines = parse.parseFile(build_path + 'war3map.lua', [])
 
 if os.path.isfile(build_path + 'war3map.lua'):
     os.remove(build_path + 'war3map.lua')

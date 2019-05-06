@@ -1,4 +1,8 @@
-local module = require('test')
+require('blizzard.common')
+require('blizzard.blizzard')
+
+local module = require('test_dir.module')
+local module2 = require('test_dir.module2')
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -13,7 +17,6 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    module.aaa.some_action(1,2)
     DisplayTextToPlayer(Player(0), 0, 0, 'azaza')
 end
 

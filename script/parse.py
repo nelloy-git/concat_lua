@@ -1,10 +1,9 @@
 import os
 import utils as u
 
-def parseFile(path, build_path = 'build/'):
+def parseFile(path, used_modules, build_path = 'build/'):
     print('Parsing ' + path + '...')
     f = open(path, 'r')
-    cur_dir = path[:path.rfind('/') + 1]
     lines = f.readlines()
     f.close()
     res = []
@@ -12,26 +11,16 @@ def parseFile(path, build_path = 'build/'):
         l = line.replace(' ', '')
         pos = l.find('=require(')
         if pos > 0:
-            module_path = cur_dir + u.getRelativeModulePath(line)
-            print(module_path)
-            module_lines = parseFile(module_path)
-            for l in module_lines:
-                res.append(l)
-            res.append(line[:line.find('=')] + ' = ' + getModuleName(module_path) + '\n')
+            module_path = build_path + u.getRelativeModulePath(line)
+            if not module_path in used_modules:
+                module_lines = parseFile(module_path, used_modules, build_path)
+                for l in module_lines:
+                    res.append(l)
+                used_modules.append(module_path)
+            res.append(line[:line.find('=')] + '= ' + u.getModuleName(module_path) + '\n')
         else:
             res.append(line)
     return res
-
-def getModuleName(path):
-    m_file = open(path)
-    first_line = m_file.readline()
-    m_file.close()
-
-    start = first_line.find('local ') + 5
-    l = first_line.replace(' ', '')
-    end = l.find('={}')
-
-    return l[start:end]
 
 def listRequires(path, cur_dir):
     f = open(path)

@@ -5,7 +5,9 @@ def preParseSrc(path, build_path = 'build/'):
     for name in os.listdir(path):
         full_path = path +  name
         if os.path.isfile(full_path):
-            if full_path != path + 'war3map.lua':
+            if (full_path != path + 'war3map.lua'
+               and not full_path.endswith('blizzard/common.lua')
+               and not full_path.endswith('blizzard/blizzard.lua')):
                 parseFile(full_path, build_path)
         else:
             preParseSrc(full_path + '/', build_path)
@@ -46,9 +48,11 @@ def fixRequire(path, src_path, build_path):
 
     res = []
     for line in lines:
-        if line.replace(' ', '').find('=require(') > -1:
+        if line.replace(' ', '').find('require(') > -1:
             module = line[line.find('(\'') + 2: line.find('\')')]
-            module_path = src_path + u.getRelativeModulePath(line)
+            if module == 'blizzard.common' or module == 'blizzard.blizzard':
+                continue
+            module_path = path[:path.rfind('/') + 1] + u.getRelativeModulePath(line)
             new_name = u.path2Name(module_path)
             new_path = build_path + module_path[module_path.find('/') + 1:module_path.rfind('/') + 1] + new_name + '.lua'
             new_module = u.path2Module(new_path[new_path.find('/') + 1:])
