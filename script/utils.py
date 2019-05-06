@@ -1,3 +1,6 @@
+import os
+from shutil import copyfile
+
 # Function returns file's module name.
 def getModuleName(path):
     m_file = open(path)
@@ -12,7 +15,7 @@ def getModuleName(path):
 
 # Converts path to file name
 def path2Name(path):
-    return path[path.find('/') + 1:].replace('/', '_')[:-4]
+    return path.replace('/', '_')[:path.rfind('.')]
 
 # Converts path to module name
 def path2Module(path):
@@ -33,3 +36,8 @@ def isIgnored(path, ignore_list):
         if path.endswith(ignore):
             return True
     return False
+
+def replaceFile(dst, src):
+    if os.path.isfile(dst):
+        os.remove(dst)
+    copyfile(src, dst)

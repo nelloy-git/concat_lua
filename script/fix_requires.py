@@ -6,17 +6,17 @@ default_ignore = [
     'blizzard.blizzard'
 ]
 
-def fixRequires(path, src_path, build_path, ignore_list = default_ignore):
+def fixRequires(path, build_path, ignore_list = default_ignore):
     for name in os.listdir(path):
         full_path = path + name
         if os.path.isfile(full_path):
-            fixRequire(full_path, src_path, build_path, ignore_list)
+            fixRequire(full_path, build_path, ignore_list)
         else:
-            fixRequires(full_path + '/', src_path, build_path, ignore_list)
+            fixRequires(full_path + '/', build_path, ignore_list)
 
-def fixRequire(path, src_path, build_path, ignore_list):
+def fixRequire(path, build_path, ignore_list):
     print('Fixing requires ' + path + '...')
-    rel_path = path[len(src_path):]
+    rel_path = path[len(build_path):]
     f = open(path, 'r')
     lines = f.readlines()
     f.close()
@@ -28,11 +28,11 @@ def fixRequire(path, src_path, build_path, ignore_list):
             if module in ignore_list:
                 continue
             module_path = rel_path[:rel_path.rfind('/') + 1] + u.getRelativeModulePath(line)
+            print(module_path)
             new_name = u.path2Name(module_path)
-            print(new_name)
-            new_path = module_path[module_path.find('/') + 1:module_path.rfind('/') + 1] + new_name + '.lua'
+            new_path = module_path[:module_path.rfind('/') + 1] + new_name + '.lua'
             print(new_path)
-            new_module = u.path2Module(new_path[new_path.find('/') + 1:])
+            new_module = u.path2Module(new_path)
             line = line.replace(module, new_module)
         res.append(line)
 

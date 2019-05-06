@@ -1,4 +1,11 @@
-local chat_module = require('modules.test_chat')
+local modules_test_chat = {}
+
+
+function modules_test_chat.print(msg)
+    DisplayTextToPlayer(Player(0), 0, 0, msg)
+end
+
+local chat_module = modules_test_chat
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()

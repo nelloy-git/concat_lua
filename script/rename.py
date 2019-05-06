@@ -12,7 +12,8 @@ def renamePath(cur_folder, src_path, build_path, ignore_list = default_ignore):
     for name in os.listdir(cur_folder):
         full_path = cur_folder + name
         if os.path.isfile(full_path):
-            if (not u.isIgnored(full_path, ignore_list)):
+            if (not u.isIgnored(full_path, ignore_list)
+                and full_path.endswith('.lua')):
                 renameModule(full_path, src_path, build_path)
         else:
             renamePath(full_path + '/', src_path, build_path, ignore_list)
@@ -26,6 +27,8 @@ def renameModule(path, src_path, build_path):
     lines = f.readlines()
 
     real_path = build_path + rel_path[:rel_path.rfind('/') + 1] + new_name + '.lua'
+    print('New file: ' + real_path)
+
     if os.path.isfile(real_path):
         os.remove(real_path)
 
