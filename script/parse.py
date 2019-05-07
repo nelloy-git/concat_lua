@@ -1,5 +1,5 @@
-import os
 import utils as u
+
 
 def parseFile(path, used_modules, build_path = 'build/'):
     print('Parsing ' + path + '...')

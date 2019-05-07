@@ -24,7 +24,7 @@ end
 function InitCustomTriggers()
     InitTrig_Melee_Initialization()
 end
-
+ 212121
 function RunInitializationTriggers()
     ConditionalTriggerExecute(gg_trg_Melee_Initialization)
 end

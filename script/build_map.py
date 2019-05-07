@@ -1,11 +1,12 @@
 import sys
+sys.path.insert(0, '.')
 import os
 import shutil
 import subprocess
 
-import rename
-import fix_requires
 import parse
+import fix_requires
+import rename
 import utils as u
 
 argc = len(sys.argv)
