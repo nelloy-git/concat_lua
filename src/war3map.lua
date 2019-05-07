@@ -1,4 +1,4 @@
-local chat_module = require('modules.test_chat')
+local Unit = require('modules.Unit')
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -13,7 +13,8 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    chat_module.print('azazaza')
+    local foot = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    foot:show(true)
 end
 
 function InitTrig_Melee_Initialization()
@@ -24,7 +25,7 @@ end
 function InitCustomTriggers()
     InitTrig_Melee_Initialization()
 end
- 212121
+
 function RunInitializationTriggers()
     ConditionalTriggerExecute(gg_trg_Melee_Initialization)
 end
