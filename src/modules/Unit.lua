@@ -1,14 +1,12 @@
-local Unit = {
-    unit = nil;
-}
-
-Unit.__index = Unit
+local Unit = {}
 
 require('blizzard.common')
 
+local Unit_mt = {__index = Unit}
+
 function Unit.new(player, unitId, x, y, face)
     local u = {}
-    setmetatable(u, Unit)
+    setmetatable(u, Unit_mt)
     u.unit = CreateUnit(player, unitId, x, y, face)
     return u
 end

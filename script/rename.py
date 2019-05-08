@@ -39,4 +39,8 @@ def renameModule(path, src_path, build_path):
     lines[0] = 'local ' + new_name + ' = {}\n'
     lines.remove(lines[len(lines) - 1])
     for line in lines:
-        b_file.write(line.replace(old_name + '.', new_name + '.'))
+        line = line.replace(old_name + '.', new_name + '.')
+        line = line.replace(old_name + '\n', new_name + '\n')
+        line = line.replace(old_name + '}', new_name + '}')
+        line = line.replace(old_name + ':', new_name + ':')
+        b_file.write(line)

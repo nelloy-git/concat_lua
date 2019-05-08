@@ -82,18 +82,19 @@ path = sys.argv[2] + 'map.w3x'
 if os.path.exists(path):
     os.remove(path)
 
-run_mpq_cmd = ''
-if os.name == 'posix':
-    run_mpq_cmd = 'wine'
-elif os.name == 'nt':
-    run_mpq_cmd = ''
+#run_mpq_cmd = ''
+#if os.name == 'posix':
+#    run_mpq_cmd = ['wine', './script/MPQEditor.exe', 'new', path
+#elif os.name == 'nt':
+#    run_mpq_cmd = ''
 
-subprocess.run([run_mpq_cmd, './script/MPQEditor.exe', 'new', path])
-subprocess.run([run_mpq_cmd, './script/MPQEditor.exe', 'add', path, sys.argv[2] + 'war3map.lua', 'war3map.lua', '/auto'])
+print(['./script/MPQEditor.exe', 'new', path])
+subprocess.run(['./script/MPQEditor.exe', 'new', path])
+subprocess.run(['./script/MPQEditor.exe', 'add', path, sys.argv[2] + 'war3map.lua', 'war3map.lua', '/auto'])
 for file in other_files:
-    subprocess.run([run_mpq_cmd, './script/MPQEditor.exe', 'add', path, sys.argv[2] + file, file, ' /auto'])
-#for folder in folders:
-    #subprocess.run(run_mpq_cmd + ' add ' + path + ' ' + sys.argv[2] + folder + ' ' + folder + ' /auto')
+    subprocess.run(['./script/MPQEditor.exe', 'add', path, sys.argv[2] + file, file, ' /auto'])
+for folder in folders:
+    subprocess.run('./script/MPQEditor.exe' + ' add ' + path + ' ' + sys.argv[2] + folder + ' ' + folder + ' /auto')
 
 #if os.name == 'posix':
 #    print([run_mpq_cmd, './script/MPQEditor.exe', 'open', './' + path])
@@ -101,8 +102,8 @@ for file in other_files:
 
 #path = os.path.abspath(path)
 
-#print(war3_exe + ' -loadfile ' + path)
-#subprocess.call(war3_exe + ' -loadfile ' + path)
+print(war3_exe + ' -loadfile ./' + path)
+subprocess.call(war3_exe + ' -loadfile ./' + path)
 
 
 #input("Press Enter to continue...")

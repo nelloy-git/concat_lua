@@ -13,8 +13,12 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    local foot = Unit.new(Player(0), 'hfoo', 0, 0, 0)
-    foot:show(true)
+    local id = 1751543663
+    DisplayTextToPlayer(Player(0), 0 , 0, I2S(id))
+    local f = Unit.new(Player(0), id, 0, 0, 0)
+    f = Unit.new(Player(0), id, 0, 0, 0)
+    local angle = 180
+    f:setFacing(angle)
 end
 
 function InitTrig_Melee_Initialization()
@@ -43,20 +47,8 @@ function InitCustomTeams()
 end
 
 function main()
-    SetCameraBounds(
-        -15616.0 + GetCameraMargin(CAMERA_MARGIN_LEFT),
-        -15872.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM),
-        15616.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT),
-        15360.0 - GetCameraMargin(CAMERA_MARGIN_TOP),
-        -15616.0 + GetCameraMargin(CAMERA_MARGIN_LEFT),
-        15360.0 - GetCameraMargin(CAMERA_MARGIN_TOP),
-        15616.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT),
-        -15872.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM)
-    )
-    SetDayNightModels(
-        "Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl",
-        "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl"
-    )
+    SetCameraBounds(-3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
+    SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
     NewSoundEnvironment("Default")
     SetAmbientDaySound("LordaeronSummerDay")
     SetAmbientNightSound("LordaeronSummerNight")
@@ -73,8 +65,9 @@ function config()
     SetPlayers(1)
     SetTeams(1)
     SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
-    DefineStartLocation(0, 6464.0, -9472.0)
+    DefineStartLocation(0, -1953.6, -3131.3)
     InitCustomPlayerSlots()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()
 end
+
