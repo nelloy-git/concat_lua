@@ -38,7 +38,7 @@ else:
     print('Can not find %s file.' % base_src)
     sys.exit()
 
-rename.renamePath(src_path, src_path, build_path)
+rename.rename_modules_in_folder(src_path, src_path, build_path)
 fix_requires.fixRequires(build_path, build_path)
 lines = parse.parseFile(result_path, [], build_path)
 

@@ -1,7 +1,10 @@
 local modules_test_chat = {}
 
 
-function modules_test_chat.print(msg)
+local function print(msg)
     DisplayTextToPlayer(Player(0), 0, 0, msg)
 end
 
+modules_test_chat.print = print(msg)
+
+return modules_test_chat

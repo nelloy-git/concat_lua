@@ -7,27 +7,33 @@ default_ignore = [
     '/blizzard.lua'
 ]
 
-# Renames files for unique names. can run only once
-def renamePath(cur_folder, src_path, build_path, ignore_list = default_ignore):
-    for name in os.listdir(cur_folder):
-        full_path = cur_folder + name
+prev_chars = [
+    '.', '=', ':', ' ', '(', ')', '[', ']', '{', '}', '\n', '\t'
+]
+
+next_chars = prev_chars + ['']
+
+
+# Renames files for unique names.
+def rename_modules_in_folder(folder, src_root, dst_root, ignore_list=default_ignore):
+    for name in os.listdir(folder):
+        full_path = folder + name
         if os.path.isfile(full_path):
-            if (not u.isIgnored(full_path, ignore_list)
-                and full_path.endswith('.lua')):
-                renameModule(full_path, src_path, build_path)
+            if full_path[full_path.rfind('/'):] not in ignore_list and full_path.endswith('.lua'):
+                rename_module(full_path, src_root, dst_root)
         else:
-            renamePath(full_path + '/', src_path, build_path, ignore_list)
+            rename_modules_in_folder(full_path + '/', src_root, dst_root, ignore_list)
 
-def renameModule(path, src_path, build_path):
-    print('Renaming ' + path + '...')
-    rel_path = path[len(src_path):]
-    f = open(path)
-    old_name = u.getModuleName(path)
+
+def rename_module(path, src_root, build_root):
+    # Path inside src_root
+    rel_path = path[len(src_root):]
+    old_name = u.get_module_name(path)
     new_name = u.path2Name(rel_path)
-    lines = f.readlines()
 
-    real_path = build_path + rel_path[:rel_path.rfind('/') + 1] + new_name + '.lua'
-    print('New file: ' + real_path)
+    print('Renaming ' + path + ': ' + old_name + ' -> ' + new_name)
+
+    real_path = build_root + rel_path[:rel_path.rfind('/') + 1] + new_name + '.lua'
 
     if os.path.isfile(real_path):
         os.remove(real_path)
@@ -35,12 +41,22 @@ def renameModule(path, src_path, build_path):
     if not os.path.exists(real_path[:real_path.rfind('/') + 1]):
         os.makedirs(real_path[:real_path.rfind('/') + 1])
 
+    f = open(path)
+    lines = f.readlines()
+    f.close()
+
     b_file = open(real_path, 'w')
-    lines[0] = 'local ' + new_name + ' = {}\n'
-    lines.remove(lines[len(lines) - 1])
+    prev_line = '\n'
     for line in lines:
-        line = line.replace(old_name + '.', new_name + '.')
-        line = line.replace(old_name + '\n', new_name + '\n')
-        line = line.replace(old_name + '}', new_name + '}')
-        line = line.replace(old_name + ':', new_name + ':')
-        b_file.write(line)
+        for prev in prev_chars:
+            for next in next_chars:
+                if line.find(prev + old_name + next) > -1:
+                    line = line.replace(prev + old_name + next, prev + new_name + next)
+        for char in next_chars:
+            if line.startswith(old_name + char):
+                line = line.replace(old_name + char, new_name + char, 1)
+
+
+        if not (prev_line == '\n' and line == '\n'):
+            b_file.write(line)
+        prev_line = line

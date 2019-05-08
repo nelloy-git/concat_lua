@@ -17,7 +17,7 @@ def parseFile(path, used_modules, build_path = 'build/'):
                 for l in module_lines:
                     res.append(l)
                 used_modules.append(module_path)
-            res.append(line[:line.find('=')] + '= ' + u.getModuleName(module_path) + '\n')
+            res.append(line[:line.find('=')] + '= ' + u.get_module_name(module_path) + '\n')
         else:
             res.append(line)
     return res

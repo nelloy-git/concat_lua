@@ -1,106 +1,125 @@
+--============================================================================
 -- Native types. All native functions take extended handle types when
 -- possible to help prevent passing bad values to native functions
 --
-function ConvertAllianceType(int_i) return alliancetype end
-function ConvertRacePref(int_i) return racepreference end
-function ConvertIGameState(int_i) return igamestate end
-function ConvertFGameState(int_i) return fgamestate end
-function ConvertPlayerState(int_i) return playerstate end
-function ConvertPlayerScore(int_i) return playerscore end
-function ConvertPlayerGameResult(int_i) return playergameresult end
-function ConvertUnitState(int_i) return unitstate end
-function ConvertAIDifficulty(int_i) return aidifficulty end
-function ConvertGameEvent(int_i) return gameevent end
-function ConvertPlayerEvent(int_i) return playerevent end
-function ConvertPlayerUnitEvent(int_i) return playerunitevent end
-function ConvertWidgetEvent(int_i) return widgetevent end
-function ConvertDialogEvent(int_i) return dialogevent end
-function ConvertUnitEvent(int_i) return unitevent end
-function ConvertLimitOp(int_i) return limitop end
-function ConvertUnitType(int_i) return unittype end
-function ConvertGameSpeed(int_i) return gamespeed end
-function ConvertPlacement(int_i) return placement end
-function ConvertStartLocPrio(int_i) return startlocprio end
-function ConvertGameDifficulty(int_i) return gamedifficulty end
-function ConvertGameType(int_i) return gametype end
-function ConvertMapFlag(int_i) return mapflag end
-function ConvertMapVisibility(int_i) return mapvisibility end
-function ConvertMapSetting(int_i) return mapsetting end
-function ConvertMapDensity(int_i) return mapdensity end
-function ConvertMapControl(int_i) return mapcontrol end
-function ConvertPlayerColor(int_i) return playercolor end
-function ConvertPlayerSlotState(int_i) return playerslotstate end
-function ConvertVolumeGroup(int_i) return volumegroup end
-function ConvertCameraField(int_i) return camerafield end
-function ConvertBlendMode(int_i) return blendmode end
-function ConvertRarityControl(int_i) return raritycontrol end
-function ConvertTexMapFlags(int_i) return texmapflags end
-function ConvertFogState(int_i) return fogstate end
-function ConvertEffectType(int_i) return effecttype end
-function ConvertVersion(int_i) return version end
-function ConvertItemType(int_i) return itemtype end
-function ConvertAttackType(int_i) return attacktype end
-function ConvertDamageType(int_i) return damagetype end
-function ConvertWeaponType(int_i) return weapontype end
-function ConvertSoundType(int_i) return soundtype end
-function ConvertPathingType(int_i) return pathingtype end
-function ConvertMouseButtonType(int_i) return mousebuttontype end
-function ConvertAnimType(int_i) return animtype end
-function ConvertSubAnimType(int_i) return subanimtype end
-function ConvertOriginFrameType(int_i) return originframetype end
-function ConvertFramePointType(int_i) return framepointtype end
-function ConvertTextAlignType(int_i) return textaligntype end
-function ConvertFrameEventType(int_i) return frameeventtype end
-function ConvertOsKeyType(int_i) return oskeytype end
-function ConvertAbilityIntegerField(int_i) return abilityintegerfield end
-function ConvertAbilityRealField(int_i) return abilityrealfield end
-function ConvertAbilityBooleanField(int_i) return abilitybooleanfield end
-function ConvertAbilityStringField(int_i) return abilitystringfield end
-function ConvertAbilityIntegerLevelField(int_i) return abilityintegerlevelfield end
-function ConvertAbilityRealLevelField(int_i) return abilityreallevelfield end
-function ConvertAbilityBooleanLevelField(int_i) return abilitybooleanlevelfield end
-function ConvertAbilityStringLevelField(int_i) return abilitystringlevelfield end
-function ConvertAbilityIntegerLevelArrayField(int_i) return abilityintegerlevelarrayfield end
-function ConvertAbilityRealLevelArrayField(int_i) return abilityreallevelarrayfield end
-function ConvertAbilityBooleanLevelArrayField(int_i) return abilitybooleanlevelarrayfield end
-function ConvertAbilityStringLevelArrayField(int_i) return abilitystringlevelarrayfield end
-function ConvertUnitIntegerField(int_i) return unitintegerfield end
-function ConvertUnitRealField(int_i) return unitrealfield end
-function ConvertUnitBooleanField(int_i) return unitbooleanfield end
-function ConvertUnitStringField(int_i) return unitstringfield end
-function ConvertUnitWeaponIntegerField(int_i) return unitweaponintegerfield end
-function ConvertUnitWeaponRealField(int_i) return unitweaponrealfield end
-function ConvertUnitWeaponBooleanField(int_i) return unitweaponbooleanfield end
-function ConvertUnitWeaponStringField(int_i) return unitweaponstringfield end
-function ConvertItemIntegerField(int_i) return itemintegerfield end
-function ConvertItemRealField(int_i) return itemrealfield end
-function ConvertItemBooleanField(int_i) return itembooleanfield end
-function ConvertItemStringField(int_i) return itemstringfield end
-function ConvertMoveType(int_i) return movetype end
-function ConvertTargetFlag(int_i) return targetflag end
-function ConvertArmorType(int_i) return armortype end
-function ConvertHeroAttribute(int_i) return heroattribute end
-function ConvertDefenseType(int_i) return defensetype end
-function ConvertRegenType(int_i) return regentype end
-function ConvertUnitCategory(int_i) return unitcategory end
-function ConvertPathingFlag(int_i) return pathingflag end
-function OrderId2String(int_orderId) return string end
-function UnitId(str_unitIdString) return integer end
-function UnitId2String(int_unitId) return string end
-function AbilityId(str_abilityIdString) return integer end
-function AbilityId2String(int_abilityId) return string end
-function GetObjectName(int_objectId) return string end
+
+function ConvertRace(i_i) return race end
+function ConvertAllianceType(i_i) return alliancetype end
+function ConvertRacePref(i_i) return racepreference end
+function ConvertIGameState(i_i) return igamestate end
+function ConvertFGameState(i_i) return fgamestate end
+function ConvertPlayerState(i_i) return playerstate end
+function ConvertPlayerScore(i_i) return playerscore end
+function ConvertPlayerGameResult(i_i) return playergameresult end
+function ConvertUnitState(i_i) return unitstate end
+function ConvertAIDifficulty(i_i) return aidifficulty end
+function ConvertGameEvent(i_i) return gameevent end
+function ConvertPlayerEvent(i_i) return playerevent end
+function ConvertPlayerUnitEvent(i_i) return playerunitevent end
+function ConvertWidgetEvent(i_i) return widgetevent end
+function ConvertDialogEvent(i_i) return dialogevent end
+function ConvertUnitEvent(i_i) return unitevent end
+function ConvertLimitOp(i_i) return limitop end
+function ConvertUnitType(i_i) return unittype end
+function ConvertGameSpeed(i_i) return gamespeed end
+function ConvertPlacement(i_i) return placement end
+function ConvertStartLocPrio(i_i) return startlocprio end
+function ConvertGameDifficulty(i_i) return gamedifficulty end
+function ConvertGameType(i_i) return gametype end
+function ConvertMapFlag(i_i) return mapflag end
+function ConvertMapVisibility(i_i) return mapvisibility end
+function ConvertMapSetting(i_i) return mapsetting end
+function ConvertMapDensity(i_i) return mapdensity end
+function ConvertMapControl(i_i) return mapcontrol end
+function ConvertPlayerColor(i_i) return playercolor end
+function ConvertPlayerSlotState(i_i) return playerslotstate end
+function ConvertVolumeGroup(i_i) return volumegroup end
+function ConvertCameraField(i_i) return camerafield end
+function ConvertBlendMode(i_i) return blendmode end
+function ConvertRarityControl(i_i) return raritycontrol end
+function ConvertTexMapFlags(i_i) return texmapflags end
+function ConvertFogState(i_i) return fogstate end
+function ConvertEffectType(i_i) return effecttype end
+function ConvertVersion(i_i) return version end
+function ConvertItemType(i_i) return itemtype end
+function ConvertAttackType(i_i) return attacktype end
+function ConvertDamageType(i_i) return damagetype end
+function ConvertWeaponType(i_i) return weapontype end
+function ConvertSoundType(i_i) return soundtype end
+function ConvertPathingType(i_i) return pathingtype end
+function ConvertMouseButtonType(i_i) return mousebuttontype end
+function ConvertAnimType(i_i) return animtype end
+function ConvertSubAnimType(i_i) return subanimtype end
+function ConvertOriginFrameType(i_i) return originframetype end
+function ConvertFramePointType(i_i) return framepointtype end
+function ConvertTextAlignType(i_i) return textaligntype end
+function ConvertFrameEventType(i_i) return frameeventtype end
+function ConvertOsKeyType(i_i) return oskeytype end
+function ConvertAbilityIntegerField(i_i) return abilityintegerfield end
+function ConvertAbilityRealField(i_i) return abilityrealfield end
+function ConvertAbilityBooleanField(i_i) return abilitybooleanfield end
+function ConvertAbilityStringField(i_i) return abilitystringfield end
+function ConvertAbilityIntegerLevelField(i_i) return abilityintegerlevelfield end
+function ConvertAbilityRealLevelField(i_i) return abilityreallevelfield end
+function ConvertAbilityBooleanLevelField(i_i) return abilitybooleanlevelfield end
+function ConvertAbilityStringLevelField(i_i) return abilitystringlevelfield end
+function ConvertAbilityIntegerLevelArrayField(i_i) return abilityintegerlevelarrayfield end
+function ConvertAbilityRealLevelArrayField(i_i) return abilityreallevelarrayfield end
+function ConvertAbilityBooleanLevelArrayField(i_i) return abilitybooleanlevelarrayfield end
+function ConvertAbilityStringLevelArrayField(i_i) return abilitystringlevelarrayfield end
+function ConvertUnitIntegerField(i_i) return unitintegerfield end
+function ConvertUnitRealField(i_i) return unitrealfield end
+function ConvertUnitBooleanField(i_i) return unitbooleanfield end
+function ConvertUnitStringField(i_i) return unitstringfield end
+function ConvertUnitWeaponIntegerField(i_i) return unitweaponintegerfield end
+function ConvertUnitWeaponRealField(i_i) return unitweaponrealfield end
+function ConvertUnitWeaponBooleanField(i_i) return unitweaponbooleanfield end
+function ConvertUnitWeaponStringField(i_i) return unitweaponstringfield end
+function ConvertItemIntegerField(i_i) return itemintegerfield end
+function ConvertItemRealField(i_i) return itemrealfield end
+function ConvertItemBooleanField(i_i) return itembooleanfield end
+function ConvertItemStringField(i_i) return itemstringfield end
+function ConvertMoveType(i_i) return movetype end
+function ConvertTargetFlag(i_i) return targetflag end
+function ConvertArmorType(i_i) return armortype end
+function ConvertHeroAttribute(i_i) return heroattribute end
+function ConvertDefenseType(i_i) return defensetype end
+function ConvertRegenType(i_i) return regentype end
+function ConvertUnitCategory(i_i) return unitcategory end
+function ConvertPathingFlag(i_i) return pathingflag end
+
+function OrderId(s_orderIdString) return integer end
+function OrderId2String(i_orderId) return string end
+function UnitId(s_unitIdString) return integer end
+function UnitId2String(i_unitId) return string end
+
+-- Not currently working correctly...
+function AbilityId(s_abilityIdString) return integer end
+function AbilityId2String(i_abilityId) return string end
+
+-- Looks up the "name" field for any object (unit, item, ability)
+function GetObjectName(i_objectId) return string end
+
+function GetBJMaxPlayers() return integer end
 function GetBJPlayerNeutralVictim() return integer end
 function GetBJPlayerNeutralExtra() return integer end
 function GetBJMaxPlayerSlots() return integer end
 function GetPlayerNeutralPassive() return integer end
 function GetPlayerNeutralAggressive() return integer end
+
+--===================================================
 -- Game Constants
 --===================================================
+
+-- pfff
 FALSE = false
 TRUE = true
 JASS_MAX_ARRAY_SIZE = 32768
+
+PLAYER_NEUTRAL_PASSIVE = GetPlayerNeutralPassive()
 PLAYER_NEUTRAL_AGGRESSIVE = GetPlayerNeutralAggressive()
+
+PLAYER_COLOR_RED = ConvertPlayerColor(0)
 PLAYER_COLOR_BLUE = ConvertPlayerColor(1)
 PLAYER_COLOR_CYAN = ConvertPlayerColor(2)
 PLAYER_COLOR_PURPLE = ConvertPlayerColor(3)
@@ -124,14 +143,20 @@ PLAYER_COLOR_COAL = ConvertPlayerColor(20)
 PLAYER_COLOR_SNOW = ConvertPlayerColor(21)
 PLAYER_COLOR_EMERALD = ConvertPlayerColor(22)
 PLAYER_COLOR_PEANUT = ConvertPlayerColor(23)
+
+RACE_HUMAN = ConvertRace(1)
 RACE_ORC = ConvertRace(2)
 RACE_UNDEAD = ConvertRace(3)
 RACE_NIGHTELF = ConvertRace(4)
 RACE_DEMON = ConvertRace(5)
 RACE_OTHER = ConvertRace(7)
+
+PLAYER_GAME_RESULT_VICTORY = ConvertPlayerGameResult(0)
 PLAYER_GAME_RESULT_DEFEAT = ConvertPlayerGameResult(1)
 PLAYER_GAME_RESULT_TIE = ConvertPlayerGameResult(2)
 PLAYER_GAME_RESULT_NEUTRAL = ConvertPlayerGameResult(3)
+
+ALLIANCE_PASSIVE = ConvertAllianceType(0)
 ALLIANCE_HELP_REQUEST = ConvertAllianceType(1)
 ALLIANCE_HELP_RESPONSE = ConvertAllianceType(2)
 ALLIANCE_SHARED_XP = ConvertAllianceType(3)
@@ -141,13 +166,19 @@ ALLIANCE_SHARED_CONTROL = ConvertAllianceType(6)
 ALLIANCE_SHARED_ADVANCED_CONTROL= ConvertAllianceType(7)
 ALLIANCE_RESCUABLE = ConvertAllianceType(8)
 ALLIANCE_SHARED_VISION_FORCED = ConvertAllianceType(9)
+
+VERSION_REIGN_OF_CHAOS = ConvertVersion(0)
 VERSION_FROZEN_THRONE = ConvertVersion(1)
+
+ATTACK_TYPE_NORMAL = ConvertAttackType(0)
 ATTACK_TYPE_MELEE = ConvertAttackType(1)
 ATTACK_TYPE_PIERCE = ConvertAttackType(2)
 ATTACK_TYPE_SIEGE = ConvertAttackType(3)
 ATTACK_TYPE_MAGIC = ConvertAttackType(4)
 ATTACK_TYPE_CHAOS = ConvertAttackType(5)
 ATTACK_TYPE_HERO = ConvertAttackType(6)
+
+DAMAGE_TYPE_UNKNOWN = ConvertDamageType(0)
 DAMAGE_TYPE_NORMAL = ConvertDamageType(4)
 DAMAGE_TYPE_ENHANCED = ConvertDamageType(5)
 DAMAGE_TYPE_FIRE = ConvertDamageType(8)
@@ -169,6 +200,8 @@ DAMAGE_TYPE_SLOW_POISON = ConvertDamageType(23)
 DAMAGE_TYPE_SPIRIT_LINK = ConvertDamageType(24)
 DAMAGE_TYPE_SHADOW_STRIKE = ConvertDamageType(25)
 DAMAGE_TYPE_UNIVERSAL = ConvertDamageType(26)
+
+WEAPON_TYPE_WHOKNOWS = ConvertWeaponType(0)
 WEAPON_TYPE_METAL_LIGHT_CHOP = ConvertWeaponType(1)
 WEAPON_TYPE_METAL_MEDIUM_CHOP = ConvertWeaponType(2)
 WEAPON_TYPE_METAL_HEAVY_CHOP = ConvertWeaponType(3)
@@ -192,6 +225,8 @@ WEAPON_TYPE_CLAW_MEDIUM_SLICE = ConvertWeaponType(20)
 WEAPON_TYPE_CLAW_HEAVY_SLICE = ConvertWeaponType(21)
 WEAPON_TYPE_AXE_MEDIUM_CHOP = ConvertWeaponType(22)
 WEAPON_TYPE_ROCK_HEAVY_BASH = ConvertWeaponType(23)
+
+PATHING_TYPE_ANY = ConvertPathingType(0)
 PATHING_TYPE_WALKABILITY = ConvertPathingType(1)
 PATHING_TYPE_FLYABILITY = ConvertPathingType(2)
 PATHING_TYPE_BUILDABILITY = ConvertPathingType(3)
@@ -199,8 +234,12 @@ PATHING_TYPE_PEONHARVESTPATHING = ConvertPathingType(4)
 PATHING_TYPE_BLIGHTPATHING = ConvertPathingType(5)
 PATHING_TYPE_FLOATABILITY = ConvertPathingType(6)
 PATHING_TYPE_AMPHIBIOUSPATHING = ConvertPathingType(7)
+
+MOUSE_BUTTON_TYPE_LEFT = ConvertMouseButtonType(1)
 MOUSE_BUTTON_TYPE_MIDDLE = ConvertMouseButtonType(2)
 MOUSE_BUTTON_TYPE_RIGHT = ConvertMouseButtonType(3)
+
+ANIM_TYPE_BIRTH = ConvertAnimType(0)
 ANIM_TYPE_DEATH = ConvertAnimType(1)
 ANIM_TYPE_DECAY = ConvertAnimType(2)
 ANIM_TYPE_DISSIPATE = ConvertAnimType(3)
@@ -211,6 +250,8 @@ ANIM_TYPE_MORPH = ConvertAnimType(7)
 ANIM_TYPE_SLEEP = ConvertAnimType(8)
 ANIM_TYPE_SPELL = ConvertAnimType(9)
 ANIM_TYPE_PORTRAIT = ConvertAnimType(10)
+
+SUBANIM_TYPE_ROOTED = ConvertSubAnimType(11)
 SUBANIM_TYPE_ALTERNATE_EX = ConvertSubAnimType(12)
 SUBANIM_TYPE_LOOPING = ConvertSubAnimType(13)
 SUBANIM_TYPE_SLAM = ConvertSubAnimType(14)
@@ -262,19 +303,27 @@ SUBANIM_TYPE_OFF = ConvertSubAnimType(59)
 SUBANIM_TYPE_SWIM = ConvertSubAnimType(60)
 SUBANIM_TYPE_ENTANGLE = ConvertSubAnimType(61)
 SUBANIM_TYPE_BERSERK = ConvertSubAnimType(62)
+
+--===================================================
 -- Map Setup Constants
 --===================================================
+
+RACE_PREF_HUMAN = ConvertRacePref(1)
 RACE_PREF_ORC = ConvertRacePref(2)
 RACE_PREF_NIGHTELF = ConvertRacePref(4)
 RACE_PREF_UNDEAD = ConvertRacePref(8)
 RACE_PREF_DEMON = ConvertRacePref(16)
 RACE_PREF_RANDOM = ConvertRacePref(32)
 RACE_PREF_USER_SELECTABLE = ConvertRacePref(64)
+
+MAP_CONTROL_USER = ConvertMapControl(0)
 MAP_CONTROL_COMPUTER = ConvertMapControl(1)
 MAP_CONTROL_RESCUABLE = ConvertMapControl(2)
 MAP_CONTROL_NEUTRAL = ConvertMapControl(3)
 MAP_CONTROL_CREEP = ConvertMapControl(4)
 MAP_CONTROL_NONE = ConvertMapControl(5)
+
+GAME_TYPE_MELEE = ConvertGameType(1)
 GAME_TYPE_FFA = ConvertGameType(2)
 GAME_TYPE_USE_MAP_SETTINGS = ConvertGameType(4)
 GAME_TYPE_BLIZ = ConvertGameType(8)
@@ -282,35 +331,63 @@ GAME_TYPE_ONE_ON_ONE = ConvertGameType(16)
 GAME_TYPE_TWO_TEAM_PLAY = ConvertGameType(32)
 GAME_TYPE_THREE_TEAM_PLAY = ConvertGameType(64)
 GAME_TYPE_FOUR_TEAM_PLAY = ConvertGameType(128)
+
+MAP_FOG_HIDE_TERRAIN = ConvertMapFlag(1)
 MAP_FOG_MAP_EXPLORED = ConvertMapFlag(2)
 MAP_FOG_ALWAYS_VISIBLE = ConvertMapFlag(4)
+
+MAP_USE_HANDICAPS = ConvertMapFlag(8)
 MAP_OBSERVERS = ConvertMapFlag(16)
 MAP_OBSERVERS_ON_DEATH = ConvertMapFlag(32)
+
+MAP_FIXED_COLORS = ConvertMapFlag(128)
+
+MAP_LOCK_RESOURCE_TRADING = ConvertMapFlag(256)
 MAP_RESOURCE_TRADING_ALLIES_ONLY = ConvertMapFlag(512)
+
+MAP_LOCK_ALLIANCE_CHANGES = ConvertMapFlag(1024)
 MAP_ALLIANCE_CHANGES_HIDDEN = ConvertMapFlag(2048)
+
+MAP_CHEATS = ConvertMapFlag(4096)
 MAP_CHEATS_HIDDEN = ConvertMapFlag(8192)
+
+MAP_LOCK_SPEED = ConvertMapFlag(8192*2)
 MAP_LOCK_RANDOM_SEED = ConvertMapFlag(8192*4)
 MAP_SHARED_ADVANCED_CONTROL = ConvertMapFlag(8192*8)
 MAP_RANDOM_HERO = ConvertMapFlag(8192*16)
 MAP_RANDOM_RACES = ConvertMapFlag(8192*32)
 MAP_RELOADED = ConvertMapFlag(8192*64)
+
+MAP_PLACEMENT_RANDOM = ConvertPlacement(0) -- random among all slots
 MAP_PLACEMENT_FIXED = ConvertPlacement(1) -- player 0 in start loc 0...
 MAP_PLACEMENT_USE_MAP_SETTINGS = ConvertPlacement(2) -- whatever was specified by the script
 MAP_PLACEMENT_TEAMS_TOGETHER = ConvertPlacement(3) -- random with allies next to each other
+
+MAP_LOC_PRIO_LOW = ConvertStartLocPrio(0)
 MAP_LOC_PRIO_HIGH = ConvertStartLocPrio(1)
 MAP_LOC_PRIO_NOT = ConvertStartLocPrio(2)
+
+MAP_DENSITY_NONE = ConvertMapDensity(0)
 MAP_DENSITY_LIGHT = ConvertMapDensity(1)
 MAP_DENSITY_MEDIUM = ConvertMapDensity(2)
 MAP_DENSITY_HEAVY = ConvertMapDensity(3)
+
+MAP_DIFFICULTY_EASY = ConvertGameDifficulty(0)
 MAP_DIFFICULTY_NORMAL = ConvertGameDifficulty(1)
 MAP_DIFFICULTY_HARD = ConvertGameDifficulty(2)
 MAP_DIFFICULTY_INSANE = ConvertGameDifficulty(3)
+
+MAP_SPEED_SLOWEST = ConvertGameSpeed(0)
 MAP_SPEED_SLOW = ConvertGameSpeed(1)
 MAP_SPEED_NORMAL = ConvertGameSpeed(2)
 MAP_SPEED_FAST = ConvertGameSpeed(3)
 MAP_SPEED_FASTEST = ConvertGameSpeed(4)
+
+PLAYER_SLOT_STATE_EMPTY = ConvertPlayerSlotState(0)
 PLAYER_SLOT_STATE_PLAYING = ConvertPlayerSlotState(1)
 PLAYER_SLOT_STATE_LEFT = ConvertPlayerSlotState(2)
+
+--===================================================
 -- Sound Constants
 --===================================================
 SOUND_VOLUMEGROUP_UNITMOVEMENT = ConvertVolumeGroup(0)
@@ -321,13 +398,21 @@ SOUND_VOLUMEGROUP_UI = ConvertVolumeGroup(4)
 SOUND_VOLUMEGROUP_MUSIC = ConvertVolumeGroup(5)
 SOUND_VOLUMEGROUP_AMBIENTSOUNDS = ConvertVolumeGroup(6)
 SOUND_VOLUMEGROUP_FIRE = ConvertVolumeGroup(7)
+
+--===================================================
 -- Game, Player, and Unit States
 --
 -- For use with TriggerRegister<X>StateEvent
 --
 --===================================================
+
+GAME_STATE_DIVINE_INTERVENTION = ConvertIGameState(0)
 GAME_STATE_DISCONNECTED = ConvertIGameState(1)
 GAME_STATE_TIME_OF_DAY = ConvertFGameState(2)
+
+PLAYER_STATE_GAME_RESULT = ConvertPlayerState(0)
+
+-- current resource levels
 --
 PLAYER_STATE_RESOURCE_GOLD = ConvertPlayerState(1)
 PLAYER_STATE_RESOURCE_LUMBER = ConvertPlayerState(2)
@@ -335,22 +420,36 @@ PLAYER_STATE_RESOURCE_HERO_TOKENS = ConvertPlayerState(3)
 PLAYER_STATE_RESOURCE_FOOD_CAP = ConvertPlayerState(4)
 PLAYER_STATE_RESOURCE_FOOD_USED = ConvertPlayerState(5)
 PLAYER_STATE_FOOD_CAP_CEILING = ConvertPlayerState(6)
+
+PLAYER_STATE_GIVES_BOUNTY = ConvertPlayerState(7)
 PLAYER_STATE_ALLIED_VICTORY = ConvertPlayerState(8)
 PLAYER_STATE_PLACED = ConvertPlayerState(9)
 PLAYER_STATE_OBSERVER_ON_DEATH = ConvertPlayerState(10)
 PLAYER_STATE_OBSERVER = ConvertPlayerState(11)
 PLAYER_STATE_UNFOLLOWABLE = ConvertPlayerState(12)
+
+-- taxation rate for each resource
 --
 PLAYER_STATE_GOLD_UPKEEP_RATE = ConvertPlayerState(13)
 PLAYER_STATE_LUMBER_UPKEEP_RATE = ConvertPlayerState(14)
+
+-- cumulative resources collected by the player during the mission
 --
 PLAYER_STATE_GOLD_GATHERED = ConvertPlayerState(15)
 PLAYER_STATE_LUMBER_GATHERED = ConvertPlayerState(16)
+
+PLAYER_STATE_NO_CREEP_SLEEP = ConvertPlayerState(25)
+
+UNIT_STATE_LIFE = ConvertUnitState(0)
 UNIT_STATE_MAX_LIFE = ConvertUnitState(1)
 UNIT_STATE_MANA = ConvertUnitState(2)
 UNIT_STATE_MAX_MANA = ConvertUnitState(3)
+
+AI_DIFFICULTY_NEWBIE = ConvertAIDifficulty(0)
 AI_DIFFICULTY_NORMAL = ConvertAIDifficulty(1)
 AI_DIFFICULTY_INSANE = ConvertAIDifficulty(2)
+
+-- player score values
 PLAYER_SCORE_UNITS_TRAINED = ConvertPlayerScore(0)
 PLAYER_SCORE_UNITS_KILLED = ConvertPlayerScore(1)
 PLAYER_SCORE_STRUCT_BUILT = ConvertPlayerScore(2)
@@ -376,6 +475,8 @@ PLAYER_SCORE_UNIT_TOTAL = ConvertPlayerScore(21)
 PLAYER_SCORE_HERO_TOTAL = ConvertPlayerScore(22)
 PLAYER_SCORE_RESOURCE_TOTAL = ConvertPlayerScore(23)
 PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
+
+--===================================================
 -- Game, Player and Unit Events
 --
 -- When an event causes a trigger to fire these
@@ -389,50 +490,98 @@ PLAYER_SCORE_TOTAL = ConvertPlayerScore(24)
 -- is changed to match.
 --
 --===================================================
+
+--===================================================
 -- For use with TriggerRegisterGameEvent
 --===================================================
+
+EVENT_GAME_VICTORY = ConvertGameEvent(0)
 EVENT_GAME_END_LEVEL = ConvertGameEvent(1)
+
+EVENT_GAME_VARIABLE_LIMIT = ConvertGameEvent(2)
 EVENT_GAME_STATE_LIMIT = ConvertGameEvent(3)
+
+EVENT_GAME_TIMER_EXPIRED = ConvertGameEvent(4)
+
+EVENT_GAME_ENTER_REGION = ConvertGameEvent(5)
 EVENT_GAME_LEAVE_REGION = ConvertGameEvent(6)
+
+EVENT_GAME_TRACKABLE_HIT = ConvertGameEvent(7)
 EVENT_GAME_TRACKABLE_TRACK = ConvertGameEvent(8)
+
+EVENT_GAME_SHOW_SKILL = ConvertGameEvent(9)
 EVENT_GAME_BUILD_SUBMENU = ConvertGameEvent(10)
+
+--===================================================
 -- For use with TriggerRegisterPlayerEvent
 --===================================================
 EVENT_PLAYER_STATE_LIMIT = ConvertPlayerEvent(11)
 EVENT_PLAYER_ALLIANCE_CHANGED = ConvertPlayerEvent(12)
+
+EVENT_PLAYER_DEFEAT = ConvertPlayerEvent(13)
 EVENT_PLAYER_VICTORY = ConvertPlayerEvent(14)
 EVENT_PLAYER_LEAVE = ConvertPlayerEvent(15)
 EVENT_PLAYER_CHAT = ConvertPlayerEvent(16)
 EVENT_PLAYER_END_CINEMATIC = ConvertPlayerEvent(17)
+
+--===================================================
 -- For use with TriggerRegisterPlayerUnitEvent
 --===================================================
+
+EVENT_PLAYER_UNIT_ATTACKED = ConvertPlayerUnitEvent(18)
 EVENT_PLAYER_UNIT_RESCUED = ConvertPlayerUnitEvent(19)
+
+EVENT_PLAYER_UNIT_DEATH = ConvertPlayerUnitEvent(20)
 EVENT_PLAYER_UNIT_DECAY = ConvertPlayerUnitEvent(21)
+
+EVENT_PLAYER_UNIT_DETECTED = ConvertPlayerUnitEvent(22)
 EVENT_PLAYER_UNIT_HIDDEN = ConvertPlayerUnitEvent(23)
+
+EVENT_PLAYER_UNIT_SELECTED = ConvertPlayerUnitEvent(24)
 EVENT_PLAYER_UNIT_DESELECTED = ConvertPlayerUnitEvent(25)
+
+EVENT_PLAYER_UNIT_CONSTRUCT_START = ConvertPlayerUnitEvent(26)
 EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL = ConvertPlayerUnitEvent(27)
 EVENT_PLAYER_UNIT_CONSTRUCT_FINISH = ConvertPlayerUnitEvent(28)
+
+EVENT_PLAYER_UNIT_UPGRADE_START = ConvertPlayerUnitEvent(29)
 EVENT_PLAYER_UNIT_UPGRADE_CANCEL = ConvertPlayerUnitEvent(30)
 EVENT_PLAYER_UNIT_UPGRADE_FINISH = ConvertPlayerUnitEvent(31)
+
+EVENT_PLAYER_UNIT_TRAIN_START = ConvertPlayerUnitEvent(32)
 EVENT_PLAYER_UNIT_TRAIN_CANCEL = ConvertPlayerUnitEvent(33)
 EVENT_PLAYER_UNIT_TRAIN_FINISH = ConvertPlayerUnitEvent(34)
+
+EVENT_PLAYER_UNIT_RESEARCH_START = ConvertPlayerUnitEvent(35)
 EVENT_PLAYER_UNIT_RESEARCH_CANCEL = ConvertPlayerUnitEvent(36)
 EVENT_PLAYER_UNIT_RESEARCH_FINISH = ConvertPlayerUnitEvent(37)
 EVENT_PLAYER_UNIT_ISSUED_ORDER = ConvertPlayerUnitEvent(38)
 EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER = ConvertPlayerUnitEvent(39)
 EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER = ConvertPlayerUnitEvent(40)
 EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER = ConvertPlayerUnitEvent(40) -- for compat
+
+EVENT_PLAYER_HERO_LEVEL = ConvertPlayerUnitEvent(41)
 EVENT_PLAYER_HERO_SKILL = ConvertPlayerUnitEvent(42)
+
+EVENT_PLAYER_HERO_REVIVABLE = ConvertPlayerUnitEvent(43)
+
+EVENT_PLAYER_HERO_REVIVE_START = ConvertPlayerUnitEvent(44)
 EVENT_PLAYER_HERO_REVIVE_CANCEL = ConvertPlayerUnitEvent(45)
 EVENT_PLAYER_HERO_REVIVE_FINISH = ConvertPlayerUnitEvent(46)
 EVENT_PLAYER_UNIT_SUMMON = ConvertPlayerUnitEvent(47)
 EVENT_PLAYER_UNIT_DROP_ITEM = ConvertPlayerUnitEvent(48)
 EVENT_PLAYER_UNIT_PICKUP_ITEM = ConvertPlayerUnitEvent(49)
 EVENT_PLAYER_UNIT_USE_ITEM = ConvertPlayerUnitEvent(50)
+
+EVENT_PLAYER_UNIT_LOADED = ConvertPlayerUnitEvent(51)
 EVENT_PLAYER_UNIT_DAMAGED = ConvertPlayerUnitEvent(308)
 EVENT_PLAYER_UNIT_DAMAGING = ConvertPlayerUnitEvent(315)
+
+--===================================================
 -- For use with TriggerRegisterUnitEvent
 --===================================================
+
+EVENT_UNIT_DAMAGED = ConvertUnitEvent(52)
 EVENT_UNIT_DAMAGING = ConvertUnitEvent(314)
 EVENT_UNIT_DEATH = ConvertUnitEvent(53)
 EVENT_UNIT_DECAY = ConvertUnitEvent(54)
@@ -440,39 +589,75 @@ EVENT_UNIT_DETECTED = ConvertUnitEvent(55)
 EVENT_UNIT_HIDDEN = ConvertUnitEvent(56)
 EVENT_UNIT_SELECTED = ConvertUnitEvent(57)
 EVENT_UNIT_DESELECTED = ConvertUnitEvent(58)
+
+EVENT_UNIT_STATE_LIMIT = ConvertUnitEvent(59)
+
+-- Events which may have a filter for the "other unit"
 --
 EVENT_UNIT_ACQUIRED_TARGET = ConvertUnitEvent(60)
 EVENT_UNIT_TARGET_IN_RANGE = ConvertUnitEvent(61)
 EVENT_UNIT_ATTACKED = ConvertUnitEvent(62)
 EVENT_UNIT_RESCUED = ConvertUnitEvent(63)
+
+EVENT_UNIT_CONSTRUCT_CANCEL = ConvertUnitEvent(64)
 EVENT_UNIT_CONSTRUCT_FINISH = ConvertUnitEvent(65)
+
+EVENT_UNIT_UPGRADE_START = ConvertUnitEvent(66)
 EVENT_UNIT_UPGRADE_CANCEL = ConvertUnitEvent(67)
 EVENT_UNIT_UPGRADE_FINISH = ConvertUnitEvent(68)
+
+-- Events which involve the specified unit performing
 -- training of other units
 --
 EVENT_UNIT_TRAIN_START = ConvertUnitEvent(69)
 EVENT_UNIT_TRAIN_CANCEL = ConvertUnitEvent(70)
 EVENT_UNIT_TRAIN_FINISH = ConvertUnitEvent(71)
+
+EVENT_UNIT_RESEARCH_START = ConvertUnitEvent(72)
 EVENT_UNIT_RESEARCH_CANCEL = ConvertUnitEvent(73)
 EVENT_UNIT_RESEARCH_FINISH = ConvertUnitEvent(74)
+
+EVENT_UNIT_ISSUED_ORDER = ConvertUnitEvent(75)
 EVENT_UNIT_ISSUED_POINT_ORDER = ConvertUnitEvent(76)
 EVENT_UNIT_ISSUED_TARGET_ORDER = ConvertUnitEvent(77)
+
+EVENT_UNIT_HERO_LEVEL = ConvertUnitEvent(78)
 EVENT_UNIT_HERO_SKILL = ConvertUnitEvent(79)
+
+EVENT_UNIT_HERO_REVIVABLE = ConvertUnitEvent(80)
 EVENT_UNIT_HERO_REVIVE_START = ConvertUnitEvent(81)
 EVENT_UNIT_HERO_REVIVE_CANCEL = ConvertUnitEvent(82)
 EVENT_UNIT_HERO_REVIVE_FINISH = ConvertUnitEvent(83)
+
+EVENT_UNIT_SUMMON = ConvertUnitEvent(84)
+
+EVENT_UNIT_DROP_ITEM = ConvertUnitEvent(85)
 EVENT_UNIT_PICKUP_ITEM = ConvertUnitEvent(86)
 EVENT_UNIT_USE_ITEM = ConvertUnitEvent(87)
+
+EVENT_UNIT_LOADED = ConvertUnitEvent(88)
+
+EVENT_WIDGET_DEATH = ConvertWidgetEvent(89)
+
+EVENT_DIALOG_BUTTON_CLICK = ConvertDialogEvent(90)
 EVENT_DIALOG_CLICK = ConvertDialogEvent(91)
+
+--===================================================
 -- Frozen Throne Expansion Events
 -- Need to be added here to preserve compat
 --===================================================
+
+EVENT_GAME_LOADED = ConvertGameEvent(256)
 EVENT_GAME_TOURNAMENT_FINISH_SOON = ConvertGameEvent(257)
 EVENT_GAME_TOURNAMENT_FINISH_NOW = ConvertGameEvent(258)
 EVENT_GAME_SAVE = ConvertGameEvent(259)
 EVENT_GAME_CUSTOM_UI_FRAME = ConvertGameEvent(310)
+
+--===================================================
 -- For use with TriggerRegisterPlayerEvent
 --===================================================
+
+EVENT_PLAYER_ARROW_LEFT_DOWN = ConvertPlayerEvent(261)
 EVENT_PLAYER_ARROW_LEFT_UP = ConvertPlayerEvent(262)
 EVENT_PLAYER_ARROW_RIGHT_DOWN = ConvertPlayerEvent(263)
 EVENT_PLAYER_ARROW_RIGHT_UP = ConvertPlayerEvent(264)
@@ -487,8 +672,12 @@ EVENT_PLAYER_SYNC_DATA = ConvertPlayerEvent(309)
 EVENT_PLAYER_KEY = ConvertPlayerEvent(311)
 EVENT_PLAYER_KEY_DOWN = ConvertPlayerEvent(312)
 EVENT_PLAYER_KEY_UP = ConvertPlayerEvent(313)
+
+--===================================================
 -- For use with TriggerRegisterPlayerUnitEvent
 --===================================================
+
+EVENT_PLAYER_UNIT_SELL = ConvertPlayerUnitEvent(269)
 EVENT_PLAYER_UNIT_CHANGE_OWNER = ConvertPlayerUnitEvent(270)
 EVENT_PLAYER_UNIT_SELL_ITEM = ConvertPlayerUnitEvent(271)
 EVENT_PLAYER_UNIT_SPELL_CHANNEL = ConvertPlayerUnitEvent(272)
@@ -497,8 +686,12 @@ EVENT_PLAYER_UNIT_SPELL_EFFECT = ConvertPlayerUnitEvent(274)
 EVENT_PLAYER_UNIT_SPELL_FINISH = ConvertPlayerUnitEvent(275)
 EVENT_PLAYER_UNIT_SPELL_ENDCAST = ConvertPlayerUnitEvent(276)
 EVENT_PLAYER_UNIT_PAWN_ITEM = ConvertPlayerUnitEvent(277)
+
+--===================================================
 -- For use with TriggerRegisterUnitEvent
 --===================================================
+
+EVENT_UNIT_SELL = ConvertUnitEvent(286)
 EVENT_UNIT_CHANGE_OWNER = ConvertUnitEvent(287)
 EVENT_UNIT_SELL_ITEM = ConvertUnitEvent(288)
 EVENT_UNIT_SPELL_CHANNEL = ConvertUnitEvent(289)
@@ -507,6 +700,8 @@ EVENT_UNIT_SPELL_EFFECT = ConvertUnitEvent(291)
 EVENT_UNIT_SPELL_FINISH = ConvertUnitEvent(292)
 EVENT_UNIT_SPELL_ENDCAST = ConvertUnitEvent(293)
 EVENT_UNIT_PAWN_ITEM = ConvertUnitEvent(294)
+
+--===================================================
 -- Limit Event API constants
 -- variable, player state, game state, and unit state events
 -- ( do NOT change the order of these... )
@@ -517,30 +712,50 @@ EQUAL = ConvertLimitOp(2)
 GREATER_THAN_OR_EQUAL = ConvertLimitOp(3)
 GREATER_THAN = ConvertLimitOp(4)
 NOT_EQUAL = ConvertLimitOp(5)
+
+--===================================================
 -- Unit Type Constants for use with IsUnitType()
 --===================================================
+
+UNIT_TYPE_HERO = ConvertUnitType(0)
 UNIT_TYPE_DEAD = ConvertUnitType(1)
 UNIT_TYPE_STRUCTURE = ConvertUnitType(2)
+
+UNIT_TYPE_FLYING = ConvertUnitType(3)
 UNIT_TYPE_GROUND = ConvertUnitType(4)
+
+UNIT_TYPE_ATTACKS_FLYING = ConvertUnitType(5)
 UNIT_TYPE_ATTACKS_GROUND = ConvertUnitType(6)
+
+UNIT_TYPE_MELEE_ATTACKER = ConvertUnitType(7)
 UNIT_TYPE_RANGED_ATTACKER = ConvertUnitType(8)
+
+UNIT_TYPE_GIANT = ConvertUnitType(9)
 UNIT_TYPE_SUMMONED = ConvertUnitType(10)
 UNIT_TYPE_STUNNED = ConvertUnitType(11)
 UNIT_TYPE_PLAGUED = ConvertUnitType(12)
 UNIT_TYPE_SNARED = ConvertUnitType(13)
+
+UNIT_TYPE_UNDEAD = ConvertUnitType(14)
 UNIT_TYPE_MECHANICAL = ConvertUnitType(15)
 UNIT_TYPE_PEON = ConvertUnitType(16)
 UNIT_TYPE_SAPPER = ConvertUnitType(17)
 UNIT_TYPE_TOWNHALL = ConvertUnitType(18)
 UNIT_TYPE_ANCIENT = ConvertUnitType(19)
+
+UNIT_TYPE_TAUREN = ConvertUnitType(20)
 UNIT_TYPE_POISONED = ConvertUnitType(21)
 UNIT_TYPE_POLYMORPHED = ConvertUnitType(22)
 UNIT_TYPE_SLEEPING = ConvertUnitType(23)
 UNIT_TYPE_RESISTANT = ConvertUnitType(24)
 UNIT_TYPE_ETHEREAL = ConvertUnitType(25)
 UNIT_TYPE_MAGIC_IMMUNE = ConvertUnitType(26)
+
+--===================================================
 -- Unit Type Constants for use with ChooseRandomItemEx()
 --===================================================
+
+ITEM_TYPE_PERMANENT = ConvertItemType(0)
 ITEM_TYPE_CHARGED = ConvertItemType(1)
 ITEM_TYPE_POWERUP = ConvertItemType(2)
 ITEM_TYPE_ARTIFACT = ConvertItemType(3)
@@ -549,9 +764,15 @@ ITEM_TYPE_CAMPAIGN = ConvertItemType(5)
 ITEM_TYPE_MISCELLANEOUS = ConvertItemType(6)
 ITEM_TYPE_UNKNOWN = ConvertItemType(7)
 ITEM_TYPE_ANY = ConvertItemType(8)
+
+-- Deprecated, should use ITEM_TYPE_POWERUP
 ITEM_TYPE_TOME = ConvertItemType(2)
+
+--===================================================
 -- Animatable Camera Fields
 --===================================================
+
+CAMERA_FIELD_TARGET_DISTANCE = ConvertCameraField(0)
 CAMERA_FIELD_FARZ = ConvertCameraField(1)
 CAMERA_FIELD_ANGLE_OF_ATTACK = ConvertCameraField(2)
 CAMERA_FIELD_FIELD_OF_VIEW = ConvertCameraField(3)
@@ -562,34 +783,56 @@ CAMERA_FIELD_NEARZ = ConvertCameraField(7)
 CAMERA_FIELD_LOCAL_PITCH = ConvertCameraField(8)
 CAMERA_FIELD_LOCAL_YAW = ConvertCameraField(9)
 CAMERA_FIELD_LOCAL_ROLL = ConvertCameraField(10)
+
+BLEND_MODE_NONE = ConvertBlendMode(0)
 BLEND_MODE_DONT_CARE = ConvertBlendMode(0)
 BLEND_MODE_KEYALPHA = ConvertBlendMode(1)
 BLEND_MODE_BLEND = ConvertBlendMode(2)
 BLEND_MODE_ADDITIVE = ConvertBlendMode(3)
 BLEND_MODE_MODULATE = ConvertBlendMode(4)
 BLEND_MODE_MODULATE_2X = ConvertBlendMode(5)
+
+RARITY_FREQUENT = ConvertRarityControl(0)
 RARITY_RARE = ConvertRarityControl(1)
+
+TEXMAP_FLAG_NONE = ConvertTexMapFlags(0)
 TEXMAP_FLAG_WRAP_U = ConvertTexMapFlags(1)
 TEXMAP_FLAG_WRAP_V = ConvertTexMapFlags(2)
 TEXMAP_FLAG_WRAP_UV = ConvertTexMapFlags(3)
+
+FOG_OF_WAR_MASKED = ConvertFogState(1)
 FOG_OF_WAR_FOGGED = ConvertFogState(2)
 FOG_OF_WAR_VISIBLE = ConvertFogState(4)
+
+--===================================================
 -- Camera Margin constants for use with GetCameraMargin
 --===================================================
+
+CAMERA_MARGIN_LEFT = 0
 CAMERA_MARGIN_RIGHT = 1
 CAMERA_MARGIN_TOP = 2
 CAMERA_MARGIN_BOTTOM = 3
+
+--===================================================
 -- Effect API constants
 --===================================================
+
+EFFECT_TYPE_EFFECT = ConvertEffectType(0)
 EFFECT_TYPE_TARGET = ConvertEffectType(1)
 EFFECT_TYPE_CASTER = ConvertEffectType(2)
 EFFECT_TYPE_SPECIAL = ConvertEffectType(3)
 EFFECT_TYPE_AREA_EFFECT = ConvertEffectType(4)
 EFFECT_TYPE_MISSILE = ConvertEffectType(5)
 EFFECT_TYPE_LIGHTNING = ConvertEffectType(6)
+
+SOUND_TYPE_EFFECT = ConvertSoundType(0)
 SOUND_TYPE_EFFECT_LOOPED = ConvertSoundType(1)
+
+--===================================================
 -- Custom UI API constants
 --===================================================
+
+ORIGIN_FRAME_GAME_UI = ConvertOriginFrameType(0)
 ORIGIN_FRAME_COMMAND_BUTTON = ConvertOriginFrameType(1)
 ORIGIN_FRAME_HERO_BAR = ConvertOriginFrameType(2)
 ORIGIN_FRAME_HERO_BUTTON = ConvertOriginFrameType(3)
@@ -607,6 +850,8 @@ ORIGIN_FRAME_UNIT_MSG = ConvertOriginFrameType(14)
 ORIGIN_FRAME_TOP_MSG = ConvertOriginFrameType(15)
 ORIGIN_FRAME_PORTRAIT = ConvertOriginFrameType(16)
 ORIGIN_FRAME_WORLD_FRAME = ConvertOriginFrameType(17)
+
+FRAMEPOINT_TOPLEFT = ConvertFramePointType(0)
 FRAMEPOINT_TOP = ConvertFramePointType(1)
 FRAMEPOINT_TOPRIGHT = ConvertFramePointType(2)
 FRAMEPOINT_LEFT = ConvertFramePointType(3)
@@ -615,11 +860,15 @@ FRAMEPOINT_RIGHT = ConvertFramePointType(5)
 FRAMEPOINT_BOTTOMLEFT = ConvertFramePointType(6)
 FRAMEPOINT_BOTTOM = ConvertFramePointType(7)
 FRAMEPOINT_BOTTOMRIGHT = ConvertFramePointType(8)
+
+TEXT_JUSTIFY_TOP = ConvertTextAlignType(0)
 TEXT_JUSTIFY_MIDDLE = ConvertTextAlignType(1)
 TEXT_JUSTIFY_BOTTOM = ConvertTextAlignType(2)
 TEXT_JUSTIFY_LEFT = ConvertTextAlignType(3)
 TEXT_JUSTIFY_CENTER = ConvertTextAlignType(4)
 TEXT_JUSTIFY_RIGHT = ConvertTextAlignType(5)
+
+FRAMEEVENT_CONTROL_CLICK = ConvertFrameEventType(1)
 FRAMEEVENT_MOUSE_ENTER = ConvertFrameEventType(2)
 FRAMEEVENT_MOUSE_LEAVE = ConvertFrameEventType(3)
 FRAMEEVENT_MOUSE_UP = ConvertFrameEventType(4)
@@ -635,8 +884,12 @@ FRAMEEVENT_SLIDER_VALUE_CHANGED = ConvertFrameEventType(13)
 FRAMEEVENT_DIALOG_CANCEL = ConvertFrameEventType(14)
 FRAMEEVENT_DIALOG_ACCEPT = ConvertFrameEventType(15)
 FRAMEEVENT_EDITBOX_ENTER = ConvertFrameEventType(16)
+
+--===================================================
 -- OS Key constants
 --===================================================
+
+OSKEY_BACKSPACE = ConvertOsKeyType(0x08)
 OSKEY_TAB = ConvertOsKeyType(0x09)
 OSKEY_CLEAR = ConvertOsKeyType(0x0C)
 OSKEY_RETURN = ConvertOsKeyType(0x0D)
@@ -825,8 +1078,12 @@ OSKEY_ZOOM = ConvertOsKeyType(0xFB)
 OSKEY_NONAME = ConvertOsKeyType(0xFC)
 OSKEY_PA1 = ConvertOsKeyType(0xFD)
 OSKEY_OEM_CLEAR = ConvertOsKeyType(0xFE)
+
+--===================================================
 -- Instanced Object Operation API constants
 --===================================================
+
+-- Ability
 ABILITY_IF_BUTTON_POSITION_NORMAL_X = ConvertAbilityIntegerField('abpx')
 ABILITY_IF_BUTTON_POSITION_NORMAL_Y = ConvertAbilityIntegerField('abpy')
 ABILITY_IF_BUTTON_POSITION_ACTIVATED_X = ConvertAbilityIntegerField('aubx')
@@ -840,12 +1097,20 @@ ABILITY_IF_PRIORITY = ConvertAbilityIntegerField('apri')
 ABILITY_IF_LEVELS = ConvertAbilityIntegerField('alev')
 ABILITY_IF_REQUIRED_LEVEL = ConvertAbilityIntegerField('arlv')
 ABILITY_IF_LEVEL_SKIP_REQUIREMENT = ConvertAbilityIntegerField('alsk')
+
+ABILITY_BF_HERO_ABILITY = ConvertAbilityBooleanField('aher') -- Get only
 ABILITY_BF_ITEM_ABILITY = ConvertAbilityBooleanField('aite')
 ABILITY_BF_CHECK_DEPENDENCIES = ConvertAbilityBooleanField('achd')
+
+ABILITY_RF_ARF_MISSILE_ARC = ConvertAbilityRealField('amac')
+
+ABILITY_SF_NAME = ConvertAbilityStringField('anam') -- Get Only
 ABILITY_SF_ICON_ACTIVATED = ConvertAbilityStringField('auar')
 ABILITY_SF_ICON_RESEARCH = ConvertAbilityStringField('arar')
 ABILITY_SF_EFFECT_SOUND = ConvertAbilityStringField('aefs')
 ABILITY_SF_EFFECT_SOUND_LOOPING = ConvertAbilityStringField('aefl')
+
+ABILITY_ILF_MANA_COST = ConvertAbilityIntegerLevelField('amcs')
 ABILITY_ILF_NUMBER_OF_WAVES = ConvertAbilityIntegerLevelField('Hbz1')
 ABILITY_ILF_NUMBER_OF_SHARDS = ConvertAbilityIntegerLevelField('Hbz3')
 ABILITY_ILF_NUMBER_OF_UNITS_TELEPORTED = ConvertAbilityIntegerLevelField('Hmt1')
@@ -1029,6 +1294,8 @@ ABILITY_ILF_FACTORY_UNIT_ID = ConvertAbilityIntegerLevelField('Nsyu')
 ABILITY_ILF_SPAWN_UNIT_ID_NFYU = ConvertAbilityIntegerLevelField('Nfyu')
 ABILITY_ILF_DESTRUCTIBLE_ID = ConvertAbilityIntegerLevelField('Nvcu')
 ABILITY_ILF_UPGRADE_TYPE = ConvertAbilityIntegerLevelField('Iglu')
+
+ABILITY_RLF_CASTING_TIME = ConvertAbilityRealLevelField('acas')
 ABILITY_RLF_DURATION_NORMAL = ConvertAbilityRealLevelField('adur')
 ABILITY_RLF_DURATION_HERO = ConvertAbilityRealLevelField('ahdu')
 ABILITY_RLF_COOLDOWN = ConvertAbilityRealLevelField('acdn')
@@ -1442,6 +1709,8 @@ ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NVC4 = ConvertAbilityRealLevelField('Nvc4')
 ABILITY_RLF_FULL_DAMAGE_AMOUNT_NVC5 = ConvertAbilityRealLevelField('Nvc5')
 ABILITY_RLF_HALF_DAMAGE_FACTOR = ConvertAbilityRealLevelField('Nvc6')
 ABILITY_RLF_INTERVAL_BETWEEN_PULSES = ConvertAbilityRealLevelField('Tau5')
+
+ABILITY_BLF_PERCENT_BONUS_HAB2 = ConvertAbilityBooleanLevelField('Hab2')
 ABILITY_BLF_USE_TELEPORT_CLUSTERING_HMT3 = ConvertAbilityBooleanLevelField('Hmt3')
 ABILITY_BLF_NEVER_MISS_OCR5 = ConvertAbilityBooleanLevelField('Ocr5')
 ABILITY_BLF_EXCLUDE_ITEM_DAMAGE = ConvertAbilityBooleanLevelField('Ocr6')
@@ -1505,6 +1774,8 @@ ABILITY_BLF_SLEEP_ONCE = ConvertAbilityBooleanLevelField('sla1')
 ABILITY_BLF_ALLOW_ON_ANY_PLAYER_SLOT = ConvertAbilityBooleanLevelField('sla2')
 ABILITY_BLF_DISABLE_OTHER_ABILITIES = ConvertAbilityBooleanLevelField('Ncl5')
 ABILITY_BLF_ALLOW_BOUNTY = ConvertAbilityBooleanLevelField('Ntm4')
+
+ABILITY_SLF_ICON_NORMAL = ConvertAbilityStringLevelField('aart')
 ABILITY_SLF_CASTER = ConvertAbilityStringLevelField('acat')
 ABILITY_SLF_TARGET = ConvertAbilityStringLevelField('atat')
 ABILITY_SLF_SPECIAL = ConvertAbilityStringLevelField('asat')
@@ -1547,6 +1818,8 @@ ABILITY_SLF_ABILITY_UPGRADE_2 = ConvertAbilityStringLevelField('Neg4')
 ABILITY_SLF_ABILITY_UPGRADE_3 = ConvertAbilityStringLevelField('Neg5')
 ABILITY_SLF_ABILITY_UPGRADE_4 = ConvertAbilityStringLevelField('Neg6')
 ABILITY_SLF_SPAWN_UNIT_ID_NSY2 = ConvertAbilityStringLevelField('Nsy2')
+
+-- Item
 ITEM_IF_LEVEL = ConvertItemIntegerField('ilev')
 ITEM_IF_NUMBER_OF_CHARGES = ConvertItemIntegerField('iuse')
 ITEM_IF_COOLDOWN_GROUP = ConvertItemIntegerField('icid')
@@ -1558,12 +1831,20 @@ ITEM_IF_TINTING_COLOR_RED = ConvertItemIntegerField('iclr')
 ITEM_IF_TINTING_COLOR_GREEN = ConvertItemIntegerField('iclg')
 ITEM_IF_TINTING_COLOR_BLUE = ConvertItemIntegerField('iclb')
 ITEM_IF_TINTING_COLOR_ALPHA = ConvertItemIntegerField('ical')
+
+ITEM_RF_SCALING_VALUE = ConvertItemRealField('isca')
+
+ITEM_BF_DROPPED_WHEN_CARRIER_DIES = ConvertItemBooleanField('idrp')
 ITEM_BF_CAN_BE_DROPPED = ConvertItemBooleanField('idro')
 ITEM_BF_PERISHABLE = ConvertItemBooleanField('iper')
 ITEM_BF_INCLUDE_AS_RANDOM_CHOICE = ConvertItemBooleanField('iprn')
 ITEM_BF_USE_AUTOMATICALLY_WHEN_ACQUIRED = ConvertItemBooleanField('ipow')
 ITEM_BF_CAN_BE_SOLD_TO_MERCHANTS = ConvertItemBooleanField('ipaw')
 ITEM_BF_ACTIVELY_USED = ConvertItemBooleanField('iusa')
+
+ITEM_SF_MODEL_USED = ConvertItemStringField('ifil')
+
+-- Unit
 UNIT_IF_DEFENSE_TYPE = ConvertUnitIntegerField('udty')
 UNIT_IF_ARMOR_TYPE = ConvertUnitIntegerField('uarm')
 UNIT_IF_LOOPING_FADE_IN_RATE = ConvertUnitIntegerField('ulfi')
@@ -1597,6 +1878,8 @@ UNIT_IF_UNIT_CLASSIFICATION = ConvertUnitIntegerField('utyp')
 UNIT_IF_HIT_POINTS_REGENERATION_TYPE = ConvertUnitIntegerField('uhrt')
 UNIT_IF_PLACEMENT_PREVENTED_BY = ConvertUnitIntegerField('upar')
 UNIT_IF_PRIMARY_ATTRIBUTE = ConvertUnitIntegerField('upra')
+
+UNIT_RF_STRENGTH_PER_LEVEL = ConvertUnitRealField('ustp')
 UNIT_RF_AGILITY_PER_LEVEL = ConvertUnitRealField('uagp')
 UNIT_RF_INTELLIGENCE_PER_LEVEL = ConvertUnitRealField('uinp')
 UNIT_RF_HIT_POINTS_REGENERATION_RATE = ConvertUnitRealField('uhpr')
@@ -1628,6 +1911,8 @@ UNIT_RF_ACQUISITION_RANGE = ConvertUnitRealField('uacq')
 UNIT_RF_CAST_BACK_SWING = ConvertUnitRealField('ucbs')
 UNIT_RF_CAST_POINT = ConvertUnitRealField('ucpt')
 UNIT_RF_MINIMUM_ATTACK_RANGE = ConvertUnitRealField('uamn')
+
+UNIT_BF_RAISABLE = ConvertUnitBooleanField('urai')
 UNIT_BF_DECAYABLE = ConvertUnitBooleanField('udec')
 UNIT_BF_IS_A_BUILDING = ConvertUnitBooleanField('ubdg')
 UNIT_BF_USE_EXTENDED_LINE_OF_SIGHT = ConvertUnitBooleanField('ulos')
@@ -1639,9 +1924,13 @@ UNIT_BF_HIDE_MINIMAP_DISPLAY = ConvertUnitBooleanField('uhom')
 UNIT_BF_SCALE_PROJECTILES = ConvertUnitBooleanField('uscb')
 UNIT_BF_SELECTION_CIRCLE_ON_WATER = ConvertUnitBooleanField('usew')
 UNIT_BF_HAS_WATER_SHADOW = ConvertUnitBooleanField('ushr')
+
+UNIT_SF_NAME = ConvertUnitStringField('unam')
 UNIT_SF_PROPER_NAMES = ConvertUnitStringField('upro')
 UNIT_SF_GROUND_TEXTURE = ConvertUnitStringField('uubs')
 UNIT_SF_SHADOW_IMAGE_UNIT = ConvertUnitStringField('ushu')
+
+-- Unit Weapon
 UNIT_WEAPON_IF_ATTACK_DAMAGE_NUMBER_OF_DICE = ConvertUnitWeaponIntegerField('ua1d')
 UNIT_WEAPON_IF_ATTACK_DAMAGE_BASE = ConvertUnitWeaponIntegerField('ua1b')
 UNIT_WEAPON_IF_ATTACK_DAMAGE_SIDES_PER_DIE = ConvertUnitWeaponIntegerField('ua1s')
@@ -1650,6 +1939,8 @@ UNIT_WEAPON_IF_ATTACK_ATTACK_TYPE = ConvertUnitWeaponIntegerField('ua1t')
 UNIT_WEAPON_IF_ATTACK_WEAPON_SOUND = ConvertUnitWeaponIntegerField('ucs1')
 UNIT_WEAPON_IF_ATTACK_AREA_OF_EFFECT_TARGETS = ConvertUnitWeaponIntegerField('ua1p')
 UNIT_WEAPON_IF_ATTACK_TARGETS_ALLOWED = ConvertUnitWeaponIntegerField('ua1g')
+
+UNIT_WEAPON_RF_ATTACK_BACKSWING_POINT = ConvertUnitWeaponRealField('ubs1')
 UNIT_WEAPON_RF_ATTACK_DAMAGE_POINT = ConvertUnitWeaponRealField('udp1')
 UNIT_WEAPON_RF_ATTACK_BASE_COOLDOWN = ConvertUnitWeaponRealField('ua1c')
 UNIT_WEAPON_RF_ATTACK_DAMAGE_LOSS_FACTOR = ConvertUnitWeaponRealField('udl1')
@@ -1663,8 +1954,14 @@ UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_FULL_DAMAGE = ConvertUnitWeaponRealField('u
 UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_MEDIUM_DAMAGE = ConvertUnitWeaponRealField('ua1h')
 UNIT_WEAPON_RF_ATTACK_AREA_OF_EFFECT_SMALL_DAMAGE = ConvertUnitWeaponRealField('ua1q')
 UNIT_WEAPON_RF_ATTACK_RANGE = ConvertUnitWeaponRealField('ua1r')
+
+UNIT_WEAPON_BF_ATTACK_SHOW_UI = ConvertUnitWeaponBooleanField('uwu1')
 UNIT_WEAPON_BF_ATTACKS_ENABLED = ConvertUnitWeaponBooleanField('uaen')
 UNIT_WEAPON_BF_ATTACK_PROJECTILE_HOMING_ENABLED = ConvertUnitWeaponBooleanField('umh1')
+
+UNIT_WEAPON_SF_ATTACK_PROJECTILE_ART = ConvertUnitWeaponStringField('ua1m')
+
+-- Move Type
 MOVE_TYPE_UNKNOWN = ConvertMoveType(0)
 MOVE_TYPE_FOOT = ConvertMoveType(1)
 MOVE_TYPE_FLY = ConvertMoveType(2)
@@ -1673,6 +1970,8 @@ MOVE_TYPE_HOVER = ConvertMoveType(8)
 MOVE_TYPE_FLOAT = ConvertMoveType(16)
 MOVE_TYPE_AMPHIBIOUS = ConvertMoveType(32)
 MOVE_TYPE_UNBUILDABLE = ConvertMoveType(64)
+
+-- Target Flag
 TARGET_FLAG_NONE = ConvertTargetFlag(1)
 TARGET_FLAG_GROUND = ConvertTargetFlag(2)
 TARGET_FLAG_AIR = ConvertTargetFlag(4)
@@ -1684,6 +1983,8 @@ TARGET_FLAG_WALL = ConvertTargetFlag(128)
 TARGET_FLAG_DEBRIS = ConvertTargetFlag(256)
 TARGET_FLAG_DECORATION = ConvertTargetFlag(512)
 TARGET_FLAG_BRIDGE = ConvertTargetFlag(1024)
+
+-- defense type
 DEFENSE_TYPE_LIGHT = ConvertDefenseType(0)
 DEFENSE_TYPE_MEDIUM = ConvertDefenseType(1)
 DEFENSE_TYPE_LARGE = ConvertDefenseType(2)
@@ -1692,20 +1993,28 @@ DEFENSE_TYPE_NORMAL = ConvertDefenseType(4)
 DEFENSE_TYPE_HERO = ConvertDefenseType(5)
 DEFENSE_TYPE_DIVINE = ConvertDefenseType(6)
 DEFENSE_TYPE_NONE = ConvertDefenseType(7)
+
+-- Hero Attribute
 HERO_ATTRIBUTE_STR = ConvertHeroAttribute(1)
 HERO_ATTRIBUTE_INT = ConvertHeroAttribute(2)
 HERO_ATTRIBUTE_AGI = ConvertHeroAttribute(3)
+
+-- Armor Type
 ARMOR_TYPE_WHOKNOWS = ConvertArmorType(0)
 ARMOR_TYPE_FLESH = ConvertArmorType(1)
 ARMOR_TYPE_METAL = ConvertArmorType(2)
 ARMOR_TYPE_WOOD = ConvertArmorType(3)
 ARMOR_TYPE_ETHREAL = ConvertArmorType(4)
 ARMOR_TYPE_STONE = ConvertArmorType(5)
+
+-- Regeneration Type
 REGENERATION_TYPE_NONE = ConvertRegenType(0)
 REGENERATION_TYPE_ALWAYS = ConvertRegenType(1)
 REGENERATION_TYPE_BLIGHT = ConvertRegenType(2)
 REGENERATION_TYPE_DAY = ConvertRegenType(3)
 REGENERATION_TYPE_NIGHT = ConvertRegenType(4)
+
+-- Unit Category
 UNIT_CATEGORY_GIANT = ConvertUnitCategory(1)
 UNIT_CATEGORY_UNDEAD = ConvertUnitCategory(2)
 UNIT_CATEGORY_SUMMONED = ConvertUnitCategory(4)
@@ -1718,6 +2027,8 @@ UNIT_CATEGORY_NEUTRAL = ConvertUnitCategory(256)
 UNIT_CATEGORY_WARD = ConvertUnitCategory(512)
 UNIT_CATEGORY_STANDON = ConvertUnitCategory(1024)
 UNIT_CATEGORY_TAUREN = ConvertUnitCategory(2048)
+
+-- Pathing Flag
 PATHING_FLAG_UNWALKABLE = ConvertPathingFlag(2)
 PATHING_FLAG_UNFLYABLE = ConvertPathingFlag(4)
 PATHING_FLAG_UNBUILDABLE = ConvertPathingFlag(8)
@@ -1726,33 +2037,53 @@ PATHING_FLAG_BLIGHTED = ConvertPathingFlag(32)
 PATHING_FLAG_UNFLOATABLE = ConvertPathingFlag(64)
 PATHING_FLAG_UNAMPHIBIOUS = ConvertPathingFlag(128)
 PATHING_FLAG_UNITEMPLACABLE = ConvertPathingFlag(256)
+
+--============================================================================
 -- MathAPI
 function Deg2Rad(r_degrees) return real end
 function Rad2Deg(r_radians) return real end
+
+function Sin(r_radians) return real end
 function Cos(r_radians) return real end
 function Tan(r_radians) return real end
+
+-- Expect values between -1 and 1...returns 0 for invalid input
 function Asin(r_y) return real end
 function Acos(r_x) return real end
+
+function Atan(r_x) return real end
+
+-- Returns 0 if x and y are both 0
 function Atan2(r_y, r_x) return real end
+
+-- Returns 0 if x <= 0
 function SquareRoot(r_x) return real end
+
+-- computes x to the y power
 -- y == 0.0 => 1
 -- x ==0.0 and y < 0 => 0
 --
 function Pow(r_x, r_power) return real end
+
+--============================================================================
 -- String Utility API
-function I2R(int_i) return real end
+function I2R(i_i) return real end
 function R2I(r_r) return integer end
-function I2S(int_i) return string end
+function I2S(i_i) return string end
 function R2S(r_r) return string end
-function R2SW(r_r, int_width, int_precision) return string end
-function S2I(str_s) return integer end
-function S2R(str_s) return real end
-function GetHandleId(handle_h) return integer end
-function SubString(str_source, int_start, int_end) return string end
-function StringLength(str_s) return integer end
-function StringCase(str_source, b_upper) return string end
-function StringHash(str_s) return integer end
-function GetLocalizedHotkey(str_source) return integer end
+function R2SW(r_r, i_width, i_precision) return string end
+function S2I(s_s) return integer end
+function S2R(s_s) return real end
+function GetHandleId(h_h) return integer end
+function SubString(s_source, i_start, i_end) return string end
+function StringLength(s_s) return integer end
+function StringCase(s_source, b_upper) return string end
+function StringHash(s_s) return integer end
+
+function GetLocalizedString(s_source) return string end
+function GetLocalizedHotkey(s_source) return integer end
+
+--============================================================================
 -- Map Setup API
 --
 -- These are native functions for describing the map configuration
@@ -1760,42 +2091,62 @@ function GetLocalizedHotkey(str_source) return integer end
 -- a map script. The functions should also be called in this order
 -- ( i.e. call SetPlayers before SetPlayerColor...
 --
-function SetMapDescription(str_description) end
-function SetPlayers(int_playercount) end
-function DefineStartLocationLoc(int_whichStartLoc, location_whichLocation) end
-function SetStartLocPrioCount(int_whichStartLoc, int_prioSlotCount) end
-function SetStartLocPrio(int_whichStartLoc, int_prioSlotIndex, int_otherStartLocIndex, startlocprio_priority) end
-function GetStartLocPrioSlot(int_whichStartLoc, int_prioSlotIndex) return integer end
-function GetStartLocPrio(int_whichStartLoc, int_prioSlotIndex) return startlocprio end
+
+function SetMapName(s_name) end
+function SetMapDescription(s_description) end
+
+function SetTeams(i_teamcount) end
+function SetPlayers(i_playercount) end
+
+function DefineStartLocation(i_whichStartLoc, r_x, r_y) end
+function DefineStartLocationLoc(i_whichStartLoc, location_whichLocation) end
+function SetStartLocPrioCount(i_whichStartLoc, i_prioSlotCount) end
+function SetStartLocPrio(i_whichStartLoc, i_prioSlotIndex, i_otherStartLocIndex, startlocprio_priority) end
+function GetStartLocPrioSlot(i_whichStartLoc, i_prioSlotIndex) return integer end
+function GetStartLocPrio(i_whichStartLoc, i_prioSlotIndex) return startlocprio end
+
+function SetGameTypeSupported(gametype_whichGameType, b_value) end
 function SetMapFlag(mapflag_whichMapFlag, b_value) end
 function SetGamePlacement(placement_whichPlacementType) end
 function SetGameSpeed(gamespeed_whichspeed) end
 function SetGameDifficulty(gamedifficulty_whichdifficulty) end
 function SetResourceDensity(mapdensity_whichdensity) end
 function SetCreatureDensity(mapdensity_whichdensity) end
+
+function GetTeams() return integer end
 function GetPlayers() return integer end
+
+function IsGameTypeSupported(gametype_whichGameType) return boolean end
 function GetGameTypeSelected() return gametype end
 function IsMapFlagSet(mapflag_whichMapFlag) return boolean end
+
+function GetGamePlacement() return placement end
 function GetGameSpeed() return gamespeed end
 function GetGameDifficulty() return gamedifficulty end
 function GetResourceDensity() return mapdensity end
 function GetCreatureDensity() return mapdensity end
-function GetStartLocationX(int_whichStartLocation) return real end
-function GetStartLocationY(int_whichStartLocation) return real end
-function GetStartLocationLoc(int_whichStartLocation) return location end
-function SetPlayerStartLocation(player_whichPlayer, int_startLocIndex) end
+function GetStartLocationX(i_whichStartLocation) return real end
+function GetStartLocationY(i_whichStartLocation) return real end
+function GetStartLocationLoc(i_whichStartLocation) return location end
+
+function SetPlayerTeam(player_whichPlayer, i_whichTeam) end
+function SetPlayerStartLocation(player_whichPlayer, i_startLocIndex) end
 -- forces player to have the specified start loc and marks the start loc as occupied
 -- which removes it from consideration for subsequently placed players
 -- ( i.e. you can use this to put people in a fixed loc and then
 -- use random placement for any unplaced players etc )
-function ForcePlayerStartLocation(player_whichPlayer, int_startLocIndex) end
+function ForcePlayerStartLocation(player_whichPlayer, i_startLocIndex) end
 function SetPlayerColor(player_whichPlayer, playercolor_color) end
 function SetPlayerAlliance(player_sourcePlayer, player_otherPlayer, alliancetype_whichAllianceSetting, b_value) end
-function SetPlayerTaxRate(player_sourcePlayer, player_otherPlayer, playerstate_whichResource, int_rate) end
+function SetPlayerTaxRate(player_sourcePlayer, player_otherPlayer, playerstate_whichResource, i_rate) end
 function SetPlayerRacePreference(player_whichPlayer, racepreference_whichRacePreference) end
 function SetPlayerRaceSelectable(player_whichPlayer, b_value) end
 function SetPlayerController(player_whichPlayer, mapcontrol_controlType) end
-function SetPlayerName(player_whichPlayer, str_name) end
+function SetPlayerName(player_whichPlayer, s_name) end
+
+function SetPlayerOnScoreScreen(player_whichPlayer, b_flag) end
+
+function GetPlayerTeam(player_whichPlayer) return integer end
 function GetPlayerStartLocation(player_whichPlayer) return integer end
 function GetPlayerColor(player_whichPlayer) return playercolor end
 function GetPlayerSelectable(player_whichPlayer) return boolean end
@@ -1804,17 +2155,21 @@ function GetPlayerSlotState(player_whichPlayer) return playerslotstate end
 function GetPlayerTaxRate(player_sourcePlayer, player_otherPlayer, playerstate_whichResource) return integer end
 function IsPlayerRacePrefSet(player_whichPlayer, racepreference_pref) return boolean end
 function GetPlayerName(player_whichPlayer) return string end
+
+--============================================================================
 -- Timer API
 --
 function CreateTimer() return timer end
 function DestroyTimer(timer_whichTimer) end
-function TimerStart(timer_whichTimer, r_timeout, b_periodic, code_handlerFunc) end
+function TimerStart(timer_whichTimer, r_timeout, b_periodic, c_handlerFunc) end
 function TimerGetElapsed(timer_whichTimer) return real end
 function TimerGetRemaining(timer_whichTimer) return real end
 function TimerGetTimeout(timer_whichTimer) return real end
 function PauseTimer(timer_whichTimer) end
 function ResumeTimer(timer_whichTimer) end
 function GetExpiredTimer() return timer end
+
+--============================================================================
 -- Group API
 --
 function CreateGroup() return group end
@@ -1825,29 +2180,35 @@ function BlzGroupAddGroupFast(group_whichGroup, group_addGroup) return integer e
 function BlzGroupRemoveGroupFast(group_whichGroup, group_removeGroup) return integer end
 function GroupClear(group_whichGroup) end
 function BlzGroupGetSize(group_whichGroup) return integer end
-function BlzGroupUnitAt(group_whichGroup, int_index) return unit end
-function GroupEnumUnitsOfType(group_whichGroup, str_unitname, boolexpr_filter) end
+function BlzGroupUnitAt(group_whichGroup, i_index) return unit end
+function GroupEnumUnitsOfType(group_whichGroup, s_unitname, boolexpr_filter) end
 function GroupEnumUnitsOfPlayer(group_whichGroup, player_whichPlayer, boolexpr_filter) end
-function GroupEnumUnitsOfTypeCounted(group_whichGroup, str_unitname, boolexpr_filter, int_countLimit) end
+function GroupEnumUnitsOfTypeCounted(group_whichGroup, s_unitname, boolexpr_filter, i_countLimit) end
 function GroupEnumUnitsInRect(group_whichGroup, rect_r, boolexpr_filter) end
-function GroupEnumUnitsInRectCounted(group_whichGroup, rect_r, boolexpr_filter, int_countLimit) end
+function GroupEnumUnitsInRectCounted(group_whichGroup, rect_r, boolexpr_filter, i_countLimit) end
 function GroupEnumUnitsInRange(group_whichGroup, r_x, r_y, r_radius, boolexpr_filter) end
 function GroupEnumUnitsInRangeOfLoc(group_whichGroup, location_whichLocation, r_radius, boolexpr_filter) end
-function GroupEnumUnitsInRangeCounted(group_whichGroup, r_x, r_y, r_radius, boolexpr_filter, int_countLimit) end
-function GroupEnumUnitsInRangeOfLocCounted(group_whichGroup, location_whichLocation, r_radius, boolexpr_filter, int_countLimit) end
+function GroupEnumUnitsInRangeCounted(group_whichGroup, r_x, r_y, r_radius, boolexpr_filter, i_countLimit) end
+function GroupEnumUnitsInRangeOfLocCounted(group_whichGroup, location_whichLocation, r_radius, boolexpr_filter, i_countLimit) end
 function GroupEnumUnitsSelected(group_whichGroup, player_whichPlayer, boolexpr_filter) end
-function GroupImmediateOrderById(group_whichGroup, int_order) return boolean end
-function GroupPointOrder(group_whichGroup, str_order, r_x, r_y) return boolean end
-function GroupPointOrderLoc(group_whichGroup, str_order, location_whichLocation) return boolean end
-function GroupPointOrderById(group_whichGroup, int_order, r_x, r_y) return boolean end
-function GroupPointOrderByIdLoc(group_whichGroup, int_order, location_whichLocation) return boolean end
-function GroupTargetOrder(group_whichGroup, str_order, widget_targetWidget) return boolean end
-function GroupTargetOrderById(group_whichGroup, int_order, widget_targetWidget) return boolean end
+
+function GroupImmediateOrder(group_whichGroup, s_order) return boolean end
+function GroupImmediateOrderById(group_whichGroup, i_order) return boolean end
+function GroupPointOrder(group_whichGroup, s_order, r_x, r_y) return boolean end
+function GroupPointOrderLoc(group_whichGroup, s_order, location_whichLocation) return boolean end
+function GroupPointOrderById(group_whichGroup, i_order, r_x, r_y) return boolean end
+function GroupPointOrderByIdLoc(group_whichGroup, i_order, location_whichLocation) return boolean end
+function GroupTargetOrder(group_whichGroup, s_order, widget_targetWidget) return boolean end
+function GroupTargetOrderById(group_whichGroup, i_order, widget_targetWidget) return boolean end
+
+-- This will be difficult to support with potentially disjoint, cell-based regions
 -- as it would involve enumerating all the cells that are covered by a particularregion
 -- a better implementation would be a trigger that adds relevant units as they enter
 -- and removes them if they leave...
-function ForGroup(group_whichGroup, code_callback) end
+function ForGroup(group_whichGroup, c_callback) end
 function FirstOfGroup(group_whichGroup) return unit end
+
+--============================================================================
 -- Force API
 --
 function CreateForce() return force end
@@ -1857,10 +2218,12 @@ function ForceRemovePlayer(force_whichForce, player_whichPlayer) end
 function BlzForceHasPlayer(force_whichForce, player_whichPlayer) return boolean end
 function ForceClear(force_whichForce) end
 function ForceEnumPlayers(force_whichForce, boolexpr_filter) end
-function ForceEnumPlayersCounted(force_whichForce, boolexpr_filter, int_countLimit) end
+function ForceEnumPlayersCounted(force_whichForce, boolexpr_filter, i_countLimit) end
 function ForceEnumAllies(force_whichForce, player_whichPlayer, boolexpr_filter) end
 function ForceEnumEnemies(force_whichForce, player_whichPlayer, boolexpr_filter) end
-function ForForce(force_whichForce, code_callback) end
+function ForForce(force_whichForce, c_callback) end
+
+--============================================================================
 -- Region and Location API
 --
 function Rect(r_minx, r_miny, r_maxx, r_maxy) return rect end
@@ -1870,25 +2233,43 @@ function SetRect(rect_whichRect, r_minx, r_miny, r_maxx, r_maxy) end
 function SetRectFromLoc(rect_whichRect, location_min, location_max) end
 function MoveRectTo(rect_whichRect, r_newCenterX, r_newCenterY) end
 function MoveRectToLoc(rect_whichRect, location_newCenterLoc) end
+
+function GetRectCenterX(rect_whichRect) return real end
 function GetRectCenterY(rect_whichRect) return real end
 function GetRectMinX(rect_whichRect) return real end
 function GetRectMinY(rect_whichRect) return real end
 function GetRectMaxX(rect_whichRect) return real end
 function GetRectMaxY(rect_whichRect) return real end
+
+function CreateRegion() return region end
 function RemoveRegion(region_whichRegion) end
+
+function RegionAddRect(region_whichRegion, rect_r) end
 function RegionClearRect(region_whichRegion, rect_r) end
+
+function RegionAddCell(region_whichRegion, r_x, r_y) end
 function RegionAddCellAtLoc(region_whichRegion, location_whichLocation) end
 function RegionClearCell(region_whichRegion, r_x, r_y) end
 function RegionClearCellAtLoc(region_whichRegion, location_whichLocation) end
+
+function Location(r_x, r_y) return location end
 function RemoveLocation(location_whichLocation) end
 function MoveLocation(location_whichLocation, r_newX, r_newY) end
 function GetLocationX(location_whichLocation) return real end
 function GetLocationY(location_whichLocation) return real end
+
+-- This function is asynchronous. The values it returns are not guaranteed synchronous between each player.
 -- If you attempt to use it in a synchronous manner, it may cause a desync.
 function GetLocationZ(location_whichLocation) return real end
+
+function IsUnitInRegion(region_whichRegion, unit_whichUnit) return boolean end
 function IsPointInRegion(region_whichRegion, r_x, r_y) return boolean end
 function IsLocationInRegion(region_whichRegion, location_whichLocation) return boolean end
+
+-- Returns full map bounds, including unplayable borders, in world coordinates
 function GetWorldBounds() return rect end
+
+--============================================================================
 -- Native trigger interface
 --
 function CreateTrigger() return trigger end
@@ -1897,103 +2278,215 @@ function ResetTrigger(trigger_whichTrigger) end
 function EnableTrigger(trigger_whichTrigger) end
 function DisableTrigger(trigger_whichTrigger) end
 function IsTriggerEnabled(trigger_whichTrigger) return boolean end
+
+function TriggerWaitOnSleeps(trigger_whichTrigger, b_flag) end
 function IsTriggerWaitOnSleeps(trigger_whichTrigger) return boolean end
+
+function GetFilterUnit() return unit end
 function GetEnumUnit() return unit end
+
+function GetFilterDestructable() return destructable end
 function GetEnumDestructable() return destructable end
+
+function GetFilterItem() return item end
 function GetEnumItem() return item end
+
+function GetFilterPlayer() return player end
 function GetEnumPlayer() return player end
+
+function GetTriggeringTrigger() return trigger end
 function GetTriggerEventId() return eventid end
 function GetTriggerEvalCount(trigger_whichTrigger) return integer end
 function GetTriggerExecCount(trigger_whichTrigger) return integer end
+
+function ExecuteFunc(s_funcName) end
+
+--============================================================================
 -- Boolean Expr API ( for compositing trigger conditions and unit filter funcs...)
 --============================================================================
 function And(boolexpr_operandA, boolexpr_operandB) return boolexpr end
 function Or(boolexpr_operandA, boolexpr_operandB) return boolexpr end
 function Not(boolexpr_operand) return boolexpr end
-function Condition(code_func) return conditionfunc end
+function Condition(c_func) return conditionfunc end
 function DestroyCondition(conditionfunc_c) end
-function Filter(code_func) return filterfunc end
+function Filter(c_func) return filterfunc end
 function DestroyFilter(filterfunc_f) end
 function DestroyBoolExpr(boolexpr_e) end
+
+--============================================================================
 -- Trigger Game Event API
 --============================================================================
+
+function TriggerRegisterVariableEvent(trigger_whichTrigger, s_varName, limitop_opcode, r_limitval) return event end
+
+-- EVENT_GAME_VARIABLE_LIMIT
 --constant native string GetTriggeringVariableName takes  returns string
+
+-- Creates it's own timer and triggers when it expires
 function TriggerRegisterTimerEvent(trigger_whichTrigger, r_timeout, b_periodic) return event end
+
+-- Triggers when the timer you tell it about expires
 function TriggerRegisterTimerExpireEvent(trigger_whichTrigger, timer_t) return event end
+
+function TriggerRegisterGameStateEvent(trigger_whichTrigger, gamestate_whichState, limitop_opcode, r_limitval) return event end
+
+function TriggerRegisterDialogEvent(trigger_whichTrigger, dialog_whichDialog) return event end
 function TriggerRegisterDialogButtonEvent(trigger_whichTrigger, button_whichButton) return event end
+
+-- EVENT_GAME_STATE_LIMIT
 function GetEventGameState() return gamestate end
+
+function TriggerRegisterGameEvent(trigger_whichTrigger, gameevent_whichGameEvent) return event end
+
+-- EVENT_GAME_VICTORY
 function GetWinningPlayer() return player end
+
+function TriggerRegisterEnterRegion(trigger_whichTrigger, region_whichRegion, boolexpr_filter) return event end
+
+-- EVENT_GAME_ENTER_REGION
 function GetTriggeringRegion() return region end
 function GetEnteringUnit() return unit end
+
+-- EVENT_GAME_LEAVE_REGION
+
+function TriggerRegisterLeaveRegion(trigger_whichTrigger, region_whichRegion, boolexpr_filter) return event end
 function GetLeavingUnit() return unit end
+
+function TriggerRegisterTrackableHitEvent(trigger_whichTrigger, trackable_t) return event end
 function TriggerRegisterTrackableTrackEvent(trigger_whichTrigger, trackable_t) return event end
+
+-- EVENT_GAME_TRACKABLE_HIT
 -- EVENT_GAME_TRACKABLE_TRACK
 function GetTriggeringTrackable() return trackable end
+
+-- EVENT_DIALOG_BUTTON_CLICK
 function GetClickedButton() return button end
 function GetClickedDialog() return dialog end
+
+-- EVENT_GAME_TOURNAMENT_FINISH_SOON
 function GetTournamentFinishSoonTimeRemaining() return real end
 function GetTournamentFinishNowRule() return integer end
 function GetTournamentFinishNowPlayer() return player end
 function GetTournamentScore(player_whichPlayer) return integer end
+
+-- EVENT_GAME_SAVE
 function GetSaveBasicFilename() return string end
+
+--============================================================================
 -- Trigger Player Based Event API
 --============================================================================
+
+function TriggerRegisterPlayerEvent(trigger_whichTrigger, player_whichPlayer, playerevent_whichPlayerEvent) return event end
+
+-- EVENT_PLAYER_DEFEAT
 -- EVENT_PLAYER_VICTORY
 function GetTriggerPlayer() return player end
+
+function TriggerRegisterPlayerUnitEvent(trigger_whichTrigger, player_whichPlayer, playerunitevent_whichPlayerUnitEvent, boolexpr_filter) return event end
+
+-- EVENT_PLAYER_HERO_LEVEL
 -- EVENT_UNIT_HERO_LEVEL
 function GetLevelingUnit() return unit end
+
+-- EVENT_PLAYER_HERO_SKILL
 -- EVENT_UNIT_HERO_SKILL
 function GetLearningUnit() return unit end
 function GetLearnedSkill() return integer end
 function GetLearnedSkillLevel() return integer end
+
+-- EVENT_PLAYER_HERO_REVIVABLE
 function GetRevivableUnit() return unit end
+
+-- EVENT_PLAYER_HERO_REVIVE_START
 -- EVENT_PLAYER_HERO_REVIVE_CANCEL
 -- EVENT_PLAYER_HERO_REVIVE_FINISH
 -- EVENT_UNIT_HERO_REVIVE_START
 -- EVENT_UNIT_HERO_REVIVE_CANCEL
 -- EVENT_UNIT_HERO_REVIVE_FINISH
 function GetRevivingUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_ATTACKED
 function GetAttacker() return unit end
+
+-- EVENT_PLAYER_UNIT_RESCUED
 function GetRescuer() return unit end
+
+-- EVENT_PLAYER_UNIT_DEATH
 function GetDyingUnit() return unit end
 function GetKillingUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_DECAY
 function GetDecayingUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_SELECTED
 --constant native GetSelectedUnit takes  returns unit
+
+-- EVENT_PLAYER_UNIT_CONSTRUCT_START
 function GetConstructingStructure() return unit end
+
+-- EVENT_PLAYER_UNIT_CONSTRUCT_FINISH
 -- EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL
 function GetCancelledStructure() return unit end
 function GetConstructedStructure() return unit end
+
+-- EVENT_PLAYER_UNIT_RESEARCH_START
 -- EVENT_PLAYER_UNIT_RESEARCH_CANCEL
 -- EVENT_PLAYER_UNIT_RESEARCH_FINISH
 function GetResearchingUnit() return unit end
 function GetResearched() return integer end
+
+-- EVENT_PLAYER_UNIT_TRAIN_START
 -- EVENT_PLAYER_UNIT_TRAIN_CANCEL
 function GetTrainedUnitType() return integer end
+
+-- EVENT_PLAYER_UNIT_TRAIN_FINISH
 function GetTrainedUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_DETECTED
 function GetDetectedUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_SUMMONED
 function GetSummoningUnit() return unit end
 function GetSummonedUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_LOADED
 function GetTransportUnit() return unit end
 function GetLoadedUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_SELL
 function GetSellingUnit() return unit end
 function GetSoldUnit() return unit end
 function GetBuyingUnit() return unit end
+
+-- EVENT_PLAYER_UNIT_SELL_ITEM
 function GetSoldItem() return item end
+
+-- EVENT_PLAYER_UNIT_CHANGE_OWNER
 function GetChangingUnit() return unit end
 function GetChangingUnitPrevOwner() return player end
+
+-- EVENT_PLAYER_UNIT_DROP_ITEM
 -- EVENT_PLAYER_UNIT_PICKUP_ITEM
 -- EVENT_PLAYER_UNIT_USE_ITEM
 function GetManipulatingUnit() return unit end
 function GetManipulatedItem() return item end
+
+-- EVENT_PLAYER_UNIT_ISSUED_ORDER
 function GetOrderedUnit() return unit end
 function GetIssuedOrderId() return integer end
+
+-- EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
 function GetOrderPointX() return real end
 function GetOrderPointY() return real end
 function GetOrderPointLoc() return location end
+
+-- EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
 function GetOrderTarget() return widget end
 function GetOrderTargetDestructable() return destructable end
 function GetOrderTargetItem() return item end
 function GetOrderTargetUnit() return unit end
+
+-- EVENT_UNIT_SPELL_CHANNEL
 -- EVENT_UNIT_SPELL_CAST
 -- EVENT_UNIT_SPELL_EFFECT
 -- EVENT_UNIT_SPELL_FINISH
@@ -2012,34 +2505,98 @@ function GetSpellTargetY() return real end
 function GetSpellTargetDestructable() return destructable end
 function GetSpellTargetItem() return item end
 function GetSpellTargetUnit() return unit end
+
+function TriggerRegisterPlayerAllianceChange(trigger_whichTrigger, player_whichPlayer, alliancetype_whichAlliance) return event end
 function TriggerRegisterPlayerStateEvent(trigger_whichTrigger, player_whichPlayer, playerstate_whichState, limitop_opcode, r_limitval) return event end
+
+-- EVENT_PLAYER_STATE_LIMIT
 function GetEventPlayerState() return playerstate end
+
+function TriggerRegisterPlayerChatEvent(trigger_whichTrigger, player_whichPlayer, s_chatMessageToDetect, b_exactMatchOnly) return event end
+
+-- EVENT_PLAYER_CHAT
+
+-- returns the actual string they typed in ( same as what you registered for
 -- if you required exact match )
 function GetEventPlayerChatString() return string end
+
+-- returns the string that you registered for
 function GetEventPlayerChatStringMatched() return string end
+
+function TriggerRegisterDeathEvent(trigger_whichTrigger, widget_whichWidget) return event end
+
+--============================================================================
 -- Trigger Unit Based Event API
 --============================================================================
+
+-- returns handle to unit which triggered the most recent event when called from
 -- within a trigger action function...returns null handle when used incorrectly
+
+function GetTriggerUnit() return unit end
+
+function TriggerRegisterUnitStateEvent(trigger_whichTrigger, unit_whichUnit, unitstate_whichState, limitop_opcode, r_limitval) return event end
+
+-- EVENT_UNIT_STATE_LIMIT
 function GetEventUnitState() return unitstate end
+
+function TriggerRegisterUnitEvent(trigger_whichTrigger, unit_whichUnit, unitevent_whichEvent) return event end
+
+-- EVENT_UNIT_DAMAGED
 function GetEventDamage() return real end
 function GetEventDamageSource() return unit end
+
+-- EVENT_UNIT_DEATH
 -- EVENT_UNIT_DECAY
 -- Use the GetDyingUnit and GetDecayingUnit funcs above
+
+-- EVENT_UNIT_DETECTED
 function GetEventDetectingPlayer() return player end
+
+function TriggerRegisterFilterUnitEvent(trigger_whichTrigger, unit_whichUnit, unitevent_whichEvent, boolexpr_filter) return event end
+
+-- EVENT_UNIT_ACQUIRED_TARGET
 -- EVENT_UNIT_TARGET_IN_RANGE
 function GetEventTargetUnit() return unit end
+
+-- EVENT_UNIT_ATTACKED
 -- Use GetAttacker from the Player Unit Event API Below...
+
+-- EVENT_UNIT_RESCUEDED
 -- Use GetRescuer from the Player Unit Event API Below...
+
+-- EVENT_UNIT_CONSTRUCT_CANCEL
 -- EVENT_UNIT_CONSTRUCT_FINISH
+
+-- See the Player Unit Construction Event API above for event info funcs
+
+-- EVENT_UNIT_TRAIN_START
 -- EVENT_UNIT_TRAIN_CANCELLED
 -- EVENT_UNIT_TRAIN_FINISH
+
+-- See the Player Unit Training Event API above for event info funcs
+
+-- EVENT_UNIT_SELL
+
+-- See the Player Unit Sell Event API above for event info funcs
+
+-- EVENT_UNIT_DROP_ITEM
 -- EVENT_UNIT_PICKUP_ITEM
 -- EVENT_UNIT_USE_ITEM
 -- See the Player Unit/Item manipulation Event API above for event info funcs
+
+-- EVENT_UNIT_ISSUED_ORDER
 -- EVENT_UNIT_ISSUED_POINT_ORDER
 -- EVENT_UNIT_ISSUED_TARGET_ORDER
+
+-- See the Player Unit Order Event API above for event info funcs
+
+function TriggerRegisterUnitInRange(trigger_whichTrigger, unit_whichUnit, r_range, boolexpr_filter) return event end
+
+function TriggerAddCondition(trigger_whichTrigger, boolexpr_condition) return triggercondition end
 function TriggerRemoveCondition(trigger_whichTrigger, triggercondition_whichCondition) end
 function TriggerClearConditions(trigger_whichTrigger) end
+
+function TriggerAddAction(trigger_whichTrigger, c_actionFunc) return triggeraction end
 function TriggerRemoveAction(trigger_whichTrigger, triggeraction_whichAction) end
 function TriggerClearActions(trigger_whichTrigger) end
 function TriggerSleepAction(r_timeout) end
@@ -2049,23 +2606,27 @@ function TriggerExecute(trigger_whichTrigger) end
 function TriggerExecuteWait(trigger_whichTrigger) end
 function TriggerSyncStart() end
 function TriggerSyncReady() end
+
+--============================================================================
 -- Widget API
 function GetWidgetLife(widget_whichWidget) return real end
 function SetWidgetLife(widget_whichWidget, r_newLife) end
 function GetWidgetX(widget_whichWidget) return real end
 function GetWidgetY(widget_whichWidget) return real end
 function GetTriggerWidget() return widget end
+
+--============================================================================
 -- Destructable Object API
 -- Facing arguments are specified in degrees
-function CreateDestructable(int_objectid, r_x, r_y, r_face, r_scale, int_variation) return destructable end
-function CreateDestructableZ(int_objectid, r_x, r_y, r_z, r_face, r_scale, int_variation) return destructable end
-function CreateDeadDestructable(int_objectid, r_x, r_y, r_face, r_scale, int_variation) return destructable end
-function CreateDeadDestructableZ(int_objectid, r_x, r_y, r_z, r_face, r_scale, int_variation) return destructable end
+function CreateDestructable(i_objectid, r_x, r_y, r_face, r_scale, i_variation) return destructable end
+function CreateDestructableZ(i_objectid, r_x, r_y, r_z, r_face, r_scale, i_variation) return destructable end
+function CreateDeadDestructable(i_objectid, r_x, r_y, r_face, r_scale, i_variation) return destructable end
+function CreateDeadDestructableZ(i_objectid, r_x, r_y, r_z, r_face, r_scale, i_variation) return destructable end
 function RemoveDestructable(destructable_d) end
 function KillDestructable(destructable_d) end
 function SetDestructableInvulnerable(destructable_d, b_flag) end
 function IsDestructableInvulnerable(destructable_d) return boolean end
-function EnumDestructablesInRect(rect_r, boolexpr_filter, code_actionFunc) end
+function EnumDestructablesInRect(rect_r, boolexpr_filter, c_actionFunc) end
 function GetDestructableTypeId(destructable_d) return integer end
 function GetDestructableX(destructable_d) return real end
 function GetDestructableY(destructable_d) return real end
@@ -2074,16 +2635,18 @@ function GetDestructableLife(destructable_d) return real end
 function SetDestructableMaxLife(destructable_d, r_max) end
 function GetDestructableMaxLife(destructable_d) return real end
 function DestructableRestoreLife(destructable_d, r_life, b_birth) end
-function QueueDestructableAnimation(destructable_d, str_whichAnimation) end
-function SetDestructableAnimation(destructable_d, str_whichAnimation) end
+function QueueDestructableAnimation(destructable_d, s_whichAnimation) end
+function SetDestructableAnimation(destructable_d, s_whichAnimation) end
 function SetDestructableAnimationSpeed(destructable_d, r_speedFactor) end
 function ShowDestructable(destructable_d, b_flag) end
 function GetDestructableOccluderHeight(destructable_d) return real end
 function SetDestructableOccluderHeight(destructable_d, r_height) end
 function GetDestructableName(destructable_d) return string end
 function GetTriggerDestructable() return destructable end
+
+--============================================================================
 -- Item API
-function CreateItem(int_itemid, r_x, r_y) return item end
+function CreateItem(i_itemid, r_x, r_y) return item end
 function RemoveItem(item_whichItem) end
 function GetItemPlayer(item_whichItem) return player end
 function GetItemTypeId(item_i) return integer end
@@ -2102,27 +2665,33 @@ function IsItemOwned(item_whichItem) return boolean end
 function IsItemPowerup(item_whichItem) return boolean end
 function IsItemSellable(item_whichItem) return boolean end
 function IsItemPawnable(item_whichItem) return boolean end
-function IsItemIdPowerup(int_itemId) return boolean end
-function IsItemIdSellable(int_itemId) return boolean end
-function IsItemIdPawnable(int_itemId) return boolean end
-function EnumItemsInRect(rect_r, boolexpr_filter, code_actionFunc) end
+function IsItemIdPowerup(i_itemId) return boolean end
+function IsItemIdSellable(i_itemId) return boolean end
+function IsItemIdPawnable(i_itemId) return boolean end
+function EnumItemsInRect(rect_r, boolexpr_filter, c_actionFunc) end
 function GetItemLevel(item_whichItem) return integer end
 function GetItemType(item_whichItem) return itemtype end
-function SetItemDropID(item_whichItem, int_unitId) end
+function SetItemDropID(item_whichItem, i_unitId) end
 function GetItemName(item_whichItem) return string end
 function GetItemCharges(item_whichItem) return integer end
-function SetItemCharges(item_whichItem, int_charges) end
+function SetItemCharges(item_whichItem, i_charges) end
 function GetItemUserData(item_whichItem) return integer end
-function SetItemUserData(item_whichItem, int_data) end
+function SetItemUserData(item_whichItem, i_data) end
+
+--============================================================================
 -- Unit API
 -- Facing arguments are specified in degrees
-function CreateUnit(player_id, int_unitid, r_x, r_y, r_face) return unit end
-function CreateUnitByName(player_whichPlayer, str_unitname, r_x, r_y, r_face) return unit end
-function CreateUnitAtLoc(player_id, int_unitid, location_whichLocation, r_face) return unit end
-function CreateUnitAtLocByName(player_id, str_unitname, location_whichLocation, r_face) return unit end
-function CreateCorpse(player_whichPlayer, int_unitid, r_x, r_y, r_face) return unit end
+function CreateUnit(player_id, i_unitid, r_x, r_y, r_face) return unit end
+function CreateUnitByName(player_whichPlayer, s_unitname, r_x, r_y, r_face) return unit end
+function CreateUnitAtLoc(player_id, i_unitid, location_whichLocation, r_face) return unit end
+function CreateUnitAtLocByName(player_id, s_unitname, location_whichLocation, r_face) return unit end
+function CreateCorpse(player_whichPlayer, i_unitid, r_x, r_y, r_face) return unit end
+
+function KillUnit(unit_whichUnit) end
 function RemoveUnit(unit_whichUnit) end
 function ShowUnit(unit_whichUnit, b_show) end
+
+function SetUnitState(unit_whichUnit, unitstate_whichUnitState, r_newVal) end
 function SetUnitX(unit_whichUnit, r_newX) end
 function SetUnitY(unit_whichUnit, r_newY) end
 function SetUnitPosition(unit_whichUnit, r_newX, r_newY) end
@@ -2135,39 +2704,65 @@ function SetUnitTurnSpeed(unit_whichUnit, r_newTurnSpeed) end
 function SetUnitPropWindow(unit_whichUnit, r_newPropWindowAngle) end
 function SetUnitAcquireRange(unit_whichUnit, r_newAcquireRange) end
 function SetUnitCreepGuard(unit_whichUnit, b_creepGuard) end
+
+function GetUnitAcquireRange(unit_whichUnit) return real end
 function GetUnitTurnSpeed(unit_whichUnit) return real end
 function GetUnitPropWindow(unit_whichUnit) return real end
 function GetUnitFlyHeight(unit_whichUnit) return real end
+
+function GetUnitDefaultAcquireRange(unit_whichUnit) return real end
 function GetUnitDefaultTurnSpeed(unit_whichUnit) return real end
 function GetUnitDefaultPropWindow(unit_whichUnit) return real end
 function GetUnitDefaultFlyHeight(unit_whichUnit) return real end
+
+function SetUnitOwner(unit_whichUnit, player_whichPlayer, b_changeColor) end
 function SetUnitColor(unit_whichUnit, playercolor_whichColor) end
+
+function SetUnitScale(unit_whichUnit, r_scaleX, r_scaleY, r_scaleZ) end
 function SetUnitTimeScale(unit_whichUnit, r_timeScale) end
 function SetUnitBlendTime(unit_whichUnit, r_blendTime) end
-function SetUnitVertexColor(unit_whichUnit, int_red, int_green, int_blue, int_alpha) end
-function SetUnitAnimation(unit_whichUnit, str_whichAnimation) end
-function SetUnitAnimationByIndex(unit_whichUnit, int_whichAnimation) end
-function SetUnitAnimationWithRarity(unit_whichUnit, str_whichAnimation, raritycontrol_rarity) end
-function AddUnitAnimationProperties(unit_whichUnit, str_animProperties, b_add) end
+function SetUnitVertexColor(unit_whichUnit, i_red, i_green, i_blue, i_alpha) end
+
+function QueueUnitAnimation(unit_whichUnit, s_whichAnimation) end
+function SetUnitAnimation(unit_whichUnit, s_whichAnimation) end
+function SetUnitAnimationByIndex(unit_whichUnit, i_whichAnimation) end
+function SetUnitAnimationWithRarity(unit_whichUnit, s_whichAnimation, raritycontrol_rarity) end
+function AddUnitAnimationProperties(unit_whichUnit, s_animProperties, b_add) end
+
+function SetUnitLookAt(unit_whichUnit, s_whichBone, unit_lookAtTarget, r_offsetX, r_offsetY, r_offsetZ) end
 function ResetUnitLookAt(unit_whichUnit) end
+
+function SetUnitRescuable(unit_whichUnit, player_byWhichPlayer, b_flag) end
 function SetUnitRescueRange(unit_whichUnit, r_range) end
-function SetHeroAgi(unit_whichHero, int_newAgi, b_permanent) end
-function SetHeroInt(unit_whichHero, int_newInt, b_permanent) end
+
+function SetHeroStr(unit_whichHero, i_newStr, b_permanent) end
+function SetHeroAgi(unit_whichHero, i_newAgi, b_permanent) end
+function SetHeroInt(unit_whichHero, i_newInt, b_permanent) end
+
+function GetHeroStr(unit_whichHero, b_includeBonuses) return integer end
 function GetHeroAgi(unit_whichHero, b_includeBonuses) return integer end
 function GetHeroInt(unit_whichHero, b_includeBonuses) return integer end
-function SetHeroXP(unit_whichHero, int_newXpVal, b_showEyeCandy) end
-function UnitModifySkillPoints(unit_whichHero, int_skillPointDelta) return boolean end
-function SetHeroLevel(unit_whichHero, int_level, b_showEyeCandy) end
+
+function UnitStripHeroLevel(unit_whichHero, i_howManyLevels) return boolean end
+
+function GetHeroXP(unit_whichHero) return integer end
+function SetHeroXP(unit_whichHero, i_newXpVal, b_showEyeCandy) end
+
+function GetHeroSkillPoints(unit_whichHero) return integer end
+function UnitModifySkillPoints(unit_whichHero, i_skillPointDelta) return boolean end
+
+function AddHeroXP(unit_whichHero, i_xpToAdd, b_showEyeCandy) end
+function SetHeroLevel(unit_whichHero, i_level, b_showEyeCandy) end
 function GetHeroLevel(unit_whichHero) return integer end
 function GetUnitLevel(unit_whichUnit) return integer end
 function GetHeroProperName(unit_whichHero) return string end
 function SuspendHeroXP(unit_whichHero, b_flag) end
 function IsSuspendedXP(unit_whichHero) return boolean end
-function SelectHeroSkill(unit_whichHero, int_abilcode) end
-function GetUnitAbilityLevel(unit_whichUnit, int_abilcode) return integer end
-function DecUnitAbilityLevel(unit_whichUnit, int_abilcode) return integer end
-function IncUnitAbilityLevel(unit_whichUnit, int_abilcode) return integer end
-function SetUnitAbilityLevel(unit_whichUnit, int_abilcode, int_level) return integer end
+function SelectHeroSkill(unit_whichHero, i_abilcode) end
+function GetUnitAbilityLevel(unit_whichUnit, i_abilcode) return integer end
+function DecUnitAbilityLevel(unit_whichUnit, i_abilcode) return integer end
+function IncUnitAbilityLevel(unit_whichUnit, i_abilcode) return integer end
+function SetUnitAbilityLevel(unit_whichUnit, i_abilcode, i_level) return integer end
 function ReviveHero(unit_whichHero, r_x, r_y, b_doEyecandy) return boolean end
 function ReviveHeroLoc(unit_whichHero, location_loc, b_doEyecandy) return boolean end
 function SetUnitExploded(unit_whichUnit, b_exploded) end
@@ -2175,20 +2770,32 @@ function SetUnitInvulnerable(unit_whichUnit, b_flag) end
 function PauseUnit(unit_whichUnit, b_flag) end
 function IsUnitPaused(unit_whichHero) return boolean end
 function SetUnitPathing(unit_whichUnit, b_flag) end
+
+function ClearSelection() end
 function SelectUnit(unit_whichUnit, b_flag) end
-function GetUnitPointValueByType(int_unitType) return integer end
+
+function GetUnitPointValue(unit_whichUnit) return integer end
+function GetUnitPointValueByType(i_unitType) return integer end
 --native SetUnitPointValueByType takes integer unitType, integer newPointValue returns 
-function UnitAddItemById(unit_whichUnit, int_itemId) return item end
-function UnitAddItemToSlotById(unit_whichUnit, int_itemId, int_itemSlot) return boolean end
+
+function UnitAddItem(unit_whichUnit, item_whichItem) return boolean end
+function UnitAddItemById(unit_whichUnit, i_itemId) return item end
+function UnitAddItemToSlotById(unit_whichUnit, i_itemId, i_itemSlot) return boolean end
 function UnitRemoveItem(unit_whichUnit, item_whichItem) end
-function UnitRemoveItemFromSlot(unit_whichUnit, int_itemSlot) return item end
+function UnitRemoveItemFromSlot(unit_whichUnit, i_itemSlot) return item end
 function UnitHasItem(unit_whichUnit, item_whichItem) return boolean end
-function UnitItemInSlot(unit_whichUnit, int_itemSlot) return item end
+function UnitItemInSlot(unit_whichUnit, i_itemSlot) return item end
 function UnitInventorySize(unit_whichUnit) return integer end
-function UnitDropItemSlot(unit_whichUnit, item_whichItem, int_slot) return boolean end
+
+function UnitDropItemPoint(unit_whichUnit, item_whichItem, r_x, r_y) return boolean end
+function UnitDropItemSlot(unit_whichUnit, item_whichItem, i_slot) return boolean end
 function UnitDropItemTarget(unit_whichUnit, item_whichItem, widget_target) return boolean end
+
+function UnitUseItem(unit_whichUnit, item_whichItem) return boolean end
 function UnitUseItemPoint(unit_whichUnit, item_whichItem, r_x, r_y) return boolean end
 function UnitUseItemTarget(unit_whichUnit, item_whichItem, widget_target) return boolean end
+
+function GetUnitX(unit_whichUnit) return real end
 function GetUnitY(unit_whichUnit) return real end
 function GetUnitLoc(unit_whichUnit) return location end
 function GetUnitFacing(unit_whichUnit) return real end
@@ -2201,11 +2808,15 @@ function GetUnitRace(unit_whichUnit) return race end
 function GetUnitName(unit_whichUnit) return string end
 function GetUnitFoodUsed(unit_whichUnit) return integer end
 function GetUnitFoodMade(unit_whichUnit) return integer end
-function GetFoodMade(int_unitId) return integer end
-function GetFoodUsed(int_unitId) return integer end
+function GetFoodMade(i_unitId) return integer end
+function GetFoodUsed(i_unitId) return integer end
 function SetUnitUseFood(unit_whichUnit, b_useFood) end
+
+function GetUnitRallyPoint(unit_whichUnit) return location end
 function GetUnitRallyUnit(unit_whichUnit) return unit end
 function GetUnitRallyDestructable(unit_whichUnit) return destructable end
+
+function IsUnitInGroup(unit_whichUnit, group_whichGroup) return boolean end
 function IsUnitInForce(unit_whichUnit, force_whichForce) return boolean end
 function IsUnitOwnedByPlayer(unit_whichUnit, player_whichPlayer) return boolean end
 function IsUnitAlly(unit_whichUnit, player_whichPlayer) return boolean end
@@ -2224,13 +2835,21 @@ function IsUnitInRangeXY(unit_whichUnit, r_x, r_y, r_distance) return boolean en
 function IsUnitInRangeLoc(unit_whichUnit, location_whichLocation, r_distance) return boolean end
 function IsUnitHidden(unit_whichUnit) return boolean end
 function IsUnitIllusion(unit_whichUnit) return boolean end
+
+function IsUnitInTransport(unit_whichUnit, unit_whichTransport) return boolean end
 function IsUnitLoaded(unit_whichUnit) return boolean end
-function IsUnitIdType(int_unitId, unittype_whichUnitType) return boolean end
+
+function IsHeroUnitId(i_unitId) return boolean end
+function IsUnitIdType(i_unitId, unittype_whichUnitType) return boolean end
+
+function UnitShareVision(unit_whichUnit, player_whichPlayer, b_share) end
 function UnitSuspendDecay(unit_whichUnit, b_suspend) end
 function UnitAddType(unit_whichUnit, unittype_whichUnitType) return boolean end
 function UnitRemoveType(unit_whichUnit, unittype_whichUnitType) return boolean end
-function UnitRemoveAbility(unit_whichUnit, int_abilityId) return boolean end
-function UnitMakeAbilityPermanent(unit_whichUnit, b_permanent, int_abilityId) return boolean end
+
+function UnitAddAbility(unit_whichUnit, i_abilityId) return boolean end
+function UnitRemoveAbility(unit_whichUnit, i_abilityId) return boolean end
+function UnitMakeAbilityPermanent(unit_whichUnit, b_permanent, i_abilityId) return boolean end
 function UnitRemoveBuffs(unit_whichUnit, b_removePositive, b_removeNegative) end
 function UnitRemoveBuffsEx(unit_whichUnit, b_removePositive, b_removeNegative, b_magic, b_physical, b_timedLife, b_aura, b_autoDispel) end
 function UnitHasBuffsEx(unit_whichUnit, b_removePositive, b_removeNegative, b_magic, b_physical, b_timedLife, b_aura, b_autoDispel) return boolean end
@@ -2241,51 +2860,73 @@ function UnitAddSleepPerm(unit_whichUnit, b_add) end
 function UnitCanSleepPerm(unit_whichUnit) return boolean end
 function UnitIsSleeping(unit_whichUnit) return boolean end
 function UnitWakeUp(unit_whichUnit) end
-function UnitApplyTimedLife(unit_whichUnit, int_buffId, r_duration) end
+function UnitApplyTimedLife(unit_whichUnit, i_buffId, r_duration) end
 function UnitIgnoreAlarm(unit_whichUnit, b_flag) return boolean end
 function UnitIgnoreAlarmToggled(unit_whichUnit) return boolean end
 function UnitResetCooldown(unit_whichUnit) end
-function UnitSetConstructionProgress(unit_whichUnit, int_constructionPercentage) end
-function UnitSetUpgradeProgress(unit_whichUnit, int_upgradePercentage) end
+function UnitSetConstructionProgress(unit_whichUnit, i_constructionPercentage) end
+function UnitSetUpgradeProgress(unit_whichUnit, i_upgradePercentage) end
 function UnitPauseTimedLife(unit_whichUnit, b_flag) end
 function UnitSetUsesAltIcon(unit_whichUnit, b_flag) end
+
+function UnitDamagePoint(unit_whichUnit, r_delay, r_radius, r_x, r_y, r_amount, b_attack, b_ranged, attacktype_attackType, damagetype_damageType, weapontype_weaponType) return boolean end
 function UnitDamageTarget(unit_whichUnit, widget_target, r_amount, b_attack, b_ranged, attacktype_attackType, damagetype_damageType, weapontype_weaponType) return boolean end
-function IssueImmediateOrderById(unit_whichUnit, int_order) return boolean end
-function IssuePointOrder(unit_whichUnit, str_order, r_x, r_y) return boolean end
-function IssuePointOrderLoc(unit_whichUnit, str_order, location_whichLocation) return boolean end
-function IssuePointOrderById(unit_whichUnit, int_order, r_x, r_y) return boolean end
-function IssuePointOrderByIdLoc(unit_whichUnit, int_order, location_whichLocation) return boolean end
-function IssueTargetOrder(unit_whichUnit, str_order, widget_targetWidget) return boolean end
-function IssueTargetOrderById(unit_whichUnit, int_order, widget_targetWidget) return boolean end
-function IssueInstantPointOrder(unit_whichUnit, str_order, r_x, r_y, widget_instantTargetWidget) return boolean end
-function IssueInstantPointOrderById(unit_whichUnit, int_order, r_x, r_y, widget_instantTargetWidget) return boolean end
-function IssueInstantTargetOrder(unit_whichUnit, str_order, widget_targetWidget, widget_instantTargetWidget) return boolean end
-function IssueInstantTargetOrderById(unit_whichUnit, int_order, widget_targetWidget, widget_instantTargetWidget) return boolean end
-function IssueBuildOrder(unit_whichPeon, str_unitToBuild, r_x, r_y) return boolean end
-function IssueBuildOrderById(unit_whichPeon, int_unitId, r_x, r_y) return boolean end
-function IssueNeutralImmediateOrderById(player_forWhichPlayer, unit_neutralStructure, int_unitId) return boolean end
-function IssueNeutralPointOrder(player_forWhichPlayer, unit_neutralStructure, str_unitToBuild, r_x, r_y) return boolean end
-function IssueNeutralPointOrderById(player_forWhichPlayer, unit_neutralStructure, int_unitId, r_x, r_y) return boolean end
-function IssueNeutralTargetOrder(player_forWhichPlayer, unit_neutralStructure, str_unitToBuild, widget_target) return boolean end
-function IssueNeutralTargetOrderById(player_forWhichPlayer, unit_neutralStructure, int_unitId, widget_target) return boolean end
-function AddResourceAmount(unit_whichUnit, int_amount) end
+
+function IssueImmediateOrder(unit_whichUnit, s_order) return boolean end
+function IssueImmediateOrderById(unit_whichUnit, i_order) return boolean end
+function IssuePointOrder(unit_whichUnit, s_order, r_x, r_y) return boolean end
+function IssuePointOrderLoc(unit_whichUnit, s_order, location_whichLocation) return boolean end
+function IssuePointOrderById(unit_whichUnit, i_order, r_x, r_y) return boolean end
+function IssuePointOrderByIdLoc(unit_whichUnit, i_order, location_whichLocation) return boolean end
+function IssueTargetOrder(unit_whichUnit, s_order, widget_targetWidget) return boolean end
+function IssueTargetOrderById(unit_whichUnit, i_order, widget_targetWidget) return boolean end
+function IssueInstantPointOrder(unit_whichUnit, s_order, r_x, r_y, widget_instantTargetWidget) return boolean end
+function IssueInstantPointOrderById(unit_whichUnit, i_order, r_x, r_y, widget_instantTargetWidget) return boolean end
+function IssueInstantTargetOrder(unit_whichUnit, s_order, widget_targetWidget, widget_instantTargetWidget) return boolean end
+function IssueInstantTargetOrderById(unit_whichUnit, i_order, widget_targetWidget, widget_instantTargetWidget) return boolean end
+function IssueBuildOrder(unit_whichPeon, s_unitToBuild, r_x, r_y) return boolean end
+function IssueBuildOrderById(unit_whichPeon, i_unitId, r_x, r_y) return boolean end
+
+function IssueNeutralImmediateOrder(player_forWhichPlayer, unit_neutralStructure, s_unitToBuild) return boolean end
+function IssueNeutralImmediateOrderById(player_forWhichPlayer, unit_neutralStructure, i_unitId) return boolean end
+function IssueNeutralPointOrder(player_forWhichPlayer, unit_neutralStructure, s_unitToBuild, r_x, r_y) return boolean end
+function IssueNeutralPointOrderById(player_forWhichPlayer, unit_neutralStructure, i_unitId, r_x, r_y) return boolean end
+function IssueNeutralTargetOrder(player_forWhichPlayer, unit_neutralStructure, s_unitToBuild, widget_target) return boolean end
+function IssueNeutralTargetOrderById(player_forWhichPlayer, unit_neutralStructure, i_unitId, widget_target) return boolean end
+
+function GetUnitCurrentOrder(unit_whichUnit) return integer end
+
+function SetResourceAmount(unit_whichUnit, i_amount) end
+function AddResourceAmount(unit_whichUnit, i_amount) end
 function GetResourceAmount(unit_whichUnit) return integer end
+
+function WaygateGetDestinationX(unit_waygate) return real end
 function WaygateGetDestinationY(unit_waygate) return real end
 function WaygateSetDestination(unit_waygate, r_x, r_y) end
 function WaygateActivate(unit_waygate, b_activate) end
 function WaygateIsActive(unit_waygate) return boolean end
-function AddItemToStock(unit_whichUnit, int_itemId, int_currentStock, int_stockMax) end
-function AddUnitToAllStock(int_unitId, int_currentStock, int_stockMax) end
-function AddUnitToStock(unit_whichUnit, int_unitId, int_currentStock, int_stockMax) end
-function RemoveItemFromStock(unit_whichUnit, int_itemId) end
-function RemoveUnitFromAllStock(int_unitId) end
-function RemoveUnitFromStock(unit_whichUnit, int_unitId) end
-function SetAllUnitTypeSlots(int_slots) end
-function SetItemTypeSlots(unit_whichUnit, int_slots) end
-function SetUnitTypeSlots(unit_whichUnit, int_slots) end
-function SetUnitUserData(unit_whichUnit, int_data) end
+
+function AddItemToAllStock(i_itemId, i_currentStock, i_stockMax) end
+function AddItemToStock(unit_whichUnit, i_itemId, i_currentStock, i_stockMax) end
+function AddUnitToAllStock(i_unitId, i_currentStock, i_stockMax) end
+function AddUnitToStock(unit_whichUnit, i_unitId, i_currentStock, i_stockMax) end
+
+function RemoveItemFromAllStock(i_itemId) end
+function RemoveItemFromStock(unit_whichUnit, i_itemId) end
+function RemoveUnitFromAllStock(i_unitId) end
+function RemoveUnitFromStock(unit_whichUnit, i_unitId) end
+
+function SetAllItemTypeSlots(i_slots) end
+function SetAllUnitTypeSlots(i_slots) end
+function SetItemTypeSlots(unit_whichUnit, i_slots) end
+function SetUnitTypeSlots(unit_whichUnit, i_slots) end
+
+function GetUnitUserData(unit_whichUnit) return integer end
+function SetUnitUserData(unit_whichUnit, i_data) end
+
+--============================================================================
 -- Player API
-function Player(int_number) return player end
+function Player(i_number) return player end
 function GetLocalPlayer() return player end
 function IsPlayerAlly(player_whichPlayer, player_otherPlayer) return boolean end
 function IsPlayerEnemy(player_whichPlayer, player_otherPlayer) return boolean end
@@ -2297,26 +2938,42 @@ function IsFoggedToPlayer(r_x, r_y, player_whichPlayer) return boolean end
 function IsLocationFoggedToPlayer(location_whichLocation, player_whichPlayer) return boolean end
 function IsMaskedToPlayer(r_x, r_y, player_whichPlayer) return boolean end
 function IsLocationMaskedToPlayer(location_whichLocation, player_whichPlayer) return boolean end
+
+function GetPlayerRace(player_whichPlayer) return race end
 function GetPlayerId(player_whichPlayer) return integer end
 function GetPlayerUnitCount(player_whichPlayer, b_includeIncomplete) return integer end
-function GetPlayerTypedUnitCount(player_whichPlayer, str_unitName, b_includeIncomplete, b_includeUpgrades) return integer end
+function GetPlayerTypedUnitCount(player_whichPlayer, s_unitName, b_includeIncomplete, b_includeUpgrades) return integer end
 function GetPlayerStructureCount(player_whichPlayer, b_includeIncomplete) return integer end
 function GetPlayerState(player_whichPlayer, playerstate_whichPlayerState) return integer end
 function GetPlayerScore(player_whichPlayer, playerscore_whichPlayerScore) return integer end
 function GetPlayerAlliance(player_sourcePlayer, player_otherPlayer, alliancetype_whichAllianceSetting) return boolean end
+
+function GetPlayerHandicap(player_whichPlayer) return real end
 function GetPlayerHandicapXP(player_whichPlayer) return real end
 function SetPlayerHandicap(player_whichPlayer, r_handicap) end
 function SetPlayerHandicapXP(player_whichPlayer, r_handicap) end
-function GetPlayerTechMaxAllowed(player_whichPlayer, int_techid) return integer end
-function AddPlayerTechResearched(player_whichPlayer, int_techid, int_levels) end
-function SetPlayerTechResearched(player_whichPlayer, int_techid, int_setToLevel) end
-function GetPlayerTechResearched(player_whichPlayer, int_techid, b_specificonly) return boolean end
-function GetPlayerTechCount(player_whichPlayer, int_techid, b_specificonly) return integer end
+
+function SetPlayerTechMaxAllowed(player_whichPlayer, i_techid, i_maximum) end
+function GetPlayerTechMaxAllowed(player_whichPlayer, i_techid) return integer end
+function AddPlayerTechResearched(player_whichPlayer, i_techid, i_levels) end
+function SetPlayerTechResearched(player_whichPlayer, i_techid, i_setToLevel) end
+function GetPlayerTechResearched(player_whichPlayer, i_techid, b_specificonly) return boolean end
+function GetPlayerTechCount(player_whichPlayer, i_techid, b_specificonly) return integer end
+
+function SetPlayerUnitsOwner(player_whichPlayer, i_newOwner) end
 function CripplePlayer(player_whichPlayer, force_toWhichPlayers, b_flag) end
+
+function SetPlayerAbilityAvailable(player_whichPlayer, i_abilid, b_avail) end
+
+function SetPlayerState(player_whichPlayer, playerstate_whichPlayerState, i_value) end
 function RemovePlayer(player_whichPlayer, playergameresult_gameResult) end
+
+-- Used to store hero level data for the scorescreen
 -- before units are moved to neutral passive in melee games
 --
 function CachePlayerHeroData(player_whichPlayer) end
+
+--============================================================================
 -- Fog of War API
 function SetFogStateRect(player_forWhichPlayer, fogstate_whichState, rect_where, b_useSharedVision) end
 function SetFogStateRadius(player_forWhichPlayer, fogstate_whichState, r_centerx, r_centerY, r_radius, b_useSharedVision) end
@@ -2325,199 +2982,251 @@ function FogMaskEnable(b_enable) end
 function IsFogMaskEnabled() return boolean end
 function FogEnable(b_enable) end
 function IsFogEnabled() return boolean end
+
+function CreateFogModifierRect(player_forWhichPlayer, fogstate_whichState, rect_where, b_useSharedVision, b_afterUnits) return fogmodifier end
 function CreateFogModifierRadius(player_forWhichPlayer, fogstate_whichState, r_centerx, r_centerY, r_radius, b_useSharedVision, b_afterUnits) return fogmodifier end
 function CreateFogModifierRadiusLoc(player_forWhichPlayer, fogstate_whichState, location_center, r_radius, b_useSharedVision, b_afterUnits) return fogmodifier end
 function DestroyFogModifier(fogmodifier_whichFogModifier) end
 function FogModifierStart(fogmodifier_whichFogModifier) end
 function FogModifierStop(fogmodifier_whichFogModifier) end
+
+--============================================================================
 -- Game API
 function VersionGet() return version end
 function VersionCompatible(version_whichVersion) return boolean end
 function VersionSupported(version_whichVersion) return boolean end
-function ChangeLevel(str_newLevel, b_doScoreScreen) end
+
+function EndGame(b_doScoreScreen) end
+
+-- Async only!
+function ChangeLevel(s_newLevel, b_doScoreScreen) end
 function RestartGame(b_doScoreScreen) end
 function ReloadGame() end
 -- %%% SetCampaignMenuRace is deprecated. It must remain to support
 -- old maps which use it, but all new maps should use SetCampaignMenuRaceEx
 function SetCampaignMenuRace(race_r) end
-function SetCampaignMenuRaceEx(int_campaignIndex) end
+function SetCampaignMenuRaceEx(i_campaignIndex) end
 function ForceCampaignSelectScreen() end
-function SaveGame(str_saveFileName) end
-function RenameSaveDirectory(str_sourceDirName, str_destDirName) return boolean end
-function RemoveSaveDirectory(str_sourceDirName) return boolean end
-function CopySaveGame(str_sourceSaveName, str_destSaveName) return boolean end
-function SaveGameExists(str_saveName) return boolean end
+
+function LoadGame(s_saveFileName, b_doScoreScreen) end
+function SaveGame(s_saveFileName) end
+function RenameSaveDirectory(s_sourceDirName, s_destDirName) return boolean end
+function RemoveSaveDirectory(s_sourceDirName) return boolean end
+function CopySaveGame(s_sourceSaveName, s_destSaveName) return boolean end
+function SaveGameExists(s_saveName) return boolean end
 function SyncSelections() end
 function SetFloatGameState(fgamestate_whichFloatGameState, r_value) end
 function GetFloatGameState(fgamestate_whichFloatGameState) return real end
-function SetIntegerGameState(igamestate_whichIntegerGameState, int_value) end
+function SetIntegerGameState(igamestate_whichIntegerGameState, i_value) end
 function GetIntegerGameState(igamestate_whichIntegerGameState) return integer end
+
+--============================================================================
 -- Campaign API
 function SetTutorialCleared(b_cleared) end
-function SetMissionAvailable(int_campaignNumber, int_missionNumber, b_available) end
-function SetCampaignAvailable(int_campaignNumber, b_available) end
-function SetOpCinematicAvailable(int_campaignNumber, b_available) end
-function SetEdCinematicAvailable(int_campaignNumber, b_available) end
+function SetMissionAvailable(i_campaignNumber, i_missionNumber, b_available) end
+function SetCampaignAvailable(i_campaignNumber, b_available) end
+function SetOpCinematicAvailable(i_campaignNumber, b_available) end
+function SetEdCinematicAvailable(i_campaignNumber, b_available) end
 function GetDefaultDifficulty() return gamedifficulty end
 function SetDefaultDifficulty(gamedifficulty_g) end
-function SetCustomCampaignButtonVisible(int_whichButton, b_visible) end
-function GetCustomCampaignButtonVisible(int_whichButton) return boolean end
+function SetCustomCampaignButtonVisible(i_whichButton, b_visible) end
+function GetCustomCampaignButtonVisible(i_whichButton) return boolean end
 function DoNotSaveReplay() end
+
+--============================================================================
 -- Dialog API
 function DialogCreate() return dialog end
 function DialogDestroy(dialog_whichDialog) end
 function DialogClear(dialog_whichDialog) end
-function DialogSetMessage(dialog_whichDialog, str_messageText) end
-function DialogAddButton(dialog_whichDialog, str_buttonText, int_hotkey) return button end
-function DialogAddQuitButton(dialog_whichDialog, b_doScoreScreen, str_buttonText, int_hotkey) return button end
+function DialogSetMessage(dialog_whichDialog, s_messageText) end
+function DialogAddButton(dialog_whichDialog, s_buttonText, i_hotkey) return button end
+function DialogAddQuitButton(dialog_whichDialog, b_doScoreScreen, s_buttonText, i_hotkey) return button end
 function DialogDisplay(player_whichPlayer, dialog_whichDialog, b_flag) end
+
+-- Creates a new or reads in an existing game cache file stored
 -- in the current campaign profile dir
 --
 function ReloadGameCachesFromDisk() return boolean end
+
+function InitGameCache(s_campaignFile) return gamecache end
 function SaveGameCache(gamecache_whichCache) return boolean end
-function StoreReal(gamecache_cache, str_missionKey, str_key, r_value) end
-function StoreBoolean(gamecache_cache, str_missionKey, str_key, b_value) end
-function StoreUnit(gamecache_cache, str_missionKey, str_key, unit_whichUnit) return boolean end
-function StoreString(gamecache_cache, str_missionKey, str_key, str_value) return boolean end
-function SyncStoredReal(gamecache_cache, str_missionKey, str_key) end
-function SyncStoredBoolean(gamecache_cache, str_missionKey, str_key) end
-function SyncStoredUnit(gamecache_cache, str_missionKey, str_key) end
-function SyncStoredString(gamecache_cache, str_missionKey, str_key) end
-function HaveStoredReal(gamecache_cache, str_missionKey, str_key) return boolean end
-function HaveStoredBoolean(gamecache_cache, str_missionKey, str_key) return boolean end
-function HaveStoredUnit(gamecache_cache, str_missionKey, str_key) return boolean end
-function HaveStoredString(gamecache_cache, str_missionKey, str_key) return boolean end
-function FlushStoredMission(gamecache_cache, str_missionKey) end
-function FlushStoredInteger(gamecache_cache, str_missionKey, str_key) end
-function FlushStoredReal(gamecache_cache, str_missionKey, str_key) end
-function FlushStoredBoolean(gamecache_cache, str_missionKey, str_key) end
-function FlushStoredUnit(gamecache_cache, str_missionKey, str_key) end
-function FlushStoredString(gamecache_cache, str_missionKey, str_key) end
-function GetStoredInteger(gamecache_cache, str_missionKey, str_key) return integer end
-function GetStoredReal(gamecache_cache, str_missionKey, str_key) return real end
-function GetStoredBoolean(gamecache_cache, str_missionKey, str_key) return boolean end
-function GetStoredString(gamecache_cache, str_missionKey, str_key) return string end
-function RestoreUnit(gamecache_cache, str_missionKey, str_key, player_forWhichPlayer, r_x, r_y, r_facing) return unit end
-function SaveReal(hashtable_table, int_parentKey, int_childKey, r_value) end
-function SaveBoolean(hashtable_table, int_parentKey, int_childKey, b_value) end
-function SaveStr(hashtable_table, int_parentKey, int_childKey, str_value) return boolean end
-function SavePlayerHandle(hashtable_table, int_parentKey, int_childKey, player_whichPlayer) return boolean end
-function SaveWidgetHandle(hashtable_table, int_parentKey, int_childKey, widget_whichWidget) return boolean end
-function SaveDestructableHandle(hashtable_table, int_parentKey, int_childKey, destructable_whichDestructable) return boolean end
-function SaveItemHandle(hashtable_table, int_parentKey, int_childKey, item_whichItem) return boolean end
-function SaveUnitHandle(hashtable_table, int_parentKey, int_childKey, unit_whichUnit) return boolean end
-function SaveAbilityHandle(hashtable_table, int_parentKey, int_childKey, ability_whichAbility) return boolean end
-function SaveTimerHandle(hashtable_table, int_parentKey, int_childKey, timer_whichTimer) return boolean end
-function SaveTriggerHandle(hashtable_table, int_parentKey, int_childKey, trigger_whichTrigger) return boolean end
-function SaveTriggerConditionHandle(hashtable_table, int_parentKey, int_childKey, triggercondition_whichTriggercondition) return boolean end
-function SaveTriggerActionHandle(hashtable_table, int_parentKey, int_childKey, triggeraction_whichTriggeraction) return boolean end
-function SaveTriggerEventHandle(hashtable_table, int_parentKey, int_childKey, event_whichEvent) return boolean end
-function SaveForceHandle(hashtable_table, int_parentKey, int_childKey, force_whichForce) return boolean end
-function SaveGroupHandle(hashtable_table, int_parentKey, int_childKey, group_whichGroup) return boolean end
-function SaveLocationHandle(hashtable_table, int_parentKey, int_childKey, location_whichLocation) return boolean end
-function SaveRectHandle(hashtable_table, int_parentKey, int_childKey, rect_whichRect) return boolean end
-function SaveBooleanExprHandle(hashtable_table, int_parentKey, int_childKey, boolexpr_whichBoolexpr) return boolean end
-function SaveSoundHandle(hashtable_table, int_parentKey, int_childKey, sound_whichSound) return boolean end
-function SaveEffectHandle(hashtable_table, int_parentKey, int_childKey, effect_whichEffect) return boolean end
-function SaveUnitPoolHandle(hashtable_table, int_parentKey, int_childKey, unitpool_whichUnitpool) return boolean end
-function SaveItemPoolHandle(hashtable_table, int_parentKey, int_childKey, itempool_whichItempool) return boolean end
-function SaveQuestHandle(hashtable_table, int_parentKey, int_childKey, quest_whichQuest) return boolean end
-function SaveQuestItemHandle(hashtable_table, int_parentKey, int_childKey, questitem_whichQuestitem) return boolean end
-function SaveDefeatConditionHandle(hashtable_table, int_parentKey, int_childKey, defeatcondition_whichDefeatcondition) return boolean end
-function SaveTimerDialogHandle(hashtable_table, int_parentKey, int_childKey, timerdialog_whichTimerdialog) return boolean end
-function SaveLeaderboardHandle(hashtable_table, int_parentKey, int_childKey, leaderboard_whichLeaderboard) return boolean end
-function SaveMultiboardHandle(hashtable_table, int_parentKey, int_childKey, multiboard_whichMultiboard) return boolean end
-function SaveMultiboardItemHandle(hashtable_table, int_parentKey, int_childKey, multiboarditem_whichMultiboarditem) return boolean end
-function SaveTrackableHandle(hashtable_table, int_parentKey, int_childKey, trackable_whichTrackable) return boolean end
-function SaveDialogHandle(hashtable_table, int_parentKey, int_childKey, dialog_whichDialog) return boolean end
-function SaveButtonHandle(hashtable_table, int_parentKey, int_childKey, button_whichButton) return boolean end
-function SaveTextTagHandle(hashtable_table, int_parentKey, int_childKey, texttag_whichTexttag) return boolean end
-function SaveLightningHandle(hashtable_table, int_parentKey, int_childKey, lightning_whichLightning) return boolean end
-function SaveImageHandle(hashtable_table, int_parentKey, int_childKey, image_whichImage) return boolean end
-function SaveUbersplatHandle(hashtable_table, int_parentKey, int_childKey, ubersplat_whichUbersplat) return boolean end
-function SaveRegionHandle(hashtable_table, int_parentKey, int_childKey, region_whichRegion) return boolean end
-function SaveFogStateHandle(hashtable_table, int_parentKey, int_childKey, fogstate_whichFogState) return boolean end
-function SaveFogModifierHandle(hashtable_table, int_parentKey, int_childKey, fogmodifier_whichFogModifier) return boolean end
-function SaveAgentHandle(hashtable_table, int_parentKey, int_childKey, agent_whichAgent) return boolean end
-function SaveHashtableHandle(hashtable_table, int_parentKey, int_childKey, hashtable_whichHashtable) return boolean end
-function SaveFrameHandle(hashtable_table, int_parentKey, int_childKey, framehandle_whichFrameHandle) return boolean end
-function LoadReal(hashtable_table, int_parentKey, int_childKey) return real end
-function LoadBoolean(hashtable_table, int_parentKey, int_childKey) return boolean end
-function LoadStr(hashtable_table, int_parentKey, int_childKey) return string end
-function LoadPlayerHandle(hashtable_table, int_parentKey, int_childKey) return player end
-function LoadWidgetHandle(hashtable_table, int_parentKey, int_childKey) return widget end
-function LoadDestructableHandle(hashtable_table, int_parentKey, int_childKey) return destructable end
-function LoadItemHandle(hashtable_table, int_parentKey, int_childKey) return item end
-function LoadUnitHandle(hashtable_table, int_parentKey, int_childKey) return unit end
-function LoadAbilityHandle(hashtable_table, int_parentKey, int_childKey) return ability end
-function LoadTimerHandle(hashtable_table, int_parentKey, int_childKey) return timer end
-function LoadTriggerHandle(hashtable_table, int_parentKey, int_childKey) return trigger end
-function LoadTriggerConditionHandle(hashtable_table, int_parentKey, int_childKey) return triggercondition end
-function LoadTriggerActionHandle(hashtable_table, int_parentKey, int_childKey) return triggeraction end
-function LoadTriggerEventHandle(hashtable_table, int_parentKey, int_childKey) return event end
-function LoadForceHandle(hashtable_table, int_parentKey, int_childKey) return force end
-function LoadGroupHandle(hashtable_table, int_parentKey, int_childKey) return group end
-function LoadLocationHandle(hashtable_table, int_parentKey, int_childKey) return location end
-function LoadRectHandle(hashtable_table, int_parentKey, int_childKey) return rect end
-function LoadBooleanExprHandle(hashtable_table, int_parentKey, int_childKey) return boolexpr end
-function LoadSoundHandle(hashtable_table, int_parentKey, int_childKey) return sound end
-function LoadEffectHandle(hashtable_table, int_parentKey, int_childKey) return effect end
-function LoadUnitPoolHandle(hashtable_table, int_parentKey, int_childKey) return unitpool end
-function LoadItemPoolHandle(hashtable_table, int_parentKey, int_childKey) return itempool end
-function LoadQuestHandle(hashtable_table, int_parentKey, int_childKey) return quest end
-function LoadQuestItemHandle(hashtable_table, int_parentKey, int_childKey) return questitem end
-function LoadDefeatConditionHandle(hashtable_table, int_parentKey, int_childKey) return defeatcondition end
-function LoadTimerDialogHandle(hashtable_table, int_parentKey, int_childKey) return timerdialog end
-function LoadLeaderboardHandle(hashtable_table, int_parentKey, int_childKey) return leaderboard end
-function LoadMultiboardHandle(hashtable_table, int_parentKey, int_childKey) return multiboard end
-function LoadMultiboardItemHandle(hashtable_table, int_parentKey, int_childKey) return multiboarditem end
-function LoadTrackableHandle(hashtable_table, int_parentKey, int_childKey) return trackable end
-function LoadDialogHandle(hashtable_table, int_parentKey, int_childKey) return dialog end
-function LoadButtonHandle(hashtable_table, int_parentKey, int_childKey) return button end
-function LoadTextTagHandle(hashtable_table, int_parentKey, int_childKey) return texttag end
-function LoadLightningHandle(hashtable_table, int_parentKey, int_childKey) return lightning end
-function LoadImageHandle(hashtable_table, int_parentKey, int_childKey) return image end
-function LoadUbersplatHandle(hashtable_table, int_parentKey, int_childKey) return ubersplat end
-function LoadRegionHandle(hashtable_table, int_parentKey, int_childKey) return region end
-function LoadFogStateHandle(hashtable_table, int_parentKey, int_childKey) return fogstate end
-function LoadFogModifierHandle(hashtable_table, int_parentKey, int_childKey) return fogmodifier end
-function LoadHashtableHandle(hashtable_table, int_parentKey, int_childKey) return hashtable end
-function LoadFrameHandle(hashtable_table, int_parentKey, int_childKey) return framehandle end
-function HaveSavedReal(hashtable_table, int_parentKey, int_childKey) return boolean end
-function HaveSavedBoolean(hashtable_table, int_parentKey, int_childKey) return boolean end
-function HaveSavedString(hashtable_table, int_parentKey, int_childKey) return boolean end
-function HaveSavedHandle(hashtable_table, int_parentKey, int_childKey) return boolean end
-function RemoveSavedReal(hashtable_table, int_parentKey, int_childKey) end
-function RemoveSavedBoolean(hashtable_table, int_parentKey, int_childKey) end
-function RemoveSavedString(hashtable_table, int_parentKey, int_childKey) end
-function RemoveSavedHandle(hashtable_table, int_parentKey, int_childKey) end
-function FlushChildHashtable(hashtable_table, int_parentKey) end
+
+function StoreInteger(gamecache_cache, s_missionKey, s_key, i_value) end
+function StoreReal(gamecache_cache, s_missionKey, s_key, r_value) end
+function StoreBoolean(gamecache_cache, s_missionKey, s_key, b_value) end
+function StoreUnit(gamecache_cache, s_missionKey, s_key, unit_whichUnit) return boolean end
+function StoreString(gamecache_cache, s_missionKey, s_key, s_value) return boolean end
+
+function SyncStoredInteger(gamecache_cache, s_missionKey, s_key) end
+function SyncStoredReal(gamecache_cache, s_missionKey, s_key) end
+function SyncStoredBoolean(gamecache_cache, s_missionKey, s_key) end
+function SyncStoredUnit(gamecache_cache, s_missionKey, s_key) end
+function SyncStoredString(gamecache_cache, s_missionKey, s_key) end
+
+function HaveStoredInteger(gamecache_cache, s_missionKey, s_key) return boolean end
+function HaveStoredReal(gamecache_cache, s_missionKey, s_key) return boolean end
+function HaveStoredBoolean(gamecache_cache, s_missionKey, s_key) return boolean end
+function HaveStoredUnit(gamecache_cache, s_missionKey, s_key) return boolean end
+function HaveStoredString(gamecache_cache, s_missionKey, s_key) return boolean end
+
+function FlushGameCache(gamecache_cache) end
+function FlushStoredMission(gamecache_cache, s_missionKey) end
+function FlushStoredInteger(gamecache_cache, s_missionKey, s_key) end
+function FlushStoredReal(gamecache_cache, s_missionKey, s_key) end
+function FlushStoredBoolean(gamecache_cache, s_missionKey, s_key) end
+function FlushStoredUnit(gamecache_cache, s_missionKey, s_key) end
+function FlushStoredString(gamecache_cache, s_missionKey, s_key) end
+
+-- Will return 0 if the specified value's data is not found in the cache
+function GetStoredInteger(gamecache_cache, s_missionKey, s_key) return integer end
+function GetStoredReal(gamecache_cache, s_missionKey, s_key) return real end
+function GetStoredBoolean(gamecache_cache, s_missionKey, s_key) return boolean end
+function GetStoredString(gamecache_cache, s_missionKey, s_key) return string end
+function RestoreUnit(gamecache_cache, s_missionKey, s_key, player_forWhichPlayer, r_x, r_y, r_facing) return unit end
+
+function InitHashtable() return hashtable end
+
+function SaveInteger(hashtable_table, i_parentKey, i_childKey, i_value) end
+function SaveReal(hashtable_table, i_parentKey, i_childKey, r_value) end
+function SaveBoolean(hashtable_table, i_parentKey, i_childKey, b_value) end
+function SaveStr(hashtable_table, i_parentKey, i_childKey, s_value) return boolean end
+function SavePlayerHandle(hashtable_table, i_parentKey, i_childKey, player_whichPlayer) return boolean end
+function SaveWidgetHandle(hashtable_table, i_parentKey, i_childKey, widget_whichWidget) return boolean end
+function SaveDestructableHandle(hashtable_table, i_parentKey, i_childKey, destructable_whichDestructable) return boolean end
+function SaveItemHandle(hashtable_table, i_parentKey, i_childKey, item_whichItem) return boolean end
+function SaveUnitHandle(hashtable_table, i_parentKey, i_childKey, unit_whichUnit) return boolean end
+function SaveAbilityHandle(hashtable_table, i_parentKey, i_childKey, ability_whichAbility) return boolean end
+function SaveTimerHandle(hashtable_table, i_parentKey, i_childKey, timer_whichTimer) return boolean end
+function SaveTriggerHandle(hashtable_table, i_parentKey, i_childKey, trigger_whichTrigger) return boolean end
+function SaveTriggerConditionHandle(hashtable_table, i_parentKey, i_childKey, triggercondition_whichTriggercondition) return boolean end
+function SaveTriggerActionHandle(hashtable_table, i_parentKey, i_childKey, triggeraction_whichTriggeraction) return boolean end
+function SaveTriggerEventHandle(hashtable_table, i_parentKey, i_childKey, event_whichEvent) return boolean end
+function SaveForceHandle(hashtable_table, i_parentKey, i_childKey, force_whichForce) return boolean end
+function SaveGroupHandle(hashtable_table, i_parentKey, i_childKey, group_whichGroup) return boolean end
+function SaveLocationHandle(hashtable_table, i_parentKey, i_childKey, location_whichLocation) return boolean end
+function SaveRectHandle(hashtable_table, i_parentKey, i_childKey, rect_whichRect) return boolean end
+function SaveBooleanExprHandle(hashtable_table, i_parentKey, i_childKey, boolexpr_whichBoolexpr) return boolean end
+function SaveSoundHandle(hashtable_table, i_parentKey, i_childKey, sound_whichSound) return boolean end
+function SaveEffectHandle(hashtable_table, i_parentKey, i_childKey, effect_whichEffect) return boolean end
+function SaveUnitPoolHandle(hashtable_table, i_parentKey, i_childKey, unitpool_whichUnitpool) return boolean end
+function SaveItemPoolHandle(hashtable_table, i_parentKey, i_childKey, itempool_whichItempool) return boolean end
+function SaveQuestHandle(hashtable_table, i_parentKey, i_childKey, quest_whichQuest) return boolean end
+function SaveQuestItemHandle(hashtable_table, i_parentKey, i_childKey, questitem_whichQuestitem) return boolean end
+function SaveDefeatConditionHandle(hashtable_table, i_parentKey, i_childKey, defeatcondition_whichDefeatcondition) return boolean end
+function SaveTimerDialogHandle(hashtable_table, i_parentKey, i_childKey, timerdialog_whichTimerdialog) return boolean end
+function SaveLeaderboardHandle(hashtable_table, i_parentKey, i_childKey, leaderboard_whichLeaderboard) return boolean end
+function SaveMultiboardHandle(hashtable_table, i_parentKey, i_childKey, multiboard_whichMultiboard) return boolean end
+function SaveMultiboardItemHandle(hashtable_table, i_parentKey, i_childKey, multiboarditem_whichMultiboarditem) return boolean end
+function SaveTrackableHandle(hashtable_table, i_parentKey, i_childKey, trackable_whichTrackable) return boolean end
+function SaveDialogHandle(hashtable_table, i_parentKey, i_childKey, dialog_whichDialog) return boolean end
+function SaveButtonHandle(hashtable_table, i_parentKey, i_childKey, button_whichButton) return boolean end
+function SaveTextTagHandle(hashtable_table, i_parentKey, i_childKey, texttag_whichTexttag) return boolean end
+function SaveLightningHandle(hashtable_table, i_parentKey, i_childKey, lightning_whichLightning) return boolean end
+function SaveImageHandle(hashtable_table, i_parentKey, i_childKey, image_whichImage) return boolean end
+function SaveUbersplatHandle(hashtable_table, i_parentKey, i_childKey, ubersplat_whichUbersplat) return boolean end
+function SaveRegionHandle(hashtable_table, i_parentKey, i_childKey, region_whichRegion) return boolean end
+function SaveFogStateHandle(hashtable_table, i_parentKey, i_childKey, fogstate_whichFogState) return boolean end
+function SaveFogModifierHandle(hashtable_table, i_parentKey, i_childKey, fogmodifier_whichFogModifier) return boolean end
+function SaveAgentHandle(hashtable_table, i_parentKey, i_childKey, agent_whichAgent) return boolean end
+function SaveHashtableHandle(hashtable_table, i_parentKey, i_childKey, hashtable_whichHashtable) return boolean end
+function SaveFrameHandle(hashtable_table, i_parentKey, i_childKey, framehandle_whichFrameHandle) return boolean end
+
+function LoadInteger(hashtable_table, i_parentKey, i_childKey) return integer end
+function LoadReal(hashtable_table, i_parentKey, i_childKey) return real end
+function LoadBoolean(hashtable_table, i_parentKey, i_childKey) return boolean end
+function LoadStr(hashtable_table, i_parentKey, i_childKey) return string end
+function LoadPlayerHandle(hashtable_table, i_parentKey, i_childKey) return player end
+function LoadWidgetHandle(hashtable_table, i_parentKey, i_childKey) return widget end
+function LoadDestructableHandle(hashtable_table, i_parentKey, i_childKey) return destructable end
+function LoadItemHandle(hashtable_table, i_parentKey, i_childKey) return item end
+function LoadUnitHandle(hashtable_table, i_parentKey, i_childKey) return unit end
+function LoadAbilityHandle(hashtable_table, i_parentKey, i_childKey) return ability end
+function LoadTimerHandle(hashtable_table, i_parentKey, i_childKey) return timer end
+function LoadTriggerHandle(hashtable_table, i_parentKey, i_childKey) return trigger end
+function LoadTriggerConditionHandle(hashtable_table, i_parentKey, i_childKey) return triggercondition end
+function LoadTriggerActionHandle(hashtable_table, i_parentKey, i_childKey) return triggeraction end
+function LoadTriggerEventHandle(hashtable_table, i_parentKey, i_childKey) return event end
+function LoadForceHandle(hashtable_table, i_parentKey, i_childKey) return force end
+function LoadGroupHandle(hashtable_table, i_parentKey, i_childKey) return group end
+function LoadLocationHandle(hashtable_table, i_parentKey, i_childKey) return location end
+function LoadRectHandle(hashtable_table, i_parentKey, i_childKey) return rect end
+function LoadBooleanExprHandle(hashtable_table, i_parentKey, i_childKey) return boolexpr end
+function LoadSoundHandle(hashtable_table, i_parentKey, i_childKey) return sound end
+function LoadEffectHandle(hashtable_table, i_parentKey, i_childKey) return effect end
+function LoadUnitPoolHandle(hashtable_table, i_parentKey, i_childKey) return unitpool end
+function LoadItemPoolHandle(hashtable_table, i_parentKey, i_childKey) return itempool end
+function LoadQuestHandle(hashtable_table, i_parentKey, i_childKey) return quest end
+function LoadQuestItemHandle(hashtable_table, i_parentKey, i_childKey) return questitem end
+function LoadDefeatConditionHandle(hashtable_table, i_parentKey, i_childKey) return defeatcondition end
+function LoadTimerDialogHandle(hashtable_table, i_parentKey, i_childKey) return timerdialog end
+function LoadLeaderboardHandle(hashtable_table, i_parentKey, i_childKey) return leaderboard end
+function LoadMultiboardHandle(hashtable_table, i_parentKey, i_childKey) return multiboard end
+function LoadMultiboardItemHandle(hashtable_table, i_parentKey, i_childKey) return multiboarditem end
+function LoadTrackableHandle(hashtable_table, i_parentKey, i_childKey) return trackable end
+function LoadDialogHandle(hashtable_table, i_parentKey, i_childKey) return dialog end
+function LoadButtonHandle(hashtable_table, i_parentKey, i_childKey) return button end
+function LoadTextTagHandle(hashtable_table, i_parentKey, i_childKey) return texttag end
+function LoadLightningHandle(hashtable_table, i_parentKey, i_childKey) return lightning end
+function LoadImageHandle(hashtable_table, i_parentKey, i_childKey) return image end
+function LoadUbersplatHandle(hashtable_table, i_parentKey, i_childKey) return ubersplat end
+function LoadRegionHandle(hashtable_table, i_parentKey, i_childKey) return region end
+function LoadFogStateHandle(hashtable_table, i_parentKey, i_childKey) return fogstate end
+function LoadFogModifierHandle(hashtable_table, i_parentKey, i_childKey) return fogmodifier end
+function LoadHashtableHandle(hashtable_table, i_parentKey, i_childKey) return hashtable end
+function LoadFrameHandle(hashtable_table, i_parentKey, i_childKey) return framehandle end
+
+function HaveSavedInteger(hashtable_table, i_parentKey, i_childKey) return boolean end
+function HaveSavedReal(hashtable_table, i_parentKey, i_childKey) return boolean end
+function HaveSavedBoolean(hashtable_table, i_parentKey, i_childKey) return boolean end
+function HaveSavedString(hashtable_table, i_parentKey, i_childKey) return boolean end
+function HaveSavedHandle(hashtable_table, i_parentKey, i_childKey) return boolean end
+
+function RemoveSavedInteger(hashtable_table, i_parentKey, i_childKey) end
+function RemoveSavedReal(hashtable_table, i_parentKey, i_childKey) end
+function RemoveSavedBoolean(hashtable_table, i_parentKey, i_childKey) end
+function RemoveSavedString(hashtable_table, i_parentKey, i_childKey) end
+function RemoveSavedHandle(hashtable_table, i_parentKey, i_childKey) end
+
+function FlushParentHashtable(hashtable_table) end
+function FlushChildHashtable(hashtable_table, i_parentKey) end
+
+--============================================================================
 -- Randomization API
-function GetRandomInt(int_lowBound, int_highBound) return integer end
+function GetRandomInt(i_lowBound, i_highBound) return integer end
 function GetRandomReal(r_lowBound, r_highBound) return real end
+
+function CreateUnitPool() return unitpool end
 function DestroyUnitPool(unitpool_whichPool) end
-function UnitPoolAddUnitType(unitpool_whichPool, int_unitId, r_weight) end
-function UnitPoolRemoveUnitType(unitpool_whichPool, int_unitId) end
+function UnitPoolAddUnitType(unitpool_whichPool, i_unitId, r_weight) end
+function UnitPoolRemoveUnitType(unitpool_whichPool, i_unitId) end
 function PlaceRandomUnit(unitpool_whichPool, player_forWhichPlayer, r_x, r_y, r_facing) return unit end
+
+function CreateItemPool() return itempool end
 function DestroyItemPool(itempool_whichItemPool) end
-function ItemPoolAddItemType(itempool_whichItemPool, int_itemId, r_weight) end
-function ItemPoolRemoveItemType(itempool_whichItemPool, int_itemId) end
+function ItemPoolAddItemType(itempool_whichItemPool, i_itemId, r_weight) end
+function ItemPoolRemoveItemType(itempool_whichItemPool, i_itemId) end
 function PlaceRandomItem(itempool_whichItemPool, r_x, r_y) return item end
-function ChooseRandomCreep(int_level) return integer end
+
+-- Choose any random unit/item. (NP means Neutral Passive)
+function ChooseRandomCreep(i_level) return integer end
 function ChooseRandomNPBuilding() return integer end
-function ChooseRandomItem(int_level) return integer end
-function ChooseRandomItemEx(itemtype_whichType, int_level) return integer end
-function SetRandomSeed(int_seed) end
+function ChooseRandomItem(i_level) return integer end
+function ChooseRandomItemEx(itemtype_whichType, i_level) return integer end
+function SetRandomSeed(i_seed) end
+
+--============================================================================
 -- Visual API
 function SetTerrainFog(r_a, r_b, r_c, r_d, r_e) end
 function ResetTerrainFog() end
-function SetTerrainFogEx(int_style, r_zstart, r_zend, r_density, r_red, r_green, r_blue) end
-function DisplayTextToPlayer(player_toPlayer, r_x, r_y, str_message) end
-function DisplayTimedTextToPlayer(player_toPlayer, r_x, r_y, r_duration, str_message) end
-function DisplayTimedTextFromPlayer(player_toPlayer, r_x, r_y, r_duration, str_message) end
+
+function SetUnitFog(r_a, r_b, r_c, r_d, r_e) end
+function SetTerrainFogEx(i_style, r_zstart, r_zend, r_density, r_red, r_green, r_blue) end
+function DisplayTextToPlayer(player_toPlayer, r_x, r_y, s_message) end
+function DisplayTimedTextToPlayer(player_toPlayer, r_x, r_y, r_duration, s_message) end
+function DisplayTimedTextFromPlayer(player_toPlayer, r_x, r_y, r_duration, s_message) end
 function ClearTextMessages() end
-function SetDayNightModels(str_terrainDNCFile, str_unitDNCFile) end
-function SetSkyModel(str_skyModelFile) end
+function SetDayNightModels(s_terrainDNCFile, s_unitDNCFile) end
+function SetSkyModel(s_skyModelFile) end
 function EnableUserControl(b_b) end
 function EnableUserUI(b_b) end
 function SuspendTimeOfDay(b_b) end
@@ -2525,26 +3234,28 @@ function SetTimeOfDayScale(r_r) end
 function GetTimeOfDayScale() return real end
 function ShowInterface(b_flag, r_fadeDuration) end
 function PauseGame(b_flag) end
-function UnitAddIndicator(unit_whichUnit, int_red, int_green, int_blue, int_alpha) end
-function AddIndicator(widget_whichWidget, int_red, int_green, int_blue, int_alpha) end
+function UnitAddIndicator(unit_whichUnit, i_red, i_green, i_blue, i_alpha) end
+function AddIndicator(widget_whichWidget, i_red, i_green, i_blue, i_alpha) end
 function PingMinimap(r_x, r_y, r_duration) end
-function PingMinimapEx(r_x, r_y, r_duration, int_red, int_green, int_blue, b_extraEffects) end
+function PingMinimapEx(r_x, r_y, r_duration, i_red, i_green, i_blue, b_extraEffects) end
 function EnableOcclusion(b_flag) end
-function SetIntroShotText(str_introText) end
-function SetIntroShotModel(str_introModelPath) end
+function SetIntroShotText(s_introText) end
+function SetIntroShotModel(s_introModelPath) end
 function EnableWorldFogBoundary(b_b) end
-function PlayModelCinematic(str_modelName) end
-function PlayCinematic(str_movieName) end
-function ForceUIKey(str_key) end
+function PlayModelCinematic(s_modelName) end
+function PlayCinematic(s_movieName) end
+function ForceUIKey(s_key) end
 function ForceUICancel() end
 function DisplayLoadDialog() end
-function SetAltMinimapIcon(str_iconPath) end
+function SetAltMinimapIcon(s_iconPath) end
 function DisableRestartMission(b_flag) end
+
+function CreateTextTag() return texttag end
 function DestroyTextTag(texttag_t) end
-function SetTextTagText(texttag_t, str_s, r_height) end
+function SetTextTagText(texttag_t, s_s, r_height) end
 function SetTextTagPos(texttag_t, r_x, r_y, r_heightOffset) end
 function SetTextTagPosUnit(texttag_t, unit_whichUnit, r_heightOffset) end
-function SetTextTagColor(texttag_t, int_red, int_green, int_blue, int_alpha) end
+function SetTextTagColor(texttag_t, i_red, i_green, i_blue, i_alpha) end
 function SetTextTagVelocity(texttag_t, r_xvel, r_yvel) end
 function SetTextTagVisibility(texttag_t, b_flag) end
 function SetTextTagSuspended(texttag_t, b_flag) end
@@ -2552,90 +3263,154 @@ function SetTextTagPermanent(texttag_t, b_flag) end
 function SetTextTagAge(texttag_t, r_age) end
 function SetTextTagLifespan(texttag_t, r_lifespan) end
 function SetTextTagFadepoint(texttag_t, r_fadepoint) end
+
+function SetReservedLocalHeroButtons(i_reserved) end
 function GetAllyColorFilterState() return integer end
-function SetAllyColorFilterState(int_state) end
+function SetAllyColorFilterState(i_state) end
 function GetCreepCampFilterState() return boolean end
 function SetCreepCampFilterState(b_state) end
 function EnableMinimapFilterButtons(b_enableAlly, b_enableCreep) end
 function EnableDragSelect(b_state, b_ui) end
 function EnablePreSelect(b_state, b_ui) end
 function EnableSelect(b_state, b_ui) end
+
+--============================================================================
 -- Trackable API
-function CreateTrackable(str_trackableModelPath, r_x, r_y, r_facing) return trackable end
+function CreateTrackable(s_trackableModelPath, r_x, r_y, r_facing) return trackable end
+
+--============================================================================
 -- Quest API
 function CreateQuest() return quest end
 function DestroyQuest(quest_whichQuest) end
-function QuestSetTitle(quest_whichQuest, str_title) end
-function QuestSetDescription(quest_whichQuest, str_description) end
-function QuestSetIconPath(quest_whichQuest, str_iconPath) end
+function QuestSetTitle(quest_whichQuest, s_title) end
+function QuestSetDescription(quest_whichQuest, s_description) end
+function QuestSetIconPath(quest_whichQuest, s_iconPath) end
+
+function QuestSetRequired(quest_whichQuest, b_required) end
 function QuestSetCompleted(quest_whichQuest, b_completed) end
 function QuestSetDiscovered(quest_whichQuest, b_discovered) end
 function QuestSetFailed(quest_whichQuest, b_failed) end
 function QuestSetEnabled(quest_whichQuest, b_enabled) end
+
+function IsQuestRequired(quest_whichQuest) return boolean end
 function IsQuestCompleted(quest_whichQuest) return boolean end
 function IsQuestDiscovered(quest_whichQuest) return boolean end
 function IsQuestFailed(quest_whichQuest) return boolean end
 function IsQuestEnabled(quest_whichQuest) return boolean end
-function QuestItemSetDescription(questitem_whichQuestItem, str_description) end
+
+function QuestCreateItem(quest_whichQuest) return questitem end
+function QuestItemSetDescription(questitem_whichQuestItem, s_description) end
 function QuestItemSetCompleted(questitem_whichQuestItem, b_completed) end
+
+function IsQuestItemCompleted(questitem_whichQuestItem) return boolean end
+
+function CreateDefeatCondition() return defeatcondition end
 function DestroyDefeatCondition(defeatcondition_whichCondition) end
-function DefeatConditionSetDescription(defeatcondition_whichCondition, str_description) end
+function DefeatConditionSetDescription(defeatcondition_whichCondition, s_description) end
+
+function FlashQuestDialogButton() end
 function ForceQuestDialogUpdate() end
+
+--============================================================================
 -- Timer Dialog API
 function CreateTimerDialog(timer_t) return timerdialog end
 function DestroyTimerDialog(timerdialog_whichDialog) end
-function TimerDialogSetTitle(timerdialog_whichDialog, str_title) end
-function TimerDialogSetTitleColor(timerdialog_whichDialog, int_red, int_green, int_blue, int_alpha) end
-function TimerDialogSetTimeColor(timerdialog_whichDialog, int_red, int_green, int_blue, int_alpha) end
+function TimerDialogSetTitle(timerdialog_whichDialog, s_title) end
+function TimerDialogSetTitleColor(timerdialog_whichDialog, i_red, i_green, i_blue, i_alpha) end
+function TimerDialogSetTimeColor(timerdialog_whichDialog, i_red, i_green, i_blue, i_alpha) end
 function TimerDialogSetSpeed(timerdialog_whichDialog, r_speedMultFactor) end
 function TimerDialogDisplay(timerdialog_whichDialog, b_display) end
 function IsTimerDialogDisplayed(timerdialog_whichDialog) return boolean end
 function TimerDialogSetRealTimeRemaining(timerdialog_whichDialog, r_timeRemaining) end
+
+--============================================================================
 -- Leaderboard API
+
+-- Create a leaderboard object
 function CreateLeaderboard() return leaderboard end
 function DestroyLeaderboard(leaderboard_lb) end
+
+function LeaderboardDisplay(leaderboard_lb, b_show) end
 function IsLeaderboardDisplayed(leaderboard_lb) return boolean end
-function LeaderboardAddItem(leaderboard_lb, str_label, int_value, player_p) end
-function LeaderboardRemoveItem(leaderboard_lb, int_index) end
+
+function LeaderboardGetItemCount(leaderboard_lb) return integer end
+
+function LeaderboardSetSizeByItemCount(leaderboard_lb, i_count) end
+function LeaderboardAddItem(leaderboard_lb, s_label, i_value, player_p) end
+function LeaderboardRemoveItem(leaderboard_lb, i_index) end
 function LeaderboardRemovePlayerItem(leaderboard_lb, player_p) end
 function LeaderboardClear(leaderboard_lb) end
+
+function LeaderboardSortItemsByValue(leaderboard_lb, b_ascending) end
 function LeaderboardSortItemsByPlayer(leaderboard_lb, b_ascending) end
 function LeaderboardSortItemsByLabel(leaderboard_lb, b_ascending) end
+
+function LeaderboardHasPlayerItem(leaderboard_lb, player_p) return boolean end
 function LeaderboardGetPlayerIndex(leaderboard_lb, player_p) return integer end
-function LeaderboardSetLabel(leaderboard_lb, str_label) end
+function LeaderboardSetLabel(leaderboard_lb, s_label) end
 function LeaderboardGetLabelText(leaderboard_lb) return string end
+
+function PlayerSetLeaderboard(player_toPlayer, leaderboard_lb) end
 function PlayerGetLeaderboard(player_toPlayer) return leaderboard end
-function LeaderboardSetValueColor(leaderboard_lb, int_red, int_green, int_blue, int_alpha) end
+
+function LeaderboardSetLabelColor(leaderboard_lb, i_red, i_green, i_blue, i_alpha) end
+function LeaderboardSetValueColor(leaderboard_lb, i_red, i_green, i_blue, i_alpha) end
 function LeaderboardSetStyle(leaderboard_lb, b_showLabel, b_showNames, b_showValues, b_showIcons) end
-function LeaderboardSetItemLabel(leaderboard_lb, int_whichItem, str_val) end
-function LeaderboardSetItemStyle(leaderboard_lb, int_whichItem, b_showLabel, b_showValue, b_showIcon) end
-function LeaderboardSetItemLabelColor(leaderboard_lb, int_whichItem, int_red, int_green, int_blue, int_alpha) end
-function LeaderboardSetItemValueColor(leaderboard_lb, int_whichItem, int_red, int_green, int_blue, int_alpha) end
+
+function LeaderboardSetItemValue(leaderboard_lb, i_whichItem, i_val) end
+function LeaderboardSetItemLabel(leaderboard_lb, i_whichItem, s_val) end
+function LeaderboardSetItemStyle(leaderboard_lb, i_whichItem, b_showLabel, b_showValue, b_showIcon) end
+function LeaderboardSetItemLabelColor(leaderboard_lb, i_whichItem, i_red, i_green, i_blue, i_alpha) end
+function LeaderboardSetItemValueColor(leaderboard_lb, i_whichItem, i_red, i_green, i_blue, i_alpha) end
+
+--============================================================================
 -- Multiboard API
 --============================================================================
+
+-- Create a multiboard object
 function CreateMultiboard() return multiboard end
 function DestroyMultiboard(multiboard_lb) end
+
+function MultiboardDisplay(multiboard_lb, b_show) end
 function IsMultiboardDisplayed(multiboard_lb) return boolean end
+
+function MultiboardMinimize(multiboard_lb, b_minimize) end
 function IsMultiboardMinimized(multiboard_lb) return boolean end
 function MultiboardClear(multiboard_lb) end
+
+function MultiboardSetTitleText(multiboard_lb, s_label) end
 function MultiboardGetTitleText(multiboard_lb) return string end
-function MultiboardSetTitleTextColor(multiboard_lb, int_red, int_green, int_blue, int_alpha) end
+function MultiboardSetTitleTextColor(multiboard_lb, i_red, i_green, i_blue, i_alpha) end
+
+function MultiboardGetRowCount(multiboard_lb) return integer end
 function MultiboardGetColumnCount(multiboard_lb) return integer end
-function MultiboardSetRowCount(multiboard_lb, int_count) end
+
+function MultiboardSetColumnCount(multiboard_lb, i_count) end
+function MultiboardSetRowCount(multiboard_lb, i_count) end
+
+-- broadcast settings to all items
 function MultiboardSetItemsStyle(multiboard_lb, b_showValues, b_showIcons) end
-function MultiboardSetItemsValue(multiboard_lb, str_value) end
-function MultiboardSetItemsValueColor(multiboard_lb, int_red, int_green, int_blue, int_alpha) end
+function MultiboardSetItemsValue(multiboard_lb, s_value) end
+function MultiboardSetItemsValueColor(multiboard_lb, i_red, i_green, i_blue, i_alpha) end
 function MultiboardSetItemsWidth(multiboard_lb, r_width) end
-function MultiboardSetItemsIcon(multiboard_lb, str_iconPath) end
-function MultiboardGetItem(multiboard_lb, int_row, int_column) return multiboarditem end
+function MultiboardSetItemsIcon(multiboard_lb, s_iconPath) end
+
+-- funcs for modifying individual items
+function MultiboardGetItem(multiboard_lb, i_row, i_column) return multiboarditem end
 function MultiboardReleaseItem(multiboarditem_mbi) end
-function MultiboardSetItemValue(multiboarditem_mbi, str_val) end
-function MultiboardSetItemValueColor(multiboarditem_mbi, int_red, int_green, int_blue, int_alpha) end
+
+function MultiboardSetItemStyle(multiboarditem_mbi, b_showValue, b_showIcon) end
+function MultiboardSetItemValue(multiboarditem_mbi, s_val) end
+function MultiboardSetItemValueColor(multiboarditem_mbi, i_red, i_green, i_blue, i_alpha) end
 function MultiboardSetItemWidth(multiboarditem_mbi, r_width) end
-function MultiboardSetItemIcon(multiboarditem_mbi, str_iconFileName) end
+function MultiboardSetItemIcon(multiboarditem_mbi, s_iconFileName) end
+
+-- meant to unequivocally suspend display of existing and
 -- subsequently displayed multiboards
 --
 function MultiboardSuppressDisplay(b_flag) end
+
+--============================================================================
 -- Camera API
 function SetCameraPosition(r_x, r_y) end
 function SetCameraQuickPosition(r_x, r_y) end
@@ -2646,12 +3421,14 @@ function PanCameraTo(r_x, r_y) end
 function PanCameraToTimed(r_x, r_y, r_duration) end
 function PanCameraToWithZ(r_x, r_y, r_zOffsetDest) end
 function PanCameraToTimedWithZ(r_x, r_y, r_zOffsetDest, r_duration) end
-function SetCinematicCamera(str_cameraModelFile) end
+function SetCinematicCamera(s_cameraModelFile) end
 function SetCameraRotateMode(r_x, r_y, r_radiansToSweep, r_duration) end
 function SetCameraField(camerafield_whichField, r_value, r_duration) end
 function AdjustCameraField(camerafield_whichField, r_offset, r_duration) end
 function SetCameraTargetController(unit_whichUnit, r_xoffset, r_yoffset, b_inheritOrientation) end
 function SetCameraOrientController(unit_whichUnit, r_xoffset, r_yoffset) end
+
+function CreateCameraSetup() return camerasetup end
 function CameraSetupSetField(camerasetup_whichSetup, camerafield_whichField, r_value, r_duration) end
 function CameraSetupGetField(camerasetup_whichSetup, camerafield_whichField) return real end
 function CameraSetupSetDestPosition(camerasetup_whichSetup, r_x, r_y, r_duration) end
@@ -2662,19 +3439,33 @@ function CameraSetupApply(camerasetup_whichSetup, b_doPan, b_panTimed) end
 function CameraSetupApplyWithZ(camerasetup_whichSetup, r_zDestOffset) end
 function CameraSetupApplyForceDuration(camerasetup_whichSetup, b_doPan, r_forceDuration) end
 function CameraSetupApplyForceDurationWithZ(camerasetup_whichSetup, r_zDestOffset, r_forceDuration) end
+
+function CameraSetTargetNoise(r_mag, r_velocity) end
 function CameraSetSourceNoise(r_mag, r_velocity) end
+
+function CameraSetTargetNoiseEx(r_mag, r_velocity, b_vertOnly) end
 function CameraSetSourceNoiseEx(r_mag, r_velocity, b_vertOnly) end
+
+function CameraSetSmoothingFactor(r_factor) end
+
+function SetCineFilterTexture(s_filename) end
 function SetCineFilterBlendMode(blendmode_whichMode) end
 function SetCineFilterTexMapFlags(texmapflags_whichFlags) end
 function SetCineFilterStartUV(r_minu, r_minv, r_maxu, r_maxv) end
 function SetCineFilterEndUV(r_minu, r_minv, r_maxu, r_maxv) end
-function SetCineFilterStartColor(int_red, int_green, int_blue, int_alpha) end
-function SetCineFilterEndColor(int_red, int_green, int_blue, int_alpha) end
+function SetCineFilterStartColor(i_red, i_green, i_blue, i_alpha) end
+function SetCineFilterEndColor(i_red, i_green, i_blue, i_alpha) end
 function SetCineFilterDuration(r_duration) end
 function DisplayCineFilter(b_flag) end
 function IsCineFilterDisplayed() return boolean end
+
+function SetCinematicScene(i_portraitUnitId, playercolor_color, s_speakerTitle, s_text, r_sceneDuration, r_voiceoverDuration) end
 function EndCinematicScene() end
 function ForceCinematicSubtitles(b_flag) end
+
+function GetCameraMargin(i_whichMargin) return real end
+
+-- These return values for the local players camera only...
 function GetCameraBoundMinX() return real end
 function GetCameraBoundMinY() return real end
 function GetCameraBoundMaxX() return real end
@@ -2688,59 +3479,97 @@ function GetCameraEyePositionX() return real end
 function GetCameraEyePositionY() return real end
 function GetCameraEyePositionZ() return real end
 function GetCameraEyePositionLoc() return location end
+
+--============================================================================
 -- Sound API
 --
-function NewSoundEnvironment(str_environmentName) end
-function CreateSoundFilenameWithLabel(str_fileName, b_looping, b_is3D, b_stopwhenoutofrange, int_fadeInRate, int_fadeOutRate, str_SLKEntryName) return sound end
-function CreateSoundFromLabel(str_soundLabel, b_looping, b_is3D, b_stopwhenoutofrange, int_fadeInRate, int_fadeOutRate) return sound end
-function CreateMIDISound(str_soundLabel, int_fadeInRate, int_fadeOutRate) return sound end
+function NewSoundEnvironment(s_environmentName) end
+
+function CreateSound(s_fileName, b_looping, b_is3D, b_stopwhenoutofrange, i_fadeInRate, i_fadeOutRate, s_eaxSetting) return sound end
+function CreateSoundFilenameWithLabel(s_fileName, b_looping, b_is3D, b_stopwhenoutofrange, i_fadeInRate, i_fadeOutRate, s_SLKEntryName) return sound end
+function CreateSoundFromLabel(s_soundLabel, b_looping, b_is3D, b_stopwhenoutofrange, i_fadeInRate, i_fadeOutRate) return sound end
+function CreateMIDISound(s_soundLabel, i_fadeInRate, i_fadeOutRate) return sound end
+
+function SetSoundParamsFromLabel(sound_soundHandle, s_soundLabel) end
 function SetSoundDistanceCutoff(sound_soundHandle, r_cutoff) end
-function SetSoundChannel(sound_soundHandle, int_channel) end
-function SetSoundVolume(sound_soundHandle, int_volume) end
+function SetSoundChannel(sound_soundHandle, i_channel) end
+function SetSoundVolume(sound_soundHandle, i_volume) end
 function SetSoundPitch(sound_soundHandle, r_pitch) end
-function SetSoundPlayPosition(sound_soundHandle, int_millisecs) end
+
+-- the following method must be called immediately after calling "StartSound"
+function SetSoundPlayPosition(sound_soundHandle, i_millisecs) end
+
+-- these calls are only valid if the sound was created with 3d enabled
 function SetSoundDistances(sound_soundHandle, r_minDist, r_maxDist) end
-function SetSoundConeAngles(sound_soundHandle, r_inside, r_outside, int_outsideVolume) end
+function SetSoundConeAngles(sound_soundHandle, r_inside, r_outside, i_outsideVolume) end
 function SetSoundConeOrientation(sound_soundHandle, r_x, r_y, r_z) end
 function SetSoundPosition(sound_soundHandle, r_x, r_y, r_z) end
 function SetSoundVelocity(sound_soundHandle, r_x, r_y, r_z) end
 function AttachSoundToUnit(sound_soundHandle, unit_whichUnit) end
+
+function StartSound(sound_soundHandle) end
 function StopSound(sound_soundHandle, b_killWhenDone, b_fadeOut) end
 function KillSoundWhenDone(sound_soundHandle) end
-function SetMapMusic(str_musicName, b_random, int_index) end
+
+-- Music Interface. Note that if music is disabled, these calls do 
+function SetMapMusic(s_musicName, b_random, i_index) end
 function ClearMapMusic() end
-function PlayMusicEx(str_musicName, int_frommsecs, int_fadeinmsecs) end
+
+function PlayMusic(s_musicName) end
+function PlayMusicEx(s_musicName, i_frommsecs, i_fadeinmsecs) end
 function StopMusic(b_fadeOut) end
 function ResumeMusic() end
-function PlayThematicMusicEx(str_musicFileName, int_frommsecs) end
+
+function PlayThematicMusic(s_musicFileName) end
+function PlayThematicMusicEx(s_musicFileName, i_frommsecs) end
 function EndThematicMusic() end
-function SetMusicPlayPosition(int_millisecs) end
-function SetThematicMusicPlayPosition(int_millisecs) end
-function SetSoundDuration(sound_soundHandle, int_duration) end
+
+function SetMusicVolume(i_volume) end
+function SetMusicPlayPosition(i_millisecs) end
+function SetThematicMusicPlayPosition(i_millisecs) end
+
+-- other music and sound calls
+function SetSoundDuration(sound_soundHandle, i_duration) end
 function GetSoundDuration(sound_soundHandle) return integer end
-function GetSoundFileDuration(str_musicFileName) return integer end
+function GetSoundFileDuration(s_musicFileName) return integer end
+
+function VolumeGroupSetVolume(volumegroup_vgroup, r_scale) end
 function VolumeGroupReset() end
+
+function GetSoundIsPlaying(sound_soundHandle) return boolean end
 function GetSoundIsLoading(sound_soundHandle) return boolean end
+
+function RegisterStackedSound(sound_soundHandle, b_byPosition, r_rectwidth, r_rectheight) end
 function UnregisterStackedSound(sound_soundHandle, b_byPosition, r_rectwidth, r_rectheight) end
+
+--============================================================================
 -- Effects API
 --
-function AddWeatherEffect(rect_where, int_effectID) return weathereffect end
+function AddWeatherEffect(rect_where, i_effectID) return weathereffect end
 function RemoveWeatherEffect(weathereffect_whichEffect) end
 function EnableWeatherEffect(weathereffect_whichEffect, b_enable) end
-function TerrainDeformRipple(r_x, r_y, r_radius, r_depth, int_duration, int_count, r_spaceWaves, r_timeWaves, r_radiusStartPct, b_limitNeg) return terraindeformation end
-function TerrainDeformWave(r_x, r_y, r_dirX, r_dirY, r_distance, r_speed, r_radius, r_depth, int_trailTime, int_count) return terraindeformation end
-function TerrainDeformRandom(r_x, r_y, r_radius, r_minDelta, r_maxDelta, int_duration, int_updateInterval) return terraindeformation end
-function TerrainDeformStop(terraindeformation_deformation, int_duration) end
+
+function TerrainDeformCrater(r_x, r_y, r_radius, r_depth, i_duration, b_permanent) return terraindeformation end
+function TerrainDeformRipple(r_x, r_y, r_radius, r_depth, i_duration, i_count, r_spaceWaves, r_timeWaves, r_radiusStartPct, b_limitNeg) return terraindeformation end
+function TerrainDeformWave(r_x, r_y, r_dirX, r_dirY, r_distance, r_speed, r_radius, r_depth, i_trailTime, i_count) return terraindeformation end
+function TerrainDeformRandom(r_x, r_y, r_radius, r_minDelta, r_maxDelta, i_duration, i_updateInterval) return terraindeformation end
+function TerrainDeformStop(terraindeformation_deformation, i_duration) end
 function TerrainDeformStopAll() end
-function AddSpecialEffectLoc(str_modelName, location_where) return effect end
-function AddSpecialEffectTarget(str_modelName, widget_targetWidget, str_attachPointName) return effect end
+
+function AddSpecialEffect(s_modelName, r_x, r_y) return effect end
+function AddSpecialEffectLoc(s_modelName, location_where) return effect end
+function AddSpecialEffectTarget(s_modelName, widget_targetWidget, s_attachPointName) return effect end
 function DestroyEffect(effect_whichEffect) end
-function AddSpellEffectLoc(str_abilityString, effecttype_t, location_where) return effect end
-function AddSpellEffectById(int_abilityId, effecttype_t, r_x, r_y) return effect end
-function AddSpellEffectByIdLoc(int_abilityId, effecttype_t, location_where) return effect end
-function AddSpellEffectTarget(str_modelName, effecttype_t, widget_targetWidget, str_attachPoint) return effect end
-function AddSpellEffectTargetById(int_abilityId, effecttype_t, widget_targetWidget, str_attachPoint) return effect end
-function AddLightningEx(str_codeName, b_checkVisibility, r_x1, r_y1, r_z1, r_x2, r_y2, r_z2) return lightning end
+
+function AddSpellEffect(s_abilityString, effecttype_t, r_x, r_y) return effect end
+function AddSpellEffectLoc(s_abilityString, effecttype_t, location_where) return effect end
+function AddSpellEffectById(i_abilityId, effecttype_t, r_x, r_y) return effect end
+function AddSpellEffectByIdLoc(i_abilityId, effecttype_t, location_where) return effect end
+function AddSpellEffectTarget(s_modelName, effecttype_t, widget_targetWidget, s_attachPoint) return effect end
+function AddSpellEffectTargetById(i_abilityId, effecttype_t, widget_targetWidget, s_attachPoint) return effect end
+
+function AddLightning(s_codeName, b_checkVisibility, r_x1, r_y1, r_x2, r_y2) return lightning end
+function AddLightningEx(s_codeName, b_checkVisibility, r_x1, r_y1, r_z1, r_x2, r_y2, r_z2) return lightning end
 function DestroyLightning(lightning_whichBolt) return boolean end
 function MoveLightning(lightning_whichBolt, b_checkVisibility, r_x1, r_y1, r_x2, r_y2) return boolean end
 function MoveLightningEx(lightning_whichBolt, b_checkVisibility, r_x1, r_y1, r_z1, r_x2, r_y2, r_z2) return boolean end
@@ -2749,40 +3578,50 @@ function GetLightningColorR(lightning_whichBolt) return real end
 function GetLightningColorG(lightning_whichBolt) return real end
 function GetLightningColorB(lightning_whichBolt) return real end
 function SetLightningColor(lightning_whichBolt, r_r, r_g, r_b, r_a) return boolean end
-function GetAbilityEffectById(int_abilityId, effecttype_t, int_index) return string end
-function GetAbilitySound(str_abilityString, soundtype_t) return string end
-function GetAbilitySoundById(int_abilityId, soundtype_t) return string end
+
+function GetAbilityEffect(s_abilityString, effecttype_t, i_index) return string end
+function GetAbilityEffectById(i_abilityId, effecttype_t, i_index) return string end
+function GetAbilitySound(s_abilityString, soundtype_t) return string end
+function GetAbilitySoundById(i_abilityId, soundtype_t) return string end
+
+--============================================================================
 -- Terrain API
 --
 function GetTerrainCliffLevel(r_x, r_y) return integer end
-function SetWaterBaseColor(int_red, int_green, int_blue, int_alpha) end
+function SetWaterBaseColor(i_red, i_green, i_blue, i_alpha) end
 function SetWaterDeforms(b_val) end
 function GetTerrainType(r_x, r_y) return integer end
 function GetTerrainVariance(r_x, r_y) return integer end
-function SetTerrainType(r_x, r_y, int_terrainType, int_variation, int_area, int_shape) end
+function SetTerrainType(r_x, r_y, i_terrainType, i_variation, i_area, i_shape) end
 function IsTerrainPathable(r_x, r_y, pathingtype_t) return boolean end
 function SetTerrainPathable(r_x, r_y, pathingtype_t, b_flag) end
+
+--============================================================================
 -- Image API
 --
-function CreateImage(str_file, r_sizeX, r_sizeY, r_sizeZ, r_posX, r_posY, r_posZ, r_originX, r_originY, r_originZ, int_imageType) return image end
+function CreateImage(s_file, r_sizeX, r_sizeY, r_sizeZ, r_posX, r_posY, r_posZ, r_originX, r_originY, r_originZ, i_imageType) return image end
 function DestroyImage(image_whichImage) end
 function ShowImage(image_whichImage, b_flag) end
 function SetImageConstantHeight(image_whichImage, b_flag, r_height) end
 function SetImagePosition(image_whichImage, r_x, r_y, r_z) end
-function SetImageColor(image_whichImage, int_red, int_green, int_blue, int_alpha) end
+function SetImageColor(image_whichImage, i_red, i_green, i_blue, i_alpha) end
 function SetImageRender(image_whichImage, b_flag) end
 function SetImageRenderAlways(image_whichImage, b_flag) end
 function SetImageAboveWater(image_whichImage, b_flag, b_useWaterAlpha) end
-function SetImageType(image_whichImage, int_imageType) end
+function SetImageType(image_whichImage, i_imageType) end
+
+--============================================================================
 -- Ubersplat API
 --
-function CreateUbersplat(r_x, r_y, str_name, int_red, int_green, int_blue, int_alpha, b_forcePaused, b_noBirthTime) return ubersplat end
+function CreateUbersplat(r_x, r_y, s_name, i_red, i_green, i_blue, i_alpha, b_forcePaused, b_noBirthTime) return ubersplat end
 function DestroyUbersplat(ubersplat_whichSplat) end
 function ResetUbersplat(ubersplat_whichSplat) end
 function FinishUbersplat(ubersplat_whichSplat) end
 function ShowUbersplat(ubersplat_whichSplat, b_flag) end
 function SetUbersplatRender(ubersplat_whichSplat, b_flag) end
 function SetUbersplatRenderAlways(ubersplat_whichSplat, b_flag) end
+
+--============================================================================
 -- Blight API
 --
 function SetBlight(player_whichPlayer, r_x, r_y, r_radius, b_addBlight) end
@@ -2791,86 +3630,104 @@ function SetBlightPoint(player_whichPlayer, r_x, r_y, b_addBlight) end
 function SetBlightLoc(player_whichPlayer, location_whichLocation, r_radius, b_addBlight) end
 function CreateBlightedGoldmine(player_id, r_x, r_y, r_face) return unit end
 function IsPointBlighted(r_x, r_y) return boolean end
+
+--============================================================================
 -- Doodad API
 --
-function SetDoodadAnimation(r_x, r_y, r_radius, int_doodadID, b_nearestOnly, str_animName, b_animRandom) end
-function SetDoodadAnimationRect(rect_r, int_doodadID, str_animName, b_animRandom) end
+function SetDoodadAnimation(r_x, r_y, r_radius, i_doodadID, b_nearestOnly, s_animName, b_animRandom) end
+function SetDoodadAnimationRect(rect_r, i_doodadID, s_animName, b_animRandom) end
+
+--============================================================================
 -- Computer AI interface
 --
-function StartMeleeAI(player_num, str_script) end
-function StartCampaignAI(player_num, str_script) end
-function CommandAI(player_num, int_command, int_data) end
+function StartMeleeAI(player_num, s_script) end
+function StartCampaignAI(player_num, s_script) end
+function CommandAI(player_num, i_command, i_data) end
 function PauseCompAI(player_p, b_pause) end
 function GetAIDifficulty(player_num) return aidifficulty end
+
+function RemoveGuardPosition(unit_hUnit) end
 function RecycleGuardPosition(unit_hUnit) end
 function RemoveAllGuardPositions(player_num) end
-function Cheat(str_cheatStr) end
+
+--============================================================================
+function Cheat(s_cheatStr) end
 function IsNoVictoryCheat() return boolean end
 function IsNoDefeatCheat() return boolean end
+
+function Preload(s_filename) end
 function PreloadEnd(r_timeout) end
+
+function PreloadStart() end
 function PreloadRefresh() end
 function PreloadEndEx() end
+
+function PreloadGenClear() end
 function PreloadGenStart() end
-function PreloadGenEnd(str_filename) end
-function Preloader(str_filename) end
-function AutomationSetTestType(str_testType) end
-function AutomationTestStart(str_testName) end
+function PreloadGenEnd(s_filename) end
+function Preloader(s_filename) end
+
+-- Automation Test
+function AutomationSetTestType(s_testType) end
+function AutomationTestStart(s_testName) end
 function AutomationTestEnd() end
 function AutomationTestingFinished() end
+
+-- JAPI Functions
 function BlzGetTriggerPlayerMouseX() return real end
 function BlzGetTriggerPlayerMouseY() return real end
 function BlzGetTriggerPlayerMousePosition() return location end
 function BlzGetTriggerPlayerMouseButton() return mousebuttontype end
-function BlzSetAbilityTooltip(int_abilCode, str_tooltip, int_level) end
-function BlzSetAbilityActivatedTooltip(int_abilCode, str_tooltip, int_level) end
-function BlzSetAbilityExtendedTooltip(int_abilCode, str_extendedTooltip, int_level) end
-function BlzSetAbilityActivatedExtendedTooltip(int_abilCode, str_extendedTooltip, int_level) end
-function BlzSetAbilityResearchTooltip(int_abilCode, str_researchTooltip, int_level) end
-function BlzSetAbilityResearchExtendedTooltip(int_abilCode, str_researchExtendedTooltip, int_level) end
-function BlzGetAbilityTooltip(int_abilCode, int_level) return string end
-function BlzGetAbilityActivatedTooltip(int_abilCode, int_level) return string end
-function BlzGetAbilityExtendedTooltip(int_abilCode, int_level) return string end
-function BlzGetAbilityActivatedExtendedTooltip(int_abilCode, int_level) return string end
-function BlzGetAbilityResearchTooltip(int_abilCode, int_level) return string end
-function BlzGetAbilityResearchExtendedTooltip(int_abilCode, int_level) return string end
-function BlzSetAbilityIcon(int_abilCode, str_iconPath) end
-function BlzGetAbilityIcon(int_abilCode) return string end
-function BlzSetAbilityActivatedIcon(int_abilCode, str_iconPath) end
-function BlzGetAbilityActivatedIcon(int_abilCode) return string end
-function BlzGetAbilityPosX(int_abilCode) return integer end
-function BlzGetAbilityPosY(int_abilCode) return integer end
-function BlzSetAbilityPosX(int_abilCode, int_x) end
-function BlzSetAbilityPosY(int_abilCode, int_y) end
-function BlzGetAbilityActivatedPosX(int_abilCode) return integer end
-function BlzGetAbilityActivatedPosY(int_abilCode) return integer end
-function BlzSetAbilityActivatedPosX(int_abilCode, int_x) end
-function BlzSetAbilityActivatedPosY(int_abilCode, int_y) end
+function BlzSetAbilityTooltip(i_abilCode, s_tooltip, i_level) end
+function BlzSetAbilityActivatedTooltip(i_abilCode, s_tooltip, i_level) end
+function BlzSetAbilityExtendedTooltip(i_abilCode, s_extendedTooltip, i_level) end
+function BlzSetAbilityActivatedExtendedTooltip(i_abilCode, s_extendedTooltip, i_level) end
+function BlzSetAbilityResearchTooltip(i_abilCode, s_researchTooltip, i_level) end
+function BlzSetAbilityResearchExtendedTooltip(i_abilCode, s_researchExtendedTooltip, i_level) end
+function BlzGetAbilityTooltip(i_abilCode, i_level) return string end
+function BlzGetAbilityActivatedTooltip(i_abilCode, i_level) return string end
+function BlzGetAbilityExtendedTooltip(i_abilCode, i_level) return string end
+function BlzGetAbilityActivatedExtendedTooltip(i_abilCode, i_level) return string end
+function BlzGetAbilityResearchTooltip(i_abilCode, i_level) return string end
+function BlzGetAbilityResearchExtendedTooltip(i_abilCode, i_level) return string end
+function BlzSetAbilityIcon(i_abilCode, s_iconPath) end
+function BlzGetAbilityIcon(i_abilCode) return string end
+function BlzSetAbilityActivatedIcon(i_abilCode, s_iconPath) end
+function BlzGetAbilityActivatedIcon(i_abilCode) return string end
+function BlzGetAbilityPosX(i_abilCode) return integer end
+function BlzGetAbilityPosY(i_abilCode) return integer end
+function BlzSetAbilityPosX(i_abilCode, i_x) end
+function BlzSetAbilityPosY(i_abilCode, i_y) end
+function BlzGetAbilityActivatedPosX(i_abilCode) return integer end
+function BlzGetAbilityActivatedPosY(i_abilCode) return integer end
+function BlzSetAbilityActivatedPosX(i_abilCode, i_x) end
+function BlzSetAbilityActivatedPosY(i_abilCode, i_y) end
 function BlzGetUnitMaxHP(unit_whichUnit) return integer end
-function BlzSetUnitMaxHP(unit_whichUnit, int_hp) end
+function BlzSetUnitMaxHP(unit_whichUnit, i_hp) end
 function BlzGetUnitMaxMana(unit_whichUnit) return integer end
-function BlzSetUnitMaxMana(unit_whichUnit, int_mana) end
-function BlzSetItemName(item_whichItem, str_name) end
-function BlzSetItemDescription(item_whichItem, str_description) end
+function BlzSetUnitMaxMana(unit_whichUnit, i_mana) end
+function BlzSetItemName(item_whichItem, s_name) end
+function BlzSetItemDescription(item_whichItem, s_description) end
 function BlzGetItemDescription(item_whichItem) return string end
-function BlzSetItemTooltip(item_whichItem, str_tooltip) end
+function BlzSetItemTooltip(item_whichItem, s_tooltip) end
 function BlzGetItemTooltip(item_whichItem) return string end
-function BlzSetItemExtendedTooltip(item_whichItem, str_extendedTooltip) end
+function BlzSetItemExtendedTooltip(item_whichItem, s_extendedTooltip) end
 function BlzGetItemExtendedTooltip(item_whichItem) return string end
-function BlzSetItemIconPath(item_whichItem, str_iconPath) end
+function BlzSetItemIconPath(item_whichItem, s_iconPath) end
 function BlzGetItemIconPath(item_whichItem) return string end
-function BlzSetUnitName(unit_whichUnit, str_name) end
-function BlzSetHeroProperName(unit_whichUnit, str_heroProperName) end
-function BlzGetUnitBaseDamage(unit_whichUnit, int_weaponIndex) return integer end
-function BlzSetUnitBaseDamage(unit_whichUnit, int_baseDamage, int_weaponIndex) end
-function BlzGetUnitDiceNumber(unit_whichUnit, int_weaponIndex) return integer end
-function BlzSetUnitDiceNumber(unit_whichUnit, int_diceNumber, int_weaponIndex) end
-function BlzGetUnitDiceSides(unit_whichUnit, int_weaponIndex) return integer end
-function BlzSetUnitDiceSides(unit_whichUnit, int_diceSides, int_weaponIndex) end
-function BlzGetUnitAttackCooldown(unit_whichUnit, int_weaponIndex) return real end
-function BlzSetUnitAttackCooldown(unit_whichUnit, r_cooldown, int_weaponIndex) end
+function BlzSetUnitName(unit_whichUnit, s_name) end
+function BlzSetHeroProperName(unit_whichUnit, s_heroProperName) end
+function BlzGetUnitBaseDamage(unit_whichUnit, i_weaponIndex) return integer end
+function BlzSetUnitBaseDamage(unit_whichUnit, i_baseDamage, i_weaponIndex) end
+function BlzGetUnitDiceNumber(unit_whichUnit, i_weaponIndex) return integer end
+function BlzSetUnitDiceNumber(unit_whichUnit, i_diceNumber, i_weaponIndex) end
+function BlzGetUnitDiceSides(unit_whichUnit, i_weaponIndex) return integer end
+function BlzSetUnitDiceSides(unit_whichUnit, i_diceSides, i_weaponIndex) end
+function BlzGetUnitAttackCooldown(unit_whichUnit, i_weaponIndex) return real end
+function BlzSetUnitAttackCooldown(unit_whichUnit, r_cooldown, i_weaponIndex) end
 function BlzSetSpecialEffectColorByPlayer(effect_whichEffect, player_whichPlayer) end
-function BlzSetSpecialEffectColor(effect_whichEffect, int_r, int_g, int_b) end
-function BlzSetSpecialEffectAlpha(effect_whichEffect, int_alpha) end
+function BlzSetSpecialEffectColor(effect_whichEffect, i_r, i_g, i_b) end
+function BlzSetSpecialEffectAlpha(effect_whichEffect, i_alpha) end
 function BlzSetSpecialEffectScale(effect_whichEffect, r_scale) end
 function BlzSetSpecialEffectPosition(effect_whichEffect, r_x, r_y, r_z) end
 function BlzSetSpecialEffectHeight(effect_whichEffect, r_height) end
@@ -2895,23 +3752,23 @@ function BlzPlaySpecialEffectWithTimeScale(effect_whichEffect, animtype_whichAni
 function BlzGetAnimName(animtype_whichAnim) return string end
 function BlzGetUnitArmor(unit_whichUnit) return real end
 function BlzSetUnitArmor(unit_whichUnit, r_armorAmount) end
-function BlzUnitHideAbility(unit_whichUnit, int_abilId, b_flag) end
-function BlzUnitDisableAbility(unit_whichUnit, int_abilId, b_flag, b_hideUI) end
+function BlzUnitHideAbility(unit_whichUnit, i_abilId, b_flag) end
+function BlzUnitDisableAbility(unit_whichUnit, i_abilId, b_flag, b_hideUI) end
 function BlzUnitCancelTimedLife(unit_whichUnit) end
 function BlzIsUnitSelectable(unit_whichUnit) return boolean end
 function BlzIsUnitInvulnerable(unit_whichUnit) return boolean end
 function BlzUnitInterruptAttack(unit_whichUnit) end
 function BlzGetUnitCollisionSize(unit_whichUnit) return real end
-function BlzGetAbilityManaCost(int_abilId, int_level) return integer end
-function BlzGetAbilityCooldown(int_abilId, int_level) return real end
-function BlzSetUnitAbilityCooldown(unit_whichUnit, int_abilId, int_level, r_cooldown) end
-function BlzGetUnitAbilityCooldown(unit_whichUnit, int_abilId, int_level) return real end
-function BlzGetUnitAbilityCooldownRemaining(unit_whichUnit, int_abilId) return real end
-function BlzEndUnitAbilityCooldown(unit_whichUnit, int_abilCode) end
-function BlzGetUnitAbilityManaCost(unit_whichUnit, int_abilId, int_level) return integer end
-function BlzSetUnitAbilityManaCost(unit_whichUnit, int_abilId, int_level, int_manaCost) end
+function BlzGetAbilityManaCost(i_abilId, i_level) return integer end
+function BlzGetAbilityCooldown(i_abilId, i_level) return real end
+function BlzSetUnitAbilityCooldown(unit_whichUnit, i_abilId, i_level, r_cooldown) end
+function BlzGetUnitAbilityCooldown(unit_whichUnit, i_abilId, i_level) return real end
+function BlzGetUnitAbilityCooldownRemaining(unit_whichUnit, i_abilId) return real end
+function BlzEndUnitAbilityCooldown(unit_whichUnit, i_abilCode) end
+function BlzGetUnitAbilityManaCost(unit_whichUnit, i_abilId, i_level) return integer end
+function BlzSetUnitAbilityManaCost(unit_whichUnit, i_abilId, i_level, i_manaCost) end
 function BlzGetLocalUnitZ(unit_whichUnit) return real end
-function BlzDecPlayerTechResearched(player_whichPlayer, int_techid, int_levels) end
+function BlzDecPlayerTechResearched(player_whichPlayer, i_techid, i_levels) end
 function BlzSetEventDamage(r_damage) end
 function BlzGetEventDamageTarget() return unit end
 function BlzGetEventAttackType() return attacktype end
@@ -2920,10 +3777,10 @@ function BlzGetEventWeaponType() return weapontype end
 function BlzSetEventAttackType(attacktype_attackType) return boolean end
 function BlzSetEventDamageType(damagetype_damageType) return boolean end
 function BlzSetEventWeaponType(weapontype_weaponType) return boolean end
-function RequestExtraIntegerData(int_dataType, player_whichPlayer, str_param1, str_param2, b_param3, int_param4, int_param5, int_param6) return integer end
-function RequestExtraBooleanData(int_dataType, player_whichPlayer, str_param1, str_param2, b_param3, int_param4, int_param5, int_param6) return boolean end
-function RequestExtraStringData(int_dataType, player_whichPlayer, str_param1, str_param2, b_param3, int_param4, int_param5, int_param6) return string end
-function RequestExtraRealData(int_dataType, player_whichPlayer, str_param1, str_param2, b_param3, int_param4, int_param5, int_param6) return real end
+function RequestExtraIntegerData(i_dataType, player_whichPlayer, s_param1, s_param2, b_param3, i_param4, i_param5, i_param6) return integer end
+function RequestExtraBooleanData(i_dataType, player_whichPlayer, s_param1, s_param2, b_param3, i_param4, i_param5, i_param6) return boolean end
+function RequestExtraStringData(i_dataType, player_whichPlayer, s_param1, s_param2, b_param3, i_param4, i_param5, i_param6) return string end
+function RequestExtraRealData(i_dataType, player_whichPlayer, s_param1, s_param2, b_param3, i_param4, i_param5, i_param6) return real end
 -- Add this function to follow the style of GetUnitX and GetUnitY, it has the same result as BlzGetLocalUnitZ
 function BlzGetUnitZ(unit_whichUnit) return real end
 function BlzEnableSelections(b_enableSelection, b_enableSelectionCircle) end
@@ -2932,13 +3789,15 @@ function BlzIsSelectionCircleEnabled() return boolean end
 function BlzCameraSetupApplyForceDurationSmooth(camerasetup_whichSetup, b_doPan, r_forcedDuration, r_easeInDuration, r_easeOutDuration, r_smoothFactor) end
 function BlzEnableTargetIndicator(b_enable) end
 function BlzIsTargetIndicatorEnabled() return boolean end
+
+function BlzGetOriginFrame(originframetype_frameType, i_index) return framehandle end
 function BlzEnableUIAutoPosition(b_enable) end
 function BlzHideOriginFrames(b_enable) end
-function BlzConvertColor(int_a, int_r, int_g, int_b) return integer end
-function BlzLoadTOCFile(str_TOCFile) return boolean end
-function BlzCreateFrame(str_name, framehandle_owner, int_priority, int_createContext) return framehandle end
-function BlzCreateSimpleFrame(str_name, framehandle_owner, int_createContext) return framehandle end
-function BlzCreateFrameByType(str_typeName, str_name, framehandle_owner, str_inherits, int_createContext) return framehandle end
+function BlzConvertColor(i_a, i_r, i_g, i_b) return integer end
+function BlzLoadTOCFile(s_TOCFile) return boolean end
+function BlzCreateFrame(s_name, framehandle_owner, i_priority, i_createContext) return framehandle end
+function BlzCreateSimpleFrame(s_name, framehandle_owner, i_createContext) return framehandle end
+function BlzCreateFrameByType(s_typeName, s_name, framehandle_owner, s_inherits, i_createContext) return framehandle end
 function BlzDestroyFrame(framehandle_frame) end
 function BlzFrameSetPoint(framehandle_frame, framepointtype_point, framehandle_relative, framepointtype_relativePoint, r_x, r_y) end
 function BlzFrameSetAbsPoint(framehandle_frame, framepointtype_point, r_x, r_y) end
@@ -2946,22 +3805,22 @@ function BlzFrameClearAllPoints(framehandle_frame) end
 function BlzFrameSetAllPoints(framehandle_frame, framehandle_relative) end
 function BlzFrameSetVisible(framehandle_frame, b_visible) end
 function BlzFrameIsVisible(framehandle_frame) return boolean end
-function BlzGetFrameByName(str_name, int_createContext) return framehandle end
+function BlzGetFrameByName(s_name, i_createContext) return framehandle end
 function BlzFrameGetName(framehandle_frame) return string end
 function BlzFrameClick(framehandle_frame) end
-function BlzFrameSetText(framehandle_frame, str_text) end
+function BlzFrameSetText(framehandle_frame, s_text) end
 function BlzFrameGetText(framehandle_frame) return string end
-function BlzFrameSetTextSizeLimit(framehandle_frame, int_size) end
+function BlzFrameSetTextSizeLimit(framehandle_frame, i_size) end
 function BlzFrameGetTextSizeLimit(framehandle_frame) return integer end
-function BlzFrameSetTextColor(framehandle_frame, int_color) end
+function BlzFrameSetTextColor(framehandle_frame, i_color) end
 function BlzFrameSetFocus(framehandle_frame, b_flag) end
-function BlzFrameSetModel(framehandle_frame, str_modelFile, int_cameraIndex) end
+function BlzFrameSetModel(framehandle_frame, s_modelFile, i_cameraIndex) end
 function BlzFrameSetEnable(framehandle_frame, b_enabled) end
 function BlzFrameGetEnable(framehandle_frame) return boolean end
-function BlzFrameSetAlpha(framehandle_frame, int_alpha) end
+function BlzFrameSetAlpha(framehandle_frame, i_alpha) end
 function BlzFrameGetAlpha(framehandle_frame) return integer end
-function BlzFrameSetSpriteAnimate(framehandle_frame, int_primaryProp, int_flags) end
-function BlzFrameSetTexture(framehandle_frame, str_texFile, int_flag, b_blend) end
+function BlzFrameSetSpriteAnimate(framehandle_frame, i_primaryProp, i_flags) end
+function BlzFrameSetTexture(framehandle_frame, s_texFile, i_flag, b_blend) end
 function BlzFrameSetScale(framehandle_frame, r_scale) end
 function BlzFrameSetTooltip(framehandle_frame, framehandle_tooltip) end
 function BlzFrameCageMouse(framehandle_frame, b_enable) end
@@ -2970,101 +3829,111 @@ function BlzFrameGetValue(framehandle_frame) return real end
 function BlzFrameSetMinMaxValue(framehandle_frame, r_minValue, r_maxValue) end
 function BlzFrameSetStepSize(framehandle_frame, r_stepSize) end
 function BlzFrameSetSize(framehandle_frame, r_width, r_height) end
-function BlzFrameSetVertexColor(framehandle_frame, int_color) end
-function BlzFrameSetLevel(framehandle_frame, int_level) end
+function BlzFrameSetVertexColor(framehandle_frame, i_color) end
+function BlzFrameSetLevel(framehandle_frame, i_level) end
 function BlzFrameSetParent(framehandle_frame, framehandle_parent) end
 function BlzFrameGetParent(framehandle_frame) return framehandle end
 function BlzFrameGetHeight(framehandle_frame) return real end
 function BlzFrameGetWidth(framehandle_frame) return real end
-function BlzFrameSetFont(framehandle_frame, str_fileName, r_height, int_flags) end
+function BlzFrameSetFont(framehandle_frame, s_fileName, r_height, i_flags) end
 function BlzFrameSetTextAlignment(framehandle_frame, textaligntype_vert, textaligntype_horz) end
 function BlzTriggerRegisterFrameEvent(trigger_whichTrigger, framehandle_frame, frameeventtype_eventId) return event end
 function BlzGetTriggerFrame() return framehandle end
 function BlzGetTriggerFrameEvent() return frameeventtype end
-function BlzTriggerRegisterPlayerSyncEvent(trigger_whichTrigger, player_whichPlayer, str_prefix, b_fromServer) return event end
-function BlzSendSyncData(str_prefix, str_data) return boolean end
+function BlzTriggerRegisterPlayerSyncEvent(trigger_whichTrigger, player_whichPlayer, s_prefix, b_fromServer) return event end
+function BlzSendSyncData(s_prefix, s_data) return boolean end
 function BlzGetTriggerSyncPrefix() return string end
 function BlzGetTriggerSyncData() return string end
-function BlzTriggerRegisterPlayerKeyEvent(trigger_whichTrigger, player_whichPlayer, oskeytype_key, int_metaKey, b_keyDown) return event end
+function BlzTriggerRegisterPlayerKeyEvent(trigger_whichTrigger, player_whichPlayer, oskeytype_key, i_metaKey, b_keyDown) return event end
 function BlzGetTriggerPlayerKey() return oskeytype end
 function BlzGetTriggerPlayerMetaKey() return integer end
 function BlzGetTriggerPlayerIsKeyDown() return boolean end
 function BlzEnableCursor(b_enable) end
-function BlzSetMousePos(int_x, int_y) end
+function BlzSetMousePos(i_x, i_y) end
 function BlzGetLocalClientWidth() return integer end
 function BlzGetLocalClientHeight() return integer end
 function BlzIsLocalClientActive() return boolean end
 function BlzGetMouseFocusUnit() return unit end
-function BlzChangeMinimapTerrainTex(str_texFile) return boolean end
+function BlzChangeMinimapTerrainTex(s_texFile) return boolean end
 function BlzGetLocale() return string end
 function BlzGetSpecialEffectScale(effect_whichEffect) return real end
 function BlzSetSpecialEffectMatrixScale(effect_whichEffect, r_x, r_y, r_z) end
 function BlzResetSpecialEffectMatrix(effect_whichEffect) end
-function BlzGetUnitAbility(unit_whichUnit, int_abilId) return ability end
-function BlzGetUnitAbilityByIndex(unit_whichUnit, int_index) return ability end
-function BlzDisplayChatMessage(player_whichPlayer, int_recipient, str_message) end
+function BlzGetUnitAbility(unit_whichUnit, i_abilId) return ability end
+function BlzGetUnitAbilityByIndex(unit_whichUnit, i_index) return ability end
+function BlzDisplayChatMessage(player_whichPlayer, i_recipient, s_message) end
 function BlzPauseUnitEx(unit_whichUnit, b_flag) end
-function BlzBitOr(int_x, int_y) return integer end
-function BlzBitAnd(int_x, int_y) return integer end
-function BlzBitXor(int_x, int_y) return integer end
+
+-- Bit Operations
+function BlzBitOr(i_x, i_y) return integer end
+function BlzBitAnd(i_x, i_y) return integer end
+function BlzBitXor(i_x, i_y) return integer end
+
+-- Intanced Object Operations
 -- Ability
 function BlzGetAbilityBooleanField(ability_whichAbility, abilitybooleanfield_whichField) return boolean end
 function BlzGetAbilityIntegerField(ability_whichAbility, abilityintegerfield_whichField) return integer end
 function BlzGetAbilityRealField(ability_whichAbility, abilityrealfield_whichField) return real end
 function BlzGetAbilityStringField(ability_whichAbility, abilitystringfield_whichField) return string end
-function BlzGetAbilityBooleanLevelField(ability_whichAbility, abilitybooleanlevelfield_whichField, int_level) return boolean end
-function BlzGetAbilityIntegerLevelField(ability_whichAbility, abilityintegerlevelfield_whichField, int_level) return integer end
-function BlzGetAbilityRealLevelField(ability_whichAbility, abilityreallevelfield_whichField, int_level) return real end
-function BlzGetAbilityStringLevelField(ability_whichAbility, abilitystringlevelfield_whichField, int_level) return string end
-function BlzGetAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, int_level, int_index) return boolean end
-function BlzGetAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, int_level, int_index) return integer end
-function BlzGetAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, int_level, int_index) return real end
-function BlzGetAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, int_level, int_index) return string end
+function BlzGetAbilityBooleanLevelField(ability_whichAbility, abilitybooleanlevelfield_whichField, i_level) return boolean end
+function BlzGetAbilityIntegerLevelField(ability_whichAbility, abilityintegerlevelfield_whichField, i_level) return integer end
+function BlzGetAbilityRealLevelField(ability_whichAbility, abilityreallevelfield_whichField, i_level) return real end
+function BlzGetAbilityStringLevelField(ability_whichAbility, abilitystringlevelfield_whichField, i_level) return string end
+function BlzGetAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, i_level, i_index) return boolean end
+function BlzGetAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, i_level, i_index) return integer end
+function BlzGetAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, i_level, i_index) return real end
+function BlzGetAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, i_level, i_index) return string end
 function BlzSetAbilityBooleanField(ability_whichAbility, abilitybooleanfield_whichField, b_value) return boolean end
-function BlzSetAbilityIntegerField(ability_whichAbility, abilityintegerfield_whichField, int_value) return boolean end
+function BlzSetAbilityIntegerField(ability_whichAbility, abilityintegerfield_whichField, i_value) return boolean end
 function BlzSetAbilityRealField(ability_whichAbility, abilityrealfield_whichField, r_value) return boolean end
-function BlzSetAbilityStringField(ability_whichAbility, abilitystringfield_whichField, str_value) return boolean end
-function BlzSetAbilityBooleanLevelField(ability_whichAbility, abilitybooleanlevelfield_whichField, int_level, b_value) return boolean end
-function BlzSetAbilityIntegerLevelField(ability_whichAbility, abilityintegerlevelfield_whichField, int_level, int_value) return boolean end
-function BlzSetAbilityRealLevelField(ability_whichAbility, abilityreallevelfield_whichField, int_level, r_value) return boolean end
-function BlzSetAbilityStringLevelField(ability_whichAbility, abilitystringlevelfield_whichField, int_level, str_value) return boolean end
-function BlzSetAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, int_level, int_index, b_value) return boolean end
-function BlzSetAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, int_level, int_index, int_value) return boolean end
-function BlzSetAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, int_level, int_index, r_value) return boolean end
-function BlzSetAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, int_level, int_index, str_value) return boolean end
-function BlzAddAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, int_level, b_value) return boolean end
-function BlzAddAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, int_level, int_value) return boolean end
-function BlzAddAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, int_level, r_value) return boolean end
-function BlzAddAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, int_level, str_value) return boolean end
-function BlzRemoveAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, int_level, b_value) return boolean end
-function BlzRemoveAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, int_level, int_value) return boolean end
-function BlzRemoveAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, int_level, r_value) return boolean end
-function BlzRemoveAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, int_level, str_value) return boolean end
-function BlzGetItemAbilityByIndex(item_whichItem, int_index) return ability end
-function BlzGetItemAbility(item_whichItem, int_abilCode) return ability end
-function BlzItemAddAbility(item_whichItem, int_abilCode) return boolean end
+function BlzSetAbilityStringField(ability_whichAbility, abilitystringfield_whichField, s_value) return boolean end
+function BlzSetAbilityBooleanLevelField(ability_whichAbility, abilitybooleanlevelfield_whichField, i_level, b_value) return boolean end
+function BlzSetAbilityIntegerLevelField(ability_whichAbility, abilityintegerlevelfield_whichField, i_level, i_value) return boolean end
+function BlzSetAbilityRealLevelField(ability_whichAbility, abilityreallevelfield_whichField, i_level, r_value) return boolean end
+function BlzSetAbilityStringLevelField(ability_whichAbility, abilitystringlevelfield_whichField, i_level, s_value) return boolean end
+function BlzSetAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, i_level, i_index, b_value) return boolean end
+function BlzSetAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, i_level, i_index, i_value) return boolean end
+function BlzSetAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, i_level, i_index, r_value) return boolean end
+function BlzSetAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, i_level, i_index, s_value) return boolean end
+function BlzAddAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, i_level, b_value) return boolean end
+function BlzAddAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, i_level, i_value) return boolean end
+function BlzAddAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, i_level, r_value) return boolean end
+function BlzAddAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, i_level, s_value) return boolean end
+function BlzRemoveAbilityBooleanLevelArrayField(ability_whichAbility, abilitybooleanlevelarrayfield_whichField, i_level, b_value) return boolean end
+function BlzRemoveAbilityIntegerLevelArrayField(ability_whichAbility, abilityintegerlevelarrayfield_whichField, i_level, i_value) return boolean end
+function BlzRemoveAbilityRealLevelArrayField(ability_whichAbility, abilityreallevelarrayfield_whichField, i_level, r_value) return boolean end
+function BlzRemoveAbilityStringLevelArrayField(ability_whichAbility, abilitystringlevelarrayfield_whichField, i_level, s_value) return boolean end
+
+-- Item
+function BlzGetItemAbilityByIndex(item_whichItem, i_index) return ability end
+function BlzGetItemAbility(item_whichItem, i_abilCode) return ability end
+function BlzItemAddAbility(item_whichItem, i_abilCode) return boolean end
 function BlzGetItemBooleanField(item_whichItem, itembooleanfield_whichField) return boolean end
 function BlzGetItemIntegerField(item_whichItem, itemintegerfield_whichField) return integer end
 function BlzGetItemRealField(item_whichItem, itemrealfield_whichField) return real end
 function BlzGetItemStringField(item_whichItem, itemstringfield_whichField) return string end
 function BlzSetItemBooleanField(item_whichItem, itembooleanfield_whichField, b_value) return boolean end
-function BlzSetItemIntegerField(item_whichItem, itemintegerfield_whichField, int_value) return boolean end
+function BlzSetItemIntegerField(item_whichItem, itemintegerfield_whichField, i_value) return boolean end
 function BlzSetItemRealField(item_whichItem, itemrealfield_whichField, r_value) return boolean end
-function BlzSetItemStringField(item_whichItem, itemstringfield_whichField, str_value) return boolean end
-function BlzItemRemoveAbility(item_whichItem, int_abilCode) return boolean end
+function BlzSetItemStringField(item_whichItem, itemstringfield_whichField, s_value) return boolean end
+function BlzItemRemoveAbility(item_whichItem, i_abilCode) return boolean end
+
+-- Unit
 function BlzGetUnitBooleanField(unit_whichUnit, unitbooleanfield_whichField) return boolean end
 function BlzGetUnitIntegerField(unit_whichUnit, unitintegerfield_whichField) return integer end
 function BlzGetUnitRealField(unit_whichUnit, unitrealfield_whichField) return real end
 function BlzGetUnitStringField(unit_whichUnit, unitstringfield_whichField) return string end
 function BlzSetUnitBooleanField(unit_whichUnit, unitbooleanfield_whichField, b_value) return boolean end
-function BlzSetUnitIntegerField(unit_whichUnit, unitintegerfield_whichField, int_value) return boolean end
+function BlzSetUnitIntegerField(unit_whichUnit, unitintegerfield_whichField, i_value) return boolean end
 function BlzSetUnitRealField(unit_whichUnit, unitrealfield_whichField, r_value) return boolean end
-function BlzSetUnitStringField(unit_whichUnit, unitstringfield_whichField, str_value) return boolean end
-function BlzGetUnitWeaponBooleanField(unit_whichUnit, unitweaponbooleanfield_whichField, int_index) return boolean end
-function BlzGetUnitWeaponIntegerField(unit_whichUnit, unitweaponintegerfield_whichField, int_index) return integer end
-function BlzGetUnitWeaponRealField(unit_whichUnit, unitweaponrealfield_whichField, int_index) return real end
-function BlzGetUnitWeaponStringField(unit_whichUnit, unitweaponstringfield_whichField, int_index) return string end
-function BlzSetUnitWeaponBooleanField(unit_whichUnit, unitweaponbooleanfield_whichField, int_index, b_value) return boolean end
-function BlzSetUnitWeaponIntegerField(unit_whichUnit, unitweaponintegerfield_whichField, int_index, int_value) return boolean end
-function BlzSetUnitWeaponRealField(unit_whichUnit, unitweaponrealfield_whichField, int_index, r_value) return boolean end
-function BlzSetUnitWeaponStringField(unit_whichUnit, unitweaponstringfield_whichField, int_index, str_value) return boolean end
+function BlzSetUnitStringField(unit_whichUnit, unitstringfield_whichField, s_value) return boolean end
+
+-- Unit Weapon
+function BlzGetUnitWeaponBooleanField(unit_whichUnit, unitweaponbooleanfield_whichField, i_index) return boolean end
+function BlzGetUnitWeaponIntegerField(unit_whichUnit, unitweaponintegerfield_whichField, i_index) return integer end
+function BlzGetUnitWeaponRealField(unit_whichUnit, unitweaponrealfield_whichField, i_index) return real end
+function BlzGetUnitWeaponStringField(unit_whichUnit, unitweaponstringfield_whichField, i_index) return string end
+function BlzSetUnitWeaponBooleanField(unit_whichUnit, unitweaponbooleanfield_whichField, i_index, b_value) return boolean end
+function BlzSetUnitWeaponIntegerField(unit_whichUnit, unitweaponintegerfield_whichField, i_index, i_value) return boolean end
+function BlzSetUnitWeaponRealField(unit_whichUnit, unitweaponrealfield_whichField, i_index, r_value) return boolean end
+function BlzSetUnitWeaponStringField(unit_whichUnit, unitweaponstringfield_whichField, i_index, s_value) return boolean end
