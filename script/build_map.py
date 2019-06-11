@@ -1,5 +1,8 @@
+'''
+    Docs
+'''
+
 import sys
-sys.path.insert(0, '.')
 import os
 import shutil
 import subprocess
@@ -8,6 +11,8 @@ import parse
 import fix_requires
 import rename
 import utils as u
+from luaparser import ast
+
 
 argc = len(sys.argv)
 if (argc > 1 and sys.argv[1] == '-h') or argc < 4:
@@ -37,6 +42,7 @@ if os.path.isfile(base_src):
 else:
     print('Can not find %s file.' % base_src)
     sys.exit()
+
 
 rename.rename_modules_in_folder(src_path, src_path, build_path)
 fix_requires.fixRequires(build_path, build_path)
