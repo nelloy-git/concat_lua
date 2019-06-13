@@ -527,10 +527,6 @@ class String(Expression):
         self.s = s
 
 
-    def str(self, lvl):
-        return '\'' + self.s + '\''
-
-
 class Field(Expression):
     """Define a lua table field expression
 
