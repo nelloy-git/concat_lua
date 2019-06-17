@@ -9,8 +9,14 @@ chat.text.aza = 'azaza '
 --]]
 
 function chat:wh(...)
-    local arg = {...}
-    local t = function () arg = {} end
+    local a = 2
+    a = 1 + 1
+    a = 1 - 1
+    a = 1 * 1
+    a = 1 / 1
+    a = 1 // 1
+    a = 1 % 1
+    a = 1 ^ 1
 end
 
 chat.print = print(msg)
