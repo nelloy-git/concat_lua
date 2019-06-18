@@ -1,15 +1,17 @@
 local chat = {}
 
-require('blizzard.common')
-
 chat.text.aza = 'azaza '
 
 --[[ 
     Some comments
 --]]
 
+local b = 1
+chat.b = 1
+
 function chat:wh(...)
     local a = 2
+    chat.b = b + 1
     a = 1 + 1
     a = 1 - 1
     a = 1 * 1

@@ -9,6 +9,17 @@ def chunk_to_str(node, lvl):
 def block_to_str(node, lvl=0):
     ''' Converts ast.Block to str. '''
     s = ''
+    loc_vars = []
+    for line in node.body:
+        if type(line) == ast.LocalAssign:
+            for var in line.targets:
+                loc_vars.append(node_to_str(var, lvl))
+
+    s += '  ' * lvl + '-- Local variables: '
+    for var in loc_vars:
+        s += var + ', '
+    s = s[:-2] + '\n'
+
     for line in node.body:
         s += '  ' * lvl + node_to_str(line, lvl + 1) + '\n'
     s = s[:-1]
@@ -355,6 +366,7 @@ def concat_to_str(node, lvl):
     ''' Converts ast.Concat to str. '''
     return node_to_str(node.left, lvl) + '..' + node_to_str(node.right, lvl)
 
+
 def unary_minus_to_str(node, lvl):
     ''' Converts ast. to str. '''
     return '-' + node_to_str(node.operand, lvl)
@@ -367,14 +379,12 @@ def not_bit_to_str(node, lvl):
 
 def not_to_str(node, lvl):
     ''' Converts ast. to str. '''
-    return '' + node_to_str(node.operand, lvl)
+    return 'not ' + node_to_str(node.operand, lvl)
 
 
 def length_to_str(node, lvl):
     ''' Converts ast. to str. '''
-    return '' + node_to_str(node.operand, lvl)
-
-
+    return '#' + node_to_str(node.operand, lvl)
 
 
 switcher = [
