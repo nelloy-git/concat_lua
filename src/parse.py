@@ -1,16 +1,11 @@
 ''' Some info
 '''
 
-from luaparser import ast
 import ast_to_lua as atl
 
-path = './src/modules/test_chat.lua'
+src_dir = '/home/bugrov/lua/concat_lua/src'
+dst_dir = '/home/bugrov/lua/concat_lua/build/scripts'
+module_path = 'modules/test_chat.lua'
 
-with open(path, 'r') as file:
-    data = file.read()
-tree = ast.parse(data)
-
-print(ast.to_pretty_str(tree))
-
-print(atl.node_to_str(tree))
+atl.parse_module(module_path, src_dir, dst_dir)
     

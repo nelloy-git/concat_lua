@@ -1,3 +1,4 @@
+import os
 from luaparser import ast
 
 
@@ -14,11 +15,6 @@ def block_to_str(node, lvl=0):
         if type(line) == ast.LocalAssign:
             for var in line.targets:
                 loc_vars.append(node_to_str(var, lvl))
-
-    s += '  ' * lvl + '-- Local variables: '
-    for var in loc_vars:
-        s += var + ', '
-    s = s[:-2] + '\n'
 
     for line in node.body:
         s += '  ' * lvl + node_to_str(line, lvl + 1) + '\n'
@@ -460,3 +456,63 @@ def node_to_str(node, lvl=0):
         if type(node) == node_type[0]:
             return node_type[1](node, lvl)
     return 'Not parsed'
+
+
+def rename(new, old, tree):
+    ''' Rename variable. '''
+    for node in ast.walk(tree):
+        if type(node) == ast.Name and node.id == old:
+            node.id = new
+
+
+def call_requare():
+    ''' Require function implementation. '''
+    return
+
+
+def path_to_module_name(path):
+    ''' Converts module path to module name. '''
+    return path.replace('.', '_').replace('/', '_')
+
+
+def get_index_name(node):
+    if type(node) == ast.Name:
+        return node
+    return get_index_name(node.value)
+
+
+def parse_module(module_path, src_dir, dst_dir):
+    full_src_path = src_dir + '/' + module_path
+    full_dst_path = dst_dir + '/' + module_path
+    module_path = module_path[:-4]
+
+    with open(full_src_path, 'r') as file:
+        module = file.read()
+    tree = ast.parse(module)
+    module_name = path_to_module_name(module_path)
+
+    # Generate list of variables for renaming.
+    variables = []
+    names = []
+    for node in tree.body.body:
+        if type(node) == ast.LocalAssign or type(node) == ast.Assign:
+            for targ in node.targets:
+                variables.append(targ)
+                if type(targ) == ast.Name:
+                    names.append(targ.id)
+                if type(targ) == ast.Index:
+                    names.append(get_index_name(targ).id)
+
+    # Rename.
+    for name in names:
+        rename(module_name + '_' + name, name, tree)
+
+    # Write file.
+    if not os.path.exists(full_dst_path[:full_dst_path.rfind('/')]):
+        os.mkdir(full_dst_path[:full_dst_path.rfind('/')])
+
+    if os.path.isfile(full_dst_path[:full_dst_path.rfind('/')] + '/' + module_name + '.lua'):
+        os.remove(full_dst_path[:full_dst_path.rfind('/')] + '/' + module_name + '.lua')
+    built_module = open(full_dst_path[:full_dst_path.rfind('/')] + '/' + module_name + '.lua', 'w')
+    built_module.write('\n-- Module ' + module_name + ' --\n\n')
+    built_module.write(node_to_str(tree))
