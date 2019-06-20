@@ -4,10 +4,10 @@ Unit = {
 
 local Unit_mt = {__index = Unit}
 
-function Unit.new(--[[Enter arguments--]])
+function Unit.new(player_id, i_unitid, r_x, r_y, r_face)
     local instance = {}
     setmetatable(instance, Unit_mt)
-    instance.unit = --Add constructor
+    instance.unit = Unit.create(player_id, i_unitid, r_x, r_y, r_face)
     return instance
 end
 

@@ -1,6 +1,3 @@
-
--- Module modules_test_chat --
-
 local modules_test_chat_chat = {}
 modules_test_chat_chat.text.aza = 'azaza '
 local modules_test_chat_b = 1
