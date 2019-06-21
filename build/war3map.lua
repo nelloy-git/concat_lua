@@ -1,9 +1,11 @@
 -- Module modules/test_chat.lua start. --
 
 local modules_test_chat_chat = {}
-modules_test_chat_chat.text.aza = 'azaza '
 local modules_test_chat_b = 1
 modules_test_chat_chat.b = 1
+function return_2()
+  return 2
+end
 function modules_test_chat_chat:wh(a)
   local a = 2
   modules_test_chat_chat.b = modules_test_chat_b+1
@@ -11,13 +13,12 @@ function modules_test_chat_chat:wh(a)
   a = 1-1
   a = 1*1
   a = 1/1
-  a = 1//1
   a = 1%1
   a = 1^1
 end
-modules_test_chat_chat.print = print(msg)
 
 -- Module modules/test_chat.lua end. --
+
 
 -- Module war3map.lua start. --
 
@@ -63,19 +64,19 @@ function InitCustomTeams()
 end
 function main()
   SetCameraBounds(-3328.0+GetCameraMargin(CAMERA_MARGIN_LEFT), -3584.0+GetCameraMargin(CAMERA_MARGIN_BOTTOM), 3328.0-GetCameraMargin(CAMERA_MARGIN_RIGHT), 3072.0-GetCameraMargin(CAMERA_MARGIN_TOP), -3328.0+GetCameraMargin(CAMERA_MARGIN_LEFT), 3072.0-GetCameraMargin(CAMERA_MARGIN_TOP), 3328.0-GetCameraMargin(CAMERA_MARGIN_RIGHT), -3584.0+GetCameraMargin(CAMERA_MARGIN_BOTTOM))
-  SetDayNightModels('Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl', 'Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl')
-  NewSoundEnvironment('Default')
-  SetAmbientDaySound('LordaeronSummerDay')
-  SetAmbientNightSound('LordaeronSummerNight')
-  SetMapMusic('Music', true, 0)
+  SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
+  NewSoundEnvironment("Default")
+  SetAmbientDaySound("LordaeronSummerDay")
+  SetAmbientNightSound("LordaeronSummerNight")
+  SetMapMusic("Music", true, 0)
   InitBlizzard()
   InitGlobals()
   InitCustomTriggers()
   RunInitializationTriggers()
 end
 function config()
-  SetMapName('TRIGSTR_001')
-  SetMapDescription('TRIGSTR_003')
+  SetMapName("TRIGSTR_001")
+  SetMapDescription("TRIGSTR_003")
   SetPlayers(1)
   SetTeams(1)
   SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)

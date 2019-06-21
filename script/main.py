@@ -2,6 +2,9 @@
 '''
 
 import ast_to_lua as atl
+import call_lua as cl
+import pathlib
+import os
 
 src_dir = '/home/bugrov/lua/concat_lua/src'
 dst_dir = '/home/bugrov/lua/concat_lua/build/scripts'
@@ -19,4 +22,16 @@ done = atl.parse_list('war3map.lua', dst_dir, files_list, requires_list, content
 if not done:
     print('Parsing failed.')
 
-atl.link_content(dst_dir[:dst_dir.rfind('/')] + '/war3map.lua', files_list, content_list)
+full_content = atl.link_content(files_list, content_list)
+
+res_path = dst_dir[:dst_dir.rfind('/')]
+
+pathlib.Path(res_path).mkdir(parents=True, exist_ok=True)
+if os.path.isfile(res_path):
+    os.remove(res_path)
+
+with open(res_path + '/war3map.lua', 'w') as file:
+    file.write(full_content)
+
+lua_content = cl.load_content(atl.node_to_str(content_list[1]))
+print(lua_content)

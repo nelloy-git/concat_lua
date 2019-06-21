@@ -1,5 +1,3 @@
-import os
-import pathlib
 from luaparser import ast
 
 
@@ -10,17 +8,11 @@ def chunk_to_str(node, lvl):
 
 def block_to_str(node, lvl=0):
     ''' Converts ast.Block to str. '''
-    s = ''
-    loc_vars = []
+    res = ''
     for line in node.body:
-        if type(line) == ast.LocalAssign:
-            for var in line.targets:
-                loc_vars.append(node_to_str(var, lvl))
-
-    for line in node.body:
-        s += '  ' * lvl + node_to_str(line, lvl + 1) + '\n'
-    s = s[:-1]
-    return s
+        res += '  ' * lvl + node_to_str(line, lvl + 1) + '\n'
+    res = res[:-1]
+    return res
 
 
 def name_to_str(node, _):
@@ -73,7 +65,8 @@ def loc_assign_to_str(node, lvl):
 
 def while_to_str(node, lvl):
     ''' Converts ast.While to str. '''
-    return 'while(' + node_to_str(node.test) + ') do\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
+    return 'while(' + node_to_str(node.test) + ') do\n' + \
+            node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
 
 
 def do_to_str(node, lvl):
@@ -83,12 +76,14 @@ def do_to_str(node, lvl):
 
 def repeat_to_str(node, lvl):
     ''' Converts ast.Repeat to str. '''
-    return 'repeat\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'until(' + node_to_str(node.test, lvl) + ')'
+    return 'repeat\n' + node_to_str(node.body, lvl) + '\n' + \
+            ('  ' * (lvl-1)) + 'until(' + node_to_str(node.test, lvl) + ')'
 
 
 def else_if_to_str(node, lvl):
     ''' Converts ast.ElseIf to str. '''
-    s_if = 'elseif (' + node_to_str(node.test, lvl) + ') then\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1))
+    s_if = 'elseif (' + node_to_str(node.test, lvl) + ') then\n' + \
+            node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1))
     if node.orelse is not None:
         if isinstance(node.orelse, ast.ElseIf):
             s_if += node_to_str(node.orelse, lvl) + '\n'
@@ -102,7 +97,8 @@ def else_if_to_str(node, lvl):
 
 def if_to_str(node, lvl):
     ''' Converts ast.If to str. '''
-    s_if = 'if (' + node_to_str(node.test, lvl) + ') then\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1))
+    s_if = 'if (' + node_to_str(node.test, lvl) + ') then\n' + \
+            node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1))
     if node.orelse is not None:
         if isinstance(node.orelse, ast.ElseIf):
             s_if += node_to_str(node.orelse, lvl) + '\n'
@@ -114,7 +110,7 @@ def if_to_str(node, lvl):
     return s_if
 
 
-def label_to_str(node, lvl):
+def label_to_str(node, _):
     ''' Converts ast.Label to str. '''
     return '::' + node.id + '::'
 
@@ -227,7 +223,7 @@ def varargs_to_str(node, lvl):
 
 def string_to_str(node, lvl):
     ''' Converts ast.String to str. '''
-    return '\'' + node.s + '\''
+    return '\"' + node.s + '\"'
 
 
 def field_to_str(node, lvl):
@@ -457,170 +453,3 @@ def node_to_str(node, lvl=0):
         if type(node) == node_type[0]:
             return node_type[1](node, lvl)
     return 'Not parsed'
-
-
-def rename(new, old, tree):
-    ''' Rename variable. '''
-    for node in ast.walk(tree):
-        if type(node) == ast.Name and node.id == old:
-            node.id = new
-
-
-def call_require():
-    ''' Require function implementation. '''
-    return
-
-
-def path_to_module_name(path):
-    ''' Converts module path to module name. '''
-    return path.replace('.', '_').replace('/', '_')
-
-
-def name_to_module_path(path):
-    ''' Converts module name to module path. '''
-    return path.replace('.', '/') + '.lua'
-
-
-def get_index_name(node):
-    if type(node) == ast.Name:
-        return node
-    return get_index_name(node.value)
-
-
-def preparse_module(module_path, src_dir, dst_dir):
-
-    full_src_path = src_dir + '/' + module_path
-    full_dst_path = dst_dir + '/' + module_path
-    module_path = module_path[:-4]
-
-    with open(full_src_path, 'r') as file:
-        module = file.read()
-    tree = ast.parse(module)
-    module_name = path_to_module_name(module_path)
-
-    # Generate list of variables for renaming.
-    variables = []
-    names = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call) and node_to_str(node.func, 0) == 'require':
-            if len(node.args) > 1 or not isinstance(node.args[0], ast.String):
-                s = ''
-                for arg in node.args:
-                    s += node_to_str(arg) + ', '
-                s = s[:-2]
-                print('Error in require(' + s + '). File: ' + src_dir + '/' + module_path + '.lua')
-                print('Require function needs one constant string argument.')
-            path = name_to_module_path(node.args[0].s)
-            preparse_module(path, src_dir, dst_dir)
-
-    print('Preparing ' + src_dir + '/' + module_path + '.lua')
-    for node in tree.body.body:
-        if isinstance(node, ast.Assign):
-            for targ in node.targets:
-                variables.append(targ)
-                if type(targ) == ast.Name:
-                    names.append(targ.id)
-                if type(targ) == ast.Index:
-                    names.append(get_index_name(targ).id)
-            
-    # Rename.
-    f_name = module_name
-    if f_name != 'war3map' and f_name != 'main':
-        for name in names:
-            rename(module_name + '_' + name, name, tree)
-
-    # Write file.
-    pathlib.Path(full_dst_path[:full_dst_path.rfind('/')]).mkdir(parents=True, exist_ok=True)
-
-    if os.path.isfile(dst_dir + '/' + module_path + '.lua'):
-        os.remove(dst_dir + '/' + module_path + '.lua')
-
-    built_module = open(dst_dir + '/' + module_path + '.lua', 'w')
-    #built_module.write('\n-- Module ' + module_name + ' start. --\n\n')
-    content = node_to_str(tree)
-    built_module.write(content)
-    #built_module.write('\n\n-- Module ' + module_name + ' end. --')
-
-
-def print_module(path):
-    ''' Prints module '''
-    with open(path, 'r') as file:
-        module = file.read()
-    tree = ast.parse(module)
-    print(node_to_str(tree))
-
-
-def parse_list(path, src_dir, files_list, requires_list, content_list, return_list):
-    with open(src_dir + '/' + path, 'r') as file:
-        module = file.read()
-    tree = ast.parse(module)
-
-    # Add self to lists.
-    files_list.append(path)
-    requires_list.append([])
-    content_list.append(tree)
-    return_list.append(None)
-    pos = len(files_list) - 1
-
-    # Search requires.
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Assign):
-            continue
-
-        if len(node.values) > 1:
-            for val in node.values:
-                if isinstance(val, ast.Call) and node_to_str(val.func) == 'require':
-                    print('Error in require(' + path_to_module_name(node_to_str(val.args[0])) + '). File: ' + src_dir + '/' + path + '\nRequire function can not be used in multiple assignment.')
-                    return False
-
-        if isinstance(node.values[0], ast.Call) and node_to_str(node.values[0].func) == 'require':
-            args = node.values[0].args
-            if len(args) != 1:
-                print('Error in require function. File: ' + src_dir + '/' + path + '\nRequire function can have only one argument.')
-                return False
-
-            if type(args[0]) == ast.String:
-                requires_list[pos].append(node)
-            else:
-                print('Error in require function. File: ' + src_dir + '/' + path + '\nArgument must be constant string.')
-                return False
-
-    # Search return in main block.
-    for node in tree.body.body:
-        if type(node) == ast.Return:
-            return_list[pos] = node.values
-            tree.body.body.remove(node)
-
-    # Preparse requires.
-    for require in requires_list[pos]:
-        require_path = name_to_module_path(require.values[0].args[0].s)
-        if files_list.count(require_path) < 1:
-            if not parse_list(require_path, src_dir, files_list, requires_list, content_list, return_list):
-                return False
-        req_pos = files_list.index(require_path)
-        require.values = return_list[req_pos]
-
-    print(src_dir + '/' + path + ' parsed.')
-
-    return True
-
-
-def link_content(res_path, files_list, content_list):
-    # Write file.
-    pathlib.Path(res_path[:res_path.rfind('/')]).mkdir(parents=True, exist_ok=True)
-
-    if os.path.isfile(res_path):
-        os.remove(res_path)
-    f_res = open(res_path, 'w')
-
-    for i in range(len(files_list) - 1, -1, -1):
-        s = ''
-        if i != len(files_list) - 1: 
-            s += '\n\n'
-        s += '-- Module ' + files_list[i] + ' start. --\n\n'
-        s += node_to_str(content_list[i])
-        s += '\n\n-- Module ' + files_list[i] + ' end. --'
-        f_res.write(s)
-
-    f_res.close()
-
