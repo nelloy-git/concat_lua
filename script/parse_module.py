@@ -1,12 +1,52 @@
+'''
+
+'''
 import os
+
 import pathlib
-import lua
 from luaparser import ast
 
 import ast_to_string as ats
 
 
-def prepare_module(module_path, src_dir, dst_dir):
+def read_contents(module_path, src_dir, file_list, content_list):
+    full_src_path = src_dir + '/' + module_path
+
+    with open(full_src_path, 'r') as file:
+        module = file.read()
+    tree = ast.parse(module)
+
+    # Prepare depencies.
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and ats.node_to_str(node.func, 0) == 'require':
+
+            # Errors
+            if len(node.args) > 1 or not isinstance(node.args[0], ast.String):
+                s = ''
+                for arg in node.args:
+                    s += ats.node_to_str(arg) + ', '
+                s = s[:-2]
+                print('Error in require(' + s + '). File: ' + src_dir + '/' + module_path)
+                print('Require function needs one constant string argument.')
+                return False
+
+            # Prepare depency.
+            path = ats.name_to_module_path(node.args[0].s)
+            file_list, content_list = prepare_module(path, src_dir, file_list, content_list)
+            if not file_list:
+                return False
+
+    file_list.append(full_src_path)
+    content_list.append()
+    return file_list, contents
+
+
+
+def prepare_module(module_path, src_dir, dst_dir, file_list=[], contents=[]):
+    '''
+        Function generates files with unique module names.
+        Returns list of result file paths.
+    '''
     full_src_path = src_dir + '/' + module_path
     full_dst_path = dst_dir + '/' + module_path
     module_name = ats.path_to_module_name(module_path[:-4])
@@ -29,7 +69,8 @@ def prepare_module(module_path, src_dir, dst_dir):
 
             # Prepare depency.
             path = ats.name_to_module_path(node.args[0].s)
-            if not prepare_module(path, src_dir, dst_dir):
+            file_list, contents = prepare_module(path, src_dir, dst_dir, file_list)
+            if not file_list:
                 return False
 
     # Generate list of variables for renaming.
@@ -51,39 +92,17 @@ def prepare_module(module_path, src_dir, dst_dir):
             ats.rename(module_name + '_' + name, name, tree)
 
     # Write file.
-    pathlib.Path(full_dst_path[:full_dst_path.rfind('/')]).mkdir(parents=True, exist_ok=True)
+    #pathlib.Path(full_dst_path[:full_dst_path.rfind('/')]).mkdir(parents=True, exist_ok=True)
 
-    if os.path.isfile(dst_dir + '/' + module_path):
-        os.remove(dst_dir + '/' + module_path)
-    built_module = open(dst_dir + '/' + module_path, 'w')
+    #if os.path.isfile(dst_dir + '/' + module_path):
+    #    os.remove(dst_dir + '/' + module_path)
+    #built_module = open(dst_dir + '/' + module_path, 'w')
 
     content = ats.node_to_str(tree)
-    built_module.write(content)
-    return True
-
-
-def compiletime_execution(func_node):
-    if func_node != ast.Call or func_node.func != 'compiletime':
-        print('Compiletime error: can not run not \'compiletime\' functions.')
-        return None, False
-
-    if len(func_node.args) != 1 or not isinstance(func_node.args[0], ast.String):
-        print('Compiletime error: \'compiletime\' function needs one constant string argument.')
-        return None, False
-
-    # Define function
-    func_body = func_node.args[0].s
-    lua.execute('func_body = [[\n' + func_body + '\n]]')
-    lua.execute('func, err = loadstring(func_body)')
-
-    lg = lua.globals()
-    if lg.func != None:
-        print('Compiletime error: ' + lg.err)
-        return None, False
-
-    # Execute
-    lua.execute('res = func()')
-    return lg.res
+    #built_module.write(content)
+    file_list.append(dst_dir + '/' + module_path)
+    contents.append(content)
+    return file_list, contents
 
 
 def parse_list(path, src_dir, files_list, requires_list, content_list, return_list):

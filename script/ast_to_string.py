@@ -24,6 +24,8 @@ def index_to_str(node, lvl):
     ''' Converts ast.Index to str. '''
     if isinstance(node.idx, ast.String):
         return node_to_str(node.value, lvl) + '.' + node_to_str(node.idx, lvl)[1:-1]
+    if isinstance(node.idx, ast.Name):
+        return node_to_str(node.value, lvl) + '.' + node_to_str(node.idx, lvl)
     return node_to_str(node.value, lvl) + '[' + node_to_str(node.idx, lvl) + ']'
 
 
