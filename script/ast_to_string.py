@@ -453,3 +453,28 @@ def node_to_str(node, lvl=0):
         if type(node) == node_type[0]:
             return node_type[1](node, lvl)
     return 'Not parsed'
+
+
+def rename(new, old, tree):
+    ''' Rename variable. '''
+    for node in ast.walk(tree):
+        if type(node) == ast.Name and node.id == old:
+            node.id = new
+
+
+def path_to_module_name(path):
+    ''' Converts module path to module name. '''
+    return path.replace('.', '_').replace('/', '_')
+
+
+def name_to_module_path(path):
+    ''' Converts module name to module path. '''
+    return path.replace('.', '/') + '.lua'
+
+
+def get_index_name(node):
+    if type(node) == ast.Name:
+        return node
+    return get_index_name(node.value)
+
+
