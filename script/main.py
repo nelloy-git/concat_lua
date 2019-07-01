@@ -3,16 +3,25 @@
 
 import parse_module as pm
 import ast_to_string as ats
-#import call_lua as cl
+import call_lua as cl
 import pathlib
 import os
 
 src_dir = '/home/bugrov/lua/concat_lua/src'
-build_dir = '/home/bugrov/lua/concat_lua/build/scripts'
+#build_dir = '/home/bugrov/lua/concat_lua/build/scripts'
 module_path = 'modules/test_chat.lua'
 
-files_list, contents_list = pm.prepare_module('war3map.lua', src_dir, build_dir)
-print(files_list)
+file_list, content_list, requires_list = pm.read_requires('war3map.lua', src_dir, [], [], [])
+
+pm.prepare_module(file_list, content_list, requires_list)
+
+full_content = pm.link_content(file_list, content_list)
+print(ats.node_to_str(full_content))
+pm.compiletime_execution(full_content)
+print(full_content)
+
+
+
 
 #new_path = pm.parse_module(module_path, src_dir, dst_dir)
 #files_list = []

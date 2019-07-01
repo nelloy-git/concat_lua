@@ -122,12 +122,12 @@ def goto_to_str(node, lvl):
     return 'goto ' + node_to_str(node.label, lvl)
 
 
-def semicolon_to_str(node, lvl):
+def semicolon_to_str(_node, _lvl):
     ''' Converts ast.SemiColon to str. '''
     return ''
 
 
-def break_to_str(node, lvl):
+def break_to_str(_node, _lvl):
     ''' Converts ast.Break to str. '''
     return 'break'
 
@@ -144,7 +144,8 @@ def return_to_str(node, lvl):
 
 def fornum_to_str(node, lvl):
     ''' Converts ast.Fornum to str. '''
-    s_for = 'for ' + node_to_str(node.target, lvl) + ' = ' + node_to_str(node.start, lvl) + ', ' + node_to_str(node.stop, lvl)
+    s_for = 'for ' + node_to_str(node.target, lvl) + ' = ' + node_to_str(node.start, lvl) + \
+            ', ' + node_to_str(node.stop, lvl)
     if node.step != 1:
         s_for += ', ' + node_to_str(node.step, lvl)
     s_for += ' do\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
@@ -153,7 +154,8 @@ def fornum_to_str(node, lvl):
 
 def forin_to_str(node, lvl):
     ''' Converts ast.Forin to str. '''
-    s_for = 'for ' + node_to_str(node.targets, lvl) + ' in ' + node_to_str(node.iter) + ' do\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
+    s_for = 'for ' + node_to_str(node.targets, lvl) + ' in ' + node_to_str(node.iter) + ' do\n' + \
+            node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
     return s_for
 
 
@@ -166,7 +168,7 @@ def call_to_str(node, lvl):
     return node_to_str(node.func) + '(' + s_arg + ')'
 
 
-def invoke_to_str(node, lvl):
+def invoke_to_str(_node, _lvl):
     ''' Converts ast.invoke to str. '''
     return ''
 
@@ -177,7 +179,8 @@ def func_to_str(node, lvl):
     for arg in node.args:
         s_arg += node_to_str(arg) + ', '
     s_arg = s_arg[:-2]
-    return 'function ' + node_to_str(node.name, lvl) + '(' + s_arg + ')\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
+    return 'function ' + node_to_str(node.name, lvl) + '(' + s_arg + ')\n' + \
+            node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
 
 
 def loc_func_to_str(node, lvl):
@@ -186,7 +189,8 @@ def loc_func_to_str(node, lvl):
     for arg in node.args:
         s_arg += node_to_str(arg) + ', '
     s_arg = s_arg[:-2]
-    return 'local function ' + node_to_str(node.name, lvl) + '(' + s_arg + ')\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
+    return 'local function ' + node_to_str(node.name, lvl) + '(' + s_arg + ')\n' + \
+            node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
 
 
 def method_to_str(node, lvl):
@@ -195,40 +199,41 @@ def method_to_str(node, lvl):
     for arg in node.args:
         s_arg += node_to_str(arg) + ', '
     s_arg = s_arg[:-2]
-    return 'function ' + node_to_str(node.source, lvl) + ':' + node_to_str(node.name, lvl) + '(' + s_arg + ')\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
+    return 'function ' + node_to_str(node.source, lvl) + ':' + node_to_str(node.name, lvl) + \
+            '(' + s_arg + ')\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
 
 
-def nil_to_str(node, lvl):
+def nil_to_str(_node, _lvl):
     ''' Converts ast.Nil to str. '''
     return 'nil'
 
 
-def true_expr_to_str(node, lvl):
+def true_expr_to_str(_node, _lvl):
     ''' Converts ast.TrueExpr to str. '''
     return 'true'
 
 
-def false_expr_to_str(node, lvl):
+def false_expr_to_str(_node, _lvl):
     ''' Converts ast.TrueExpr to str. '''
     return 'false'
 
 
-def number_to_str(node, lvl):
+def number_to_str(node, _lvl):
     ''' Converts ast.Number to str. '''
     return str(node.n)
 
 
-def varargs_to_str(node, lvl):
+def varargs_to_str(_node, _lvl):
     ''' Converts ast.Varargs to str. '''
     return '...'
 
 
-def string_to_str(node, lvl):
+def string_to_str(node, _lvl):
     ''' Converts ast.String to str. '''
     return '\"' + node.s + '\"'
 
 
-def field_to_str(node, lvl):
+def field_to_str(node, _lvl):
     ''' Converts ast.Field to str. '''
     return node_to_str(node.key) + ' = ' + node_to_str(node.value)
 
@@ -242,7 +247,7 @@ def table_to_str(node, lvl):
     return '{' + s_fields + '}'
 
 
-def dots_to_str(node, lvl):
+def dots_to_str(_node, _lvl):
     ''' Converts ast.Dots to str. '''
     return 'Can not parse dots'
 
@@ -254,7 +259,8 @@ def anon_func_to_str(node, lvl):
         s_arg += node_to_str(arg) + ', '
     s_arg = s_arg[:-2]
 
-    return 'function(' + s_arg + ')\n' + node_to_str(node.body, lvl) + '\n' + ('  ' * (lvl-1)) + 'end'
+    return 'function(' + s_arg + ')\n' + node_to_str(node.body, lvl) + '\n' + \
+            ('  ' * (lvl-1)) + 'end'
 
 
 def add_to_str(node, lvl):
@@ -382,7 +388,7 @@ def length_to_str(node, lvl):
     return '#' + node_to_str(node.operand, lvl)
 
 
-switcher = [
+AST_LIST = [
     (ast.Chunk, chunk_to_str),
     (ast.Block, block_to_str),
     (ast.Name, name_to_str),
@@ -451,7 +457,7 @@ switcher = [
 
 def node_to_str(node, lvl=0):
     ''' Converts node to string. '''
-    for node_type in switcher:
+    for node_type in AST_LIST:
         if type(node) == node_type[0]:
             return node_type[1](node, lvl)
     return 'Not parsed'
@@ -466,7 +472,7 @@ def rename(new, old, tree):
 
 def path_to_module_name(path):
     ''' Converts module path to module name. '''
-    return path.replace('.', '_').replace('/', '_')
+    return path.replace('.', '_').replace('/', '_')[:-4]
 
 
 def name_to_module_path(path):

@@ -1,13 +1,12 @@
 local chat = {}
+local b = 'azaz'
 
---chat.text.aza = 'azaza '
+chat.f = compiletime(
+    function() 
+        return {a = 0, b = b}
+    end)
 
---[[ 
-    Some comments
---]]
-
-local b = 1
-chat.b = 1
+chat.c = compiletime('string')
 
 function return_2()
     return 2
@@ -20,7 +19,6 @@ function chat:wh(a)
     a = 1 - 1
     a = 1 * 1
     a = 1 / 1
-    --a = 1 // 1
     a = 1 % 1
     a = 1 ^ 1
 end
