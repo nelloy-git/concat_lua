@@ -8,7 +8,7 @@ chat.f = compiletime(
 
 chat.c = compiletime('string')
 
-function return_2()
+local function return_2()
     return 2
 end
 

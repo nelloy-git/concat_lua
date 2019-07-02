@@ -3,7 +3,7 @@ from luaparser import ast
 
 def chunk_to_str(node, lvl):
     ''' Converts ast.Chunk to str. '''
-    return node_to_str(node.body, lvl)
+    return '  ' * (lvl - 1) + 'do\n' + node_to_str(node.body, lvl) + '  ' * (lvl - 1) + '\nend'
 
 
 def block_to_str(node, lvl=0):
@@ -463,11 +463,23 @@ def node_to_str(node, lvl=0):
     return 'Not parsed'
 
 
+def get_index_name(node):
+    if type(node) == ast.Name:
+        return node
+    return get_index_name(node.value)
+
+
 def rename(new, old, tree):
     ''' Rename variable. '''
     for node in ast.walk(tree):
-        if type(node) == ast.Name and node.id == old:
-            node.id = new
+        if isinstance(node, (ast.LocalAssign, ast.Assign)):
+            for targ in node.targets:
+                if isinstance(targ, ast.Name) and targ.id == old:
+                    targ.id = new
+                if isinstance(targ, ast.Index):
+                    n = get_index_name(targ)
+                    if n.id == old:
+                        n.id = new
 
 
 def path_to_module_name(path):
@@ -478,11 +490,5 @@ def path_to_module_name(path):
 def name_to_module_path(path):
     ''' Converts module name to module path. '''
     return path.replace('.', '/') + '.lua'
-
-
-def get_index_name(node):
-    if type(node) == ast.Name:
-        return node
-    return get_index_name(node.value)
 
 

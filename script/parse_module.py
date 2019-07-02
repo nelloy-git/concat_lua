@@ -67,55 +67,14 @@ def read_requires(module_path, src_dir, file_list, content_list, require_list):
     return file_list, content_list, require_list
 
 
-def prepare_module(file_list, content_list, require_list):
-    '''
-        Function generates files with unique module names.
-        Returns list of result file paths.
-    '''
-    for i, path in enumerate(file_list):
-        print('Preparing ' + path)
+def fix_content_return(file_path, content):
+    module_name = ats.path_to_module_name(file_path)
+    for node in content.body.body:
+        if isinstance(node, ast.Return):
+            pos = content.body.body.index(node)
+            func = ast.Function(ast.Name(module_name + '_return'), [], ast.Block([node]))
+            content.body.body[pos] = func
 
-        name = ats.path_to_module_name(path)
-        content = content_list[i]
-
-        # Generate list of variables for renaming.
-        variables = []
-        names = []
-        for node in content.body.body:
-            # Save local variables.
-            if isinstance(node, ast.LocalAssign):
-                for targ in node.targets:
-                    variables.append(targ)
-                    if isinstance(targ, ast.Name):
-                        names.append(targ.id)
-                    if isinstance(targ, ast.Index):
-                        names.append(ats.get_index_name(targ).id)
-            # Save return.
-            if isinstance(node, ast.Return):
-                return_node = node
-                content.body.body.remove(node)
-
-        # Rename.
-        if name not in ('war3map', 'main'):
-            for var_name in names:
-                ats.rename(name + '_' + var_name, var_name, content)
-
-        for module_requires in require_list:
-            for require in module_requires:
-                req_call = require.values[0]
-                if isinstance(req_call, ast.Call):
-                    if len(req_call.args) != 1:
-                        print('Error in ' + ats.node_to_str(req_call) + '). \n\
-                            Require function can have only one argument')
-                    if not isinstance(req_call.args[0], ast.String):
-                        print('Error in ' + ats.node_to_str(req_call) + '). \n\
-                            Argument must be constant string')
-
-                    req_path = ats.name_to_module_path(ats.node_to_str(req_call.args[0])[1:-1])
-                    if path == req_path:
-                        pos = module_requires.index(require)
-                        module_requires[pos].values = return_node.values
-    return
 
 
 def compiletime_execution(module_tree):
@@ -149,6 +108,20 @@ def compiletime_execution(module_tree):
 
 
 def link_content(files_list, content_list):
+    
+    mod_node = ast.Name('module')
+    require_func = ast.Function(ast.Name('require'), [mod_node], \
+                            ast.Block([
+                                ast.Assign([mod_node], [ast.Call(ast.Index(ast.String('gsub'), ast.Name('string')), [mod_node, ast.String('%.'), ast.String('_')])]),
+                                #ast.Call(ast.Name('print'),[mod_node]),
+                                ast.Return([
+                                    ast.Call(ast.Index(ast.Concat(mod_node, ast.String('_return')), ast.Name('_G')), [])
+                                    ])
+                                ])
+                            )
+
+    content_list.insert(0, require_func)
+    #print(content_list)
     block = ast.Block(content_list)
     return block
 
