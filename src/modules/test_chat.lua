@@ -1,3 +1,4 @@
+local incl = require('war3map')
 local chat = {}
 local b = 'azaz'
 

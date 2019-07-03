@@ -1,4 +1,4 @@
-local Unit = compiletime(require('modules.test_chat'))
+local Unit = require('modules.test_chat')
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()

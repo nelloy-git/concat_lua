@@ -10,20 +10,27 @@ import os
 from luaparser import ast
 
 src_dir = '/home/bugrov/lua/concat_lua/src'
-#build_dir = '/home/bugrov/lua/concat_lua/build/scripts'
+build_dir = '/home/bugrov/lua/concat_lua/build'
 module_path = 'modules/test_chat.lua'
 
-file_list, content_list, requires_list = pm.read_requires('war3map.lua', src_dir, [], [], [])
+file_list = []
+content_list = []
+pm.read_content('war3map.lua', src_dir, file_list, content_list)
+file_list.reverse()
+content_list.reverse()
 
-#pm.prepare_module(file_list, content_list, requires_list)
+print('Used files:')
+for f in file_list:
+    print('  ' + f)
+
 for i, file_path in enumerate(file_list):
     pm.fix_content_return(file_path, content_list[i])
 
 full_content = pm.link_content(file_list, content_list)
 pm.compiletime_execution(full_content)
-print(ats.node_to_str(full_content))
 
-
+with open(build_dir + '/war3map.lua', 'w') as file:
+    file.write(ats.node_to_str(full_content))
 
 #print(ats.node_to_str(require_func))
 
@@ -45,8 +52,6 @@ print(ats.node_to_str(full_content))
 #if os.path.isfile(res_path):
 #    os.remove(res_path)
 #
-#with open(res_path + '/war3map.lua', 'w') as file:
-#    file.write(full_content)
 
 #lua_content = cl.load_content(ats.node_to_str(content_list[1]))
 #print(lua_content)

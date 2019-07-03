@@ -165,12 +165,17 @@ def call_to_str(node, lvl):
     for arg in node.args:
         s_arg += node_to_str(arg, lvl) + ', '
     s_arg = s_arg[:-2]
-    return node_to_str(node.func) + '(' + s_arg + ')'
+    return node_to_str(node.func, lvl) + '(' + s_arg + ')'
 
 
-def invoke_to_str(_node, _lvl):
+def invoke_to_str(node, lvl):
     ''' Converts ast.invoke to str. '''
-    return ''
+    s_arg = ''
+    for arg in node.args:
+        s_arg += node_to_str(arg, lvl) + ', '
+    s_arg = s_arg[:-2]
+    
+    return node_to_str(node.source, lvl) + ':' + node_to_str(node.func, lvl) + '(' + s_arg + ')'
 
 
 def func_to_str(node, lvl):

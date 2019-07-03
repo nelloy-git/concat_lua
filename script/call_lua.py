@@ -15,15 +15,26 @@ lua_compiletime = \
     '''
     compiletime_results = {}
 
-    compiletime =
-        function(body)
-            local l = table.getn(compiletime_results)
-            if type(body) == \'function\' then
-                compiletime_results[l + 1] = body()
-            else
-                compiletime_results[l + 1] = body
-            end
+    function compiletime(body)
+        local l = table.getn(compiletime_results)
+        if type(body) == \'function\' then
+            compiletime_results[l + 1] = body()
+        else
+            compiletime_results[l + 1] = body
         end
+    end
+    '''
+
+lua_require = \
+    '''
+    function require(module)
+        module = module:gsub(\'%.\', \'_\')
+        local func = _G[module..\'_return\']
+        if func == nil then
+            return nil
+        end
+        return func()
+    end
     '''
 
 
