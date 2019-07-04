@@ -1,18 +1,21 @@
-import lua
+import lupa
+lua = lupa.LuaRuntime(unpack_returned_tuples=True)
+
 from luaparser import ast
 
 
 lua_compiletime = \
     '''
+    compiletime_count = 0
     compiletime_results = {}
 
     function compiletime(body)
-        local l = table.getn(compiletime_results)
         if type(body) == \'function\' then
-            compiletime_results[l + 1] = body()
+            compiletime_results[compiletime_count + 1] = body()
         else
-            compiletime_results[l + 1] = body
+            compiletime_results[compiletime_count + 1] = body
         end
+        compiletime_count = compiletime_count + 1
     end
     '''
 

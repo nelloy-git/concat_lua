@@ -2,6 +2,10 @@ local incl = require('war3map')
 local chat = {}
 local b = 'azaz'
 
+function print(player_num, msg)
+    DisplayTextToPlayer(Player(player_num), 0 , 0, msg)
+end
+
 function chat.g()
     return {a = 0, b = {a = 0, b = 0}}
 end

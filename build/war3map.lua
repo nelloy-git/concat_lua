@@ -12,6 +12,9 @@ do
   local incl = require("war3map")
   local chat = {}
   local b = "azaz"
+  function print(player_num, msg)
+    DisplayTextToPlayer(Player(player_num), 0, 0, msg)
+  end
   function chat.g()
     return {a = 0, b = {a = 0, b = 0}}
   end
@@ -35,7 +38,7 @@ do
   end
 end
 do
-  local Unit = require("modules.test_chat")
+  local chat = require("modules.test_chat")
   gg_trg_Melee_Initialization = nil
   function InitGlobals()
 
@@ -50,11 +53,9 @@ do
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
     local id = 1751543663
+    DisplayTextToPlayer(Player(0), 0, 0, chat.c)
+    print(0, "azaza")
     DisplayTextToPlayer(Player(0), 0, 0, I2S(id))
-    local f = Unit.new(Player(0), id, 0, 0, 0)
-    f = Unit.new(Player(0), id, 0, 0, 0)
-    local angle = 180
-    f:setFacing(angle)
   end
   function InitTrig_Melee_Initialization()
     gg_trg_Melee_Initialization = CreateTrigger()

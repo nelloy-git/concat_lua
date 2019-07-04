@@ -1,4 +1,4 @@
-local Unit = require('modules.test_chat')
+local chat = require('modules.test_chat')
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -14,11 +14,9 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
     local id = 1751543663
+    DisplayTextToPlayer(Player(0), 0 , 0, chat.c)
+    print(0, 'azaza')
     DisplayTextToPlayer(Player(0), 0 , 0, I2S(id))
-    local f = Unit.new(Player(0), id, 0, 0, 0)
-    f = Unit.new(Player(0), id, 0, 0, 0)
-    local angle = 180
-    f:setFacing(angle)
 end
 
 function InitTrig_Melee_Initialization()
