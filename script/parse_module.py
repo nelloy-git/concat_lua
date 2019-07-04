@@ -59,7 +59,6 @@ def compiletime_execution(module_tree):
     cl.init_compiletime()
     cl.load_enviroment(ats.node_to_str(module_tree))
 
-    print(ats.node_to_str(module_tree))
     # Get compiletime results.
     cur = 0
     for node in ast.walk(module_tree):

@@ -1,15 +1,6 @@
 import lua
 from luaparser import ast
 
-def load_content(content):
-    lua.execute('content_str = [[return {\n' + content + '\n}]]')
-    lua.execute('content_getter, err = loadstring(content_str)')
-    lua.execute('if content_getter == nil then print(\'Error\') end')
-    lua.execute('content, err = loadstring(content_str)')
-    lua.execute('print(content.return_2())')
-    print(lua.globals().content.return_2())
-    return lua.globals().content
-
 
 lua_compiletime = \
     '''
@@ -62,15 +53,13 @@ def lua_to_ast(val, val_type):
             fields.append(field)
         return ast.Table(fields)
 
-    print('Error: compiletime function can return only nil, number, string or table (with nils, numbers, strings and tables).')
+    print('Error: compiletime function can return only nil, number, string or table (with nils, numbers, strings and tables etc.).')
     return False
 
 def get_compiletime_result(pos):
     lg = lua.globals()
     res = lg.compiletime_results[pos]
     res_type = lg.type(lg.compiletime_results[pos])
-    
-    # nil, number, string, function, CFunction, userdata, and table
     return lua_to_ast(res, res_type)
 
 def clear_enviroment():
