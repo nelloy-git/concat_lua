@@ -41,11 +41,11 @@ def load_enviroment(content):
 def lua_to_ast(val, val_type):
     if val_type == 'nil':
         return ast.Nil()
-    elif val_type == 'number':
+    if val_type == 'number':
         return ast.Number(val)
-    elif val_type == 'string':
+    if val_type == 'string':
         return ast.String(val)
-    elif val_type == 'table':
+    if val_type == 'table':
         fields = []
         for field_name in val:
             field_val = lua_to_ast(val[field_name], lua.globals().type(val[field_name]))
@@ -53,7 +53,8 @@ def lua_to_ast(val, val_type):
             fields.append(field)
         return ast.Table(fields)
 
-    print('Error: compiletime function can return only nil, number, string or table (with nils, numbers, strings and tables etc.).')
+    print('Error: compiletime function can return only nil, number, \
+           string or table (with nils, numbers, strings and tables etc.).')
     return False
 
 def get_compiletime_result(pos):
@@ -63,4 +64,4 @@ def get_compiletime_result(pos):
     return lua_to_ast(res, res_type)
 
 def clear_enviroment():
-    lua.execute('for k, v in pairs(_G) do k = nil end')
+    lua.execute('for k, v in pairs(_G) do v = nil end')

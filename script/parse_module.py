@@ -70,11 +70,11 @@ def compiletime_execution(module_tree):
             if isinstance(val, ast.Call) and ats.node_to_str(val.func, 0) == 'compiletime':
                 cur += 1
                 if len(val.args) > 1:
-                    s = ''
+                    s_args = ''
                     for arg in node.args:
-                        s += ats.node_to_str(arg) + ', '
-                    s = s[:-2]
-                    print('Error in compiletime(' + s + ').')
+                        s_args += ats.node_to_str(arg) + ', '
+                    s_args = s_args[:-2]
+                    print('Error in compiletime(' + s_args + ').')
                     print('Require function needs only one argument.')
                     return
                 val = cl.get_compiletime_result(cur)
@@ -83,7 +83,7 @@ def compiletime_execution(module_tree):
         node.values = new_vals
 
 
-def link_content(files_list, content_list):
+def link_content(content_list):
     require_tree = ast.parse(cl.lua_require)
     content_list.insert(0, require_tree)
     block = ast.Block(content_list)

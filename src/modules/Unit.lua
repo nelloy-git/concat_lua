@@ -1,4 +1,4 @@
-Unit = {
+local Unit = {
     unit = nil
 }
 
@@ -223,3 +223,5 @@ function Unit:setItemTypeSlots(i_slots) SetItemTypeSlots(self.unit, i_slots) end
 function Unit:setTypeSlots(i_slots) SetUnitTypeSlots(self.unit, i_slots) end
 function Unit:getUserData() return GetUnitUserData(self.unit) end
 function Unit:setUserData(i_data) SetUnitUserData(self.unit, i_data) end
+
+return Unit
