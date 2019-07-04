@@ -2,9 +2,13 @@ local incl = require('war3map')
 local chat = {}
 local b = 'azaz'
 
+function chat.g()
+    return {a = 0, b = {a = 0, b = 0}}
+end
+
 chat.f = compiletime(
     function() 
-        return {a = 0, b = b}
+        return chat.g()
     end)
 
 chat.c = compiletime('string')
