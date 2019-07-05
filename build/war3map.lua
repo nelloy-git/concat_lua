@@ -18,7 +18,7 @@ do
   function chat.g()
     return {a = 0, b = {a = 0, b = 0}}
   end
-  chat.f = {a = 0, b = {a = 0, b = 0}}
+  chat.f = {b = {b = 0, a = 0}, a = 0}
   chat.c = "string"
   local function return_2()
     return 2

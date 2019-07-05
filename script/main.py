@@ -12,11 +12,9 @@ from luaparser import ast
 
 #src_dir = '/home/bugrov/lua/concat_lua/src'
 #build_dir = '/home/bugrov/lua/concat_lua/build'
-#module_path = 'modules/test_chat.lua'
 
 src_dir = './src'
 build_dir = './build'
-module_path = './modules/test_chat.lua'
 
 file_list = []
 content_list = []
@@ -58,13 +56,12 @@ map_folders = [
     'war3mapImported'
 ]
 
-path = build_dir + '/map.w3x'
-#print(['./script/MPQEditor.exe', 'new', path])
-subprocess.run(['./MPQEditor.exe', 'new', path])
-for f in map_files:
-    subprocess.run(['./MPQEditor.exe', 'add', path, build_dir + '/' + f, f, ' /auto'])
-for folder in map_folders:
-    subprocess.run('./MPQEditor.exe' + ' add ' + path + ' ' + build_dir + '/' + folder + ' ' + folder + ' /auto')
+#path = build_dir + '/map.w3x'
+#subprocess.run(['./MPQEditor.exe', 'new', path])
+#for f in map_files:
+#    subprocess.run(['./MPQEditor.exe', 'add', path, build_dir + '/' + f, f, ' /auto'])
+#for folder in map_folders:
+#    subprocess.run('./MPQEditor.exe' + ' add ' + path + ' ' + build_dir + '/' + folder + ' ' + folder + ' /auto')
 
 #war3_exe = 'C:\\Program Files\\Warcraft III\\x86_64\\Warcraft III.exe'
 #print(os.getcwd() + '\\build\\map.w3x')
