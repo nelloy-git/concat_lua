@@ -1,4 +1,15 @@
-local chat = require('modules.test_chat')
+local obj = require('modules.compiletime')
+
+function print_file(path)
+    local a = 257
+    local b = obj.int2lend(a)
+    print(obj.to_hex(b, 16))
+    b = obj.lend2int(b)
+    print(b)
+    return nil
+end
+
+local p = compiletime(print_file('./src/war3map.w3u'))
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -13,10 +24,6 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    local id = 1751543663
-    DisplayTextToPlayer(Player(0), 0 , 0, chat.c)
-    print(0, 'azaza')
-    DisplayTextToPlayer(Player(0), 0 , 0, I2S(id))
 end
 
 function InitTrig_Melee_Initialization()

@@ -1,14 +1,7 @@
 ''' Some info
 '''
-
 import parse_module as pm
 import ast_to_string as ats
-import call_lua as cl
-import pathlib
-import os
-import subprocess
-
-from luaparser import ast
 
 #src_dir = '/home/bugrov/lua/concat_lua/src'
 #build_dir = '/home/bugrov/lua/concat_lua/build'

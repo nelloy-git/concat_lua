@@ -9,36 +9,57 @@ do
   end
 end
 do
-  local incl = require("war3map")
-  local chat = {}
-  local b = "azaz"
-  function print(player_num, msg)
-    DisplayTextToPlayer(Player(player_num), 0, 0, msg)
+  local ObjEdit = {}
+  function ObjEdit.read(path)
+    local f = assert(io.open(path, "rb"))
+    local t = f:read("*all")
+    f:close()
+    return t
   end
-  function chat.g()
-    return {a = 0, b = {a = 0, b = 0}}
+  function ObjEdit.to_hex(str, bytes_per_line)
+    local res = ""
+    for i = 1, str:len() do
+      local c = str:sub(i, i)
+      res = res.." "..string.format("%02x", c:byte())
+      if (i%bytes_per_line == 0) then
+        res = res.."\n"
+      end
+    end
+    return res
   end
-  chat.f = {b = {b = 0, a = 0}, a = 0}
-  chat.c = "string"
-  local function return_2()
-    return 2
+  function ObjEdit.int2lend(val)
+    local bytes = ""
+    for i = 0, 3 do
+      bytes = bytes..string.char(val >> 8*i&255)
+    end
+    return bytes
   end
-  function chat:wh(a)
-    local a = 2
-    chat.b = b+1
-    a = 1+1
-    a = 1-1
-    a = 1*1
-    a = 1/1
-    a = 1%1
-    a = 1^1
+  function ObjEdit.lend2int(bytes)
+    local res = 0
+    for i = 0, 3 do
+      res = res << 8
+      res = res+bytes:sub(#bytes-i, #bytes-i):byte()
+    end
+    return res
   end
-  function modules_test_chat_return()
-    return chat
+  function ObjEdit.parse(bytes)
+    local parsed = {}
+  end
+  function modules_compiletime_return()
+    return ObjEdit
   end
 end
 do
-  local chat = require("modules.test_chat")
+  local obj = require("modules.compiletime")
+  function print_file(path)
+    local a = 257
+    local b = obj.int2lend(a)
+    print(obj.to_hex(b, 16))
+    b = obj.lend2int(b)
+    print(b)
+    return nil
+  end
+  local p = nil
   gg_trg_Melee_Initialization = nil
   function InitGlobals()
 
@@ -52,10 +73,6 @@ do
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    local id = 1751543663
-    DisplayTextToPlayer(Player(0), 0, 0, chat.c)
-    print(0, "azaza")
-    DisplayTextToPlayer(Player(0), 0, 0, I2S(id))
   end
   function InitTrig_Melee_Initialization()
     gg_trg_Melee_Initialization = CreateTrigger()
