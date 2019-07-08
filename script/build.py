@@ -1,62 +1,48 @@
-'''
-    Docs
+#!/usr/bin/env python
+
+''' Some info
 '''
 
-import sys
 import os
-import shutil
-import subprocess
 
-import parse
-import fix_requires
-import rename
-import utils as u
-from luaparser import ast
+import imports.parse_module as pm
+import imports.ast_to_string as ats
+import imports.read_config as conf
 
+script_path = os.path.abspath(os.path.join(__file__, os.pardir))
+conf_path = os.path.join(script_path, 'config.txt')
 
-argc = len(sys.argv)
-if (argc > 1 and sys.argv[1] == '-h') or argc < 4:
-    print('Arguments:\n1 - source path,\n2 - build path,\n3 - wc3 execution path.')
-    sys.exit()
+war3_exe, src_dir, dst_dir = conf.get_paths(conf_path)
+if src_dir is None or dst_dir is None:
+    exit()
 
-src_path = sys.argv[1]
-build_path = sys.argv[2] + 'scripts/'
-war3_exe = ''
-for i in range(3, argc):
-    war3_exe += ' ' + sys.argv[i]
-war3_exe = war3_exe[1:]
+if not war3_exe is None:
+    print('Warcraft III.exe path:\n  ' + war3_exe)
+print('Source dir path:\n  ' + src_dir)
+print('Destination dir path:\n  ' + dst_dir)
 
-print('Sourse path: %s\nBuild path: %s\n' % (src_path, build_path))
+file_list = []
+content_list = []
+pm.read_content('war3map.lua', src_dir, file_list, content_list)
+file_list.reverse()
+content_list.reverse()
 
-base_src = src_path + 'war3map.lua'
-result_path = build_path + 'war3map.lua'
+print('\nUsed files:')
+for f in file_list:
+    print('  ' + f)
 
-if not os.path.exists(result_path[:result_path.rfind('/')]):
-    os.mkdir(result_path[:result_path.rfind('/')])
+for i, file_path in enumerate(file_list):
+    pm.fix_content_return(file_path, content_list[i])
 
-if os.path.isfile(result_path):
-    os.remove(result_path)
+full_content = pm.link_content(content_list)
+print('\nCompiletime output:')
+pm.compiletime_execution(full_content)
 
-if os.path.isfile(base_src):
-    shutil.copyfile(base_src, result_path)
-else:
-    print('Can not find %s file.' % base_src)
-    sys.exit()
-
-
-rename.rename_modules_in_folder(src_path, src_path, build_path)
-fix_requires.fixRequires(build_path, build_path)
-lines = parse.parseFile(result_path, [], build_path)
-
-if os.path.isfile(build_path + 'war3map.lua'):
-    os.remove(build_path + 'war3map.lua')
-result = open(build_path + 'war3map.lua', 'w')
-result.writelines(lines)
-result.close()
-
-u.replaceFile(sys.argv[2] + 'war3map.lua', result_path)
-
-other_files = [
+with open(dst_dir + '/war3map.lua', 'w') as file:
+    file.write(ats.node_to_str(full_content))
+    
+map_files = [
+    'war3map.lua',
     'war3map.doo',
     'war3map.mmp',
     'war3map.shd',
@@ -72,44 +58,18 @@ other_files = [
     'war3mapUnits.doo',
 ]
 
-folders = [
+map_folders = [
     'war3mapImported'
 ]
 
-for name in other_files:
-    u.replaceFile(sys.argv[2] + name, src_path + name)
+input("Press Enter to continue...")
+#path = build_dir + '/map.w3x'
+#subprocess.run(['./MPQEditor.exe', 'new', path])
+#for f in map_files:
+#    subprocess.run(['./MPQEditor.exe', 'add', path, build_dir + '/' + f, f, ' /auto'])
+#for folder in map_folders:
+#    subprocess.run('./MPQEditor.exe' + ' add ' + path + ' ' + build_dir + '/' + folder + ' ' + folder + ' /auto')
 
-for folder in folders:
-    if os.path.exists(sys.argv[2] + folder):
-        shutil.rmtree(sys.argv[2] + folder)
-    shutil.copytree(src_path + folder, sys.argv[2] + folder)
-
-path = sys.argv[2] + 'map.w3x'
-if os.path.exists(path):
-    os.remove(path)
-
-#run_mpq_cmd = ''
-#if os.name == 'posix':
-#    run_mpq_cmd = ['wine', './script/MPQEditor.exe', 'new', path
-#elif os.name == 'nt':
-#    run_mpq_cmd = ''
-
-print(['./script/MPQEditor.exe', 'new', path])
-subprocess.run(['./script/MPQEditor.exe', 'new', path])
-subprocess.run(['./script/MPQEditor.exe', 'add', path, sys.argv[2] + 'war3map.lua', 'war3map.lua', '/auto'])
-for file in other_files:
-    subprocess.run(['./script/MPQEditor.exe', 'add', path, sys.argv[2] + file, file, ' /auto'])
-for folder in folders:
-    subprocess.run('./script/MPQEditor.exe' + ' add ' + path + ' ' + sys.argv[2] + folder + ' ' + folder + ' /auto')
-
-#if os.name == 'posix':
-#    print([run_mpq_cmd, './script/MPQEditor.exe', 'open', './' + path])
-#    subprocess.run([run_mpq_cmd, './script/MPQEditor.exe', 'open', path])
-
-#path = os.path.abspath(path)
-
-print(war3_exe + ' -loadfile ./' + path)
-subprocess.call(war3_exe + ' -loadfile ./' + path)
-
-
-#input("Press Enter to continue...")
+#war3_exe = 'C:\\Program Files\\Warcraft III\\x86_64\\Warcraft III.exe'
+#print(os.getcwd() + '\\build\\map.w3x')
+#subprocess.call(war3_exe + ' -loadfile ' + os.getcwd() + '\\' + path)

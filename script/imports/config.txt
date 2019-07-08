@@ -1,0 +1,3 @@
+Warcraft III.exe path: ""
+Map folder path: ""
+Build folder path: ""
