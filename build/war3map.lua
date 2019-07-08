@@ -44,6 +44,7 @@ do
   end
   function ObjEdit.parse(bytes)
     local parsed = {}
+    parsed.diffs_count = bytes.sub(13, 16)
   end
   function modules_compiletime_return()
     return ObjEdit

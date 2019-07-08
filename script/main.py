@@ -2,12 +2,12 @@
 '''
 import parse_module as pm
 import ast_to_string as ats
+import read_config
 
-#src_dir = '/home/bugrov/lua/concat_lua/src'
-#build_dir = '/home/bugrov/lua/concat_lua/build'
-
-src_dir = './src'
-build_dir = './build'
+war3_exe, src_dir, dst_dir = read_config.get_paths()
+print('Warcraft III.exe path:\n  ' + war3_exe)
+print('Source dir path:\n  ' + src_dir)
+print('Destination dir path:\n  ' + dst_dir)
 
 file_list = []
 content_list = []
@@ -15,7 +15,7 @@ pm.read_content('war3map.lua', src_dir, file_list, content_list)
 file_list.reverse()
 content_list.reverse()
 
-print('Used files:')
+print('\nUsed files:')
 for f in file_list:
     print('  ' + f)
 
@@ -23,9 +23,10 @@ for i, file_path in enumerate(file_list):
     pm.fix_content_return(file_path, content_list[i])
 
 full_content = pm.link_content(content_list)
+print('\nCompiletime output:')
 pm.compiletime_execution(full_content)
 
-with open(build_dir + '/war3map.lua', 'w') as file:
+with open(dst_dir + '/war3map.lua', 'w') as file:
     file.write(ats.node_to_str(full_content))
     
 map_files = [
@@ -49,6 +50,7 @@ map_folders = [
     'war3mapImported'
 ]
 
+input("Press Enter to continue...")
 #path = build_dir + '/map.w3x'
 #subprocess.run(['./MPQEditor.exe', 'new', path])
 #for f in map_files:
