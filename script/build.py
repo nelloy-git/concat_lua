@@ -21,11 +21,7 @@ if not war3_exe is None:
 print('Source dir path:\n  ' + src_dir)
 print('Destination dir path:\n  ' + dst_dir)
 
-file_list = []
-content_list = []
-pm.read_content('war3map.lua', src_dir, file_list, content_list)
-file_list.reverse()
-content_list.reverse()
+file_list, content_list = pm.get_contents('war3map.lua', src_dir)
 
 print('\nUsed files:')
 for f in file_list:

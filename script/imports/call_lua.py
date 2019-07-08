@@ -9,6 +9,7 @@ lua = lupa.LuaRuntime(unpack_returned_tuples=True)
 
 LUA_COMPILETIME = \
     '''
+    is_compiletime = 1
     compiletime_count = 0
     compiletime_results = {}
 

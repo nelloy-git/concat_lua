@@ -43,6 +43,13 @@ def read_content(main_path, src_dir, file_list, content_list):
             read_content(path, src_dir, file_list, content_list)
 
 
+def get_contents(main_path, src_dir):
+    file_list = []
+    content_list = []
+    read_content(main_path, src_dir, file_list, content_list)
+    return file_list.reverse(), content_list.reverse()
+
+
 def fix_content_return(file_path, content):
     module_name = ats.path_to_module_name(file_path)
     for pos, node in enumerate(content.body.body):

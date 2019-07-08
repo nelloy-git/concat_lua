@@ -34,7 +34,7 @@ def get_paths(conf_path):
         print('Can not find source folder (' + src_path + '). Check configuration file.')
         done = False
     if dst_path is None or not os.path.exists(dst_path):
-        print('Can not find source folder (' + dst_path + '). Check configuration file.')
+        print('Can not find destination folder (' + dst_path + '). Check configuration file.')
         done = False
     if not done:
         return None, None, None
