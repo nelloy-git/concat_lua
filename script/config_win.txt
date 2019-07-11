@@ -1,3 +1,0 @@
-Warcraft III.exe path: "C:\Program Files\Warcraft III\x86_64\Warcraft III.exe"
-Map folder path: "C:\Users\Nello\OneDrive\Documents\concat_lua\src"
-Build folder path: "C:\Users\Nello\OneDrive\Documents\concat_lua\build"
