@@ -1,4 +1,4 @@
-local obj = require('modules.compiletime')
+local obj = require('modules.test_chat')
 
 function print_file(path)
     local a = 257
