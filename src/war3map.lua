@@ -2,14 +2,12 @@ local obj = require('modules.test_chat')
 
 function print_file(path)
     local a = 257
-    local b = obj.int2lend(a)
-    print(obj.to_hex(b, 16))
-    b = obj.lend2int(b)
-    print(b)
+    --local b = obj.int2lend(a)
+    --print(obj.to_hex(b, 16))
+    --b = obj.lend2int(b)
+    --print(b)
     return nil
 end
-
-local p = compiletime(print_file('./src/war3map.w3u'))
 
 gg_trg_Melee_Initialization = nil
 function InitGlobals()
