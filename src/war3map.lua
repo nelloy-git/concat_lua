@@ -1,12 +1,7 @@
-local obj = require('modules.test_chat')
+local glTimer = compiletime(require('compiletime_modules.entrance'))
 
-function print_file(path)
-    local a = 257
-    --local b = obj.int2lend(a)
-    --print(obj.to_hex(b, 16))
-    --b = obj.lend2int(b)
-    --print(b)
-    return nil
+function showText_callback(user_data)
+    DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)
 end
 
 gg_trg_Melee_Initialization = nil
@@ -22,6 +17,8 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
+    glTimer.init(0.1)
+    glTimer.addAction(3, showText_callback, {player = Player(0), text = 'Delayed text'})
 end
 
 function InitTrig_Melee_Initialization()

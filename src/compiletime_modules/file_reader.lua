@@ -36,9 +36,14 @@ function ObjEdit.lend2int(bytes)
     return res
 end
 
-function ObjEdit.parse(bytes)
-    local parsed = {}
-    parsed.diffs_count = bytes.sub(13, 16)
+function ObjEdit.getChangesCount(file)
+    return ObjEdit.lend2int(file:sub(9, 12))
+end
+
+function ObjEdit.setChangesCount(count, file)
+    local count_bytes = ObjEdit.int2lend(count)
+    file = file:sub(1, 8) .. count_bytes .. file:sub(13)
+    return file
 end
 
 return ObjEdit
