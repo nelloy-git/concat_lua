@@ -1,4 +1,4 @@
-local glTimer = compiletime(require('compiletime_modules.entrance'))
+local glTimer = compiletime(require, 'compiletime_modules.entrance')
 
 function showText_callback(user_data)
     DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)

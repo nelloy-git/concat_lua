@@ -14,8 +14,10 @@ end
 function EditObjects.addModification(obj, modification_id, value)
     if type(value) == 'string' then
         value = value .. string.char(0)
+    end
     if type(value) == 'number' then
         value = ReadFile.int2lend(value)
+    end
 
     obj.changes[modification_id] = value
 end
