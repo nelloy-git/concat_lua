@@ -1,4 +1,8 @@
-local glTimer = compiletime(require, 'compiletime_modules.entrance')
+Debug = true
+
+local CompileFuncs = compiletime(require, 'compiletime_modules.we_object_editing.entrance')
+local str_compile = compiletime('Compiletime string')
+local glTimer = require("modules.global_timer")
 
 function showText_callback(user_data)
     DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)
