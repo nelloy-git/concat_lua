@@ -12,30 +12,34 @@ function WeEditFile.read(path)
         path = path,
         content = t
     }
-    setmetatable(we_file, {index = WeFile})
+    setmetatable(we_file, {__index = WeFile})
     return we_file
 end
 
+function WeFile:write(path)
+    local f = assert(io.open(path, "w"))
+    local t = f:write(self.content)
+    f:close()
+end
 
 function WeFile:getChangesCount()
-    return utils.lend2int(self.content:sub(9, 12))
+    return utils.byte2int(self.content:sub(9, 12))
 end
+
 
 function WeFile:setChangesCount(count)
-    self.content = self.content:sub(1, 8) .. utils.int2lend(count) .. self.content:sub(13)
+    self.content = self.content:sub(1, 8) .. utils.int2byte(count) .. self.content:sub(13)
 end
 
-
---function we_object_instance:serialize()
---    local changes_count = ReadFile.getChangesCount(file)
---    file = ReadFile.setChangesCount(changes_count + 1, file)
---    file = file .. obj.id .. obj.base_id .. ReadFile.int2lend(#(obj.changes))
---    if Debug then
---        print('Created object with id: '.. obj.id .. ' (', ReadFile.to_hex(obj.id, 5), ') based on ' .. obj.base_id .. ' (', ReadFile.to_hex(obj.base_id, 5), ')')
---    else
---        print('Created object with id: '.. obj.id .. ' based on ' .. obj.base_id)
---    end
---    return file
---end
+function WeFile:add(we_obj)
+    bytes = we_obj:serialize()
+    self:setChangesCount(self:getChangesCount() + 1)
+    self.content = self.content .. bytes
+    if Debug then
+        print('Created object with id: '.. we_obj.id .. ' (', utils.byte2hex(we_obj.id, 5), ') based on ' .. we_obj.base_id .. ' (', utils.byte2hex(we_obj.base_id, 5), ')')
+    else
+        print('Created object with id: '.. we_obj.id .. ' based on ' .. we_obj.base_id)
+    end
+end
 
 return WeEditFile

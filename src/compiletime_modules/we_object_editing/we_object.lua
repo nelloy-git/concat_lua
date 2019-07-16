@@ -22,7 +22,7 @@ function WeObject.new(id, base_id, we_type)
     local obj = {
         id = id,
         base_id = base_id,
-        type = we_type,
+        we_type = we_type,
         changes = {}
     }
     setmetatable(obj, {__index = WeObjectInstance})
@@ -30,7 +30,7 @@ function WeObject.new(id, base_id, we_type)
 end
 
 function WeObjectInstance:addModification(we_modification)
-    if we_modification.type ~= self.type then
+    if we_modification.we_type ~= self.we_type then
         print('Warning: can not add modification',
                we_modification.id, '(class ' .. we_modification.type .. ') to object',
                self.id, '(class ' .. self.type .. ')')
@@ -40,9 +40,9 @@ function WeObjectInstance:addModification(we_modification)
 end
 
 function WeObjectInstance:serialize()
-    local serial = self.id .. self.base_id .. utils.int2byte(#(self.changes))
+    local serial = self.base_id .. self.id .. utils.int2byte(#(self.changes))
     for k, v in pairs(self.changes) do
-        serial = serial + v.id + v.data + '\0\0\0\0'
+        serial = serial .. v.id .. v.var_type .. v.data .. '\0\0\0\0'
     end
     return serial
 end

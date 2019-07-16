@@ -2,49 +2,55 @@ local WeUnitModification = {}
 
 local utils = require('compiletime_modules.we_object_editing.utils')
 
-local function toTable(id, data)
+local function toTable(id, data, var_type)
+	local var_type_id = 0
+	if var_type == 'int' then var_type_id = utils.int2byte(0) end
+	if var_type == 'real' then var_type_id = utils.int2byte(1) end
+	if var_type == 'unreal' then var_type_id = utils.int2byte(2) end
+	if var_type == 'string' then var_type_id = utils.int2byte(3) end
     local t = {
         id = id,
-        data = data,
-        type = 'unit'
+		data = data,
+		var_type = var_type_id,
+        we_type = 'unit'
     }
     return t
 end
 
 function WeUnitModification.tooltipExtended(str_data)
-    toTable("utub", utils.str2byte(str_data))
+    return toTable("utub", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.tooltipBasic(str_data)
-    toTable("utip", utils.str2byte(str_data))
+    return toTable("utip", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.requirementsLevels(str_data)
-    toTable("urqa", utils.str2byte(str_data))
+    return toTable("urqa", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.requirements(str_data)
-    toTable("ureq", utils.str2byte(str_data))
+    return toTable("ureq", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.name(str_data)
-    toTable("unam", utils.str2byte(str_data))
+    return toTable("unam", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.hotkey(str_data)
-    toTable("uhot", utils.str2byte(str_data))
+    return toTable("uhot", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.description(str_data)
-    toTable("ides", utils.str2byte(str_data))
+    return toTable("ides", utils.str2byte(str_data), 'string')
 end
 
 function WeUnitModification.buttonPositionY(int_data)
-    toTable("ubpy", utils.int2byte(int_data))
+    return toTable("ubpy", utils.int2byte(int_data), 'int')
 end
 
 function WeUnitModification.buttonPositionX(int_data)
-    toTable("ubpx", utils.int2byte(int_data))
+    return toTable("ubpx", utils.int2byte(int_data), 'int')
 end
 
 return WeUnitModification

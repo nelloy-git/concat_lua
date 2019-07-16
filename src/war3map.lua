@@ -1,8 +1,9 @@
-Debug = true
+_G.Debug = true
 
 local CompileFuncs = compiletime(require, 'compiletime_modules.we_object_editing.entrance')
 local str_compile = compiletime('Compiletime string')
 local glTimer = require("modules.global_timer")
+local utils = require("modules.utils")
 
 function showText_callback(user_data)
     DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)
@@ -23,6 +24,9 @@ function Trig_Melee_Initialization_Actions()
     MeleeInitVictoryDefeat()
     glTimer.init(0.1)
     glTimer.addAction(3, showText_callback, {player = Player(0), text = 'Delayed text'})
+    DisplayTextToPlayer(Player(0), 0, 0, 'azaza')
+    DisplayTextToPlayer(Player(0), 0, 0, I2S(FourCC('A001')))
+    CreateUnit(Player(0), FourCC('A001'), 0, 0, 0)
 end
 
 function InitTrig_Melee_Initialization()
