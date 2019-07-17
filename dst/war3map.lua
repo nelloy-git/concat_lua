@@ -40,6 +40,21 @@ __require_data.module["modules.utils"] = function()
       end
       return res
     end
+    function WeUtils.byte2float(data)
+      local s = 1
+      if (data >> 31 == 1) then
+        s = -1
+      end
+      local e = data >> 23&255
+      local m = 0
+      if (e ~= 0) then
+        m = data&8388607|8388608
+      else
+        m = data&8388607 << 1
+      end
+      local m1 = m*2^-23
+      return s*m1*2^e-127
+    end
     return WeUtils
 end
 __require_data.module["modules.global_timer"] = function()

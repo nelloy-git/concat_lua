@@ -1,844 +1,951 @@
 local WeUnitModification = {}
 
 local utils = require('compiletime_modules.we_object_editing.utils')
+local field = require('compiletime_modules.we_object_editing.fields.field')
 
-local function toTable(id, data, var_type)
-	local var_type_id = 0
-	if var_type == 'int' then var_type_id = utils.int2byte(0) end
-	if var_type == 'real' then var_type_id = utils.int2byte(1) end
-	if var_type == 'unreal' then var_type_id = utils.int2byte(2) end
-	if var_type == 'string' then var_type_id = utils.int2byte(3) end
-    local t = {
-        id = id,
-		data = data,
-		var_type = var_type_id,
-        we_type = 'unit'
-    }
-    return t
+function WeUnitModification.setTooltipExtended(str_data)
+    return field.new("utub", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.tooltipExtended(str_data)
-    return toTable("utub", utils.str2byte(str_data), 'string')
+function WeUnitModification.setTooltipBasic(str_data)
+    return field.new("utip", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.tooltipBasic(str_data)
-    return toTable("utip", utils.str2byte(str_data), 'string')
+function WeUnitModification.setRequirementsLevels(str_data)
+    return field.new("urqa", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.requirementsLevels(str_data)
-    return toTable("urqa", utils.str2byte(str_data), 'string')
+function WeUnitModification.setRequirements(str_data)
+    return field.new("ureq", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.requirements(str_data)
-    return toTable("ureq", utils.str2byte(str_data), 'string')
+function WeUnitModification.setName(str_data)
+    return field.new("unam", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.name(str_data)
-    return toTable("unam", utils.str2byte(str_data), 'string')
+function WeUnitModification.setHotkey(str_data)
+    return field.new("uhot", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.hotkey(str_data)
-    return toTable("uhot", utils.str2byte(str_data), 'string')
+function WeUnitModification.setDescription(str_data)
+    return field.new("ides", utils.str2byte(str_data), 'string')
 end
 
-function WeUnitModification.description(str_data)
-    return toTable("ides", utils.str2byte(str_data), 'string')
+function WeUnitModification.setButtonPositionY(int_data)
+    return field.new("ubpy", utils.int2byte(int_data), 'int')
 end
 
-function WeUnitModification.buttonPositionY(int_data)
-    return toTable("ubpy", utils.int2byte(int_data), 'int')
+function WeUnitModification.setButtonPositionX(int_data)
+    return field.new("ubpx", utils.int2byte(int_data), 'int')
 end
 
-function WeUnitModification.buttonPositionX(int_data)
-    return toTable("ubpx", utils.int2byte(int_data), 'int')
+function WeUnitModification.setItemsSold(str_data)
+	return field.new("usei", utils.str2byte(str_data), 'string')
 end
+
+function WeUnitModification.setUnitsSold(str_data)
+	return field.new("useu", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setHideMinimapDisplay(bool_flag)
+	return field.new("uhom", utils.int2byte(bool_flag), 'int')
+end
+
+function WeUnitModification.setUseExtendedLineofSight(bool_data)
+	return field.new("ulos", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setUseClickHelper(bool_data)
+	return field.new("uuch", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setUpgradesUsed(str_data)
+	return field.new("upgr", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setUnitSoundSet(str_data)
+	return field.new("usnd", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setUnitClassification(str_data)
+	return field.new("utyp", utils.str2byte(str_data), 'string')
+end
+
+-- foot, horse, fly, hover, float, amph
+function WeUnitModification.setMovementType(str_data)
+	return field.new("umvt", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setTurnRate(real_data)
+	return field.new("umvr", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setTintingColorBlue(int_data)
+	return field.new("uclb", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setTintingColorGreen(int_data)
+	return field.new("uclg", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setTintingColorRed(int_data)
+	return field.new("uclr", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setTilesets(str_data)
+	return field.new("util", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setTeamColor(int_data)
+	return field.new("utco", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setTargetedAs(str_data)
+	return field.new("utar", utils.str2byte(str_data), 'string')
+end
+
+--@deprecated("use #setArtTarget() instead")
+function WeUnitModification.setTarget(str_data)
+	return field.new("utaa", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setArtTarget(str_data)
+	return field.new("utaa", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setStockStartDelay(int_data)
+	return field.new("usst", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setStockReplenishInterval(int_data)
+	return field.new("usrg", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setStockMaximum(int_data)
+	return field.new("usma", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setSpeedMinimum(int_data)
+	return field.new("umis", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setSpeedMaximum(int_data)
+	return field.new("umas", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setSpeedBase(int_data)
+	return field.new("umvs", utils.int2byte(int_data), 'int')
+end
+
+--@deprecated("use #setArtSpecial() instead")
+function WeUnitModification.setSpecial(str_data)
+	return field.new("uspa", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setArtSpecial(str_data)
+	return field.new("uspa", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setSleeps(bool_data)
+	return field.new("usle", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setSightRadiusNight(int_data)
+	return field.new("usin", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setSightRadiusDay(int_data)
+	return field.new("usid", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setShadowTextureBuilding(str_data)
+	return field.new("ushb", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setShadowImageWidth(real_data)
+	return field.new("ushw", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setShadowImageUnit(str_data)
+	return field.new("ushu", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setShadowImageHeight(real_data)
+	return field.new("ushh", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setShadowImageCenterY(real_data)
+	return field.new("ushy", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setShadowImageCenterX(real_data)
+	return field.new("ushx", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setSelectionScale(real_data)
+	return field.new("ussc", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setSelectionCircleOnWater(bool_data)
+	return field.new("usew", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setSelectionCircleHeight(real_data)
+	return field.new("uslz", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setScalingValue(real_data)
+	return field.new("usca", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setScaleProjectiles(bool_data)
+	return field.new("uscb", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setRequiredBoneNames(str_data)
+	return field.new("ubpr", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setRequiredAttachmentLinkNames(str_data)
+	return field.new("ualp", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setRequiredAnimationNamesAttachments(str_data)
+	return field.new("uaap", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setRequiredAnimationNames(str_data)
+	return field.new("uani", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setRepairTime(int_data)
+	return field.new("urtm", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setRepairLumberCost(int_data)
+	return field.new("ulur", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setRepairGoldCost(int_data)
+	return field.new("ugor", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setRandomSound(str_data)
+	return field.new("ursl", utils.str2byte(str_data), 'string')
+end
+
+-- commoner, creeps, critters, demon, human, naga, nightelf, orc, other, undead, unknown
+function WeUnitModification.setRace(str_data)
+	return field.new("urac", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setPropulsionWindowdegrees(real_data)
+	return field.new("uprw", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setProjectileLaunchZSwimming(real_data)
+	return field.new("ulsz", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setProjectileLaunchZ(real_data)
+	return field.new("ulpz", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setProjectileLaunchY(real_data)
+	return field.new("ulpy", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setProjectileLaunchX(real_data)
+	return field.new("ulpx", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setProjectileImpactZSwimming(real_data)
+	return field.new("uisz", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setProjectileImpactZ(real_data)
+	return field.new("uimz", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setPriority(int_data)
+	return field.new("upri", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setPointValue(int_data)
+	return field.new("upoi", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setPlaceableInEditor(bool_data)
+	return field.new("uine", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setOrientationInterpolation(int_data)
+	return field.new("uori", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setOccluderHeight(real_data)
+	return field.new("uocc", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setNormalAbilities(str_data)
+	return field.new("uabi", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setNameEditorSuffix(str_data)
+	return field.new("unsf", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setMovementSound(str_data)
+	return field.new("umsl", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setModelFileExtraVersions(str_data)
+	return field.new("uver", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setModelFile(str_data)
+	return field.new("umdl", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setMinimumAttackRange(int_data)
+	return field.new("uamn", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setMaximumRollAngledegrees(real_data)
+	return field.new("umxr", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setMaximumPitchAngledegrees(real_data)
+	return field.new("umxp", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setManaRegeneration(real_data)
+	return field.new("umpr", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setManaMaximum(int_data)
+	return field.new("umpm", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setManaInitialAmount(int_data)
+	return field.new("umpi", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setLumberCost(int_data)
+	return field.new("ulum", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setSoundLoopingFadeOutRate(int_data)
+	return field.new("ulfo", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setSoundLoopingFadeInRate(int_data)
+	return field.new("ulfi", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setIsaBuilding(bool_data)
+	return field.new("ubdg", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setIconScoreScreen(str_data)
+	return field.new("ussi", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setIconGameInterface(str_data)
+	return field.new("uico", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setHitPointsRegenerationType(str_data)
+	return field.new("uhrt", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setHitPointsRegenerationRate(real_data)
+	return field.new("uhpr", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setHitPointsMaximumBase(int_data)
+	return field.new("uhpm", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setMovementHeightMinimum(real_data)
+	return field.new("umvf", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setMovementHeight(real_data)
+	return field.new("umvh", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setHasWaterShadow(bool_data)
+	return field.new("ushr", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setHasTilesetSpecificData(bool_data)
+	return field.new("utss", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setGoldCost(int_data)
+	return field.new("ugol", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGoldBountyAwardedSidesperDie(int_data)
+	return field.new("ubsi", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGoldBountyAwardedNumberofDice(int_data)
+	return field.new("ubdi", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGoldBountyAwardedBase(int_data)
+	return field.new("ubba", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setLumberBountyAwardedSidesperDie(int_data)
+	return field.new("ulbs", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setLumberBountyAwardedNumberofDice(int_data)
+	return field.new("ulbd", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setLumberBountyAwardedBase(int_data)
+	return field.new("ulba", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setFoodProduced(int_data)
+	return field.new("ufma", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setFoodCost(int_data)
+	return field.new("ufoo", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setFogOfWarSampleRadius(real_data)
+	return field.new("ufrd", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setElevationSampleRadius(real_data)
+	return field.new("uerd", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setElevationSamplePoints(int_data)
+	return field.new("uept", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setDisplayasNeutralHostile(bool_data)
+	return field.new("uhos", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setDependencyEquivalents(str_data)
+	return field.new("udep", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setDefenseUpgradeBonus(int_data)
+	return field.new("udup", utils.int2byte(int_data), 'int')
+end
+-- normal, small, medium, large, fort, hero, divine, none
+function WeUnitModification.setArmorType(str_data)
+	return field.new("udty", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setDefenseBase(int_data)
+	return field.new("udef", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setDefaultActiveAbility(str_data)
+	return field.new("udaa", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setDeathType(int_data)
+	return field.new("udea", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setDeathTimeseconds(real_data)
+	return field.new("udtm", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setCollisionSize(real_data)
+	return field.new("ucol", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setCategorizationSpecial(bool_data)
+	return field.new("uspe", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setCategorizationCampaign(bool_data)
+	return field.new("ucam", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setCanFlee(bool_data)
+	return field.new("ufle", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setCanDropItemsOnDeath(bool_data)
+	return field.new("udro", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setBuildTime(int_data)
+	return field.new("ubld", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttacksEnabled(int_data)
+	return field.new("uaen", utils.int2byte(int_data), 'int')
+end
+
+-- normal, instant, artillery, aline, missile, msplash, mbounce, mline, default, _
+function WeUnitModification.setAttack2WeaponType(str_data)
+	return field.new("ua2w", utils.str2byte(str_data), 'string')
+end
+
+-- Nothing, AxeMediumChop, MetalHeavyBash, MetalHeavyChop, MetalHeavySlice,
+-- MetalLightChop, MetalLightSlice, MetalMediumBash, MetalMediumChop,
+-- MetalMediumSlice, RockHeavyBash, WoodHeavyBash, WoodLightBash, WoodMediumBash
+function WeUnitModification.setAttack2WeaponSound(str_data)
+	return field.new("ucs2", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack2TargetsAllowed(str_data)
+	return field.new("ua2g", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack2ShowUI(bool_data)
+	return field.new("uwu2", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setAttack2RangeMotionBuffer(real_data)
+	return field.new("urb2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2Range(int_data)
+	return field.new("ua2r", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2ProjectileSpeed(int_data)
+	return field.new("ua2z", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2ProjectileHomingEnabled(bool_data)
+	return field.new("umh2", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setAttack2ProjectileArt(str_data)
+	return field.new("ua2m", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack2ProjectileArc(real_data)
+	return field.new("uma2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2MaximumNumberofTargets(int_data)
+	return field.new("utc2", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2DamageUpgradeAmount(int_data)
+	return field.new("udu2", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2DamageSpillRadius(real_data)
+	return field.new("usr2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2DamageSpillDistance(real_data)
+	return field.new("usd2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2DamageSidesperDie(int_data)
+	return field.new("ua2s", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2DamageNumberofDice(int_data)
+	return field.new("ua2d", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2DamageLossFactor(real_data)
+	return field.new("udl2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2DamageFactorSmall(real_data)
+	return field.new("uqd2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2DamageFactorMedium(real_data)
+	return field.new("uhd2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2DamageBase(int_data)
+	return field.new("ua2b", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2CooldownTime(real_data)
+	return field.new("ua2c", utils.float2byte(real_data), 'unreal')
+end
+
+-- unknown, normal, pierce, siege, spells, chaos, magic, hero
+function WeUnitModification.setAttack2AttackType(str_data)
+	return field.new("ua2t", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack2AreaofEffectTargets(str_data)
+	return field.new("ua2p", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack2AreaofEffectSmallDamage(int_data)
+	return field.new("ua2q", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2AreaofEffectMediumDamage(int_data)
+	return field.new("ua2h", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2AreaofEffectFullDamage(int_data)
+	return field.new("ua2f", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack2AnimationDamagePoint(real_data)
+	return field.new("udp2", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack2AnimationBackswingPoint(real_data)
+	return field.new("ubs2", utils.float2byte(real_data), 'unreal')
+end
+
+-- normal, instant, artillery, aline, missile, msplash, mbounce, mline, default, _
+function WeUnitModification.setAttack2WeaponType(str_data)
+	return field.new("ua1w", utils.str2byte(str_data), 'string')
+end
+
+-- Nothing, AxeMediumChop, MetalHeavyBash, MetalHeavyChop, MetalHeavySlice,
+-- MetalLightChop, MetalLightSlice, MetalMediumBash, MetalMediumChop,
+-- MetalMediumSlice, RockHeavyBash, WoodHeavyBash, WoodLightBash, WoodMediumBash
+function WeUnitModification.setAttack2WeaponSound(str_data)
+	return field.new("ucs1", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack1TargetsAllowed(str_data)
+	return field.new("ua1g", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack1ShowUI(bool_data)
+	return field.new("uwu1", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setAttack1RangeMotionBuffer(real_data)
+	return field.new("urb1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1Range(int_data)
+	return field.new("ua1r", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1ProjectileSpeed(int_data)
+	return field.new("ua1z", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1ProjectileHomingEnabled(bool_data)
+	return field.new("umh1", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setAttack1ProjectileArt(str_data)
+	return field.new("ua1m", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack1ProjectileArc(real_data)
+	return field.new("uma1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1MaximumNumberofTargets(int_data)
+	return field.new("utc1", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1DamageUpgradeAmount(int_data)
+	return field.new("udu1", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1DamageSpillRadius(real_data)
+	return field.new("usr1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1DamageSpillDistance(real_data)
+	return field.new("usd1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1DamageSidesperDie(int_data)
+	return field.new("ua1s", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1DamageNumberofDice(int_data)
+	return field.new("ua1d", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1DamageLossFactor(real_data)
+	return field.new("udl1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1DamageFactorSmall(real_data)
+	return field.new("uqd1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1DamageFactorMedium(real_data)
+	return field.new("uhd1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1DamageBase(int_data)
+	return field.new("ua1b", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1CooldownTime(real_data)
+	return field.new("ua1c", utils.float2byte(real_data), 'unreal')
+end
+
+-- unknown, normal, pierce, siege, spells, chaos, magic, hero
+function WeUnitModification.setAttack2AttackType(str_data)
+	return field.new("ua1t", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack1AreaofEffectTargets(str_data)
+	return field.new("ua1p", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAttack1AreaofEffectSmallDamage(int_data)
+	return field.new("ua1q", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1AreaofEffectMediumDamage(int_data)
+	return field.new("ua1h", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1AreaofEffectFullDamage(int_data)
+	return field.new("ua1f", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setAttack1AnimationDamagePoint(real_data)
+	return field.new("udp1", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAttack1AnimationBackswingPoint(real_data)
+	return field.new("ubs1", utils.float2byte(real_data), 'unreal')
+end
+
+-- Ethereal, Flesh, Wood, Stone, Metal
+function WeUnitModification.setArmorSoundType(str_data)
+	return field.new("uarm", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAnimationWalkSpeed(real_data)
+	return field.new("uwal", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setAnimationRunSpeed(real_data)
+	return field.new("urun", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setAnimationCastPoint(real_data)
+	return field.new("ucpt", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAnimationCastBackswing(real_data)
+	return field.new("ucbs", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAnimationBlendTimeseconds(real_data)
+	return field.new("uble", utils.float2byte(real_data), 'real')
+end
+
+function WeUnitModification.setAllowCustomTeamColor(bool_data)
+	return field.new("utcc", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setAIPlacementType(str_data)
+	return field.new("uabt", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAIPlacementRadius(real_data)
+	return field.new("uabr", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setAcquisitionRange(real_data)
+	return field.new("uacq", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setTransportedSize(int_data)
+	return field.new("ucar", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setLevel(int_data)
+	return field.new("ulev", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGroupSeparationPriority(int_data)
+	return field.new("urpr", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGroupSeparationParameter(int_data)
+	return field.new("urpp", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGroupSeparationGroupNumber(int_data)
+	return field.new("urpg", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setGroupSeparationEnabled(bool_data)
+	return field.new("urpo", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setFormationRank(int_data)
+	return field.new("ufor", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setStructuresBuilt(str_data)
+	return field.new("ubui", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.hideHeroDeathMsg(bool_flag)
+	return field.new("uhhd", utils.int2byte(bool_flag), 'int')
+end
+
+function WeUnitModification.hideHeroInterfaceIcon(bool_flag)
+	return field.new("uhhb", utils.int2byte(bool_flag), 'int')
+end
+
+function WeUnitModification.hideHeroMinimapDisplay(bool_flag)
+	return field.new("uhhm", utils.int2byte(bool_flag), 'int')
+end
+
+function WeUnitModification.setTooltipRevive(str_data)
+	return field.new("utpr", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setTooltipAwaken(str_data)
+	return field.new("uawt", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setStrengthPerLevel(real_data)
+	return field.new("ustp", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setStartingStrength(int_data)
+	return field.new("ustr", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setStartingIntelligence(int_data)
+	return field.new("uint", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setStartingAgility(int_data)
+	return field.new("uagi", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setProperNamesUsed(int_data)
+	return field.new("upru", utils.int2byte(int_data), 'int')
+end
+
+function WeUnitModification.setProperNames(str_data)
+	return field.new("upro", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setPrimaryAttribute(str_data)
+	return field.new("upra", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setIntelligencePerLevel(real_data)
+	return field.new("uinp", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setHeroRevivalLocations(str_data)
+	return field.new("urva", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setHeroAbilities(str_data)
+	return field.new("uhab", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setAgilityPerLevel(real_data)
+	return field.new("uagp", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setCasterUpgradeTips(str_data)
+	return field.new("ucut", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setCasterUpgradeNames(str_data)
+	return field.new("ucun", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setCasterUpgradeArt(str_data)
+	return field.new("ucua", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setUpgradesTo(str_data)
+	return field.new("uupt", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setUnitsTrained(str_data)
+	return field.new("utra", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setRevivesDeadHeros(bool_data)
+	return field.new("urev", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setResearchesAvailable(str_data)
+	return field.new("ures", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setPlacementRequiresWaterRadius(real_data)
+	return field.new("upaw", utils.float2byte(real_data), 'unreal')
+end
+
+function WeUnitModification.setPlacementRequires(str_data)
+	return field.new("upap", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setPlacementPreventedBy(str_data)
+	return field.new("upar", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setPathingMap(str_data)
+	return field.new("upat", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setNeutralBuildingValidAsRandomBuilding(bool_data)
+	return field.new("unbr", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setNeutralBuildingShowsMinimapIcon(bool_data)
+	return field.new("unbm", utils.int2byte(bool_data), 'int')
+end
+
+function WeUnitModification.setItemsMade(str_data)
+	return field.new("umki", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setGroundTexture(str_data)
+	return field.new("uubs", utils.str2byte(str_data), 'string')
+end
+
+function WeUnitModification.setConstructionSound(str_data)
+	return field.new("ubsl", utils.str2byte(str_data), 'string')
+end
+
+
+
+--function setRequierementsForTier(int tier, str_data)
+--	utils.str2byte(str_switch tier, 'string')
+--		case 2
+--			def.setString("urq1", data)
+--		case 3
+--			def.setString("urq2", data)
+--		case 4
+--			def.setString("urq3", data)
+--		case 5
+--			def.setString("urq4", data)
+--		case 6
+--			def.setString("urq5", data)
+--		case 7
+--			def.setString("urq6", data)
+--		case 8
+--			def.setString("urq7", data)
+--		case 9
+--			def.setString("urq8", data)
+--		default
 
 return WeUnitModification
---[[
-public class UnitOrBuildingOrHeroDefinition extends W3UDefinition
-
-	construct(int newUnitId, int origUnitId)
-		super(newUnitId, origUnitId)
-
-	function setItemsSold(string data)
-		def.setString("usei", data)
-
-	function setUnitsSold(string data)
-		def.setString("useu", data)
-
-	function setHideMinimapDisplay(boolean flag)
-		def.setBoolean("uhom", flag)
-
-	function setUseExtendedLineofSight(boolean data)
-		def.setBoolean("ulos", data)
-
-	function setUseClickHelper(boolean data)
-		def.setBoolean("uuch", data)
-
-	function setUpgradesUsed(string data)
-		def.setString("upgr", data)
-
-	function setUnitSoundSet(string data)
-		def.setString("usnd", data)
-
-	function setUnitClassification(string data)
-		def.setString("utyp", data)
-
-	function setMovementType(MovementType mtype)
-		def.setString("umvt", mtype.toObjectString())
-
-	function setTurnRate(real data)
-		def.setUnreal("umvr", data)
-
-	function setTintingColorBlue(int data)
-		def.setInt("uclb", data)
-
-	function setTintingColorGreen(int data)
-		def.setInt("uclg", data)
-
-	function setTintingColorRed(int data)
-		def.setInt("uclr", data)
-
-	function setTilesets(string data)
-		def.setString("util", data)
-
-	function setTeamColor(int data)
-		def.setInt("utco", data)
-
-	function setTargetedAs(string data)
-		def.setString("utar", data)
-
-	@deprecated("use #setArtTarget() instead")
-	function setTarget(string data)
-		def.setString("utaa", data)
-
-	function setArtTarget(string data)
-		def.setString("utaa", data)
-
-	function setStockStartDelay(int data)
-		def.setInt("usst", data)
-
-	function setStockReplenishInterval(int data)
-		def.setInt("usrg", data)
-
-	function setStockMaximum(int data)
-		def.setInt("usma", data)
-
-	function setSpeedMinimum(int data)
-		def.setInt("umis", data)
-
-	function setSpeedMaximum(int data)
-		def.setInt("umas", data)
-
-	function setSpeedBase(int data)
-		def.setInt("umvs", data)
-
-	@deprecated("use #setArtSpecial() instead")
-	function setSpecial(string data)
-		def.setString("uspa", data)
-
-	function setArtSpecial(string data)
-		def.setString("uspa", data)
-
-	function setSleeps(boolean data)
-		def.setBoolean("usle", data)
-
-	function setSightRadiusNight(int data)
-		def.setInt("usin", data)
-
-	function setSightRadiusDay(int data)
-		def.setInt("usid", data)
-
-	function setShadowTextureBuilding(string data)
-		def.setString("ushb", data)
-
-	function setShadowImageWidth(real data)
-		def.setReal("ushw", data)
-
-	function setShadowImageUnit(string data)
-		def.setString("ushu", data)
-
-	function setShadowImageHeight(real data)
-		def.setReal("ushh", data)
-
-	function setShadowImageCenterY(real data)
-		def.setReal("ushy", data)
-
-	function setShadowImageCenterX(real data)
-		def.setReal("ushx", data)
-
-	function setSelectionScale(real data)
-		def.setReal("ussc", data)
-
-	function setSelectionCircleOnWater(boolean data)
-		def.setBoolean("usew", data)
-
-	function setSelectionCircleHeight(real data)
-		def.setReal("uslz", data)
-
-	function setScalingValue(real data)
-		def.setReal("usca", data)
-
-	function setScaleProjectiles(boolean data)
-		def.setBoolean("uscb", data)
-
-	function setRequiredBoneNames(string data)
-		def.setString("ubpr", data)
-
-	function setRequiredAttachmentLinkNames(string data)
-		def.setString("ualp", data)
-
-	function setRequiredAnimationNamesAttachments(string data)
-		def.setString("uaap", data)
-
-	function setRequiredAnimationNames(string data)
-		def.setString("uani", data)
-
-	function setRepairTime(int data)
-		def.setInt("urtm", data)
-
-	function setRepairLumberCost(int data)
-		def.setInt("ulur", data)
-
-	function setRepairGoldCost(int data)
-		def.setInt("ugor", data)
-
-	function setRandomSound(string data)
-		def.setString("ursl", data)
-
-	function setRace(Race data)
-		def.setString("urac", data.toObjectString())
-
-	function setPropulsionWindowdegrees(real data)
-		def.setUnreal("uprw", data)
-
-	function setProjectileLaunchZSwimming(real data)
-		def.setUnreal("ulsz", data)
-
-	function setProjectileLaunchZ(real data)
-		def.setUnreal("ulpz", data)
-
-	function setProjectileLaunchY(real data)
-		def.setUnreal("ulpy", data)
-
-	function setProjectileLaunchX(real data)
-		def.setUnreal("ulpx", data)
-
-	function setProjectileImpactZSwimming(real data)
-		def.setUnreal("uisz", data)
-
-	function setProjectileImpactZ(real data)
-		def.setUnreal("uimz", data)
-
-	function setPriority(int data)
-		def.setInt("upri", data)
-
-	function setPointValue(int data)
-		def.setInt("upoi", data)
-
-	function setPlaceableInEditor(boolean data)
-		def.setBoolean("uine", data)
-
-	function setOrientationInterpolation(int data)
-		def.setInt("uori", data)
-
-	function setOccluderHeight(real data)
-		def.setUnreal("uocc", data)
-
-	function setNormalAbilities(string data)
-		def.setString("uabi", data)
-
-	function setNameEditorSuffix(string data)
-		def.setString("unsf", data)
-
-	function setMovementSound(string data)
-		def.setString("umsl", data)
-
-	function setModelFileExtraVersions(string data)
-		def.setString("uver", data)
-
-	function setModelFile(string data)
-		def.setString("umdl", data)
-
-	function setMinimumAttackRange(int data)
-		def.setInt("uamn", data)
-
-	function setMaximumRollAngledegrees(real data)
-		def.setReal("umxr", data)
-
-	function setMaximumPitchAngledegrees(real data)
-		def.setReal("umxp", data)
-
-	function setManaRegeneration(real data)
-		def.setUnreal("umpr", data)
-
-	function setManaMaximum(int data)
-		def.setInt("umpm", data)
-
-	function setManaInitialAmount(int data)
-		def.setInt("umpi", data)
-
-	function setLumberCost(int data)
-		def.setInt("ulum", data)
-
-	function setSoundLoopingFadeOutRate(int data)
-		def.setInt("ulfo", data)
-
-	function setSoundLoopingFadeInRate(int data)
-		def.setInt("ulfi", data)
-
-	function setIsaBuilding(boolean data)
-		def.setBoolean("ubdg", data)
-
-	function setIconScoreScreen(string data)
-		def.setString("ussi", data)
-
-	function setIconGameInterface(string data)
-		def.setString("uico", data)
-
-	function setHitPointsRegenerationType(string data)
-		def.setString("uhrt", data)
-
-	function setHitPointsRegenerationRate(real data)
-		def.setUnreal("uhpr", data)
-
-	function setHitPointsMaximumBase(int data)
-		def.setInt("uhpm", data)
-
-	function setMovementHeightMinimum(real data)
-		def.setUnreal("umvf", data)
-
-	function setMovementHeight(real data)
-		def.setUnreal("umvh", data)
-
-	function setHasWaterShadow(boolean data)
-		def.setBoolean("ushr", data)
-
-	function setHasTilesetSpecificData(boolean data)
-		def.setBoolean("utss", data)
-
-	function setGoldCost(int data)
-		def.setInt("ugol", data)
-
-	function setGoldBountyAwardedSidesperDie(int data)
-		def.setInt("ubsi", data)
-
-	function setGoldBountyAwardedNumberofDice(int data)
-		def.setInt("ubdi", data)
-
-	function setGoldBountyAwardedBase(int data)
-		def.setInt("ubba", data)
-
-	function setLumberBountyAwardedSidesperDie(int data)
-		def.setInt("ulbs", data)
-
-	function setLumberBountyAwardedNumberofDice(int data)
-		def.setInt("ulbd", data)
-
-	function setLumberBountyAwardedBase(int data)
-		def.setInt("ulba", data)
-
-	function setFoodProduced(int data)
-		def.setInt("ufma", data)
-
-	function setFoodCost(int data)
-		def.setInt("ufoo", data)
-
-	function setFogOfWarSampleRadius(real data)
-		def.setReal("ufrd", data)
-
-	function setElevationSampleRadius(real data)
-		def.setReal("uerd", data)
-
-	function setElevationSamplePoints(int data)
-		def.setInt("uept", data)
-
-	function setDisplayasNeutralHostile(boolean data)
-		def.setBoolean("uhos", data)
-
-	function setDependencyEquivalents(string data)
-		def.setString("udep", data)
-
-	function setDefenseUpgradeBonus(int data)
-		def.setInt("udup", data)
-
-	function setArmorType(ArmorType data)
-		def.setString("udty", data.toObjectString())
-
-	function setDefenseBase(int data)
-		def.setInt("udef", data)
-
-	function setDefaultActiveAbility(string data)
-		def.setString("udaa", data)
-
-	function setDeathType(int data)
-		def.setInt("udea", data)
-
-	function setDeathTimeseconds(real data)
-		def.setUnreal("udtm", data)
-
-	function setCollisionSize(real data)
-		def.setUnreal("ucol", data)
-
-	function setCategorizationSpecial(boolean data)
-		def.setBoolean("uspe", data)
-
-	function setCategorizationCampaign(boolean data)
-		def.setBoolean("ucam", data)
-
-	function setCanFlee(boolean data)
-		def.setBoolean("ufle", data)
-
-	function setCanDropItemsOnDeath(boolean data)
-		def.setBoolean("udro", data)
-
-	function setBuildTime(int data)
-		def.setInt("ubld", data)
-
-	function setAttacksEnabled(int data)
-		def.setInt("uaen", data)
-
-	function setAttack2WeaponType(WeaponType wepType)
-		def.setString("ua2w", wepType.toObjectString())
-
-	function setAttack2WeaponSound(WeaponSound data)
-		def.setString("ucs2", data.toString())
-
-	function setAttack2TargetsAllowed(string data)
-		def.setString("ua2g", data)
-
-	function setAttack2ShowUI(boolean data)
-		def.setBoolean("uwu2", data)
-
-	function setAttack2RangeMotionBuffer(real data)
-		def.setUnreal("urb2", data)
-
-	function setAttack2Range(int data)
-		def.setInt("ua2r", data)
-
-	function setAttack2ProjectileSpeed(int data)
-		def.setInt("ua2z", data)
-
-	function setAttack2ProjectileHomingEnabled(boolean data)
-		def.setBoolean("umh2", data)
-
-	function setAttack2ProjectileArt(string data)
-		def.setString("ua2m", data)
-
-	function setAttack2ProjectileArc(real data)
-		def.setUnreal("uma2", data)
-
-	function setAttack2MaximumNumberofTargets(int data)
-		def.setInt("utc2", data)
-
-	function setAttack2DamageUpgradeAmount(int data)
-		def.setInt("udu2", data)
-
-	function setAttack2DamageSpillRadius(real data)
-		def.setUnreal("usr2", data)
-
-	function setAttack2DamageSpillDistance(real data)
-		def.setUnreal("usd2", data)
-
-	function setAttack2DamageSidesperDie(int data)
-		def.setInt("ua2s", data)
-
-	function setAttack2DamageNumberofDice(int data)
-		def.setInt("ua2d", data)
-
-	function setAttack2DamageLossFactor(real data)
-		def.setUnreal("udl2", data)
-
-	function setAttack2DamageFactorSmall(real data)
-		def.setUnreal("uqd2", data)
-
-	function setAttack2DamageFactorMedium(real data)
-		def.setUnreal("uhd2", data)
-
-	function setAttack2DamageBase(int data)
-		def.setInt("ua2b", data)
-
-	function setAttack2CooldownTime(real data)
-		def.setUnreal("ua2c", data)
-
-	function setAttack2AttackType(AttackType data)
-		def.setString("ua2t", data.toObjectString())
-
-	function setAttack2AreaofEffectTargets(string data)
-		def.setString("ua2p", data)
-
-	function setAttack2AreaofEffectSmallDamage(int data)
-		def.setInt("ua2q", data)
-
-	function setAttack2AreaofEffectMediumDamage(int data)
-		def.setInt("ua2h", data)
-
-	function setAttack2AreaofEffectFullDamage(int data)
-		def.setInt("ua2f", data)
-
-	function setAttack2AnimationDamagePoint(real data)
-		def.setUnreal("udp2", data)
-
-	function setAttack2AnimationBackswingPoint(real data)
-		def.setUnreal("ubs2", data)
-
-	function setAttack1WeaponType(WeaponType weaponType)
-		def.setString("ua1w", weaponType.toObjectString())
-
-	function setAttack1WeaponSound(WeaponSound data)
-		def.setString("ucs1", data.toString())
-
-	function setAttack1TargetsAllowed(string data)
-		def.setString("ua1g", data)
-
-	function setAttack1ShowUI(boolean data)
-		def.setBoolean("uwu1", data)
-
-	function setAttack1RangeMotionBuffer(real data)
-		def.setUnreal("urb1", data)
-
-	function setAttack1Range(int data)
-		def.setInt("ua1r", data)
-
-	function setAttack1ProjectileSpeed(int data)
-		def.setInt("ua1z", data)
-
-	function setAttack1ProjectileHomingEnabled(boolean data)
-		def.setBoolean("umh1", data)
-
-	function setAttack1ProjectileArt(string data)
-		def.setString("ua1m", data)
-
-	function setAttack1ProjectileArc(real data)
-		def.setUnreal("uma1", data)
-
-	function setAttack1MaximumNumberofTargets(int data)
-		def.setInt("utc1", data)
-
-	function setAttack1DamageUpgradeAmount(int data)
-		def.setInt("udu1", data)
-
-	function setAttack1DamageSpillRadius(real data)
-		def.setUnreal("usr1", data)
-
-	function setAttack1DamageSpillDistance(real data)
-		def.setUnreal("usd1", data)
-
-	function setAttack1DamageSidesperDie(int data)
-		def.setInt("ua1s", data)
-
-	function setAttack1DamageNumberofDice(int data)
-		def.setInt("ua1d", data)
-
-	function setAttack1DamageLossFactor(real data)
-		def.setUnreal("udl1", data)
-
-	function setAttack1DamageFactorSmall(real data)
-		def.setUnreal("uqd1", data)
-
-	function setAttack1DamageFactorMedium(real data)
-		def.setUnreal("uhd1", data)
-
-	function setAttack1DamageBase(int data)
-		def.setInt("ua1b", data)
-
-	function setAttack1CooldownTime(real data)
-		def.setUnreal("ua1c", data)
-
-	function setAttack1AttackType(AttackType data)
-		def.setString("ua1t", data.toObjectString())
-
-	function setAttack1AreaofEffectTargets(string data)
-		def.setString("ua1p", data)
-
-	function setAttack1AreaofEffectSmallDamage(int data)
-		def.setInt("ua1q", data)
-
-	function setAttack1AreaofEffectMediumDamage(int data)
-		def.setInt("ua1h", data)
-
-	function setAttack1AreaofEffectFullDamage(int data)
-		def.setInt("ua1f", data)
-
-	function setAttack1AnimationDamagePoint(real data)
-		def.setUnreal("udp1", data)
-
-	function setAttack1AnimationBackswingPoint(real data)
-		def.setUnreal("ubs1", data)
-
-	function setArmorSoundType(ArmorSoundType data)
-		def.setString("uarm", data.toString())
-
-	function setAnimationWalkSpeed(real data)
-		def.setReal("uwal", data)
-
-	function setAnimationRunSpeed(real data)
-		def.setReal("urun", data)
-
-	function setAnimationCastPoint(real data)
-		def.setUnreal("ucpt", data)
-
-	function setAnimationCastBackswing(real data)
-		def.setUnreal("ucbs", data)
-
-	function setAnimationBlendTimeseconds(real data)
-		def.setReal("uble", data)
-
-	function setAllowCustomTeamColor(boolean data)
-		def.setBoolean("utcc", data)
-
-	function setAIPlacementType(string data)
-		def.setString("uabt", data)
-
-	function setAIPlacementRadius(real data)
-		def.setUnreal("uabr", data)
-
-	function setAcquisitionRange(real data)
-		def.setUnreal("uacq", data)
-
-public class UnitOrHeroDefinition extends UnitOrBuildingOrHeroDefinition
-
-	construct(int newId, int origId)
-		super(newId, origId)
-
-	function setTransportedSize(int data)
-		def.setInt("ucar", data)
-
-	function setLevel(int data)
-		def.setInt("ulev", data)
-
-	function setGroupSeparationPriority(int data)
-		def.setInt("urpr", data)
-
-	function setGroupSeparationParameter(int data)
-		def.setInt("urpp", data)
-
-	function setGroupSeparationGroupNumber(int data)
-		def.setInt("urpg", data)
-
-	function setGroupSeparationEnabled(boolean data)
-		def.setBoolean("urpo", data)
-
-	function setFormationRank(int data)
-		def.setInt("ufor", data)
-
-	function setStructuresBuilt(string data)
-		def.setString("ubui", data)
-
-public class HeroDefinition extends UnitOrHeroDefinition
-
-	construct(int newId, int origId)
-		super(newId, origId)
-
-	function hideHeroDeathMsg(boolean flag)
-		def.setBoolean("uhhd", flag)
-
-	function hideHeroInterfaceIcon(boolean flag)
-		def.setBoolean("uhhb", flag)
-
-	function hideHeroMinimapDisplay(boolean flag)
-		def.setBoolean("uhhm", flag)
-
-	function setTooltipRevive(string data)
-		def.setString("utpr", data)
-
-	function setTooltipAwaken(string data)
-		def.setString("uawt", data)
-
-	function setStrengthPerLevel(real data)
-		def.setUnreal("ustp", data)
-
-	function setStartingStrength(int data)
-		def.setInt("ustr", data)
-
-	function setStartingIntelligence(int data)
-		def.setInt("uint", data)
-
-	function setStartingAgility(int data)
-		def.setInt("uagi", data)
-
-	function setProperNamesUsed(int data)
-		def.setInt("upru", data)
-
-	function setProperNames(string data)
-		def.setString("upro", data)
-
-	function setPrimaryAttribute(string data)
-		def.setString("upra", data)
-
-	function setIntelligencePerLevel(real data)
-		def.setUnreal("uinp", data)
-
-	function setHeroRevivalLocations(string data)
-		def.setString("urva", data)
-
-	function setHeroAbilities(string data)
-		def.setString("uhab", data)
-
-	function setAgilityPerLevel(real data)
-		def.setUnreal("uagp", data)
-
-	/** sets the techtree requirements for a specific tier
-		for example use setRequierements
-	*/
-	function setRequierementsForTier(int tier, string data)
-		switch tier
-			case 2
-				def.setString("urq1", data)
-			case 3
-				def.setString("urq2", data)
-			case 4
-				def.setString("urq3", data)
-			case 5
-				def.setString("urq4", data)
-			case 6
-				def.setString("urq5", data)
-			case 7
-				def.setString("urq6", data)
-			case 8
-				def.setString("urq7", data)
-			case 9
-				def.setString("urq8", data)
-			default
-
-public class UnitDefinition extends UnitOrHeroDefinition
-
-	construct(int newId, int origId)
-		super(newId, origId)
-
-	function setCasterUpgradeTips(string data)
-		def.setString("ucut", data)
-
-	function setCasterUpgradeNames(string data)
-		def.setString("ucun", data)
-
-	function setCasterUpgradeArt(string data)
-		def.setString("ucua", data)
-
-public class BuildingDefinition extends UnitOrBuildingOrHeroDefinition
-
-	construct(int newId, int origId)
-		super(newId, origId)
-
-	function setUpgradesTo(string data)
-		def.setString("uupt", data)
-
-	function setUnitsTrained(string data)
-		def.setString("utra", data)
-
-	function setRevivesDeadHeros(boolean data)
-		def.setBoolean("urev", data)
-
-	function setResearchesAvailable(string data)
-		def.setString("ures", data)
-
-	function setPlacementRequiresWaterRadius(real data)
-		def.setUnreal("upaw", data)
-
-	function setPlacementRequires(string data)
-		def.setString("upap", data)
-
-	function setPlacementPreventedBy(string data)
-		def.setString("upar", data)
-
-	function setPathingMap(string data)
-		def.setString("upat", data)
-
-	function setNeutralBuildingValidAsRandomBuilding(boolean data)
-		def.setBoolean("unbr", data)
-
-	function setNeutralBuildingShowsMinimapIcon(boolean data)
-		def.setBoolean("unbm", data)
-
-	function setItemsMade(string data)
-		def.setString("umki", data)
-
-	function setGroundTexture(string data)
-		def.setString("uubs", data)
-
-	function setConstructionSound(string data)
-		def.setString("ubsl", data)
-
-public class BuildingAndHeroDefinition extends UnitOrBuildingOrHeroDefinition
-
-	construct(int newId, int origId)
-		super(newId, origId)
-
-	function setUpgradesTo(string data)
-		def.setString("uupt", data)
-
-	function setUnitsTrained(string data)
-		def.setString("utra", data)
-
-	function setRevivesDeadHeros(boolean data)
-		def.setBoolean("urev", data)
-
-	function setResearchesAvailable(string data)
-		def.setString("ures", data)
-
-	function setPlacementRequiresWaterRadius(real data)
-		def.setUnreal("upaw", data)
-
-	function setPlacementRequires(string data)
-		def.setString("upap", data)
-
-	function setPlacementPreventedBy(string data)
-		def.setString("upar", data)
-
-	function setPathingMap(string data)
-		def.setString("upat", data)
-
-	function setNeutralBuildingValidAsRandomBuilding(boolean data)
-		def.setBoolean("unbr", data)
-
-	function setNeutralBuildingShowsMinimapIcon(boolean data)
-		def.setBoolean("unbm", data)
-
-	function setItemsMade(string data)
-		def.setString("umki", data)
-
-	function setGroundTexture(string data)
-		def.setString("uubs", data)
-
-	function setConstructionSound(string data)
-		def.setString("ubsl", data)
-
-	function setTooltipRevive(string data)
-		def.setString("utpr", data)
-
-	function setTooltipAwaken(string data)
-		def.setString("uawt", data)
-
-	function setStrengthPerLevel(real data)
-		def.setUnreal("ustp", data)
-
-	function setStartingStrength(int data)
-		def.setInt("ustr", data)
-
-	function setStartingIntelligence(int data)
-		def.setInt("uint", data)
-
-	function setStartingAgility(int data)
-		def.setInt("uagi", data)
-
-	function setProperNamesUsed(int data)
-		def.setInt("upru", data)
-
-	function setProperNames(string data)
-		def.setString("upro", data)
-
-	function setPrimaryAttribute(string data)
-		def.setString("upra", data)
-
-	function setIntelligencePerLevel(real data)
-		def.setUnreal("uinp", data)
-
-	function setHeroRevivalLocations(string data)
-		def.setString("urva", data)
-
-	function setHeroAbilities(string data)
-		def.setString("uhab", data)
-
-	function setAgilityPerLevel(real data)
-        def.setUnreal("uagp", data)
-]]--
