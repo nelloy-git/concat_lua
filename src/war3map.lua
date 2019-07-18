@@ -5,11 +5,11 @@ local str_compile = compiletime('Compiletime string')
 local glTimer = require("modules.global_timer")
 local utils = require("modules.utils")
 
-function showText_callback(user_data)
+local function showText_callback(user_data)
     DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)
 end
 
-gg_trg_Melee_Initialization = nil
+GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
 
@@ -30,8 +30,8 @@ function Trig_Melee_Initialization_Actions()
 end
 
 function InitTrig_Melee_Initialization()
-    gg_trg_Melee_Initialization = CreateTrigger()
-    TriggerAddAction(gg_trg_Melee_Initialization, Trig_Melee_Initialization_Actions)
+    GG_trg_Melee_Initialization = CreateTrigger()
+    TriggerAddAction(GG_trg_Melee_Initialization, Trig_Melee_Initialization_Actions)
 end
 
 function InitCustomTriggers()
@@ -39,7 +39,7 @@ function InitCustomTriggers()
 end
 
 function RunInitializationTriggers()
-    ConditionalTriggerExecute(gg_trg_Melee_Initialization)
+    ConditionalTriggerExecute(GG_trg_Melee_Initialization)
 end
 
 function InitCustomPlayerSlots()

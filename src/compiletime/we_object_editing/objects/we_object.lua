@@ -36,7 +36,7 @@ function WeObject:addField(we_field)
         print(utils.getErrorPos())
         return false
     end
-    table.insert(self.changes, self)
+    table.insert(self.changes, we_field)
     return true
 end
 
