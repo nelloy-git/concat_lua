@@ -1,6 +1,6 @@
 _G.Debug = true
 
-local CompileFuncs = compiletime(require, 'compiletime_modules.we_object_editing.entrance')
+local CompileFuncs = compiletime(require, 'compiletime.we_object_editing.entrance')
 local str_compile = compiletime('Compiletime string')
 local glTimer = require("modules.global_timer")
 local utils = require("modules.utils")

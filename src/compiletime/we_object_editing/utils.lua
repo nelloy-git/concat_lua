@@ -86,4 +86,18 @@ function WeUtils.float2byte(x)
     return v
 end
 
+function  WeUtils.getErrorPos()
+    local str = ''
+    local i = 2
+    while debug.getinfo(i, 'ln') ~= nil do
+        local func = debug.getinfo(i, 'lnS')
+        local source_type = func.source:sub(#func.source - 3, #func.source)
+        if func.source:sub(#func.source - 3, #func.source) == '.lua' then
+            str = '  ' .. func.source .. ':' .. tostring(func.currentline) .. '\n' .. str
+        end
+        i = i + 1
+    end
+    return str
+end
+
 return WeUtils

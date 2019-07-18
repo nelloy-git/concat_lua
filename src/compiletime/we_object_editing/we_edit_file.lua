@@ -2,7 +2,7 @@ local WeEditFile = {}
 
 local WeFile = {}
 
-local utils = require('compiletime_modules.we_object_editing.utils')
+local utils = require('compiletime.we_object_editing.utils')
 
 function WeEditFile.read(path)
     local f = assert(io.open(path, "rb"))
@@ -32,7 +32,7 @@ function WeFile:setChangesCount(count)
 end
 
 function WeFile:add(we_obj)
-    bytes = we_obj:serialize()
+    local bytes = we_obj:serialize()
     self:setChangesCount(self:getChangesCount() + 1)
     self.content = self.content .. bytes
     if Debug then

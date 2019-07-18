@@ -2,7 +2,7 @@ local WeObject = {}
 
 local WeObjectInstance = {}
 
-local utils = require('compiletime_modules.we_object_editing.utils')
+local utils = require('compiletime.we_object_editing.utils')
 
 
 function WeObject.new(id, base_id, we_type)
@@ -16,6 +16,7 @@ function WeObject.new(id, base_id, we_type)
 
     if id:len() > 4 or base_id:len() > 4 then
         print('Warning: can not create object ' .. id .. ' based on ' .. base_id)
+        print(utils.getErrorPos())
         return nil
     end
 
@@ -29,14 +30,16 @@ function WeObject.new(id, base_id, we_type)
     return obj
 end
 
-function WeObjectInstance:addModification(we_modification)
-    if we_modification.we_type ~= self.we_type then
+function WeObjectInstance:addField(we_field)
+    if self.we_type ~= self.we_type then
         print('Warning: can not add modification',
-               we_modification.id, '(class ' .. we_modification.type .. ') to object',
+               self.id, '(class ' .. self.type .. ') to object',
                self.id, '(class ' .. self.type .. ')')
+        print(utils.getErrorPos())
         return false
     end
-    table.insert(self.changes, we_modification)
+    table.insert(self.changes, self)
+    return true
 end
 
 function WeObjectInstance:serialize()
