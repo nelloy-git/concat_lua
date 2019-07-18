@@ -1,22 +1,30 @@
-local WeEditFile = {}
-
 local WeFile = {}
 
 local utils = require('compiletime.we_object_editing.utils')
 
-function WeEditFile.read(path)
+local function weType2file(we_type)
+    if we_type == 'unit' then return 'war3map.w3u' end
+end
+
+function WeFile.readFromSrc(we_type)
+    local separator = package.config:sub(1,1)
+    local path = src_dir .. separator .. weType2file(we_type)
+
     local f = assert(io.open(path, "rb"))
     local t = f:read("*all")
     f:close()
     local we_file = {
-        path = path,
+        we_type = we_type,
         content = t
     }
     setmetatable(we_file, {__index = WeFile})
     return we_file
 end
 
-function WeFile:write(path)
+function WeFile:writeToDst()
+    local separator = package.config:sub(1,1)
+    local path = dst_dir .. separator .. weType2file(self.we_type)
+
     local f = assert(io.open(path, "w"))
     local t = f:write(self.content)
     f:close()
@@ -32,6 +40,11 @@ function WeFile:setChangesCount(count)
 end
 
 function WeFile:add(we_obj)
+    if we_obj.we_type ~= self.we_type then
+        print('Warning: can not add object of type', we_obj.we_type, 'to file of type', self.we_type)
+        print(utils.getErrorPos())
+        return false
+    end
     local bytes = we_obj:serialize()
     self:setChangesCount(self:getChangesCount() + 1)
     self.content = self.content .. bytes
@@ -40,6 +53,7 @@ function WeFile:add(we_obj)
     else
         print('Created object with id: '.. we_obj.id .. ' based on ' .. we_obj.base_id)
     end
+    return true
 end
 
-return WeEditFile
+return WeFile

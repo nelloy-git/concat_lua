@@ -1,9 +1,11 @@
-local File = require('compiletime.we_object_editing.we_edit_file')
+local WeFile = require('compiletime.we_object_editing.we_edit_file')
 local WeUnit = require('compiletime.we_object_editing.objects.unit')
 
 local foo = WeUnit.new('h000', 'hfoo')
+foo:setName('Test footman')
 
---local w3u = File.read(src_dir .. '/' .. 'war3map.w3u')
---w3u:write(dst_dir .. '/' .. 'war3map.w3u')
+local w3u = WeFile.readFromSrc('unit')
+w3u:add(foo)
+w3u:writeToDst()
 
 return nil

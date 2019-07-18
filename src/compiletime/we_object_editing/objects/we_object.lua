@@ -1,7 +1,5 @@
 local WeObject = {}
 
-local WeObjectInstance = {}
-
 local utils = require('compiletime.we_object_editing.utils')
 
 
@@ -26,11 +24,11 @@ function WeObject.new(id, base_id, we_type)
         we_type = we_type,
         changes = {}
     }
-    setmetatable(obj, {__index = WeObjectInstance})
+    setmetatable(obj, {__index = WeObject})
     return obj
 end
 
-function WeObjectInstance:addField(we_field)
+function WeObject:addField(we_field)
     if self.we_type ~= self.we_type then
         print('Warning: can not add modification',
                self.id, '(class ' .. self.type .. ') to object',
@@ -42,7 +40,7 @@ function WeObjectInstance:addField(we_field)
     return true
 end
 
-function WeObjectInstance:serialize()
+function WeObject:serialize()
     local serial = self.base_id .. self.id .. utils.int2byte(#(self.changes))
     for k, v in pairs(self.changes) do
         serial = serial .. v.id .. v.var_type .. v.data .. '\0\0\0\0'
