@@ -40,10 +40,22 @@ function WeObject:addField(we_field)
     return true
 end
 
+local function getBytes(var)
+    if var == nil then
+        return ''
+    end
+    return var
+end
+
 function WeObject:serialize()
     local serial = self.base_id .. self.id .. utils.int2byte(#(self.changes))
-    for k, v in pairs(self.changes) do
-        serial = serial .. v.id .. v.var_type .. v.data .. '\0\0\0\0'
+    for _, v in pairs(self.changes) do
+        local word_1 = getBytes(v.id)
+        local word_2 = getBytes(v.var_type)
+        local word_3 = getBytes(v.lvl)
+        local word_4 = getBytes(v.abil_data_id)
+        local word_5 = getBytes(v.data)
+        serial = serial .. word_1 .. word_2 .. word_3 .. word_4 .. word_5 .. '\0\0\0\0'
     end
     return serial
 end

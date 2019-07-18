@@ -4,6 +4,7 @@ local utils = require('compiletime.we_object_editing.utils')
 
 local function weType2file(we_type)
     if we_type == 'unit' then return 'war3map.w3u' end
+    if we_type == 'ability' then return 'war3map.w3a' end
 end
 
 function WeFile.readFromSrc(we_type)
