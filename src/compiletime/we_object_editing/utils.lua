@@ -27,14 +27,19 @@ end
 
 function WeUtils.byte2hex(data, bytes_per_line)
     local res = ''
+    local line = ''
     for i = 1, data:len() do
         local c = data:sub(i, i)
-        res = res..' '..string.format("%02x", c:byte())
+        line = line .. string.format("%02x", c:byte()) .. ' '
         if i % bytes_per_line == 0 then
-            res = res..'\n'
+            res = res..'\n'..line:sub(1, #line - 1)
+            line = ''
         end
     end
-    return res
+    if line ~= '' then
+        res = res..'\n'..line:sub(1, #line - 1)
+    end
+    return res:sub(2, #res)
 end
 
 function WeUtils.byte2float(data)

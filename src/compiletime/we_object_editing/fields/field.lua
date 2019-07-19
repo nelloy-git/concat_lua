@@ -13,12 +13,28 @@ local function data2byte(data, data_type)
 	return utils.str2byte(data)
 end
 
-function WeField.new(field_name, we_type, data)
-	local field = nil
+local function getBytes(var)
+    if var == nil then
+        return ''
+    end
+    return var
+end
+
+function WeField.new(fields_table, field_name, data)
+	local we_type = fields_table.we_type()
+	local field_data = fields_table[field_name]
 	if we_type == 'unit' then
-		field = WeUnitField[field_name]
+		field = fields_table[field_name]
 		if field == nil then
 			print('Unit does not have field', field_name)
+			print(utils.getErrorPos())
+			return nil
+		end
+	end
+	if we_type == 'ability' then
+		field = fields_table[field_name]
+		if field == nil then
+			print('Ability does not have field', field_name)
 			print(utils.getErrorPos())
 			return nil
 		end
@@ -30,13 +46,21 @@ function WeField.new(field_name, we_type, data)
 	if field.data_type == 'unreal' then data_type_id = utils.int2byte(2) end
 	if field.data_type == 'string' then data_type_id = utils.int2byte(3) end
 
-    local t = {
-        id = field.id,
-		data = data2byte(data, field.data_type),
-		var_type = data_type_id,
+    local field_table = {
+        id = getBytes(field.id),
+		data_type = getBytes(data_type_id),
+		lvl = getBytes(field.lvl),
+		abil_data_id = getBytes(utils.int2byte(field.abil_data_id)),
+		data = getBytes(data2byte(data, field.data_type)),
         we_type = we_type
-    }
-    return t
+	}
+	setmetatable(field_table, {__index = WeField})
+    return field_table
+end
+
+function WeField:serialize()
+	local str = self.id .. self.data_type .. self.lvl .. self.abil_data_id .. self.data
+	return str
 end
 
 return WeField

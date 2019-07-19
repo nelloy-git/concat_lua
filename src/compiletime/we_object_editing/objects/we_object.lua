@@ -29,7 +29,7 @@ function WeObject.new(id, base_id, we_type)
 end
 
 function WeObject:addField(we_field)
-    if self.we_type ~= self.we_type then
+    if self.we_type ~= we_field.we_type then
         print('Warning: can not add modification',
                self.id, '(class ' .. self.type .. ') to object',
                self.id, '(class ' .. self.type .. ')')
@@ -49,13 +49,8 @@ end
 
 function WeObject:serialize()
     local serial = self.base_id .. self.id .. utils.int2byte(#(self.changes))
-    for _, v in pairs(self.changes) do
-        local word_1 = getBytes(v.id)
-        local word_2 = getBytes(v.var_type)
-        local word_3 = getBytes(v.lvl)
-        local word_4 = getBytes(v.abil_data_id)
-        local word_5 = getBytes(v.data)
-        serial = serial .. word_1 .. word_2 .. word_3 .. word_4 .. word_5 .. '\0\0\0\0'
+    for _, field in pairs(self.changes) do
+        serial = serial .. field:serialize() .. '\0\0\0\0'
     end
     return serial
 end

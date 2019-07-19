@@ -11,9 +11,14 @@ function WeFile.readFromSrc(we_type)
     local separator = package.config:sub(1,1)
     local path = src_dir .. separator .. weType2file(we_type)
 
-    local f = assert(io.open(path, "rb"))
-    local t = f:read("*all")
-    f:close()
+    local t = string.char(2)..string.char(0)..string.char(0)..string.char(0)..  -- file version
+              string.char(0)..string.char(0)..string.char(0)..string.char(0)..  -- object tables
+              string.char(0)..string.char(0)..string.char(0)..string.char(0)    -- changes count
+    local f = io.open(path, "rb")
+    if f then
+        t = f:read("*all")
+        f:close()
+    end
     local we_file = {
         we_type = we_type,
         content = t
@@ -50,7 +55,7 @@ function WeFile:add(we_obj)
     self:setChangesCount(self:getChangesCount() + 1)
     self.content = self.content .. bytes
     if Debug then
-        print('Created object with id: '.. we_obj.id .. ' (', utils.byte2hex(we_obj.id, 5), ') based on ' .. we_obj.base_id .. ' (', utils.byte2hex(we_obj.base_id, 5), ')')
+        print(string.format('Created object with id: \'%s\' (%s) based on \'%s\' (%s)', we_obj.id, utils.byte2hex(we_obj.id, 5), we_obj.base_id, utils.byte2hex(we_obj.base_id, 5)))
     else
         print('Created object with id: '.. we_obj.id .. ' based on ' .. we_obj.base_id)
     end

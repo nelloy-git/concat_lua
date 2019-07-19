@@ -1,5 +1,9 @@
 local WeUnitField = {}
 
+function WeUnitField.we_type()
+    return 'unit'
+end
+
 WeUnitField['TooltipExtended'] = {id = "utub", data_type = 'string'}
 WeUnitField['TooltipBasic'] = {id = "utip", data_type = 'string'}
 WeUnitField['RequirementsLevels'] = {id = "urqa", data_type = 'string'}
