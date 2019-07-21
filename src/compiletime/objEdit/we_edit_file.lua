@@ -1,6 +1,6 @@
 local WeFile = {}
 
-local utils = require('compiletime.we_object_editing.utils')
+local utils = require('compiletime.objEdit.utils')
 
 local function weType2file(we_type)
     if we_type == 'unit' then return 'war3map.w3u' end
