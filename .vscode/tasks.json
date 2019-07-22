@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run",
+            "label": "Compile",
             "type": "shell",
-            "command": "C:\\'Program Files'\\'Warcraft III'\\x86_64\\'Warcraft III'.exe -loadfile ${workspaceFolder}\\dst"
+            "command": "python3 ${config:lua-wc3.exePath} ${workspaceFolder}/${config:lua-wc3.sourceFolder} ${workspaceFolder}/${config:lua-wc3.destinationFolder}"
         }
     ]
 }

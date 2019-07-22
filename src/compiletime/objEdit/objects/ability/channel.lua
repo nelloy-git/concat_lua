@@ -1,8 +1,8 @@
 WeChannelAbility = {}
 
-local WeField = require('compiletime.objEdit.we_field')
-local WeObject = require('compiletime.objEdit.objects.we_object')
-local WeEveryAbility = require('compiletime.objEdit.objects.ability.every')
+local WeField = require(CurrentLib..'.we_field')
+local WeObject = require(CurrentLib..'.objects.we_object')
+local WeEveryAbility = require(CurrentLib..'.objects.ability.every')
 setmetatable(WeChannelAbility, {__index = WeEveryAbility})
 
 function WeChannelAbility.new(id)

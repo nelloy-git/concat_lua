@@ -1,8 +1,8 @@
 local WeHero = {}
 
-local WeField = require('compiletime.objEdit.we_field')
-local WeObject = require('compiletime.objEdit.objects.we_object')
-local WeEveryUnit = require('compiletime.objEdit.objects.unit.every')
+local WeField = require(CurrentLib..'.we_field')
+local WeObject = require(CurrentLib..'.objects.we_object')
+local WeEveryUnit = require(CurrentLib..'.objects.unit.every')
 setmetatable(WeHero, {__index = WeEveryUnit})
 
 function WeHero.new(id, base_id)

@@ -1,7 +1,7 @@
 WeEveryAbility = {}
 
-local WeField = require('compiletime.objEdit.we_field')
-local WeObject = require('compiletime.objEdit.objects.we_object')
+local WeField = require(CurrentLib..'.we_field')
+local WeObject = require(CurrentLib..'.objects.we_object')
 setmetatable(WeEveryAbility, {__index = WeObject})
 
 function WeEveryAbility.new(id, base_id)

@@ -1,6 +1,6 @@
 local WeObject = {}
 
-local utils = require('compiletime.objEdit.utils')
+local utils = require(CurrentLib..'.utils')
 
 function WeObject.new(id, base_id, we_type)
     local obj = {

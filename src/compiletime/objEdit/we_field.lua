@@ -1,6 +1,6 @@
 local WeField = {}
 
-local utils = require('compiletime.objEdit.utils')
+local utils = require(CurrentLib..'.utils')
 
 local function data2byte(data, data_type)
 	if data_type == 'bool' then
