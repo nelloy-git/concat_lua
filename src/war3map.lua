@@ -1,7 +1,12 @@
 _G.Debug = true
 
-local tmp = compiletime(require, 'compiletime.objEdit.objEdit')
-compiletime(ObjEdit.createUnit('h001', 'hpea'))
+local unit_id = 'h001'
+
+compiletime(require, 'compiletime.objEdit.objEdit')
+compiletime(function ()
+                local unit_type = ObjEdit.Unit.new(unit_id, 'hpea')
+                unit_type:setName('Compiletime footman')
+            end)
 
 --local tmp = compiletime(CompileFuncs.init())
 --local str_compile = compiletime('Compiletime string')

@@ -8,10 +8,13 @@ CurrentLib = dir:gsub(separator, '.'):sub(2)
 local WeFile = require(CurrentLib..'.weFile')
 WeFile.init()
 local WeUnit = require(CurrentLib..'.objects.unit.unit')
-local WeChannelAbil = require(CurrentLib..'.objects.ability.channel')
+local WeChannelAbility = require(CurrentLib..'.objects.ability.channel')
 local utils = require(CurrentLib..'.utils')
 
-ObjEdit = {}
+ObjEdit = {
+    Unit = WeUnit,
+    ChannelAbility = WeChannelAbility
+}
 
 function ObjEdit.close()
     WeFile.close()
