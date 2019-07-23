@@ -15,7 +15,7 @@ local function runAction(cur_time, action)
     if action.time >= cur_time then
         local continue = action.callback(action.user_data)
         if continue == true and action.period ~= 0 then
-            action.time = cur_time + action.period
+            action.time = action.time + action.period
             return true
         else
             return false
