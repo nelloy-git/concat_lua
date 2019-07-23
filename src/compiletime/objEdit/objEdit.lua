@@ -5,26 +5,21 @@ local separator = package.config:sub(1,1)
 local dir = path:sub(1, #path - path:reverse():find(separator))
 CurrentLib = dir:gsub(separator, '.'):sub(2)
 
-local WeFile = require(CurrentLib..'.we_edit_file')
+local WeFile = require(CurrentLib..'.weFile')
+WeFile.init()
 local WeUnit = require(CurrentLib..'.objects.unit.unit')
 local WeChannelAbil = require(CurrentLib..'.objects.ability.channel')
 local utils = require(CurrentLib..'.utils')
 
+ObjEdit = {}
 
-local foo = WeUnit.new('h001', 'hpea')
-foo:setName('Test footman')
+function ObjEdit.close()
+    WeFile.close()
+end
 
-local w3u = WeFile.readFromSrc('unit')
-w3u:add(foo)
-w3u:writeToDst()
-
-local ch = WeChannelAbil.new('A001')
-ch:setName('Test channel')
-ch:setOptions(1, 1)
-
-local w3a = WeFile.readFromSrc('ability')
-w3a:add(ch)
-w3a:writeToDst()
+function ObjEdit.createUnit(id, base_id)
+    WeUnit.new(id, base_id)
+end
 
 -- Restore global var
 CurrentLib = prev_val

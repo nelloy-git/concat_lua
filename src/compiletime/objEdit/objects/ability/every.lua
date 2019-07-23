@@ -1,13 +1,15 @@
 WeEveryAbility = {}
 
 local WeField = require(CurrentLib..'.we_field')
+local WeFile = require(CurrentLib..'.weFile')
 local WeObject = require(CurrentLib..'.objects.we_object')
 setmetatable(WeEveryAbility, {__index = WeObject})
 
 function WeEveryAbility.new(id, base_id)
-    local we_unit = WeObject.new(id, base_id, 'ability')
-    setmetatable(we_unit, {__index = WeEveryAbility})
-    return we_unit
+    local we_ability = WeObject.new(id, base_id, 'ability')
+    setmetatable(we_ability, {__index = WeEveryAbility})
+    WeFile.abilities:add(we_ability)
+    return we_ability
 end
 
 function WeEveryAbility:setName(string_data)

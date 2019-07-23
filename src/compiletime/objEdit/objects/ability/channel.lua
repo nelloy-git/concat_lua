@@ -6,9 +6,9 @@ local WeEveryAbility = require(CurrentLib..'.objects.ability.every')
 setmetatable(WeChannelAbility, {__index = WeEveryAbility})
 
 function WeChannelAbility.new(id)
-    local we_unit = WeObject.new(id, 'ANcl', 'ability')
-    setmetatable(we_unit, {__index = WeChannelAbility})
-    return we_unit
+    local we_ability = WeEveryAbility.new(id, 'ANcl', 'ability')
+    setmetatable(we_ability, {__index = WeChannelAbility})
+    return we_ability
 end
 
 function WeChannelAbility:setArtDuration(unreal_data, lvl)

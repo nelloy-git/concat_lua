@@ -6,7 +6,7 @@ local WeEveryUnit = require(CurrentLib..'.objects.unit.every')
 setmetatable(WeBuilding, {__index = WeEveryUnit})
 
 function WeBuilding.new(id, base_id)
-    local we_unit = WeObject.new(id, base_id, 'unit')
+    local we_unit = WeEveryUnit.new(id, base_id, 'unit')
     setmetatable(we_unit, {__index = WeBuilding})
     return we_unit
 end

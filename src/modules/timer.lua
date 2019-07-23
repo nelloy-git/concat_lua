@@ -1,51 +1,60 @@
-local Timer = {
-    cur_time = 0,
-    accuracy = 0.1,
-    actions = {}
-}
+local Timer = {}
 
+-- Function initialize timer with callbacks.
 function Timer.init(accuracy)
-    Timer.timer = CreateTimer()
-    Timer.accuracy = accuracy
+    local t = {
+        timer = CreateTimer(),
+        cur_time = 0,
+        accuracy = accuracy or 0.1,
+        actions = {}
+    }
+    setmetatable(Timer, {__index = Timer})
     TimerStart(Timer.timer, Timer.accuracy, true, Timer.period)
+    return t
 end
 
--- Function returns true if action should continue iterating.
-local function runAction(cur_time, action)
-    if action.time >= cur_time then
-        local continue = action.callback(action.user_data)
-        if continue == true and action.period ~= 0 then
-            action.time = action.time + action.period
-            return true
+-- Function runs callback and returns true if action should continue iterating.
+local function runAction(action)
+    local continue = action.callback(action.user_data)
+    if continue == true and action.period ~= 0 then
+        action.time = action.time + action.period
+        return true
+    else
+        return false
+    end
+end
+
+function Timer:period()
+    self.cur_time = self.cur_time + self.accuracy
+    local cur_time = self.cur_time
+    local new_list = {}
+    for i = 1, #self.actions do
+        local action = self.actions[i]
+        if cur_time > action.time then
+            local continue = runAction(action)
+            if continue then
+                table.insert(new_list, 1, action)
+            end
         else
-            return false
+            table.insert(new_list, 1, action)
         end
     end
+    self.actions = new_list
 end
 
-function Timer.period()
-    Timer.cur_time = Timer.cur_time + Timer.accuracy
-    for i = 1, #Timer.time do
-        local continue = runAction(Timer.cur_time, Timer.actions[i])
-        if not continue then
-            table.remove(Timer.actions, i)
-        end
-    end
-end
-
--- Periodic callbacks have to return false if you want remove it from timer.
-function Timer.addAction(time, callback, user_data, period)
+-- Periodic callbacks have to return false if you want remove then from timer.
+function Timer:addAction(first_call_delay, callback, user_data, period)
     if period == nil then
         period = 0
     end
 
     local action = {
-        time = Timer.cur_time + time,
+        time = self.time + first_call_delay,
         callback = callback,
         user_data = user_data,
         period = period
     }
-    table.insert(Timer.actions, 1, action)
+    table.insert(self.actions, 1, action)
 end
 
 return Timer

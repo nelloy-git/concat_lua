@@ -1,12 +1,14 @@
 local WeEveryUnit = {}
 
 local WeField = require(CurrentLib..'.we_field')
+local WeFile = require(CurrentLib..'.weFile')
 local WeObject = require(CurrentLib..'.objects.we_object')
 setmetatable(WeEveryUnit, {__index = WeObject})
 
 function WeEveryUnit.new(id, base_id)
     local we_unit = WeObject.new(id, base_id, 'unit')
     setmetatable(we_unit, {__index = WeEveryUnit})
+    WeFile.units:add(we_unit)
     return we_unit
 end
 
