@@ -6,6 +6,11 @@ compiletime(require, 'compiletime.objEdit.objEdit')
 compiletime(function ()
                 local unit_type = ObjEdit.Unit.new(unit_id, 'hpea')
                 unit_type:setName('Compiletime footman')
+
+                local aura = ObjEdit.AuraDummy.new('A001', 'B001',
+                                                   'Test buff', 'Some tooltip',
+                                                   "ReplaceableTextures\\CommandButtons\\BTNAdvancedSpikedBarricades.blp",
+                                                   '', '')
             end)
 
 --local tmp = compiletime(CompileFuncs.init())
@@ -13,8 +18,8 @@ compiletime(function ()
 --local glTimer = require("modules.global_timer")
 --local utils = require("modules.utils")
 
-local function showText_callback(user_data)
-    DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)
+function FourCC(id)
+    return string.unpack(">I4", id)
 end
 
 GG_trg_Melee_Initialization = nil
@@ -22,6 +27,7 @@ function InitGlobals()
 end
 
 function Trig_Melee_Initialization_Actions()
+    DisplayTextToPlayer(Player(0), 0, 0, I2S(FourCC('h001')))
     MeleeStartingVisibility()
     MeleeStartingHeroLimit()
     MeleeGrantHeroItems()
@@ -30,12 +36,12 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    --glTimer.init(0.1)
-    --glTimer.addAction(3, showText_callback, {player = Player(0), text = 'Delayed text'})
-    DisplayTextToPlayer(Player(0), 0, 0, 'azaza')
-    DisplayTextToPlayer(Player(0), 0, 0, I2S(FourCC('h001')))
-    local u = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
-    UnitAddAbility(u, FourCC('A001'))
+    local u1 = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
+    local u2 = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
+    UnitAddAbility(u1, FourCC('A001'))
+    --UnitAddAbility(u2, FourCC('A001'))
+    BlzSetUnitStringField(u1, UNIT_SF_NAME, 'Test')
+    BlzSetUnitStringField(u2, UNIT_SF_NAME, 'Test2')
 end
 
 function InitTrig_Melee_Initialization()

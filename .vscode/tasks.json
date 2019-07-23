@@ -7,6 +7,11 @@
             "label": "Compile",
             "type": "shell",
             "command": "python3 ${config:lua-wc3.exePath} ${workspaceFolder}/${config:lua-wc3.sourceFolder} ${workspaceFolder}/${config:lua-wc3.destinationFolder}"
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "C:\\'Program Files'\\'Warcraft III Public Test'\\x86_64\\'Warcraft III'.exe -loadfile ${workspaceFolder}\\${config:lua-wc3.destinationFolder} -windowed"
         }
     ]
 }

@@ -1,13 +1,15 @@
 local WeFile = {
     units = nil,
-    abilities = nil
+    buffs = nil,
+    abilities = nil,
 }
 
 local utils = require(CurrentLib..'.utils')
 
 local function weType2file(we_type)
-    if we_type == 'unit' then return 'war3map.w3u' end
     if we_type == 'ability' then return 'war3map.w3a' end
+    if we_type == 'buff' then return 'war3map.w3h'end
+    if we_type == 'unit' then return 'war3map.w3u' end
 end
 
 local function readFile(path)
@@ -67,6 +69,7 @@ function WeFile:applyChanges()
             print(string.format('Created %s with id: \'%s\' based on \'%s\'', we_obj.we_type, we_obj.id, we_obj.base_id))
         end
     end
+    self:writeToDst()
 end
 
 function WeFile:add(we_obj)
@@ -81,12 +84,14 @@ end
 
 function WeFile.init()
     WeFile.abilities = WeFile.readFromSrc('ability')
+    WeFile.buffs = WeFile.readFromSrc('buff')
     WeFile.units = WeFile.readFromSrc('unit')
 end
 
 function WeFile.close()
     WeFile.abilities:applyChanges()
     WeFile.units:applyChanges()
+    WeFile.buffs:applyChanges()
 end
 
 return WeFile

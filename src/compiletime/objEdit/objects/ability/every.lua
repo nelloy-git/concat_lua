@@ -1,4 +1,4 @@
-WeEveryAbility = {}
+local WeEveryAbility = {}
 
 local WeField = require(CurrentLib..'.we_field')
 local WeFile = require(CurrentLib..'.weFile')

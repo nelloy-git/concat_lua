@@ -7,22 +7,17 @@ CurrentLib = dir:gsub(separator, '.'):sub(2)
 
 local WeFile = require(CurrentLib..'.weFile')
 WeFile.init()
-local WeUnit = require(CurrentLib..'.objects.unit.unit')
-local WeChannelAbility = require(CurrentLib..'.objects.ability.channel')
-local utils = require(CurrentLib..'.utils')
 
 ObjEdit = {
-    Unit = WeUnit,
-    ChannelAbility = WeChannelAbility
+    Unit =  require(CurrentLib..'.objects.unit.unit'),
+    ChannelAbility = require(CurrentLib..'.objects.ability.channel'),
+    AuraDummy = require(CurrentLib..'.presets.auraDummy')
 }
 
 function ObjEdit.close()
     WeFile.close()
 end
 
-function ObjEdit.createUnit(id, base_id)
-    WeUnit.new(id, base_id)
-end
 
 -- Restore global var
 CurrentLib = prev_val

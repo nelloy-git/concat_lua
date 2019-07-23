@@ -1,4 +1,4 @@
-WeChannelAbility = {}
+local WeChannelAbility = {}
 
 local WeField = require(CurrentLib..'.we_field')
 local WeObject = require(CurrentLib..'.objects.we_object')

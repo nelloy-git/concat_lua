@@ -10,14 +10,15 @@
   local unit_id = "h001"
   
   
-  local function showText_callback(user_data)
-    DisplayTextToPlayer(user_data.player, 0, 0, user_data.text)
+  function FourCC(id)
+    return string.unpack(">I4", id)
   end
   GG_trg_Melee_Initialization = nil
   function InitGlobals()
 
   end
   function Trig_Melee_Initialization_Actions()
+    DisplayTextToPlayer(Player(0), 0, 0, I2S(FourCC("h001")))
     MeleeStartingVisibility()
     MeleeStartingHeroLimit()
     MeleeGrantHeroItems()
@@ -26,10 +27,11 @@
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    DisplayTextToPlayer(Player(0), 0, 0, "azaza")
-    DisplayTextToPlayer(Player(0), 0, 0, I2S(FourCC("h001")))
-    local u = CreateUnit(Player(0), FourCC("h001"), 0, 0, 0)
-    UnitAddAbility(u, FourCC("A001"))
+    local u1 = CreateUnit(Player(0), FourCC("h001"), 0, 0, 0)
+    local u2 = CreateUnit(Player(0), FourCC("h001"), 0, 0, 0)
+    UnitAddAbility(u1, FourCC("A001"))
+    BlzSetUnitStringField(u1, UNIT_SF_NAME, "Test")
+    BlzSetUnitStringField(u2, UNIT_SF_NAME, "Test2")
   end
   function InitTrig_Melee_Initialization()
     GG_trg_Melee_Initialization = CreateTrigger()
