@@ -1,22 +1,20 @@
-_G.Debug = true
-
 local unit_id = 'h001'
+local aura_id = 'A001'
+local buff_id = 'B001'
 
-compiletime(require, 'compiletime.objEdit.objEdit')
-compiletime(function ()
-                local unit_type = ObjEdit.Unit.new(unit_id, 'hpea')
-                unit_type:setName('Compiletime footman')
+compiletime(
+    function ()
+        local objEdit = require('compiletime.objEdit.objEdit')
+        objEdit.init(src_dir, dst_dir)
 
-                local aura = ObjEdit.AuraDummy.new('A001', 'B001',
-                                                   'Test buff', 'Some tooltip',
-                                                   "ReplaceableTextures\\CommandButtons\\BTNAdvancedSpikedBarricades.blp",
-                                                   '', '')
-            end)
+        local unit_type = objEdit.Unit.new(unit_id, 'hpea')
+        unit_type:setName('Compiletime footman')
 
---local tmp = compiletime(CompileFuncs.init())
---local str_compile = compiletime('Compiletime string')
---local glTimer = require("modules.global_timer")
---local utils = require("modules.utils")
+        local aura = objEdit.AuraDummy.new(aura_id, buff_id,
+                                           'Test buff', 'Some tooltip',
+                                           "ReplaceableTextures\\CommandButtons\\BTNAdvancedSpikedBarricades.blp",
+                                           '', '')
+    end)
 
 function FourCC(id)
     return string.unpack(">I4", id)
@@ -39,7 +37,6 @@ function Trig_Melee_Initialization_Actions()
     local u1 = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
     local u2 = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
     UnitAddAbility(u1, FourCC('A001'))
-    --UnitAddAbility(u2, FourCC('A001'))
     BlzSetUnitStringField(u1, UNIT_SF_NAME, 'Test')
     BlzSetUnitStringField(u2, UNIT_SF_NAME, 'Test2')
 end
@@ -93,4 +90,9 @@ function config()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()
 end
-compiletime(ObjEdit.close())
+
+compiletime(
+    function ()
+        local objEdit = require('compiletime.objEdit.objEdit')
+        objEdit.close()
+    end)

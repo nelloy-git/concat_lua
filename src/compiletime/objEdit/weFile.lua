@@ -2,6 +2,9 @@ local WeFile = {
     units = nil,
     buffs = nil,
     abilities = nil,
+
+    __src_dir = nil,
+    __dst_dir = nil
 }
 
 local utils = require(CurrentLib..'.utils')
@@ -30,7 +33,7 @@ end
 
 function WeFile.readFromSrc(we_type)
     local separator = package.config:sub(1,1)
-    local path = src_dir .. separator .. weType2file(we_type)
+    local path = WeFile.__src_dir .. separator .. weType2file(we_type)
     local we_file = {
         we_type = we_type,
         content = readFile(path),
@@ -42,7 +45,7 @@ end
 
 function WeFile:writeToDst()
     local separator = package.config:sub(1,1)
-    local path = dst_dir .. separator .. weType2file(self.we_type)
+    local path = WeFile.__dst_dir .. separator .. weType2file(self.we_type)
 
     local f = assert(io.open(path, "w"))
     local t = f:write(self.content)
@@ -82,7 +85,10 @@ function WeFile:add(we_obj)
     return true
 end
 
-function WeFile.init()
+function WeFile.init(src_dir, dst_dir)
+    WeFile.__src_dir = src_dir
+    WeFile.__dst_dir = dst_dir
+
     WeFile.abilities = WeFile.readFromSrc('ability')
     WeFile.buffs = WeFile.readFromSrc('buff')
     WeFile.units = WeFile.readFromSrc('unit')

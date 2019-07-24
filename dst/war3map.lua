@@ -9,7 +9,6 @@
   _G.Debug = true
   local unit_id = "h001"
   
-  
   function FourCC(id)
     return string.unpack(">I4", id)
   end
