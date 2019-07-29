@@ -7,8 +7,10 @@ local function getModulePrefix()
 end
 
 local ObjEdit = {
+    utils = nil,
+
     Unit = nil,
-    ChannelAbility = nil,
+    Ability = {},
     AuraDummy = nil,
 }
 
@@ -20,17 +22,31 @@ function ObjEdit.init(src_path, dst_path)
     local WeFile = require(CurrentLib..'.weFile')
     WeFile.init(src_path, dst_path)
 
+    ObjEdit.utils = require(CurrentLib..'.utils')
+
+    -- Units
     ObjEdit.Unit =  require(CurrentLib..'.objects.unit.unit')
-    ObjEdit.ChannelAbility = require(CurrentLib..'.objects.ability.channel')
+
+    -- Ailities
+    ObjEdit.Ability.BladeMasterCriticalStrike = require(CurrentLib..'.objects.ability.bladeMasterCriticalStrike')
+    ObjEdit.Ability.Channel = require(CurrentLib..'.objects.ability.channel')
+    ObjEdit.Ability.RunedBracers = require(CurrentLib..'.objects.ability.runedBracers')
+
     ObjEdit.AuraDummy = require(CurrentLib..'.presets.auraDummy')
+
+    CurrentLib = prev_val
 end
 
 function ObjEdit.close()
+    local prev_val = CurrentLib
+    CurrentLib = getModulePrefix()
+
     local WeFile = require(CurrentLib..'.weFile')
     WeFile.close()
+    
+    CurrentLib = prev_val
 end
 
 
 -- Restore global var
-CurrentLib = prev_val
 return ObjEdit

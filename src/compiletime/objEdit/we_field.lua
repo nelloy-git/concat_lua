@@ -9,14 +9,17 @@ local function data2byte(data, data_type)
 		else
 			return utils.int2byte(0)
 		end
-	if data_type == 'int' then
+	elseif data_type == 'int' then
 		return utils.int2byte(data)
-	end
-	else if data_type == 'real' or data_type == 'unreal' then
+	elseif data_type == 'real' or data_type == 'unreal' then
 		return utils.float2byte(data)
-		end
+	elseif data_type == 'sring' then
+		return utils.str2byte(data)
+	else
+		print('Wrong data type')
+		print(utils.getErrorPos())
+		return nil
 	end
-	return utils.str2byte(data)
 end
 
 local function type2bytes(data_type)
@@ -50,6 +53,7 @@ function WeField.new(id, data_type, lvl_or_variation, abil_data_id, data)
 		abil_data_id = getBytes(abil_data_id),
 		data = getBytes(data2byte(data, data_type)),
 	}
+	--print(data_type, tostring(data))
 	setmetatable(field_table, {__index = WeField})
     return field_table
 end

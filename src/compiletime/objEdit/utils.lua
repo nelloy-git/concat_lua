@@ -105,4 +105,72 @@ function  WeUtils.getErrorPos()
     return str
 end
 
+local function nextId(cur_id)
+    local p4 = string.byte(cur_id, 1)
+    local p3 = string.byte(cur_id, 2)
+    local p2 = string.byte(cur_id, 3)
+    local p1 = string.byte(cur_id, 4)
+
+    if p1 < 96 then
+        p1 = p1 + 1
+        while p1 >= 48 and p1 <= 57 do
+            p1 = p1 + 1
+        end
+    elseif p2 < 96 then
+        p1 = string.byte('!')
+        p2 = p2 + 1
+        while p2 >= 48 and p2 <= 57 do
+            p2 = p2 + 1
+        end
+    elseif p3 < 96 then
+        p1 = string.byte('!')
+        p2 = string.byte('!')
+        p3 = p3 + 1
+        while p3 >= 48 and p3 <= 57 do
+            p3 = p3 + 1
+        end
+    else 
+        print('No valid ids left.')
+        return nil
+    end
+    return string.char(p4)..string.char(p3)..string.char(p2)..string.char(p1)
+end
+
+local UNIT_ID = 'x###'
+function WeUtils.nextUnitId()
+    UNIT_ID = nextId(UNIT_ID)
+    return UNIT_ID
+end
+
+local HERO_ID = 'HM##'
+function WeUtils.nextHeroId()
+    HERO_ID = nextId(HERO_ID)
+    return HERO_ID
+end
+
+local ABIL_ID = 'AM##'
+function WeUtils.nextAbilId()
+    ABIL_ID = nextId(ABIL_ID)
+    return ABIL_ID
+end
+
+local BUFF_ID = 'BM##'
+function WeUtils.nextBuffId()
+    BUFF_ID = nextId(BUFF_ID)
+    return BUFF_ID
+end
+
+local ITEM_ID = 'IM##'
+function WeUtils.nextItemId()
+    ITEM_ID = nextId(ITEM_ID)
+    return ITEM_ID
+end
+
+local UPGR_ID = 'RM##'
+function WeUtils.nextUpgrId()
+    UPGR_ID = nextId(UPGR_ID)
+    return UPGR_ID
+end
+
+
 return WeUtils

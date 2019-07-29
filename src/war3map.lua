@@ -1,31 +1,17 @@
-local unit_id = 'h001'
-local aura_id = 'A001'
-local buff_id = 'B001'
-
 compiletime(
     function ()
         local objEdit = require('compiletime.objEdit.objEdit')
         objEdit.init(src_dir, dst_dir)
-
-        local unit_type = objEdit.Unit.new(unit_id, 'hpea')
-        unit_type:setName('Compiletime footman')
-
-        local aura = objEdit.AuraDummy.new(aura_id, buff_id,
-                                           'Test buff', 'Some tooltip',
-                                           "ReplaceableTextures\\CommandButtons\\BTNAdvancedSpikedBarricades.blp",
-                                           '', '')
     end)
 
-function FourCC(id)
-    return string.unpack(">I4", id)
-end
+local Unit = require('unit.unit')
+local Utils = require('utils.utils')
 
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
 
 function Trig_Melee_Initialization_Actions()
-    DisplayTextToPlayer(Player(0), 0, 0, I2S(FourCC('h001')))
     MeleeStartingVisibility()
     MeleeStartingHeroLimit()
     MeleeGrantHeroItems()
@@ -34,11 +20,10 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
-    local u1 = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
-    local u2 = CreateUnit(Player(0), FourCC('h001'), 0, 0, 0)
-    UnitAddAbility(u1, FourCC('A001'))
-    BlzSetUnitStringField(u1, UNIT_SF_NAME, 'Test')
-    BlzSetUnitStringField(u2, UNIT_SF_NAME, 'Test2')
+    local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
+    local u2 = Unit.new(0, 'hfoo', 0, 0, 0)
+
+    u2:setDodgeChance(5000, 3, 0)
 end
 
 function InitTrig_Melee_Initialization()

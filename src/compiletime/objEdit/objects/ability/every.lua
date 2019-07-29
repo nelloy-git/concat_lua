@@ -233,7 +233,7 @@ function WeEveryAbility:setEffectSoundLooping(string_data)
 end
 
 function WeEveryAbility:setLevels(int_data)
-    self:addField(WeField.new("ale 'int',v", 0, 0, int_data))
+    self:addField(WeField.new("alev", 'int', 0, 0, int_data))
 end
 
 function WeEveryAbility:setRequiredLevel(int_data)
