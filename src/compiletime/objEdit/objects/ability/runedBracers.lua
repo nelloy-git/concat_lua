@@ -1,21 +1,25 @@
+---@type WeField
+local WeField = require('compiletime.objEdit.weField')
+---@type AnyWeAbility
+local AnyWeAbility = require('compiletime.objEdit.objects.ability.every')
+
+---@class RunedBracersWeAbility : AnyWeAbility
 local RunedBracers = {}
+setmetatable(RunedBracers, {__index = AnyWeAbility})
 
-local WeField = require(CurrentLib..'.weField')
-local WeEveryAbility = require(CurrentLib..'.objects.ability.every')
-setmetatable(RunedBracers, {__index = WeEveryAbility})
-
+---@param id string
+---@return RunedBracersWeAbility
 function RunedBracers.new(id)
-    local we_ability = WeEveryAbility.new(id, 'AIsr')
+    local we_ability = AnyWeAbility.new(id, 'AIsr')
     setmetatable(we_ability, {__index = RunedBracers})
     return we_ability
 end
 
-function RunedBracers:setDamageBonus(real_data, lvl)
-    self:addField(WeField.new("isr1", 'unrealm', lvl, 1, real_data))
-end
-
-function RunedBracers:setDamageReduction(real_data, lvl)
-    self:addField(WeField.new("isr2", 'unreal', lvl, 2, real_data))
-end
+---@param data number
+---@param lvl integer
+function RunedBracers:setDamageBonus(data, lvl) self:addField(WeField.new("isr1", 'unrealm', lvl, 1, data)) end
+---@param data number
+---@param lvl integer
+function RunedBracers:setDamageReduction(data, lvl) self:addField(WeField.new("isr2", 'unreal', lvl, 2, data)) end
 
 return RunedBracers

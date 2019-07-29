@@ -1,13 +1,20 @@
+---@class WeUtils
 local WeUtils = {}
 
+---@param data string
+---@return bytes
 function WeUtils.str2byte(data)
     return data .. '\0'
 end
 
+---@param data bytes
+---@return string
 function WeUtils.byte2str(data)
     return data:sub(1, #data - 1)
 end
 
+---@param data integer
+---@return bytes
 function WeUtils.int2byte(data)
     local bytes = ''
     for i = 0, 3 do
@@ -16,6 +23,8 @@ function WeUtils.int2byte(data)
     return bytes
 end
 
+---@param data bytes
+---@return integer
 function WeUtils.byte2int(data)
     local res = 0
     for i = 0, 3 do
@@ -25,6 +34,9 @@ function WeUtils.byte2int(data)
     return res
 end
 
+---@param data bytes
+---@param bytes_per_line integer
+---@return string
 function WeUtils.byte2hex(data, bytes_per_line)
     local res = ''
     local line = ''
@@ -42,6 +54,8 @@ function WeUtils.byte2hex(data, bytes_per_line)
     return res:sub(2, #res)
 end
 
+---@param data bytes
+---@return number
 function WeUtils.byte2float(data)
     data = WeUtils.byte2int(data)
     local s = 1
@@ -69,14 +83,16 @@ local frexp = math.frexp or function(x)
 	return x / 2 ^ e, e
 end
 
-function WeUtils.float2byte(x)
+---@param data number
+---@return bytes
+function WeUtils.float2byte(data)
     local sign = 0
-    if x < 0 then
+    if data < 0 then
       sign = 1;
-      x = -x
+      data = -data
     end
-    local mantissa, exponent = frexp(x)
-    if x == 0 then
+    local mantissa, exponent = frexp(data)
+    if data == 0 then
        mantissa = 0;
        exponent = 0
     else
@@ -84,13 +100,14 @@ function WeUtils.float2byte(x)
        exponent = exponent + 126
     end
     local v, byte = "" -- convert to bytes
-    x, byte = grab_byte(mantissa); v = v..byte -- 7:0
-    x, byte = grab_byte(x); v = v..byte -- 15:8
-    x, byte = grab_byte(exponent * 128 + x); v = v..byte -- 23:16
-    x, byte = grab_byte(sign * 128 + x); v = v..byte -- 31:24
+    data, byte = grab_byte(mantissa); v = v..byte -- 7:0
+    data, byte = grab_byte(data); v = v..byte -- 15:8
+    data, byte = grab_byte(exponent * 128 + data); v = v..byte -- 23:16
+    data, byte = grab_byte(sign * 128 + data); v = v..byte -- 31:24
     return v
 end
 
+---@return string
 function  WeUtils.getErrorPos()
     local str = ''
     local i = 2
@@ -105,6 +122,8 @@ function  WeUtils.getErrorPos()
     return str
 end
 
+---@param cur_id string
+---@return string
 local function nextId(cur_id)
     local p4 = string.byte(cur_id, 1)
     local p3 = string.byte(cur_id, 2)
@@ -137,36 +156,42 @@ local function nextId(cur_id)
 end
 
 local UNIT_ID = 'x###'
+---@return string
 function WeUtils.nextUnitId()
     UNIT_ID = nextId(UNIT_ID)
     return UNIT_ID
 end
 
 local HERO_ID = 'HM##'
+---@return string
 function WeUtils.nextHeroId()
     HERO_ID = nextId(HERO_ID)
     return HERO_ID
 end
 
 local ABIL_ID = 'AM##'
+---@return string
 function WeUtils.nextAbilId()
     ABIL_ID = nextId(ABIL_ID)
     return ABIL_ID
 end
 
 local BUFF_ID = 'BM##'
+---@return string
 function WeUtils.nextBuffId()
     BUFF_ID = nextId(BUFF_ID)
     return BUFF_ID
 end
 
 local ITEM_ID = 'IM##'
+---@return string
 function WeUtils.nextItemId()
     ITEM_ID = nextId(ITEM_ID)
     return ITEM_ID
 end
 
 local UPGR_ID = 'RM##'
+---@return string
 function WeUtils.nextUpgrId()
     UPGR_ID = nextId(UPGR_ID)
     return UPGR_ID

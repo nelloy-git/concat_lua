@@ -1,7 +1,7 @@
 local AuraDummy = {}
 
-local WeAuraSlow = require(CurrentLib..'.objects.ability.auraSlow')
-local WeBuff = require(CurrentLib..'.objects.buff.buff')
+local WeAuraSlow = require('compiletime.objEdit.objects.ability.auraSlow')
+local WeBuff = require('compiletime.objEdit.objects.buff.buff')
 
 function AuraDummy.new(ability_id, buff_id,
                        name, tooltip, icon_path, effect_path, attachment_point)

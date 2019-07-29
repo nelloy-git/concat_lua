@@ -1,34 +1,34 @@
-local criticalStrike = {}
+---@type WeField
+local WeField = require('compiletime.objEdit.weField')
+---@type AnyWeAbility
+local AnyWeAbility = require('compiletime.objEdit.objects.ability.every')
 
-local WeField = require(CurrentLib..'.weField')
-local WeEveryAbility = require(CurrentLib..'.objects.ability.every')
-setmetatable(criticalStrike, {__index = WeEveryAbility})
+---@class BladeMasterCriticalStrikeWeAbility : AnyWeAbility
+local BladeMasterCriticalStrike = {}
+setmetatable(BladeMasterCriticalStrike, {__index = AnyWeAbility})
 
-function criticalStrike.new(id)
-    local we_ability = WeEveryAbility.new(id, 'AOcr')
-    setmetatable(we_ability, {__index = criticalStrike})
+---@param id string
+---@return BladeMasterCriticalStrikeWeAbility
+function BladeMasterCriticalStrike.new(id)
+    local we_ability = AnyWeAbility.new(id, 'AOcr')
+    setmetatable(we_ability, {__index = BladeMasterCriticalStrike})
     return we_ability
 end
 
-function criticalStrike:setDamageMultiplier(real_data, lvl)
-    self:addField(WeField.new("Ocr2", 'unreal', lvl, 2, real_data))
-end
+---@param data number
+---@param lvl integer
+function BladeMasterCriticalStrike:setDamageMultiplier(data, lvl) self:addField(WeField.new("Ocr2", 'unreal', lvl, 2, data)) end
+---@param data number
+---@param lvl integer
+function BladeMasterCriticalStrike:setChancetoCriticalStrike(data, lvl) self:addField(WeField.new("Ocr1", 'unreal', lvl, 1, data)) end
+---@param data number
+---@param lvl integer
+function BladeMasterCriticalStrike:setDamageBonus(data, lvl) self:addField(WeField.new("Ocr3", 'unreal', lvl, 3, data)) end
+---@param data number
+---@param lvl integer
+function BladeMasterCriticalStrike:setChancetoEvade(data, lvl) self:addField(WeField.new("Ocr4", 'unreal', lvl, 4, data)) end
+---@param data number
+---@param lvl integer
+function BladeMasterCriticalStrike:setNeverMiss(data, lvl) self:addField(WeField.new("Ocr5", 'bool', lvl, 5, data)) end
 
-function criticalStrike:setChancetoCriticalStrike(real_data, lvl)
-    self:addField(WeField.new("Ocr1", 'unreal', lvl, 1, real_data))
-end
-
-function criticalStrike:setDamageBonus(real_data, lvl)
-    self:addField(WeField.new("Ocr3", 'unreal', lvl, 3, real_data))
-end
-
-function criticalStrike:setChancetoEvade(real_data, lvl)
-    self:addField(WeField.new("Ocr4", 'unreal', lvl, 4, real_data))
-end
-
-function criticalStrike:setNeverMiss(bool_data, lvl)
-    self:addField(WeField.new("Ocr5", 'bool', lvl, 5, bool_data))
-end
-
-
-return criticalStrike
+return BladeMasterCriticalStrike

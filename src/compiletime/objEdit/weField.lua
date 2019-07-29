@@ -1,9 +1,15 @@
-local utils = require(CurrentLib..'.utils')
+---@type WeUtils
+local utils = require('compiletime.objEdit.utils')
 
 ---Object modification container
 ---@class WeField
 local WeField = {}
 
+---@class bytes : string
+
+---@param data boolean|integer|number|string
+---@param data_type string|'bool'|'int'|'real'|'unreal'|'string'
+---@return bytes|nil
 local function data2byte(data, data_type)
 	if data_type == 'bool' then
 		if data == true then
@@ -24,6 +30,8 @@ local function data2byte(data, data_type)
 	end
 end
 
+---@param data_type string|'bool'|'int'|'real'|'unreal'|'string'
+---@return bytes
 local function type2bytes(data_type)
 	if data_type == 'bool' then return utils.int2byte(0) end
 	if data_type == 'int' then return utils.int2byte(0) end
@@ -32,6 +40,8 @@ local function type2bytes(data_type)
 	if data_type == 'string' then return utils.int2byte(3) end
 end
 
+---@param var bytes
+---@return bytes
 local function getBytes(var)
     if var == nil then
         return ''
@@ -39,6 +49,12 @@ local function getBytes(var)
     return var
 end
 
+---@param id string
+---@param data_type string|'bool'|'int'|'real'|'unreal'|'string'
+---@param lvl_or_variation integer|nil
+---@param abil_data_id integer|nil
+---@param data string|boolean|integer|number
+---@return WeField
 function WeField.new(id, data_type, lvl_or_variation, abil_data_id, data)
 	if lvl_or_variation ~= nil then
 		lvl_or_variation = utils.int2byte(lvl_or_variation)
@@ -47,7 +63,7 @@ function WeField.new(id, data_type, lvl_or_variation, abil_data_id, data)
 	if abil_data_id ~= nil then
 		abil_data_id = utils.int2byte(abil_data_id)
 	end
-	
+
     local field_table = {
         id = id,
 		data_type = type2bytes(data_type),
@@ -55,11 +71,11 @@ function WeField.new(id, data_type, lvl_or_variation, abil_data_id, data)
 		abil_data_id = getBytes(abil_data_id),
 		data = getBytes(data2byte(data, data_type)),
 	}
-	--print(data_type, tostring(data))
 	setmetatable(field_table, {__index = WeField})
     return field_table
 end
 
+---@return bytes
 function WeField:serialize()
 	local str = self.id .. self.data_type .. self.lvl .. self.abil_data_id .. self.data
 	return str

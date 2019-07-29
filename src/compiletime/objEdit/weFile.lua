@@ -1,19 +1,19 @@
+---@type WeUtils
+local utils = require('compiletime.objEdit.utils')
+
 ---@class WeFile
----@field abilities WeFile
----@field buffs WeFile
----@field units WeFile
----@field src_dir string
----@field dst_dir string
 local WeFile = {}
 
-local utils = require(CurrentLib..'.utils')
-
+---@param we_type string|'ability'|'buff'|'unit'
+---@return string
 local function weType2file(we_type)
     if we_type == 'ability' then return 'war3map.w3a' end
     if we_type == 'buff' then return 'war3map.w3h'end
     if we_type == 'unit' then return 'war3map.w3u' end
 end
 
+---@param path string
+---@return bytes
 local function readFile(path)
     local path = path
 
@@ -30,6 +30,8 @@ local function readFile(path)
     return t
 end
 
+---@param we_type string|'ability'|'buff'|'unit'
+---@return WeFile
 function WeFile.readFromSrc(we_type)
     local separator = package.config:sub(1,1)
     local path = WeFile.src_dir .. separator .. weType2file(we_type)
@@ -51,10 +53,12 @@ function WeFile:writeToDst()
     f:close()
 end
 
+---@return integer
 function WeFile:getChangesCount()
     return utils.byte2int(self.content:sub(9, 12))
 end
 
+---@param count integer
 function WeFile:setChangesCount(count)
     self.content = self.content:sub(1, 8) .. utils.int2byte(count) .. self.content:sub(13)
 end
@@ -70,6 +74,8 @@ function WeFile:applyChanges()
     self:writeToDst()
 end
 
+---@param we_obj WeObject
+---@return boolean
 function WeFile:add(we_obj)
     if we_obj.we_type ~= self.we_type then
         print('Warning: can not add object of type', we_obj.we_type, 'to file of type', self.we_type)
@@ -82,7 +88,7 @@ end
 
 ---Function initialize object files.
 ---@param src_dir string
----@param dst_dir string 
+---@param dst_dir string
 function WeFile.init(src_dir, dst_dir)
     WeFile.src_dir = src_dir
     WeFile.dst_dir = dst_dir

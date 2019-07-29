@@ -1,5 +1,7 @@
+---@class Utils
 local Utils = {}
 
+---@return string
 function  Utils.getErrorPos()
     local str = ''
     local i = 2
@@ -40,6 +42,8 @@ function print(...)
     end
 end
 
+---@param id integer|string
+---@return integer|nil
 function ID(id)
     if type(id) == 'string' then
         return string.unpack(">I4", id)
@@ -51,9 +55,10 @@ function ID(id)
     return nil
 end
 
-function id2str(id)
+---@param id integer
+---@return string
+function ID2str(id)
     return string.pack(">I4", id)
 end
-
 
 return Utils

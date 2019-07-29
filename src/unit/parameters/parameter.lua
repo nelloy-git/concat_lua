@@ -1,5 +1,13 @@
+---@class UnitParameter
 local Parameter = {}
 
+---Create new parameter for unit.
+---@param owner_struct Unit
+---@param base number
+---@param apply_param_func any
+---@param math_func function
+---@param max_val number
+---@return UnitParameter
 function Parameter.new(owner_struct, base, apply_param_func, math_func, max_val)
     local container = {
         owner_struct = owner_struct,

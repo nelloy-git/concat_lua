@@ -1,10 +1,15 @@
+---@type UnitParameter
 local Param = require('unit.parameters.parameter')
 local ApplyParam = require('unit.parameters.applyParam')
+---@type MathParameter
 local MathParam = require('unit.parameters.mathParam')
 
-local Unit = {
-    unit = nil
-}
+---@class UnitObject : userdata
+
+---@class Unit
+---@field unit UnitObject
+---@field id string
+local Unit = {}
 
 local UnitDB = {}
 function UnitDB.add(unit_struct) UnitDB[unit_struct.unit] = unit_struct end
@@ -15,7 +20,7 @@ function Unit.new(player_id, unit_id, x, y, face)
     unit_id = ID(unit_id)
 
     local instance = {
-        id = id2str(unit_id),
+        id = ID2str(unit_id),
         unit = CreateUnit(Player(player_id), unit_id, x, y, face)
     }
     setmetatable(instance, {__index = Unit})
@@ -30,7 +35,8 @@ function Unit.newCorpse(player_id, unit_id, x, y, face)
     unit_id = ID(unit_id)
 
     local instance = {
-        id = id2str(unit_id),
+        id = ID2str(unit_id),
+        ---@type UnitObject
         unit = CreateCorpse(Player(player_id), unit_id, x, y, face)
     }
     setmetatable(instance, {__index = Unit})
@@ -46,6 +52,7 @@ function Unit:prepareCustomData()
 end
 
 function Unit:prepareParameters()
+    ---@type table<string,UnitParameter>
     local parameters = {
         attack = Param.new(self, 1, ApplyParam.attack, MathParam.linear),
         attackSpeed = Param.new(self, 2, ApplyParam.attackSpeed, MathParam.inverseLinear),

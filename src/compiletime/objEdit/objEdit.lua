@@ -1,55 +1,48 @@
----Warcraft object editing API
 ---@class ObjEdit
 local ObjEdit = {}
 
----Function return current dir path in 'require' function format
----@return
-local function getModulePrefix()
-    local path = debug.getinfo(1, "S").source:sub(3)
-    local separator = package.config:sub(1,1)
-    local dir = path:sub(1, #path - path:reverse():find(separator))
-    return dir:gsub(separator, '.'):sub(2)
-end
-
----Function initialize object editing
+---Function initialize object editing.
 ---@param src_path string
 ---@param dst_path string
 function ObjEdit.init(src_path, dst_path)
-    --Save to restore later
-    local prev_val = CurrentLib
-    CurrentLib = getModulePrefix()
-
     --Initialize object files
     ---@type WeFile
     local WeFile = require('compiletime.objEdit.weFile')
     WeFile.init(src_path, dst_path)
 
-    ObjEdit.Utils = require(CurrentLib..'.utils')
+    -- Utils
+    ---@type WeUtils
+    ObjEdit.Utils = require('compiletime.objEdit.utils')
 
     --Abilities
     ObjEdit.Ability = {}
-    ObjEdit.Ability.BladeMasterCriticalStrike = require(CurrentLib..'.objects.ability.bladeMasterCriticalStrike')
-    ObjEdit.Ability.RunedBracers = require(CurrentLib..'.objects.ability.runedBracers')
+    ---@type AuraSlowWeAbility
+    ObjEdit.Ability.AuraSlow = require('compiletime.objEdit.objects.auraSlow')
+    ---@type ChannelWeAbility
+    ObjEdit.Ability.Channel = require('compiletim.objEdit.objects.ability.channel')
+    ---@type BladeMasterCriticalStrikeWeAbility
+    ObjEdit.Ability.BladeMasterCriticalStrike = require('compiletime.objEdit.objects.ability.bladeMasterCriticalStrike')
+    ---@type RunedBracersWeAbility
+    ObjEdit.Ability.RunedBracers = require('compiletime.objEdit.objects.ability.runedBracers')
+
+    -- Buffs
+    ---@type WeBuff
+    ObjEdit.Buff.Buff = require('compiletime.objEdit.objects.buff.buff')
 
     -- Units
     ObjEdit.Unit = {}
+    ---@type WeBuilding
+    ObjEdit.Unit.Building = require('compiletime.objEdit.objects.unit.building')
     ---@type WeUnit
+    ObjEdit.Unit.Hero = require('compiletime.objEdit.objects.unit.hero')
+    ---@type WeHero
     ObjEdit.Unit.Unit = require('compiletime.objEdit.objects.unit.unit')
-
-    CurrentLib = prev_val
 end
 
----Function closes object files
+---Function finish object editing.
 function ObjEdit.close()
-    local prev_val = CurrentLib
-    CurrentLib = getModulePrefix()
-
     local WeFile = require('compiletime.objEdit.weFile')
     WeFile.close()
-    
-    CurrentLib = prev_val
 end
 
-
--- Restore global var
 return ObjEdit

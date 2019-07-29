@@ -1,9 +1,9 @@
+---@type AnyWeUnit
+local AnyWeUnit = require('compiletime.objEdit.objects.unit.every')
 ---@type WeField
 local WeField = require('compiletime.objEdit.weField')
----@type AnyWeUnit
-local AnyWeUnit = require(CurrentLib..'.objects.unit.every')
 
----@class WeUnit
+---@class WeUnit : AnyWeUnit
 local WeUnit = {}
 setmetatable(WeUnit, {__index = AnyWeUnit})
 
@@ -17,58 +17,26 @@ function WeUnit.new(id, base_id)
 end
 
 ---@param data integer
-function WeUnit:setTransportedSize(data)
-    self:addField(WeField.new("ucar", 'int', nil, nil, data))
-end
-
+function WeUnit:setTransportedSize(data) self:addField(WeField.new("ucar", 'int', nil, nil, data)) end
 ---@param data integer
-function WeUnit:setLevel(data)
-    self:addField(WeField.new("ulev", 'int', nil, nil, data))
-end
-
+function WeUnit:setLevel(data) self:addField(WeField.new("ulev", 'int', nil, nil, data)) end
 ---@param data integer
-function WeUnit:setGroupSeparationPriority(data)
-    self:addField(WeField.new("urpr", 'int', nil, nil, data))
-end
-
+function WeUnit:setGroupSeparationPriority(data) self:addField(WeField.new("urpr", 'int', nil, nil, data)) end
 ---@param data integer
-function WeUnit:setGroupSeparationParameter(data)
-    self:addField(WeField.new("urpp", 'int', nil, nil, data))
-end
-
+function WeUnit:setGroupSeparationParameter(data) self:addField(WeField.new("urpp", 'int', nil, nil, data)) end
 ---@param data integer
-function WeUnit:setGroupSeparationGroupNumber(data)
-    self:addField(WeField.new("urpg", 'int', nil, nil, data))
-end
-
+function WeUnit:setGroupSeparationGroupNumber(data) self:addField(WeField.new("urpg", 'int', nil, nil, data)) end
 ---@param data boolean
-function WeUnit:setGroupSeparationEnabled(data)
-    self:addField(WeField.new("urpo", 'bool', nil, nil, data))
-end
-
+function WeUnit:setGroupSeparationEnabled(data) self:addField(WeField.new("urpo", 'bool', nil, nil, data)) end
 ---@param data integer
-function WeUnit:setFormationRank(data)
-    self:addField(WeField.new("ufor", 'int', nil, nil, data))
-end
-
+function WeUnit:setFormationRank(data) self:addField(WeField.new("ufor", 'int', nil, nil, data)) end
 ---@param data string
-function WeUnit:setStructuresBuilt(data)
-    self:addField(WeField.new("ubui", 'string', nil, nil, data))
-end
-
+function WeUnit:setStructuresBuilt(data) self:addField(WeField.new("ubui", 'string', nil, nil, data)) end
 ---@param data string
-function WeUnit:setCasterUpgradeTips(data)
-    self:addField(WeField.new("ucut", 'string', nil, nil, data))
-end
-
+function WeUnit:setCasterUpgradeTips(data) self:addField(WeField.new("ucut", 'string', nil, nil, data)) end
 ---@param data string
-function WeUnit:setCasterUpgradeNames(data)
-    self:addField(WeField.new("ucun", 'string', nil, nil, data))
-end
-
+function WeUnit:setCasterUpgradeNames(data) self:addField(WeField.new("ucun", 'string', nil, nil, data)) end
 ---@param data string
-function WeUnit:setCasterUpgradeArt(data)
-    self:addField(WeField.new("ucua", 'string', nil, nil, data))
-end
+function WeUnit:setCasterUpgradeArt(data) self:addField(WeField.new("ucua", 'string', nil, nil, data)) end
 
 return WeUnit
