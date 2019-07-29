@@ -1,6 +1,5 @@
+---@class WeObject : table
 local WeObject = {}
-
-local utils = require(CurrentLib..'.utils')
 
 function WeObject.new(id, base_id, we_type)
     local obj = {
@@ -23,6 +22,7 @@ function WeObject:addField(we_field)
 end
 
 function WeObject:serialize()
+    local utils = require(CurrentLib..'.utils')
     local serial = self.base_id .. self.id .. utils.int2byte(#(self.changes))
     for _, field in pairs(self.changes) do
         serial = serial .. field:serialize() .. '\0\0\0\0'

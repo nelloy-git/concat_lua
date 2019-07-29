@@ -1,6 +1,8 @@
-local WeField = {}
-
 local utils = require(CurrentLib..'.utils')
+
+---Object modification container
+---@class WeField
+local WeField = {}
 
 local function data2byte(data, data_type)
 	if data_type == 'bool' then

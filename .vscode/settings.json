@@ -1,3 +1,6 @@
 {
-    "python.pythonPath": "C:\\Users\\Nello\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
+    "python.pythonPath": "C:\\Users\\Nello\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "Lua.workspace.ignoreDir": [
+        "dst/*"
+    ]
 }

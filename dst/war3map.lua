@@ -194,11 +194,22 @@ __require_data.module["unit.unit"] = function()
     local ApplyParam = require("unit.parameters.applyParam")
     local MathParam = require("unit.parameters.mathParam")
     local Unit = {unit = nil}
+    local UnitDB = {}
+    function UnitDB.add(unit_struct)
+      UnitDB[unit_struct.unit] = unit_struct
+    end
+    function UnitDB.rm(unit_struct)
+      UnitDB[unit_struct.unit] = nil
+    end
+    function UnitDB.get(unit)
+      return UnitDB[unit]
+    end
     function Unit.new(player_id, unit_id, x, y, face)
       unit_id = ID(unit_id)
       local instance = {id = id2str(unit_id), unit = CreateUnit(Player(player_id), unit_id, x, y, face)}
       setmetatable(instance, {__index = Unit})
       instance:prepareCustomData()
+      UnitDB.add(instance)
       return instance
     end
     function Unit.newCorpse(player_id, unit_id, x, y, face)
@@ -206,6 +217,7 @@ __require_data.module["unit.unit"] = function()
       local instance = {id = id2str(unit_id), unit = CreateCorpse(Player(player_id), unit_id, x, y, face)}
       setmetatable(instance, {__index = Unit})
       instance:prepareCustomData()
+      UnitDB.add(instance)
       return instance
     end
     function Unit:prepareCustomData()
@@ -405,6 +417,134 @@ __require_data.module["unit.unit"] = function()
       else
         return 0, 0, 0, 0
       end
+    end
+    Unit.__GetLevelingUnit = GetLevelingUnit
+    Unit.__GetLearningUnit = GetLearningUnit
+    Unit.__GetRevivableUnit = GetRevivableUnit
+    Unit.__GetRevivingUnit = GetRevivingUnit
+    Unit.__GetAttacker = GetAttacker
+    Unit.__GetRescuer = GetRescuer
+    Unit.__GetDyingUnit = GetDyingUnit
+    Unit.__GetKillingUnit = GetKillingUnit
+    Unit.__GetDecayingUnit = GetDecayingUnit
+    Unit.__GetConstructingStructure = GetConstructingStructure
+    Unit.__GetCancelledStructure = GetCancelledStructure
+    Unit.__GetConstructedStructure = GetConstructedStructure
+    Unit.__GetResearchingUnit = GetResearchingUnit
+    Unit.__GetTrainedUnit = GetTrainedUnit
+    Unit.__GetDetectedUnit = GetDetectedUnit
+    Unit.__GetSummoningUnit = GetSummoningUnit
+    Unit.__GetSummonedUnit = GetSummonedUnit
+    Unit.__GetTransportUnit = GetTransportUnit
+    Unit.__GetLoadedUnit = GetLoadedUnit
+    Unit.__GetSellingUnit = GetSellingUnit
+    Unit.__GetSoldUnit = GetSoldUnit
+    Unit.__GetBuyingUnit = GetBuyingUnit
+    Unit.__GetChangingUnit = GetChangingUnit
+    Unit.__GetManipulatingUnit = GetManipulatingUnit
+    Unit.__GetOrderedUnit = GetOrderedUnit
+    Unit.__GetOrderTargetUnit = GetOrderTargetUnit
+    Unit.__GetSpellAbilityUnit = GetSpellAbilityUnit
+    Unit.__GetSpellTargetUnit = GetSpellTargetUnit
+    Unit.__GetTriggerUnit = GetTriggerUnit
+    Unit.__GetEventDamage = GetEventDamage
+    Unit.__GetEventDamageSource = GetEventDamageSource
+    Unit.__GetEventTargetUnit = GetEventTargetUnit
+    function GetLevelingUnit()
+      return UnitDB.get(Unit.__GetLevelingUnit())
+    end
+    function GetLearningUnit()
+      return UnitDB.get(Unit.__GetLearningUnit())
+    end
+    function GetRevivableUnit()
+      return UnitDB.get(Unit.__GetRevivableUnit())
+    end
+    function GetRevivingUnit()
+      return UnitDB.get(Unit.__GetRevivingUnit())
+    end
+    function GetAttacker()
+      return UnitDB.get(Unit.__GetAttacker())
+    end
+    function GetRescuer()
+      return UnitDB.get(Unit.__GetRescuer())
+    end
+    function GetDyingUnit()
+      return UnitDB.get(Unit.__GetDyingUnit())
+    end
+    function GetKillingUnit()
+      return UnitDB.get(Unit.__GetKillingUnit())
+    end
+    function GetDecayingUnit()
+      return UnitDB.get(Unit.__GetDecayingUnit())
+    end
+    function GetConstructingStructure()
+      return UnitDB.get(Unit.__GetConstructingStructure())
+    end
+    function GetCancelledStructure()
+      return UnitDB.get(Unit.__GetCancelledStructure())
+    end
+    function GetConstructedStructure()
+      return UnitDB.get(Unit.__GetConstructedStructure())
+    end
+    function GetResearchingUnit()
+      return UnitDB.get(Unit.__GetResearchingUnit())
+    end
+    function GetTrainedUnit()
+      return UnitDB.get(Unit.__GetTrainedUnit())
+    end
+    function GetDetectedUnit()
+      return UnitDB.get(Unit.__GetDetectedUnit())
+    end
+    function GetSummoningUnit()
+      return UnitDB.get(Unit.__GetSummoningUnit())
+    end
+    function GetSummonedUnit()
+      return UnitDB.get(Unit.__GetSummonedUnit())
+    end
+    function GetTransportUnit()
+      return UnitDB.get(Unit.__GetTransportUnit())
+    end
+    function GetLoadedUnit()
+      return UnitDB.get(Unit.__GetLoadedUnit())
+    end
+    function GetSellingUnit()
+      return UnitDB.get(Unit.__GetSellingUnit())
+    end
+    function GetSoldUnit()
+      return UnitDB.get(Unit.__GetSoldUnit())
+    end
+    function GetBuyingUnit()
+      return UnitDB.get(Unit.__GetBuyingUnit())
+    end
+    function GetChangingUnit()
+      return UnitDB.get(Unit.__GetChangingUnit())
+    end
+    function GetManipulatingUnit()
+      return UnitDB.get(Unit.__GetManipulatingUnit())
+    end
+    function GetOrderedUnit()
+      return UnitDB.get(Unit.__GetOrderedUnit())
+    end
+    function GetOrderTargetUnit()
+      return UnitDB.get(Unit.__GetOrderTargetUnit())
+    end
+    function GetSpellAbilityUnit()
+      return UnitDB.get(Unit.__GetSpellAbilityUnit())
+    end
+    function GetSpellTargetUnit()
+      return UnitDB.get(Unit.__GetSpellTargetUnit())
+    end
+    function GetTriggerUnit()
+      return UnitDB.get(Unit.__GetTriggerUnit())
+    end
+    function GetEventDamage()
+      return UnitDB.get(Unit.__GetEventDamage())
+    end
+    function GetEventDamageSource()
+      return UnitDB.get(Unit.__GetEventDamageSource())
+    end
+    function GetEventTargetUnit()
+      return UnitDB.get(Unit.__GetEventTargetUnit())
     end
     return Unit
 end

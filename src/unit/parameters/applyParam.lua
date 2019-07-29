@@ -1,28 +1,5 @@
 local ApplyParameter = {}
 
--- Attack
--- Attack speed
--- Armor
-
--- Spell power
--- Cast speed
--- Reisitance
-
--- Cooldown reduction
-
--- Health
--- Regeneration
--- Mana
--- Recovery
-
--- Critical strike chance
--- Critical strike power
--- Dodge chance
-
--- Strength
--- Agility
--- Intelligence
-
 local attack_dispertion = 0.15
 
 function ApplyParameter.attack(owner, val)
