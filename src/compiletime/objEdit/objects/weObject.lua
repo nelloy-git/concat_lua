@@ -1,4 +1,4 @@
----@class WeObject : table
+---@class WeObject
 local WeObject = {}
 
 function WeObject.new(id, base_id, we_type)
@@ -12,6 +12,7 @@ function WeObject.new(id, base_id, we_type)
     return obj
 end
 
+---@param we_field WeField
 function WeObject:addField(we_field)
     for i = 1, #self.changes do
         if self.changes.id == we_field.id then

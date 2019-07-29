@@ -1,6 +1,6 @@
 local criticalStrike = {}
 
-local WeField = require(CurrentLib..'.we_field')
+local WeField = require(CurrentLib..'.weField')
 local WeEveryAbility = require(CurrentLib..'.objects.ability.every')
 setmetatable(criticalStrike, {__index = WeEveryAbility})
 

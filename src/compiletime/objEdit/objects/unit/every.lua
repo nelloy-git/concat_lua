@@ -1,11 +1,15 @@
-local WeField = require(CurrentLib..'.weField') ---@type WeField
-local WeFile = require(CurrentLib..'.weFile')   ---@type WeFile
+local WeField = require(CurrentLib..'.weField')
+local WeFile = require(CurrentLib..'.weFile')
+---@type WeObject
 local WeObject = require(CurrentLib..'.objects.weObject')
 
----@class AnyWeUnit : WeObject
+---@class AnyWeUnit
 local AnyWeUnit = {}
 setmetatable(AnyWeUnit, {__index = WeObject})
 
+---@param id string
+---@param base_id string
+---@return AnyWeUnit
 function AnyWeUnit.new(id, base_id)
     local we_unit = WeObject.new(id, base_id, 'unit')
     setmetatable(we_unit, {__index = AnyWeUnit})
@@ -13,32 +17,39 @@ function AnyWeUnit.new(id, base_id)
     return we_unit
 end
 
-function AnyWeUnit:setTooltipExtended(string_data)
-	self:addField(WeField.new("utub", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setTooltipExtended(data)
+	self:addField(WeField.new("utub", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setTooltipBasic(string_data)
-	self:addField(WeField.new("utip", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setTooltipBasic(data)
+	self:addField(WeField.new("utip", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setRequirementsLevels(string_data)
-	self:addField(WeField.new("urqa", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRequirementsLevels(data)
+	self:addField(WeField.new("urqa", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setRequirements(string_data)
-	self:addField(WeField.new("ureq", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRequirements(data)
+	self:addField(WeField.new("ureq", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setName(string_data)
-	self:addField(WeField.new("unam", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setName(data)
+	self:addField(WeField.new("unam", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setHotkey(string_data)
-	self:addField(WeField.new("uhot", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setHotkey(data)
+	self:addField(WeField.new("uhot", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setDescription(string_data)
-	self:addField(WeField.new("ides", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setDescription(data)
+	self:addField(WeField.new("ides", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setButtonPositionY(int_data)
@@ -49,12 +60,14 @@ function AnyWeUnit:setButtonPositionX(int_data)
 	self:addField(WeField.new("ubpx", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setItemsSold(string_data)
-	self:addField(WeField.new("usei", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setItemsSold(data)
+	self:addField(WeField.new("usei", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setUnitsSold(string_data)
-	self:addField(WeField.new("useu", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setUnitsSold(data)
+	self:addField(WeField.new("useu", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setHideMinimapDisplay(bool_data)
@@ -69,21 +82,25 @@ function AnyWeUnit:setUseClickHelper(bool_data)
 	self:addField(WeField.new("uuch", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setUpgradesUsed(string_data)
-	self:addField(WeField.new("upgr", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setUpgradesUsed(data)
+	self:addField(WeField.new("upgr", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setUnitSoundSet(string_data)
-	self:addField(WeField.new("usnd", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setUnitSoundSet(data)
+	self:addField(WeField.new("usnd", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setUnitClassification(string_data)
-	self:addField(WeField.new("utyp", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setUnitClassification(data)
+	self:addField(WeField.new("utyp", 'string', nil, nil, data))
 end
 
--- "horse", "fly", "hover", "float", "amph"
-function AnyWeUnit:setMovementType(string_data)
-	self:addField(WeField.new("umvt", 'MovementType_', nil, nil, string_data))
+-- "horse", "fly", "hover", "float
+---@param data string", "amph"
+function AnyWeUnit:setMovementType(data)
+	self:addField(WeField.new("umvt", 'MovementType_', nil, nil, data))
 end
 
 function AnyWeUnit:setTurnRate(real_data)
@@ -102,20 +119,23 @@ function AnyWeUnit:setTintingColorRed(int_data)
 	self:addField(WeField.new("uclr", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setTilesets(string_data)
-	self:addField(WeField.new("util", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setTilesets(data)
+	self:addField(WeField.new("util", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setTeamColor(int_data)
 	self:addField(WeField.new("utco", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setTargetedAs(string_data)
-	self:addField(WeField.new("utar", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setTargetedAs(data)
+	self:addField(WeField.new("utar", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setArtTarget(string_data)
-	self:addField(WeField.new("utaa", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setArtTarget(data)
+	self:addField(WeField.new("utaa", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setStockStartDelay(int_data)
@@ -142,8 +162,9 @@ function AnyWeUnit:setSpeedBase(int_data)
 	self:addField(WeField.new("umvs", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setArtSpecial(string_data)
-	self:addField(WeField.new("uspa", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setArtSpecial(data)
+	self:addField(WeField.new("uspa", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setSleeps(bool_data)
@@ -158,16 +179,18 @@ function AnyWeUnit:setSightRadiusDay(int_data)
 	self:addField(WeField.new("usid", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setShadowTextureBuilding(string_data)
-	self:addField(WeField.new("ushb", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setShadowTextureBuilding(data)
+	self:addField(WeField.new("ushb", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setShadowImageWidth(real_data)
 	self:addField(WeField.new("ushw", 'real', nil, nil, real_data))
 end
 
-function AnyWeUnit:setShadowImageUnit(string_data)
-	self:addField(WeField.new("ushu", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setShadowImageUnit(data)
+	self:addField(WeField.new("ushu", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setShadowImageHeight(real_data)
@@ -202,20 +225,24 @@ function AnyWeUnit:setScaleProjectiles(bool_data)
 	self:addField(WeField.new("uscb", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setRequiredBoneNames(string_data)
-	self:addField(WeField.new("ubpr", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRequiredBoneNames(data)
+	self:addField(WeField.new("ubpr", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setRequiredAttachmentLinkNames(string_data)
-	self:addField(WeField.new("ualp", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRequiredAttachmentLinkNames(data)
+	self:addField(WeField.new("ualp", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setRequiredAnimationNamesAttachments(string_data)
-	self:addField(WeField.new("uaap", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRequiredAnimationNamesAttachments(data)
+	self:addField(WeField.new("uaap", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setRequiredAnimationNames(string_data)
-	self:addField(WeField.new("uani", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRequiredAnimationNames(data)
+	self:addField(WeField.new("uani", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setRepairTime(int_data)
@@ -230,8 +257,9 @@ function AnyWeUnit:setRepairGoldCost(int_data)
 	self:addField(WeField.new("ugor", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setRandomSound(string_data)
-	self:addField(WeField.new("ursl", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setRandomSound(data)
+	self:addField(WeField.new("ursl", 'string', nil, nil, data))
 end
 
 -- function WeEveryUnit:setRace(Race_data)
@@ -286,24 +314,29 @@ function AnyWeUnit:setOccluderHeight(real_data)
 	self:addField(WeField.new("uocc", 'real', nil, nil, real_data))
 end
 
-function AnyWeUnit:setNormalAbilities(string_data)
-	self:addField(WeField.new("uabi", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setNormalAbilities(data)
+	self:addField(WeField.new("uabi", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setNameEditorSuffix(string_data)
-	self:addField(WeField.new("unsf", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setNameEditorSuffix(data)
+	self:addField(WeField.new("unsf", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setMovementSound(string_data)
-	self:addField(WeField.new("umsl", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setMovementSound(data)
+	self:addField(WeField.new("umsl", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setModelFileExtraVersions(string_data)
-	self:addField(WeField.new("uver", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setModelFileExtraVersions(data)
+	self:addField(WeField.new("uver", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setModelFile(string_data)
-	self:addField(WeField.new("umdl", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setModelFile(data)
+	self:addField(WeField.new("umdl", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setMinimumAttackRange(int_data)
@@ -346,16 +379,19 @@ function AnyWeUnit:setIsaBuilding(bool_data)
 	self:addField(WeField.new("ubdg", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setIconScoreScreen(string_data)
-	self:addField(WeField.new("ussi", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setIconScoreScreen(data)
+	self:addField(WeField.new("ussi", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setIconGameInterface(string_data)
-	self:addField(WeField.new("uico", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setIconGameInterface(data)
+	self:addField(WeField.new("uico", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setHitPointsRegenerationType(string_data)
-	self:addField(WeField.new("uhrt", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setHitPointsRegenerationType(data)
+	self:addField(WeField.new("uhrt", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setHitPointsRegenerationRate(real_data)
@@ -434,25 +470,28 @@ function AnyWeUnit:setDisplayasNeutralHostile(bool_data)
 	self:addField(WeField.new("uhos", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setDependencyEquivalents(string_data)
-	self:addField(WeField.new("udep", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setDependencyEquivalents(data)
+	self:addField(WeField.new("udep", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setDefenseUpgradeBonus(int_data)
 	self:addField(WeField.new("udup", 'int', nil, nil, int_data))
 end
 
--- "normal", "small", "medium", "large", "fort", "hero", "divine", "none"
-function AnyWeUnit:setArmorType(string_data)
-	self:addField(WeField.new("udty", 'string', nil, nil, string_data))
+-- "normal", "small", "medium",
+---@param data string "large", "fort", "hero", "divine", "none"
+function AnyWeUnit:setArmorType(data)
+	self:addField(WeField.new("udty", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setDefenseBase(int_data)
 	self:addField(WeField.new("udef", 'int', nil, nil, int_data))
 end
 
-function AnyWeUnit:setDefaultActiveAbility(string_data)
-	self:addField(WeField.new("udaa", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setDefaultActiveAbility(data)
+	self:addField(WeField.new("udaa", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setDeathType(int_data)
@@ -491,20 +530,22 @@ function AnyWeUnit:setAttacksEnabled(int_data)
 	self:addField(WeField.new("uaen", 'int', nil, nil, int_data))
 end
 
--- "normal", "instant", "artillery", "aline", "missile", "msplash", "mbounce", "mline", "_"
-function AnyWeUnit:setAttack2WeaponType(string_data)
-	self:addField(WeField.new("ua2w", 'string', nil, nil, string_data))
+---@param data string|"'normal'"|"'instant'"|"'artillery'"|"'aline'"|"'missile'"|"'msplash'"|"'mbounce'"|"'mline'"
+function AnyWeUnit:setAttack2WeaponType(data)
+	self:addField(WeField.new("ua2w", 'string', nil, nil, data))
 end
 
 -- "Nothing", "AxeMediumChop", "MetalHeavyBash", "MetalHeavyChop", "MetalHeavySlice",
 -- "MetalLightChop", "MetalLightSlice", "MetalMediumBash", "MetalMediumChop",
--- "MetalMediumSlice", "RockHeavyBash", "WoodHeavyBash", "WoodLightBash", "WoodMediumBash"
-function AnyWeUnit:setAttack2WeaponSound(string_data)
-	self:addField(WeField.new("ucs2", 'string', nil, nil, string_data))
+-- "MetalMediumSlice", "RockHeavyBash", WoodHeavyBash", "WoodLightBash", "WoodMediumBash"
+---@param data string"
+function AnyWeUnit:setAttack2WeaponSound(data)
+	self:addField(WeField.new("ucs2", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setAttack2TargetsAllowed(string_data)
-	self:addField(WeField.new("ua2g", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAttack2TargetsAllowed(data)
+	self:addField(WeField.new("ua2g", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAttack2ShowUI(bool_data)
@@ -527,8 +568,9 @@ function AnyWeUnit:setAttack2ProjectileHomingEnabled(bool_data)
 	self:addField(WeField.new("umh2", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setAttack2ProjectileArt(string_data)
-	self:addField(WeField.new("ua2m", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAttack2ProjectileArt(data)
+	self:addField(WeField.new("ua2m", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAttack2ProjectileArc(real_data)
@@ -579,13 +621,15 @@ function AnyWeUnit:setAttack2CooldownTime(real_data)
 	self:addField(WeField.new("ua2c", 'real', nil, nil, real_data))
 end
 
--- "unknown", "normal", "pierce", "siege", "spells", "chaos", "magic", "hero"
-function AnyWeUnit:setAttack2AttackType(string_data)
-	self:addField(WeField.new("ua2t", 'string', nil, nil, string_data))
+-- "unknown", "normal", "pierce", "sieg
+---@param data stringe", "spells", "chaos", "magic", "hero"
+function AnyWeUnit:setAttack2AttackType(data)
+	self:addField(WeField.new("ua2t", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setAttack2AreaofEffectTargets(string_data)
-	self:addField(WeField.new("ua2p", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAttack2AreaofEffectTargets(data)
+	self:addField(WeField.new("ua2p", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAttack2AreaofEffectSmallDamage(int_data)
@@ -608,20 +652,23 @@ function AnyWeUnit:setAttack2AnimationBackswingPoint(real_data)
 	self:addField(WeField.new("ubs2", 'real', nil, nil, real_data))
 end
 
--- "normal", "instant", "artillery", "aline", "missile", "msplash", "mbounce", "mline", "_"
-function AnyWeUnit:setAttack1WeaponType(string_data)
-	self:addField(WeField.new("ua1w", 'string', nil, nil, string_data))
+-- "normal", "instant", "artillery", "a
+---@param data stringline", "missile", "msplash", "mbounce", "mline", "_"
+function AnyWeUnit:setAttack1WeaponType(data)
+	self:addField(WeField.new("ua1w", 'string', nil, nil, data))
 end
 
 -- "Nothing", "AxeMediumChop", "MetalHeavyBash", "MetalHeavyChop", "MetalHeavySlice",
 -- "MetalLightChop", "MetalLightSlice", "MetalMediumBash", "MetalMediumChop",
--- "MetalMediumSlice", "RockHeavyBash", "WoodHeavyBash", "WoodLightBash", "WoodMediumBash"
-function AnyWeUnit:setAttack1WeaponSound(string_data)
-	self:addField(WeField.new("ucs1", 'string', nil, nil, string_data))
+-- "MetalMediumSlice", "RockHeavyBash", 
+---@param data string"WoodHeavyBash", "WoodLightBash", "WoodMediumBash"
+function AnyWeUnit:setAttack1WeaponSound(data)
+	self:addField(WeField.new("ucs1", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setAttack1TargetsAllowed(string_data)
-	self:addField(WeField.new("ua1g", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAttack1TargetsAllowed(data)
+	self:addField(WeField.new("ua1g", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAttack1ShowUI(bool_data)
@@ -644,8 +691,9 @@ function AnyWeUnit:setAttack1ProjectileHomingEnabled(bool_data)
 	self:addField(WeField.new("umh1", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setAttack1ProjectileArt(string_data)
-	self:addField(WeField.new("ua1m", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAttack1ProjectileArt(data)
+	self:addField(WeField.new("ua1m", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAttack1ProjectileArc(real_data)
@@ -696,13 +744,15 @@ function AnyWeUnit:setAttack1CooldownTime(real_data)
 	self:addField(WeField.new("ua1c", 'real', nil, nil, real_data))
 end
 
--- "unknown", "normal", "pierce", "siege", "spells", "chaos", "magic", "hero"
-function AnyWeUnit:setAttack1AttackType(string_data)
-	self:addField(WeField.new("ua1t", 'string', nil, nil, string_data))
+-- "unknown", "normal", "pierce", "sieg
+---@param data stringe", "spells", "chaos", "magic", "hero"
+function AnyWeUnit:setAttack1AttackType(data)
+	self:addField(WeField.new("ua1t", 'string', nil, nil, data))
 end
 
-function AnyWeUnit:setAttack1AreaofEffectTargets(string_data)
-	self:addField(WeField.new("ua1p", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAttack1AreaofEffectTargets(data)
+	self:addField(WeField.new("ua1p", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAttack1AreaofEffectSmallDamage(int_data)
@@ -725,9 +775,10 @@ function AnyWeUnit:setAttack1AnimationBackswingPoint(real_data)
 	self:addField(WeField.new("ubs1", 'real', nil, nil, real_data))
 end
 
--- "Ethereal", "Flesh", "Wood", "Stone", "Metal"
-function AnyWeUnit:setArmorSoundType(string_data)
-	self:addField(WeField.new("uarm", 'string', nil, nil, string_data))
+-- "Ethereal", "Flesh", "Wood", "Sto
+---@param data stringne", "Metal"
+function AnyWeUnit:setArmorSoundType(data)
+	self:addField(WeField.new("uarm", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAnimationWalkSpeed(real_data)
@@ -754,8 +805,9 @@ function AnyWeUnit:setAllowCustomTeamColor(bool_data)
 	self:addField(WeField.new("utcc", 'bool', nil, nil, bool_data))
 end
 
-function AnyWeUnit:setAIPlacementType(string_data)
-	self:addField(WeField.new("uabt", 'string', nil, nil, string_data))
+---@param data string
+function AnyWeUnit:setAIPlacementType(data)
+	self:addField(WeField.new("uabt", 'string', nil, nil, data))
 end
 
 function AnyWeUnit:setAIPlacementRadius(real_data)

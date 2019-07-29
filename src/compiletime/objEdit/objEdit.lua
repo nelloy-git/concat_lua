@@ -1,8 +1,5 @@
 ---Warcraft object editing API
 ---@class ObjEdit
----@field Ability table @Abilities API
----@field Preset table @Presets API
----@field Unit table @Units API
 local ObjEdit = {}
 
 ---Function return current dir path in 'require' function format
@@ -23,17 +20,20 @@ function ObjEdit.init(src_path, dst_path)
     CurrentLib = getModulePrefix()
 
     --Initialize object files
+    ---@type WeFile
     local WeFile = require('compiletime.objEdit.weFile')
     WeFile.init(src_path, dst_path)
 
-    local utils = require(CurrentLib..'.utils')
+    ObjEdit.Utils = require(CurrentLib..'.utils')
 
     --Abilities
     ObjEdit.Ability = {}
-    ObjEdit.Ability.RunedBracers = require('compiletime.objEdit.objects.ability.runedBracers')
+    ObjEdit.Ability.BladeMasterCriticalStrike = require(CurrentLib..'.objects.ability.bladeMasterCriticalStrike')
+    ObjEdit.Ability.RunedBracers = require(CurrentLib..'.objects.ability.runedBracers')
 
     -- Units
     ObjEdit.Unit = {}
+    ---@type WeUnit
     ObjEdit.Unit.Unit = require('compiletime.objEdit.objects.unit.unit')
 
     CurrentLib = prev_val

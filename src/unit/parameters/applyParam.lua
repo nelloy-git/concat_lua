@@ -29,8 +29,9 @@ function ApplyParameter.castSpeed(owner, val)
 end
 
 local resist_id = compiletime(function()
+    ---@type ObjEdit
     local objEdit = require('compiletime.objEdit.objEdit')
-    local id = objEdit.utils.nextAbilId()
+    local id = objEdit.Utils.nextAbilId()
     local we_abil = objEdit.Ability.RunedBracers.new(id)
     we_abil:setLevels(1)
     we_abil:setDamageReduction(0, 1)
@@ -67,7 +68,7 @@ end
 
 local crit_and_dodge_id = compiletime(function()
     local objEdit = require('compiletime.objEdit.objEdit')
-    local id = objEdit.utils.nextAbilId()
+    local id = objEdit.Utils.nextAbilId()
     local we_abil = objEdit.Ability.BladeMasterCriticalStrike.new(id)
     we_abil:setLevels(1)
     we_abil:setDamageMultiplier(1, 1)

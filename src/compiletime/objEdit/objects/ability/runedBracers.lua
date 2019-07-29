@@ -1,6 +1,6 @@
 local RunedBracers = {}
 
-local WeField = require(CurrentLib..'.we_field')
+local WeField = require(CurrentLib..'.weField')
 local WeEveryAbility = require(CurrentLib..'.objects.ability.every')
 setmetatable(RunedBracers, {__index = WeEveryAbility})
 

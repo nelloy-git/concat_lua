@@ -1,8 +1,8 @@
 local WeEveryAbility = {}
 
-local WeField = require(CurrentLib..'.we_field')
+local WeField = require(CurrentLib..'.weField')
 local WeFile = require(CurrentLib..'.weFile')
-local WeObject = require(CurrentLib..'.objects.we_object')
+local WeObject = require(CurrentLib..'.objects.weObject')
 setmetatable(WeEveryAbility, {__index = WeObject})
 
 function WeEveryAbility.new(id, base_id)
