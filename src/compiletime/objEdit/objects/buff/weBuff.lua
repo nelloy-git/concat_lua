@@ -1,9 +1,9 @@
 ---@type WeField
-local WeField = require('compiletime.objEdit.we_field')
+local WeField = require('compiletime.objEdit.weField')
 ---@type WeFile
 local WeFile = require('compiletime.objEdit.weFile')
 ---@type WeObject
-local WeObject = require('compiletime.objEdit.objects.we_object')
+local WeObject = require('compiletime.objEdit.objects.weObject')
 
 ---@class WeBuff
 local WeBuff = {}

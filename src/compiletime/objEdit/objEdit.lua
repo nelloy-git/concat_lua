@@ -12,31 +12,32 @@ function ObjEdit.init(src_path, dst_path)
 
     -- Utils
     ---@type WeUtils
-    ObjEdit.Utils = require('compiletime.objEdit.utils')
+    ObjEdit.Utils = require('compiletime.objEdit.weUtils')
 
     --Abilities
     ObjEdit.Ability = {}
     ---@type AuraSlowWeAbility
-    ObjEdit.Ability.AuraSlow = require('compiletime.objEdit.objects.auraSlow')
+    ObjEdit.Ability.AuraSlow = require('compiletime.objEdit.objects.ability.weAuraSlow')
     ---@type ChannelWeAbility
-    ObjEdit.Ability.Channel = require('compiletim.objEdit.objects.ability.channel')
+    ObjEdit.Ability.Channel = require('compiletime.objEdit.objects.ability.weChannel')
     ---@type BladeMasterCriticalStrikeWeAbility
-    ObjEdit.Ability.BladeMasterCriticalStrike = require('compiletime.objEdit.objects.ability.bladeMasterCriticalStrike')
+    ObjEdit.Ability.BladeMasterCriticalStrike = require('compiletime.objEdit.objects.ability.weBladeMasterCriticalStrike')
     ---@type RunedBracersWeAbility
-    ObjEdit.Ability.RunedBracers = require('compiletime.objEdit.objects.ability.runedBracers')
+    ObjEdit.Ability.RunedBracers = require('compiletime.objEdit.objects.ability.weRunedBracers')
 
     -- Buffs
+    ObjEdit.Buff = {}
     ---@type WeBuff
-    ObjEdit.Buff.Buff = require('compiletime.objEdit.objects.buff.buff')
+    ObjEdit.Buff.Buff = require('compiletime.objEdit.objects.buff.weBuff')
 
     -- Units
     ObjEdit.Unit = {}
     ---@type WeBuilding
-    ObjEdit.Unit.Building = require('compiletime.objEdit.objects.unit.building')
-    ---@type WeUnit
-    ObjEdit.Unit.Hero = require('compiletime.objEdit.objects.unit.hero')
+    ObjEdit.Unit.Building = require('compiletime.objEdit.objects.unit.weBuilding')
     ---@type WeHero
-    ObjEdit.Unit.Unit = require('compiletime.objEdit.objects.unit.unit')
+    ObjEdit.Unit.Hero = require('compiletime.objEdit.objects.unit.weHero')
+    ---@type WeUnit
+    ObjEdit.Unit.Unit = require('compiletime.objEdit.objects.unit.weUnit')
 end
 
 ---Function finish object editing.

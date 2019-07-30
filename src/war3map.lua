@@ -2,10 +2,10 @@ compiletime(
     function ()
         local objEdit = require('compiletime.objEdit.objEdit')
         objEdit.init(src_dir, dst_dir)
+        local WeHero = objEdit.Unit.Hero
     end)
 
-local Unit = require('unit.unit')
-local Utils = require('utils.utils')
+local Unit = require("unit.unit")
 
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
@@ -21,9 +21,8 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
     local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
+    u1:addAttack(10, 1, 0)
     local u2 = Unit.new(0, 'hfoo', 0, 0, 0)
-
-    u2:setDodgeChance(5000, 3, 0)
 end
 
 function InitTrig_Melee_Initialization()

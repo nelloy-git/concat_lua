@@ -1,3 +1,5 @@
+local utils = require('compiletime.objEdit.weUtils')
+
 ---@class WeObject
 local WeObject = {}
 
@@ -27,7 +29,6 @@ function WeObject:addField(we_field)
 end
 
 function WeObject:serialize()
-    local utils = require('compiletime.objEdit.utils')
     local serial = self.base_id .. self.id .. utils.int2byte(#(self.changes))
     for _, field in pairs(self.changes) do
         serial = serial .. field:serialize() .. '\0\0\0\0'

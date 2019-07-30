@@ -27,7 +27,8 @@ function AnyWeAbility:setEditorSuffix(data) self:addField(WeField.new("ansf", 's
 function AnyWeAbility:setHeroAbility(data) self:addField(WeField.new("aher", 'bool', 0, 0, data)) end
 ---@param data boolean
 function AnyWeAbility:setItemAbility(data) self:addField(WeField.new("aite", 'bool', 0, 0, data)) end
----@param data string|'commoner'|'creeps'|'critters'|'demon'|'human'|'naga'|'nightelf'|'orc'|'other'|'undead'|'unknown'
+---Possible data: 'commoner'|'creeps'|'critters'|'demon'|'human'|'naga'|'nightelf'|'orc'|'other'|'undead'|'unknown'
+---@param data string
 function AnyWeAbility:setRace(data) self:addField(WeField.new("arac", 'string', 0, 0, data)) end
 ---@param data integer
 function AnyWeAbility:setButtonPositionNormalX(data) self:addField(WeField.new("abpx", 'int', 0, 0, data)) end

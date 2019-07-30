@@ -1,5 +1,5 @@
 ---@type WeUtils
-local utils = require('compiletime.objEdit.utils')
+local utils = require('compiletime.objEdit.weUtils')
 
 ---Object modification container
 ---@class WeField
@@ -7,8 +7,9 @@ local WeField = {}
 
 ---@class bytes : string
 
+---data_type = 'bool'|'int'|'real'|'unreal'|'string'
 ---@param data boolean|integer|number|string
----@param data_type string|'bool'|'int'|'real'|'unreal'|'string'
+---@param data_type string
 ---@return bytes|nil
 local function data2byte(data, data_type)
 	if data_type == 'bool' then
@@ -30,7 +31,8 @@ local function data2byte(data, data_type)
 	end
 end
 
----@param data_type string|'bool'|'int'|'real'|'unreal'|'string'
+---data type = 'bool'|'int'|'real'|'unreal'|'string'
+---@param data_type string
 ---@return bytes
 local function type2bytes(data_type)
 	if data_type == 'bool' then return utils.int2byte(0) end
@@ -49,8 +51,9 @@ local function getBytes(var)
     return var
 end
 
+---data type = 'bool'|'int'|'real'|'unreal'|'string'
 ---@param id string
----@param data_type string|'bool'|'int'|'real'|'unreal'|'string'
+---@param data_type string
 ---@param lvl_or_variation integer|nil
 ---@param abil_data_id integer|nil
 ---@param data string|boolean|integer|number

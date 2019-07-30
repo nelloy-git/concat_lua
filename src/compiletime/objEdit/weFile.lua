@@ -1,5 +1,5 @@
 ---@type WeUtils
-local utils = require('compiletime.objEdit.utils')
+local utils = require('compiletime.objEdit.weUtils')
 
 ---@class WeFile
 local WeFile = {}

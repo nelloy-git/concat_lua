@@ -2,9 +2,9 @@
     "Lua.workspace.ignoreDir": [
         "dst/*"
     ],
-    "Lua.diagnostics.enable": true,
     "Lua.diagnostics.disable": [
-        "lowercase-global"
+        "lowercase-global",
+        "redundant-parameter"
     ],
     "Lua.diagnostics.globals": [
         "is_compiletime",
@@ -4111,6 +4111,6 @@
         "PATHING_FLAG_BLIGHTED",
         "PATHING_FLAG_UNFLOATABLE",
         "PATHING_FLAG_UNAMPHIBIOUS",
-        "PATHING_FLAG_UNITEMPLACABLE",
-    ],
+        "PATHING_FLAG_UNITEMPLACABLE"
+    ]
 }

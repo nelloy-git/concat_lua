@@ -1,27 +1,36 @@
 ---@type UnitParameter
-local Param = require('unit.parameters.parameter')
-local ApplyParam = require('unit.parameters.applyParam')
----@type MathParameter
-local MathParam = require('unit.parameters.mathParam')
+local Parameter = require('unit.parameters.parameter')
 
 ---@class UnitObject : userdata
 
 ---@class Unit
----@field unit UnitObject
+---@field unit_obj UnitObject
 ---@field id string
 local Unit = {}
 
+---@type table<UnitObject, Unit>
 local UnitDB = {}
-function UnitDB.add(unit_struct) UnitDB[unit_struct.unit] = unit_struct end
-function UnitDB.rm(unit_struct) UnitDB[unit_struct.unit] = nil end
-function UnitDB.get(unit) return UnitDB[unit] end
+---@param unit Unit
+function UnitDB.add(unit) UnitDB[unit.unit] = unit end
+---@param unit Unit
+function UnitDB.rm(unit) UnitDB[unit.unit] = nil end
+---@param unit_obj UnitObject
+---@return Unit
+function UnitDB.get(unit_obj) return UnitDB[unit_obj] end
 
+---@param player_id integer
+---@param unit_id string | integer
+---@param x number
+---@param y number
+---@param face number
+---@return Unit
 function Unit.new(player_id, unit_id, x, y, face)
     unit_id = ID(unit_id)
 
+    ---@type Unit
     local instance = {
         id = ID2str(unit_id),
-        unit = CreateUnit(Player(player_id), unit_id, x, y, face)
+        unit_obj = CreateUnit(Player(player_id), unit_id, x, y, face)
     }
     setmetatable(instance, {__index = Unit})
 
@@ -31,13 +40,19 @@ function Unit.new(player_id, unit_id, x, y, face)
     return instance
 end
 
+---@param player_id integer
+---@param unit_id string | integer
+---@param x number
+---@param y number
+---@param face number
+---@return Unit
 function Unit.newCorpse(player_id, unit_id, x, y, face)
     unit_id = ID(unit_id)
 
     local instance = {
         id = ID2str(unit_id),
         ---@type UnitObject
-        unit = CreateCorpse(Player(player_id), unit_id, x, y, face)
+        unit_obj = CreateCorpse(Player(player_id), unit_id, x, y, face)
     }
     setmetatable(instance, {__index = Unit})
 
@@ -48,195 +63,248 @@ function Unit.newCorpse(player_id, unit_id, x, y, face)
 end
 
 function Unit:prepareCustomData()
-    self:prepareParameters()
+    self.parameters = Parameter.addContainer(self)
 end
 
-function Unit:prepareParameters()
-    ---@type table<string,UnitParameter>
-    local parameters = {
-        attack = Param.new(self, 1, ApplyParam.attack, MathParam.linear),
-        attackSpeed = Param.new(self, 2, ApplyParam.attackSpeed, MathParam.inverseLinear),
-        armor = Param.new(self, 0, ApplyParam.armor, MathParam.linear),
-
-        spellPower = Param.new(self, 0, ApplyParam.spellPower, MathParam.linear),
-        castSpeed = Param.new(self, 0, ApplyParam.castSpeed, MathParam.inversePercent, 75), -- For inversed percent real cap = 100 - cap
-        resistance = Param.new(self, 0, ApplyParam.resistance, MathParam.percent, 90),
-
-        health = Param.new(self, 100, ApplyParam.health, MathParam.linear),
-        regeneration = Param.new(self, 0, ApplyParam.regeneration, MathParam.linear),
-        mana = Param.new(self, 100, ApplyParam.mana, MathParam.linear),
-        recovery = Param.new(self, 0, ApplyParam.recovery, MathParam.linear),
-
-        critChance = Param.new(self, 0, ApplyParam.critChance, MathParam.percent, 100),
-        critPower = Param.new(self, 1, ApplyParam.critPower, MathParam.linear),
-        dodge = Param.new(self, 0, ApplyParam.dodgeChance, MathParam.percent, 75),
-        cooldown = Param.new(self, 0, ApplyParam.cooldown, MathParam.percent, 75),
-    }
-
-    -- Add hero stats
-    if self.id:sub(1,1) == string.upper(self.id:sub(1,1)) then
-        parameters.strength = Param.new(self, 0, ApplyParam.strength, MathParam.linear)
-        parameters.agility = Param.new(self, 0, ApplyParam.agility, MathParam.linear)
-        parameters.intelligence = Param.new(self, 0, ApplyParam.intelligence, MathParam.linear)
-    end
-
-    self.parameters = parameters
-end
-
--- Attack
-function Unit:setAttack(base, mult, bonus) self.parameters.attack:set(base, mult, bonus) end
+---Function adds attack damage to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addAttack(base, mult, bonus) self.parameters.attack:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result values of attack damage.
+---@return number, number, number, number
 function Unit:getAttack() return self.parameters.attack:get() end
 
--- Attack speed
-function Unit:setAttackSpeed(base, mult, bonus) self.parameters.attackSpeed:set(base, mult, bonus) end
-function Unit:addAttackSpeed(base, mult, bonus) self.parameters.attackSpeed:add(base, mult, bonus) end
-function Unit:getAttackSpeed() return self.parameters.attackSpeed:get() end
+---Function sets attacks per second.
+---@param base number
+function Unit:setAttacksPerSec(base) _, mult, bonus, _ = self.parameters.attackSpeed:get() self.parameters.attackSpeed:set(base, mult, bonus) end
 
--- Armor
-function Unit:setArmor(base, mult, bonus) self.parameters.armor:set(base, mult, bonus) end
+---Function adds attack speed modifier. (-0.15 = -15%)
+---@param mult number
+function Unit:addAttackSpeed(mult) self.parameters.attackSpeed:add(0, mult, 0) end
+
+---Function returns attacks per second, attack speed modifier and result attacks per second. (modifier: -0.15 = -15%)
+---@return number, number, number
+function Unit:getAttackSpeed() base, mult, _, res = self.parameters.attackSpeed:get() return base, mult, res end
+
+---Function adds armor to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addArmor(base, mult, bonus) self.parameters.armor:add(base, mult, bonus) end
-function Unit:getArmor() return self.parameters:get() end
 
--- Spell power
-function Unit:setSpellPower(base, mult, bonus) self.parameters.spellPower:set(base, mult, bonus) end
+---Function returns base, mult, bonus and result armor.
+---@return number, number, number, number
+function Unit:getArmor() return self.parameters.armor:get() end
+
+---Function adds spell power to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addSpellPower(base, mult, bonus) self.parameters.spellPower:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result spell power.
+---@return number, number, number, number
 function Unit:getSpellPower() return self.parameters.spellPower:get() end
 
--- Cast speed
-function Unit:setCastSpeed(base, mult, bonus) self.parameters.castSpeed:set(base, mult, bonus) end
+---Function adds cast speed to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addCastSpeed(base, mult, bonus) self.parameters.castSpeed:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result(%) cast speed.
+---@return number, number, number, number
 function Unit:getCastSpeed() return self.parameters.castSpeed:get() end
 
--- Cast speed
-function Unit:setCastSpeed(base, mult, bonus) self.parameters.castSpeed:set(base, mult, bonus) end
-function Unit:addCastSpeed(base, mult, bonus) self.parameters.castSpeed:add(base, mult, bonus) end
-function Unit:getCastSpeed() return self.parameters.castSpeed:get() end
-
--- Resistance
-function Unit:setResistance(base, mult, bonus) self.parameters.resistance:set(base, mult, bonus) end
+---Function adds resistance to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addResistance(base, mult, bonus) self.parameters.resistance:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result(%) resistance.
+---@return number, number, number, number
 function Unit:getResistance() return self.parameters.resistance:get() end
 
--- Health
-function Unit:setHealth(base, mult, bonus) self.parameters.health:set(base, mult, bonus) end
+---Function adds health to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addHealth(base, mult, bonus) self.parameters.health:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result health.
+---@return number, number, number, number
 function Unit:getHealth() return self.parameters.health:get() end
 
--- Regeneration
-function Unit:setRegeneration(base, mult, bonus) self.parameters.regeneration:set(base, mult, bonus) end
+---Function adds regeneration to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addRegeneration(base, mult, bonus) self.parameters.regeneration:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result regeneration.
+---@return number. number, number, number
 function Unit:getRegeneration() return self.parameters.regeneration:get() end
 
--- Mana
-function Unit:setMana(base, mult, bonus) self.parameters.mana:set(base, mult, bonus) end
+---Function adds mana to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addMana(base, mult, bonus) self.parameters.mana:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result mana
+---@return number, number, number, number
 function Unit:getMana() return self.parameters.mana:get() end
 
--- Recovery
-function Unit:setRecovery(base, mult, bonus) self.parameters.recovery:set(base, mult, bonus) end
+---Function adds recovery to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addRecovery(base, mult, bonus) self.parameters.recovery:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result recovery.
+---@return number, number, number, number
 function Unit:getRecovery() return self.parameters.recovery:get() end
 
--- Crit chance
-function Unit:setCritChance(base, mult, bonus) self.parameters.critChance:set(base, mult, bonus) end
+---Function adds critical strike chance to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addCritChance(base, mult, bonus) self.parameters.critChance:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result(%) critical chance.
+---@return number, number, number, number 
 function Unit:getCritChance() return self.parameters.critChance:get() end
 
--- Crit power
-function Unit:setCritPower(base, mult, bonus) self.parameters.critPower:set(base, mult, bonus) end
+---Function adds critical strike power to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addCritPower(base, mult, bonus) self.parameters.critPower:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result(%) critical power.
+---@return number, number, number, number
 function Unit:getCritPower() return self.parameters.critPower:get() end
 
--- Dodge
-function Unit:setDodgeChance(base, mult, bonus) self.parameters.dodge:set(base, mult, bonus) end
+---Function adds dodge chance to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addDodgeChance(base, mult, bonus) self.parameters.dodge:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result(%) dodge.
+---@return number, number, number, number
 function Unit:getDodgeChance() return self.parameters.dodge:get() end
 
--- Cooldown
-function Unit:setCooldown(base, mult, bonus) self.parameters.cooldown:set(base, mult, bonus) end
+---Function adds cooldown modifier to unit.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addCooldown(base, mult, bonus) self.parameters.cooldown:add(base, mult, bonus) end
+
+---Function returns base, mult, bonus and result(%) cooldown.
+---@return number, number, number, number
 function Unit:getCooldown() return self.parameters.cooldown:get() end
 
--- Strength
-function Unit:setStrength(base, mult, bonus) if self.parameters.strength ~= nil then self.parameters.strength:set(base, mult, bonus) end end
+---Function adds strength to hero.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addStrength(base, mult, bonus) if self.parameters.strength ~= nil then self.parameters.strength:add(base, mult, bonus) end end
+
+---Function returns base, mult, bonus and result strength.
+---@return number, number, number, number
 function Unit:getStrength() if self.parameters.strength ~= nil then return self.parameters.strength:get() else return 0, 0, 0, 0 end end
 
--- Agility
-function Unit:setAgility(base, mult, bonus) if self.parameters.agility ~= nil then self.parameters.agility:set(base, mult, bonus) end end
+---Function adds agility to hero.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addAgility(base, mult, bonus) if self.parameters.agility ~= nil then self.parameters.agility:add(base, mult, bonus) end end
+
+---Function returns base, mult, bonus and result agility.
+---@return number, number, number, number
 function Unit:getAgility() if self.parameters.agility ~= nil then return self.parameters.agility:get() else return 0, 0, 0, 0 end end
 
--- Intelligence
-function Unit:setIntelligence(base, mult, bonus) if self.parameters.intelligence ~= nil then self.parameters.intelligence:set(base, mult, bonus) end end
+---Function adds intelligence to hero.
+---@param base number
+---@param mult number
+---@param bonus number
 function Unit:addIntelligence(base, mult, bonus) if self.parameters.intelligence ~= nil then self.parameters.intelligence:add(base, mult, bonus) end end
+
+---Function returns base, mult, bonus and result intelligence.
+---@return number, number, number, number
 function Unit:getIntelligence() if self.parameters.intelligence ~= nil then return self.parameters.intelligence:get() else return 0, 0, 0, 0 end end
 
-Unit.__GetLevelingUnit = GetLevelingUnit
-Unit.__GetLearningUnit = GetLearningUnit
-Unit.__GetRevivableUnit = GetRevivableUnit
-Unit.__GetRevivingUnit = GetRevivingUnit
-Unit.__GetAttacker = GetAttacker
-Unit.__GetRescuer = GetRescuer
-Unit.__GetDyingUnit = GetDyingUnit
-Unit.__GetKillingUnit = GetKillingUnit
-Unit.__GetDecayingUnit = GetDecayingUnit
-Unit.__GetConstructingStructure = GetConstructingStructure
-Unit.__GetCancelledStructure = GetCancelledStructure
-Unit.__GetConstructedStructure = GetConstructedStructure
-Unit.__GetResearchingUnit = GetResearchingUnit
-Unit.__GetTrainedUnit = GetTrainedUnit
-Unit.__GetDetectedUnit = GetDetectedUnit
-Unit.__GetSummoningUnit = GetSummoningUnit
-Unit.__GetSummonedUnit = GetSummonedUnit
-Unit.__GetTransportUnit = GetTransportUnit
-Unit.__GetLoadedUnit = GetLoadedUnit
-Unit.__GetSellingUnit = GetSellingUnit
-Unit.__GetSoldUnit = GetSoldUnit
-Unit.__GetBuyingUnit = GetBuyingUnit
-Unit.__GetChangingUnit = GetChangingUnit
-Unit.__GetManipulatingUnit = GetManipulatingUnit
-Unit.__GetOrderedUnit = GetOrderedUnit
-Unit.__GetOrderTargetUnit = GetOrderTargetUnit
-Unit.__GetSpellAbilityUnit = GetSpellAbilityUnit
-Unit.__GetSpellTargetUnit = GetSpellTargetUnit
-Unit.__GetTriggerUnit = GetTriggerUnit
-Unit.__GetEventDamage = GetEventDamage
-Unit.__GetEventDamageSource = GetEventDamageSource
-Unit.__GetEventTargetUnit = GetEventTargetUnit
-function GetLevelingUnit() return UnitDB.get(Unit.__GetLevelingUnit()) end
-function GetLearningUnit() return UnitDB.get(Unit.__GetLearningUnit()) end
-function GetRevivableUnit() return UnitDB.get(Unit.__GetRevivableUnit()) end
-function GetRevivingUnit() return UnitDB.get(Unit.__GetRevivingUnit()) end
-function GetAttacker() return UnitDB.get(Unit.__GetAttacker()) end
-function GetRescuer() return UnitDB.get(Unit.__GetRescuer()) end
-function GetDyingUnit() return UnitDB.get(Unit.__GetDyingUnit()) end
-function GetKillingUnit() return UnitDB.get(Unit.__GetKillingUnit()) end
-function GetDecayingUnit() return UnitDB.get(Unit.__GetDecayingUnit()) end
-function GetConstructingStructure() return UnitDB.get(Unit.__GetConstructingStructure()) end
-function GetCancelledStructure() return UnitDB.get(Unit.__GetCancelledStructure()) end
-function GetConstructedStructure() return UnitDB.get(Unit.__GetConstructedStructure()) end
-function GetResearchingUnit() return UnitDB.get(Unit.__GetResearchingUnit()) end
-function GetTrainedUnit() return UnitDB.get(Unit.__GetTrainedUnit()) end
-function GetDetectedUnit() return UnitDB.get(Unit.__GetDetectedUnit()) end
-function GetSummoningUnit() return UnitDB.get(Unit.__GetSummoningUnit()) end
-function GetSummonedUnit() return UnitDB.get(Unit.__GetSummonedUnit()) end
-function GetTransportUnit() return UnitDB.get(Unit.__GetTransportUnit()) end
-function GetLoadedUnit() return UnitDB.get(Unit.__GetLoadedUnit()) end
-function GetSellingUnit() return UnitDB.get(Unit.__GetSellingUnit()) end
-function GetSoldUnit() return UnitDB.get(Unit.__GetSoldUnit()) end
-function GetBuyingUnit() return UnitDB.get(Unit.__GetBuyingUnit()) end
-function GetChangingUnit() return UnitDB.get(Unit.__GetChangingUnit()) end
-function GetManipulatingUnit() return UnitDB.get(Unit.__GetManipulatingUnit()) end
-function GetOrderedUnit() return UnitDB.get(Unit.__GetOrderedUnit()) end
-function GetOrderTargetUnit() return UnitDB.get(Unit.__GetOrderTargetUnit()) end
-function GetSpellAbilityUnit() return UnitDB.get(Unit.__GetSpellAbilityUnit()) end
-function GetSpellTargetUnit() return UnitDB.get(Unit.__GetSpellTargetUnit()) end
-function GetTriggerUnit() return UnitDB.get(Unit.__GetTriggerUnit()) end
-function GetEventDamage() return UnitDB.get(Unit.__GetEventDamage()) end
-function GetEventDamageSource() return UnitDB.get(Unit.__GetEventDamageSource()) end
-function GetEventTargetUnit() return UnitDB.get(Unit.__GetEventTargetUnit()) end
+local __replaced_functions = {
+    GetLevelingUnit = GetLevelingUnit,
+    GetLearningUnit = GetLearningUnit,
+    GetRevivableUnit = GetRevivableUnit,
+    GetRevivingUnit = GetRevivingUnit,
+    GetAttacker = GetAttacker,
+    GetRescuer = GetRescuer,
+    GetDyingUnit = GetDyingUnit,
+    GetKillingUnit = GetKillingUnit,
+    GetDecayingUnit = GetDecayingUnit,
+    GetConstructingStructure = GetConstructingStructure,
+    GetCancelledStructure = GetCancelledStructure,
+    GetConstructedStructure = GetConstructedStructure,
+    GetResearchingUnit = GetResearchingUnit,
+    GetTrainedUnit = GetTrainedUnit,
+    GetDetectedUnit = GetDetectedUnit,
+    GetSummoningUnit = GetSummoningUnit,
+    GetSummonedUnit = GetSummonedUnit,
+    GetTransportUnit = GetTransportUnit,
+    GetLoadedUnit = GetLoadedUnit,
+    GetSellingUnit = GetSellingUnit,
+    GetSoldUnit = GetSoldUnit,
+    GetBuyingUnit = GetBuyingUnit,
+    GetChangingUnit = GetChangingUnit,
+    GetManipulatingUnit = GetManipulatingUnit,
+    GetOrderedUnit = GetOrderedUnit,
+    GetOrderTargetUnit = GetOrderTargetUnit,
+    GetSpellAbilityUnit = GetSpellAbilityUnit,
+    GetSpellTargetUnit = GetSpellTargetUnit,
+    GetTriggerUnit = GetTriggerUnit,
+    GetEventDamage = GetEventDamage,
+    GetEventDamageSource = GetEventDamageSource,
+    GetEventTargetUnit = GetEventTargetUnit,
+}
+
+function GetLevelingUnit() return UnitDB.get(__replaced_functions.GetLevelingUnit()) end
+function GetLearningUnit() return UnitDB.get(__replaced_functions.GetLearningUnit()) end
+function GetRevivableUnit() return UnitDB.get(__replaced_functions.GetRevivableUnit()) end
+function GetRevivingUnit() return UnitDB.get(__replaced_functions.GetRevivingUnit()) end
+function GetAttacker() return UnitDB.get(__replaced_functions.GetAttacker()) end
+function GetRescuer() return UnitDB.get(__replaced_functions.GetRescuer()) end
+function GetDyingUnit() return UnitDB.get(__replaced_functions.GetDyingUnit()) end
+function GetKillingUnit() return UnitDB.get(__replaced_functions.GetKillingUnit()) end
+function GetDecayingUnit() return UnitDB.get(__replaced_functions.GetDecayingUnit()) end
+function GetConstructingStructure() return UnitDB.get(__replaced_functions.GetConstructingStructure()) end
+function GetCancelledStructure() return UnitDB.get(__replaced_functions.GetCancelledStructure()) end
+function GetConstructedStructure() return UnitDB.get(__replaced_functions.GetConstructedStructure()) end
+function GetResearchingUnit() return UnitDB.get(__replaced_functions.GetResearchingUnit()) end
+function GetTrainedUnit() return UnitDB.get(__replaced_functions.GetTrainedUnit()) end
+function GetDetectedUnit() return UnitDB.get(__replaced_functions.GetDetectedUnit()) end
+function GetSummoningUnit() return UnitDB.get(__replaced_functions.GetSummoningUnit()) end
+function GetSummonedUnit() return UnitDB.get(__replaced_functions.GetSummonedUnit()) end
+function GetTransportUnit() return UnitDB.get(__replaced_functions.GetTransportUnit()) end
+function GetLoadedUnit() return UnitDB.get(__replaced_functions.GetLoadedUnit()) end
+function GetSellingUnit() return UnitDB.get(__replaced_functions.GetSellingUnit()) end
+function GetSoldUnit() return UnitDB.get(__replaced_functions.GetSoldUnit()) end
+function GetBuyingUnit() return UnitDB.get(__replaced_functions.GetBuyingUnit()) end
+function GetChangingUnit() return UnitDB.get(__replaced_functions.GetChangingUnit()) end
+function GetManipulatingUnit() return UnitDB.get(__replaced_functions.GetManipulatingUnit()) end
+function GetOrderedUnit() return UnitDB.get(__replaced_functions.GetOrderedUnit()) end
+function GetOrderTargetUnit() return UnitDB.get(__replaced_functions.GetOrderTargetUnit()) end
+function GetSpellAbilityUnit() return UnitDB.get(__replaced_functions.GetSpellAbilityUnit()) end
+function GetSpellTargetUnit() return UnitDB.get(__replaced_functions.GetSpellTargetUnit()) end
+function GetTriggerUnit() return UnitDB.get(__replaced_functions.GetTriggerUnit()) end
+function GetEventDamage() return UnitDB.get(__replaced_functions.GetEventDamage()) end
+function GetEventDamageSource() return UnitDB.get(__replaced_functions.GetEventDamageSource()) end
+function GetEventTargetUnit() return UnitDB.get(__replaced_functions.GetEventTargetUnit()) end
 
 --============================================================================
 -- Unit API

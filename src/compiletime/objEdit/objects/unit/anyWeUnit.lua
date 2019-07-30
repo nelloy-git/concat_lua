@@ -53,7 +53,8 @@ function AnyWeUnit:setUpgradesUsed(data) self:addField(WeField.new("upgr", 'stri
 function AnyWeUnit:setUnitSoundSet(data) self:addField(WeField.new("usnd", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setUnitClassification(data) self:addField(WeField.new("utyp", 'string', nil, nil, data)) end
----@param data string|'horse'|'fly'|'hover'|'float'|'amph'
+---Possible data: 'horse'|'fly'|'hover'|'float'|'amph'
+---@param data string
 function AnyWeUnit:setMovementType(data) self:addField(WeField.new("umvt", 'MovementType_', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setTurnRate(data) self:addField(WeField.new("umvr", 'real', nil, nil, data)) end
@@ -129,7 +130,8 @@ function AnyWeUnit:setRepairLumberCost(data) self:addField(WeField.new("ulur", '
 function AnyWeUnit:setRepairGoldCost(data) self:addField(WeField.new("ugor", 'int', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setRandomSound(data) self:addField(WeField.new("ursl", 'string', nil, nil, data)) end
----@param data string|'commoner'|'creeps'|'critters'|'demon'|'human'|'naga'|'nightelf'|'orc'|'other'|'undead'|'unknown'
+---Possible data 'commoner'|'creeps'|'critters'|'demon'|'human'|'naga'|'nightelf'|'orc'|'other'|'undead'|'unknown'
+---@param data string
 function AnyWeUnit:setRace(data) self:addField(WeField.new("urac", 'Race', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setPropulsionWindowdegrees(data) self:addField(WeField.new("uprw", 'real', nil, nil, data)) end
@@ -233,7 +235,8 @@ function AnyWeUnit:setDisplayasNeutralHostile(data) self:addField(WeField.new("u
 function AnyWeUnit:setDependencyEquivalents(data) self:addField(WeField.new("udep", 'string', nil, nil, data)) end
 ---@param data integer
 function AnyWeUnit:setDefenseUpgradeBonus(data) self:addField(WeField.new("udup", 'int', nil, nil, data)) end
----@param data string|"normal"|"small"|"medium"|"large"|"fort"|"hero"|"divine"|"none"
+---Possible data: "normal"|"small"|"medium"|"large"|"fort"|"hero"|"divine"|"none"
+---@param data string
 function AnyWeUnit:setArmorType(data) self:addField(WeField.new("udty", 'string', nil, nil, data)) end
 ---@param data integer
 function AnyWeUnit:setDefenseBase(data) self:addField(WeField.new("udef", 'int', nil, nil, data)) end
@@ -257,9 +260,11 @@ function AnyWeUnit:setCanDropItemsOnDeath(data) self:addField(WeField.new("udro"
 function AnyWeUnit:setBuildTime(data) self:addField(WeField.new("ubld", 'int', nil, nil, data)) end
 ---@param data integer
 function AnyWeUnit:setAttacksEnabled(data) self:addField(WeField.new("uaen", 'int', nil, nil, data)) end
----@param data string|'normal'|'instant'|'artillery'|'aline'|'missile'|'msplash'|'mbounce'|'mline'
+---Possible data: 'normal'|'instant'|'artillery'|'aline'|'missile'|'msplash'|'mbounce'|'mline'
+---@param data string
 function AnyWeUnit:setAttack2WeaponType(data) self:addField(WeField.new("ua2w", 'string', nil, nil, data)) end
----@param data string|"Nothing"|"AxeMediumChop"|"MetalHeavyBash"|"MetalHeavyChop"|"MetalHeavySlice"|"MetalLightChop"|"MetalLightSlice"|"MetalMediumBash"|"MetalMediumChop"|"MetalMediumSlice"|"RockHeavyBash"|WoodHeavyBash"|"WoodLightBash"|"WoodMediumBash"
+---Possible data: "Nothing"|"AxeMediumChop"|"MetalHeavyBash"|"MetalHeavyChop"|"MetalHeavySlice"|"MetalLightChop"|"MetalLightSlice"|"MetalMediumBash"|"MetalMediumChop"|"MetalMediumSlice"|"RockHeavyBash"|WoodHeavyBash"|"WoodLightBash"|"WoodMediumBash"
+---@param data string
 function AnyWeUnit:setAttack2WeaponSound(data) self:addField(WeField.new("ucs2", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setAttack2TargetsAllowed(data) self:addField(WeField.new("ua2g", 'string', nil, nil, data)) end
@@ -299,7 +304,8 @@ function AnyWeUnit:setAttack2DamageFactorMedium(data) self:addField(WeField.new(
 function AnyWeUnit:setAttack2DamageBase(data) self:addField(WeField.new("ua2b", 'int', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setAttack2CooldownTime(data) self:addField(WeField.new("ua2c", 'real', nil, nil, data)) end
----@param data string|'unknown'|'normal'|'pierce'|'siege'|'spells'|'chaos'|'magic'|'hero'
+---Possible data: 'unknown'|'normal'|'pierce'|'siege'|'spells'|'chaos'|'magic'|'hero'
+---@param data string
 function AnyWeUnit:setAttack2AttackType(data) self:addField(WeField.new("ua2t", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setAttack2AreaofEffectTargets(data) self:addField(WeField.new("ua2p", 'string', nil, nil, data)) end
@@ -313,9 +319,11 @@ function AnyWeUnit:setAttack2AreaofEffectFullDamage(data) self:addField(WeField.
 function AnyWeUnit:setAttack2AnimationDamagePoint(data) self:addField(WeField.new("udp2", 'real', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setAttack2AnimationBackswingPoint(data) self:addField(WeField.new("ubs2", 'real', nil, nil, data)) end
----@param data string|'normal'|'instant'|'artillery'|'aline'|'missile'|'msplash'|'mbounce'|'mline'
+---Possible data: 'normal'|'instant'|'artillery'|'aline'|'missile'|'msplash'|'mbounce'|'mline'
+---@param data string
 function AnyWeUnit:setAttack1WeaponType(data) self:addField(WeField.new("ua1w", 'string', nil, nil, data)) end
----@param data string|'Nothing'|'AxeMediumChop'|'MetalHeavyBash'|'MetalHeavyChop'|'MetalHeavySlice'|'MetalLightChop'|'MetalLightSlice'|'MetalMediumBash'|'MetalMediumChop'|'MetalMediumSlice'|'RockHeavyBash'|'WoodHeavyBash'|'WoodLightBash'|'WoodMediumBash'
+---Possible data: 'Nothing'|'AxeMediumChop'|'MetalHeavyBash'|'MetalHeavyChop'|'MetalHeavySlice'|'MetalLightChop'|'MetalLightSlice'|'MetalMediumBash'|'MetalMediumChop'|'MetalMediumSlice'|'RockHeavyBash'|'WoodHeavyBash'|'WoodLightBash'|'WoodMediumBash'
+---@param data string
 function AnyWeUnit:setAttack1WeaponSound(data) self:addField(WeField.new("ucs1", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setAttack1TargetsAllowed(data) self:addField(WeField.new("ua1g", 'string', nil, nil, data)) end
@@ -355,7 +363,8 @@ function AnyWeUnit:setAttack1DamageFactorMedium(data) self:addField(WeField.new(
 function AnyWeUnit:setAttack1DamageBase(data) self:addField(WeField.new("ua1b", 'int', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setAttack1CooldownTime(data) self:addField(WeField.new("ua1c", 'real', nil, nil, data)) end
----@param data string|'unknown'|'normal'|'pierce'|'siege'|'spells'|'chaos'|'magic'|'hero'
+---Possible data: 'unknown'|'normal'|'pierce'|'siege'|'spells'|'chaos'|'magic'|'hero'
+---@param data string
 function AnyWeUnit:setAttack1AttackType(data) self:addField(WeField.new("ua1t", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setAttack1AreaofEffectTargets(data) self:addField(WeField.new("ua1p", 'string', nil, nil, data)) end
@@ -369,7 +378,8 @@ function AnyWeUnit:setAttack1AreaofEffectFullDamage(data) self:addField(WeField.
 function AnyWeUnit:setAttack1AnimationDamagePoint(data) self:addField(WeField.new("udp1", 'real', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setAttack1AnimationBackswingPoint(data) self:addField(WeField.new("ubs1", 'real', nil, nil, data)) end
----@param data string|'Ethereal'|'Flesh'|'Wood'|'Stone'|'Metal'
+---Possible data: 'Ethereal'|'Flesh'|'Wood'|'Stone'|'Metal'
+---@param data string
 function AnyWeUnit:setArmorSoundType(data) self:addField(WeField.new("uarm", 'string', nil, nil, data)) end
 ---@param data number
 function AnyWeUnit:setAnimationWalkSpeed(data) self:addField(WeField.new("uwal", 'real', nil, nil, data)) end

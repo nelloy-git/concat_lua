@@ -1,7 +1,7 @@
 ---@type WeField
-local WeField = require('compiletime.objEdit.we_field')
+local WeField = require('compiletime.objEdit.weField')
 ---@type AnyWeAbility
-local AnyWeAbility = require('compiletime.objEdit.objects.ability.every')
+local AnyWeAbility = require('compiletime.objEdit.objects.ability.anyWeAbility')
 
 ---@class AuraSlowWeAbility : AnyWeAbility
 local WeAuraSlow = {}

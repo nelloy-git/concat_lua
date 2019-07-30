@@ -1,8 +1,12 @@
-local ApplyParameter = {}
+---@class UnitApplyParameter
+local UnitApplyParameter = {}
 
 local attack_dispertion = 0.15
 
-function ApplyParameter.attack(owner, val)
+---@alias UnitApplyParameterFunc fun(owner:UnitObject, val:number):nil
+
+---@type UnitApplyParameterFunc
+UnitApplyParameter.attack = function(owner, val)
     local k = 1 - attack_dispertion
     local dmg = k * val
     local dice_sides = 2 * attack_dispertion * val
@@ -12,19 +16,23 @@ function ApplyParameter.attack(owner, val)
     BlzSetUnitDiceSides(owner, math.floor(dice_sides + 1), 0)
 end
 
-function ApplyParameter.attackSpeed(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.attackSpeed = function(owner, val)
     BlzSetUnitAttackCooldown(owner, val, 0)
 end
 
-function ApplyParameter.armor(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.armor = function(owner, val)
     BlzSetUnitArmor(owner, val)
 end
 
-function ApplyParameter.spellPower(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.spellPower = function(owner, val)
     -- TODO
 end
 
-function ApplyParameter.castSpeed(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.castSpeed = function(owner, val)
     -- TODO
 end
 
@@ -38,7 +46,8 @@ local resist_id = compiletime(function()
     return id
 end)
 
-function ApplyParameter.resistance(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.resistance = function(owner, val)
     if GetUnitAbilityLevel(owner, FourCC(resist_id)) == 0 then
         UnitAddAbility(owner, FourCC(resist_id))
     end
@@ -46,23 +55,28 @@ function ApplyParameter.resistance(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 0, val)
 end
 
-function ApplyParameter.cooldown(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.cooldown = function(owner, val)
     -- TODO
 end
 
-function ApplyParameter.health(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.health = function(owner, val)
     BlzSetUnitMaxHP(owner, math.floor(val))
 end
 
-function ApplyParameter.regeneration(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.regeneration = function(owner, val)
     BlzSetUnitRealField(owner, UNIT_RF_HIT_POINTS_REGENERATION_RATE, val)
 end
 
-function ApplyParameter.mana(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.mana = function(owner, val)
     BlzSetUnitMaxMana(owner, math.floor(val))
 end
 
-function ApplyParameter.recovery(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.recovery = function(owner, val)
     BlzSetUnitRealField(owner, UNIT_RF_MANA_REGENERATION, val)
 end
 
@@ -79,7 +93,8 @@ local crit_and_dodge_id = compiletime(function()
     return id
 end)
 
-function ApplyParameter.critChance(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.critChance = function(owner, val)
     if GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0 then
         UnitAddAbility(owner, FourCC(crit_and_dodge_id))
     end
@@ -87,7 +102,8 @@ function ApplyParameter.critChance(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 0, val)
 end
 
-function ApplyParameter.critPower(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.critPower = function(owner, val)
     if GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0 then
         UnitAddAbility(owner, FourCC(crit_and_dodge_id))
     end
@@ -95,7 +111,8 @@ function ApplyParameter.critPower(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 0, val)
 end
 
-function ApplyParameter.dodgeChance(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.dodgeChance = function(owner, val)
     val = val / 100 -- percents to [0:1]
     if GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0 then
         UnitAddAbility(owner, FourCC(crit_and_dodge_id))
@@ -104,16 +121,19 @@ function ApplyParameter.dodgeChance(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 0, val)
 end
 
-function ApplyParameter.strength(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.strength = function(owner, val)
     SetHeroStr(owner, math.floor(val), true)
 end
 
-function ApplyParameter.agility(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.agility = function(owner, val)
     SetHeroAgi(owner, math.floor(val), true)
 end
 
-function ApplyParameter.strength(owner, val)
+---@type UnitApplyParameterFunc
+UnitApplyParameter.strength = function(owner, val)
     SetHeroInt(owner, math.floor(val), true)
 end
 
-return ApplyParameter
+return UnitApplyParameter

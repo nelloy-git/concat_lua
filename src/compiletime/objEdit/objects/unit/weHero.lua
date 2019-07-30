@@ -1,7 +1,7 @@
----@type AnyWeUnit
-local AnyWeUnit = require('compiletime.objEdit.objects.unit.every')
 ---@type WeField
-local WeField = require('compiletime.objEdit.we_field')
+local WeField = require('compiletime.objEdit.weField')
+---@type AnyWeUnit
+local AnyWeUnit = require('compiletime.objEdit.objects.unit.anyWeUnit')
 
 ---@class WeHero : AnyWeUnit
 local WeHero = {}
