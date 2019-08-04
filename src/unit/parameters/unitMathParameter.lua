@@ -7,7 +7,7 @@ local val_for_half_cap = 300
 
 ---@type UnitMathParameterFunc
 UnitMathParameter.linear = function(base, mult, bonus)
-    return base / mult - bonus
+    return base * mult + bonus
 end
 
 ---@type UnitMathParameterFunc

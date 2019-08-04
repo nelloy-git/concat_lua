@@ -1,15 +1,30 @@
 compiletime(
     function ()
-        local objEdit = require('compiletime.objEdit.objEdit')
-        objEdit.init(src_dir, dst_dir)
-        local WeHero = objEdit.Unit.Hero
+        ---@type ObjEdit
+        WeObjEdit = require('compiletime.objEdit.objEdit')
+        WeObjEdit.init(src_dir, dst_dir)
     end)
 
-local Unit = require("unit.unit")
+---@type Utils    
+local utils = require('utils.utils')
+---@type SummonCrystalSwordmanAbility
+local SummonCrystalWarriorAbility = require('unit.abilities.spiritMage.summonSwordman')
+---@type Ability
+local Ability = require('unit.abilities.ability')
+
+---@type Interface
+--local Interface = require('interface.interface')
+
+---@type Unit
+local Unit = require('unit.unit')
+
+local UnitSelection = require('player.unitsSelected')
 
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
+
+local castBar = require('interface.frames.castBar')
 
 function Trig_Melee_Initialization_Actions()
     MeleeStartingVisibility()
@@ -20,9 +35,16 @@ function Trig_Melee_Initialization_Actions()
     MeleeStartingUnits()
     MeleeStartingAI()
     MeleeInitVictoryDefeat()
+
+    castBar.init()
+    UnitSelection.init()
+    Ability.init()
+
+    --Interface.init()
     local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
-    u1:addAttack(10, 1, 0)
-    local u2 = Unit.new(0, 'hfoo', 0, 0, 0)
+    print(SummonCrystalWarriorAbility:getId())
+    u1:addAbility(SummonCrystalWarriorAbility:getId())
+    --local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
 end
 
 function InitTrig_Melee_Initialization()
@@ -61,6 +83,7 @@ function main()
     InitGlobals()
     InitCustomTriggers()
     RunInitializationTriggers()
+    Unit.init()
 end
 
 function config()

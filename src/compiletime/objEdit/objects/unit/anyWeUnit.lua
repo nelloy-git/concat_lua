@@ -4,6 +4,8 @@ local WeField = require('compiletime.objEdit.weField')
 local WeFile = require('compiletime.objEdit.weFile')
 ---@type WeObject
 local WeObject = require('compiletime.objEdit.objects.weObject')
+---@type WeUtils
+local utils = require('compiletime.objEdit.weUtils')
 
 ---@class AnyWeUnit : WeObject
 local AnyWeUnit = {}
@@ -166,7 +168,16 @@ function AnyWeUnit:setMovementSound(data) self:addField(WeField.new("umsl", 'str
 ---@param data string
 function AnyWeUnit:setModelFileExtraVersions(data) self:addField(WeField.new("uver", 'string', nil, nil, data)) end
 ---@param data string
-function AnyWeUnit:setModelFile(data) self:addField(WeField.new("umdl", 'string', nil, nil, data)) end
+function AnyWeUnit:setModelFile(data)
+    local f = io.open(data, "r")
+    if f ~= nil then 
+        f:close()
+    else
+        print('Can not find model file '..data)
+        print(utils.getErrorPos())
+    end
+    self:addField(WeField.new("umdl", 'string', nil, nil, data))
+end
 ---@param data integer
 function AnyWeUnit:setMinimumAttackRange(data) self:addField(WeField.new("uamn", 'int', nil, nil, data)) end
 ---@param data number

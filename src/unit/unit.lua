@@ -1,5 +1,7 @@
----@type UnitParameter
-local Parameter = require('unit.parameters.parameter')
+---@type UnitParameterContainer
+local ParameterContainer = require('unit.parameters.unitParameterContainer')
+---@type Timer
+local Timer = require('utils.timer')
 
 ---@class UnitObject : userdata
 
@@ -11,9 +13,9 @@ local Unit = {}
 ---@type table<UnitObject, Unit>
 local UnitDB = {}
 ---@param unit Unit
-function UnitDB.add(unit) UnitDB[unit.unit] = unit end
+function UnitDB.add(unit) UnitDB[unit.unit_obj] = unit end
 ---@param unit Unit
-function UnitDB.rm(unit) UnitDB[unit.unit] = nil end
+function UnitDB.rm(unit) UnitDB[unit.unit_obj] = nil end
 ---@param unit_obj UnitObject
 ---@return Unit
 function UnitDB.get(unit_obj) return UnitDB[unit_obj] end
@@ -63,180 +65,44 @@ function Unit.newCorpse(player_id, unit_id, x, y, face)
 end
 
 function Unit:prepareCustomData()
-    self.parameters = Parameter.addContainer(self)
+    ---@type UnitParameterContainer
+    self.parameter = ParameterContainer.new(self)
 end
 
----Function adds attack damage to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addAttack(base, mult, bonus) self.parameters.attack:add(base, mult, bonus) end
+local function to_range(val, min, max)
+    if val < min then return min end
+    if val > max then return max end
+    return val
+end
 
----Function returns base, mult, bonus and result values of attack damage.
----@return number, number, number, number
-function Unit:getAttack() return self.parameters.attack:get() end
+---Function sets unit color. Colors should be in range [0 : 1].
+---@param red number
+---@param green number
+---@param blue number
+---@param alpha number
+function Unit:setVertexColor(red, green, blue, alpha)
+    red = math.floor(255 * to_range(red, 0, 1))
+    green = math.floor(255 * to_range(green, 0, 1))
+    blue = math.floor(255 * to_range(blue, 0, 1))
+    alpha = math.floor(255 * to_range(alpha, 0, 1))
+    SetUnitVertexColor(self.unit_obj, red, green, blue, alpha)
+end
 
----Function sets attacks per second.
----@param base number
-function Unit:setAttacksPerSec(base) _, mult, bonus, _ = self.parameters.attackSpeed:get() self.parameters.attackSpeed:set(base, mult, bonus) end
+---@return integer
+function Unit:getOwningPlayerIndex() return player2index(GetOwningPlayer(self.unit_obj)) end
 
----Function adds attack speed modifier. (-0.15 = -15%)
----@param mult number
-function Unit:addAttackSpeed(mult) self.parameters.attackSpeed:add(0, mult, 0) end
+---@return number
+function Unit:getFacing() return GetUnitFacing(self.unit_obj) end
 
----Function returns attacks per second, attack speed modifier and result attacks per second. (modifier: -0.15 = -15%)
----@return number, number, number
-function Unit:getAttackSpeed() base, mult, _, res = self.parameters.attackSpeed:get() return base, mult, res end
+---@param
+function Unit:addAbility(abil_id)
+    abil_id = ID(abil_id)
+    UnitAddAbility(self.unit_obj, abil_id)
+end
 
----Function adds armor to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addArmor(base, mult, bonus) self.parameters.armor:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result armor.
----@return number, number, number, number
-function Unit:getArmor() return self.parameters.armor:get() end
-
----Function adds spell power to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addSpellPower(base, mult, bonus) self.parameters.spellPower:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result spell power.
----@return number, number, number, number
-function Unit:getSpellPower() return self.parameters.spellPower:get() end
-
----Function adds cast speed to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addCastSpeed(base, mult, bonus) self.parameters.castSpeed:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result(%) cast speed.
----@return number, number, number, number
-function Unit:getCastSpeed() return self.parameters.castSpeed:get() end
-
----Function adds resistance to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addResistance(base, mult, bonus) self.parameters.resistance:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result(%) resistance.
----@return number, number, number, number
-function Unit:getResistance() return self.parameters.resistance:get() end
-
----Function adds health to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addHealth(base, mult, bonus) self.parameters.health:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result health.
----@return number, number, number, number
-function Unit:getHealth() return self.parameters.health:get() end
-
----Function adds regeneration to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addRegeneration(base, mult, bonus) self.parameters.regeneration:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result regeneration.
----@return number. number, number, number
-function Unit:getRegeneration() return self.parameters.regeneration:get() end
-
----Function adds mana to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addMana(base, mult, bonus) self.parameters.mana:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result mana
----@return number, number, number, number
-function Unit:getMana() return self.parameters.mana:get() end
-
----Function adds recovery to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addRecovery(base, mult, bonus) self.parameters.recovery:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result recovery.
----@return number, number, number, number
-function Unit:getRecovery() return self.parameters.recovery:get() end
-
----Function adds critical strike chance to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addCritChance(base, mult, bonus) self.parameters.critChance:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result(%) critical chance.
----@return number, number, number, number 
-function Unit:getCritChance() return self.parameters.critChance:get() end
-
----Function adds critical strike power to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addCritPower(base, mult, bonus) self.parameters.critPower:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result(%) critical power.
----@return number, number, number, number
-function Unit:getCritPower() return self.parameters.critPower:get() end
-
----Function adds dodge chance to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addDodgeChance(base, mult, bonus) self.parameters.dodge:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result(%) dodge.
----@return number, number, number, number
-function Unit:getDodgeChance() return self.parameters.dodge:get() end
-
----Function adds cooldown modifier to unit.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addCooldown(base, mult, bonus) self.parameters.cooldown:add(base, mult, bonus) end
-
----Function returns base, mult, bonus and result(%) cooldown.
----@return number, number, number, number
-function Unit:getCooldown() return self.parameters.cooldown:get() end
-
----Function adds strength to hero.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addStrength(base, mult, bonus) if self.parameters.strength ~= nil then self.parameters.strength:add(base, mult, bonus) end end
-
----Function returns base, mult, bonus and result strength.
----@return number, number, number, number
-function Unit:getStrength() if self.parameters.strength ~= nil then return self.parameters.strength:get() else return 0, 0, 0, 0 end end
-
----Function adds agility to hero.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addAgility(base, mult, bonus) if self.parameters.agility ~= nil then self.parameters.agility:add(base, mult, bonus) end end
-
----Function returns base, mult, bonus and result agility.
----@return number, number, number, number
-function Unit:getAgility() if self.parameters.agility ~= nil then return self.parameters.agility:get() else return 0, 0, 0, 0 end end
-
----Function adds intelligence to hero.
----@param base number
----@param mult number
----@param bonus number
-function Unit:addIntelligence(base, mult, bonus) if self.parameters.intelligence ~= nil then self.parameters.intelligence:add(base, mult, bonus) end end
-
----Function returns base, mult, bonus and result intelligence.
----@return number, number, number, number
-function Unit:getIntelligence() if self.parameters.intelligence ~= nil then return self.parameters.intelligence:get() else return 0, 0, 0, 0 end end
+function Unit:issueImmediateOrderById(order_id)
+    IssueImmediateOrderById(self.unit_obj, order_id)
+end
 
 local __replaced_functions = {
     GetLevelingUnit = GetLevelingUnit,
@@ -305,7 +171,6 @@ function GetTriggerUnit() return UnitDB.get(__replaced_functions.GetTriggerUnit(
 function GetEventDamage() return UnitDB.get(__replaced_functions.GetEventDamage()) end
 function GetEventDamageSource() return UnitDB.get(__replaced_functions.GetEventDamageSource()) end
 function GetEventTargetUnit() return UnitDB.get(__replaced_functions.GetEventTargetUnit()) end
-
 --============================================================================
 -- Unit API
 --============================================================================

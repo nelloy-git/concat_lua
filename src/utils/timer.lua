@@ -1,3 +1,4 @@
+---@class Timer
 local Timer = {}
 
 local TimersDB = {}
@@ -48,7 +49,7 @@ end
 
 function Timer:addAction(delay, callback, user_data)
     local action = {
-        time = self.time + delay,
+        time = self.cur_time + delay,
         callback = callback,
         user_data = user_data,
         period = period

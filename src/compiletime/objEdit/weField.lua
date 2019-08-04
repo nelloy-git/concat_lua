@@ -22,7 +22,7 @@ local function data2byte(data, data_type)
 		return utils.int2byte(data)
 	elseif data_type == 'real' or data_type == 'unreal' then
 		return utils.float2byte(data)
-	elseif data_type == 'sring' then
+	elseif data_type == 'string' then
 		return utils.str2byte(data)
 	else
 		print('Wrong data type')

@@ -2,7 +2,7 @@
 local Utils = {}
 
 ---@return string
-function  Utils.getErrorPos()
+function  getErrorPos()
     local str = ''
     local i = 2
     while debug.getinfo(i, 'ln') ~= nil do
@@ -25,11 +25,13 @@ function print(...)
         for i = 1, select('#', ...) do
             local v = select(i, ...)
             local t = type(v)
-            if t == 'number' or t == 'table' or t == 'nil' then
+            if t == 'integer' or t == 'number' or t == 'table' then
                 v = tostring(v)
-            end
-
-            if type(v) ~= 'string' then
+            elseif t == 'nil' then
+                v = 'Nil'
+            elseif t == 'userdata' then
+                v = 'userdata'
+            elseif type(v) ~= 'string' then
                 v = ''
             end
 
@@ -51,7 +53,7 @@ function ID(id)
         return id
     end
     print('Wrong id fromat')
-    print(Utils.getErrorPos())
+    print(getErrorPos())
     return nil
 end
 
@@ -59,6 +61,12 @@ end
 ---@return string
 function ID2str(id)
     return string.pack(">I4", id)
+end
+
+function player2index(player)
+    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
+        if Player(i) == player then return i end
+    end
 end
 
 return Utils

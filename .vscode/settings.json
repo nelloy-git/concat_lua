@@ -12,6 +12,7 @@
         "src_dir",
         "dst_dir",
         "compiletime",
+        "bj_MAX_PLAYER_SLOTS",
         "BJDebugMsg",
         "RMinBJ",
         "RMaxBJ",

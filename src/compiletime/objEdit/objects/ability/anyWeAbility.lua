@@ -27,8 +27,7 @@ function AnyWeAbility:setEditorSuffix(data) self:addField(WeField.new("ansf", 's
 function AnyWeAbility:setHeroAbility(data) self:addField(WeField.new("aher", 'bool', 0, 0, data)) end
 ---@param data boolean
 function AnyWeAbility:setItemAbility(data) self:addField(WeField.new("aite", 'bool', 0, 0, data)) end
----Possible data: 'commoner'|'creeps'|'critters'|'demon'|'human'|'naga'|'nightelf'|'orc'|'other'|'undead'|'unknown'
----@param data string
+---@param data string|'commoner'|'creeps'|'critters'|'demon'|'human'|'naga'|'nightelf'|'orc'|'other'|'undead'|'unknown'
 function AnyWeAbility:setRace(data) self:addField(WeField.new("arac", 'string', 0, 0, data)) end
 ---@param data integer
 function AnyWeAbility:setButtonPositionNormalX(data) self:addField(WeField.new("abpx", 'int', 0, 0, data)) end
@@ -65,7 +64,7 @@ function AnyWeAbility:setMissileArt(data) self:addField(WeField.new("amat", 'str
 ---@param data integer
 function AnyWeAbility:setMissileSpeed(data) self:addField(WeField.new("amsp", 'int', 0, 0, data)) end
 ---@param data number
-function AnyWeAbility:setMissileArc(data) self:addField(WeField.new("amac", 'real', 0, 0, data)) end
+function AnyWeAbility:setMissileArc(data) self:addField(WeField.new("amac", 'unreal', 0, 0, data)) end
 ---@param data boolean
 function AnyWeAbility:setMissileHomingEnabled(data) self:addField(WeField.new("amho", 'bool', 0, 0, data)) end
 ---@param data integer
@@ -140,24 +139,24 @@ function AnyWeAbility:setLevelSkipRequirement(data) self:addField(WeField.new("a
 function AnyWeAbility:setTargetsAllowed(data, lvl) self:addField(WeField.new("atar", 'string', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setCastingTime(data, lvl) self:addField(WeField.new("acas", 'real', lvl, 0, data)) end
+function AnyWeAbility:setCastingTime(data, lvl) self:addField(WeField.new("acas", 'unreal', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setDurationNormal(data, lvl) self:addField(WeField.new("adur", 'real', lvl, 0, data)) end
+function AnyWeAbility:setDurationNormal(data, lvl) self:addField(WeField.new("adur", 'unreal', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setDurationHero(data, lvl) self:addField(WeField.new("ahdu", 'real', lvl, 0, data)) end
+function AnyWeAbility:setDurationHero(data, lvl) self:addField(WeField.new("ahdu", 'unreal', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setCooldown(data, lvl) self:addField(WeField.new("acdn", 'real', lvl, 0, data)) end
+function AnyWeAbility:setCooldown(data, lvl) self:addField(WeField.new("acdn", 'unreal', lvl, 0, data)) end
 ---@param data integer
 function AnyWeAbility:setManaCost(data, lvl) self:addField(WeField.new("amcs", 'int', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setAreaofEffect(data, lvl) self:addField(WeField.new("aare", 'real', lvl, 0, data)) end
+function AnyWeAbility:setAreaofEffect(data, lvl) self:addField(WeField.new("aare", 'unreal', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setCastRange(data, lvl) self:addField(WeField.new("aran", 'real', lvl, 0, data)) end
+function AnyWeAbility:setCastRange(data, lvl) self:addField(WeField.new("aran", 'unreal', lvl, 0, data)) end
 ---@param data string
 function AnyWeAbility:setBuffs(data, lvl) self:addField(WeField.new("abuf", 'string', lvl, 0, data)) end
 ---@param data string

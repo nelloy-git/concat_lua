@@ -38,6 +38,12 @@ function ObjEdit.init(src_path, dst_path)
     ObjEdit.Unit.Hero = require('compiletime.objEdit.objects.unit.weHero')
     ---@type WeUnit
     ObjEdit.Unit.Unit = require('compiletime.objEdit.objects.unit.weUnit')
+
+    -- Presets
+    ObjEdit.Preset = {}
+    ---@type ChannelWePreset
+    ObjEdit.Preset.Channel = require('compiletime.objEdit.preset.channel')
+
 end
 
 ---Function finish object editing.
