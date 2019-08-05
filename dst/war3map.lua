@@ -6,113 +6,84 @@
     end
     return __require_data.result[name]
   end
-__require_data.module["unit.abilities.ability"] = function()
+__require_data.module["ability.abilityEvent"] = function()
+    local Ability = require("ability.ability")
     local Timer = require("utils.timer")
     local Trigger = require("trigger.trigger")
-    local Ability = {}
-    local Ability_meta = {__index = Ability}
-    local initialized = false
-    local AbilityDB = {}
+    local AbilityEvent = {}
     local CasterDB = {}
     local timer_precision = 0.05
     local CastingTimer = nil
-    function Ability.init()
+    function AbilityEvent.init()
+      print("Abilities events initialized")
       CastingTimer = Timer.new(timer_precision)
       local casting_trigger = Trigger.new()
       casting_trigger:addEvent_AnyUnitSpellChannel()
-      casting_trigger:addAction(Ability.startCast)
+      casting_trigger:addAction(AbilityEvent.startCast)
       local trigger = Trigger.new()
       trigger:addEvent_AnyUnitIssuedOrder()
       trigger:addEvent_AnyUnitIssuedOrderTarget()
       trigger:addEvent_AnyUnitIssuedOrderPointTarget()
       trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
       trigger:addAction(function()
-          local unit = GetOrderedUnit()
-          CasterDB[unit] = nil
+          CasterDB[GetOrderedUnit()] = nil
       end)
-      print("Abilities initialized")
-      initialized = true
+      print("Abilities events initialized")
     end
-    function Ability.startCast()
-      local ability = AbilityDB[GetSpellAbilityId()]
+    function AbilityEvent.startCast()
+      local ability = Ability.getAbility(GetSpellAbilityId())
       if (ability == nil) then
         return nil
       end
       local caster = GetSpellAbilityUnit()
+      local target = GetSpellTargetUnit() or GetSpellTargetItem() or GetSpellTargetDestructable()
       local x = GetSpellTargetX()
       local y = GetSpellTargetY()
-      local target = GetSpellTargetUnit() or GetSpellTargetItem() or GetSpellTargetDestructable()
-      local continue = true
-      if (ability.start_callback ~= nil) then
-        continue = ability.start_callback(caster, x, y, target)
-      end
+      local continue = ability.start(caster, target, x, y)
       if (not continue) then
         return nil
       end
-      local data = {ability = ability, caster = caster, x = x, y = y, target = target, time = 0, cast_time = ability.getCastTime(caster)}
-      CasterDB[caster] = {ability = ability, time = 0, cast_time = data.cast_time}
-      CastingTimer:addAction(timer_precision, Ability.timerCallback, data)
+      local data = {ability = ability, caster = caster, target = target, x = x, y = y, time = 0, full_time = ability.getCastTime(caster)}
+      CasterDB[caster] = {ability = ability, time = 0, full_time = data.full_time}
+      CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
     end
-    function Ability.timerCallback(data)
+    function AbilityEvent.timerCallback(data)
       local caster_data = CasterDB[data.caster]
       if (caster_data == nil) then
-        if (data.ability.interrupt_callback ~= nil) then
-          data.ability.interrupt_callback(data.caster, data.time, data.cast_time, data.x, data.y, data.target)
-        end
+        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        CasterDB[data.caster] = nil
         return nil
       end
-      local cur_ability = CasterDB[data.caster].ability
-      local cur_time = CasterDB[data.caster].time
+      local cur_ability = caster_data.ability
+      local cur_time = caster_data.time
       if (cur_ability ~= data.ability or cur_time ~= data.time) then
-        if (data.ability.interrupt_callback ~= nil) then
-          data.ability.interrupt_callback(data.caster, data.time, data.cast_time, data.x, data.y, data.target)
-        end
+        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
       data.time = (data.time+timer_precision)
-      if (data.time >= data.cast_time) then
-        if (data.ability.finish_callback ~= nil) then
-          data.ability.finish_callback(data.caster, data.cast_time, data.x, data.y, data.target)
-        end
+      if (data.time >= data.full_time) then
+        data.ability.finish(data.caster, data.target, data.x, data.y, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
-      local continue = true
-      if (data.ability.casting_callback ~= nil) then
-        continue = data.ability.casting_callback(data.caster, data.time, data.cast_time, data.x, data.y, data.target)
-      end
-      if (continue) then
-        CastingTimer:addAction(timer_precision, Ability.timerCallback, data)
-      end
       CasterDB[data.caster].time = data.time
+      local continue = data.ability.casting(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+      if (continue) then
+        CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
+      else
+        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        CasterDB[data.caster] = nil
+      end
     end
-    function Ability.getUnitCastingAbility(caster)
+    function AbilityEvent.getUnitCastingData(caster)
       local data = CasterDB[caster]
       if (data == nil) then
         return nil, -1, -1
       end
-      return data.ability, data.time, data.cast_time
+      return data.ability, data.time, data.full_time
     end
-    function Ability.new(id, start_callback, casting_callback, interrupt_callback, finish_callback)
-      local ability = {id = ID(id), start_callback = start_callback, casting_callback = casting_callback, interrupt_callback = interrupt_callback, finish_callback = finish_callback}
-      print(ability.id)
-      setmetatable(ability, Ability_meta)
-      AbilityDB[ID(id)] = ability
-      return ability
-    end
-    function Ability:getId()
-      return self.id
-    end
-    function Ability:getName()
-      print("Ability:getName() have to be redefined in child class")
-      print(getErrorPos())
-    end
-    function Ability:getCastTime()
-      print("Ability:getCastTime() have to be redefined in child class")
-      print(getErrorPos())
-    end
-    return Ability
+    return AbilityEvent
 end
 __require_data.module["player.unitsSelected"] = function()
     local Trigger = require("trigger.trigger")
@@ -162,7 +133,7 @@ __require_data.module["player.unitsSelected"] = function()
 end
 __require_data.module["interface.frames.castBar"] = function()
     local SelectedUnits = require("player.unitsSelected")
-    local Ability = require("unit.abilities.ability")
+    local AbilityEvent = require("ability.abilityEvent")
     local castBar = {}
     function castBar.init()
       TriggerSleepAction(1)
@@ -188,9 +159,9 @@ __require_data.module["interface.frames.castBar"] = function()
           return nil
         end
         local unit = selected_units[1]
-        local abil, time, cast_time = Ability.getUnitCastingAbility(unit)
+        local abil, time, full_time = AbilityEvent.getUnitCastingData(unit)
         if (time >= 0) then
-          BlzFrameSetValue(castProgressBar, ((100*time)/cast_time))
+          BlzFrameSetValue(castProgressBar, ((100*time)/full_time))
           BlzFrameSetText(castProgressBarText, abil.getName())
           BlzFrameSetVisible(castProgressBar, true)
         else
@@ -1064,6 +1035,44 @@ __require_data.module["utils.timer"] = function()
     end
     return Timer
 end
+__require_data.module["ability.ability"] = function()
+    local Timer = require("utils.timer")
+    local Trigger = require("trigger.trigger")
+    local Ability = {}
+    local Ability_meta = {__index = Ability}
+    local AbilityDB = {}
+    function Ability.new(id)
+      local ability = {id = ID(id)}
+      setmetatable(ability, Ability_meta)
+      AbilityDB[ID(id)] = ability
+      return ability
+    end
+    function Ability:getId()
+      return self.id
+    end
+    function Ability.getAbility(id)
+      return AbilityDB[ID(id)]
+    end
+    function Ability.start(caster, target, x, y)
+      return true
+    end
+    function Ability.casting(caster, target, x, y, cur_time, full_time)
+      return true
+    end
+    function Ability.interrupt(caster, target, x, y, cur_time, full_time)
+
+    end
+    function Ability.finish(caster, target, x, y, full_time)
+
+    end
+    function Ability.getCastTime()
+      return 0
+    end
+    function Ability.getName()
+      return ""
+    end
+    return Ability
+end
 __require_data.module["unit.parameters.unitMathParameter"] = function()
     local UnitMathParameter = {}
     local val_for_half_cap = 300
@@ -1373,23 +1382,26 @@ __require_data.module["unit.parameters.unitParameterContainer"] = function()
     end
     return ParameterContainer
 end
-__require_data.module["unit.abilities.spiritMage.summonSwordman"] = function()
+__require_data.module["ability.spiritMage.summonSwordman"] = function()
     local Unit = require("unit.unit")
-    local Ability = require("unit.abilities.ability")
-    local id = {order = "absorb", unit = "x##$", abil = "AM#&"}
-    local function finish(caster, full_casting_time, target_x, target_y, target)
+    local Ability = require("ability.ability")
+    local id = {abil = "AM#&", unit = "x##$", order = "absorb"}
+    local SummonCrystalSwordmanAbility = Ability.new(id.abil)
+    function SummonCrystalSwordmanAbility.start(caster, target, x, y)
+      return true
+    end
+    function SummonCrystalSwordmanAbility.casting(caster, target, x, y, cur_time, full_time)
+      return true
+    end
+    function SummonCrystalSwordmanAbility.interrupt(caster, target, x, y, cur_time, full_time)
+      print("Interrupt")
+    end
+    function SummonCrystalSwordmanAbility.finish(caster, target, x, y, full_time)
       local owner = caster:getOwningPlayerIndex()
-      local unit = Unit.new(owner, id.unit, target_x, target_y, caster:getFacing())
-      print("Finish")
+      local unit = Unit.new(owner, id.unit, x, y, caster:getFacing())
       unit:setVertexColor(1, 1, 1, 0.35)
-      print("Finish")
       unit.parameter:setAttacksPerSec(1)
-      print("Finish")
     end
-    local function interrupt()
-      print("Interrupted.")
-    end
-    local SummonCrystalSwordmanAbility = Ability.new(id.abil, nil, nil, interrupt, finish)
     function SummonCrystalSwordmanAbility.getName()
       return "Summon crystal swordman"
     end
@@ -1466,8 +1478,8 @@ __require_data.module["utils.utils"] = function()
 end
   
   local utils = require("utils.utils")
-  local SummonCrystalWarriorAbility = require("unit.abilities.spiritMage.summonSwordman")
-  local Ability = require("unit.abilities.ability")
+  local SummonCrystalWarriorAbility = require("ability.spiritMage.summonSwordman")
+  local AbilityEvent = require("ability.abilityEvent")
   local Unit = require("unit.unit")
   local UnitSelection = require("player.unitsSelected")
   GG_trg_Melee_Initialization = nil
@@ -1486,7 +1498,8 @@ end
     MeleeInitVictoryDefeat()
     castBar.init()
     UnitSelection.init()
-    Ability.init()
+    print(AbilityEvent)
+    AbilityEvent.init()
     local u1 = Unit.new(0, "hfoo", 0, 0, 0)
     print(SummonCrystalWarriorAbility:getId())
     u1:addAbility(SummonCrystalWarriorAbility:getId())

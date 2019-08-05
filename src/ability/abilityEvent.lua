@@ -5,12 +5,12 @@ local Timer = require('utils.timer')
 ---@type Trigger
 local Trigger = require('trigger.trigger')
 
-local Init = require('utils.init')
+--local Init = require('utils.init')
 
 ---@class AbilityEvent
 local AbilityEvent = {}
 -- Automate init function.
-Init.add(AbilityEvent)
+--Init.add(AbilityEvent)
 
 ---@type table<Unit, table>
 local CasterDB = {}
@@ -19,6 +19,7 @@ local timer_precision = 0.05
 local CastingTimer = nil
 
 function AbilityEvent.init()
+    print('Abilities events initialized')
     -- Init casting timer
     CastingTimer = Timer.new(timer_precision)
 
@@ -37,8 +38,7 @@ function AbilityEvent.init()
     trigger:addAction(function()
             CasterDB[GetOrderedUnit()] = nil
         end)
-    print('Abilities initialized')
-    initialized = true
+    print('Abilities events initialized')
 end
 
 ---Calls this function when eny unit starts casting ability.
@@ -106,7 +106,7 @@ function AbilityEvent.timerCallback(data)
     -- Should unit continue casting or its broken.
     local continue = data.ability.casting(data.caster, data.target, data.x, data.y, data.time, data.full_time)
     if continue then
-        CastingTimer:addAction(timer_precision, Ability.timerCallback, data)
+        CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
     else
         data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
@@ -120,3 +120,5 @@ function AbilityEvent.getUnitCastingData(caster)
     if data == nil then return nil, -1, -1 end
     return data.ability, data.time, data.full_time
 end
+
+return AbilityEvent

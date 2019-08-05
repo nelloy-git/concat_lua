@@ -8,9 +8,9 @@ compiletime(
 ---@type Utils    
 local utils = require('utils.utils')
 ---@type SummonCrystalSwordmanAbility
-local SummonCrystalWarriorAbility = require('unit.abilities.spiritMage.summonSwordman')
----@type Ability
-local Ability = require('unit.abilities.ability')
+local SummonCrystalWarriorAbility = require('ability.spiritMage.summonSwordman')
+
+local AbilityEvent = require('ability.abilityEvent')
 
 ---@type Interface
 --local Interface = require('interface.interface')
@@ -38,7 +38,8 @@ function Trig_Melee_Initialization_Actions()
 
     castBar.init()
     UnitSelection.init()
-    Ability.init()
+    print(AbilityEvent)
+    AbilityEvent.init()
 
     --Interface.init()
     local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
