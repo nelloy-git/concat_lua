@@ -1,4 +1,5 @@
 local SelectedUnits = require('player.unitsSelected')
+---@type AbilityEvent
 local AbilityEvent = require('ability.abilityEvent')
 
 local castBar = {}
@@ -32,11 +33,11 @@ function castBar.init()
         end
 
         local unit = selected_units[1]
-        local abil, time, full_time = AbilityEvent.getUnitCastingData(unit)
+        local ability, time, full_time = AbilityEvent.getUnitCastingData(unit)
 
         if time >= 0 then
             BlzFrameSetValue(castProgressBar, 100 * time / full_time)
-            BlzFrameSetText(castProgressBarText, abil.getName())
+            BlzFrameSetText(castProgressBarText, ability:getName())
             BlzFrameSetVisible(castProgressBar, true)
         else
             BlzFrameSetVisible(castProgressBar, false)

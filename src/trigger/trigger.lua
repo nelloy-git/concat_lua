@@ -153,7 +153,7 @@ function Trigger:addEvent_AnyUnitDeath() for i = 0, bj_MAX_PLAYER_SLOTS - 1 do T
 ---@return nil
 function Trigger:addEvent_AnyUnitDecay() for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DECAY) end end
 ---@return nil
-function Trigger:addEvent_AnyUnitDeath() for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DETECTED) end end
+function Trigger:addEvent_AnyUnitDetect() for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DETECTED) end end
 ---@return nil
 function Trigger:addEvent_AnyUnitHidden() for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_HIDDEN) end end
 ---@return nil

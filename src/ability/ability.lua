@@ -18,7 +18,7 @@ local AbilityDB = {}
 ---@alias AbilityGetCastTime fun(self:Ability, caster:Unit):number
 
 ---Create new Ability instance.
----@param id string|string
+---@param id string|integer
 ---@return Ability
 function Ability.new(id)
     ---@type integer
@@ -52,12 +52,13 @@ end
 
 ---@return integer
 function Ability:getId()
+    print(self.id)
     return self.id
 end
 
 ---Function sets callback for ability events.
 ---@param callback AbilityStartCallback|AbilityCastingCallback|AbilityInterruptCallback|AbilityFinishCallback
----@param type string|"\"start\""|"\"casting\""|"\"interrupt\""|"\"finish\""
+---@param type string|"start"|"casting"|"interrupt"|"finish"
 function Ability:setCallback(callback, type)
     if type == 'start' then
         ---@type AbilityStartCallback

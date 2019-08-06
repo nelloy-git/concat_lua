@@ -1,7 +1,5 @@
 ---@type UnitParameterContainer
 local ParameterContainer = require('unit.parameters.unitParameterContainer')
----@type Timer
-local Timer = require('utils.timer')
 
 ---@class UnitObject : userdata
 
@@ -31,7 +29,7 @@ function Unit.new(player_id, unit_id, x, y, face)
 
     ---@type Unit
     local instance = {
-        id = ID2str(unit_id),
+        id = unit_id,
         unit_obj = CreateUnit(Player(player_id), unit_id, x, y, face)
     }
     setmetatable(instance, {__index = Unit})
@@ -52,7 +50,7 @@ function Unit.newCorpse(player_id, unit_id, x, y, face)
     unit_id = ID(unit_id)
 
     local instance = {
-        id = ID2str(unit_id),
+        id = unit_id,
         ---@type UnitObject
         unit_obj = CreateCorpse(Player(player_id), unit_id, x, y, face)
     }
@@ -67,6 +65,11 @@ end
 function Unit:prepareCustomData()
     ---@type UnitParameterContainer
     self.parameter = ParameterContainer.new(self)
+end
+
+---@return integer
+function Unit:getId()
+    return self.id
 end
 
 local function to_range(val, min, max)
@@ -94,10 +97,18 @@ function Unit:getOwningPlayerIndex() return player2index(GetOwningPlayer(self.un
 ---@return number
 function Unit:getFacing() return GetUnitFacing(self.unit_obj) end
 
----@param
+---@param abil_id string|integer
 function Unit:addAbility(abil_id)
-    abil_id = ID(abil_id)
-    UnitAddAbility(self.unit_obj, abil_id)
+    UnitAddAbility(self.unit_obj, ID(abil_id))
+end
+
+---@param flag boolean
+function Unit:setInvulnerable(flag)
+    SetUnitInvulnerable(self.unit_obj, flag)
+end
+
+function Unit:applyTimedLife(time)
+    UnitApplyTimedLife(self.unit_obj, 0, time)
 end
 
 function Unit:issueImmediateOrderById(order_id)

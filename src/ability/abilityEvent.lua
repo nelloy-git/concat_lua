@@ -49,7 +49,7 @@ local function generateDataForCast(ability, caster, target, x, y)
         x = x,
         y = y,
         time = 0,
-        full_time = ability.getCastTime(caster)
+        full_time = ability:getCastTime(caster)
     }
     ---@class UnitCastingData
     local unit_data = {
@@ -89,10 +89,11 @@ end
 ---CastTimer calls this function every loop for every casting ability.
 ---@param data AbilityCastingData
 function AbilityEvent.timerPeriod(data)
+    local ability = data.ability
     -- Is interupted (unit cast is not found)
     local caster_data = CasterDB[data.caster]
     if caster_data == nil then
-        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
     end
@@ -101,7 +102,7 @@ function AbilityEvent.timerPeriod(data)
     local cur_ability = caster_data.ability
     local cur_time = caster_data.time
     if cur_ability ~= data.ability or cur_time ~= data.time then
-        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
     end
@@ -109,18 +110,18 @@ function AbilityEvent.timerPeriod(data)
     -- Is finished (timeout)
     data.time = data.time + timer_precision
     if data.time >= data.full_time then
-        data.ability.finish(data.caster, data.target, data.x, data.y, data.full_time)
+        ability:runCallback('finish', data.caster, data.target, data.x, data.y, data.full_time)
         CasterDB[data.caster] = nil
         return nil
     end
     CasterDB[data.caster].time = data.time
 
     -- Should unit continue casting or its broken.
-    local continue = data.ability.casting(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+    local continue = ability:runCallback('casting', data.caster, data.target, data.x, data.y, data.time, data.full_time)
     if continue then
         CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
     else
-        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
     end
 end

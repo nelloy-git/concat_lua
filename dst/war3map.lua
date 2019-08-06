@@ -15,7 +15,6 @@ __require_data.module["ability.abilityEvent"] = function()
     local timer_precision = 0.05
     local CastingTimer = nil
     function AbilityEvent.init()
-      print("Abilities events initialized")
       CastingTimer = Timer.new(timer_precision)
       local casting_trigger = Trigger.new()
       casting_trigger:addEvent_AnyUnitSpellChannel()
@@ -30,49 +29,61 @@ __require_data.module["ability.abilityEvent"] = function()
       end)
       print("Abilities events initialized")
     end
+    local function generateDataForCast(ability, caster, target, x, y)
+      local casting_data = {ability = ability, caster = caster, target = target, x = x, y = y, time = 0, full_time = ability:getCastTime(caster)}
+      local unit_data = {ability = ability, time = 0, full_time = casting_data.full_time}
+      return casting_data, unit_data
+    end
     function AbilityEvent.startCast()
       local ability = Ability.getAbility(GetSpellAbilityId())
       if (ability == nil) then
         return nil
       end
+      local target = GetSpellTargetUnit()
+      if (target == nil) then
+        target = GetSpellTargetItem()
+      end
+      if (target == nil) then
+        target = GetSpellTargetDestructable()
+      end
       local caster = GetSpellAbilityUnit()
-      local target = GetSpellTargetUnit() or GetSpellTargetItem() or GetSpellTargetDestructable()
       local x = GetSpellTargetX()
       local y = GetSpellTargetY()
-      local continue = ability.start(caster, target, x, y)
+      local continue = ability:runCallback("start", caster, target, x, y)
       if (not continue) then
         return nil
       end
-      local data = {ability = ability, caster = caster, target = target, x = x, y = y, time = 0, full_time = ability.getCastTime(caster)}
-      CasterDB[caster] = {ability = ability, time = 0, full_time = data.full_time}
-      CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
+      local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
+      CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
+      CasterDB[caster] = unit_data
     end
-    function AbilityEvent.timerCallback(data)
+    function AbilityEvent.timerPeriod(data)
+      local ability = data.ability
       local caster_data = CasterDB[data.caster]
       if (caster_data == nil) then
-        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
       local cur_ability = caster_data.ability
       local cur_time = caster_data.time
       if (cur_ability ~= data.ability or cur_time ~= data.time) then
-        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
       data.time = (data.time+timer_precision)
       if (data.time >= data.full_time) then
-        data.ability.finish(data.caster, data.target, data.x, data.y, data.full_time)
+        ability:runCallback("finish", data.caster, data.target, data.x, data.y, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
       CasterDB[data.caster].time = data.time
-      local continue = data.ability.casting(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+      local continue = ability:runCallback("casting", data.caster, data.target, data.x, data.y, data.time, data.full_time)
       if (continue) then
-        CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
+        CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
       else
-        data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
+        ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
       end
     end
@@ -159,10 +170,10 @@ __require_data.module["interface.frames.castBar"] = function()
           return nil
         end
         local unit = selected_units[1]
-        local abil, time, full_time = AbilityEvent.getUnitCastingData(unit)
+        local ability, time, full_time = AbilityEvent.getUnitCastingData(unit)
         if (time >= 0) then
           BlzFrameSetValue(castProgressBar, ((100*time)/full_time))
-          BlzFrameSetText(castProgressBarText, abil.getName())
+          BlzFrameSetText(castProgressBarText, ability:getName())
           BlzFrameSetVisible(castProgressBar, true)
         else
           BlzFrameSetVisible(castProgressBar, false)
@@ -334,7 +345,7 @@ __require_data.module["trigger.trigger"] = function()
         TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DECAY)
       end
     end
-    function Trigger:addEvent_AnyUnitDeath()
+    function Trigger:addEvent_AnyUnitDetect()
       for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
         TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DETECTED)
       end
@@ -831,9 +842,18 @@ __require_data.module["trigger.trigger"] = function()
     end
     return Trigger
 end
+__require_data.module["unit.unitEvent"] = function()
+    local Trigger = require("trigger.trigger")
+    local UnitEvent = {}
+    function UnitEvent.init()
+      UnitEvent.death_trigger = Trigger.new()
+      UnitEvent.death_trigger:addEvent_AnyUnitDeath()
+      print("UnitEvent initialized")
+    end
+    return UnitEvent
+end
 __require_data.module["unit.unit"] = function()
     local ParameterContainer = require("unit.parameters.unitParameterContainer")
-    local Timer = require("utils.timer")
     local Unit = {}
     local UnitDB = {}
     function UnitDB.add(unit)
@@ -847,7 +867,7 @@ __require_data.module["unit.unit"] = function()
     end
     function Unit.new(player_id, unit_id, x, y, face)
       unit_id = ID(unit_id)
-      local instance = {id = ID2str(unit_id), unit_obj = CreateUnit(Player(player_id), unit_id, x, y, face)}
+      local instance = {id = unit_id, unit_obj = CreateUnit(Player(player_id), unit_id, x, y, face)}
       setmetatable(instance, {__index = Unit})
       instance:prepareCustomData()
       UnitDB.add(instance)
@@ -855,7 +875,7 @@ __require_data.module["unit.unit"] = function()
     end
     function Unit.newCorpse(player_id, unit_id, x, y, face)
       unit_id = ID(unit_id)
-      local instance = {id = ID2str(unit_id), unit_obj = CreateCorpse(Player(player_id), unit_id, x, y, face)}
+      local instance = {id = unit_id, unit_obj = CreateCorpse(Player(player_id), unit_id, x, y, face)}
       setmetatable(instance, {__index = Unit})
       instance:prepareCustomData()
       UnitDB.add(instance)
@@ -863,6 +883,9 @@ __require_data.module["unit.unit"] = function()
     end
     function Unit:prepareCustomData()
       self.parameter = ParameterContainer.new(self)
+    end
+    function Unit:getId()
+      return self.id
     end
     local function to_range(val, min, max)
       if (val < min) then
@@ -887,8 +910,13 @@ __require_data.module["unit.unit"] = function()
       return GetUnitFacing(self.unit_obj)
     end
     function Unit:addAbility(abil_id)
-      abil_id = ID(abil_id)
-      UnitAddAbility(self.unit_obj, abil_id)
+      UnitAddAbility(self.unit_obj, ID(abil_id))
+    end
+    function Unit:setInvulnerable(flag)
+      SetUnitInvulnerable(self.unit_obj, flag)
+    end
+    function Unit:applyTimedLife(time)
+      UnitApplyTimedLife(self.unit_obj, 0, time)
     end
     function Unit:issueImmediateOrderById(order_id)
       IssueImmediateOrderById(self.unit_obj, order_id)
@@ -1042,42 +1070,124 @@ __require_data.module["ability.ability"] = function()
     local Ability_meta = {__index = Ability}
     local AbilityDB = {}
     function Ability.new(id)
-      local ability = {id = ID(id), start = function()
+      id = ID(id)
+      local ability = {id = id, _start = function()
   return true
-end, casting = function()
+end, _casting = function()
   return true
-end, interrupt = function()
+end, _interrupt = function()
 
-end, finish = function()
+end, _finish = function()
 
 end}
       setmetatable(ability, Ability_meta)
-      AbilityDB[ID(id)] = ability
+      AbilityDB[id] = ability
       return ability
     end
+    function Ability.getAbility(id)
+      id = ID(id)
+      if (id) then
+        return AbilityDB[ID(id)]
+      end
+      return nil
+    end
     function Ability:getId()
+      print(self.id)
       return self.id
     end
-    function Ability.getAbility(id)
-      return AbilityDB[ID(id)]
+    function Ability:setCallback(callback, type)
+      if (type == "start") then
+        self._start = callback
+      end
+      if (type == "casting") then
+        self._casting = callback
+      end
+      if (type == "interrupt") then
+        self._interrupt = callback
+      end
+      if (type == "finish") then
+        self._finish = callback
+      end
     end
-    function Ability.start(caster, target, x, y)
-      return true
+    function Ability:runCallback(type, ...)
+      if (type == "start") then
+        return self._start(...)
+      end
+      if (type == "casting") then
+        return self._casting(...)
+      end
+      if (type == "interrupt") then
+        return self._interrupt(...)
+      end
+      if (type == "finish") then
+        return self._finish(...)
+      end
     end
-    function Ability.casting(caster, target, x, y, cur_time, full_time)
-      return true
+    function Ability:setCastTime(cast_time)
+      self.cast_time = cast_time
     end
-    function Ability.interrupt(caster, target, x, y, cur_time, full_time)
+    function Ability:getCastTime(caster)
+      if (type(self.cast_time) == "number") then
+        return self.cast_time
+      elseif (type(self.cast_time) == "function") then
+        return self.cast_time(caster)
+      end
 
-    end
-    function Ability.finish(caster, target, x, y, full_time)
-
-    end
-    function Ability.getCastTime()
       return 0
     end
-    function Ability.getName()
+    function Ability:setName(name)
+      self.name = name
+    end
+    function Ability:getName()
+      if (type(self.name) == "string") then
+        return self.name
+      elseif (type(self.name) == "function") then
+        return self.name()
+      end
+
       return ""
+    end
+    function Ability:setTooltip(tooltip, lvl, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityTooltip(self.id, tooltip, lvl)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityTooltip(self.id, tooltip, lvl)
+      end
+    end
+    function Ability:setExtendedTooltip(ext_tooltip, lvl, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityExtendedTooltip(self.id, ext_tooltip, lvl)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityExtendedTooltip(self.id, ext_tooltip, lvl)
+      end
+    end
+    function Ability:setIcon(icon_path, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityIcon(self.id, icon_path)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityIcon(self.id, icon_path)
+      end
+    end
+    function Ability:setPosition(x, y, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityPosX(self.id, x)
+        BlzSetAbilityPosY(self.id, y)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityPosX(self.id, x)
+        BlzSetAbilityPosY(self.id, y)
+      end
     end
     return Ability
 end
@@ -1256,7 +1366,9 @@ __require_data.module["unit.parameters.unitParameterContainer"] = function()
     function ParameterContainer.new(unit)
       local parameter_container = {owner = unit, attack = UnitParameter.new(unit, 1, ApplyParam.attack, MathParam.linear), attackSpeed = UnitParameter.new(unit, 2, ApplyParam.attackSpeed, MathParam.inverseLinear), armor = UnitParameter.new(unit, 0, ApplyParam.armor, MathParam.linear), spellPower = UnitParameter.new(unit, 0, ApplyParam.spellPower, MathParam.linear), castSpeed = UnitParameter.new(unit, 0, ApplyParam.castSpeed, MathParam.inversePercent, 25), resistance = UnitParameter.new(unit, 0, ApplyParam.resistance, MathParam.percent, 90), health = UnitParameter.new(unit, 100, ApplyParam.health, MathParam.linear), regeneration = UnitParameter.new(unit, 0, ApplyParam.regeneration, MathParam.linear), mana = UnitParameter.new(unit, 100, ApplyParam.mana, MathParam.linear), recovery = UnitParameter.new(unit, 0, ApplyParam.recovery, MathParam.linear), critChance = UnitParameter.new(unit, 0, ApplyParam.critChance, MathParam.percent, 100), critPower = UnitParameter.new(unit, 1, ApplyParam.critPower, MathParam.linear), dodge = UnitParameter.new(unit, 0, ApplyParam.dodgeChance, MathParam.percent, 75), cooldown = UnitParameter.new(unit, 0, ApplyParam.cooldown, MathParam.percent, 75)}
       setmetatable(parameter_container, ParameterContainer_meta)
-      if (unit.id:sub(1, 1) == string.upper(unit.id:sub(1, 1))) then
+      local string_id = ID2str(unit:getId())
+      local first = string_id:sub(1, 1)
+      if (first == string.upper(first)) then
         parameter_container.strength = UnitParameter.new(unit, 1, ApplyParam.strength, MathParam.linear)
         parameter_container.agility = UnitParameter.new(unit, 1, ApplyParam.agility, MathParam.linear)
         parameter_container.intelligence = UnitParameter.new(unit, 1, ApplyParam.intelligence, MathParam.linear)
@@ -1392,29 +1504,51 @@ __require_data.module["unit.parameters.unitParameterContainer"] = function()
 end
 __require_data.module["ability.spiritMage.summonSwordman"] = function()
     local Unit = require("unit.unit")
+    local UnitEvent = require("unit.unitEvent")
     local Ability = require("ability.ability")
-    local id = {order = "absorb", abil = "AM#&", unit = "x##$"}
+    local Name = "Summon Crystal Swordman"
+    local Cooldown = 10
+    local id = {order = "absorb", unit = "x##$", abil = "AM#&"}
+    local SlaveToMaster = {}
+    local MasterToSlaves = {}
+    local finish = function(caster, target, x, y, full_time)
+        local owner = caster:getOwningPlayerIndex()
+        local unit = Unit.new(owner, id.unit, x, y, caster:getFacing())
+        unit:setVertexColor(1, 1, 1, 0.35)
+        unit:applyTimedLife(10)
+        SlaveToMaster[unit] = owner
+        if (MasterToSlaves[owner] == nil) then
+          MasterToSlaves[owner] = {}
+        end
+        table.insert(MasterToSlaves[owner], 1, unit)
+        print(#MasterToSlaves[owner])
+        unit.parameter:setAttacksPerSec(1)
+    end
     local SummonCrystalSwordmanAbility = Ability.new(id.abil)
-    function SummonCrystalSwordmanAbility.start(caster, target, x, y)
-      return true
-    end
-    function SummonCrystalSwordmanAbility.casting(caster, target, x, y, cur_time, full_time)
-      return true
-    end
-    function SummonCrystalSwordmanAbility.interrupt(caster, target, x, y, cur_time, full_time)
-      print("Interrupt")
-    end
-    function SummonCrystalSwordmanAbility.finish(caster, target, x, y, full_time)
-      local owner = caster:getOwningPlayerIndex()
-      local unit = Unit.new(owner, id.unit, x, y, caster:getFacing())
-      unit:setVertexColor(1, 1, 1, 0.35)
-      unit.parameter:setAttacksPerSec(1)
-    end
-    function SummonCrystalSwordmanAbility.getName()
-      return "Summon crystal swordman"
-    end
-    function SummonCrystalSwordmanAbility.getCastTime()
-      return 3
+    SummonCrystalSwordmanAbility:setCallback(finish, "finish")
+    SummonCrystalSwordmanAbility:setName("Summon Crystal Swordman")
+    SummonCrystalSwordmanAbility:setCastTime(2)
+    function SummonCrystalSwordmanAbility.init()
+      UnitEvent.death_trigger:addAction(function()
+          local unit = GetDyingUnit()
+          local dying_id = unit:getId()
+          if (dying_id == ID(id.unit)) then
+            local master = SlaveToMaster[unit]
+            local slaves = MasterToSlaves[master]
+            local changed_slaves = {}
+            for i = 1, #slaves do
+              if (slaves[i] ~= unit) then
+                table.insert(changed_slaves, 1, slaves[i])
+              end
+            end
+            SlaveToMaster[unit] = nil
+            if (#changed_slaves > 0) then
+              MasterToSlaves[master] = changed_slaves
+            else
+              MasterToSlaves[master] = nil
+            end
+          end
+      end)
     end
     return SummonCrystalSwordmanAbility
 end
@@ -1489,6 +1623,7 @@ end
   local SummonCrystalWarriorAbility = require("ability.spiritMage.summonSwordman")
   local AbilityEvent = require("ability.abilityEvent")
   local Unit = require("unit.unit")
+  local UnitEvent = require("unit.unitEvent")
   local UnitSelection = require("player.unitsSelected")
   GG_trg_Melee_Initialization = nil
   function InitGlobals()
@@ -1506,10 +1641,10 @@ end
     MeleeInitVictoryDefeat()
     castBar.init()
     UnitSelection.init()
-    print(AbilityEvent)
     AbilityEvent.init()
+    UnitEvent.init()
+    SummonCrystalWarriorAbility.init()
     local u1 = Unit.new(0, "hfoo", 0, 0, 0)
-    print(SummonCrystalWarriorAbility:getId())
     u1:addAbility(SummonCrystalWarriorAbility:getId())
   end
   function InitTrig_Melee_Initialization()

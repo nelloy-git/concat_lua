@@ -38,7 +38,9 @@ function ParameterContainer.new(unit)
     setmetatable(parameter_container, ParameterContainer_meta)
 
     -- Add hero stats
-    if unit.id:sub(1,1) == string.upper(unit.id:sub(1,1)) then
+    local string_id = ID2str(unit:getId())
+    local first = string_id:sub(1, 1)
+    if first == string.upper(first) then
         parameter_container.strength = UnitParameter.new(unit, 1, ApplyParam.strength, MathParam.linear)
         parameter_container.agility = UnitParameter.new(unit, 1, ApplyParam.agility, MathParam.linear)
         parameter_container.intelligence = UnitParameter.new(unit, 1, ApplyParam.intelligence, MathParam.linear)

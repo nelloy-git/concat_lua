@@ -7,7 +7,7 @@ compiletime(
 
 ---@type Utils    
 local utils = require('utils.utils')
----@type SummonCrystalSwordmanAbility
+---@type Ability
 local SummonCrystalWarriorAbility = require('ability.spiritMage.summonSwordman')
 
 local AbilityEvent = require('ability.abilityEvent')
@@ -17,6 +17,8 @@ local AbilityEvent = require('ability.abilityEvent')
 
 ---@type Unit
 local Unit = require('unit.unit')
+---@type UnitEvent
+local UnitEvent = require('unit.unitEvent')
 
 local UnitSelection = require('player.unitsSelected')
 
@@ -38,12 +40,12 @@ function Trig_Melee_Initialization_Actions()
 
     castBar.init()
     UnitSelection.init()
-    print(AbilityEvent)
     AbilityEvent.init()
+    UnitEvent.init()
+    SummonCrystalWarriorAbility.init()
 
     --Interface.init()
     local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
-    print(SummonCrystalWarriorAbility:getId())
     u1:addAbility(SummonCrystalWarriorAbility:getId())
     --local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
 end

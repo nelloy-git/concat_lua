@@ -1,3 +1,0 @@
-local AbilityUtils = {}
-
-return AbilityUtils
