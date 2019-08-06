@@ -3,6 +3,15 @@ local Unit = require('unit.unit')
 ---@type Ability
 local Ability = require('ability.ability')
 
+--
+-- Ability data
+--
+local Name = 'Summon Crystal Swordman'
+
+--
+--
+--
+
 local id = compiletime(
     function()
         local id = {
@@ -26,61 +35,20 @@ local id = compiletime(
         return id
     end)
 
----@class SummonCrystalSwordmanAbility : Ability
-local SummonCrystalSwordmanAbility = Ability.new(id.abil)
 
---- Do nothing.
----@param caster Unit
----@param target Unit|userdata|nil
----@param x number
----@param y number
----@return boolean
-function SummonCrystalSwordmanAbility.start(caster, target, x, y)
-    return true
-end
-
---- Do nothing.
----@param caster Unit
----@param target Unit|userdata|nil
----@param x number
----@param y number
----@param cur_time number
----@param full_time number
----@return boolean
-function SummonCrystalSwordmanAbility.casting(caster, target, x, y, cur_time, full_time)
-    return true
-end
-
---- Print 'Interrupt'
----@param caster Unit
----@param target Unit|userdata|nil
----@param x number
----@param y number
----@param cur_time number
----@param full_time number
-function SummonCrystalSwordmanAbility.interrupt(caster, target, x, y, cur_time, full_time)
-    print('Interrupt')
-end
-
---- Summon crystall swordman.
----@param caster Unit
----@param target Unit|userdata|nil
----@param x number
----@param y number
----@param full_time number
-function SummonCrystalSwordmanAbility.finish(caster, target, x, y, full_time)
+---@type AbilityFinishCallback
+local finish = function(caster, target, x, y, full_time)
     local owner = caster:getOwningPlayerIndex()
     local unit = Unit.new(owner, id.unit, x, y, caster:getFacing())
     unit:setVertexColor(1, 1, 1, 0.35)
     unit.parameter:setAttacksPerSec(1)
 end
 
-function SummonCrystalSwordmanAbility.getName()
-    return 'Summon crystal swordman'
-end
+---@type Ability
+local SummonCrystalSwordmanAbility = Ability.new(id.abil)
+SummonCrystalSwordmanAbility:setCallback(finish, "finish")
+SummonCrystalSwordmanAbility:setName('Summon Crystal Swordman')
+SummonCrystalSwordmanAbility:s
 
-function SummonCrystalSwordmanAbility.getCastTime()
-    return 3
-end
 
 return SummonCrystalSwordmanAbility

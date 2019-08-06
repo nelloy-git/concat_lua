@@ -136,7 +136,7 @@ __require_data.module["interface.frames.castBar"] = function()
     local AbilityEvent = require("ability.abilityEvent")
     local castBar = {}
     function castBar.init()
-      TriggerSleepAction(1)
+      TriggerSleepAction(0)
       local toc_file = "war3mapImported\\frame_files\\MyBar.toc"
       if (not BlzLoadTOCFile(toc_file)) then
         print("Error in "..toc_file)
@@ -1042,7 +1042,15 @@ __require_data.module["ability.ability"] = function()
     local Ability_meta = {__index = Ability}
     local AbilityDB = {}
     function Ability.new(id)
-      local ability = {id = ID(id)}
+      local ability = {id = ID(id), start = function()
+  return true
+end, casting = function()
+  return true
+end, interrupt = function()
+
+end, finish = function()
+
+end}
       setmetatable(ability, Ability_meta)
       AbilityDB[ID(id)] = ability
       return ability
@@ -1385,7 +1393,7 @@ end
 __require_data.module["ability.spiritMage.summonSwordman"] = function()
     local Unit = require("unit.unit")
     local Ability = require("ability.ability")
-    local id = {abil = "AM#&", unit = "x##$", order = "absorb"}
+    local id = {order = "absorb", abil = "AM#&", unit = "x##$"}
     local SummonCrystalSwordmanAbility = Ability.new(id.abil)
     function SummonCrystalSwordmanAbility.start(caster, target, x, y)
       return true

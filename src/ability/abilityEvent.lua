@@ -12,14 +12,13 @@ local AbilityEvent = {}
 -- Automate init function.
 --Init.add(AbilityEvent)
 
----@type table<Unit, table>
+---@type table<Unit, UnitCastingData>
 local CasterDB = {}
 
 local timer_precision = 0.05
 local CastingTimer = nil
 
 function AbilityEvent.init()
-    print('Abilities events initialized')
     -- Init casting timer
     CastingTimer = Timer.new(timer_precision)
 
@@ -41,25 +40,9 @@ function AbilityEvent.init()
     print('Abilities events initialized')
 end
 
----Calls this function when eny unit starts casting ability.
-function AbilityEvent.startCast()
-    ---@type Ability
-    local ability = Ability.getAbility(GetSpellAbilityId())
-    if ability == nil then return nil end
-    ---@type Unit
-    local caster = GetSpellAbilityUnit()
-    ---@type Unit|userdata|nil
-    local target = GetSpellTargetUnit() or GetSpellTargetItem() or GetSpellTargetDestructable()
-    ---@type number
-    local x = GetSpellTargetX()
-    ---@type number
-    local y = GetSpellTargetY()
-
-    local continue = ability.start(caster, target, x, y)
-    if not continue then return nil end
-
-    -- Data for current cast.
-    local data = {
+local function generateDataForCast(ability, caster, target, x, y)
+    ---@class AbilityCastingData
+    local casting_data = {
         ability = ability,
         caster = caster,
         target = target,
@@ -68,15 +51,44 @@ function AbilityEvent.startCast()
         time = 0,
         full_time = ability.getCastTime(caster)
     }
-
-    -- Saves data to unit.
-    CasterDB[caster] = {ability = ability, time = 0, full_time = data.full_time}
-    -- Start timer
-    CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
+    ---@class UnitCastingData
+    local unit_data = {
+        ability = ability,
+        time = 0,
+        full_time = casting_data.full_time
+    }
+    return casting_data, unit_data
 end
 
---- CastTimer calls this function every loop for every casting ability.
-function AbilityEvent.timerCallback(data)
+---Calls this function when eny unit starts casting ability.
+function AbilityEvent.startCast()
+    ---@type Ability
+    local ability = Ability.getAbility(GetSpellAbilityId())
+    if ability == nil then return nil end
+    ---@type Unit|userdata|nil
+    local target = GetSpellTargetUnit()
+    if target == nil then target = GetSpellTargetItem() end
+    if target == nil then target = GetSpellTargetDestructable() end
+    ---@type Unit
+    local caster = GetSpellAbilityUnit()
+    ---@type number
+    local x = GetSpellTargetX()
+    ---@type number
+    local y = GetSpellTargetY()
+
+    local continue = ability:runCallback('start', caster, target, x, y)
+    if not continue then return nil end
+
+    -- Data for current cast.
+    local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
+    -- Start timer
+    CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
+    CasterDB[caster] = unit_data
+end
+
+---CastTimer calls this function every loop for every casting ability.
+---@param data AbilityCastingData
+function AbilityEvent.timerPeriod(data)
     -- Is interupted (unit cast is not found)
     local caster_data = CasterDB[data.caster]
     if caster_data == nil then
@@ -106,7 +118,7 @@ function AbilityEvent.timerCallback(data)
     -- Should unit continue casting or its broken.
     local continue = data.ability.casting(data.caster, data.target, data.x, data.y, data.time, data.full_time)
     if continue then
-        CastingTimer:addAction(timer_precision, AbilityEvent.timerCallback, data)
+        CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
     else
         data.ability.interrupt(data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
