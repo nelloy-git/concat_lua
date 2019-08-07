@@ -1,7 +1,7 @@
 local Init = {}
 
 function Init.start()
-    for name, _ in __require_data.module do
+    for name, _ in pairs(__require_data.module) do
         __require_data.result[name] = __require_data.module[name]()
         if __require_data.result[name].init ~= nil then
             __require_data.result[name].init()

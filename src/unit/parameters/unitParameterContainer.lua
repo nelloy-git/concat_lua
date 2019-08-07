@@ -1,7 +1,7 @@
 ---@type UnitParameter
 local UnitParameter = require('unit.parameters.unitParameter')
 ---@type UnitApplyParameter
---local ApplyParam = require('unit.parameters.unitApplyParameter')
+local ApplyParam = require('unit.parameters.unitApplyParameter')
 ---@type UnitMathParameter
 local MathParam = require('unit.parameters.unitMathParameter')
 

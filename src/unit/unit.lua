@@ -1,5 +1,7 @@
 ---@type UnitParameterContainer
 local ParameterContainer = require('unit.parameters.unitParameterContainer')
+---@type Ability
+local Ability = require('ability.ability')
 
 ---@class UnitObject : userdata
 
@@ -97,9 +99,9 @@ function Unit:getOwningPlayerIndex() return player2index(GetOwningPlayer(self.un
 ---@return number
 function Unit:getFacing() return GetUnitFacing(self.unit_obj) end
 
----@param abil_id string|integer
-function Unit:addAbility(abil_id)
-    UnitAddAbility(self.unit_obj, ID(abil_id))
+---@param ability Ability
+function Unit:addAbility(ability)
+    UnitAddAbility(self.unit_obj, ability:getId())
 end
 
 ---@param flag boolean

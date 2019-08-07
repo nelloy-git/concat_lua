@@ -24,12 +24,20 @@ function InitCustomTriggers()
 end
 
 function RunInitialization()
+    DestroyTimer(GetExpiredTimer())
+
     local Init = require('utils.init')
     Init.start()
 
     ---@type Unit
     local Unit = require('unit.unit')
-    --local u = Unit.new(0, 'hfoo', 0, 0, 0)
+    local u = Unit.new(0, 'hfoo', 0, 0, 0)
+
+    ---@type Ability
+    local summon_abil = require('ability.spiritMage.summonSwordman')
+    print('azaza')
+    u:addAbility(summon_abil)
+    print('azaza')
 end
 
 function InitCustomPlayerSlots()
@@ -54,7 +62,8 @@ function main()
     InitBlizzard()
     InitGlobals()
     InitCustomTriggers()
-    RunInitialization()
+    ---@type Trigger
+    TimerStart(CreateTimer(), 0.1, false, RunInitialization)
 end
 
 function config()
@@ -71,6 +80,6 @@ end
 
 compiletime(
     function ()
-        local objEdit = require('compiletime.objEdit.objEdit')
-        objEdit.close()
+        WeObjEdit.close()
+        WeObjEdit = nil
     end)

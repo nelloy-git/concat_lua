@@ -37,10 +37,8 @@ UnitApplyParameter.castSpeed = function(owner, val)
 end
 
 local resist_id = compiletime(function()
-    
-    local objEdit = require('compiletime.objEdit.objEdit')
-    local id = objEdit.Utils.nextAbilId()
-    local we_abil = objEdit.Ability.RunedBracers.new(id)
+    local id = WeObjEdit.Utils.nextAbilId()
+    local we_abil = WeObjEdit.Ability.RunedBracers.new(id)
     we_abil:setLevels(1)
     we_abil:setDamageReduction(0, 1)
     return id
@@ -81,9 +79,9 @@ UnitApplyParameter.recovery = function(owner, val)
 end
 
 local crit_and_dodge_id = compiletime(function()
-    local objEdit = require('compiletime.objEdit.objEdit')
-    local id = objEdit.Utils.nextAbilId()
-    local we_abil = objEdit.Ability.BladeMasterCriticalStrike.new(id)
+    if WeObjEdit == nil then print('azazqaa') end
+    local id = WeObjEdit.Utils.nextAbilId()
+    local we_abil = WeObjEdit.Ability.BladeMasterCriticalStrike.new(id)
     we_abil:setLevels(1)
     we_abil:setDamageMultiplier(1, 1)
     we_abil:setChancetoCriticalStrike(0, 1)
@@ -106,7 +104,6 @@ UnitApplyParameter.critChance = function(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 0, val)
 
     if GetOwningPlayer(owner) == GetLocalPlayer() then
-        
         local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
         local pos = tooltip:find(tooltip_critChance)
         if pos == nil then
@@ -128,7 +125,6 @@ UnitApplyParameter.critPower = function(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 0, val)
 
     if GetOwningPlayer(owner) == GetLocalPlayer() then
-        
         local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
         local start = tooltip:find(tooltip_critPower)
         if start == nil then
@@ -151,7 +147,6 @@ UnitApplyParameter.dodgeChance = function(owner, val)
     BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 0, val)
 
     if GetOwningPlayer(owner) == GetLocalPlayer() then
-        
         local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
         local start = tooltip:find(tooltip_dodgechance)
         if start == nil then

@@ -6,6 +6,894 @@
     end
     return __require_data.result[name]
   end
+__require_data.module["unit.unitEvent"] = function()
+    local Trigger = require("trigger.trigger")
+    local UnitEvent = {}
+    function UnitEvent.init()
+      UnitEvent.death_trigger = Trigger.new()
+      UnitEvent.death_trigger:addEvent_AnyUnitDeath()
+      print("UnitEvent initialized")
+    end
+    return UnitEvent
+end
+__require_data.module["ability.spiritMage.summonSwordman"] = function()
+    local Unit = require("unit.unit")
+    local UnitEvent = require("unit.unitEvent")
+    local Ability = require("ability.ability")
+    local Name = "Summon Crystal Swordman"
+    local Cooldown = 10
+    local id = {order = "absorb", unit = "x##$", abil = "AM#&"}
+    local SlaveToMaster = {}
+    local MasterToSlaves = {}
+    local finish = function(caster, target, x, y, full_time)
+        local owner = caster:getOwningPlayerIndex()
+        local unit = Unit.new(owner, id.unit, x, y, caster:getFacing())
+        unit:setVertexColor(1, 1, 1, 0.35)
+        unit:applyTimedLife(10)
+        SlaveToMaster[unit] = owner
+        if (MasterToSlaves[owner] == nil) then
+          MasterToSlaves[owner] = {}
+        end
+        table.insert(MasterToSlaves[owner], 1, unit)
+        print(#MasterToSlaves[owner])
+        unit.parameter:setAttacksPerSec(1)
+    end
+    local SummonCrystalSwordmanAbility = Ability.new(id.abil)
+    SummonCrystalSwordmanAbility:setCallback(finish, "finish")
+    SummonCrystalSwordmanAbility:setName("Summon Crystal Swordman")
+    SummonCrystalSwordmanAbility:setCastTime(2)
+    function SummonCrystalSwordmanAbility.init()
+      UnitEvent.death_trigger:addAction(function()
+          local unit = GetDyingUnit()
+          local dying_id = unit:getId()
+          if (dying_id == ID(id.unit)) then
+            local master = SlaveToMaster[unit]
+            local slaves = MasterToSlaves[master]
+            local changed_slaves = {}
+            for i = 1, #slaves do
+              if (slaves[i] ~= unit) then
+                table.insert(changed_slaves, 1, slaves[i])
+              end
+            end
+            SlaveToMaster[unit] = nil
+            if (#changed_slaves > 0) then
+              MasterToSlaves[master] = changed_slaves
+            else
+              MasterToSlaves[master] = nil
+            end
+          end
+      end)
+    end
+    return SummonCrystalSwordmanAbility
+end
+__require_data.module["trigger.trigger"] = function()
+    local Trigger = {}
+    local Trigger_meta = {__index = Trigger}
+    function Trigger.new()
+      local trigger = {trigger_obj = CreateTrigger(), actions = {}}
+      setmetatable(trigger, Trigger_meta)
+      return trigger
+    end
+    function Trigger:addAction(callback)
+      local action = TriggerAddAction(self.trigger_obj, callback)
+      self.actions[callback] = action
+    end
+    function Trigger:removeAction(callback)
+      local action = self.actions[callback]
+      self.actions[callback] = nil
+      TriggerRemoveAction(self.trigger_obj, action)
+    end
+    function Trigger:clearActions()
+      for callback, action in pairs(self.actions) do
+        TriggerRemoveAction(self.trigger_obj, action)
+        self.actions[callback] = nil
+      end
+    end
+    function Trigger:execute()
+      TriggerExecute(self.trigger_obj)
+    end
+    function Trigger:addEvent_GameVictory()
+      TriggerRegisterGameEvent(self, EVENT_GAME_VICTORY)
+    end
+    function Trigger:addEvent_GameEnd()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_END_LEVEL)
+    end
+    function Trigger:addEvent_GameVariableLimit()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_VARIABLE_LIMIT)
+    end
+    function Trigger:addEvent_GameStateLimit()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_STATE_LIMIT)
+    end
+    function Trigger:addEvent_GameTimerExpired()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_TIMER_EXPIRED)
+    end
+    function Trigger:addEvent_GameEnterRegion()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_ENTER_REGION)
+    end
+    function Trigger:addEvent_GameLeaveRegion()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_LEAVE_REGION)
+    end
+    function Trigger:addEvent_GameTrackableHit()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_TRACKABLE_HIT)
+    end
+    function Trigger:addEvent_GameTrackableTrack()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_TRACKABLE_TRACK)
+    end
+    function Trigger:addEvent_GameShowSkill()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_SHOW_SKILL)
+    end
+    function Trigger:addEvent_GameBuildSubmenu()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_BUILD_SUBMENU)
+    end
+    function Trigger:addEvent_GameLoaded()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_LOADED)
+    end
+    function Trigger:addEvent_GameTournamentFinishSoon()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_TOURNAMENT_FINISH_SOON)
+    end
+    function Trigger:addEvent_GameTournamentFinishNow()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_TOURNAMENT_FINISH_NOW)
+    end
+    function Trigger:addEvent_GameSave()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_SAVE)
+    end
+    function Trigger:addEvent_GameCustomUIFrame()
+      TriggerRegisterGameEvent(self.trigger_obj, EVENT_GAME_CUSTOM_UI_FRAME)
+    end
+    function Trigger:addEvent_PlayerStateLimit(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_STATE_LIMIT)
+    end
+    function Trigger:addEvent_PlayerAllianceChanged(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ALLIANCE_CHANGED)
+    end
+    function Trigger:addEvent_PlayerDefeat(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_DEFEAT)
+    end
+    function Trigger:addEvent_PlayerVictory(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_VICTORY)
+    end
+    function Trigger:addEvent_PlayerLeave(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_LEAVE)
+    end
+    function Trigger:addEvent_PlayerChat(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_CHAT)
+    end
+    function Trigger:addEvent_PlayerEndCinematic(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_END_CINEMATIC)
+    end
+    function Trigger:addEvent_PlayerArrowLeft_Down(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_LEFT_DOWN)
+    end
+    function Trigger:addEvent_PlayerArrowLeft_Up(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_LEFT_UP)
+    end
+    function Trigger:addEvent_PlayerArrowRight_Down(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_RIGHT_DOWN)
+    end
+    function Trigger:addEvent_PlayerArrowRight_Up(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_RIGHT_UP)
+    end
+    function Trigger:addEvent_PlayerArrowDown_Down(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_DOWN_DOWN)
+    end
+    function Trigger:addEvent_PlayerArrowDown_Up(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_DOWN_UP)
+    end
+    function Trigger:addEvent_PlayerArrowUp_Down(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_UP_DOWN)
+    end
+    function Trigger:addEvent_PlayerArrowUp_Up(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_ARROW_UP_UP)
+    end
+    function Trigger:addEvent_PlayerMouseDown(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_MOUSE_DOWN)
+    end
+    function Trigger:addEvent_PlayerMouseUp(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_MOUSE_UP)
+    end
+    function Trigger:addEvent_PlayerMouseMove(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_MOUSE_MOVE)
+    end
+    function Trigger:addEvent_PlayerSyncData(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_SYNC_DATA)
+    end
+    function Trigger:addEvent_PlayerKey(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_KEY)
+    end
+    function Trigger:addEvent_PlayerKeyDown(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_KEY_DOWN)
+    end
+    function Trigger:addEvent_PlayerKeyUp(player_index)
+      TriggerRegisterPlayerEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_KEY_UP)
+    end
+    function Trigger:addEvent_AnyUnitAttacked()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_ATTACKED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitResqued()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_RESCUED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDeath()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DEATH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDecay()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DECAY)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDetect()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DETECTED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitHidden()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_HIDDEN)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSelected()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SELECTED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDeselected()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DESELECTED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitConstructStart()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_START)
+      end
+    end
+    function Trigger:addEvent_AnyUnitConstructCancel()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
+      end
+    end
+    function Trigger:addEvent_AnyUnitConstructFinish()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitUpgradeStart()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_UPGRADE_START)
+      end
+    end
+    function Trigger:addEvent_AnyUnitCancel()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
+      end
+    end
+    function Trigger:addEvent_AnyUnitFinish()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_UPGRADE_FINISH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitTrainStart()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_TRAIN_START)
+      end
+    end
+    function Trigger:addEvent_AnyUnitTrainCancel()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_TRAIN_CANCEL)
+      end
+    end
+    function Trigger:addEvent_AnyUnitTrainFinish()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_TRAIN_FINISH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitResearchStart()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_RESEARCH_START)
+      end
+    end
+    function Trigger:addEvent_AnyUnitResearchCancel()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
+      end
+    end
+    function Trigger:addEvent_AnyUnitResearchFinish()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitIssuedOrder()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_ISSUED_ORDER)
+      end
+    end
+    function Trigger:addEvent_AnyUnitIssuedOrderPointTarget()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+      end
+    end
+    function Trigger:addEvent_AnyUnitIssuedOrderTarget()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+      end
+    end
+    function Trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+      end
+    end
+    function Trigger:addEvent_AnyHeroLevel()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_HERO_LEVEL)
+      end
+    end
+    function Trigger:addEvent_AnyHeroSkill()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_HERO_SKILL)
+      end
+    end
+    function Trigger:addEvent_AnyHeroRevivable()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_HERO_REVIVABLE)
+      end
+    end
+    function Trigger:addEvent_AnyHeroReviveStart()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_HERO_REVIVE_START)
+      end
+    end
+    function Trigger:addEvent_AnyHeroReviveCance()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_HERO_REVIVE_CANCEL)
+      end
+    end
+    function Trigger:addEvent_AnyHeroReviveFinish()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_HERO_REVIVE_FINISH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSummon()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SUMMON)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDropItem()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DROP_ITEM)
+      end
+    end
+    function Trigger:addEvent_AnyUnitPickUpItem()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_PICKUP_ITEM)
+      end
+    end
+    function Trigger:addEvent_AnyUnitUseItem()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_USE_ITEM)
+      end
+    end
+    function Trigger:addEvent_AnyUnitLoaded()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_LOADED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDamaged()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DAMAGED)
+      end
+    end
+    function Trigger:addEvent_AnyUnitDamaging()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_DAMAGING)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSell()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SELL)
+      end
+    end
+    function Trigger:addEvent_AnyUnitChangeOwner()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_CHANGE_OWNER)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSellItem()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SELL_ITEM)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSpellChannel()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SPELL_CHANNEL)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSpellCast()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SPELL_CAST)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSpellEffect()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SPELL_EFFECT)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSpellFinish()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SPELL_FINISH)
+      end
+    end
+    function Trigger:addEvent_AnyUnitSpellEndCast()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_SPELL_ENDCAST)
+      end
+    end
+    function Trigger:addEvent_AnyUnitPawnItem()
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
+        TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(i), EVENT_PLAYER_UNIT_PAWN_ITEM)
+      end
+    end
+    function Trigger:addEvent_PlayerUnitAttacked(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_ATTACKED)
+    end
+    function Trigger:addEvent_PlayerUnitResqued(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_RESCUED)
+    end
+    function Trigger:addEvent_PlayerUnitDeath(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DEATH)
+    end
+    function Trigger:addEvent_PlayerUnitDecay(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DECAY)
+    end
+    function Trigger:addEvent_PlayerUnitDeath(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DETECTED)
+    end
+    function Trigger:addEvent_PlayerUnitHidden(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_HIDDEN)
+    end
+    function Trigger:addEvent_PlayerUnitSelected(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SELECTED)
+    end
+    function Trigger:addEvent_PlayerUnitDeselected(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DESELECTED)
+    end
+    function Trigger:addEvent_PlayerUnitConstructStart(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_CONSTRUCT_START)
+    end
+    function Trigger:addEvent_PlayerUnitConstructCancel(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
+    end
+    function Trigger:addEvent_PlayerUnitConstructFinish(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
+    end
+    function Trigger:addEvent_PlayerUnitUpgradeStart(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_UPGRADE_START)
+    end
+    function Trigger:addEvent_PlayerUnitCancel(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
+    end
+    function Trigger:addEvent_PlayerUnitFinish(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_UPGRADE_FINISH)
+    end
+    function Trigger:addEvent_PlayerUnitTrainStart(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_TRAIN_START)
+    end
+    function Trigger:addEvent_PlayerUnitTrainCancel(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_TRAIN_CANCEL)
+    end
+    function Trigger:addEvent_PlayerUnitTrainFinish(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_TRAIN_FINISH)
+    end
+    function Trigger:addEvent_PlayerUnitResearchStart(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_RESEARCH_START)
+    end
+    function Trigger:addEvent_PlayerUnitResearchCancel(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
+    end
+    function Trigger:addEvent_PlayerUnitResearchFinish(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+    end
+    function Trigger:addEvent_PlayerUnitIssuedOrder(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_ISSUED_ORDER)
+    end
+    function Trigger:addEvent_PlayerUnitIssuedOrderPointTartet(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+    end
+    function Trigger:addEvent_PlayerUnitIssuedOrderTarget(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+    end
+    function Trigger:addEvent_PlayerUnitIssuedOrderUnitTarget(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+    end
+    function Trigger:addEvent_PlayerHeroLevel(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_HERO_LEVEL)
+    end
+    function Trigger:addEvent_PlayerHeroSkill(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_HERO_SKILL)
+    end
+    function Trigger:addEvent_PlayerHeroRevivable(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_HERO_REVIVABLE)
+    end
+    function Trigger:addEvent_PlayerHeroReviveStart(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_HERO_REVIVE_START)
+    end
+    function Trigger:addEvent_PlayerHeroReviveCance(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_HERO_REVIVE_CANCEL)
+    end
+    function Trigger:addEvent_PlayerHeroReviveFinish(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_HERO_REVIVE_FINISH)
+    end
+    function Trigger:addEvent_PlayerUnitSummon(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SUMMON)
+    end
+    function Trigger:addEvent_PlayerUnitDropItem(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DROP_ITEM)
+    end
+    function Trigger:addEvent_PlayerUnitPickUpItem(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_PICKUP_ITEM)
+    end
+    function Trigger:addEvent_PlayerUnitUseItem(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_USE_ITEM)
+    end
+    function Trigger:addEvent_PlayerUnitLoaded(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_LOADED)
+    end
+    function Trigger:addEvent_PlayerUnitDamaged(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DAMAGED)
+    end
+    function Trigger:addEvent_PlayerUnitDamaging(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_DAMAGING)
+    end
+    function Trigger:addEvent_PlayerUnitSell(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SELL)
+    end
+    function Trigger:addEvent_PlayerUnitChangeOwner(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_CHANGE_OWNER)
+    end
+    function Trigger:addEvent_PlayerUnitSellItem(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SELL_ITEM)
+    end
+    function Trigger:addEvent_PlayerUnitSpellChannel(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SPELL_CHANNEL)
+    end
+    function Trigger:addEvent_PlayerUnitSpellCast(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SPELL_CAST)
+    end
+    function Trigger:addEvent_PlayerUnitSpellEffect(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SPELL_EFFECT)
+    end
+    function Trigger:addEvent_PlayerUnitSpellFinish(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SPELL_FINISH)
+    end
+    function Trigger:addEvent_PlayerUnitSpellEndCast(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_SPELL_ENDCAST)
+    end
+    function Trigger:addEvent_PlayerUnitPawnItem(player_index)
+      TriggerRegisterPlayerUnitEvent(self.trigger_obj, Player(player_index), EVENT_PLAYER_UNIT_PAWN_ITEM)
+    end
+    function Trigger:addEvent_UnitDamaged(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DAMAGED)
+    end
+    function Trigger:addEvent_UnitDamaging(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DAMAGING)
+    end
+    function Trigger:addEvent_UnitDeath(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DEATH)
+    end
+    function Trigger:addEvent_UnitDecay(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DECAY)
+    end
+    function Trigger:addEvent_UnitDetected(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DETECTED)
+    end
+    function Trigger:addEvent_UnitHiden(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HIDDEN)
+    end
+    function Trigger:addEvent_UnitSelected(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SELECTED)
+    end
+    function Trigger:addEvent_UnitDeselected(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DESELECTED)
+    end
+    function Trigger:addEvent_UnitStateLimit(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_STATE_LIMIT)
+    end
+    function Trigger:addEvent_UnitAcquiredTarget(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_ACQUIRED_TARGET)
+    end
+    function Trigger:addEvent_UnitTargetInRange(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_TARGET_IN_RANGE)
+    end
+    function Trigger:addEvent_UnitAttacked(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_ATTACKED)
+    end
+    function Trigger:addEvent_UnitResqued(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_RESCUED)
+    end
+    function Trigger:addEvent_UnitConstructCancel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_CONSTRUCT_CANCEL)
+    end
+    function Trigger:addEvent_UnitConstructFinish(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_CONSTRUCT_FINISH)
+    end
+    function Trigger:addEvent_UnitUpgradeStart(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_UPGRADE_START)
+    end
+    function Trigger:addEvent_UnitUpgradeCancel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_UPGRADE_CANCEL)
+    end
+    function Trigger:addEvent_UnitUpgradeFinish(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_UPGRADE_FINISH)
+    end
+    function Trigger:addEvent_UnitTrainStart(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_TRAIN_START)
+    end
+    function Trigger:addEvent_UnitTrainCancel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_TRAIN_CANCEL)
+    end
+    function Trigger:addEvent_UnitTrainFinish(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_TRAIN_FINISH)
+    end
+    function Trigger:addEvent_UnitResearchStart(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_RESEARCH_START)
+    end
+    function Trigger:addEvent_UnitResearchCancel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_RESEARCH_CANCEL)
+    end
+    function Trigger:addEvent_UnitResearchFinish(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_RESEARCH_FINISH)
+    end
+    function Trigger:addEvent_UnitIssuedOrder(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_ISSUED_ORDER)
+    end
+    function Trigger:addEvent_UnitIssuedOrderPoint(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_ISSUED_POINT_ORDER)
+    end
+    function Trigger:addEvent_UnitIssuedOrderTarget(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_ISSUED_TARGET_ORDER)
+    end
+    function Trigger:addEvent_HeroLevel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HERO_LEVEL)
+    end
+    function Trigger:addEvent_HeroSkill(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HERO_SKILL)
+    end
+    function Trigger:addEvent_HeroRevivable(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HERO_REVIVABLE)
+    end
+    function Trigger:addEvent_HeroReviveStart(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HERO_REVIVE_START)
+    end
+    function Trigger:addEvent_HeroReviveCancel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HERO_REVIVE_CANCEL)
+    end
+    function Trigger:addEvent_HeroReviveFinish(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_HERO_REVIVE_FINISH)
+    end
+    function Trigger:addEvent_UnitSummon(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SUMMON)
+    end
+    function Trigger:addEvent_UnitDropItem(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_DROP_ITEM)
+    end
+    function Trigger:addEvent_UnitPickUpItem(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_PICKUP_ITEM)
+    end
+    function Trigger:addEvent_UnitUseItem(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_USE_ITEM)
+    end
+    function Trigger:addEvent_UnitLoaded(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_LOADED)
+    end
+    function Trigger:addEvent_UnitSell(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SELL)
+    end
+    function Trigger:addEvent_UnitChangeOwner(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_CHANGE_OWNER)
+    end
+    function Trigger:addEvent_UnitSellItem(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SELL_ITEM)
+    end
+    function Trigger:addEvent_UnitSpellChannel(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SPELL_CHANNEL)
+    end
+    function Trigger:addEvent_UnitSpellCast(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SPELL_CAST)
+    end
+    function Trigger:addEvent_UnitSpellEffect(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SPELL_EFFECT)
+    end
+    function Trigger:addEvent_UnitSpellFinish(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SPELL_FINISH)
+    end
+    function Trigger:addEvent_UnitSpellEndCast(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_SPELL_ENDCAST)
+    end
+    function Trigger:addEvent_UnitPawnItem(unit)
+      TriggerRegisterUnitEvent(self.trigger_obj, unit.unit_obj, EVENT_UNIT_PAWN_ITEM)
+    end
+    function Trigger:addEvent_Dialog(dialog)
+      TriggerRegisterDialogEvent(self.trigger_obj, dialog)
+    end
+    function Trigger:addEvent_DialogButtonClicked(button)
+      TriggerRegisterDialogButtonEvent(self.trigger_obj, button)
+    end
+    return Trigger
+end
+__require_data.module["utils.timer"] = function()
+    local Timer = {}
+    local TimersDB = {}
+    local function period()
+      local wc_timer = GetExpiredTimer()
+      local timer_data = TimersDB[wc_timer]
+      timer_data.cur_time = (timer_data.cur_time+timer_data.precision)
+      local cur_time = timer_data.cur_time
+      local cur_list = timer_data.actions
+      local remove_list = timer_data.to_remove
+      timer_data.actions = {}
+      timer_data.to_remove = {}
+      for i = 1, #cur_list do
+        local action = cur_list[i]
+        local removed = false
+        for j = 1, #remove_list do
+          if (action == remove_list[j]) then
+            removed = true
+            break
+          end
+        end
+        if (cur_time >= action.time and not removed) then
+          action.callback(action.user_data)
+        end
+      end
+    end
+    function Timer.new(precision)
+      local wc_timer = CreateTimer()
+      local timer_data = {cur_time = 0, precision = precision or 0.25, actions = {}, to_remove = {}}
+      setmetatable(timer_data, {__index = Timer})
+      TimersDB[wc_timer] = timer_data
+      TimerStart(wc_timer, precision, true, period)
+      return timer_data
+    end
+    function Timer:addAction(delay, callback, user_data)
+      local action = {time = (self.cur_time+delay), callback = callback, user_data = user_data, period = period}
+      table.insert(self.actions, 1, action)
+    end
+    function Timer:removeAction(action)
+      table.insert(self.to_remove, 1, action)
+    end
+    return Timer
+end
+__require_data.module["ability.ability"] = function()
+    local Timer = require("utils.timer")
+    local Trigger = require("trigger.trigger")
+    local Ability = {}
+    local Ability_meta = {__index = Ability}
+    local AbilityDB = {}
+    function Ability.new(id)
+      id = ID(id)
+      local ability = {id = id, _start = function()
+  return true
+end, _casting = function()
+  return true
+end, _interrupt = function()
+
+end, _finish = function()
+
+end}
+      setmetatable(ability, Ability_meta)
+      AbilityDB[id] = ability
+      return ability
+    end
+    function Ability.getAbility(id)
+      id = ID(id)
+      if (id) then
+        return AbilityDB[ID(id)]
+      end
+      return nil
+    end
+    function Ability:getId()
+      print(self.id)
+      return self.id
+    end
+    function Ability:setCallback(callback, type)
+      if (type == "start") then
+        self._start = callback
+      end
+      if (type == "casting") then
+        self._casting = callback
+      end
+      if (type == "interrupt") then
+        self._interrupt = callback
+      end
+      if (type == "finish") then
+        self._finish = callback
+      end
+    end
+    function Ability:runCallback(type, ...)
+      if (type == "start") then
+        return self._start(...)
+      end
+      if (type == "casting") then
+        return self._casting(...)
+      end
+      if (type == "interrupt") then
+        return self._interrupt(...)
+      end
+      if (type == "finish") then
+        return self._finish(...)
+      end
+    end
+    function Ability:setCastTime(cast_time)
+      self.cast_time = cast_time
+    end
+    function Ability:getCastTime(caster)
+      if (type(self.cast_time) == "number") then
+        return self.cast_time
+      elseif (type(self.cast_time) == "function") then
+        return self.cast_time(caster)
+      end
+
+      return 0
+    end
+    function Ability:setName(name)
+      self.name = name
+    end
+    function Ability:getName()
+      if (type(self.name) == "string") then
+        return self.name
+      elseif (type(self.name) == "function") then
+        return self.name()
+      end
+
+      return ""
+    end
+    function Ability:setTooltip(tooltip, lvl, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityTooltip(self.id, tooltip, lvl)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityTooltip(self.id, tooltip, lvl)
+      end
+    end
+    function Ability:setExtendedTooltip(ext_tooltip, lvl, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityExtendedTooltip(self.id, ext_tooltip, lvl)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityExtendedTooltip(self.id, ext_tooltip, lvl)
+      end
+    end
+    function Ability:setIcon(icon_path, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityIcon(self.id, icon_path)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityIcon(self.id, icon_path)
+      end
+    end
+    function Ability:setPosition(x, y, player_index)
+      if (player_index == nil) then
+        BlzSetAbilityPosX(self.id, x)
+        BlzSetAbilityPosY(self.id, y)
+        return nil
+      end
+      local local_player_index = player2index(GetLocalPlayer())
+      if (player_index == local_player_index) then
+        BlzSetAbilityPosX(self.id, x)
+        BlzSetAbilityPosY(self.id, y)
+      end
+    end
+    return Ability
+end
 __require_data.module["unit.parameters.unitMathParameter"] = function()
     local UnitMathParameter = {}
     local val_for_half_cap = 300
@@ -26,6 +914,122 @@ __require_data.module["unit.parameters.unitMathParameter"] = function()
         return (100-(k*(100-param_cap)))
     end
     return UnitMathParameter
+end
+__require_data.module["unit.parameters.unitApplyParameter"] = function()
+    local UnitApplyParameter = {}
+    local attack_dispertion = 0.15
+    UnitApplyParameter.attack = function(owner, val)
+        local k = (1-attack_dispertion)
+        local dmg = (k*val)
+        local dice_sides = ((2*attack_dispertion)*val)
+        BlzSetUnitBaseDamage(owner, math.floor(dmg), 0)
+        BlzSetUnitDiceNumber(owner, 1, 0)
+        BlzSetUnitDiceSides(owner, math.floor((dice_sides+1)), 0)
+    end
+    UnitApplyParameter.attackSpeed = function(owner, val)
+        BlzSetUnitAttackCooldown(owner, val, 0)
+    end
+    UnitApplyParameter.armor = function(owner, val)
+        BlzSetUnitArmor(owner, math.floor(val))
+    end
+    UnitApplyParameter.spellPower = function(owner, val)
+
+    end
+    UnitApplyParameter.castSpeed = function(owner, val)
+
+    end
+    local resist_id = "AM#$"
+    UnitApplyParameter.resistance = function(owner, val)
+        if (GetUnitAbilityLevel(owner, FourCC(resist_id)) == 0) then
+          UnitAddAbility(owner, FourCC(resist_id))
+        end
+        local abil = BlzGetUnitAbility(owner, FourCC(resist_id))
+        BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 0, val)
+    end
+    UnitApplyParameter.cooldown = function(owner, val)
+
+    end
+    UnitApplyParameter.health = function(owner, val)
+        BlzSetUnitMaxHP(owner, math.floor(val))
+    end
+    UnitApplyParameter.regeneration = function(owner, val)
+        BlzSetUnitRealField(owner, UNIT_RF_HIT_POINTS_REGENERATION_RATE, val)
+    end
+    UnitApplyParameter.mana = function(owner, val)
+        BlzSetUnitMaxMana(owner, math.floor(val))
+    end
+    UnitApplyParameter.recovery = function(owner, val)
+        BlzSetUnitRealField(owner, UNIT_RF_MANA_REGENERATION, val)
+    end
+    local crit_and_dodge_id = "AM#%"
+    local tooltip_critChance = "Crit chance: "
+    local tooltip_critPower = "Crit power: "
+    local tooltip_dodgechance = "Dodge chance: "
+    UnitApplyParameter.critChance = function(owner, val)
+        if (GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0) then
+          UnitAddAbility(owner, FourCC(crit_and_dodge_id))
+        end
+        local abil = BlzGetUnitAbility(owner, FourCC(crit_and_dodge_id))
+        BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 0, val)
+        if (GetOwningPlayer(owner) == GetLocalPlayer()) then
+          local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
+          local pos = tooltip:find(tooltip_critChance)
+          if (pos == nil) then
+            tooltip = tooltip_critChance.."\n"..tooltip_critPower.."\n"..tooltip_dodgechance
+            pos = tooltip:find(tooltip_critChance)
+          end
+          pos = (pos+tooltip_critChance:len())
+          tooltip = tooltip:sub(1, (pos-1))..tostring(val).."%"..tooltip:sub(tooltip:find("\n"), #tooltip)
+          BlzSetAbilityExtendedTooltip(ID(crit_and_dodge_id), tooltip, 0)
+        end
+    end
+    UnitApplyParameter.critPower = function(owner, val)
+        if (GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0) then
+          UnitAddAbility(owner, FourCC(crit_and_dodge_id))
+        end
+        local abil = BlzGetUnitAbility(owner, FourCC(crit_and_dodge_id))
+        BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 0, val)
+        if (GetOwningPlayer(owner) == GetLocalPlayer()) then
+          local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
+          local start = tooltip:find(tooltip_critPower)
+          if (start == nil) then
+            tooltip = tooltip_critChance.."\n"..tooltip_critPower.."\n"..tooltip_dodgechance
+            start = tooltip:find(tooltip_critPower)
+          end
+          finish = (start+tooltip_critPower:len())
+          tooltip = tooltip:sub(1, (finish-1))..tostring(val).."%"..tooltip:sub(tooltip:find("\n", start), #tooltip)
+          BlzSetAbilityExtendedTooltip(ID(crit_and_dodge_id), tooltip, 0)
+        end
+    end
+    UnitApplyParameter.dodgeChance = function(owner, val)
+        val = (val/100)
+        if (GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0) then
+          UnitAddAbility(owner, FourCC(crit_and_dodge_id))
+        end
+        local abil = BlzGetUnitAbility(owner, FourCC(crit_and_dodge_id))
+        BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 0, val)
+        if (GetOwningPlayer(owner) == GetLocalPlayer()) then
+          local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
+          local start = tooltip:find(tooltip_dodgechance)
+          if (start == nil) then
+            tooltip = tooltip_critChance.."\n"..tooltip_dodgechance.."\n"..tooltip_dodgechance
+            start = tooltip:find(tooltip_dodgechance)
+          end
+          finish = (start+tooltip_dodgechance:len())
+          tooltip = tooltip:sub(1, (finish-1))..tostring(val).."%"
+          BlzSetAbilityExtendedTooltip(ID(crit_and_dodge_id), tooltip, 0)
+        end
+    end
+    UnitApplyParameter.strength = function(owner, val)
+        SetHeroStr(owner, math.floor(val), true)
+    end
+    UnitApplyParameter.agility = function(owner, val)
+        SetHeroAgi(owner, math.floor(val), true)
+    end
+    UnitApplyParameter.strength = function(owner, val)
+        SetHeroInt(owner, math.floor(val), true)
+    end
+    return UnitApplyParameter
 end
 __require_data.module["unit.parameters.unitParameter"] = function()
     local UnitParameter = {}
@@ -58,6 +1062,7 @@ __require_data.module["unit.parameters.unitParameter"] = function()
 end
 __require_data.module["unit.parameters.unitParameterContainer"] = function()
     local UnitParameter = require("unit.parameters.unitParameter")
+    local ApplyParam = require("unit.parameters.unitApplyParameter")
     local MathParam = require("unit.parameters.unitMathParameter")
     local ParameterContainer = {}
     local ParameterContainer_meta = {__index = ParameterContainer}
@@ -202,6 +1207,7 @@ __require_data.module["unit.parameters.unitParameterContainer"] = function()
 end
 __require_data.module["unit.unit"] = function()
     local ParameterContainer = require("unit.parameters.unitParameterContainer")
+    local Ability = require("ability.ability")
     local Unit = {}
     local UnitDB = {}
     function UnitDB.add(unit)
@@ -257,8 +1263,8 @@ __require_data.module["unit.unit"] = function()
     function Unit:getFacing()
       return GetUnitFacing(self.unit_obj)
     end
-    function Unit:addAbility(abil_id)
-      UnitAddAbility(self.unit_obj, ID(abil_id))
+    function Unit:addAbility(ability)
+      UnitAddAbility(self.unit_obj, ability:getId())
     end
     function Unit:setInvulnerable(flag)
       SetUnitInvulnerable(self.unit_obj, flag)
@@ -371,7 +1377,7 @@ end
 __require_data.module["utils.init"] = function()
     local Init = {}
     function Init.start()
-      for name, _ in __require_data.module do
+      for name, _ in pairs(__require_data.module) do
         __require_data.result[name] = __require_data.module[name]()
         if (__require_data.result[name].init ~= nil) then
           __require_data.result[name].init()
@@ -463,9 +1469,15 @@ end
     InitTrig_Melee_Initialization()
   end
   function RunInitialization()
+    DestroyTimer(GetExpiredTimer())
     local Init = require("utils.init")
     Init.start()
     local Unit = require("unit.unit")
+    local u = Unit.new(0, "hfoo", 0, 0, 0)
+    local summon_abil = require("ability.spiritMage.summonSwordman")
+    print("azaza")
+    u:addAbility(summon_abil)
+    print("azaza")
   end
   function InitCustomPlayerSlots()
     SetPlayerStartLocation(Player(0), 0)
@@ -487,7 +1499,7 @@ end
     InitBlizzard()
     InitGlobals()
     InitCustomTriggers()
-    RunInitialization()
+    TimerStart(CreateTimer(), 0.1, false, RunInitialization)
   end
   function config()
     SetMapName("TRIGSTR_001")
