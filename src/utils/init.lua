@@ -1,21 +1,13 @@
-local InitList = {
-    list = {}
-}
+local Init = {}
 
-function InitList.init()
-    TriggerSleepAction(0)
-    print('Initialization start.')
-    for k, init_owner in ipairs(InitList.list) do
-            print(k)
-        if init_owner.init ~= nil then
-            init_owner.init()
+function Init.start()
+    for name, _ in __require_data.module do
+        __require_data.result[name] = __require_data.module[name]()
+        if __require_data.result[name].init ~= nil then
+            __require_data.result[name].init()
         end
+        __require_data.loaded[name] = true
     end
-    print('Initialization finished.')
 end
 
-function InitList.add(init_owner)
-    table.insert(InitList.list, 0, init_owner)
-end
-
-return InitList
+return Init

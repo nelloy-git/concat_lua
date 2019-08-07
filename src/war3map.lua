@@ -5,49 +5,13 @@ compiletime(
         WeObjEdit.init(src_dir, dst_dir)
     end)
 
----@type Utils    
-local utils = require('utils.utils')
----@type Ability
-local SummonCrystalWarriorAbility = require('ability.spiritMage.summonSwordman')
-
-local AbilityEvent = require('ability.abilityEvent')
-
----@type Interface
---local Interface = require('interface.interface')
-
----@type Unit
-local Unit = require('unit.unit')
----@type UnitEvent
-local UnitEvent = require('unit.unitEvent')
-
-local UnitSelection = require('player.unitsSelected')
-
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
 
-local castBar = require('interface.frames.castBar')
+--local castBar = require('interface.frames.castBar')
 
 function Trig_Melee_Initialization_Actions()
-    MeleeStartingVisibility()
-    MeleeStartingHeroLimit()
-    MeleeGrantHeroItems()
-    MeleeStartingResources()
-    MeleeClearExcessUnits()
-    MeleeStartingUnits()
-    MeleeStartingAI()
-    MeleeInitVictoryDefeat()
-
-    castBar.init()
-    UnitSelection.init()
-    AbilityEvent.init()
-    UnitEvent.init()
-    SummonCrystalWarriorAbility.init()
-
-    --Interface.init()
-    local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
-    u1:addAbility(SummonCrystalWarriorAbility:getId())
-    --local u1 = Unit.new(0, 'hfoo', 0, 0, 0)
 end
 
 function InitTrig_Melee_Initialization()
@@ -59,8 +23,13 @@ function InitCustomTriggers()
     InitTrig_Melee_Initialization()
 end
 
-function RunInitializationTriggers()
-    ConditionalTriggerExecute(GG_trg_Melee_Initialization)
+function RunInitialization()
+    local Init = require('utils.init')
+    Init.start()
+
+    ---@type Unit
+    local Unit = require('unit.unit')
+    --local u = Unit.new(0, 'hfoo', 0, 0, 0)
 end
 
 function InitCustomPlayerSlots()
@@ -85,8 +54,7 @@ function main()
     InitBlizzard()
     InitGlobals()
     InitCustomTriggers()
-    RunInitializationTriggers()
-    Unit.init()
+    RunInitialization()
 end
 
 function config()

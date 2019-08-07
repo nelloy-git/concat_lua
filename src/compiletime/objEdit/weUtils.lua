@@ -88,22 +88,26 @@ end
 function WeUtils.float2byte(data)
     local sign = 0
     if data < 0 then
-      sign = 1;
+      sign = 1
       data = -data
     end
     local mantissa, exponent = frexp(data)
     if data == 0 then
-       mantissa = 0;
+       mantissa = 0
        exponent = 0
     else
        mantissa = (mantissa * 2 - 1) * 8388608 -- math.ldexp(0.5, 24)
        exponent = exponent + 126
     end
     local v, byte = "" -- convert to bytes
-    data, byte = grab_byte(mantissa); v = v..byte -- 7:0
-    data, byte = grab_byte(data); v = v..byte -- 15:8
-    data, byte = grab_byte(exponent * 128 + data); v = v..byte -- 23:16
-    data, byte = grab_byte(sign * 128 + data); v = v..byte -- 31:24
+    data, byte = grab_byte(mantissa)
+    v = v..byte -- 7:0
+    data, byte = grab_byte(data)
+    v = v..byte -- 15:8
+    data, byte = grab_byte(exponent * 128 + data)
+    v = v..byte -- 23:16
+    data, byte = grab_byte(sign * 128 + data)
+    v = v..byte -- 31:24
     return v
 end
 

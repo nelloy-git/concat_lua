@@ -7,6 +7,7 @@
         "redundant-parameter"
     ],
     "Lua.diagnostics.globals": [
+        "__require_data",
         "is_compiletime",
         "FourCC",
         "src_dir",

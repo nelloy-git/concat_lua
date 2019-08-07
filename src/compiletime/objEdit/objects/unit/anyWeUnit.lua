@@ -169,6 +169,11 @@ function AnyWeUnit:setMovementSound(data) self:addField(WeField.new("umsl", 'str
 function AnyWeUnit:setModelFileExtraVersions(data) self:addField(WeField.new("uver", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setModelFile(data)
+    -- Path correction.
+    local sep = package.config:sub(1,1)
+    if sep == '/' then data = data:gsub('\\', package.config:sub(1,1)) 
+    elseif sep == '\\' then data = data:gsub('/', package.config:sub(1,1)) end
+    
     local f = io.open(data, "r")
     if f ~= nil then 
         f:close()
