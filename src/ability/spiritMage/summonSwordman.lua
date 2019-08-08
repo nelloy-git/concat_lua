@@ -30,8 +30,8 @@ local function generateUnit(base_id, model, abilities)
     local id = WeObjEdit.Utils.nextUnitId()
     ---@type WeUnit
     local summon = WeObjEdit.Unit.Unit.new(id.unit, base_id)
-    summon:setModelFile('war3mapImported\\units\\SwordNya.mdx')
-    summon:setNormalAbilities('Avul,Aloc')
+    summon:setModelFile(model)
+    summon:setNormalAbilities(abilities)
     summon:setSpeedBase(0)
     return id
 end
@@ -40,28 +40,33 @@ end
 --
 -- Ability data
 --
-local ability_name = 'Summon Crystal Swordman'
-local ability_tooltip = ''
+local ability_name = 'Summon Swordman'
+local ability_tooltip = 'Mage summons invulnerale spirit warrior.\n'
 local range = 500
 local area = 150
+local cast_time = 2
 local base_cooldown = 10
+local abil_id = generateAbility(ability_name, ability_tooltip, range, area, cast_time, base_cooldown)
 
-local abil_id = generateAbility(ability_name, ability_tooltip, range, area)
+local unit_model = 'war3mapImported\\units\\SwordNya.mdx'
+local unit_abilities = 'Avul,Aloc'
+local unit_id = generateUnit('hfoo', unit_model, unit_abilities)
 --
 --
 --
----@type Ability
-local SummonCrystalSwordmanAbility = Ability.new(abil_id)
 
 ---@type table<Unit, Unit>
 local SlaveToMaster = {}
 ---@type table<Unit, Unit[]>
 local MasterToSlaves = {}
 
+---@type Ability
+local SummonCrystalSwordmanAbility = Ability.new(abil_id)
+
 ---@type AbilityFinishCallback
 local finish = function(caster, target, x, y, full_time)
     local owner = caster:getOwningPlayerIndex()
-    local unit = Unit.new(owner, id.unit, x, y, caster:getFacing())
+    local unit = Unit.new(owner, unit_id, x, y, caster:getFacing())
     unit:setVertexColor(1, 1, 1, 0.35)
     unit:applyTimedLife(10)
 
@@ -74,7 +79,7 @@ local finish = function(caster, target, x, y, full_time)
     unit.parameter:setAttacksPerSec(1)
 end
 SummonCrystalSwordmanAbility:setCallback(finish, "finish")
-SummonCrystalSwordmanAbility:setName('Summon Crystal Swordman')
+SummonCrystalSwordmanAbility:setName(ability_name)
 SummonCrystalSwordmanAbility:setCastTime(2)
 
 function SummonCrystalSwordmanAbility.init()
