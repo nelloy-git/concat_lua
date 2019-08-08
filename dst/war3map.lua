@@ -22,7 +22,7 @@ __require_data.module["ability.spiritMage.summonSwordman"] = function()
     local Ability = require("ability.ability")
     local Name = "Summon Crystal Swordman"
     local Cooldown = 10
-    local id = {order = "absorb", unit = "x##$", abil = "AM#&"}
+    local id = {abil = "AM#&", order = "absorb", unit = "x##$"}
     local SlaveToMaster = {}
     local MasterToSlaves = {}
     local finish = function(caster, target, x, y, full_time)
@@ -1512,4 +1512,3 @@ end
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()
   end
-  

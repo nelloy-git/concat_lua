@@ -5,41 +5,53 @@ local UnitEvent = require('unit.unitEvent')
 ---@type Ability
 local Ability = require('ability.ability')
 
+local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
+    local id = WeObjEdit.Utils.nextAbilId()
+    local order = WeObjEdit.Utils.nextOrderId()
+
+    ---@type ChannelWeAbility
+    local abil = WeObjEdit.Preset.Channel.new(id, order, 1, 'point',
+                                              true, false, false, false, false)
+    abil:setTooltipNormal(name, 1)
+    abil:setTooltipNormalExtended(tooltip, 1)
+    abil:setCastRange(range, 1)
+    abil:setAreaofEffect(area, 1)
+
+    abil:setCastingTime(0, 1)
+    abil:setFollowThroughTime(cast_time, 1)
+    abil:setArtDuration(cast_time, 1)
+
+    abil:setCooldown(cooldown, 1)
+    
+    return id
+end
+
+local function generateUnit(base_id, model, abilities)
+    local id = WeObjEdit.Utils.nextUnitId()
+    ---@type WeUnit
+    local summon = WeObjEdit.Unit.Unit.new(id.unit, base_id)
+    summon:setModelFile('war3mapImported\\units\\SwordNya.mdx')
+    summon:setNormalAbilities('Avul,Aloc')
+    summon:setSpeedBase(0)
+    return id
+end
+
+
 --
 -- Ability data
 --
-local Name = 'Summon Crystal Swordman'
-local Cooldown = 10
+local ability_name = 'Summon Crystal Swordman'
+local ability_tooltip = ''
+local range = 500
+local area = 150
+local base_cooldown = 10
 
+local abil_id = generateAbility(ability_name, ability_tooltip, range, area)
 --
 --
 --
-
-local id = compiletime(
-    function()
-        local id = {
-            abil = WeObjEdit.Utils.nextAbilId(),
-            order = WeObjEdit.Utils.nextOrderId(),
-            unit = WeObjEdit.Utils.nextUnitId()
-        }
-
-        ---@type WeUnit
-        local summon = WeObjEdit.Unit.Unit.new(id.unit, 'hfoo')
-        summon:setModelFile('war3mapImported\\units\\SwordNya.mdx')
-        summon:setNormalAbilities('Avul,Aloc')
-
-        ---@type ChannelWePreset
-        local abil = WeObjEdit.Preset.Channel.new(id.abil, id.order,
-                                                  1, 'point', true, false, false, false, false)
-        abil:setAreaofEffect(200, 1)
-        abil:setTooltipNormal('Summon crystal warrior.', 1)
-        abil:setCastingTime(0, 1)
-        abil:setFollowThroughTime(3, 1)
-        abil:setArtDuration(3, 1)
-        abil:setCastRange(200, 1)
-        abil:setCooldown(5, 1)
-        return id
-    end)
+---@type Ability
+local SummonCrystalSwordmanAbility = Ability.new(abil_id)
 
 ---@type table<Unit, Unit>
 local SlaveToMaster = {}
@@ -61,9 +73,6 @@ local finish = function(caster, target, x, y, full_time)
 
     unit.parameter:setAttacksPerSec(1)
 end
-
----@type Ability
-local SummonCrystalSwordmanAbility = Ability.new(id.abil)
 SummonCrystalSwordmanAbility:setCallback(finish, "finish")
 SummonCrystalSwordmanAbility:setName('Summon Crystal Swordman')
 SummonCrystalSwordmanAbility:setCastTime(2)

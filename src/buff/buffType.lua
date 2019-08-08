@@ -1,18 +1,26 @@
-local BuffType = {
-    __callback_timer = nil,
-    __buff_data = {}
-}
+local Buff = {}
 
--- compiletime function
-function BuffType.new(abil_id, buff_id, name, tooltip, icon, effect_path, attach_point)
+---Function generates new buff and caring ability in compile time.
+---@param name string
+---@param tooltip string
+---@param icon string
+---@param effect_path string
+---@param attach_point string
+---@return string, string
+function Buff.new(name, tooltip, icon, effect_path, attach_point)
+    local id = {
+        ability = WeObjEdit.Utils.nextAbilId(),
+        buff = WeObjEdit.Utils.nextBuffId()
+    }
     local objEdit = require('compiletime.objEdit.objEdit')
-    local buff = objEdit.AuraDummy.new(abil_id, buff_id,
+    local buff = objEdit.AuraDummy.new(id.ability, id.buff,
                                        name, tooltip,
                                        icon, effect_path, attach_point)
+    return id.ability, id.buff
 end
 
 -- Callback function takes buff_userdata, buff_type_userdata returns boolean
-function BuffType.register(abil_id, buff_id,
+function Buff.register(abil_id, buff_id,
                            start_callback, periodic_callback,
                            dispell_callback, end_callback,
                            buff_type_userdata)
@@ -25,41 +33,41 @@ function BuffType.register(abil_id, buff_id,
         end_cb = end_callback,
         type_userdata = buff_type_userdata
     }
-    setmetatable(buff_type, {__index = BuffType})
-    BuffType[abil_id] = buff_type
+    setmetatable(buff_type, {__index = Buff})
+    Buff[abil_id] = buff_type
     return buff_type
 end
 
-function BuffType:start(target, instance_userdata)
+function Buff:start(target, instance_userdata)
     return self.start_cb(target, instance_userdata, self.type_userdata)
 end
 
-function BuffType:period(target, instance_userdata)
+function Buff:period(target, instance_userdata)
     return self.periodic_cb(target, instance_userdata, self.type_userdata)
 end
 
-function BuffType:dispell(target, instance_userdata)
+function Buff:dispell(target, instance_userdata)
     return self.dispell_cb(target, instance_userdata, self.type_userdata)
 end
 
-function BuffType:finish(target, instance_userdata)
+function Buff:finish(target, instance_userdata)
     return self.end_cb(target, instance_userdata, self.type_userdata)
 end
 
-function BuffType:setStartCallback(start_callback)
+function Buff:setStartCallback(start_callback)
     self.start_cb = start_callback
 end
 
-function BuffType:setPeriodicCallback(periodic_callback)
+function Buff:setPeriodicCallback(periodic_callback)
     self.periodic_cb = periodic_callback
 end
 
-function BuffType:setDispellCallback(dispell_callback)
+function Buff:setDispellCallback(dispell_callback)
     self.dispell_cb = dispell_callback
 end
 
-function BuffType:setStartCallback(start_callback)
+function Buff:setStartCallback(start_callback)
     self.start_callback = start_callback
 end
 
-return BuffType
+return Buff

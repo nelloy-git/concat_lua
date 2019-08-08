@@ -13,6 +13,7 @@ local ChannelWePreset = {}
 ---@param is_material boolean
 ---@param is_universal boolean
 ---@param is_group boolean
+---@return ChannelWeAbility|nil
 function ChannelWePreset.new(id, order_id, lvls, target_type, is_visible, is_area, is_material, is_universal, is_group)
     if is_compiletime then
         ---@type ChannelWeAbility

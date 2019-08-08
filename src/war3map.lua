@@ -3,6 +3,7 @@ compiletime(
         ---@type ObjEdit
         WeObjEdit = require('compiletime.objEdit.objEdit')
         WeObjEdit.init(src_dir, dst_dir)
+        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
     end)
 
 GG_trg_Melee_Initialization = nil
@@ -35,9 +36,7 @@ function RunInitialization()
 
     ---@type Ability
     local summon_abil = require('ability.spiritMage.summonSwordman')
-    print('azaza')
     u:addAbility(summon_abil)
-    print('azaza')
 end
 
 function InitCustomPlayerSlots()
@@ -78,8 +77,8 @@ function config()
     InitGenericPlayerSlots()
 end
 
-compiletime(
-    function ()
-        WeObjEdit.close()
-        WeObjEdit = nil
-    end)
+--compiletime(
+--    function ()
+--        WeObjEdit.close()
+--        WeObjEdit = nil
+--    end)
