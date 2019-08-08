@@ -5,14 +5,13 @@ local AbilityEvent = require('ability.abilityEvent')
 local castBar = {}
 
 function castBar.init()
-    TriggerSleepAction(0)
-
     local toc_file = "war3mapImported\\frame_files\\MyBar.toc"
     if not BlzLoadTOCFile(toc_file) then
         print('Error in '..toc_file)
         print(getErrorPos())
     end
 
+    print('CastBar')
     local castProgressBar = BlzCreateSimpleFrame("MyBarEx", BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 1)
     local castProgressBarText = BlzGetFrameByName("MyBarExText", 1)
     BlzFrameSetAbsPoint(castProgressBar, FRAMEPOINT_CENTER, 0.3, 0.15)
@@ -47,6 +46,8 @@ function castBar.init()
     local trigger2 = CreateTrigger()
     TriggerRegisterTimerEvent(trigger2, 0.05, true)
     TriggerAddAction(trigger2, update)
+
+    print('CastingBar initialized.')
 end
 
 return castBar

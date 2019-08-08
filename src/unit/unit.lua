@@ -117,6 +117,36 @@ function Unit:issueImmediateOrderById(order_id)
     IssueImmediateOrderById(self.unit_obj, order_id)
 end
 
+---@param order_id integer
+---@param x number
+---@param y number
+function Unit:issuePointOrderById(order_id, x, y)
+    IssuePointOrderById(self.unit_obj, order_id, x, y)
+end
+
+---@param speed number
+function Unit:setMoveSpeed(speed)
+    SetUnitMoveSpeed(self.unit_obj, speed)
+end
+
+---@param speed number
+function Unit:setTurnSpeed(speed)
+    SetUnitTurnSpeed(self.unit_obj, speed)
+end
+
+---@param animation string
+function Unit:playAnimation(animation)
+    SetUnitAnimation(self.unit_obj, animation)
+end
+
+function Unit:pause()
+    PauseUnit(self.unit_obj, true)
+end
+
+function Unit:unpause()
+    PauseUnit(self.unit_obj, false)
+end
+
 local __replaced_functions = {
     GetLevelingUnit = GetLevelingUnit,
     GetLearningUnit = GetLearningUnit,

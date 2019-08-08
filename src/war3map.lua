@@ -6,6 +6,7 @@ compiletime(
         addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
     end)
 
+
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
@@ -29,6 +30,7 @@ function RunInitialization()
 
     local Init = require('utils.init')
     Init.start()
+    require('interface.frames.castBar')
 
     ---@type Unit
     local Unit = require('unit.unit')
@@ -36,7 +38,9 @@ function RunInitialization()
 
     ---@type Ability
     local summon_abil = require('ability.spiritMage.summonSwordman')
+    local rush_abil = require('ability.spiritMage.spiritRush')
     u:addAbility(summon_abil)
+    u:addAbility(rush_abil)
 end
 
 function InitCustomPlayerSlots()
@@ -71,7 +75,7 @@ function config()
     SetPlayers(1)
     SetTeams(1)
     SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
-    DefineStartLocation(0, -1953.6, -3131.3)
+    DefineStartLocation(0, 0, 0)
     InitCustomPlayerSlots()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()

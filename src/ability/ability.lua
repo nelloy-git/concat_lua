@@ -40,19 +40,18 @@ function Ability.new(id)
     return ability
 end
 
----@param id integer
+---@param id string|integer
 ---@return Ability
 function Ability.getAbility(id)
     id = ID(id)
     if id then
-        return AbilityDB[ID(id)]
+        return AbilityDB[id]
     end
     return nil
 end
 
 ---@return integer
 function Ability:getId()
-    print(self.id)
     return self.id
 end
 
