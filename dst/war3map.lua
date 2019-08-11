@@ -10,6 +10,8 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local Ability = require("ability.ability")
     local SummonSwordman = require("ability.spiritMage.summonSwordman")
     local Unit = require("unit.unit")
+    local AbilityEvent = require("ability.abilityEvent")
+    local timer = AbilityEvent.CastingTimer
     local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
       local id = WeObjEdit.Utils.nextAbilId()
       local order = WeObjEdit.Utils.nextOrderId()
@@ -32,15 +34,42 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local cast_time = 0
     local base_cooldown = 0
     local abil_id = "AM#'"
+    local moveSpeed = 30
+    local movePeriod = 0.03125
+    local skillAnimationBaseTime = 1
+    local function moveUnit(data)
+      local speed = moveSpeed
+      local x, y = data.unit:getPos()
+      if (speed >= data.r) then
+        speed = data.r
+        data.unit:setPos((x-(data.cos*speed)), (y-(data.sin*speed)))
+        data.unit:unpause()
+        data.unit:playAnimation("stand")
+        data.unit:setAnimationSpeed(1)
+      else
+        data.unit:setPos((x-(data.cos*speed)), (y-(data.sin*speed)))
+        data.r = (data.r-speed)
+        timer:addAction(movePeriod, moveUnit, data)
+      end
+    end
     local function finish(caster, target, x, y, full_time)
       local summons = SummonSwordman.getSlaves(caster)
       print(#summons)
       for i = 1, #summons do
         local u = summons[i]
-        u:setMoveSpeed(1000)
-        u:issuePointOrderById(851986, x, y)
+        u:pause()
+        u:setFacingTo(x, y)
+        u:playAnimation("Attack Spell Slam")
+        local u_x, u_y = u:getPos()
+        local dx = (u_x-x)
+        local dy = (u_y-y)
+        local r = (((dx*dx)+(dy*dy))^0.5)
+        local anim_time = ((r/moveSpeed)*movePeriod)
+        u:setAnimationSpeed((skillAnimationBaseTime/anim_time))
+        print("range: ", r)
+        local data = {unit = u, sin = (dy/r), cos = (dx/r), r = r}
+        timer:addAction(movePeriod, moveUnit, data)
       end
-      print("Rushed")
     end
     local SpiritRush = Ability.new(abil_id)
     SpiritRush:setCallback(finish, "finish")
@@ -518,6 +547,21 @@ __require_data.module["unit.unit"] = function()
     function Unit:getOwningPlayerIndex()
       return player2index(GetOwningPlayer(self.unit_obj))
     end
+    function Unit:setPos(x, y)
+      SetUnitX(self.unit_obj, x)
+      SetUnitY(self.unit_obj, y)
+    end
+    function Unit:getPos()
+      return GetUnitX(self.unit_obj), GetUnitY(self.unit_obj)
+    end
+    function Unit:setFacing(angle)
+      SetUnitFacing(self.unit_obj, angle)
+    end
+    function Unit:setFacingTo(target_x, target_y)
+      local x, y = self:getPos()
+      local angle = (180+((180/math.pi)*math.atan((y-target_y), (x-target_x))))
+      SetUnitFacing(self.unit_obj, angle)
+    end
     function Unit:getFacing()
       return GetUnitFacing(self.unit_obj)
     end
@@ -541,6 +585,18 @@ __require_data.module["unit.unit"] = function()
     end
     function Unit:setTurnSpeed(speed)
       SetUnitTurnSpeed(self.unit_obj, speed)
+    end
+    function Unit:playAnimation(animation)
+      SetUnitAnimation(self.unit_obj, animation)
+    end
+    function Unit:setAnimationSpeed(scale)
+      SetUnitTimeScale(self.unit_obj, scale)
+    end
+    function Unit:pause()
+      PauseUnit(self.unit_obj, true)
+    end
+    function Unit:unpause()
+      PauseUnit(self.unit_obj, false)
     end
     local __replaced_functions = {GetLevelingUnit = GetLevelingUnit, GetLearningUnit = GetLearningUnit, GetRevivableUnit = GetRevivableUnit, GetRevivingUnit = GetRevivingUnit, GetAttacker = GetAttacker, GetRescuer = GetRescuer, GetDyingUnit = GetDyingUnit, GetKillingUnit = GetKillingUnit, GetDecayingUnit = GetDecayingUnit, GetConstructingStructure = GetConstructingStructure, GetCancelledStructure = GetCancelledStructure, GetConstructedStructure = GetConstructedStructure, GetResearchingUnit = GetResearchingUnit, GetTrainedUnit = GetTrainedUnit, GetDetectedUnit = GetDetectedUnit, GetSummoningUnit = GetSummoningUnit, GetSummonedUnit = GetSummonedUnit, GetTransportUnit = GetTransportUnit, GetLoadedUnit = GetLoadedUnit, GetSellingUnit = GetSellingUnit, GetSoldUnit = GetSoldUnit, GetBuyingUnit = GetBuyingUnit, GetChangingUnit = GetChangingUnit, GetManipulatingUnit = GetManipulatingUnit, GetOrderedUnit = GetOrderedUnit, GetOrderTargetUnit = GetOrderTargetUnit, GetSpellAbilityUnit = GetSpellAbilityUnit, GetSpellTargetUnit = GetSpellTargetUnit, GetTriggerUnit = GetTriggerUnit, GetEventDamage = GetEventDamage, GetEventDamageSource = GetEventDamageSource, GetEventTargetUnit = GetEventTargetUnit}
     function GetLevelingUnit()
@@ -818,9 +874,9 @@ __require_data.module["ability.abilityEvent"] = function()
     local AbilityEvent = {}
     local CasterDB = {}
     local timer_precision = 0.05
-    local CastingTimer = nil
+    AbilityEvent.CastingTimer = nil
     function AbilityEvent.init()
-      CastingTimer = Timer.new(timer_precision)
+      AbilityEvent.CastingTimer = Timer.new(timer_precision)
       local casting_trigger = Trigger.new()
       casting_trigger:addEvent_AnyUnitSpellChannel()
       casting_trigger:addAction(AbilityEvent.startCast)
@@ -859,7 +915,7 @@ __require_data.module["ability.abilityEvent"] = function()
         return nil
       end
       local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
-      CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
+      AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
       CasterDB[caster] = unit_data
     end
     function AbilityEvent.timerPeriod(data)
@@ -886,7 +942,7 @@ __require_data.module["ability.abilityEvent"] = function()
       CasterDB[data.caster].time = data.time
       local continue = ability:runCallback("casting", data.caster, data.target, data.x, data.y, data.time, data.full_time)
       if (continue) then
-        CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
+        AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
       else
         ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil

@@ -16,11 +16,11 @@ local AbilityEvent = {}
 local CasterDB = {}
 
 local timer_precision = 0.05
-local CastingTimer = nil
+AbilityEvent.CastingTimer = nil
 
 function AbilityEvent.init()
     -- Init casting timer
-    CastingTimer = Timer.new(timer_precision)
+    AbilityEvent.CastingTimer = Timer.new(timer_precision)
 
     -- Init casting start
     ---@type Trigger
@@ -82,7 +82,7 @@ function AbilityEvent.startCast()
     -- Data for current cast.
     local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
     -- Start timer
-    CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
+    AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
     CasterDB[caster] = unit_data
 end
 
@@ -119,7 +119,7 @@ function AbilityEvent.timerPeriod(data)
     -- Should unit continue casting or its broken.
     local continue = ability:runCallback('casting', data.caster, data.target, data.x, data.y, data.time, data.full_time)
     if continue then
-        CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
+        AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
     else
         ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil

@@ -4,8 +4,10 @@ local Ability = require('ability.ability')
 local SummonSwordman = require('ability.spiritMage.summonSwordman')
 ---@type Unit
 local Unit = require('unit.unit')
+---@type AbilityEvent
+local AbilityEvent = require('ability.abilityEvent')
 ---@type Timer
-local Timer = require('utils.timer')
+local timer = AbilityEvent.CastingTimer
 
 local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
     local id = WeObjEdit.Utils.nextAbilId()
@@ -40,16 +42,49 @@ local area = 150
 local cast_time = 0
 local base_cooldown = 0
 local abil_id = compiletime(generateAbility(ability_name, ability_tooltip, range, area, cast_time, base_cooldown))
+local moveSpeed = 30
+local movePeriod = 0.03125
+local skillAnimationBaseTime = 1
+
+local function moveUnit(data)
+    local speed = moveSpeed
+    local x, y = data.unit:getPos()
+    if speed >= data.r then
+        speed = data.r
+        local u = data.unit
+        u:setPos(x - data.cos * speed, y - data.sin * speed)
+        u:unpause()
+        u:playAnimation('stand')
+        u:setAnimationSpeed(1)
+    else
+        data.unit:setPos(x - data.cos * speed, y - data.sin * speed)
+        data.r = data.r - speed
+        timer:addAction(movePeriod, moveUnit, data)
+    end
+end
 
 local function finish(caster, target, x, y, full_time)
     ---@type Unit[]
     local summons = SummonSwordman.getSlaves(caster)
-    print(#summons)
     for i = 1, #summons do
         ---@type Unit
         local u = summons[i]
         u:pause()
+        u:setFacingTo(x, y)
         u:playAnimation('Attack Spell Slam')
+        local u_x, u_y = u:getPos()
+        local dx = u_x - x
+        local dy = u_y - y
+        local r = (dx*dx + dy*dy)^0.5
+        local anim_time = r/moveSpeed * movePeriod
+        u:setAnimationSpeed(skillAnimationBaseTime / anim_time)
+        local data = {
+            unit = u,
+            sin = dy/r,
+            cos = dx/r,
+            r = r
+        }
+        timer:addAction(movePeriod, moveUnit, data)
     end
 end
 

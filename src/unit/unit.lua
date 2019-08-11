@@ -95,7 +95,20 @@ end
 
 ---@return integer
 function Unit:getOwningPlayerIndex() return player2index(GetOwningPlayer(self.unit_obj)) end
-
+---@param x number
+---@param y number
+function Unit:setPos(x, y) SetUnitX(self.unit_obj, x) SetUnitY(self.unit_obj, y) end
+---@return number, number
+function Unit:getPos() return GetUnitX(self.unit_obj), GetUnitY(self.unit_obj) end
+---@param angle number
+function Unit:setFacing(angle) SetUnitFacing(self.unit_obj, angle) end
+---@param target_x number
+---@param target_y number
+function Unit:setFacingTo(target_x, target_y)
+    local x, y = self:getPos()
+    local angle = 180 + (180 / math.pi) * math.atan(y - target_y, x - target_x)
+    SetUnitFacing(self.unit_obj, angle)
+end
 ---@return number
 function Unit:getFacing() return GetUnitFacing(self.unit_obj) end
 
@@ -135,9 +148,9 @@ function Unit:setTurnSpeed(speed)
 end
 
 ---@param animation string
-function Unit:playAnimation(animation)
-    SetUnitAnimation(self.unit_obj, animation)
-end
+function Unit:playAnimation(animation) SetUnitAnimation(self.unit_obj, animation) end
+---@param scale number
+function Unit:setAnimationSpeed(scale) SetUnitTimeScale(self.unit_obj, scale) end
 
 function Unit:pause()
     PauseUnit(self.unit_obj, true)
