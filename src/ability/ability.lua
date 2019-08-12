@@ -10,10 +10,10 @@ local Ability_meta = {__index = Ability}
 ---@type table<integer, Ability>
 local AbilityDB = {}
 
----@alias AbilityStartCallback fun(self:Ability, caster:Unit, target:Unit|userdata|nil, x:number, y:number):boolean
----@alias AbilityCastingCallback fun(self:Ability, caster:Unit, target:Unit|userdata|nil, x:number, y:number, cur_time:number, full_time:number):boolean
----@alias AbilityInterruptCallback fun(self:Ability, caster:Unit, target:Unit|userdata|nil, x:number, y:number, cur_time:number, full_time:number)
----@alias AbilityFinishCallback fun(self:Ability, caster:Unit, target:Unit|userdata|nil, x:number, y:number, full_time:number)
+---@alias AbilityStartCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number):boolean
+---@alias AbilityCastingCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number, cur_time:number, full_time:number):boolean
+---@alias AbilityInterruptCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number, cur_time:number, full_time:number)
+---@alias AbilityFinishCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number, full_time:number)
 ---@alias AbilityGetName fun(self:Ability):string
 ---@alias AbilityGetCastTime fun(self:Ability, caster:Unit):number
 

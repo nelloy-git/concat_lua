@@ -113,9 +113,9 @@ end
 function Unit:getFacing() return GetUnitFacing(self.unit_obj) end
 
 ---@param ability Ability
-function Unit:addAbility(ability)
-    UnitAddAbility(self.unit_obj, ability:getId())
-end
+function Unit:addAbility(ability) UnitAddAbility(self.unit_obj, ability:getId()) end
+---@param ability Ability
+function Unit:removeAbility(ability) UnitRemoveAbility(self.unit_obj, ability:getId()) end
 
 ---@param flag boolean
 function Unit:setInvulnerable(flag)
