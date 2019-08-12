@@ -1,29 +1,29 @@
----@class Player
-local Player = {}
+---@class Players
+local Players = {}
 
 local local_player = nil
 local local_player_index = -1
 local players_array = {}
 
-function Player.init()
+function Players.init()
     local_player = GetLocalPlayer()
     local_player_index = player2index(local_player)
-    for i = 0, bj_MAX_PLAYER_SLOTS do
-        table.insert(players_array, Player(i))
+    for i = 1, bj_MAX_PLAYER_SLOTS do
+        players_array[i] = Player(i - 1)
     end
 end
 
-function Player.getLocalPlayerIndex()
+function Players.getLocalPlayerIndex()
     return local_player_index
 end
 
 ---Function forces player push button.
 ---@param index integer
 ---@param key string
-function Player.forceUIKey(index, key)
+function Players.forceUIKey(index, key)
     if players_array[index] == local_player then
-        ForceUIKey(players_array[index], key)
+        ForceUIKey(key)
     end
 end
 
-return Player
+return Players

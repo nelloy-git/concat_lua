@@ -7,6 +7,7 @@ function Init.start()
             __require_data.loaded[name] = true
         end
         if __require_data.result[name].init ~= nil then
+            print(name)
             __require_data.result[name].init()
         end
     end

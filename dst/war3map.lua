@@ -6,25 +6,68 @@
     end
     return __require_data.result[name]
   end
+__require_data.module["player.playerEvent"] = function()
+    local Trigger = require("trigger.trigger")
+    local Players = require("player.player")
+    local PlayerEvent = {}
+    function PlayerEvent.init()
+      PlayerEvent.local_mouse_move = Trigger.new()
+      PlayerEvent.local_mouse_move:addEvent_PlayerMouseMove(Players.getLocalPlayerIndex())
+      print("PlayerEvent initialized")
+    end
+    return PlayerEvent
+end
+__require_data.module["player.player"] = function()
+    local Players = {}
+    local local_player = nil
+    local local_player_index = -1
+    local players_array = {}
+    function Players.init()
+      local_player = GetLocalPlayer()
+      local_player_index = player2index(local_player)
+      for i = 1, bj_MAX_PLAYER_SLOTS do
+        players_array[i] = Player((i-1))
+      end
+    end
+    function Players.getLocalPlayerIndex()
+      return local_player_index
+    end
+    function Players.forceUIKey(index, key)
+      if (players_array[index] == local_player) then
+        ForceUIKey(key)
+      end
+    end
+    return Players
+end
 __require_data.module["ability.spiritMage.spiritRush"] = function()
     local Ability = require("ability.ability")
     local SummonSwordman = require("ability.spiritMage.summonSwordman")
     local Unit = require("unit.unit")
     local AbilityEvent = require("ability.abilityEvent")
     local timer = AbilityEvent.CastingTimer
-    local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
+    local Players = require("player.player")
+    local PlayerEvent = require("player.playerEvent")
+    local function generateDummyAbility(name, tooltip, hot_key)
       local id = WeObjEdit.Utils.nextAbilId()
       local order = WeObjEdit.Utils.nextOrderId()
-      local abil = WeObjEdit.Preset.Channel.new(id, order, 1, "point", true, true, false, false, false)
+      local abil = WeObjEdit.Preset.Channel.new(id, order, 1, "none", true, false, false, false, false)
       abil:setTooltipNormal(name, 1)
       abil:setTooltipNormalExtended(tooltip, 1)
+      abil:setHotkeyNormal(hot_key)
+      abil:setCastingTime(0, 1)
+      abil:setFollowThroughTime(0, 1)
+      abil:setArtDuration(0, 1)
+      return id
+    end
+    local function generateAbility(range, cast_time, hot_key)
+      local id = WeObjEdit.Utils.nextAbilId()
+      local order = WeObjEdit.Utils.nextOrderId()
+      local abil = WeObjEdit.Preset.Channel.new(id, order, 1, "point", true, false, false, false, false)
       abil:setCastRange(range, 1)
-      abil:setAreaofEffect(area, 1)
+      abil:setHotkeyNormal(hot_key)
       abil:setCastingTime(0, 1)
       abil:setFollowThroughTime(cast_time, 1)
       abil:setArtDuration(cast_time, 1)
-      abil:setCooldown(cooldown, 1)
-      abil:setHotkeyNormal("Z")
       return id
     end
     local ability_name = "Spirit rush"
@@ -33,19 +76,72 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local area = 150
     local cast_time = 0
     local base_cooldown = 0
-    local abil_id = "AM#'"
+    local hot_key = "Z"
+    local dummy_id = "AM#'"
+    local abil_id = "AM#("
     local moveSpeed = 30
     local movePeriod = 0.03125
     local skillAnimationBaseTime = 1
+    local positios_range = 100
+    local pos_offsets = {[1] = {x = 0, y = 0}, [2] = {x = positios_range, y = 0}, [3] = {x = -positios_range, y = 0}, [4] = {x = 0, y = positios_range}, [5] = {x = positios_range, y = positios_range}, [6] = {x = -positios_range, y = positios_range}, [7] = {x = 0, y = (2*positios_range)}, [8] = {x = positios_range, y = (2*positios_range)}, [9] = {x = -positios_range, y = (2*positios_range)}}
+    local dummySpiritRush = Ability.new(dummy_id)
+    local SpiritRush = Ability.new(abil_id)
+    local circle_model = "Abilities\\Spells\\Other\\GeneralAuraTarget\\GeneralAuraTarget.mdl"
+    function createCircules(count, x, y, caster_x, caster_y)
+      local dx = (x-caster_x)
+      local dy = (y-caster_y)
+      local r = (((dx*dx)+(dy*dy))^0.5)
+      local cos = (x/r)
+      local sin = (y/r)
+      local effects = {}
+      for i = 1, count do
+        local pos_x = ((x+(pos_offsets[i].x*sin))+(pos_offsets[i].y*cos))
+        local pos_y = ((y+(pos_offsets[i].x*cos))+(pos_offsets[i].y*sin))
+        effects[i] = AddSpecialEffect(circle_model, pos_x, pos_y)
+      end
+      return effects
+    end
+    local function trackingTarget(caster, effects)
+      print("Tracking")
+      local mouse_x = BlzGetTriggerPlayerMouseX()
+      local mouse_y = BlzGetTriggerPlayerMouseY()
+      local slaves = SummonSwordman.getSlaves(caster)
+      local count = #slaves
+      local x, y = caster:getPos()
+      local new_circles = createCircules(count, mouse_x, mouse_y, x, y)
+      for i = 1, #effects do
+        BlzSetSpecialEffectPosition(effects[i], 0, 0, -5000)
+        DestroyEffect(effects[i])
+      end
+      for i = 1, #new_circles do
+        effects[i] = new_circles[i]
+      end
+      for i = (#new_circles+1), #effects do
+        effects[i] = nil
+      end
+    end
+    local function startTargeting(caster, target, x, y)
+      local owner_index = caster:getOwningPlayerIndex()
+      caster:removeAbility(dummySpiritRush)
+      caster:addAbility(SpiritRush)
+      Players.forceUIKey(owner_index, hot_key)
+      local slaves = SummonSwordman.getSlaves(caster)
+      local caster_x, caster_y = caster:getPos()
+      local circles = createCircules(#slaves, 0, 0, caster_x, caster_y)
+      PlayerEvent.local_mouse_move:addAction(function()
+          trackingTarget(caster, circles)
+      end)
+    end
     local function moveUnit(data)
       local speed = moveSpeed
       local x, y = data.unit:getPos()
       if (speed >= data.r) then
         speed = data.r
-        data.unit:setPos((x-(data.cos*speed)), (y-(data.sin*speed)))
-        data.unit:unpause()
-        data.unit:playAnimation("stand")
-        data.unit:setAnimationSpeed(1)
+        local u = data.unit
+        u:setPos((x-(data.cos*speed)), (y-(data.sin*speed)))
+        u:unpause()
+        u:playAnimation("stand")
+        u:setAnimationSpeed(1)
       else
         data.unit:setPos((x-(data.cos*speed)), (y-(data.sin*speed)))
         data.r = (data.r-speed)
@@ -54,7 +150,6 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     end
     local function finish(caster, target, x, y, full_time)
       local summons = SummonSwordman.getSlaves(caster)
-      print(#summons)
       for i = 1, #summons do
         local u = summons[i]
         u:pause()
@@ -66,16 +161,15 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
         local r = (((dx*dx)+(dy*dy))^0.5)
         local anim_time = ((r/moveSpeed)*movePeriod)
         u:setAnimationSpeed((skillAnimationBaseTime/anim_time))
-        print("range: ", r)
         local data = {unit = u, sin = (dy/r), cos = (dx/r), r = r}
         timer:addAction(movePeriod, moveUnit, data)
       end
     end
-    local SpiritRush = Ability.new(abil_id)
     SpiritRush:setCallback(finish, "finish")
     SpiritRush:setName(ability_name)
     SpiritRush:setCastTime(cast_time)
-    return SpiritRush
+    dummySpiritRush:setCallback(startTargeting, "finish")
+    return dummySpiritRush
 end
 __require_data.module["unit.unitEvent"] = function()
     local Trigger = require("trigger.trigger")
@@ -567,6 +661,9 @@ __require_data.module["unit.unit"] = function()
     end
     function Unit:addAbility(ability)
       UnitAddAbility(self.unit_obj, ability:getId())
+    end
+    function Unit:removeAbility(ability)
+      UnitRemoveAbility(self.unit_obj, ability:getId())
     end
     function Unit:setInvulnerable(flag)
       SetUnitInvulnerable(self.unit_obj, flag)
@@ -1713,6 +1810,7 @@ __require_data.module["utils.init"] = function()
           __require_data.loaded[name] = true
         end
         if (__require_data.result[name].init ~= nil) then
+          print(name)
           __require_data.result[name].init()
         end
       end
