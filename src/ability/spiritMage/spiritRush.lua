@@ -75,14 +75,14 @@ local positios_range = 100
 
 local pos_offsets = {
     [1] = {x = 0, y = 0},
-    [2] = {x = positios_range, y = 0},
-    [3] = {x = -positios_range, y = 0},
-    [4] = {x = 0, y = positios_range},
+    [2] = {x = 0, y = positios_range},
+    [3] = {x = 0, y = -positios_range},
+    [4] = {x = positios_range, y = 0},
     [5] = {x = positios_range, y = positios_range},
-    [6] = {x = -positios_range, y = positios_range},
-    [7] = {x = 0, y = 2 * positios_range},
-    [8] = {x = positios_range, y = 2 * positios_range},
-    [9] = {x = -positios_range, y = 2 * positios_range},
+    [6] = {x = positios_range, y = -positios_range},
+    [7] = {x = 2 * positios_range, y = 0},
+    [8] = {x = 2 * positios_range, y = positios_range},
+    [9] = {x = 2 * positios_range, y = -positios_range},
 }
 
 local dummySpiritRush = Ability.new(dummy_id)
@@ -93,12 +93,12 @@ function createCircules(count, x, y, caster_x, caster_y)
     local dx = x - caster_x
     local dy = y - caster_y
     local r = (dx*dx + dy*dy)^0.5
-    local cos = x / r
-    local sin = y / r
+    local cos = dx / r
+    local sin = -dy / r
     local effects = {}
     for i = 1, count do
-        local pos_x = x + pos_offsets[i].x * sin + pos_offsets[i].y * cos
-        local pos_y = y + pos_offsets[i].x * cos + pos_offsets[i].y * sin
+        local pos_x = x + pos_offsets[i].x * cos + pos_offsets[i].y * sin
+        local pos_y = y + pos_offsets[i].x * sin + pos_offsets[i].y * cos
         effects[i] = AddSpecialEffect(circle_model, pos_x, pos_y)
     end
     return effects
@@ -106,7 +106,7 @@ end
 
 ---@param caster Unit
 local function trackingTarget(caster, effects)
-    print('Tracking')
+    --print('Tracking')
     local mouse_x = BlzGetTriggerPlayerMouseX()
     local mouse_y = BlzGetTriggerPlayerMouseY()
     local slaves = SummonSwordman.getSlaves(caster)
@@ -135,10 +135,11 @@ local function startTargeting(caster, target, x, y)
     local owner_index = caster:getOwningPlayerIndex()
     caster:removeAbility(dummySpiritRush)
     caster:addAbility(SpiritRush)
-    Players.forceUIKey(owner_index, hot_key)
+    timer:addAction(0, function() Players.forceUIKey(owner_index, hot_key) end, nil)
     local slaves = SummonSwordman.getSlaves(caster)
     local caster_x, caster_y = caster:getPos()
     local circles = createCircules(#slaves, 0, 0, caster_x, caster_y)
+    Players.forceUIKey(owner_index, hot_key)
     PlayerEvent.local_mouse_move:addAction(function()
             trackingTarget(caster, circles)
         end)

@@ -21,8 +21,10 @@ end
 ---@param index integer
 ---@param key string
 function Players.forceUIKey(index, key)
-    if players_array[index] == local_player then
+    print(index, local_player_index)
+    if index == local_player_index then
         ForceUIKey(key)
+        print('Pressed')
     end
 end
 
