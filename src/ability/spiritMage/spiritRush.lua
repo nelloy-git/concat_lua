@@ -106,11 +106,13 @@ end
 
 ---@param caster Unit
 local function trackingTarget(caster, effects)
-    --print('Tracking')
     local mouse_x = BlzGetTriggerPlayerMouseX()
     local mouse_y = BlzGetTriggerPlayerMouseY()
     local slaves = SummonSwordman.getSlaves(caster)
-    local count = #slaves
+    local count = 0
+    if slaves ~= nil then
+        count = #slaves
+    end
 
     local x, y = caster:getPos()
     local new_circles = createCircules(count, mouse_x, mouse_y, x, y)

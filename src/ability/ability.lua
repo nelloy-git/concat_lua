@@ -1,8 +1,3 @@
----@type Timer
-local Timer = require('utils.timer')
----@type Trigger
-local Trigger = require('trigger.trigger')
-
 ---@class Ability
 local Ability = {}
 local Ability_meta = {__index = Ability}

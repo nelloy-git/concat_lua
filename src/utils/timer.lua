@@ -55,6 +55,7 @@ function Timer:addAction(delay, callback, user_data)
         period = period
     }
     table.insert(self.actions, 1, action)
+    return action
 end
 
 function Timer:removeAction(action)
