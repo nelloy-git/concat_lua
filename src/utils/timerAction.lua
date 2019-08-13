@@ -16,6 +16,7 @@ function TimerAction.new(time, callback, data)
     return action
 end
 
+---@return number
 function TimerAction:getTime()
     return self.time
 end

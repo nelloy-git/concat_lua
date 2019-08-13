@@ -1,23 +1,22 @@
 ---@type TimerAction
 local TimerAction = require('utils.timerAction')
 
+---@class Timer
 local GlobalTimer = {
+    timer = nil,
     cur_time = 0,
+    precision = 0.03125,
     ---@type TimerAction[]
-    actions = {},
-    to_remove = {}
+    actions = {}
 }
 
-local timer = nil
-local precision = 0.03125
-
 function GlobalTimer.init()
-    timer = CreateTimer()
-    TimerStart(timer, precision, true, GlobalTimer.period)
+    GlobalTimer.timer = CreateTimer()
+    TimerStart(GlobalTimer.timer, GlobalTimer.precision, true, GlobalTimer.period)
 end
 
 function GlobalTimer.period()
-    local cur_time = GlobalTimer.cur_time + precision
+    local cur_time = GlobalTimer.cur_time + GlobalTimer.precision
     if #GlobalTimer.actions == 0 then
         return nil
     end
@@ -37,9 +36,9 @@ end
 ---@param list TimerAction[]
 local function findPos(time, first, last, list)
     local len = last - first + 1
-    if len == 1 then return first end
+    if len <= 1 then return 1 end
 
-    local i = math.modf(len / 2)
+    local i, _ = math.modf(len / 2)
     local pos = first + i
     if list[pos]:getTime() > time then
         return findPos(time, first, pos - 1, list)
@@ -56,7 +55,9 @@ function GlobalTimer.addAction(delay, callback, data)
     local time = GlobalTimer.cur_time + delay
     local action = TimerAction.new(time, callback, data)
     local pos = findPos(time, 1, #GlobalTimer.actions, GlobalTimer.actions)
+    debug(pos)
     table.insert(GlobalTimer.actions, pos, action)
+    debug(#GlobalTimer.actions)
     return action
 end
 

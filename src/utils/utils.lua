@@ -1,3 +1,5 @@
+local Settings = require('utils.settings')
+
 ---@class Utils
 local Utils = {}
 
@@ -25,13 +27,15 @@ function print(...)
         for i = 1, select('#', ...) do
             local v = select(i, ...)
             local t = type(v)
-            if t == 'integer' or t == 'number' or t == 'table' then
-                v = tostring(v)
-            elseif t == 'nil' then
-                v = 'Nil'
+            if t == 'nil' then
+                v = 'nil'
             elseif t == 'userdata' then
                 v = 'userdata'
-            elseif type(v) ~= 'string' then
+            elseif t == 'string' then
+                v = v
+            elseif v.tostring ~= nil then
+                v = v.tostring()
+            else
                 v = ''
             end
 
@@ -39,10 +43,44 @@ function print(...)
         end
 
         for i = 0, 23 do
-            DisplayTimedTextToPlayer(Player(i), 0, 0, 30, '[Debug]: '..s)
+            DisplayTimedTextToPlayer(Player(i), 0, 0, 30, s)
         end
     end
 end
+
+---Function prints data to local player.
+function debug(...)
+    if is_compiletime then
+        __real_print(...)
+    elseif Settings.debug then
+        local s = ''
+        for i = 1, select('#', ...) do
+            local v = select(i, ...)
+            local t = type(v)
+            if t == 'nil' then
+                v = 'nil'
+            elseif t == 'userdata' then
+                v = 'userdata'
+            elseif t == 'string' then
+                v = v
+            elseif t == 'integer' or t == 'number' then
+                --DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..t)
+                v = tostring(v)
+            elseif t == 'table' and v.__tostring ~= nil then
+                --debug()
+                --v = tostring(v)
+                v = ' Has tostring'
+            else
+                v = ''
+            end
+
+            s = s..' '..v
+        end
+
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
+    end
+end
+
 
 ---@param id integer|string
 ---@return integer|nil

@@ -11,8 +11,6 @@ GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
 
---local castBar = require('interface.frames.castBar')
-
 function Trig_Melee_Initialization_Actions()
 end
 
@@ -29,8 +27,12 @@ function RunInitialization()
     DestroyTimer(GetExpiredTimer())
 
     local Init = require('utils.init')
+    local Utils = require('utils.utils')
     Init.start()
     require('interface.frames.castBar')
+    
+    ---@type Timer
+    glTimer = require('utils.globalTimer')
 
     ---@type Unit
     local Unit = require('unit.unit')

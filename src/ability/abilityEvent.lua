@@ -1,17 +1,12 @@
 ---@type Ability
 local Ability = require('ability.ability')
----@type Timer
-local Timer = require('utils.timer')
 ---@type Trigger
 local Trigger = require('trigger.trigger')
 
---local Init = require('utils.init')
-
 ---@class AbilityEvent
 local AbilityEvent = {}
--- Automate init function.
---Init.add(AbilityEvent)
 
+---Contains currently casting units.
 ---@type table<Unit, UnitCastingData>
 local CasterDB = {}
 
@@ -19,9 +14,6 @@ local timer_precision = 0.05
 AbilityEvent.CastingTimer = nil
 
 function AbilityEvent.init()
-    -- Init casting timer
-    AbilityEvent.CastingTimer = Timer.new(timer_precision)
-
     -- Init casting start
     ---@type Trigger
     local casting_trigger = Trigger.new()
@@ -29,15 +21,14 @@ function AbilityEvent.init()
     casting_trigger:addAction(AbilityEvent.startCast)
 
     -- Init break casting with orders
+    ---@type Trigger
     local trigger = Trigger.new()
     trigger:addEvent_AnyUnitIssuedOrder()
     trigger:addEvent_AnyUnitIssuedOrderTarget()
     trigger:addEvent_AnyUnitIssuedOrderPointTarget()
     trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
-    trigger:addAction(function()
-            CasterDB[GetOrderedUnit()] = nil
-        end)
-    print('Abilities events initialized')
+    trigger:addAction(function() CasterDB[GetOrderedUnit()] = nil end)
+    debug('Abilities events initialized')
 end
 
 local function generateDataForCast(ability, caster, target, x, y)
@@ -82,7 +73,7 @@ function AbilityEvent.startCast()
     -- Data for current cast.
     local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
     -- Start timer
-    AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
+    glTimer.addAction(0, AbilityEvent.timerPeriod, casting_data)
     CasterDB[caster] = unit_data
 end
 
@@ -119,7 +110,7 @@ function AbilityEvent.timerPeriod(data)
     -- Should unit continue casting or its broken.
     local continue = ability:runCallback('casting', data.caster, data.target, data.x, data.y, data.time, data.full_time)
     if continue then
-        AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
+        glTimer.addAction(0, AbilityEvent.timerPeriod, data)
     else
         ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil

@@ -45,8 +45,6 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local Ability = require("ability.ability")
     local SummonSwordman = require("ability.spiritMage.summonSwordman")
     local Unit = require("unit.unit")
-    local AbilityEvent = require("ability.abilityEvent")
-    local timer = AbilityEvent.CastingTimer
     local Players = require("player.player")
     local PlayerEvent = require("player.playerEvent")
     local function generateDummyAbility(name, tooltip, hot_key)
@@ -81,7 +79,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local hot_key = "Z"
     local dummy_id = "AM#'"
     local abil_id = "AM#("
-    local moveSpeed = 30
+    local moveSpeed = 3
     local movePeriod = 0.03125
     local skillAnimationBaseTime = 1
     local positios_range = 100
@@ -89,7 +87,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local dummySpiritRush = Ability.new(dummy_id)
     local SpiritRush = Ability.new(abil_id)
     local circle_model = "Abilities\\Spells\\Other\\GeneralAuraTarget\\GeneralAuraTarget.mdl"
-    function createCircules(count, x, y, caster_x, caster_y)
+    local function createCircules(count, x, y, caster_x, caster_y)
       local dx = (x-caster_x)
       local dy = (y-caster_y)
       local r = (((dx*dx)+(dy*dy))^0.5)
@@ -107,7 +105,10 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
       local mouse_x = BlzGetTriggerPlayerMouseX()
       local mouse_y = BlzGetTriggerPlayerMouseY()
       local slaves = SummonSwordman.getSlaves(caster)
-      local count = #slaves
+      local count = 0
+      if (slaves ~= nil) then
+        count = #slaves
+      end
       local x, y = caster:getPos()
       local new_circles = createCircules(count, mouse_x, mouse_y, x, y)
       for i = 1, #effects do
@@ -121,21 +122,21 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
         effects[i] = nil
       end
     end
-    function pressHotkey(owner_index)
-      Players.forceUIKey(owner_index, hot_key)
-    end
     local function startTargeting(caster, target, x, y)
       local owner_index = caster:getOwningPlayerIndex()
       caster:removeAbility(dummySpiritRush)
       caster:addAbility(SpiritRush)
-      timer:addAction(0, pressHotkey, owner_index)
+      glTimer.addAction(0, function()
+          debug("Key pressed")
+          Players.forceUIKey(owner_index, hot_key)
+      end, nil)
       local slaves = SummonSwordman.getSlaves(caster)
       local caster_x, caster_y = caster:getPos()
       local circles = createCircules(#slaves, 0, 0, caster_x, caster_y)
-      Players.forceUIKey(owner_index, hot_key)
       PlayerEvent.local_mouse_move:addAction(function()
           trackingTarget(caster, circles)
       end)
+      debug("Tracking started")
     end
     local function moveUnit(data)
       local speed = moveSpeed
@@ -150,7 +151,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
       else
         data.unit:setPos((x-(data.cos*speed)), (y-(data.sin*speed)))
         data.r = (data.r-speed)
-        timer:addAction(movePeriod, moveUnit, data)
+        glTimer.addAction(movePeriod, moveUnit, data)
       end
     end
     local function finish(caster, target, x, y, full_time)
@@ -167,7 +168,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
         local anim_time = ((r/moveSpeed)*movePeriod)
         u:setAnimationSpeed((skillAnimationBaseTime/anim_time))
         local data = {unit = u, sin = (dy/r), cos = (dx/r), r = r}
-        timer:addAction(movePeriod, moveUnit, data)
+        glTimer.addAction(movePeriod, moveUnit, data)
       end
     end
     SpiritRush:setCallback(finish, "finish")
@@ -799,52 +800,77 @@ __require_data.module["unit.unit"] = function()
     end
     return Unit
 end
-__require_data.module["utils.timer"] = function()
-    local Timer = {}
-    local TimersDB = {}
-    local function period()
-      local wc_timer = GetExpiredTimer()
-      local timer_data = TimersDB[wc_timer]
-      timer_data.cur_time = (timer_data.cur_time+timer_data.precision)
-      local cur_time = timer_data.cur_time
-      local cur_list = timer_data.actions
-      local remove_list = timer_data.to_remove
-      timer_data.actions = {}
-      timer_data.to_remove = {}
-      for i = 1, #cur_list do
-        local action = cur_list[i]
-        local removed = false
-        for j = 1, #remove_list do
-          if (action == remove_list[j]) then
-            removed = true
-            break
-          end
-        end
-        if (cur_time >= action.time and not removed) then
-          action.callback(action.user_data)
-        end
+__require_data.module["utils.timerAction"] = function()
+    local TimerAction = {}
+    local TimerAction_meta = {__index = TimerAction}
+    function TimerAction.new(time, callback, data)
+      local action = {time = time, callback = callback, data = data}
+      setmetatable(action, TimerAction_meta)
+      return action
+    end
+    function TimerAction:getTime()
+      return self.time
+    end
+    function TimerAction:run()
+      self.callback(self.data)
+    end
+    return TimerAction
+end
+__require_data.module["utils.globalTimer"] = function()
+    local TimerAction = require("utils.timerAction")
+    local GlobalTimer = {timer = nil, cur_time = 0, precision = 0.03125, actions = {}}
+    function GlobalTimer.init()
+      GlobalTimer.timer = CreateTimer()
+      TimerStart(GlobalTimer.timer, GlobalTimer.precision, true, GlobalTimer.period)
+    end
+    function GlobalTimer.period()
+      local cur_time = (GlobalTimer.cur_time+GlobalTimer.precision)
+      if (#GlobalTimer.actions == 0) then
+        return nil
+      end
+      local action = GlobalTimer.actions[1]
+      while(action.time <= cur_time) do
+        action:run()
+        table.remove(GlobalTimer.actions, 1)
+        action = GlobalTimer.actions[1]
+      end
+      GlobalTimer.cur_time = cur_time
+    end
+    local function findPos(time, first, last, list)
+      local len = ((last-first)+1)
+      if (len <= 1) then
+        return 1
+      end
+      local i, _ = math.modf((len/2))
+      local pos = (first+i)
+      if (list[pos]:getTime() > time) then
+        return findPos(time, first, (pos-1), list)
+      else
+        return findPos(time, pos, last, list)
       end
     end
-    function Timer.new(precision)
-      local wc_timer = CreateTimer()
-      local timer_data = {cur_time = 0, precision = precision or 0.25, actions = {}, to_remove = {}}
-      setmetatable(timer_data, {__index = Timer})
-      TimersDB[wc_timer] = timer_data
-      TimerStart(wc_timer, precision, true, period)
-      return timer_data
+    function GlobalTimer.addAction(delay, callback, data)
+      local time = (GlobalTimer.cur_time+delay)
+      local action = TimerAction.new(time, callback, data)
+      local pos = findPos(time, 1, #GlobalTimer.actions, GlobalTimer.actions)
+      debug(pos)
+      table.insert(GlobalTimer.actions, pos, action)
+      debug(#GlobalTimer.actions)
+      return action
     end
-    function Timer:addAction(delay, callback, user_data)
-      local action = {time = (self.cur_time+delay), callback = callback, user_data = user_data, period = period}
-      table.insert(self.actions, 1, action)
+    function GlobalTimer.removeAction(action)
+      local count = #GlobalTimer.actions
+      for i = 1, count do
+        if (GlobalTimer.actions[i] == action) then
+          table.remove(GlobalTimer.actions, i)
+          return true
+        end
+      end
+      return false
     end
-    function Timer:removeAction(action)
-      table.insert(self.to_remove, 1, action)
-    end
-    return Timer
+    return GlobalTimer
 end
 __require_data.module["ability.ability"] = function()
-    local Timer = require("utils.timer")
-    local Trigger = require("trigger.trigger")
     local Ability = {}
     local Ability_meta = {__index = Ability}
     local AbilityDB = {}
@@ -971,14 +997,12 @@ end}
 end
 __require_data.module["ability.abilityEvent"] = function()
     local Ability = require("ability.ability")
-    local Timer = require("utils.timer")
     local Trigger = require("trigger.trigger")
     local AbilityEvent = {}
     local CasterDB = {}
     local timer_precision = 0.05
     AbilityEvent.CastingTimer = nil
     function AbilityEvent.init()
-      AbilityEvent.CastingTimer = Timer.new(timer_precision)
       local casting_trigger = Trigger.new()
       casting_trigger:addEvent_AnyUnitSpellChannel()
       casting_trigger:addAction(AbilityEvent.startCast)
@@ -990,7 +1014,7 @@ __require_data.module["ability.abilityEvent"] = function()
       trigger:addAction(function()
           CasterDB[GetOrderedUnit()] = nil
       end)
-      print("Abilities events initialized")
+      debug("Abilities events initialized")
     end
     local function generateDataForCast(ability, caster, target, x, y)
       local casting_data = {ability = ability, caster = caster, target = target, x = x, y = y, time = 0, full_time = ability:getCastTime(caster)}
@@ -1017,7 +1041,7 @@ __require_data.module["ability.abilityEvent"] = function()
         return nil
       end
       local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
-      AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, casting_data)
+      glTimer.addAction(0, AbilityEvent.timerPeriod, casting_data)
       CasterDB[caster] = unit_data
     end
     function AbilityEvent.timerPeriod(data)
@@ -1044,7 +1068,7 @@ __require_data.module["ability.abilityEvent"] = function()
       CasterDB[data.caster].time = data.time
       local continue = ability:runCallback("casting", data.caster, data.target, data.x, data.y, data.time, data.full_time)
       if (continue) then
-        AbilityEvent.CastingTimer:addAction(timer_precision, AbilityEvent.timerPeriod, data)
+        glTimer.addAction(0, AbilityEvent.timerPeriod, data)
       else
         ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
@@ -1815,15 +1839,20 @@ __require_data.module["utils.init"] = function()
           __require_data.loaded[name] = true
         end
         if (__require_data.result[name].init ~= nil) then
-          print(name)
+          debug(name)
           __require_data.result[name].init()
         end
       end
-      print("Initialisation finished")
+      debug("Initialisation finished")
     end
     return Init
 end
+__require_data.module["utils.settings"] = function()
+    local Settings = {debug = true}
+    return Settings
+end
 __require_data.module["utils.utils"] = function()
+    local Settings = require("utils.settings")
     local Utils = {}
     function getErrorPos()
       local str = ""
@@ -1847,13 +1876,15 @@ __require_data.module["utils.utils"] = function()
         for i = 1, select("#", ...) do
           local v = select(i, ...)
           local t = type(v)
-          if (t == "integer" or t == "number" or t == "table") then
-            v = tostring(v)
-          elseif (t == "nil") then
-            v = "Nil"
+          if (t == "nil") then
+            v = "nil"
           elseif (t == "userdata") then
             v = "userdata"
-          elseif (type(v) ~= "string") then
+          elseif (t == "string") then
+            v = v
+          elseif (v.tostring ~= nil) then
+            v = v.tostring()
+          else
             v = ""
           end
 
@@ -1862,9 +1893,40 @@ __require_data.module["utils.utils"] = function()
           s = s.." "..v
         end
         for i = 0, 23 do
-          DisplayTimedTextToPlayer(Player(i), 0, 0, 30, "[Debug]: "..s)
+          DisplayTimedTextToPlayer(Player(i), 0, 0, 30, s)
         end
       end
+    end
+    function debug(...)
+      if (is_compiletime) then
+        __real_print(...)
+      elseif (Settings.debug) then
+        local s = ""
+        for i = 1, select("#", ...) do
+          local v = select(i, ...)
+          local t = type(v)
+          if (t == "nil") then
+            v = "nil"
+          elseif (t == "userdata") then
+            v = "userdata"
+          elseif (t == "string") then
+            v = v
+          elseif (t == "integer" or t == "number") then
+            v = tostring(v)
+          elseif (t == "table" and v.__tostring ~= nil) then
+            v = " Has tostring"
+          else
+            v = ""
+          end
+
+
+
+
+          s = s.." "..v
+        end
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, "[Debug]: "..s)
+      end
+
     end
     function ID(id)
       if (type(id) == "string") then
@@ -1907,8 +1969,10 @@ end
   function RunInitialization()
     DestroyTimer(GetExpiredTimer())
     local Init = require("utils.init")
+    local Utils = require("utils.utils")
     Init.start()
     require("interface.frames.castBar")
+    glTimer = require("utils.globalTimer")
     local Unit = require("unit.unit")
     local u = Unit.new(0, "hfoo", 0, 0, 0)
     local summon_abil = require("ability.spiritMage.summonSwordman")
