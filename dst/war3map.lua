@@ -87,7 +87,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     local dummySpiritRush = Ability.new(dummy_id)
     local SpiritRush = Ability.new(abil_id)
     local circle_model = "Abilities\\Spells\\Other\\GeneralAuraTarget\\GeneralAuraTarget.mdl"
-    local function createCircules(count, x, y, caster_x, caster_y)
+    local function createCircles(count, x, y, caster_x, caster_y)
       local dx = (x-caster_x)
       local dy = (y-caster_y)
       local r = (((dx*dx)+(dy*dy))^0.5)
@@ -110,7 +110,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
         count = #slaves
       end
       local x, y = caster:getPos()
-      local new_circles = createCircules(count, mouse_x, mouse_y, x, y)
+      local new_circles = createCircles(count, mouse_x, mouse_y, x, y)
       for i = 1, #effects do
         BlzSetSpecialEffectPosition(effects[i], 0, 0, -5000)
         DestroyEffect(effects[i])
@@ -132,7 +132,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
       end, nil)
       local slaves = SummonSwordman.getSlaves(caster)
       local caster_x, caster_y = caster:getPos()
-      local circles = createCircules(#slaves, 0, 0, caster_x, caster_y)
+      local circles = createCircles(#slaves, 0, 0, caster_x, caster_y)
       PlayerEvent.local_mouse_move:addAction(function()
           trackingTarget(caster, circles)
       end)
@@ -823,6 +823,9 @@ __require_data.module["utils.globalTimer"] = function()
       GlobalTimer.timer = CreateTimer()
       TimerStart(GlobalTimer.timer, GlobalTimer.precision, true, GlobalTimer.period)
     end
+    function GlobalTimer.getPrecision()
+      return GlobalTimer.precision
+    end
     function GlobalTimer.period()
       local cur_time = (GlobalTimer.cur_time+GlobalTimer.precision)
       if (#GlobalTimer.actions == 0) then
@@ -849,13 +852,19 @@ __require_data.module["utils.globalTimer"] = function()
         return findPos(time, pos, last, list)
       end
     end
+    local function findPosSimple(time)
+      local count = #GlobalTimer.actions
+      for i = 0, count do
+        if (GlobalTimer.actions[i]:getTime() > time) then
+          return i
+        end
+      end
+    end
     function GlobalTimer.addAction(delay, callback, data)
       local time = (GlobalTimer.cur_time+delay)
       local action = TimerAction.new(time, callback, data)
-      local pos = findPos(time, 1, #GlobalTimer.actions, GlobalTimer.actions)
-      debug(pos)
+      local pos = findPosSimple(time)
       table.insert(GlobalTimer.actions, pos, action)
-      debug(#GlobalTimer.actions)
       return action
     end
     function GlobalTimer.removeAction(action)
@@ -1847,6 +1856,118 @@ __require_data.module["utils.init"] = function()
     end
     return Init
 end
+__require_data.module["effect.effect"] = function()
+    local Effect = {}
+    local Effect_meta = {__index = Effect, __gc = function(self)
+  self:destroy()
+end}
+    function Effect_meta.__tostring(self)
+      return string.format("Effect %s\nPos:[%.2f, %.2f, %.2f]\nAngles:[%.2f, %.2f,%.2f]\nSize:[%.2f, %.2f, %.2f]\n", self.model, self.x, self.y, self.z, self.yaw, self.pitch, self.roll, self.size_x, self.size_y, self.size_z)
+    end
+    function Effect_meta.__gc(self)
+      self:destroy()
+    end
+    function Effect.new(model, x, y, z)
+      local effect = {model = model, x = x, y = y, z = z, yaw = 0, pitch = 0, roll = 0, size_x = 1, size_y = 1, size_z = 1}
+      setmetatable(effect, Effect_meta)
+      return effect
+    end
+    function Effect:destroy()
+      BlzSetSpecialEffectZ(self.effect_obj, -10000)
+      DestroyEffect(self.effect_obj)
+    end
+    function Effect:setColor(red, green, blue, alpha)
+      BlzSetSpecialEffectColor(self.effect_obj, red, green, blue)
+      if (alpha ~= nil) then
+        BlzSetSpecialEffectAlpha(self.effect_obj, alpha)
+      end
+    end
+    function Effect:setSize(scale)
+      BlzSetSpecialEffectScale(self.effect_obj, scale)
+      self.size_x = scale
+      self.size_y = scale
+      self.size_z = scale
+    end
+    function Effect:getSize()
+      return self.size_x, self.size_y, self.size_z
+    end
+    function Effect:setSizeAxis(size_x, size_y, size_z)
+      self.size_x = size_x
+      self.size_y = size_y
+      self.size_z = size_z
+      BlzSetSpecialEffectMatrixScale(self.effect_obj, self.size_x, self.size_y, self.size_z)
+    end
+    function Effect:setSizeX(size_x)
+      self:setSizeAxis(size_x, self.size_y.self.size_z)
+    end
+    function Effect:setSizeY(size_y)
+      self:setSizeAxis(self.size_x, size_y.self.size_z)
+    end
+    function Effect:setSizeZ(size_z)
+      self:setSizeAxis(self.size_x, self.size_y.size_z)
+    end
+    function Effect:setPos(x, y, z)
+      BlzSetSpecialEffectPosition(self.effect_obj, x, y, z)
+      self.x = x
+      self.y = y
+      self.z = z
+    end
+    function Effect:getPos()
+      return self.x, self.y, self.z
+    end
+    function Effect:setX(x)
+      BlzSetSpecialEffectX(self.effect_obj, x)
+      self.x = x
+    end
+    function Effect:setY(y)
+      BlzSetSpecialEffectY(self.effect_obj, y)
+      self.y = y
+    end
+    function Effect:setZ(z)
+      BlzSetSpecialEffectZ(self.effect_obj, z)
+      self.z = z
+    end
+    function Effect:setAngles(yaw, pitch, roll)
+      BlzSetSpecialEffectOrientation(self.effect_obj, yaw, pitch, roll)
+      self.yaw = yaw
+      self.pitch = pitch
+      self.roll = roll
+    end
+    function Effect:getAngles()
+      return self.yaw, self.pitch, self.roll
+    end
+    function Effect:setYaw(yaw)
+      BlzSetSpecialEffectYaw(self.effect_obj, yaw)
+      self.yaw = yaw
+    end
+    function Effect:setPitch(pitch)
+      BlzSetSpecialEffectPitch(self.effect_obj, pitch)
+      self.pitch = pitch
+    end
+    function Effect:setRoll(roll)
+      BlzSetSpecialEffectRoll(self.effect_obj, roll)
+      self.roll = roll
+    end
+    function Effect:setAnimationSpeed(speed)
+      BlzSetSpecialEffectTimeScale(self.effect_obj, speed)
+    end
+    function Effect:setAnimationTime(time)
+      BlzSetSpecialEffectTime(self.effect_obj, time)
+    end
+    function Effect:addSubAnimation(sub_anim)
+      BlzSpecialEffectAddSubAnimation(self.effect_obj, sub_anim)
+    end
+    function Effect:removeSubAnimation(sub_anim)
+      BlzSpecialEffectRemoveSubAnimation(self.effect_obj, sub_anim)
+    end
+    function Effect:clearSubAnimations()
+      BlzSpecialEffectClearSubAnimations(self.effect_obj)
+    end
+    function Effect:playAnimation(anim_type, time_scale)
+      BlzPlaySpecialEffectWithTimeScale(self.effect_obj, anim_type, time_scale)
+    end
+    return Effect
+end
 __require_data.module["utils.settings"] = function()
     local Settings = {debug = true}
     return Settings
@@ -1966,6 +2087,9 @@ end
   function InitCustomTriggers()
     InitTrig_Melee_Initialization()
   end
+  local Effect = require("effect.effect")
+  local eff = Effect.new("azaz", 0, 0, 0)
+  print(eff)
   function RunInitialization()
     DestroyTimer(GetExpiredTimer())
     local Init = require("utils.init")

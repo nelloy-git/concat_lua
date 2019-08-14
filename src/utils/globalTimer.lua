@@ -6,15 +6,21 @@ local GlobalTimer = {
     timer = nil,
     cur_time = 0,
     precision = 0.03125,
-    ---@type TimerAction[]
     actions = {}
 }
 
+---@return nil
 function GlobalTimer.init()
     GlobalTimer.timer = CreateTimer()
     TimerStart(GlobalTimer.timer, GlobalTimer.precision, true, GlobalTimer.period)
 end
 
+---@return number
+function GlobalTimer.getPrecision()
+    return GlobalTimer.precision
+end
+
+---@return nil
 function GlobalTimer.period()
     local cur_time = GlobalTimer.cur_time + GlobalTimer.precision
     if #GlobalTimer.actions == 0 then
@@ -34,6 +40,7 @@ end
 ---@param first integer
 ---@param last integer
 ---@param list TimerAction[]
+---@return nil
 local function findPos(time, first, last, list)
     local len = last - first + 1
     if len <= 1 then return 1 end
@@ -47,6 +54,15 @@ local function findPos(time, first, last, list)
     end
 end
 
+---@param time number
+---@return nil
+local function findPosSimple(time)
+    local count = #GlobalTimer.actions
+    for i = 0, count do
+        if GlobalTimer.actions[i]:getTime() > time then return i end
+    end
+end
+
 ---@param delay number
 ---@param callback function
 ---@param data any
@@ -54,10 +70,9 @@ end
 function GlobalTimer.addAction(delay, callback, data)
     local time = GlobalTimer.cur_time + delay
     local action = TimerAction.new(time, callback, data)
-    local pos = findPos(time, 1, #GlobalTimer.actions, GlobalTimer.actions)
-    debug(pos)
+    --TODO change function.
+    local pos = findPosSimple(time)
     table.insert(GlobalTimer.actions, pos, action)
-    debug(#GlobalTimer.actions)
     return action
 end
 
