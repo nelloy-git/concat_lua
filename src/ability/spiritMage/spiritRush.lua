@@ -131,17 +131,18 @@ end
 ---@param x number
 ---@param y number
 local function startTargeting(caster, target, x, y)
+    Debug('Tracking started')
     local owner_index = caster:getOwningPlayerIndex()
     caster:removeAbility(dummySpiritRush)
     caster:addAbility(SpiritRush)
-    glTimer.addAction(0, function() debug('Key pressed') Players.forceUIKey(owner_index, hot_key) end, nil)
+    glTimer.addAction(0, function() Debug('Key pressed') Players.forceUIKey(owner_index, hot_key) end, nil)
     local slaves = SummonSwordman.getSlaves(caster)
     local caster_x, caster_y = caster:getPos()
     local circles = createCircles(#slaves, 0, 0, caster_x, caster_y)
     PlayerEvent.local_mouse_move:addAction(function()
             trackingTarget(caster, circles)
         end)
-    debug('Tracking started')
+    Debug('Tracking started')
 end
 
 local function moveUnit(data)
@@ -188,7 +189,7 @@ end
 
 SpiritRush:setCallback(finish, 'finish')
 SpiritRush:setName(ability_name)
-SpiritRush:setCastTime(cast_time)
+SpiritRush:setCastingTime(cast_time)
 
 dummySpiritRush:setCallback(startTargeting, 'finish')
 

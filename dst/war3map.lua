@@ -123,11 +123,12 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
       end
     end
     local function startTargeting(caster, target, x, y)
+      Debug("Tracking started")
       local owner_index = caster:getOwningPlayerIndex()
       caster:removeAbility(dummySpiritRush)
       caster:addAbility(SpiritRush)
       glTimer.addAction(0, function()
-          debug("Key pressed")
+          Debug("Key pressed")
           Players.forceUIKey(owner_index, hot_key)
       end, nil)
       local slaves = SummonSwordman.getSlaves(caster)
@@ -136,7 +137,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
       PlayerEvent.local_mouse_move:addAction(function()
           trackingTarget(caster, circles)
       end)
-      debug("Tracking started")
+      Debug("Tracking started")
     end
     local function moveUnit(data)
       local speed = moveSpeed
@@ -173,7 +174,7 @@ __require_data.module["ability.spiritMage.spiritRush"] = function()
     end
     SpiritRush:setCallback(finish, "finish")
     SpiritRush:setName(ability_name)
-    SpiritRush:setCastTime(cast_time)
+    SpiritRush:setCastingTime(cast_time)
     dummySpiritRush:setCallback(startTargeting, "finish")
     return dummySpiritRush
 end
@@ -191,7 +192,6 @@ __require_data.module["ability.spiritMage.summonSwordman"] = function()
     local Unit = require("unit.unit")
     local UnitEvent = require("unit.unitEvent")
     local Ability = require("ability.ability")
-    local AbilityEvent = require("ability.abilityEvent")
     local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
       local id = WeObjEdit.Utils.nextAbilId()
       local order = WeObjEdit.Utils.nextOrderId()
@@ -227,7 +227,7 @@ __require_data.module["ability.spiritMage.summonSwordman"] = function()
     local unit_id = "x##$"
     local SummonCrystalSwordmanAbility = Ability.new(abil_id)
     SummonCrystalSwordmanAbility:setName(ability_name)
-    SummonCrystalSwordmanAbility:setCastTime(cast_time)
+    SummonCrystalSwordmanAbility:setCastingTime(cast_time)
     SummonCrystalSwordmanAbility.SlaveToMaster = {}
     SummonCrystalSwordmanAbility.MasterToSlaves = {}
     function SummonCrystalSwordmanAbility.getSlaves(master)
@@ -243,6 +243,7 @@ __require_data.module["ability.spiritMage.summonSwordman"] = function()
       SummonCrystalSwordmanAbility.SlaveToMaster[slave] = master
     end
     local finish = function(caster, target, x, y, full_time)
+        Debug("finish")
         local owner = caster:getOwningPlayerIndex()
         local unit = Unit.new(owner, unit_id, x, y, caster:getFacing())
         unit:setVertexColor(1, 1, 1, 0.35)
@@ -800,100 +801,31 @@ __require_data.module["unit.unit"] = function()
     end
     return Unit
 end
-__require_data.module["utils.timerAction"] = function()
-    local TimerAction = {}
-    local TimerAction_meta = {__index = TimerAction}
-    function TimerAction.new(time, callback, data)
-      local action = {time = time, callback = callback, data = data}
-      setmetatable(action, TimerAction_meta)
-      return action
-    end
-    function TimerAction:getTime()
-      return self.time
-    end
-    function TimerAction:run()
-      self.callback(self.data)
-    end
-    return TimerAction
-end
-__require_data.module["utils.globalTimer"] = function()
-    local TimerAction = require("utils.timerAction")
-    local GlobalTimer = {timer = nil, cur_time = 0, precision = 0.03125, actions = {}}
-    function GlobalTimer.init()
-      GlobalTimer.timer = CreateTimer()
-      TimerStart(GlobalTimer.timer, GlobalTimer.precision, true, GlobalTimer.period)
-    end
-    function GlobalTimer.getPrecision()
-      return GlobalTimer.precision
-    end
-    function GlobalTimer.period()
-      local cur_time = (GlobalTimer.cur_time+GlobalTimer.precision)
-      if (#GlobalTimer.actions == 0) then
-        return nil
-      end
-      local action = GlobalTimer.actions[1]
-      while(action.time <= cur_time) do
-        action:run()
-        table.remove(GlobalTimer.actions, 1)
-        action = GlobalTimer.actions[1]
-      end
-      GlobalTimer.cur_time = cur_time
-    end
-    local function findPos(time, first, last, list)
-      local len = ((last-first)+1)
-      if (len <= 1) then
-        return 1
-      end
-      local i, _ = math.modf((len/2))
-      local pos = (first+i)
-      if (list[pos]:getTime() > time) then
-        return findPos(time, first, (pos-1), list)
-      else
-        return findPos(time, pos, last, list)
-      end
-    end
-    local function findPosSimple(time)
-      local count = #GlobalTimer.actions
-      for i = 0, count do
-        if (GlobalTimer.actions[i]:getTime() > time) then
-          return i
-        end
-      end
-    end
-    function GlobalTimer.addAction(delay, callback, data)
-      local time = (GlobalTimer.cur_time+delay)
-      local action = TimerAction.new(time, callback, data)
-      local pos = findPosSimple(time)
-      table.insert(GlobalTimer.actions, pos, action)
-      return action
-    end
-    function GlobalTimer.removeAction(action)
-      local count = #GlobalTimer.actions
-      for i = 1, count do
-        if (GlobalTimer.actions[i] == action) then
-          table.remove(GlobalTimer.actions, i)
-          return true
-        end
-      end
-      return false
-    end
-    return GlobalTimer
-end
 __require_data.module["ability.ability"] = function()
     local Ability = {}
     local Ability_meta = {__index = Ability}
+    function Ability_meta.__tostring(self)
+      local str = string.format("Ability %s (%s) with callbacks:\n", self:getName(), ID2str(self:getId()))
+      local callbacks = ""
+      if (self:getCallback("start")) then
+        callbacks = callbacks..",start"
+      end
+      if (self:getCallback("casting")) then
+        callbacks = callbacks..",casting"
+      end
+      if (self:getCallback("interrupt")) then
+        callbacks = callbacks..",interrupt"
+      end
+      if (self:getCallback("finish")) then
+        callbacks = callbacks..",finish"
+      end
+      callbacks = callbacks:sub(2).."\n"
+      return str..callbacks
+    end
     local AbilityDB = {}
     function Ability.new(id)
       id = ID(id)
-      local ability = {id = id, _start = function()
-  return true
-end, _casting = function()
-  return true
-end, _interrupt = function()
-
-end, _finish = function()
-
-end}
+      local ability = {id = id, _start = nil, _casting = nil, _interrupt = nil, _finish = nil, _castingTime = nil}
       setmetatable(ability, Ability_meta)
       AbilityDB[id] = ability
       return ability
@@ -922,43 +854,57 @@ end}
         self._finish = callback
       end
     end
-    function Ability:runCallback(type, ...)
+    function Ability:getCallback(type)
       if (type == "start") then
-        return self._start(...)
+        return self._start
       end
       if (type == "casting") then
-        return self._casting(...)
+        return self._casting
       end
       if (type == "interrupt") then
-        return self._interrupt(...)
+        return self._interrupt
       end
       if (type == "finish") then
-        return self._finish(...)
+        return self._finish
       end
     end
-    function Ability:setCastTime(cast_time)
-      self.cast_time = cast_time
-    end
-    function Ability:getCastTime(caster)
-      if (type(self.cast_time) == "number") then
-        return self.cast_time
-      elseif (type(self.cast_time) == "function") then
-        return self.cast_time(caster)
+    function Ability:runCallback(callback_type, ...)
+      if (callback_type == "start") then
+        if (self._start ~= nil) then
+          return self._start(...)
+        else
+          return true
+        end
       end
-
-      return 0
+      if (callback_type == "casting") then
+        if (self._casting ~= nil) then
+          return self._casting(...)
+        else
+          return true
+        end
+      end
+      if (callback_type == "interrupt") then
+        if (self._interrupt ~= nil) then
+          self._interrupt(...)
+        end
+      end
+      if (callback_type == "finish") then
+        if (self._finish ~= nil) then
+          self._finish(...)
+        end
+      end
+    end
+    function Ability:setCastingTime(time)
+      self._casting_time = time
+    end
+    function Ability:getCastingTime()
+      return self._casting_time
     end
     function Ability:setName(name)
-      self.name = name
+      self._name = name
     end
     function Ability:getName()
-      if (type(self.name) == "string") then
-        return self.name
-      elseif (type(self.name) == "function") then
-        return self.name()
-      end
-
-      return ""
+      return self._name
     end
     function Ability:setTooltip(tooltip, lvl, player_index)
       if (player_index == nil) then
@@ -1023,11 +969,12 @@ __require_data.module["ability.abilityEvent"] = function()
       trigger:addAction(function()
           CasterDB[GetOrderedUnit()] = nil
       end)
-      debug("Abilities events initialized")
+      Debug("Abilities events initialized")
     end
     local function generateDataForCast(ability, caster, target, x, y)
-      local casting_data = {ability = ability, caster = caster, target = target, x = x, y = y, time = 0, full_time = ability:getCastTime(caster)}
-      local unit_data = {ability = ability, time = 0, full_time = casting_data.full_time}
+      local full_time = ability:getCastingTime(caster)
+      local casting_data = {ability = ability, caster = caster, target = target, x = x, y = y, time = 0, full_time = full_time}
+      local unit_data = {ability = ability, time = 0, full_time = full_time}
       return casting_data, unit_data
     end
     function AbilityEvent.startCast()
@@ -1057,6 +1004,7 @@ __require_data.module["ability.abilityEvent"] = function()
       local ability = data.ability
       local caster_data = CasterDB[data.caster]
       if (caster_data == nil) then
+        Debug("data == nil")
         ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
@@ -1064,17 +1012,18 @@ __require_data.module["ability.abilityEvent"] = function()
       local cur_ability = caster_data.ability
       local cur_time = caster_data.time
       if (cur_ability ~= data.ability or cur_time ~= data.time) then
+        Debug("\n", cur_ability, data.ability, cur_time, data.time)
         ability:runCallback("interrupt", data.caster, data.target, data.x, data.y, data.time, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
       data.time = (data.time+timer_precision)
+      CasterDB[data.caster].time = data.time
       if (data.time >= data.full_time) then
         ability:runCallback("finish", data.caster, data.target, data.x, data.y, data.full_time)
         CasterDB[data.caster] = nil
         return nil
       end
-      CasterDB[data.caster].time = data.time
       local continue = ability:runCallback("casting", data.caster, data.target, data.x, data.y, data.time, data.full_time)
       if (continue) then
         glTimer.addAction(0, AbilityEvent.timerPeriod, data)
@@ -1839,6 +1788,89 @@ __require_data.module["interface.frames.castBar"] = function()
     end
     return castBar
 end
+__require_data.module["utils.timerAction"] = function()
+    local TimerAction = {}
+    local TimerAction_meta = {__index = TimerAction}
+    function TimerAction.new(time, callback, data)
+      local action = {time = time, callback = callback, data = data}
+      setmetatable(action, TimerAction_meta)
+      return action
+    end
+    function TimerAction:getTime()
+      return self.time
+    end
+    function TimerAction:run()
+      self.callback(self.data)
+    end
+    return TimerAction
+end
+__require_data.module["utils.globalTimer"] = function()
+    local TimerAction = require("utils.timerAction")
+    local GlobalTimer = {timer = nil, cur_time = 0, precision = 0.03125, actions = {}}
+    function GlobalTimer.init()
+      GlobalTimer.timer = CreateTimer()
+      TimerStart(GlobalTimer.timer, GlobalTimer.precision, true, GlobalTimer.period)
+    end
+    function GlobalTimer.getPrecision()
+      return GlobalTimer.precision
+    end
+    function GlobalTimer.period()
+      local cur_time = (GlobalTimer.cur_time+GlobalTimer.precision)
+      if (#GlobalTimer.actions == 0) then
+        return nil
+      end
+      local action = GlobalTimer.actions[1]
+      while(action.time <= cur_time) do
+        action:run()
+        table.remove(GlobalTimer.actions, 1)
+        action = GlobalTimer.actions[1]
+      end
+      GlobalTimer.cur_time = cur_time
+    end
+    local function findPos(time, first, last, list)
+      local len = ((last-first)+1)
+      if (len <= 1) then
+        return 1
+      end
+      local i, _ = math.modf((len/2))
+      local pos = (first+i)
+      if (list[pos]:getTime() > time) then
+        return findPos(time, first, (pos-1), list)
+      else
+        return findPos(time, pos, last, list)
+      end
+    end
+    local function findPosSimple(time)
+      local count = #GlobalTimer.actions
+      if (count == 0) then
+        return 1
+      end
+      for i = 1, count do
+        if (GlobalTimer.actions[i]:getTime() > time) then
+          return i
+        end
+      end
+      return (count+1)
+    end
+    function GlobalTimer.addAction(delay, callback, data)
+      local time = (GlobalTimer.cur_time+delay)
+      local action = TimerAction.new(time, callback, data)
+      local pos = findPosSimple(time)
+      table.insert(GlobalTimer.actions, pos, action)
+      return action
+    end
+    function GlobalTimer.removeAction(action)
+      local count = #GlobalTimer.actions
+      for i = 1, count do
+        if (GlobalTimer.actions[i] == action) then
+          table.remove(GlobalTimer.actions, i)
+          return true
+        end
+      end
+      return false
+    end
+    return GlobalTimer
+end
 __require_data.module["utils.init"] = function()
     local Init = {}
     function Init.start()
@@ -1848,125 +1880,13 @@ __require_data.module["utils.init"] = function()
           __require_data.loaded[name] = true
         end
         if (__require_data.result[name].init ~= nil) then
-          debug(name)
+          Debug(name)
           __require_data.result[name].init()
         end
       end
-      debug("Initialisation finished")
+      Debug("Initialisation finished")
     end
     return Init
-end
-__require_data.module["effect.effect"] = function()
-    local Effect = {}
-    local Effect_meta = {__index = Effect, __gc = function(self)
-  self:destroy()
-end}
-    function Effect_meta.__tostring(self)
-      return string.format("Effect %s\nPos:[%.2f, %.2f, %.2f]\nAngles:[%.2f, %.2f,%.2f]\nSize:[%.2f, %.2f, %.2f]\n", self.model, self.x, self.y, self.z, self.yaw, self.pitch, self.roll, self.size_x, self.size_y, self.size_z)
-    end
-    function Effect_meta.__gc(self)
-      self:destroy()
-    end
-    function Effect.new(model, x, y, z)
-      local effect = {model = model, x = x, y = y, z = z, yaw = 0, pitch = 0, roll = 0, size_x = 1, size_y = 1, size_z = 1}
-      setmetatable(effect, Effect_meta)
-      return effect
-    end
-    function Effect:destroy()
-      BlzSetSpecialEffectZ(self.effect_obj, -10000)
-      DestroyEffect(self.effect_obj)
-    end
-    function Effect:setColor(red, green, blue, alpha)
-      BlzSetSpecialEffectColor(self.effect_obj, red, green, blue)
-      if (alpha ~= nil) then
-        BlzSetSpecialEffectAlpha(self.effect_obj, alpha)
-      end
-    end
-    function Effect:setSize(scale)
-      BlzSetSpecialEffectScale(self.effect_obj, scale)
-      self.size_x = scale
-      self.size_y = scale
-      self.size_z = scale
-    end
-    function Effect:getSize()
-      return self.size_x, self.size_y, self.size_z
-    end
-    function Effect:setSizeAxis(size_x, size_y, size_z)
-      self.size_x = size_x
-      self.size_y = size_y
-      self.size_z = size_z
-      BlzSetSpecialEffectMatrixScale(self.effect_obj, self.size_x, self.size_y, self.size_z)
-    end
-    function Effect:setSizeX(size_x)
-      self:setSizeAxis(size_x, self.size_y.self.size_z)
-    end
-    function Effect:setSizeY(size_y)
-      self:setSizeAxis(self.size_x, size_y.self.size_z)
-    end
-    function Effect:setSizeZ(size_z)
-      self:setSizeAxis(self.size_x, self.size_y.size_z)
-    end
-    function Effect:setPos(x, y, z)
-      BlzSetSpecialEffectPosition(self.effect_obj, x, y, z)
-      self.x = x
-      self.y = y
-      self.z = z
-    end
-    function Effect:getPos()
-      return self.x, self.y, self.z
-    end
-    function Effect:setX(x)
-      BlzSetSpecialEffectX(self.effect_obj, x)
-      self.x = x
-    end
-    function Effect:setY(y)
-      BlzSetSpecialEffectY(self.effect_obj, y)
-      self.y = y
-    end
-    function Effect:setZ(z)
-      BlzSetSpecialEffectZ(self.effect_obj, z)
-      self.z = z
-    end
-    function Effect:setAngles(yaw, pitch, roll)
-      BlzSetSpecialEffectOrientation(self.effect_obj, yaw, pitch, roll)
-      self.yaw = yaw
-      self.pitch = pitch
-      self.roll = roll
-    end
-    function Effect:getAngles()
-      return self.yaw, self.pitch, self.roll
-    end
-    function Effect:setYaw(yaw)
-      BlzSetSpecialEffectYaw(self.effect_obj, yaw)
-      self.yaw = yaw
-    end
-    function Effect:setPitch(pitch)
-      BlzSetSpecialEffectPitch(self.effect_obj, pitch)
-      self.pitch = pitch
-    end
-    function Effect:setRoll(roll)
-      BlzSetSpecialEffectRoll(self.effect_obj, roll)
-      self.roll = roll
-    end
-    function Effect:setAnimationSpeed(speed)
-      BlzSetSpecialEffectTimeScale(self.effect_obj, speed)
-    end
-    function Effect:setAnimationTime(time)
-      BlzSetSpecialEffectTime(self.effect_obj, time)
-    end
-    function Effect:addSubAnimation(sub_anim)
-      BlzSpecialEffectAddSubAnimation(self.effect_obj, sub_anim)
-    end
-    function Effect:removeSubAnimation(sub_anim)
-      BlzSpecialEffectRemoveSubAnimation(self.effect_obj, sub_anim)
-    end
-    function Effect:clearSubAnimations()
-      BlzSpecialEffectClearSubAnimations(self.effect_obj)
-    end
-    function Effect:playAnimation(anim_type, time_scale)
-      BlzPlaySpecialEffectWithTimeScale(self.effect_obj, anim_type, time_scale)
-    end
-    return Effect
 end
 __require_data.module["utils.settings"] = function()
     local Settings = {debug = true}
@@ -2003,8 +1923,8 @@ __require_data.module["utils.utils"] = function()
             v = "userdata"
           elseif (t == "string") then
             v = v
-          elseif (v.tostring ~= nil) then
-            v = v.tostring()
+          elseif (t == "integer" or t == "number" or t == "table" or t == "function") then
+            v = tostring(v)
           else
             v = ""
           end
@@ -2018,7 +1938,7 @@ __require_data.module["utils.utils"] = function()
         end
       end
     end
-    function debug(...)
+    function Debug(...)
       if (is_compiletime) then
         __real_print(...)
       elseif (Settings.debug) then
@@ -2034,8 +1954,8 @@ __require_data.module["utils.utils"] = function()
             v = v
           elseif (t == "integer" or t == "number") then
             v = tostring(v)
-          elseif (t == "table" and v.__tostring ~= nil) then
-            v = " Has tostring"
+          elseif (t == "table") then
+            v = tostring(v)
           else
             v = ""
           end
@@ -2087,16 +2007,13 @@ end
   function InitCustomTriggers()
     InitTrig_Melee_Initialization()
   end
-  local Effect = require("effect.effect")
-  local eff = Effect.new("azaz", 0, 0, 0)
-  print(eff)
   function RunInitialization()
     DestroyTimer(GetExpiredTimer())
     local Init = require("utils.init")
     local Utils = require("utils.utils")
+    glTimer = require("utils.globalTimer")
     Init.start()
     require("interface.frames.castBar")
-    glTimer = require("utils.globalTimer")
     local Unit = require("unit.unit")
     local u = Unit.new(0, "hfoo", 0, 0, 0)
     local summon_abil = require("ability.spiritMage.summonSwordman")

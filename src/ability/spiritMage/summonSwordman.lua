@@ -4,8 +4,6 @@ local Unit = require('unit.unit')
 local UnitEvent = require('unit.unitEvent')
 ---@type Ability
 local Ability = require('ability.ability')
----@type AbilityEvent
-local AbilityEvent = require('ability.abilityEvent')
 
 local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
     local id = WeObjEdit.Utils.nextAbilId()
@@ -61,7 +59,7 @@ local unit_id = compiletime( generateUnit('hfoo', unit_model, unit_abilities))
 ---@type Ability
 local SummonCrystalSwordmanAbility = Ability.new(abil_id)
 SummonCrystalSwordmanAbility:setName(ability_name)
-SummonCrystalSwordmanAbility:setCastTime(cast_time)
+SummonCrystalSwordmanAbility:setCastingTime(cast_time)
 
 ---@type table<Unit, Unit>
 SummonCrystalSwordmanAbility.SlaveToMaster = {}
@@ -94,6 +92,7 @@ end
 
 ---@type AbilityFinishCallback
 local finish = function(caster, target, x, y, full_time)
+    Debug('finish')
     local owner = caster:getOwningPlayerIndex()
     local unit = Unit.new(owner, unit_id, x, y, caster:getFacing())
     unit:setVertexColor(1, 1, 1, 0.35)
@@ -139,5 +138,6 @@ function SummonCrystalSwordmanAbility.init()
         end)
 end
 
+--Debug(SummonCrystalSwordmanAbility)
 
 return SummonCrystalSwordmanAbility

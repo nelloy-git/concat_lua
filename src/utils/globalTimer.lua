@@ -22,6 +22,7 @@ end
 
 ---@return nil
 function GlobalTimer.period()
+    --debug(GlobalTimer.cur_time)
     local cur_time = GlobalTimer.cur_time + GlobalTimer.precision
     if #GlobalTimer.actions == 0 then
         return nil
@@ -58,9 +59,11 @@ end
 ---@return nil
 local function findPosSimple(time)
     local count = #GlobalTimer.actions
-    for i = 0, count do
+    if count == 0 then return 1 end
+    for i = 1, count do
         if GlobalTimer.actions[i]:getTime() > time then return i end
     end
+    return count + 1
 end
 
 ---@param delay number

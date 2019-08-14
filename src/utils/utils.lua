@@ -33,8 +33,8 @@ function print(...)
                 v = 'userdata'
             elseif t == 'string' then
                 v = v
-            elseif v.tostring ~= nil then
-                v = v.tostring()
+            elseif t == 'integer' or t == 'number' or t == 'table' or t == 'function' then
+                v = tostring(v)
             else
                 v = ''
             end
@@ -49,7 +49,7 @@ function print(...)
 end
 
 ---Function prints data to local player.
-function debug(...)
+function Debug(...)
     if is_compiletime then
         __real_print(...)
     elseif Settings.debug then
@@ -64,12 +64,9 @@ function debug(...)
             elseif t == 'string' then
                 v = v
             elseif t == 'integer' or t == 'number' then
-                --DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..t)
                 v = tostring(v)
-            elseif t == 'table' and v.__tostring ~= nil then
-                --debug()
-                --v = tostring(v)
-                v = ' Has tostring'
+            elseif t == 'table' then
+                v = tostring(v)
             else
                 v = ''
             end

@@ -28,11 +28,11 @@ function RunInitialization()
 
     local Init = require('utils.init')
     local Utils = require('utils.utils')
+    ---@type Timer
+    glTimer = require('utils.globalTimer')
     Init.start()
     require('interface.frames.castBar')
     
-    ---@type Timer
-    glTimer = require('utils.globalTimer')
 
     ---@type Unit
     local Unit = require('unit.unit')

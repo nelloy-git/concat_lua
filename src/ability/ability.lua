@@ -7,23 +7,14 @@ local Ability_meta = {
 ---@param self Ability
 ---@return string
 function Ability_meta.__tostring(self)
-    local function getName(type)
-        local f = self:getCallback(type)
-        if f == nil then
-            return 'nil'
-        else
-            return debug.getinfo(self:getCallback("start"), 'n').name
-        end
-    end
-
-    local abil_name = self:getName()
-    local start_name = getName("start")
-    local casting_name = getName("casting")
-    local interrupt_name = getName("interrupt")
-    local finish_name = getName("finish")
-    return string.format('Ability %s (%s) with callbacks:\nStart: %s\nWhile casting: %s\nInterrupt: %s\nFinish: %s',
-                          abil_name, ID2str(self:getId()),
-                          start_name, casting_name, interrupt_name, finish_name)
+    local str = string.format('Ability %s (%s) with callbacks:\n', self:getName(), ID2str(self:getId()))
+    local callbacks = ''
+    if self:getCallback("start") then callbacks = callbacks ..',start' end
+    if self:getCallback("casting") then callbacks = callbacks ..',casting' end
+    if self:getCallback("interrupt") then callbacks = callbacks ..',interrupt' end
+    if self:getCallback("finish") then callbacks = callbacks ..',finish' end
+    callbacks = callbacks:sub(2)..'\n'
+    return str..callbacks
 end
 
 ---@type table<integer, Ability>
@@ -98,13 +89,13 @@ function Ability:getCallback(type)
 end
 
 ---Function runs ability event callback.
----@param type AbilityCallbackType
+---@param callback_type AbilityCallbackType
 ---@return nil
-function Ability:runCallback(type, ...)
-    if type == 'start' then if self._start ~= nil then return self._start(...) end else return true end
-    if type == 'casting' then if self._casting ~= nil then return self._casting(...) end else return true end
-    if type == 'interrupt' then if self._interrupt ~= nil then self._interrupt(...) end end
-    if type == 'finish' then if self._finish ~= nil then self._finish(...) end end
+function Ability:runCallback(callback_type, ...)
+    if callback_type == "start" then if self._start ~= nil then return self._start(...) else return true end end
+    if callback_type == "casting" then if self._casting ~= nil then return self._casting(...) else return true end end
+    if callback_type == "interrupt" then if self._interrupt ~= nil then self._interrupt(...) end end
+    if callback_type == "finish" then if self._finish ~= nil then self._finish(...) end end
 end
 
 ---Set ability casting time.
