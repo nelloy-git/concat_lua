@@ -85,7 +85,6 @@ function Ability:setCallback(callback, type)
     if type == 'casting' then self._casting = callback end
     if type == 'interrupt' then self._interrupt = callback end
     if type == 'finish' then self._finish = callback end
-    if type == 'getCastingTime' then self._castingTime = callback end
 end
 
 ---Function returns current ability callback of type.
@@ -96,7 +95,6 @@ function Ability:getCallback(type)
     if type == 'casting' then return self._casting end
     if type == 'interrupt' then return self._interrupt end
     if type == 'finish' then return self._finish end
-    if type == 'getCastingTime' then return self._castingTime end
 end
 
 ---Function runs ability event callback.
@@ -107,26 +105,32 @@ function Ability:runCallback(type, ...)
     if type == 'casting' then if self._casting ~= nil then return self._casting(...) end else return true end
     if type == 'interrupt' then if self._interrupt ~= nil then self._interrupt(...) end end
     if type == 'finish' then if self._finish ~= nil then self._finish(...) end end
-    if type == 'castingTime' then if self._castingTime ~= nil then return self._castingTime(...) end end
 end
 
-func
+---Set ability casting time.
+---@param time number
+---@return nil
+function Ability:setCastingTime(time)
+    self._casting_time = time
+end
 
----Function sets ability name.
+---Get ability casting time
+---@return number
+function Ability:getCastingTime()
+    return self._casting_time
+end
+
+---Set ability name.
 ---@param name string
+---@return nil
 function Ability:setName(name)
-    self.name = name
+    self._name = name
 end
 
----Function returns ability name.
+---Get ability name.
 ---@return string
 function Ability:getName()
-    if type(self.name) == 'string' then
-        return self.name
-    elseif type(self.name) == 'function' then
-        return self.name()
-    end
-    return ''
+    return self._name
 end
 
 ---Function changes ability tooltip(name) for player with index. (nil for all players)
