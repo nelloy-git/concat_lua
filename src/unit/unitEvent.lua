@@ -6,8 +6,8 @@ local UnitEvent = {}
 
 function UnitEvent.init()
     ---@type Trigger
-    UnitEvent.death_trigger = Trigger.new()
-    UnitEvent.death_trigger:addEvent_AnyUnitDeath()
+    UnitEvent.die = Trigger.new()
+    UnitEvent.die:addEvent_AnyUnitDeath()
     print('UnitEvent initialized')
 end
 

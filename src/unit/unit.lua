@@ -1,7 +1,7 @@
 ---@type UnitParameterContainer
 local ParameterContainer = require('unit.parameters.unitParameterContainer')
----@type Ability
-local Ability = require('ability.ability')
+---@type UnitDB
+local UnitDB = require('unit.unitDB')
 
 ---@class UnitObject : userdata
 
@@ -10,63 +10,66 @@ local Ability = require('ability.ability')
 ---@field id string
 local Unit = {}
 
----@type table<UnitObject, Unit>
-local UnitDB = {}
----@param unit Unit
-function UnitDB.add(unit) UnitDB[unit.unit_obj] = unit end
----@param unit Unit
-function UnitDB.rm(unit) UnitDB[unit.unit_obj] = nil end
----@param unit_obj UnitObject
----@return Unit
-function UnitDB.get(unit_obj) return UnitDB[unit_obj] end
-
----@param player_id integer
----@param unit_id string | integer
+---@param owner_index integer
+---@param id string | integer
 ---@param x number
 ---@param y number
 ---@param face number
 ---@return Unit
-function Unit.new(player_id, unit_id, x, y, face)
-    unit_id = ID(unit_id)
+function Unit.new(owner_index, id, x, y, face)
+    id = ID(id)
+    ---@type Unit
+    local unit = {
+        id = id,
+        unit_obj = CreateUnit(Player(owner_index), id, x, y, face)
+    }
+    setmetatable(unit, {__index = Unit})
+    UnitDB.add(unit)
 
+    unit:initCustomData()
+
+    return unit
+end
+
+---@param owner_index integer
+---@param id string | integer
+---@param x number
+---@param y number
+---@param face number
+---@return Unit
+function Unit.newCorpse(owner_index, id, x, y, face)
+    id = ID(id)
     ---@type Unit
     local instance = {
-        id = unit_id,
-        unit_obj = CreateUnit(Player(player_id), unit_id, x, y, face)
+        id = id,
+        unit_obj = CreateCorpse(Player(owner_index), id, x, y, face)
     }
     setmetatable(instance, {__index = Unit})
 
-    instance:prepareCustomData()
+    instance:initCustomData()
     UnitDB.add(instance)
 
     return instance
 end
 
----@param player_id integer
----@param unit_id string | integer
----@param x number
----@param y number
----@param face number
----@return Unit
-function Unit.newCorpse(player_id, unit_id, x, y, face)
-    unit_id = ID(unit_id)
+function Unit:destroy()
+    self:destroyCustomData()
 
-    local instance = {
-        id = unit_id,
-        ---@type UnitObject
-        unit_obj = CreateCorpse(Player(player_id), unit_id, x, y, face)
-    }
-    setmetatable(instance, {__index = Unit})
-
-    instance:prepareCustomData()
-    UnitDB.add(instance)
-
-    return instance
+    UnitDB.rm(self.unit_obj)
+    RemoveUnit(self.unit_obj)
+    self.unit_obj = nil
 end
 
-function Unit:prepareCustomData()
+---Initialize unit custom data.
+---@return nil
+function Unit:initCustomData()
     ---@type UnitParameterContainer
     self.parameter = ParameterContainer.new(self)
+end
+
+---Destroy unit custom data.
+---@return nil
+function Unit:destroyCustomData()
 end
 
 ---@return integer
@@ -74,17 +77,12 @@ function Unit:getId()
     return self.id
 end
 
-local function to_range(val, min, max)
-    if val < min then return min end
-    if val > max then return max end
-    return val
-end
-
 ---Function sets unit color. Colors should be in range [0 : 1].
 ---@param red number
 ---@param green number
 ---@param blue number
 ---@param alpha number
+---@return nil
 function Unit:setVertexColor(red, green, blue, alpha)
     red = math.floor(255 * to_range(red, 0, 1))
     green = math.floor(255 * to_range(green, 0, 1))
@@ -95,27 +93,61 @@ end
 
 ---@return integer
 function Unit:getOwningPlayerIndex() return player2index(GetOwningPlayer(self.unit_obj)) end
+
 ---@param x number
 ---@param y number
-function Unit:setPos(x, y) SetUnitX(self.unit_obj, x) SetUnitY(self.unit_obj, y) end
+---@return nil
+function Unit:setPos(x, y)
+    SetUnitX(self.unit_obj, x)
+    SetUnitY(self.unit_obj, y)
+end
+
 ---@return number, number
-function Unit:getPos() return GetUnitX(self.unit_obj), GetUnitY(self.unit_obj) end
+function Unit:getPos()
+    return GetUnitX(self.unit_obj), GetUnitY(self.unit_obj)
+end
+
+---@return number
+function Unit:getX()
+    return GetUnitX(self.unit_obj)
+end
+
+---@return number
+function Unit:getY()
+    return GetUnitY(self.unit_obj)
+end
+
 ---@param angle number
-function Unit:setFacing(angle) SetUnitFacing(self.unit_obj, angle) end
+---@return nil
+function Unit:setFacing(angle)
+    SetUnitFacing(self.unit_obj, angle)
+end
+
 ---@param target_x number
 ---@param target_y number
+---@return nil
 function Unit:setFacingTo(target_x, target_y)
     local x, y = self:getPos()
     local angle = 180 + (180 / math.pi) * math.atan(y - target_y, x - target_x)
     SetUnitFacing(self.unit_obj, angle)
 end
+
 ---@return number
-function Unit:getFacing() return GetUnitFacing(self.unit_obj) end
+function Unit:getFacing()
+    return GetUnitFacing(self.unit_obj)
+end
 
 ---@param ability Ability
-function Unit:addAbility(ability) UnitAddAbility(self.unit_obj, ability:getId()) end
+---@return nil
+function Unit:addAbility(ability)
+    UnitAddAbility(self.unit_obj, ability:getId())
+end
+
 ---@param ability Ability
-function Unit:removeAbility(ability) UnitRemoveAbility(self.unit_obj, ability:getId()) end
+---@return nil
+function Unit:removeAbility(ability)
+    UnitRemoveAbility(self.unit_obj, ability:getId())
+end
 
 ---@param flag boolean
 function Unit:setInvulnerable(flag)
@@ -126,8 +158,15 @@ function Unit:applyTimedLife(time)
     UnitApplyTimedLife(self.unit_obj, 0, time)
 end
 
+---@param order_id integer
+---@return nil
 function Unit:issueImmediateOrderById(order_id)
     IssueImmediateOrderById(self.unit_obj, order_id)
+end
+
+---@return nil
+function Unit:orderStop()
+    self:issueImmediateOrderById(851972)
 end
 
 ---@param order_id integer
@@ -194,38 +233,69 @@ local __replaced_functions = {
     GetEventDamageSource = GetEventDamageSource,
     GetEventTargetUnit = GetEventTargetUnit,
 }
-
+---@return Unit
 function GetLevelingUnit() return UnitDB.get(__replaced_functions.GetLevelingUnit()) end
+---@return Unit
 function GetLearningUnit() return UnitDB.get(__replaced_functions.GetLearningUnit()) end
+---@return Unit
 function GetRevivableUnit() return UnitDB.get(__replaced_functions.GetRevivableUnit()) end
+---@return Unit
 function GetRevivingUnit() return UnitDB.get(__replaced_functions.GetRevivingUnit()) end
+---@return Unit
 function GetAttacker() return UnitDB.get(__replaced_functions.GetAttacker()) end
+---@return Unit
 function GetRescuer() return UnitDB.get(__replaced_functions.GetRescuer()) end
+---@return Unit
 function GetDyingUnit() return UnitDB.get(__replaced_functions.GetDyingUnit()) end
+---@return Unit
 function GetKillingUnit() return UnitDB.get(__replaced_functions.GetKillingUnit()) end
+---@return Unit
 function GetDecayingUnit() return UnitDB.get(__replaced_functions.GetDecayingUnit()) end
+---@return Unit
 function GetConstructingStructure() return UnitDB.get(__replaced_functions.GetConstructingStructure()) end
+---@return Unit
 function GetCancelledStructure() return UnitDB.get(__replaced_functions.GetCancelledStructure()) end
+---@return Unit
 function GetConstructedStructure() return UnitDB.get(__replaced_functions.GetConstructedStructure()) end
+---@return Unit
 function GetResearchingUnit() return UnitDB.get(__replaced_functions.GetResearchingUnit()) end
+---@return Unit
 function GetTrainedUnit() return UnitDB.get(__replaced_functions.GetTrainedUnit()) end
+---@return Unit
 function GetDetectedUnit() return UnitDB.get(__replaced_functions.GetDetectedUnit()) end
+---@return Unit
 function GetSummoningUnit() return UnitDB.get(__replaced_functions.GetSummoningUnit()) end
+---@return Unit
 function GetSummonedUnit() return UnitDB.get(__replaced_functions.GetSummonedUnit()) end
+---@return Unit
 function GetTransportUnit() return UnitDB.get(__replaced_functions.GetTransportUnit()) end
+---@return Unit
 function GetLoadedUnit() return UnitDB.get(__replaced_functions.GetLoadedUnit()) end
+---@return Unit
 function GetSellingUnit() return UnitDB.get(__replaced_functions.GetSellingUnit()) end
+---@return Unit
 function GetSoldUnit() return UnitDB.get(__replaced_functions.GetSoldUnit()) end
+---@return Unit
 function GetBuyingUnit() return UnitDB.get(__replaced_functions.GetBuyingUnit()) end
+---@return Unit
 function GetChangingUnit() return UnitDB.get(__replaced_functions.GetChangingUnit()) end
+---@return Unit
 function GetManipulatingUnit() return UnitDB.get(__replaced_functions.GetManipulatingUnit()) end
+---@return Unit
 function GetOrderedUnit() return UnitDB.get(__replaced_functions.GetOrderedUnit()) end
+---@return Unit
 function GetOrderTargetUnit() return UnitDB.get(__replaced_functions.GetOrderTargetUnit()) end
+---@return Unit
 function GetSpellAbilityUnit() return UnitDB.get(__replaced_functions.GetSpellAbilityUnit()) end
+---@return Unit
 function GetSpellTargetUnit() return UnitDB.get(__replaced_functions.GetSpellTargetUnit()) end
+---@return Unit
 function GetTriggerUnit() return UnitDB.get(__replaced_functions.GetTriggerUnit()) end
+---@return Unit
 function GetEventDamage() return UnitDB.get(__replaced_functions.GetEventDamage()) end
+---@return Unit
 function GetEventDamageSource() return UnitDB.get(__replaced_functions.GetEventDamageSource()) end
+---@return Unit
 function GetEventTargetUnit() return UnitDB.get(__replaced_functions.GetEventTargetUnit()) end
 --============================================================================
 -- Unit API

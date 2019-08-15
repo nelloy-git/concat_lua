@@ -98,10 +98,23 @@ function ID2str(id)
     return string.pack(">I4", id)
 end
 
+---@param player userdata
+---@return integer
 function player2index(player)
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         if Player(i) == player then return i end
     end
+end
+
+---If val < min returns min. If val > max returns max.
+---@param val number
+---@param min number
+---@param max number
+---@return number
+function to_range(val, min, max)
+    if val < min then return min end
+    if val > max then return max end
+    return val
 end
 
 return Utils

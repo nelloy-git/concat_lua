@@ -113,7 +113,7 @@ SummonCrystalSwordmanAbility:setCallback(finish, "finish")
     
 function SummonCrystalSwordmanAbility.init()
     
-    UnitEvent.death_trigger:addAction(function()
+    UnitEvent.die:addAction(function()
             ---@type Unit
             local unit = GetDyingUnit()
             local dying_id = unit:getId()

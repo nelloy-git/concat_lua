@@ -2,6 +2,8 @@
 local Ability = require('ability.ability')
 ---@type Trigger
 local Trigger = require('trigger.trigger')
+---@type SpellInstance
+local SpellInstance = require('ability.spellInstance')
 
 ---@class AbilityEvent
 local AbilityEvent = {}
@@ -31,48 +33,32 @@ function AbilityEvent.init()
     Debug('Abilities events initialized')
 end
 
-local function generateDataForCast(ability, caster, target, x, y)
-    local full_time = ability:getCastingTime(caster)
-    ---@class AbilityCastingData
-    local casting_data = {
-        ability = ability,
-        caster = caster,
-        target = target,
-        x = x,
-        y = y,
-        time = 0,
-        full_time = full_time
-    }
-    ---@class UnitCastingData
-    local unit_data = {
-        ability = ability,
-        time = 0,
-        full_time = full_time
-    }
-    return casting_data, unit_data
+---@alias SpellTarget Unit|Item|userdata|nil
+
+---@return SpellTarget
+function AbilityEvent.getSpellTarget()
+    local target = GetSpellTargetUnit()
+    if target == nil then target = GetSpellTargetItem() end
+    if target == nil then target = GetSpellTargetDestructable() end
+    return target
 end
 
 ---Calls this function when eny unit starts casting ability.
+---@return nil
 function AbilityEvent.startCast()
     ---@type Ability
     local ability = Ability.getAbility(GetSpellAbilityId())
     if ability == nil then return nil end
-    ---@type Unit|userdata|nil
-    local target = GetSpellTargetUnit()
-    if target == nil then target = GetSpellTargetItem() end
-    if target == nil then target = GetSpellTargetDestructable() end
-    ---@type Unit
+
+    local target = AbilityEvent.getSpellTarget()
     local caster = GetSpellAbilityUnit()
-    ---@type number
     local x = GetSpellTargetX()
-    ---@type number
     local y = GetSpellTargetY()
 
     local continue = ability:runCallback('start', caster, target, x, y)
-    if not continue then return nil end
+    if not continue then caster:orderStop() return nil end
 
-    -- Data for current cast.
-    local casting_data, unit_data = generateDataForCast(ability, caster, target, x, y)
+    local data = SpellInstance.new()
     -- Start timer
     glTimer.addAction(0, AbilityEvent.timerPeriod, casting_data)
     CasterDB[caster] = unit_data

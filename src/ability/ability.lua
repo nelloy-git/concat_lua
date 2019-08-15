@@ -172,4 +172,10 @@ function Ability:setPosition(x, y, player_index)
     end
 end
 
+---Function returns last spell ability.
+---@return Ability
+function GetSpellAbility()
+    return Ability.getAbility(GetSpellAbilityId())
+end
+
 return Ability
