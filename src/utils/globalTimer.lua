@@ -24,15 +24,17 @@ end
 function GlobalTimer.period()
     --debug(GlobalTimer.cur_time)
     local cur_time = GlobalTimer.cur_time + GlobalTimer.precision
-    if #GlobalTimer.actions == 0 then
-        return nil
-    end
-    ---@type TimerAction
-    local action = GlobalTimer.actions[1]
-    while action.time <= cur_time do
-        action:run()
-        table.remove(GlobalTimer.actions, 1)
-        action = GlobalTimer.actions[1]
+    while #GlobalTimer.actions ~= 0 do
+        ---@type TimerAction
+        local action = table.remove(GlobalTimer.actions, 1)
+        if action:getTime() <= cur_time then
+            action:run()
+            Debug('Run', action:getTime(), cur_time)
+        else
+            table.insert(GlobalTimer.actions, 1, action)
+            Debug('Wait', action:getTime(), cur_time)
+            break
+        end
     end
     GlobalTimer.cur_time = cur_time
 end
@@ -71,6 +73,7 @@ end
 ---@param data any
 ---@return TimerAction
 function GlobalTimer.addAction(delay, callback, data)
+    if delay == 0 then delay = 0.01 end
     local time = GlobalTimer.cur_time + delay
     local action = TimerAction.new(time, callback, data)
     --TODO change function.

@@ -4,16 +4,11 @@ local Ability = require('ability.ability')
 local Trigger = require('trigger.trigger')
 ---@type SpellInstance
 local SpellInstance = require('ability.spellInstance')
+---@type CasterDB
+local CasterDB = require('ability.casterDB')
 
 ---@class AbilityEvent
 local AbilityEvent = {}
-
----Contains currently casting units.
----@type table<Unit, UnitCastingData>
-local CasterDB = {}
-
-local timer_precision = 0.05
-AbilityEvent.CastingTimer = nil
 
 function AbilityEvent.init()
     -- Init casting start
@@ -29,7 +24,7 @@ function AbilityEvent.init()
     trigger:addEvent_AnyUnitIssuedOrderTarget()
     trigger:addEvent_AnyUnitIssuedOrderPointTarget()
     trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
-    trigger:addAction(function() CasterDB[GetOrderedUnit()] = nil end)
+    trigger:addAction(function() CasterDB.rm(GetOrderedUnit()) end)
     Debug('Abilities events initialized')
 end
 
@@ -58,51 +53,41 @@ function AbilityEvent.startCast()
     local continue = ability:runCallback('start', caster, target, x, y)
     if not continue then caster:orderStop() return nil end
 
-    local data = SpellInstance.new()
-    -- Start timer
-    glTimer.addAction(0, AbilityEvent.timerPeriod, casting_data)
-    CasterDB[caster] = unit_data
+    local data = SpellInstance.new(ability, caster, target, x, y, ability:getCastingTime(caster))
+    glTimer.addAction(0, AbilityEvent.timerPeriod, data)
+    CasterDB.add(caster, data)
 end
 
 ---CastTimer calls this function every loop for every casting ability.
----@param data AbilityCastingData
-function AbilityEvent.timerPeriod(data)
-    local ability = data.ability
-    -- Is interupted (unit cast is not found)
-    local caster_data = CasterDB[data.caster]
-    if caster_data == nil then
-        Debug('data == nil')
-        ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
-        CasterDB[data.caster] = nil
+---@param spell_data SpellInstance
+---@return nil
+function AbilityEvent.timerPeriod(spell_data)
+    local ability, caster, target, x, y, cur_time, full_time = spell_data:getAll()
+    local caster_data = CasterDB.get(caster)
+    Debug(spell_data, caster_data)
+    if caster_data ~= spell_data then
+        ability:runCallback('interrupt', caster, target, x, y, cur_time, full_time)
+        CasterDB.rm(caster)
         return nil
     end
 
-    -- Is interupted (changed ability or casting time)
-    local cur_ability = caster_data.ability
-    local cur_time = caster_data.time
-    if cur_ability ~= data.ability or cur_time ~= data.time then
-        Debug('\n',cur_ability, data.ability, cur_time, data.time)
-        ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
-        CasterDB[data.caster] = nil
+    local delta = glTimer.getPrecision()
+    cur_time = cur_time + delta
+    if cur_time >= full_time then
+        ability:runCallback('finish', caster, target, x, y, full_time)
+        CasterDB.rm(caster)
         return nil
     end
 
-    -- Is finished (timeout)
-    data.time = data.time + timer_precision
-    CasterDB[data.caster].time = data.time
-    if data.time >= data.full_time then
-        ability:runCallback('finish', data.caster, data.target, data.x, data.y, data.full_time)
-        CasterDB[data.caster] = nil
-        return nil
-    end
-
-    -- Should unit continue casting or its broken.
-    local continue = ability:runCallback('casting', data.caster, data.target, data.x, data.y, data.time, data.full_time)
+    -- Should unit continue casting or its broken by casting reasons.
+    local continue = ability:runCallback('casting', caster, target, x, y, cur_time, full_time)
     if continue then
-        glTimer.addAction(0, AbilityEvent.timerPeriod, data)
+        spell_data:addTime(delta)
+        caster_data:addTime(delta)
+        glTimer.addAction(0, AbilityEvent.timerPeriod, spell_data)
     else
-        ability:runCallback('interrupt', data.caster, data.target, data.x, data.y, data.time, data.full_time)
-        CasterDB[data.caster] = nil
+        ability:runCallback('interrupt', caster, target, x, y, cur_time, full_time)
+        CasterDB.rm(caster)
     end
 end
 

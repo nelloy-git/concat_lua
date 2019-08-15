@@ -24,7 +24,7 @@ function Unit.new(owner_index, id, x, y, face)
         unit_obj = CreateUnit(Player(owner_index), id, x, y, face)
     }
     setmetatable(unit, {__index = Unit})
-    UnitDB.add(unit)
+    UnitDB.add(unit.unit_obj, unit)
 
     unit:initCustomData()
 
@@ -40,16 +40,16 @@ end
 function Unit.newCorpse(owner_index, id, x, y, face)
     id = ID(id)
     ---@type Unit
-    local instance = {
+    local unit = {
         id = id,
         unit_obj = CreateCorpse(Player(owner_index), id, x, y, face)
     }
-    setmetatable(instance, {__index = Unit})
+    setmetatable(unit, {__index = Unit})
+    UnitDB.add(unit.unit_obj, unit)
 
-    instance:initCustomData()
-    UnitDB.add(instance)
+    unit:initCustomData()
 
-    return instance
+    return unit
 end
 
 function Unit:destroy()

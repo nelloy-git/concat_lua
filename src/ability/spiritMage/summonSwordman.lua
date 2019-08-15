@@ -92,7 +92,6 @@ end
 
 ---@type AbilityFinishCallback
 local finish = function(caster, target, x, y, full_time)
-    Debug('finish')
     local owner = caster:getOwningPlayerIndex()
     local unit = Unit.new(owner, unit_id, x, y, caster:getFacing())
     unit:setVertexColor(1, 1, 1, 0.35)

@@ -105,9 +105,10 @@ function Ability:setCastingTime(time)
     self._casting_time = time
 end
 
----Get ability casting time
+---Get ability casting time for caster
+---@param caster Unit
 ---@return number
-function Ability:getCastingTime()
+function Ability:getCastingTime(caster)
     return self._casting_time
 end
 
