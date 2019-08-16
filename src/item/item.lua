@@ -11,7 +11,8 @@ local Item_meta = {
 ---@param self Item
 ---@return string
 function Item_meta.__tostring(self)
-    return string.format('Item %s (%s):\n', self:getName(), ID2str(self:getId()))
+    return string.format('Item %s (%s) at [%.2f, %.2f]',
+                         self:getName(), ID2str(self:getId()), self:getX(), self:getY())
 end
 
 ---@param id string|integer
@@ -52,6 +53,16 @@ end
 ---@return number, number
 function Item:getPos()
     return GetItemX(self.item_obj), GetItemY(self.item_obj)
+end
+
+---@return number
+function Item:getX()
+    return GetItemX(self.item_obj)
+end
+
+---@return number
+function Item:getY()
+    return GetItemY(self.item_obj)
 end
 
 ---@param flag boolean

@@ -6,24 +6,39 @@ local UnitDB = require('unit.unitDB')
 ---@class UnitObject : userdata
 
 ---@class Unit
----@field unit_obj UnitObject
----@field id string
 local Unit = {}
+local Unit_meta = {
+    __index = Unit,
+    __gc = Unit.destroy
+}
 
----@param owner_index integer
+---@param self Unit
+---@return string
+function Unit_meta.__tostring(self)
+    return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]',
+                         self:getName(), self:getId(), self:getX(), self:getY(), self:getZ())
+end
+
+---@param player Player
 ---@param id string | integer
 ---@param x number
 ---@param y number
 ---@param face number
 ---@return Unit
-function Unit.new(owner_index, id, x, y, face)
+function Unit.new(player, id, x, y, face, is_dead)
     id = ID(id)
+    local unit_obj = nil
+    if is_dead then
+        unit_obj = CreateCorpse(player:get(), id, x, y, face)
+    else
+        unit_obj = CreateCorpse(player:get(), id, x, y, face)
+    end
     ---@type Unit
     local unit = {
-        id = id,
-        unit_obj = CreateUnit(Player(owner_index), id, x, y, face)
+        __id = id,
+        unit_obj = unit_obj
     }
-    setmetatable(unit, {__index = Unit})
+    setmetatable(unit, Unit_meta)
     UnitDB.add(unit.unit_obj, unit)
 
     unit:initCustomData()
@@ -31,27 +46,7 @@ function Unit.new(owner_index, id, x, y, face)
     return unit
 end
 
----@param owner_index integer
----@param id string | integer
----@param x number
----@param y number
----@param face number
----@return Unit
-function Unit.newCorpse(owner_index, id, x, y, face)
-    id = ID(id)
-    ---@type Unit
-    local unit = {
-        id = id,
-        unit_obj = CreateCorpse(Player(owner_index), id, x, y, face)
-    }
-    setmetatable(unit, {__index = Unit})
-    UnitDB.add(unit.unit_obj, unit)
-
-    unit:initCustomData()
-
-    return unit
-end
-
+---@return nil
 function Unit:destroy()
     self:destroyCustomData()
 
@@ -74,7 +69,12 @@ end
 
 ---@return integer
 function Unit:getId()
-    return self.id
+    return self.__id
+end
+
+---@return string
+function Unit:getName()
+    return GetUnitName(self.unit_obj)
 end
 
 ---Function sets unit color. Colors should be in range [0 : 1].
@@ -92,7 +92,9 @@ function Unit:setVertexColor(red, green, blue, alpha)
 end
 
 ---@return integer
-function Unit:getOwningPlayerIndex() return player2index(GetOwningPlayer(self.unit_obj)) end
+function Unit:getOwningPlayerIndex()
+    return player2index(GetOwningPlayer(self.unit_obj))
+end
 
 ---@param x number
 ---@param y number
@@ -115,6 +117,11 @@ end
 ---@return number
 function Unit:getY()
     return GetUnitY(self.unit_obj)
+end
+
+---@return number
+function Unit:getZ()
+    return GetUnitFlyHeight(self.unit_obj)
 end
 
 ---@param angle number

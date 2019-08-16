@@ -1,15 +1,15 @@
 ---@type Trigger
 local Trigger = require('trigger.trigger')
----@type Players
-local Players = require('player.player')
+---@type Player
+local Player = require('player.player')
 
 ---@class PlayerEvent
 local PlayerEvent = {}
 
 function PlayerEvent.init()
     ---@type Trigger
-    PlayerEvent.local_mouse_move = Trigger.new()
-    PlayerEvent.local_mouse_move:addEvent_PlayerMouseMove(Players.getLocalPlayerIndex())
+    PlayerEvent.localPlayer_mouseMove = Trigger.new()
+    PlayerEvent.localPlayer_mouseMove:addEvent_PlayerMouseMove(Player.)
     print('PlayerEvent initialized')
 end
 

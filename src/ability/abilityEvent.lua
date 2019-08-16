@@ -28,7 +28,7 @@ function AbilityEvent.init()
     Debug('Abilities events initialized')
 end
 
----@alias SpellTarget Unit|Item|userdata|nil
+---@alias SpellTarget Unit|Item|Destructable|nil
 
 ---@return SpellTarget
 function AbilityEvent.getSpellTarget()
