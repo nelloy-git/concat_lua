@@ -104,6 +104,7 @@ function player2index(player)
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         if Player(i) == player then return i end
     end
+    return -1
 end
 
 ---If val < min returns min. If val > max returns max.

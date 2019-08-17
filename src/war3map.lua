@@ -29,18 +29,22 @@ function RunInitialization()
     local Init = require('utils.init')
     local Utils = require('utils.utils')
     ---@type Timer
-    glTimer = require('utils.globalTimer')
+    --glTimer = require('utils.globalTimer')
     Init.start()
-    require('interface.frames.castBar')
+    local Player = require('player.player')
+    --require('interface.frames.castBar')
     
 
     ---@type Unit
     local Unit = require('unit.unit')
-    local u = Unit.new(0, 'hfoo', 0, 0, 0)
+    Debug(Player(0))
+    local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    Debug(u)
+    --Debug(Player(0))
 
     ---@type Ability
-    local summon_abil = require('ability.spiritMage.summonSwordman')
-    local rush_abil = require('ability.spiritMage.spiritRush')
+    --local summon_abil = require('ability.warlord.summon')
+    --local rush_abil = require('ability.warlord.rush')
     u:addAbility(summon_abil)
     u:addAbility(rush_abil)
 end

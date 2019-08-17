@@ -1,3 +1,5 @@
+Debug("Unit class initialization...")
+
 ---@type UnitParameterContainer
 local ParameterContainer = require('unit.parameters.unitParameterContainer')
 ---@type UnitDB
@@ -15,6 +17,7 @@ local Unit_meta = {
 ---@param self Unit
 ---@return string
 function Unit_meta.__tostring(self)
+    Debug('here')
     return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]',
                          self:getName(), self:getId(), self:getX(), self:getY(), self:getZ())
 end
@@ -31,7 +34,7 @@ function Unit.new(player, id, x, y, face, is_dead)
     if is_dead then
         unit_obj = CreateCorpse(player:get(), id, x, y, face)
     else
-        unit_obj = CreateCorpse(player:get(), id, x, y, face)
+        unit_obj = CreateUnit(player:get(), id, x, y, face)
     end
     ---@type Unit
     local unit = {
@@ -92,8 +95,8 @@ function Unit:setVertexColor(red, green, blue, alpha)
 end
 
 ---@return integer
-function Unit:getOwningPlayerIndex()
-    return player2index(GetOwningPlayer(self.unit_obj))
+function Unit:getOwningPlayer()
+    return GetOwningPlayer(self)
 end
 
 ---@param x number
@@ -544,5 +547,7 @@ function Unit.removeFromAllStock(id_unitType) RemoveUnitFromAllStock(id_unitType
 function Unit.setAllItemTypeSlots(i_slots) SetAllItemTypeSlots(i_slots) end
 function Unit.setAllTypeSlots(i_slots) SetAllUnitTypeSlots(i_slots) end
 ]]--
+
+Debug('Unit class initialized')
 
 return Unit

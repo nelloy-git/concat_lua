@@ -9,7 +9,7 @@ local PlayerEvent = {}
 function PlayerEvent.init()
     ---@type Trigger
     PlayerEvent.localPlayer_mouseMove = Trigger.new()
-    PlayerEvent.localPlayer_mouseMove:addEvent_PlayerMouseMove(Player.)
+    PlayerEvent.localPlayer_mouseMove:addEvent_PlayerMouseMove(GetLocalPlayer())
     print('PlayerEvent initialized')
 end
 

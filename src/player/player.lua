@@ -6,15 +6,17 @@ __replaced_class = {
     Player = Player
 }
 ---@class Player
-local Player = {}
+Player = {}
 local Player_meta = {
-    __index = Player,
+    __index = Player
 }
+setmetatable(Player, Player_meta)
 
+---@param index integer
 ---@return Player|nil
-function Player_meta.__call(index)
-    if type(index) ~= 'integer' then return nil end
-    return PlayerIndexDB[index]
+function Player_meta.__call(_, index)
+    if type(index) ~= 'number' then return nil end
+    return PlayerIndexDB[math.floor(index)]
 end
 
 ---@param self Player
@@ -49,6 +51,11 @@ function Player.init()
     local_player = PlayerDB.get(GetLocalPlayer())
 end
 
+---@return Player
+function Player.getLocal()
+    return local_player
+end
+
 ---@return userdata
 function Player:get()
     return self.player_obj
@@ -56,7 +63,7 @@ end
 
 ---@return integer
 function Player:getIndex()
-    return PlayerDB.index
+    return self.index
 end
 
 ---Function forces player press button.
@@ -67,6 +74,17 @@ function Player:forceUIKey(key)
         key = string.upper(key)
         ForceUIKey(key)
     end
+end
+
+local __replaced_functions = {
+    GetOwningPlayer = GetOwningPlayer
+}
+
+---@param unit Unit
+---@return Player
+function GetOwningPlayer(unit)
+    local player_obj = __replaced_functions.GetOwningPlayer(unit.unit_obj)
+    return PlayerDB.get(player_obj)
 end
 
 return Player
