@@ -1,31 +1,46 @@
+---@type Settings
+local Settings = require('utils.settings')
+
 ---@class UnitMathParameter
 local UnitMathParameter = {}
 
-local val_for_half_cap = 300
+local half_cap = Settings.UnitParameters.value_to_get_half_cap_for_percent_value
 
----@alias UnitMathParameterFunc fun(base:number, mult:number, bonus:number, cap:number):number
-
----@type UnitMathParameterFunc
-UnitMathParameter.linear = function(base, mult, bonus)
+---@param base number
+---@param mult number
+---@param bonus number
+---@return number
+function UnitMathParameter.linear(base, mult, bonus)
     return base * mult + bonus
 end
 
----@type UnitMathParameterFunc
-UnitMathParameter.inverseLinear = function(base, mult, bonus)
+---@param base number
+---@param mult number
+---@param bonus number
+---@return number
+function UnitMathParameter.inverseLinear(base, mult, bonus)
     return base / mult - bonus
 end
 
----@type UnitMathParameterFunc
-UnitMathParameter.percent = function(base, mult, bonus, param_cap)
+---@param base number
+---@param mult number
+---@param bonus number
+---@param param_cap number
+---@return number
+function UnitMathParameter.percent(base, mult, bonus, param_cap)
     local val = base * mult + bonus
-    local k = val / (val + val_for_half_cap)
+    local k = val / (val + half_cap)
     return k * param_cap
 end
 
----@type UnitMathParameterFunc
-UnitMathParameter.inversePercent = function(base, mult, bonus, param_cap)
+---@param base number
+---@param mult number
+---@param bonus number
+---@param param_cap number
+---@return number
+function UnitMathParameter.inversePercent(base, mult, bonus, param_cap)
     local val = base * mult + bonus
-    local k = val / (val + val_for_half_cap)
+    local k = val / (val + half_cap)
     return 100 - k * (100 - param_cap)
 end
 

@@ -179,4 +179,6 @@ function GetSpellAbility()
     return Ability.getAbility(GetSpellAbilityId())
 end
 
+
+
 return Ability

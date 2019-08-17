@@ -77,7 +77,8 @@ function Player:forceUIKey(key)
 end
 
 local __replaced_functions = {
-    GetOwningPlayer = GetOwningPlayer
+    GetOwningPlayer = GetOwningPlayer,
+    GetLocalPlayer = GetLocalPlayer
 }
 
 ---@param unit Unit
@@ -85,6 +86,11 @@ local __replaced_functions = {
 function GetOwningPlayer(unit)
     local player_obj = __replaced_functions.GetOwningPlayer(unit.unit_obj)
     return PlayerDB.get(player_obj)
+end
+
+---@return Player
+function GetLocalPlayer()
+    return PlayerDB.get(__replaced_functions.GetLocalPlayer())
 end
 
 return Player

@@ -1,4 +1,7 @@
 local Settings = require('utils.settings')
+require('utils.math.vec2')
+require('utils.math.vec3')
+require('utils.globalTimer')
 
 ---@class Utils
 local Utils = {}

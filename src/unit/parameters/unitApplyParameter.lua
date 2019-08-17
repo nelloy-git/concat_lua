@@ -1,85 +1,17 @@
+---@type Settings
+local Settings = require('utils.settings')
+---@type Ability
+local Ability = require('ability.ability')
+
 ---@class UnitApplyParameter
 local UnitApplyParameter = {}
 
-local attack_dispertion = 0.15
+local attack_dispertion = Settings.UnitParameters.attack_dispersion
 
----@alias UnitApplyParameterFunc fun(owner:UnitObject, val:number):nil
-
-
-UnitApplyParameter.attack = function(owner, val)
-    local k = 1 - attack_dispertion
-    local dmg = k * val
-    local dice_sides = 2 * attack_dispertion * val
-
-    BlzSetUnitBaseDamage(owner, math.floor(dmg), 0)
-    BlzSetUnitDiceNumber(owner, 1, 0)
-    BlzSetUnitDiceSides(owner, math.floor(dice_sides + 1), 0)
-end
-
-
-UnitApplyParameter.attackSpeed = function(owner, val)
-    BlzSetUnitAttackCooldown(owner, val, 0)
-end
-
-
-UnitApplyParameter.armor = function(owner, val)
-    BlzSetUnitArmor(owner, math.floor(val))
-end
-
-
-UnitApplyParameter.spellPower = function(owner, val)
-    -- TODO
-end
-
-
-UnitApplyParameter.castSpeed = function(owner, val)
-    -- TODO
-end
-
-local resist_id = compiletime(function()
-    local id = WeObjEdit.Utils.nextAbilId()
-    local we_abil = WeObjEdit.Ability.RunedBracers.new(id)
-    we_abil:setLevels(1)
-    we_abil:setDamageReduction(0, 1)
-    return id
-end)
-
-
-UnitApplyParameter.resistance = function(owner, val)
-    if GetUnitAbilityLevel(owner, FourCC(resist_id)) == 0 then
-        UnitAddAbility(owner, FourCC(resist_id))
-    end
-    local abil = BlzGetUnitAbility(owner, FourCC(resist_id))
-    BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 0, val)
-end
-
-
-UnitApplyParameter.cooldown = function(owner, val)
-    -- TODO
-end
-
-
-UnitApplyParameter.health = function(owner, val)
-    BlzSetUnitMaxHP(owner, math.floor(val))
-end
-
-
-UnitApplyParameter.regeneration = function(owner, val)
-    BlzSetUnitRealField(owner, UNIT_RF_HIT_POINTS_REGENERATION_RATE, val)
-end
-
-
-UnitApplyParameter.mana = function(owner, val)
-    BlzSetUnitMaxMana(owner, math.floor(val))
-end
-
-
-UnitApplyParameter.recovery = function(owner, val)
-    BlzSetUnitRealField(owner, UNIT_RF_MANA_REGENERATION, val)
-end
-
+---Generated ability for crit chance, crit damage and dodge.
+---@type string
 local crit_and_dodge_id = compiletime(function()
-    if WeObjEdit == nil then print('azazqaa') end
+    if not WeObjEdit then print('WeObjEdit module is not loaded.') return nil end
     local id = WeObjEdit.Utils.nextAbilId()
     local we_abil = WeObjEdit.Ability.BladeMasterCriticalStrike.new(id)
     we_abil:setLevels(1)
@@ -90,88 +22,158 @@ local crit_and_dodge_id = compiletime(function()
     we_abil:setNeverMiss(true, 1)
     return id
 end)
+local crit_and_dodge_abil = Ability.new(crit_and_dodge_id)
 
-local tooltip_critChance = 'Crit chance: '
-local tooltip_critPower = 'Crit power: '
-local tooltip_dodgechance = 'Dodge chance: '
+---Generated ability for magic resistance.
+---@type string
+local resist_id = compiletime(function()
+    if not WeObjEdit then print('WeObjEdit module is not loaded.') return nil end
+    local id = WeObjEdit.Utils.nextAbilId()
+    local we_abil = WeObjEdit.Ability.RunedBracers.new(id)
+    we_abil:setLevels(1)
+    we_abil:setDamageReduction(0, 1)
+    return id
+end)
+local resist_abil = Ability.new(resist_id)
 
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.attack(unit, val)
+    local k = 1 - attack_dispertion
+    local dmg = k * val
+    local dice_sides = 2 * attack_dispertion * val
 
-UnitApplyParameter.critChance = function(owner, val)
-    if GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0 then
-        UnitAddAbility(owner, FourCC(crit_and_dodge_id))
-    end
-    local abil = BlzGetUnitAbility(owner, FourCC(crit_and_dodge_id))
-    BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 0, val)
+    local unit_obj = unit:getObj()
+    BlzSetUnitBaseDamage(unit_obj, math.floor(dmg), 0)
+    BlzSetUnitDiceNumber(unit_obj, 1, 0)
+    BlzSetUnitDiceSides(unit_obj, math.floor(dice_sides + 1), 0)
+end
 
-    if GetOwningPlayer(owner) == GetLocalPlayer() then
-        local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
-        local pos = tooltip:find(tooltip_critChance)
-        if pos == nil then
-            tooltip = tooltip_critChance..'\n'..tooltip_critPower..'\n'..tooltip_dodgechance
-            pos = tooltip:find(tooltip_critChance)
-        end
-        pos = pos + tooltip_critChance:len()
-        tooltip = tooltip:sub(1, pos - 1)..tostring(val)..'%'..tooltip:sub(tooltip:find('\n'), #tooltip)
-        BlzSetAbilityExtendedTooltip(ID(crit_and_dodge_id), tooltip, 0)
-    end
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.attackSpeed(unit, val)
+    BlzSetUnitAttackCooldown(unit:getObj(), val, 1)
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.armor(unit, val)
+    BlzSetUnitArmor(unit:getObj(), math.floor(val))
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.spellPower(unit, val)
+    -- TODO
 end
 
 
-UnitApplyParameter.critPower = function(owner, val)
-    if GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0 then
-        UnitAddAbility(owner, FourCC(crit_and_dodge_id))
-    end
-    local abil = BlzGetUnitAbility(owner, FourCC(crit_and_dodge_id))
-    BlzSetAbilityRealLevelField(abil, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 0, val)
-
-    if GetOwningPlayer(owner) == GetLocalPlayer() then
-        local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
-        local start = tooltip:find(tooltip_critPower)
-        if start == nil then
-            tooltip = tooltip_critChance..'\n'..tooltip_critPower..'\n'..tooltip_dodgechance
-            start = tooltip:find(tooltip_critPower)
-        end
-        finish = start + tooltip_critPower:len()
-        tooltip = tooltip:sub(1, finish - 1)..tostring(val)..'%'..tooltip:sub(tooltip:find('\n', start), #tooltip) 
-        BlzSetAbilityExtendedTooltip(ID(crit_and_dodge_id), tooltip, 0)
-    end
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.castSpeed(unit, val)
+    -- TODO
 end
 
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.resistance(unit, val)
+    if unit:getAbilityLevel(resist_abil) <= 0 then
+        unit:addAbility(resist_abil)
+    end
+    unit:changeAbilityField(resist_abil, val, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 1)
+end
 
-UnitApplyParameter.dodgeChance = function(owner, val)
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.cooldown(unit, val)
+    -- TODO
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.health(unit, val)
+    BlzSetUnitMaxHP(unit:getObj(), math.floor(val))
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.regeneration(unit, val)
+    BlzSetUnitRealField(unit:getObj(), UNIT_RF_HIT_POINTS_REGENERATION_RATE, val)
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.mana(unit, val)
+    BlzSetUnitMaxMana(unit:getObj(), math.floor(val))
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.recovery(unit, val)
+    BlzSetUnitRealField(unit:getObj(), UNIT_RF_MANA_REGENERATION, val)
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.critChance(unit, val)
+    if unit:getAbilityLevel(crit_and_dodge_abil) <= 0 then
+        unit:addAbility(crit_and_dodge_abil)
+    end
+    unit:changeAbilityField(crit_and_dodge_abil, val, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 1)
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.critPower(unit, val)
+    if unit:getAbilityLevel(crit_and_dodge_abil) <= 0 then
+        unit:addAbility(crit_and_dodge_abil)
+    end
+    unit:changeAbilityField(crit_and_dodge_abil, val, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 1)
+end
+
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.dodgeChance(unit, val)
     val = val / 100 -- percents to [0:1]
-    if GetUnitAbilityLevel(owner, FourCC(crit_and_dodge_id)) == 0 then
-        UnitAddAbility(owner, FourCC(crit_and_dodge_id))
+    if unit:getAbilityLevel(crit_and_dodge_abil) <= 0 then
+        unit:addAbility(crit_and_dodge_abil)
     end
-    local abil = BlzGetUnitAbility(owner, FourCC(crit_and_dodge_id))
-    BlzSetAbilityRealLevelField(abil, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 0, val)
-
-    if GetOwningPlayer(owner) == GetLocalPlayer() then
-        local tooltip = BlzGetAbilityExtendedTooltip(ID(crit_and_dodge_id), 0)
-        local start = tooltip:find(tooltip_dodgechance)
-        if start == nil then
-            tooltip = tooltip_critChance..'\n'..tooltip_dodgechance..'\n'..tooltip_dodgechance
-            start = tooltip:find(tooltip_dodgechance)
-        end
-        finish = start + tooltip_dodgechance:len()
-        tooltip = tooltip:sub(1, finish - 1)..tostring(val)..'%'
-        BlzSetAbilityExtendedTooltip(ID(crit_and_dodge_id), tooltip, 0)
-    end
+    unit:changeAbilityField(crit_and_dodge_abil, val, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 1)
 end
 
-
-UnitApplyParameter.strength = function(owner, val)
-    SetHeroStr(owner, math.floor(val), true)
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.strength(unit, val)
+    SetHeroStr(unit:getObj(), math.floor(val), true)
 end
 
-
-UnitApplyParameter.agility = function(owner, val)
-    SetHeroAgi(owner, math.floor(val), true)
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.agility(unit, val)
+    SetHeroAgi(unit:getObj(), math.floor(val), true)
 end
 
-
-UnitApplyParameter.strength = function(owner, val)
-    SetHeroInt(owner, math.floor(val), true)
+---@param unit Unit
+---@param val number
+---@return nil
+function UnitApplyParameter.strength(unit, val)
+    SetHeroInt(unit:getObj(), math.floor(val), true)
 end
 
 return UnitApplyParameter

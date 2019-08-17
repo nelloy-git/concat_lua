@@ -1,24 +1,29 @@
 ---@class UnitParameter
 local UnitParameter = {}
+local UnitParameter_meta = {
+    __index = UnitParameter
+}
 
 ---Create new parameter for unit.
----@param owner_struct Unit
+---@param unit_obj UnitObject
 ---@param base number
----@param apply_param_func UnitApplyParameterFunc
----@param math_func UnitMathParameterFunc
----@param max_val number
+---@param apply_param_func function
+---@param math_func function
+---@param max_val number|nil
 ---@return UnitParameter
-function UnitParameter.new(owner_struct, base, apply_param_func, math_func, max_val)
+function UnitParameter.new(unit_obj, base, apply_param_func, math_func, max_val)
+    ---@type UnitParameter
     local container = {
-        owner_struct = owner_struct,
-        base = base,
-        bonus = 0,
-        mult = 1,
-        cap = max_val,
-        apply_param_func = apply_param_func,
-        math_func = math_func
+        __unit_obj = unit_obj,
+        __base = base,
+        __bonus = 0,
+        __mult = 1,
+        __res = math_func(base, mult, bonus, max_val),
+        __cap = max_val,
+        __apply_param_func = apply_param_func,
+        __math_func = math_func
     }
-    setmetatable(container, {__index = UnitParameter})
+    setmetatable(container, UnitParameter_meta)
     container:update()
     return container
 end
@@ -27,10 +32,11 @@ end
 ---@param base number
 ---@param mult number
 ---@param bonus number
+---@return nil
 function UnitParameter:set(base, mult, bonus)
-    self.base = base
-    self.mult = mult
-    self.bonus = bonus
+    self.__base = base
+    self.__mult = mult
+    self.__bonus = bonus
     self:update()
 end
 
@@ -38,23 +44,52 @@ end
 ---@param base number
 ---@param mult number
 ---@param bonus number
+---@return nil
 function UnitParameter:add(base, mult, bonus)
-    self.base = self.base + base
-    self.mult = self.mult + mult
-    self.bonus = self.bonus + bonus
+    self.__base = self.__base + base
+    self.__mult = self.__mult + mult
+    self.__bonus = self.__bonus + bonus
+    self:update()
+end
+
+---@param base number
+---@return nil
+function UnitParameter:addBase(base)
+    self.__base = self.__base + base
     self:update()
 end
 
 ---Function returns base, mult, bonus and result values of parameter.
 ---@return number, number, number, number
-function UnitParameter:get()
-    return self.base, self.mult, self.bonus, self.math_func(self.base, self.mult, self.bonus, self.cap)
+function UnitParameter:getAll()
+    return self.__base, self.__mult, self.__bonus, self.__math_func(self.__base, self.__mult, self.__bonus, self.__cap)
+end
+
+---@return number
+function UnitParameter:getBase()
+    return self.__base
+end
+
+---@return number
+function UnitParameter:getBonus()
+    return self.__bonus
+end
+
+---@return number
+function UnitParameter:getMult()
+    return self.__mult
+end
+
+---@return number
+function UnitParameter:getResult()
+    return self.__res
 end
 
 ---Function updates parameter state.
+---@return nil
 function UnitParameter:update()
-    local val = self.math_func(self.base, self.mult, self.bonus, self.cap)
-    self.apply_param_func(self.owner_struct.unit_obj, val)
+    self.__res = self.__math_func(self.__base, self.__mult, self.__bonus, self.__cap)
+    self.__apply_param_func(self.__unit_obj, self.__res)
 end
 
 return UnitParameter
