@@ -29,10 +29,10 @@ function GlobalTimer.period()
         local action = table.remove(GlobalTimer.actions, 1)
         if action:getTime() <= cur_time then
             action:run()
-            Debug('Run', action:getTime(), cur_time)
+            --Debug('Run', action:getTime(), cur_time)
         else
             table.insert(GlobalTimer.actions, 1, action)
-            Debug('Wait', action:getTime(), cur_time)
+            --Debug('Wait', action:getTime(), cur_time)
             break
         end
     end

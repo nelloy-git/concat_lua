@@ -36,7 +36,6 @@ function ParameterContainer.new(unit)
     parameter_container.__cooldown = UnitParameter.new(unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
 
     setmetatable(parameter_container, ParameterContainer_meta)
-    Debug('Done')
 
     -- Add hero stats
     local string_id = ID2str(unit:getId())
@@ -46,7 +45,6 @@ function ParameterContainer.new(unit)
         parameter_container.agility = UnitParameter.new(unit, 1, ApplyParam.agility, MathParam.linear)
         parameter_container.intelligence = UnitParameter.new(unit, 1, ApplyParam.intelligence, MathParam.linear)
     end
-    Debug('Done')
 
     return parameter_container
 end

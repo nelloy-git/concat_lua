@@ -15,8 +15,9 @@ setmetatable(Player, Player_meta)
 ---@param index integer
 ---@return Player|nil
 function Player_meta.__call(_, index)
-    if type(index) ~= 'number' then return nil end
-    return PlayerIndexDB[math.floor(index)]
+    if type(index) ~= 'number' then Debug('Player index can be number(integer) only') return nil end
+    local player = PlayerIndexDB[math.floor(index)]
+    return player
 end
 
 ---@param self Player
@@ -57,7 +58,7 @@ function Player.getLocal()
 end
 
 ---@return userdata
-function Player:get()
+function Player:getObj()
     return self.player_obj
 end
 
@@ -76,9 +77,13 @@ function Player:forceUIKey(key)
     end
 end
 
+---@return Player
+function Player.getLocal()
+    return local_player
+end
+
 local __replaced_functions = {
-    GetOwningPlayer = GetOwningPlayer,
-    GetLocalPlayer = GetLocalPlayer
+    GetOwningPlayer = GetOwningPlayer
 }
 
 ---@param unit Unit
@@ -86,11 +91,6 @@ local __replaced_functions = {
 function GetOwningPlayer(unit)
     local player_obj = __replaced_functions.GetOwningPlayer(unit.unit_obj)
     return PlayerDB.get(player_obj)
-end
-
----@return Player
-function GetLocalPlayer()
-    return PlayerDB.get(__replaced_functions.GetLocalPlayer())
 end
 
 return Player

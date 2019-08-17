@@ -5,27 +5,26 @@ local UnitParameter_meta = {
 }
 
 ---Create new parameter for unit.
----@param unit_obj UnitObject
+---@param unit Unit
 ---@param base number
 ---@param apply_param_func function
 ---@param math_func function
 ---@param max_val number|nil
 ---@return UnitParameter
-function UnitParameter.new(unit_obj, base, apply_param_func, math_func, max_val)
+function UnitParameter.new(unit, base, apply_param_func, math_func, max_val)
     ---@type UnitParameter
-    local container = {
-        __unit_obj = unit_obj,
+    local parameter = {
+        __unit = unit,
         __base = base,
         __bonus = 0,
         __mult = 1,
-        __res = math_func(base, mult, bonus, max_val),
         __cap = max_val,
         __apply_param_func = apply_param_func,
         __math_func = math_func
     }
-    setmetatable(container, UnitParameter_meta)
-    container:update()
-    return container
+    setmetatable(parameter, UnitParameter_meta)
+    parameter:update()
+    return parameter
 end
 
 ---Recomend use in tests only. Function set parameter of unit.
@@ -89,7 +88,7 @@ end
 ---@return nil
 function UnitParameter:update()
     self.__res = self.__math_func(self.__base, self.__mult, self.__bonus, self.__cap)
-    self.__apply_param_func(self.__unit_obj, self.__res)
+    self.__apply_param_func(self.__unit, self.__res)
 end
 
 return UnitParameter

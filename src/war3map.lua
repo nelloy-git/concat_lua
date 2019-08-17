@@ -26,21 +26,22 @@ end
 function RunInitialization()
     DestroyTimer(GetExpiredTimer())
 
-    local Init = require('utils.init')
     local Utils = require('utils.utils')
-    ---@type Timer
+    local Init = require('utils.init')
+    --@type Timer
     glTimer = require('utils.globalTimer')
     Init.start()
     local Player = require('player.player')
     require('ability.warlord.settings')
-    --require('interface.frames.castBar')
+    require('interface.frames.castBar')
     
 
     ---@type Unit
     local Unit = require('unit.unit')
-    Debug(Player(0))
+    --Debug(Player(0))
     local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
-    Debug(u)
+    local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
+    --Debug(u)
     --Debug(Player(0))
 
     ---@type Ability

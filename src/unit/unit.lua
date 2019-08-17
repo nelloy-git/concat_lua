@@ -17,9 +17,8 @@ local Unit_meta = {
 ---@param self Unit
 ---@return string
 function Unit_meta.__tostring(self)
-    Debug('here')
     return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]',
-                         self:getName(), self:getId(), self:getX(), self:getY(), self:getZ())
+                         self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
 end
 
 
@@ -70,9 +69,9 @@ function Unit.new(player, id, x, y, face, is_dead)
     id = ID(id)
     local unit_obj = nil
     if is_dead then
-        unit_obj = __replaced_functions.CreateCorpse(player:get(), id, x, y, face)
+        unit_obj = __replaced_functions.CreateCorpse(player:getObj(), id, x, y, face)
     else
-        unit_obj = __replaced_functions.CreateUnit(player:get(), id, x, y, face)
+        unit_obj = __replaced_functions.CreateUnit(player:getObj(), id, x, y, face)
     end
     ---@type Unit
     local unit = {
@@ -652,7 +651,5 @@ function Unit.removeFromAllStock(id_unitType) RemoveUnitFromAllStock(id_unitType
 function Unit.setAllItemTypeSlots(i_slots) SetAllItemTypeSlots(i_slots) end
 function Unit.setAllTypeSlots(i_slots) SetAllUnitTypeSlots(i_slots) end
 ]]--
-
-Debug('Unit class initialized')
 
 return Unit

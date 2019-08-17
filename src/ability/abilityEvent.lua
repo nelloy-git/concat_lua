@@ -25,7 +25,6 @@ function AbilityEvent.init()
     trigger:addEvent_AnyUnitIssuedOrderPointTarget()
     trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
     trigger:addAction(function() CasterDB.rm(GetOrderedUnit()) end)
-    Debug('Abilities events initialized')
 end
 
 ---@alias SpellTarget Unit|Item|Destructable|nil

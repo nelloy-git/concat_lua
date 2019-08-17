@@ -1,4 +1,7 @@
+---@type Player
+local Player = require('player.player')
 local Settings = require('utils.settings')
+require('utils.init')
 require('utils.math.vec2')
 require('utils.math.vec3')
 require('utils.globalTimer')
@@ -46,7 +49,7 @@ function print(...)
         end
 
         for i = 0, 23 do
-            DisplayTimedTextToPlayer(Player(i), 0, 0, 30, s)
+            DisplayTimedTextToPlayer(Player(i):getObj(), 0, 0, 30, s)
         end
     end
 end
@@ -68,7 +71,7 @@ function Debug(...)
                 v = v
             elseif t == 'integer' or t == 'number' then
                 v = tostring(v)
-            elseif t == 'table' then
+            elseif t == 'table' or t == 'function' then
                 v = tostring(v)
             else
                 v = ''
@@ -77,7 +80,7 @@ function Debug(...)
             s = s..' '..v
         end
 
-        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
+        DisplayTimedTextToPlayer(Player.getLocal():getObj(), 0, 0, 30, '[Debug]: '..s)
     end
 end
 

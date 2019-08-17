@@ -7,11 +7,9 @@ local castBar = {}
 function castBar.init()
     local toc_file = "war3mapImported\\frame_files\\MyBar.toc"
     if not BlzLoadTOCFile(toc_file) then
-        print('Error in '..toc_file)
-        print(getErrorPos())
+        error('Error in '..toc_file)
     end
 
-    print('CastBar')
     local castProgressBar = BlzCreateSimpleFrame("MyBarEx", BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 1)
     local castProgressBarText = BlzGetFrameByName("MyBarExText", 1)
     BlzFrameSetAbsPoint(castProgressBar, FRAMEPOINT_CENTER, 0.3, 0.15)
@@ -20,7 +18,6 @@ function castBar.init()
     BlzFrameSetTexture(castProgressBar, "Replaceabletextures\\Teamcolor\\Teamcolor01.blp", 0, true)
     BlzFrameSetText(castProgressBarText, "Cast")
     BlzFrameSetVisible(castProgressBar, false)
-    print('Cast bar init done')
 
     local function update()
         local player_index = player2index(GetLocalPlayer())
@@ -46,8 +43,6 @@ function castBar.init()
     local trigger2 = CreateTrigger()
     TriggerRegisterTimerEvent(trigger2, 0.05, true)
     TriggerAddAction(trigger2, update)
-
-    print('CastingBar initialized.')
 end
 
 return castBar

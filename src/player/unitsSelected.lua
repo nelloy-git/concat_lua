@@ -39,7 +39,6 @@ function SelectedUnits.init()
             end
             SelectedUnits[owner_index] = new_list
         end)
-    print('Unit selection initialized')
 end
 
 function SelectedUnits.get(player_index)

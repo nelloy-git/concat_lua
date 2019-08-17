@@ -54,6 +54,7 @@ end
 ---@param val number
 ---@return nil
 function UnitApplyParameter.attackSpeed(unit, val)
+    BlzSetUnitAttackCooldown(unit:getObj(), val, 0)
     BlzSetUnitAttackCooldown(unit:getObj(), val, 1)
 end
 
@@ -86,6 +87,7 @@ function UnitApplyParameter.resistance(unit, val)
     if unit:getAbilityLevel(resist_abil) <= 0 then
         unit:addAbility(resist_abil)
     end
+    --Debug('Resist')
     unit:changeAbilityField(resist_abil, val, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 1)
 end
 
@@ -131,6 +133,7 @@ function UnitApplyParameter.critChance(unit, val)
     if unit:getAbilityLevel(crit_and_dodge_abil) <= 0 then
         unit:addAbility(crit_and_dodge_abil)
     end
+    --Debug('Crit chance')
     unit:changeAbilityField(crit_and_dodge_abil, val, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 1)
 end
 
@@ -141,6 +144,7 @@ function UnitApplyParameter.critPower(unit, val)
     if unit:getAbilityLevel(crit_and_dodge_abil) <= 0 then
         unit:addAbility(crit_and_dodge_abil)
     end
+    --Debug('Crit damage')
     unit:changeAbilityField(crit_and_dodge_abil, val, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 1)
 end
 
@@ -152,6 +156,7 @@ function UnitApplyParameter.dodgeChance(unit, val)
     if unit:getAbilityLevel(crit_and_dodge_abil) <= 0 then
         unit:addAbility(crit_and_dodge_abil)
     end
+    --Debug('Evade')
     unit:changeAbilityField(crit_and_dodge_abil, val, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 1)
 end
 
