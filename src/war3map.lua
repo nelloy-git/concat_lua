@@ -2,8 +2,8 @@ compiletime(
     function ()
         ---@type ObjEdit
         WeObjEdit = require('compiletime.objEdit.objEdit')
-        WeObjEdit.init(src_dir, dst_dir)
-        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
+        --WeObjEdit.init(src_dir, dst_dir)
+        --addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
     end)
 
 
@@ -26,21 +26,21 @@ end
 function RunInitialization()
     DestroyTimer(GetExpiredTimer())
 
-    local Utils = require('utils.utils')
     local Init = require('utils.init')
-    --@type Timer
-    glTimer = require('utils.globalTimer')
     Init.start()
-    local Player = require('player.player')
-    require('ability.warlord.settings')
-    require('interface.frames.castBar')
+
+    --@type Timer
+    --glTimer = require('utils.globalTimer')
+    
+    --require('ability.warlord.settings')
+    --require('interface.frames.castBar')
     
 
     ---@type Unit
-    local Unit = require('unit.unit')
+    --local Unit = require('unit.unit')
     --Debug(Player(0))
-    local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
-    local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
+    --local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
     --Debug(u)
     --Debug(Player(0))
 

@@ -92,14 +92,6 @@ function AnyWeAbility:setSpecialAttachmentPoint(data) self:addField(WeField.new(
 ---@param data string
 function AnyWeAbility:setAnimationNames(data) self:addField(WeField.new("aani", 'string', 0, 0, data)) end
 ---@param data string
-function AnyWeAbility:setTooltipNormal(data, lvl) self:addField(WeField.new("atp1", 'string', lvl, 0, data)) end
----@param data string
-function AnyWeAbility:setTooltipTurnOff(data, lvl) self:addField(WeField.new("aut1", 'string', lvl, 0, data)) end
----@param data string
-function AnyWeAbility:setTooltipNormalExtended(data, lvl) self:addField(WeField.new("aub1", 'string', lvl, 0, data)) end
----@param data string
-function AnyWeAbility:setTooltipTurnOffExtended(data, lvl) self:addField(WeField.new("auu1", 'string', lvl, 0, data)) end
----@param data string
 function AnyWeAbility:setTooltipLearn(data) self:addField(WeField.new("aret", 'string', 0, 0, data)) end
 ---@param data string
 function AnyWeAbility:setTooltipLearnExtended(data) self:addField(WeField.new("arut", 'string', 0, 0, data)) end
@@ -135,6 +127,14 @@ function AnyWeAbility:setLevels(data) self:addField(WeField.new("alev", 'int', 0
 function AnyWeAbility:setRequiredLevel(data) self:addField(WeField.new("arlv", 'int', 0, 0, data)) end
 ---@param data integer
 function AnyWeAbility:setLevelSkipRequirement(data) self:addField(WeField.new("alsk", 'int', 0, 0, data)) end
+---@param data string
+function AnyWeAbility:setTooltipNormal(data, lvl) self:addField(WeField.new("atp1", 'string', lvl, 0, data)) end
+---@param data string
+function AnyWeAbility:setTooltipTurnOff(data, lvl) self:addField(WeField.new("aut1", 'string', lvl, 0, data)) end
+---@param data string
+function AnyWeAbility:setTooltipNormalExtended(data, lvl) self:addField(WeField.new("aub1", 'string', lvl, 0, data)) end
+---@param data string
+function AnyWeAbility:setTooltipTurnOffExtended(data, lvl) self:addField(WeField.new("auu1", 'string', lvl, 0, data)) end
 ---@param data string
 function AnyWeAbility:setTargetsAllowed(data, lvl) self:addField(WeField.new("atar", 'string', lvl, 0, data)) end
 ---@param data number

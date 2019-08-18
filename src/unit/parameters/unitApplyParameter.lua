@@ -22,6 +22,7 @@ local crit_and_dodge_id = compiletime(function()
     we_abil:setNeverMiss(true, 1)
     return id
 end)
+
 local crit_and_dodge_abil = Ability.new(crit_and_dodge_id)
 
 ---Generated ability for magic resistance.

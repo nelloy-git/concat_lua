@@ -5,27 +5,9 @@ local UnitEvent = require('unit.unitEvent')
 ---@type Ability
 local Ability = require('ability.ability')
 
-local function generateAbility(name, tooltip, range, area, cast_time, cooldown)
-    local id = WeObjEdit.Utils.nextAbilId()
-    local order = WeObjEdit.Utils.nextOrderId()
-
-    ---@type ChannelWeAbility
-    local abil = WeObjEdit.Preset.Channel.new(id, order, 1, 'point',
-                                              true, true, false, false, false)
-    abil:setTooltipNormal(name, 1)
-    abil:setTooltipNormalExtended(tooltip, 1)
-    abil:setCastRange(range, 1)
-    abil:setAreaofEffect(area, 1)
-
-    abil:setCastingTime(0, 1)
-    abil:setFollowThroughTime(cast_time, 1)
-    abil:setArtDuration(cast_time, 1)
-
-    abil:setCooldown(cooldown, 1)
-    abil:setHotkeyNormal('X')
-    
-    return id
-end
+local FullData = require('ability.warlord.settings')
+---@type ChannelCompiletimeData
+local Data = FullData.SummonSpearman
 
 local function generateUnit(base_id, model, abilities)
     local id = WeObjEdit.Utils.nextUnitId()
@@ -41,13 +23,6 @@ end
 --
 -- Ability data
 --
-local ability_name = 'Summon Swordman'
-local ability_tooltip = 'Mage summons invulnerale spirit warrior.\n'
-local range = 500
-local area = 150
-local cast_time = 0
-local base_cooldown = 0
-local abil_id = compiletime(generateAbility(ability_name, ability_tooltip, range, area, cast_time, base_cooldown))
 
 local unit_model = 'war3mapImported\\units\\SwordNya.mdx'
 local unit_abilities = 'Avul,Aloc'
@@ -57,9 +32,9 @@ local unit_id = compiletime( generateUnit('hfoo', unit_model, unit_abilities))
 --
 
 ---@type Ability
-local SummonCrystalSwordmanAbility = Ability.new(abil_id)
-SummonCrystalSwordmanAbility:setName(ability_name)
-SummonCrystalSwordmanAbility:setCastingTime(cast_time)
+local SummonCrystalSwordmanAbility = Ability.new(Data:getField("Id"))
+SummonCrystalSwordmanAbility:setName(Data:getField("TooltipNormal"))
+SummonCrystalSwordmanAbility:setCastingTime(Data:getField("CustomCastingTime"))
 
 ---@type table<Unit, Unit>
 SummonCrystalSwordmanAbility.SlaveToMaster = {}
@@ -92,6 +67,7 @@ end
 
 ---@type AbilityFinishCallback
 local finish = function(caster, target, x, y, full_time)
+    Debug("Finish")
     local owner = caster:getOwningPlayerIndex()
     local unit = Unit.new(owner, unit_id, x, y, caster:getFacing())
     unit:setVertexColor(1, 1, 1, 0.35)
@@ -111,8 +87,7 @@ SummonCrystalSwordmanAbility:setCallback(finish, "finish")
 
     
 function SummonCrystalSwordmanAbility.init()
-    
-    UnitEvent.die:addAction(function()
+    UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
             ---@type Unit
             local unit = GetDyingUnit()
             local dying_id = unit:getId()
@@ -136,7 +111,5 @@ function SummonCrystalSwordmanAbility.init()
             end
         end)
 end
-
---Debug(SummonCrystalSwordmanAbility)
 
 return SummonCrystalSwordmanAbility

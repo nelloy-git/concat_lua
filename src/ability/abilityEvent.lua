@@ -10,7 +10,9 @@ local CasterDB = require('ability.casterDB')
 ---@class AbilityEvent
 local AbilityEvent = {}
 
+local initialized = false
 function AbilityEvent.init()
+    if initialized then return nil end
     -- Init casting start
     ---@type Trigger
     local casting_trigger = Trigger.new()
@@ -25,6 +27,8 @@ function AbilityEvent.init()
     trigger:addEvent_AnyUnitIssuedOrderPointTarget()
     trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
     trigger:addAction(function() CasterDB.rm(GetOrderedUnit()) end)
+
+    initialized = true
 end
 
 ---@alias SpellTarget Unit|Item|Destructable|nil
@@ -40,6 +44,7 @@ end
 ---Calls this function when eny unit starts casting ability.
 ---@return nil
 function AbilityEvent.startCast()
+    Debug("Cast start")
     ---@type Ability
     local ability = Ability.getAbility(GetSpellAbilityId())
     if ability == nil then return nil end
@@ -55,6 +60,7 @@ function AbilityEvent.startCast()
     local data = SpellInstance.new(ability, caster, target, x, y, ability:getCastingTime(caster))
     glTimer.addAction(0, AbilityEvent.timerPeriod, data)
     CasterDB.add(caster, data)
+    Debug("Cast start")
 end
 
 ---CastTimer calls this function every loop for every casting ability.

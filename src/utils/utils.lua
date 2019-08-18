@@ -1,28 +1,35 @@
 ---@type Player
-local Player = require('player.player')
+--local Player = require('player.player')
+--if not is_compiletime then
+--    Player.init()
+--end
+
 local Settings = require('utils.settings')
-require('utils.init')
 require('utils.math.vec2')
 require('utils.math.vec3')
-require('utils.globalTimer')
+
+--require('utils.globalTimer')
+--require('ability.abilityEvent')
+--require('player.playerEvent')
+--require('unit.unitEvent')
 
 ---@class Utils
 local Utils = {}
 
 ---@return string
-function  getErrorPos()
-    local str = ''
-    local i = 2
-    while debug.getinfo(i, 'ln') ~= nil do
-        local func = debug.getinfo(i, 'lnS')
-        local source_type = func.source:sub(#func.source - 3, #func.source)
-        if func.source:sub(#func.source - 3, #func.source) == '.lua' then
-            str = '  ' .. func.source .. ':' .. tostring(func.currentline) .. '\n' .. str
-        end
-        i = i + 1
-    end
-    return str
-end
+--function  getErrorPos()
+--    local str = ''
+--    local i = 2
+--    while debug.getinfo(i, 'ln') ~= nil do
+--        local func = debug.getinfo(i, 'lnS')
+--        local source_type = func.source:sub(#func.source - 3, #func.source)
+--        if func.source:sub(#func.source - 3, #func.source) == '.lua' then
+--            str = '  ' .. func.source .. ':' .. tostring(func.currentline) .. '\n' .. str
+--        end
+--        i = i + 1
+--    end
+--    return str
+--end
 
 local __real_print = print
 function print(...)
@@ -54,6 +61,7 @@ function print(...)
     end
 end
 
+local compiletime_print = print
 ---Function prints data to local player.
 function Debug(...)
     if is_compiletime then
@@ -94,14 +102,7 @@ function ID(id)
         return id
     end
     print('Wrong id fromat')
-    print(getErrorPos())
     return nil
-end
-
----@param id integer
----@return string
-function ID2str(id)
-    return string.pack(">I4", id)
 end
 
 ---@param player userdata
@@ -118,7 +119,7 @@ end
 ---@param min number
 ---@param max number
 ---@return number
-function to_range(val, min, max)
+function torange(val, min, max)
     if val < min then return min end
     if val > max then return max end
     return val

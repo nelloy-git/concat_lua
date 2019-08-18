@@ -1,41 +1,41 @@
-
+---@type ChannelCompiletimeData
+local AbilityData = require('ability.channelCompiletimeData')
 
 local WarlordSettings = compiletime(function()
-    local CTF = require('ability.warlord.compiletime') --CompiletimeFunctions
-
-    local function buildAbilityTable(compiletimFunction, name, tooltip, castRange, targetingArea, castingTime, cooldown, hotkey)
-        return {
-            Id = compiletimFunction(name, tooltip, castRange, targetingArea, castingTime, cooldown, hotkey),
-            Name = name,
-            Tooltip = tooltip,
-            CastRange = castRange,
-            TargetingArea = targetingArea,
-            CastingTime = castingTime,
-            Cooldown = cooldown,
-            HotKey = hotkey,
-        }
-    end
-
     -- ================= --
     --  Summon spearman  --
     -- ================= --
-    local summonSpearmanSettings =
-    buildAbilityTable  (CTF.generateSummonSpearmanAbility,          -- Ability generator
-                        'Summon spearman',                          -- Name
-                        'Summons invulnerale spirit warrior.',      -- Tooltip
-                        500,                                        -- CastRange
-                        150,                                        -- TargetingArea
-                        0,                                          -- CastingTime
-                        0,                                          -- Cooldown
-                        'X')                                        -- HotKey
+    local SummonSpearmanData = AbilityData.new()
+    SummonSpearmanData:setField("Name", "Summon spearman")
+    SummonSpearmanData:setField("TooltipNormal", "Summon spearman")
+    SummonSpearmanData:setField("TooltipNormalExtended", "Summons invulnerale spirit warrior.")
+    SummonSpearmanData:setField("CastRange", 500)
+    SummonSpearmanData:setField("AreaofEffect", 150)
+    SummonSpearmanData:setField("Cooldown", 0)
+    SummonSpearmanData:setField("CastingTime", 0)
+    SummonSpearmanData:setField("CustomCastingTime", 1)
+    SummonSpearmanData:setField("HotkeyNormal", "X")
+    SummonSpearmanData:setField("ArtCaster", "")
+    SummonSpearmanData:setField("ArtEffect", "")
+    SummonSpearmanData:setField("ArtSpecial", "")
+    SummonSpearmanData:setField("ArtTarget", "")
+    SummonSpearmanData:setField("Levels", 1)
+    SummonSpearmanData:setField("Options", AbilityData.option.is_visible + AbilityData.option.is_areaTarget)
+    SummonSpearmanData:setField("TargetType", "point")
+    SummonSpearmanData:setField("DisableOtherAbilities", false)
+    SummonSpearmanData:setField("FollowThroughTime", 0)
+    SummonSpearmanData:generate()
 
     -- ============= --
     --  Spirit rush  --
     -- ============= --
 
     local settings = {
-        Ability1 = summonSpearmanSettings
+        SummonSpearman = SummonSpearmanData
     }
-    return settings 
+    return settings
 end)
+
+setmetatable(WarlordSettings.SummonSpearman, {__index = AbilityData})
+
 return WarlordSettings

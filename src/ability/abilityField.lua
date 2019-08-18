@@ -2,7 +2,6 @@
 local AbilityField = {}
 
 function AbilityField.init()
-    Debug(ABILITY_IF_BUTTON_POSITION_NORMAL_X)
     local Integer = {}
         Integer[ABILITY_IF_BUTTON_POSITION_NORMAL_X] = true
         Integer[ABILITY_IF_BUTTON_POSITION_NORMAL_Y] = true

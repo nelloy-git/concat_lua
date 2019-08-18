@@ -1,5 +1,5 @@
 ---@type PlayerDB
-local PlayerDB = require('player.playerDB')
+local PlayerDB = require('utils.player.PlayerDB')
 local PlayerIndexDB = {}
 
 __replaced_class = {
@@ -45,7 +45,8 @@ end
 local local_player = nil
 
 ---@return nil
-function Player.init()
+if not is_compiletime then
+    if local_player ~= nil then return nil end
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         newPlayer(i)
     end
@@ -92,5 +93,3 @@ function GetOwningPlayer(unit)
     local player_obj = __replaced_functions.GetOwningPlayer(unit.unit_obj)
     return PlayerDB.get(player_obj)
 end
-
-return Player

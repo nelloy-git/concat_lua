@@ -7,10 +7,11 @@ local TimerAction_meta = {__index = TimerAction}
 ---@param data any
 ---@return TimerAction
 function TimerAction.new(time, callback, data)
+    ---@type TimerAction
     local action = {
-        time = time,
-        callback = callback,
-        data = data
+        __time = time,
+        __callback = callback,
+        __data = data
     }
     setmetatable(action, TimerAction_meta)
     return action
@@ -18,11 +19,12 @@ end
 
 ---@return number
 function TimerAction:getTime()
-    return self.time
+    return self.__time
 end
 
+---@Run this action.
 function TimerAction:run()
-    self.callback(self.data)
+    self.__callback(self.__data)
 end
 
 return TimerAction

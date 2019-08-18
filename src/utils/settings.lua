@@ -1,6 +1,7 @@
 ---@class Settings
 local Settings = {
     debug = true,
+    testTimer = true,
 
     -- ================= --
     --  Unit parameters  --
