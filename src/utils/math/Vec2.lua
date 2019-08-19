@@ -1,5 +1,5 @@
 ---@class Vec2
-Vec2 = {}
+local Vec2 = {}
 local Vec2_meta = {
     __index = Vec2,
 }

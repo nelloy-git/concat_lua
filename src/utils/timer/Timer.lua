@@ -4,21 +4,11 @@ local TimerAction = require('utils.timer.TimerAction')
 local TimerDB = require('utils.timer.TimerDB')
 
 ---@class Timer
-local Timer = {
-    timer = nil,
-    cur_time = 0,
-    precision = 0.03125,
-    __actions = {}
-}
+local Timer = {}
 local Timer_meta = {
     __index = Timer,
     __gc = Timer.destroy
 }
-
-function Timer.init()
-    ---Global timer with 0.03125 period.
-    glTimer = Timer.new(0.03125)
-end
 
 ---@param period number
 ---@return Timer
@@ -35,6 +25,15 @@ function Timer.new(period)
     TimerStart(timer.__timer_obj, timer.__period, true, Timer.timeout)
 
     return timer
+end
+
+function Timer:destroy()
+    while #self.__actions > 0 do
+        local action = table.remove(self.__actions, 1)
+        action:destroy()
+    end
+    TimerDB.rm(self.__timer_obj)
+    DestroyTimer(self.__timer_obj)
 end
 
 ---@return number
@@ -64,8 +63,8 @@ end
 ---@param list TimerAction[]
 ---@return number
 local function findPos(time, first, last, list)
-    local len = last - first + 1
-    if len <= 1 then return 1 end
+    local len = last - first
+    if len == 0 then return first end
 
     local i, _ = math.modf(len / 2)
     local pos = first + i
@@ -95,7 +94,7 @@ function Timer:addAction(delay, callback, data)
     if delay <= 0 then delay = 0.01 end
     local time = self.__cur_time + delay
     local action = TimerAction.new(time, callback, data)
-    local pos = findPos(time, 1, #self.__actions, self.__actions)
+    local pos = findPos(time, 1, #self.__actions + 1, self.__actions)
     Debug(pos)
     table.insert(self.__actions, pos, action)
     return action
@@ -116,26 +115,30 @@ end
 
 local count = 100
 local test_result = {}
+local test_timer = nil
 local function test(num)
-    Debug(num)
+    --Debug(num)
     table.insert(test_result, #test_result + 1, num)
 end
 
 local function check_test()
+    DestroyTimer(GetExpiredTimer())
     for i = 1, count do
         --Debug(test_result[i])
         if test_result[i] ~= i then Debug('Timer test failed') return nil end
     end
+    test_timer:destroy()
     Debug("Timer test passed.")
 end
 
 function Timer.test()
+    test_timer = Timer.new(0.03125)
     local t = 0.05
     for i = 1, count do
-        glTimer:addAction(i * t, test, i)
+        test_timer:addAction(i * t, test, i)
     end
     local timer = CreateTimer()
-    TimerStart(timer, 1.2 * t * count, false, check_test)
+    TimerStart(timer, 1.1 * t * count, false, check_test)
 end
 
 return Timer

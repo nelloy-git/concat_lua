@@ -1,12 +1,8 @@
 local Init = {}
 
----Player class has to be loaded first for Debug function.
-require('utils.player.player')
-require('utils.global')
-require('utils.timer.Timer')
-
----@type Settings
-local Settings = require('utils.Settings')
+---Globals have to be loaded and initialized first.
+local Globals = require('utils.global')
+Globals.init()
 
 function Init.start()
     for name, _ in pairs(__require_data.module) do
@@ -33,6 +29,10 @@ function Init.start()
     Debug('Initialisation finished')
 
     -- Tests
+
+    ---@type Settings
+    local Settings = require('utils.Settings')
+
     if Settings.testTimer then glTimer.test() end
 end
 

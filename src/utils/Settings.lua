@@ -1,8 +1,13 @@
 ---@class Settings
 local Settings = {
     debug = true,
-    testTimer = true,
-
+    -- ======= --
+    --  Timer  --
+    -- ======= --
+    Timer = {
+        glTimer_period = 0.03125,
+        run_test = true,
+    },
     -- ================= --
     --  Unit parameters  --
     -- ================= --

@@ -1,6 +1,20 @@
 ---@type Settings
 local Settings = require('utils.Settings')
 
+local Globals = {}
+function Globals.init()
+    local Timer = require('utils.timer.Timer')
+
+    ---@type Player
+    Player = require('utils.player.Player')
+    ---@type Vec2
+    Vec2 = require('utils.math.Vec2')
+    ---@type Vec3
+    Vec3 = require('utils.math.Vec3')
+    ---@type Timer
+    glTimer = Timer.new(Settings.Timer.glTimer_period)
+end
+
 local compiletime_print = print
 ---Function prints data to local player in debug mode.
 function Debug(...)
@@ -62,3 +76,5 @@ function torange(val, min, max)
     if val > max then return max end
     return val
 end
+
+return Globals

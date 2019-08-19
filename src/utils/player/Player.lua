@@ -6,7 +6,7 @@ __replaced_class = {
     Player = Player
 }
 ---@class Player
-Player = {}
+local Player = {}
 local Player_meta = {
     __index = Player
 }
