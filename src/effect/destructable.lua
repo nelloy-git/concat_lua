@@ -154,7 +154,7 @@ function Destructable:getName()
     return GetDestructableName(self.destructable_obj)
 end
 
-__replaced_class = {
+__replaced_functions = {
     GetSpellTargetDestructable = GetSpellTargetDestructable,
     GetOrderTargetDestructable = GetOrderTargetDestructable,
     GetTriggerDestructable = GetTriggerDestructable,
@@ -162,12 +162,12 @@ __replaced_class = {
 }
 
 ---@return Destructable
-function GetSpellTargetDestructable() return DestructableDB.get(__replaced_class.GetSpellTargetDestructable()) end
+function GetSpellTargetDestructable() return DestructableDB.get(__replaced_functions.GetSpellTargetDestructable()) end
 ---@return Destructable
-function GetOrderTargetDestructable() return DestructableDB.get(__replaced_class.GetOrderTargetDestructable()) end
+function GetOrderTargetDestructable() return DestructableDB.get(__replaced_functions.GetOrderTargetDestructable()) end
 ---@return Destructable
-function GetTriggerDestructable() return DestructableDB.get(__replaced_class.GetTriggerDestructable()) end
+function GetTriggerDestructable() return DestructableDB.get(__replaced_functions.GetTriggerDestructable()) end
 ---@return Destructable
-function GetUnitRallyDestructable() return DestructableDB.get(__replaced_class.GetUnitRallyDestructable()) end
+function GetUnitRallyDestructable() return DestructableDB.get(__replaced_functions.GetUnitRallyDestructable()) end
 
 return Destructable

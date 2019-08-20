@@ -1,12 +1,13 @@
 local Init = {}
 
 ---Globals have to be loaded and initialized first.
-local Globals = require('utils.global')
-Globals.init()
+local Globals = require('utils.Globals')
+if not is_compiletime then
+    Globals.init()
+end
 
 function Init.start()
     for name, _ in pairs(__require_data.module) do
-        Debug(name)
         if not  __require_data.loaded[name] then
             local success, result = pcall(__require_data.module[name])
             if success then
@@ -33,7 +34,12 @@ function Init.start()
     ---@type Settings
     local Settings = require('utils.Settings')
 
-    if Settings.testTimer then glTimer.test() end
+    if Settings.Timer.run_test then
+        ---@type Timer
+        local Timer = require("utils.timer.Timer")
+        Debug("Timer test.")
+        Timer.test()
+    end
 end
 
 return Init

@@ -26,9 +26,10 @@ end
 function RunInitialization()
     DestroyTimer(GetExpiredTimer())
 
-    local Init = require('utils.init')
+    local Init = require('utils.Init')
     Init.start()
 
+    --local Trigger = require('trigger.Trigger')
     --@type Timer
     --glTimer = require('utils.globalTimer')
     
@@ -37,9 +38,9 @@ function RunInitialization()
     
 
     ---@type Unit
-    --local Unit = require('unit.unit')
+    local Unit = require('unit.unit')
     --Debug(Player(0))
-    --local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
     --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
     --Debug(u)
     --Debug(Player(0))

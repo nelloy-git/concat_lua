@@ -2,18 +2,25 @@
 local Settings = require('utils.Settings')
 
 local Globals = {}
-function Globals.init()
-    local Timer = require('utils.timer.Timer')
 
-    ---@type Player
-    Player = require('utils.player.Player')
+
+local initialized = false
+function Globals.init()
+    if initialized then return nil end
+
     ---@type Vec2
     Vec2 = require('utils.math.Vec2')
     ---@type Vec3
     Vec3 = require('utils.math.Vec3')
+
+
+    local Timer = require('utils.timer.Timer')
     ---@type Timer
     glTimer = Timer.new(Settings.Timer.glTimer_period)
+
+    initialized = true
 end
+
 
 local compiletime_print = print
 ---Function prints data to local player in debug mode.
@@ -42,9 +49,10 @@ function Debug(...)
             s = s..' '..v
         end
 
-        DisplayTimedTextToPlayer(Player.getLocal():getObj(), 0, 0, 30, '[Debug]: '..s)
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
     end
 end
+
 
 ---Converts integer or string id to integer.
 ---@param id integer|string
@@ -59,12 +67,15 @@ function ID(id)
     return nil
 end
 
+
 ---@Converts integer id to string id.
 ---@param id integer
 ---@return string
 function ID2str(id)
     return string.pack(">I4", id)
 end
+
+
 
 ---If val < min returns min. If val > max returns max.
 ---@param val number

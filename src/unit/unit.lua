@@ -21,6 +21,293 @@ function Unit_meta.__tostring(self)
                          self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
 end
 
+---@param wc3_player userdata
+---@param id string | integer
+---@param x number
+---@param y number
+---@param face number
+---@return Unit
+function Unit.new(wc3_player, id, x, y, face, is_dead)
+    id = ID(id)
+    local wc3_unit = nil
+    if is_dead then
+        wc3_unit = __replaced_functions.CreateCorpse(wc3_player, id, x, y, face)
+    else
+        wc3_unit = __replaced_functions.CreateUnit(wc3_player, id, x, y, face)
+    end
+    ---@type Unit
+    local unit = {
+        __id = id,
+        __wc3_unit = wc3_unit
+    }
+    setmetatable(unit, Unit_meta)
+    UnitDB.add(unit.__wc3_unit, unit)
+
+    unit:initCustomData()
+
+    return unit
+end
+
+---@return nil
+function Unit:destroy()
+    self:destroyCustomData()
+
+    UnitDB.rm(self.__wc3_unit)
+    RemoveUnit(self.__wc3_unit)
+    self.__wc3_unit = nil
+end
+
+---@return UnitObject
+function Unit:getObj()
+    return self.__wc3_unit
+end
+
+---Initialize unit custom data.
+---@return nil
+function Unit:initCustomData()
+    ---@type UnitParameterContainer
+    self.parameter = ParameterContainer.new(self)
+end
+
+---Destroy unit custom data.
+---@return nil
+function Unit:destroyCustomData()
+end
+
+---@return integer
+function Unit:getId()
+    return self.__id
+end
+
+---@return string
+function Unit:getName()
+    return GetUnitName(self.__wc3_unit)
+end
+
+---Function sets unit color. Colors should be in range [0 : 1].
+---@param red number
+---@param green number
+---@param blue number
+---@param alpha number
+---@return nil
+function Unit:setVertexColor(red, green, blue, alpha)
+    red = math.floor(255 * torange(red, 0, 1))
+    green = math.floor(255 * torange(green, 0, 1))
+    blue = math.floor(255 * torange(blue, 0, 1))
+    alpha = math.floor(255 * torange(alpha, 0, 1))
+    SetUnitVertexColor(self.__wc3_unit, red, green, blue, alpha)
+end
+
+---@return integer
+function Unit:getOwningPlayer()
+    return GetOwningPlayer(self.__wc3_unit)
+end
+
+---@param pos Vec2
+---@return nil
+function Unit:setPos2(pos)
+    self:setX(pos.x)
+    self:setY(pos.y)
+end
+
+---@param pos Vec3
+---@return nil
+function Unit:setPos3(pos)
+    self:setX(pos.x)
+    self:setY(pos.y)
+    self:setZ(pos.z)
+end
+
+---@param x number
+---@return nil
+function Unit:setX(x)
+    SetUnitX(self.__wc3_unit, x)
+end
+
+---@param y number
+---@return nil
+function Unit:setY(y)
+    SetUnitY(self.__wc3_unit, y)
+end
+
+---@param z number
+---@return nil
+function Unit:setZ(z)
+    self:setFlyHeight(z - GetTerrainZ(self:getX(), self:getY()))
+end
+
+---@return Vec2
+function Unit:getPos2()
+    return Vec2.new(self:getX(), self:getY())
+end
+
+---@return Vec3
+function Unit:getPos3()
+    return Vec3.new(self:getX(), self:getY(), self:getZ())
+end
+
+---@return number
+function Unit:getX()
+    return GetUnitX(self.__wc3_unit)
+end
+
+---@return number
+function Unit:getY()
+    return GetUnitY(self.__wc3_unit)
+end
+
+---@return number
+function Unit:getZ()
+    return GetTerrainZ(self:getX(), self:getY()) + self:getFlyHeight()
+end
+
+---@return number
+function Unit:getFlyHeight()
+    return GetUnitFlyHeight(self.__wc3_unit)
+end
+
+---@return number
+function Unit:setFlyHeigth(height)
+    return SetUnitFlyHeight(self.__wc3_unit, height)
+end
+
+---@return number
+function Unit:getDefaultsFlyHeight()
+    return GetUnitDefaultFlyHeight(self.__wc3_unit)
+end
+
+---@param angle number
+---@param time number|nil
+---@return nil
+function Unit:setFacing(angle, time)
+    if time == nil or time <= 0 then
+        SetUnitFacing(self.__wc3_unit, angle)
+    else
+        SetUnitFacingTimed(self.__wc3_unit, angle, time)
+    end
+end
+
+---@param target Vec2
+---@param time number|nil
+---@return nil
+function Unit:setFacingTo(target, time)
+    local x, y = self:getPos()
+    local angle = 180 + (180 / math.pi) * math.atan(y - target.y, x - target.x)
+    self:setFacing(angle, time)
+end
+
+---@return number
+function Unit:getFacing()
+    return GetUnitFacing(self.__wc3_unit)
+end
+
+---@return number
+function Unit:getMoveSpeed()
+    return GetUnitMoveSpeed(self.__wc3_unit)
+end
+
+---@param speed number
+---@return nil
+function Unit:setMoveSpeed(speed)
+    SetUnitMoveSpeed(self.__wc3_unit, speed)
+end
+
+---@return number
+function Unit:getTurnSpeed()
+    return GetUnitTurnSpeed(self.__wc3_unit)
+end
+
+---@param speed number
+---@return nil
+function Unit:setTurnSpeed(speed)
+    SetUnitTurnSpeed(self.__wc3_unit, speed)
+end
+
+---@return number
+function Unit:getDefaultTurnSpeed()
+    return GetUnitDefaultTurnSpeed(self.__wc3_unit)
+end
+
+---@param ability_id integer
+function Unit:addAbility(ability_id)
+    UnitAddAbility(self.__wc3_unit, ability_id)
+end
+
+---@param ability_id integer
+function Unit:removeAbility(ability_id)
+    UnitRemoveAbility(self.__wc3_unit, ability_id)
+end
+
+---@param ability_id integer
+---@return integer
+function Unit:getAbilityLevel(ability_id)
+    return GetUnitAbilityLevel(self.__wc3_unit, ability_id)
+end
+
+---@param ability_id integer
+function Unit:setAbilityLevel(ability_id)
+    SetUnitAbilityLevel(self.__wc3_unit, ability_id)
+end
+
+---@param flag boolean
+---@return nil
+function Unit:setInvulnerable(flag)
+    SetUnitInvulnerable(self.__wc3_unit, flag)
+end
+
+---@param time number
+---@return nil
+function Unit:applyTimedLife(time)
+    UnitApplyTimedLife(self.__wc3_unit, 0, time)
+end
+
+---@param order_id integer
+---@return nil
+function Unit:issueImmediateOrderById(order_id)
+    IssueImmediateOrderById(self.__wc3_unit, order_id)
+end
+
+---@return nil
+function Unit:orderStop()
+    self:issueImmediateOrderById(851972)
+end
+
+---@param order_id integer
+---@param x number
+---@param y number
+function Unit:issuePointOrderById(order_id, x, y)
+    IssuePointOrderById(self.__wc3_unit, order_id, x, y)
+end
+
+---@param speed number
+function Unit:setMoveSpeed(speed)
+    SetUnitMoveSpeed(self.__wc3_unit, speed)
+end
+
+---@param speed number
+function Unit:setTurnSpeed(speed)
+    SetUnitTurnSpeed(self.__wc3_unit, speed)
+end
+
+---@param animation string
+function Unit:playAnimation(animation)
+    SetUnitAnimation(self.__wc3_unit, animation)
+end
+
+---@param scale number
+function Unit:setAnimationSpeed(scale)
+    SetUnitTimeScale(self.__wc3_unit, scale)
+end
+
+---@return nil
+function Unit:pause()
+    PauseUnit(self.__wc3_unit, true)
+end
+
+---@return nil
+function Unit:unpause()
+    PauseUnit(self.__wc3_unit, false)
+end
 
 local __replaced_functions = {
     GetLevelingUnit = GetLevelingUnit,
@@ -58,319 +345,6 @@ local __replaced_functions = {
     CreateUnit = CreateUnit,
     CreateCorpse = CreateCorpse,
 }
-
----@param player Player
----@param id string | integer
----@param x number
----@param y number
----@param face number
----@return Unit
-function Unit.new(player, id, x, y, face, is_dead)
-    id = ID(id)
-    local unit_obj = nil
-    if is_dead then
-        unit_obj = __replaced_functions.CreateCorpse(player:getObj(), id, x, y, face)
-    else
-        unit_obj = __replaced_functions.CreateUnit(player:getObj(), id, x, y, face)
-    end
-    ---@type Unit
-    local unit = {
-        __id = id,
-        __unit_obj = unit_obj
-    }
-    setmetatable(unit, Unit_meta)
-    UnitDB.add(unit.__unit_obj, unit)
-
-    unit:initCustomData()
-
-    return unit
-end
-
----@return nil
-function Unit:destroy()
-    self:destroyCustomData()
-
-    UnitDB.rm(self.__unit_obj)
-    RemoveUnit(self.__unit_obj)
-    self.__unit_obj = nil
-end
-
----@return UnitObject
-function Unit:getObj()
-    return self.__unit_obj
-end
-
----Initialize unit custom data.
----@return nil
-function Unit:initCustomData()
-    ---@type UnitParameterContainer
-    self.parameter = ParameterContainer.new(self)
-end
-
----Destroy unit custom data.
----@return nil
-function Unit:destroyCustomData()
-end
-
----@return integer
-function Unit:getId()
-    return self.__id
-end
-
----@return string
-function Unit:getName()
-    return GetUnitName(self.__unit_obj)
-end
-
----Function sets unit color. Colors should be in range [0 : 1].
----@param red number
----@param green number
----@param blue number
----@param alpha number
----@return nil
-function Unit:setVertexColor(red, green, blue, alpha)
-    red = math.floor(255 * to_range(red, 0, 1))
-    green = math.floor(255 * to_range(green, 0, 1))
-    blue = math.floor(255 * to_range(blue, 0, 1))
-    alpha = math.floor(255 * to_range(alpha, 0, 1))
-    SetUnitVertexColor(self.__unit_obj, red, green, blue, alpha)
-end
-
----@return integer
-function Unit:getOwningPlayer()
-    return GetOwningPlayer(self)
-end
-
----@param pos Vec2
----@return nil
-function Unit:setPos2(pos)
-    self:setX(pos.x)
-    self:setY(pos.y)
-end
-
----@param pos Vec3
----@return nil
-function Unit:setPos3(pos)
-    self:setX(pos.x)
-    self:setY(pos.y)
-    self:setZ(pos.z)
-end
-
----@param x number
----@return nil
-function Unit:setX(x)
-    SetUnitX(self.__unit_obj, x)
-end
-
----@param y number
----@return nil
-function Unit:setY(y)
-    SetUnitY(self.__unit_obj, y)
-end
-
----@param z number
----@return nil
-function Unit:setZ(z)
-    self:setFlyHeight(z - GetTerrainZ(self:getX(), self:getY()))
-end
-
----@return Vec2
-function Unit:getPos2()
-    return Vec2.new(self:getX(), self:getY())
-end
-
----@return Vec3
-function Unit:getPos3()
-    return Vec3.new(self:getX(), self:getY(), self:getZ())
-end
-
----@return number
-function Unit:getX()
-    return GetUnitX(self.__unit_obj)
-end
-
----@return number
-function Unit:getY()
-    return GetUnitY(self.__unit_obj)
-end
-
----@return number
-function Unit:getZ()
-    return GetTerrainZ(self:getX(), self:getY()) + self:getFlyHeight()
-end
-
----@return number
-function Unit:getFlyHeight()
-    return GetUnitFlyHeight(self.__unit_obj)
-end
-
----@return number
-function Unit:setFlyHeigth(height)
-    return SetUnitFlyHeight(self.__unit_obj, height)
-end
-
----@return number
-function Unit:getDefaultsFlyHeight()
-    return GetUnitDefaultFlyHeight(self.__unit_obj)
-end
-
----@param angle number
----@param time number|nil
----@return nil
-function Unit:setFacing(angle, time)
-    if time == nil or time <= 0 then
-        SetUnitFacing(self.__unit_obj, angle)
-    else
-        SetUnitFacingTimed(self.__unit_obj, angle, time)
-    end
-end
-
----@param target Vec2
----@param time number|nil
----@return nil
-function Unit:setFacingTo(target, time)
-    local x, y = self:getPos()
-    local angle = 180 + (180 / math.pi) * math.atan(y - target.y, x - target.x)
-    self:setFacing(angle, time)
-end
-
----@return number
-function Unit:getFacing()
-    return GetUnitFacing(self.__unit_obj)
-end
-
----@return number
-function Unit:getMoveSpeed()
-    return GetUnitMoveSpeed(self.__unit_obj)
-end
-
----@param speed number
----@return nil
-function Unit:setMoveSpeed(speed)
-    SetUnitMoveSpeed(self.__unit_obj, speed)
-end
-
----@return number
-function Unit:getTurnSpeed()
-    return GetUnitTurnSpeed(self.__unit_obj)
-end
-
----@param speed number
----@return nil
-function Unit:setTurnSpeed(speed)
-    SetUnitTurnSpeed(self.__unit_obj, speed)
-end
-
----@return number
-function Unit:getDefaultTurnSpeed()
-    return GetUnitDefaultTurnSpeed(self.__unit_obj)
-end
-
----@param ability Ability
----@return nil
-function Unit:addAbility(ability)
-    UnitAddAbility(self.__unit_obj, ability:getId())
-end
-
----@param ability Ability
----@return nil
-function Unit:removeAbility(ability)
-    UnitRemoveAbility(self.__unit_obj, ability:getId())
-end
-
----@param ability Ability
----@return integer
-function Unit:getAbilityLevel(ability)
-    return GetUnitAbilityLevel(self.__unit_obj, ability:getId())
-end
-
----@param ability Ability
----@return nil
-function Unit:setAbilityLevel(ability)
-    SetUnitAbilityLevel(self.__unit_obj, ability:getId())
-end
-
----@param ability Ability
----@param value any
----@param field userdata
----@param lvl integer|nil
----@return boolean
-function Unit:changeAbilityField(ability, value, field, lvl)
-    return AbilityField.set(ability, self, value, field, lvl)
-end
-
----@param flag boolean
----@return nil
-function Unit:setInvulnerable(flag)
-    SetUnitInvulnerable(self.__unit_obj, flag)
-end
-
----@param time number
----@return nil
-function Unit:applyTimedLife(time)
-    UnitApplyTimedLife(self.__unit_obj, 0, time)
-end
-
----@param order_id integer
----@return nil
-function Unit:issueImmediateOrderById(order_id)
-    IssueImmediateOrderById(self.__unit_obj, order_id)
-end
-
----@return nil
-function Unit:orderStop()
-    self:issueImmediateOrderById(851972)
-end
-
----@param order_id integer
----@param x number
----@param y number
-function Unit:issuePointOrderById(order_id, x, y)
-    IssuePointOrderById(self.__unit_obj, order_id, x, y)
-end
-
----@param speed number
-function Unit:setMoveSpeed(speed)
-    SetUnitMoveSpeed(self.__unit_obj, speed)
-end
-
----@param speed number
-function Unit:setTurnSpeed(speed)
-    SetUnitTurnSpeed(self.__unit_obj, speed)
-end
-
----@param animation string
-function Unit:playAnimation(animation) SetUnitAnimation(self.__unit_obj, animation) end
----@param scale number
-function Unit:setAnimationSpeed(scale) SetUnitTimeScale(self.__unit_obj, scale) end
-
----@return nil
-function Unit:pause()
-    PauseUnit(self.__unit_obj, true)
-end
-
----@return nil
-function Unit:unpause()
-    PauseUnit(self.__unit_obj, false)
-end
-
----@param player Player
----@param id string|integer
----@param x number
----@param y number
----@param face number
-function CreateUnit(player, id, x, y, face)
-    return Unit.new(player, id, x, y, face, false)
-end
-
----@param player Player
----@param id string|integer
----@param x number
----@param y number
----@param face number
-function CreateCorpse(player, id, x, y, face)
-    return Unit.new(player, id, x, y, face, true)
-end
 
 ---@return Unit
 function GetLevelingUnit() return UnitDB.get(__replaced_functions.GetLevelingUnit()) end

@@ -1,5 +1,5 @@
 ---@type Settings
-local Settings = require('utils.settings')
+local Settings = require('utils.Settings')
 
 ---@class UnitMathParameter
 local UnitMathParameter = {}

@@ -59,29 +59,27 @@ end
 
 ---@param time number
 ---@param first integer
----@param last integer
----@param list TimerAction[]
+---@param len integer
 ---@return number
-local function findPos(time, first, last, list)
-    local len = last - first
+function Timer:findPos(time, first, len)
     if len == 0 then return first end
 
-    local i, _ = math.modf(len / 2)
-    local pos = first + i
-    if list[pos]:getTime() < time then
-        return findPos(time, first, pos - 1, list)
+    local half_len, d = math.modf(len / 2)
+    local pos = first + half_len
+    if self.__actions[pos]:getTime() > time then
+        return self:findPos(time, first, half_len)
     else
-        return findPos(time, pos, last, list)
+        return self:findPos(time, first + half_len + 2 * d, half_len)
     end
 end
 
 ---@param time number
 ---@return number
-local function findPosSimple(time)
-    local count = #Timer.actions
+function Timer:findPosSimple(time)
+    local count = #self.__actions
     if count == 0 then return 1 end
     for i = 1, count do
-        if Timer.actions[i]:getTime() > time then return i end
+        if self.__actions[i]:getTime() > time then return i end
     end
     return count + 1
 end
@@ -94,8 +92,9 @@ function Timer:addAction(delay, callback, data)
     if delay <= 0 then delay = 0.01 end
     local time = self.__cur_time + delay
     local action = TimerAction.new(time, callback, data)
-    local pos = findPos(time, 1, #self.__actions + 1, self.__actions)
-    Debug(pos)
+    local pos = 1
+    pos = self:findPos(time, 1, #self.__actions)
+    --local pos = self:findPosSimple(time)
     table.insert(self.__actions, pos, action)
     return action
 end
@@ -113,7 +112,7 @@ function Timer:removeAction(action)
     return false
 end
 
-local count = 100
+local count = 10
 local test_result = {}
 local test_timer = nil
 local function test(num)
@@ -124,8 +123,7 @@ end
 local function check_test()
     DestroyTimer(GetExpiredTimer())
     for i = 1, count do
-        --Debug(test_result[i])
-        if test_result[i] ~= i then Debug('Timer test failed') return nil end
+        if test_result[i] ~= i // 2 then Debug('Timer test failed') return nil end
     end
     test_timer:destroy()
     Debug("Timer test passed.")
@@ -136,6 +134,7 @@ function Timer.test()
     local t = 0.05
     for i = 1, count do
         test_timer:addAction(i * t, test, i)
+        test_timer:addAction((count - i) * t, test, count - i)
     end
     local timer = CreateTimer()
     TimerStart(timer, 1.1 * t * count, false, check_test)

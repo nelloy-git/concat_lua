@@ -27,6 +27,9 @@ __require_data.module["utils.timer.TimerAction"] = function()
       setmetatable(action, TimerAction_meta)
       return action
     end
+    function TimerAction:destroy()
+
+    end
     function TimerAction:getTime()
       return self.__time
     end
@@ -38,17 +41,22 @@ end
 __require_data.module["utils.timer.Timer"] = function()
     local TimerAction = require("utils.timer.TimerAction")
     local TimerDB = require("utils.timer.TimerDB")
-    local Timer = {timer = nil, cur_time = 0, precision = 0.03125, __actions = {}}
+    local Timer = {}
     local Timer_meta = {__index = Timer, __gc = Timer.destroy}
-    function Timer.init()
-      glTimer = Timer.new(0.03125)
-    end
     function Timer.new(period)
       local timer = {__timer_obj = CreateTimer(), __cur_time = 0.0, __period = period, __actions = {}}
       setmetatable(timer, Timer_meta)
       TimerDB.add(timer.__timer_obj, timer)
       TimerStart(timer.__timer_obj, timer.__period, true, Timer.timeout)
       return timer
+    end
+    function Timer:destroy()
+      while(#self.__actions > 0) do
+        local action = table.remove(self.__actions, 1)
+        action:destroy()
+      end
+      TimerDB.rm(self.__timer_obj)
+      DestroyTimer(self.__timer_obj)
     end
     function Timer:getPeriod()
       return self.__period
@@ -67,26 +75,25 @@ __require_data.module["utils.timer.Timer"] = function()
       end
       self.__cur_time = cur_time
     end
-    local function findPos(time, first, last, list)
-      local len = ((last-first)+1)
-      if (len <= 1) then
-        return 1
+    function Timer:findPos(time, first, len)
+      if (len == 0) then
+        return first
       end
-      local i, _ = math.modf((len/2))
-      local pos = (first+i)
-      if (list[pos]:getTime() < time) then
-        return findPos(time, first, (pos-1), list)
+      local half_len, d = math.modf((len/2))
+      local pos = (first+half_len)
+      if (self.__actions[pos]:getTime() > time) then
+        return self:findPos(time, first, half_len)
       else
-        return findPos(time, pos, last, list)
+        return self:findPos(time, ((first+half_len)+(2*d)), half_len)
       end
     end
-    local function findPosSimple(time)
-      local count = #Timer.actions
+    function Timer:findPosSimple(time)
+      local count = #self.__actions
       if (count == 0) then
         return 1
       end
       for i = 1, count do
-        if (Timer.actions[i]:getTime() > time) then
+        if (self.__actions[i]:getTime() > time) then
           return i
         end
       end
@@ -98,8 +105,8 @@ __require_data.module["utils.timer.Timer"] = function()
       end
       local time = (self.__cur_time+delay)
       local action = TimerAction.new(time, callback, data)
-      local pos = findPos(time, 1, #self.__actions, self.__actions)
-      Debug(pos)
+      local pos = 1
+      pos = self:findPos(time, 1, #self.__actions)
       table.insert(self.__actions, pos, action)
       return action
     end
@@ -113,37 +120,87 @@ __require_data.module["utils.timer.Timer"] = function()
       end
       return false
     end
-    local count = 100
+    local count = 10
     local test_result = {}
+    local test_timer = nil
     local function test(num)
-      Debug(num)
       table.insert(test_result, (#test_result+1), num)
     end
     local function check_test()
+      DestroyTimer(GetExpiredTimer())
       for i = 1, count do
-        if (test_result[i] ~= i) then
+        if (test_result[i] ~= (i//2)) then
           Debug("Timer test failed")
           return nil
         end
       end
+      test_timer:destroy()
       Debug("Timer test passed.")
     end
     function Timer.test()
+      test_timer = Timer.new(0.03125)
       local t = 0.05
       for i = 1, count do
-        glTimer:addAction((i*t), test, i)
+        test_timer:addAction((i*t), test, i)
+        test_timer:addAction(((count-i)*t), test, (count-i))
       end
       local timer = CreateTimer()
-      TimerStart(timer, ((1.2*t)*count), false, check_test)
+      TimerStart(timer, ((1.1*t)*count), false, check_test)
     end
     return Timer
 end
+__require_data.module["utils.math.Vec3"] = function()
+    local Vec3 = {}
+    local Vec3_meta = {__index = Vec3}
+    function Vec3_meta.__tostring(self)
+      return string.format("[%.2f, %.2f, %.2f]", self.x, self.y, self.z)
+    end
+    local loc = nil
+    function Vec3.init()
+      loc = Location(0, 0)
+    end
+    function GetTerrainZ(x, y)
+      MoveLocation(loc, x, y)
+      return GetLocationZ(loc)
+    end
+    function Vec3.new(x, y, z)
+      local v = {x = x, y = y, z = z}
+      setmetatable(v, Vec3_meta)
+      return v
+    end
+    return Vec3
+end
+__require_data.module["utils.math.Vec2"] = function()
+    local Vec2 = {}
+    local Vec2_meta = {__index = Vec2}
+    function Vec2_meta.__tostring(self)
+      return string.format("[%.2f, %.2f]", self.x, self.y)
+    end
+    function Vec2.new(x, y)
+      local v = {x = x, y = y}
+      setmetatable(v, Vec2_meta)
+      return v
+    end
+    return Vec2
+end
 __require_data.module["utils.Settings"] = function()
-    local Settings = {debug = true, testTimer = true, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}}
+    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = true}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}}
     return Settings
 end
-__require_data.module["utils.global"] = function()
+__require_data.module["utils.Globals"] = function()
     local Settings = require("utils.Settings")
+    local Globals = {}
+    local initialized = false
+    function Globals.init()
+      if (initialized) then
+        return nil
+      end
+      Vec2 = require("utils.math.Vec2")
+      Vec3 = require("utils.math.Vec3")
+      local Timer = require("utils.timer.Timer")
+      glTimer = Timer.new(Settings.Timer.glTimer_period)
+      initialized = true
+    end
     local compiletime_print = print
     function Debug(...)
       if (is_compiletime) then
@@ -172,7 +229,7 @@ __require_data.module["utils.global"] = function()
 
           s = s.." "..v
         end
-        DisplayTimedTextToPlayer(Player.getLocal():getObj(), 0, 0, 30, "[Debug]: "..s)
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, "[Debug]: "..s)
       end
 
     end
@@ -198,88 +255,16 @@ __require_data.module["utils.global"] = function()
       end
       return val
     end
+    return Globals
 end
-__require_data.module["utils.player.PlayerDB"] = function()
-    local PlayerDB = {}
-    function PlayerDB.add(player_obj, player)
-      PlayerDB[player_obj] = player
-    end
-    function PlayerDB.rm(player_obj)
-      PlayerDB[player_obj] = nil
-    end
-    function PlayerDB.get(player_obj)
-      return PlayerDB[player_obj]
-    end
-    return PlayerDB
-end
-__require_data.module["utils.player.player"] = function()
-    local PlayerDB = require("utils.player.PlayerDB")
-    local PlayerIndexDB = {}
-    __replaced_class = {Player = Player}
-    Player = {}
-    local Player_meta = {__index = Player}
-    setmetatable(Player, Player_meta)
-    function Player_meta.__call(_, index)
-      if (type(index) ~= "number") then
-        Debug("Player index can be number(integer) only")
-        return nil
-      end
-      local player = PlayerIndexDB[math.floor(index)]
-      return player
-    end
-    function Player_meta.__tostring(self)
-      return string.format("Player_%d", self:getIndex())
-    end
-    local function newPlayer(index)
-      local player = {index = index, player_obj = __replaced_class.Player(index)}
-      setmetatable(player, Player_meta)
-      PlayerDB.add(player.player_obj, player)
-      PlayerIndexDB[index] = player
-      return player
-    end
-    local local_player = nil
-    if (not is_compiletime) then
-      if (local_player ~= nil) then
-        return nil
-      end
-      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-        newPlayer(i)
-      end
-      local_player = PlayerDB.get(GetLocalPlayer())
-    end
-    function Player.getLocal()
-      return local_player
-    end
-    function Player:getObj()
-      return self.player_obj
-    end
-    function Player:getIndex()
-      return self.index
-    end
-    function Player:forceUIKey(key)
-      if (self == local_player) then
-        key = string.upper(key)
-        ForceUIKey(key)
-      end
-    end
-    function Player.getLocal()
-      return local_player
-    end
-    local __replaced_functions = {GetOwningPlayer = GetOwningPlayer}
-    function GetOwningPlayer(unit)
-      local player_obj = __replaced_functions.GetOwningPlayer(unit.unit_obj)
-      return PlayerDB.get(player_obj)
-    end
-end
-__require_data.module["utils.init"] = function()
+__require_data.module["utils.Init"] = function()
     local Init = {}
-    require("utils.player.player")
-    require("utils.global")
-    require("utils.timer.Timer")
-    local Settings = require("utils.Settings")
+    local Globals = require("utils.Globals")
+    if (not is_compiletime) then
+      Globals.init()
+    end
     function Init.start()
       for name, _ in pairs(__require_data.module) do
-        Debug(name)
         if (not __require_data.loaded[name]) then
           local success, result = pcall(__require_data.module[name])
           if (success) then
@@ -299,8 +284,11 @@ __require_data.module["utils.init"] = function()
         end
       end
       Debug("Initialisation finished")
-      if (Settings.testTimer) then
-        glTimer.test()
+      local Settings = require("utils.Settings")
+      if (Settings.Timer.run_test) then
+        local Timer = require("utils.timer.Timer")
+        Debug("Timer test.")
+        Timer.test()
       end
     end
     return Init
@@ -322,7 +310,7 @@ end
   end
   function RunInitialization()
     DestroyTimer(GetExpiredTimer())
-    local Init = require("utils.init")
+    local Init = require("utils.Init")
     Init.start()
   end
   function InitCustomPlayerSlots()

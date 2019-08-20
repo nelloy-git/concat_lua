@@ -1,7 +1,5 @@
 ---@type Settings
-local Settings = require('utils.settings')
----@type Ability
-local Ability = require('ability.ability')
+local Settings = require('utils.Settings')
 
 ---@class UnitApplyParameter
 local UnitApplyParameter = {}
@@ -23,8 +21,6 @@ local crit_and_dodge_id = compiletime(function()
     return id
 end)
 
-local crit_and_dodge_abil = Ability.new(crit_and_dodge_id)
-
 ---Generated ability for magic resistance.
 ---@type string
 local resist_id = compiletime(function()
@@ -35,7 +31,6 @@ local resist_id = compiletime(function()
     we_abil:setDamageReduction(0, 1)
     return id
 end)
-local resist_abil = Ability.new(resist_id)
 
 ---@param unit Unit
 ---@param val number
@@ -85,8 +80,8 @@ end
 ---@param val number
 ---@return nil
 function UnitApplyParameter.resistance(unit, val)
-    if unit:getAbilityLevel(resist_abil) <= 0 then
-        unit:addAbility(resist_abil)
+    if unit:getAbilityLevel(resist_id) <= 0 then
+        unit:addAbility(resist_id)
     end
     --Debug('Resist')
     unit:changeAbilityField(resist_abil, val, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 1)
