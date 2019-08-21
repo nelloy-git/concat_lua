@@ -19,8 +19,16 @@ function AnyWeAbility.new(id, base_id)
     return we_ability
 end
 
+---@return string
+function AnyWeAbility:getName()
+    return self.__name
+end
+
 ---@param data string
-function AnyWeAbility:setName(data) self:addField(WeField.new("anam", 'string', 0, 0, data)) end
+function AnyWeAbility:setName(data)
+    self.__name = data
+    self:addField(WeField.new("anam", 'string', 0, 0, data))
+end
 ---@param data string
 function AnyWeAbility:setEditorSuffix(data) self:addField(WeField.new("ansf", 'string', 0, 0, data)) end
 ---@param data boolean

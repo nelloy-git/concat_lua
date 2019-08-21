@@ -18,12 +18,14 @@ function ObjEdit.init(src_path, dst_path)
     ObjEdit.Ability = {}
     ---@type AuraSlowWeAbility
     ObjEdit.Ability.AuraSlow = require('compiletime.objEdit.objects.ability.weAuraSlow')
-    ---@type ChannelWeAbility
-    ObjEdit.Ability.Channel = require('compiletime.objEdit.objects.ability.weChannel')
     ---@type BladeMasterCriticalStrikeWeAbility
     ObjEdit.Ability.BladeMasterCriticalStrike = require('compiletime.objEdit.objects.ability.weBladeMasterCriticalStrike')
+    ---@type ChannelWeAbility
+    ObjEdit.Ability.Channel = require('compiletime.objEdit.objects.ability.weChannel')
     ---@type RunedBracersWeAbility
     ObjEdit.Ability.RunedBracers = require('compiletime.objEdit.objects.ability.weRunedBracers')
+    ---@type SpellBookWeAbility
+    ObjEdit.Ability.SpellBook = require('compiletime.objEdit.objects.ability.weSpellBook')
 
     -- Buffs
     ObjEdit.Buff = {}

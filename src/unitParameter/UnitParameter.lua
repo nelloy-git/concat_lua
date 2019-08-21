@@ -5,16 +5,16 @@ local UnitParameter_meta = {
 }
 
 ---Create new parameter for unit.
----@param unit Unit
+---@param wc3_unit wc3_Unit
 ---@param base number
 ---@param apply_param_func function
 ---@param math_func function
 ---@param max_val number|nil
 ---@return UnitParameter
-function UnitParameter.new(unit, base, apply_param_func, math_func, max_val)
+function UnitParameter.new(wc3_unit, base, apply_param_func, math_func, max_val)
     ---@type UnitParameter
     local parameter = {
-        __unit = unit,
+        __wc3_unit = wc3_unit,
         __base = base,
         __bonus = 0,
         __mult = 1,
@@ -44,17 +44,31 @@ end
 ---@param mult number
 ---@param bonus number
 ---@return nil
-function UnitParameter:add(base, mult, bonus)
+function UnitParameter:addAll(base, mult, bonus)
     self.__base = self.__base + base
     self.__mult = self.__mult + mult
     self.__bonus = self.__bonus + bonus
     self:update()
 end
 
----@param base number
+---@param val number
 ---@return nil
-function UnitParameter:addBase(base)
-    self.__base = self.__base + base
+function UnitParameter:addBase(val)
+    self.__base = self.__base + val
+    self:update()
+end
+
+---@param val number
+---@return nil
+function UnitParameter:addBonus(val)
+    self.__bonus = self.__bonus + val
+    self:update()
+end
+
+---@param val number
+---@return nil
+function UnitParameter:addMult(val)
+    self.__mult = self.__mult + val
     self:update()
 end
 
@@ -88,7 +102,7 @@ end
 ---@return nil
 function UnitParameter:update()
     self.__res = self.__math_func(self.__base, self.__mult, self.__bonus, self.__cap)
-    self.__apply_param_func(self.__unit, self.__res)
+    self.__apply_param_func(self.__wc3_unit, self.__res)
 end
 
 return UnitParameter

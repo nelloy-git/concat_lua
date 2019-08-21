@@ -1,52 +1,58 @@
 ---@type UnitParameter
-local UnitParameter = require('unit.parameters.unitParameter')
----@type UnitApplyParameter
-local ApplyParam = require('unit.parameters.unitApplyParameter')
----@type UnitMathParameter
-local MathParam = require('unit.parameters.unitMathParameter')
+local UnitParameter = require('unitParameter.UnitParameter')
+---@type UnitParameterContainerDB
+local UnitParameterContainerDB = require('unitParameter.UnitParameterContainerDB')
+
+local ApplyParam = require('unitParameter.applyFunc')
+local MathParam = require('unitParameter.mathFunc')
 
 ---@class UnitParameterContainer
 local ParameterContainer = {}
 local ParameterContainer_meta = {__index = ParameterContainer}
 
 ---Create new ParameterContainer.
----@param unit Unit
+---@param wc3_unit wc3_Unit
 ---@return UnitParameterContainer
-function ParameterContainer.new(unit)
+function ParameterContainer.new(wc3_unit)
     ---@type UnitParameterContainer
-    local parameter_container = {
-        __unit_obj = unit:getObj()
-    }
-    parameter_container.__attack = UnitParameter.new(unit, 1, ApplyParam.attack, MathParam.linear)
-    parameter_container.__attackSpeed = UnitParameter.new(unit, 2, ApplyParam.attackSpeed, MathParam.inverseLinear)
-    parameter_container.__armor = UnitParameter.new(unit, 0, ApplyParam.armor, MathParam.linear)
+    local container = {}
+    setmetatable(container, ParameterContainer_meta)
+    UnitParameterContainerDB.add(wc3_unit)
 
-    parameter_container.__spellPower = UnitParameter.new(unit, 0, ApplyParam.spellPower, MathParam.linear)
-    parameter_container.__castSpeed = UnitParameter.new(unit, 0, ApplyParam.castSpeed, MathParam.inversePercent, 25)
-    parameter_container.__resistance = UnitParameter.new(unit, 0, ApplyParam.resistance, MathParam.percent, 90)
+    container.__attack = UnitParameter.new(wc3_unit, 1, ApplyParam.attack, MathParam.linear)
+    container.__attackSpeed = UnitParameter.new(wc3_unit, 2, ApplyParam.attackSpeed, MathParam.inverseLinear)
+    container.__armor = UnitParameter.new(wc3_unit, 0, ApplyParam.armor, MathParam.linear)
 
-    parameter_container.__health = UnitParameter.new(unit, 100, ApplyParam.health, MathParam.linear)
-    parameter_container.__regeneration = UnitParameter.new(unit, 0, ApplyParam.regeneration, MathParam.linear)
-    parameter_container.__mana = UnitParameter.new(unit, 100, ApplyParam.mana, MathParam.linear)
-    parameter_container.__recovery = UnitParameter.new(unit, 0, ApplyParam.recovery, MathParam.linear)
+    container.__spellPower = UnitParameter.new(wc3_unit, 0, ApplyParam.spellPower, MathParam.linear)
+    container.__castSpeed = UnitParameter.new(wc3_unit, 0, ApplyParam.castSpeed, MathParam.inversePercent, 25)
+    container.__resistance = UnitParameter.new(wc3_unit, 0, ApplyParam.resistance, MathParam.percent, 90)
 
-    parameter_container.__critChance = UnitParameter.new(unit, 0, ApplyParam.critChance, MathParam.percent, 100)
-    parameter_container.__critPower = UnitParameter.new(unit, 1, ApplyParam.critPower, MathParam.linear)
-    parameter_container.__dodge = UnitParameter.new(unit, 0, ApplyParam.dodgeChance, MathParam.percent, 75)
-    parameter_container.__cooldown = UnitParameter.new(unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
+    container.__health = UnitParameter.new(wc3_unit, 100, ApplyParam.health, MathParam.linear)
+    container.__regeneration = UnitParameter.new(wc3_unit, 0, ApplyParam.regeneration, MathParam.linear)
+    container.__mana = UnitParameter.new(wc3_unit, 100, ApplyParam.mana, MathParam.linear)
+    container.__recovery = UnitParameter.new(wc3_unit, 0, ApplyParam.recovery, MathParam.linear)
 
-    setmetatable(parameter_container, ParameterContainer_meta)
+    container.__critChance = UnitParameter.new(wc3_unit, 0, ApplyParam.critChance, MathParam.percent, 100)
+    container.__critPower = UnitParameter.new(wc3_unit, 1, ApplyParam.critPower, MathParam.linear)
+    container.__dodge = UnitParameter.new(wc3_unit, 0, ApplyParam.dodgeChance, MathParam.percent, 75)
+    container.__cooldown = UnitParameter.new(wc3_unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
 
     -- Add hero stats
-    local string_id = ID2str(unit:getId())
+    local string_id = ID2str(wc3_unit)
     local first = string_id:sub(1, 1)
     if first == string.upper(first) then
-        parameter_container.strength = UnitParameter.new(unit, 1, ApplyParam.strength, MathParam.linear)
-        parameter_container.agility = UnitParameter.new(unit, 1, ApplyParam.agility, MathParam.linear)
-        parameter_container.intelligence = UnitParameter.new(unit, 1, ApplyParam.intelligence, MathParam.linear)
+        container.strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)
+        container.agility = UnitParameter.new(wc3_unit, 1, ApplyParam.agility, MathParam.linear)
+        container.intelligence = UnitParameter.new(wc3_unit, 1, ApplyParam.intelligence, MathParam.linear)
     end
 
-    return parameter_container
+    return container
+end
+
+---@param wc3_unit wc3_Unit
+---@return UnitParameterContainer
+function ParameterContainer.get(wc3_unit)
+    return UnitParameterContainerDB.get(wc3_unit)
 end
 
 ---Function adds attack damage to unit.

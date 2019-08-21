@@ -1,9 +1,7 @@
 ---@type UnitParameterContainer
-local ParameterContainer = require('unit.parameters.unitParameterContainer')
+local ParameterContainer = require('unitParameter.UnitParameterContainer')
 ---@type UnitDB
 local UnitDB = require('unit.unitDB')
----@type AbilityField
-local AbilityField = require('ability.abilityField')
 
 ---@class UnitObject : userdata
 
@@ -31,9 +29,9 @@ function Unit.new(wc3_player, id, x, y, face, is_dead)
     id = ID(id)
     local wc3_unit = nil
     if is_dead then
-        wc3_unit = __replaced_functions.CreateCorpse(wc3_player, id, x, y, face)
+        wc3_unit = CreateCorpse(wc3_player, id, x, y, face)
     else
-        wc3_unit = __replaced_functions.CreateUnit(wc3_player, id, x, y, face)
+        wc3_unit = CreateUnit(wc3_player, id, x, y, face)
     end
     ---@type Unit
     local unit = {

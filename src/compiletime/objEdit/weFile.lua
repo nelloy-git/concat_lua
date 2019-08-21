@@ -69,7 +69,11 @@ function WeFile:applyChanges()
         local bytes = we_obj:serialize()
         self:setChangesCount(self:getChangesCount() + 1)
         self.content = self.content .. bytes
-        print(string.format('Created %s with id: \'%s\' based on \'%s\'', we_obj.we_type, we_obj.id, we_obj.base_id))
+        local name = ''
+        if type(we_obj.getName) == 'function' then
+            name = we_obj:getName() or ''
+        end
+        print(string.format('Created %s %s with id: \'%s\' based on \'%s\'', we_obj.we_type, name, we_obj.id, we_obj.base_id))
     end
     self:writeToDst()
 end

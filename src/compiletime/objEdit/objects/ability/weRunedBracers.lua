@@ -17,7 +17,7 @@ end
 
 ---@param data number
 ---@param lvl integer
-function RunedBracers:setDamageBonus(data, lvl) self:addField(WeField.new("isr1", 'unrealm', lvl, 1, data)) end
+function RunedBracers:setDamageBonus(data, lvl) self:addField(WeField.new("isr1", 'unreal', lvl, 1, data)) end
 ---@param data number
 ---@param lvl integer
 function RunedBracers:setDamageReduction(data, lvl) self:addField(WeField.new("isr2", 'unreal', lvl, 2, data)) end

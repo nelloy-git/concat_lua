@@ -2,8 +2,8 @@ compiletime(
     function ()
         ---@type ObjEdit
         WeObjEdit = require('compiletime.objEdit.objEdit')
-        --WeObjEdit.init(src_dir, dst_dir)
-        --addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
+        WeObjEdit.init(src_dir, dst_dir)
+        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
     end)
 
 

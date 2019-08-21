@@ -1,7 +1,6 @@
 ---@type Settings
 local Settings = require('utils.Settings')
 
----@class UnitMathParameter
 local UnitMathParameter = {}
 
 local half_cap = Settings.UnitParameters.value_to_get_half_cap_for_percent_value

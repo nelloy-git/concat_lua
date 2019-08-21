@@ -21,6 +21,15 @@ function AnyWeUnit.new(id, base_id)
     return we_unit
 end
 
+---@return string
+function AnyWeUnit:getName()
+    return self.__name
+end
+---@param data string
+function AnyWeUnit:setName(data)
+    self.__name = data
+    self:addField(WeField.new("unam", 'string', nil, nil, data))
+end
 ---@param data string
 function AnyWeUnit:setTooltipExtended(data) self:addField(WeField.new("utub", 'string', nil, nil, data)) end
 ---@param data string
@@ -29,8 +38,6 @@ function AnyWeUnit:setTooltipBasic(data) self:addField(WeField.new("utip", 'stri
 function AnyWeUnit:setRequirementsLevels(data) self:addField(WeField.new("urqa", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setRequirements(data) self:addField(WeField.new("ureq", 'string', nil, nil, data)) end
----@param data string
-function AnyWeUnit:setName(data) self:addField(WeField.new("unam", 'string', nil, nil, data)) end
 ---@param data string
 function AnyWeUnit:setHotkey(data) self:addField(WeField.new("uhot", 'string', nil, nil, data)) end
 ---@param data string

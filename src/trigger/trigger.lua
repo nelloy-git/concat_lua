@@ -116,21 +116,21 @@ function Trigger:addEvent_Game(event)
 end
 
 ---@param event TriggerPlayerEvent
----@param player Player
-function Trigger:addEvent_Player(event, player)
-    TriggerEvent.Player[event](self, player)
+---@param wc3_player wc3_Player
+function Trigger:addEvent_Player(event, wc3_player)
+    TriggerEvent.Player[event](self, wc3_player)
 end
 
 ---@param event TriggerUnitEvent
----@param unit Unit
-function Trigger:addEvent_Unit(event, unit)
-    TriggerEvent.Unit[event](self, unit)
+---@param wc3_unit wc3_Unit
+function Trigger:addEvent_Unit(event, wc3_unit)
+    TriggerEvent.Unit[event](self, wc3_unit)
 end
 
 ---@param event TriggerPlayerUnitEvent
----@param player Player
-function Trigger:addEvent_PlayerUnit(event, player)
-    TriggerEvent.PlayerUnit[event](self, player)
+---@param wc3_player wc3_Player
+function Trigger:addEvent_PlayerUnit(event, wc3_player)
+    TriggerEvent.PlayerUnit[event](self, wc3_player)
 end
 
 ---@param event TriggerAnyUnitEvent

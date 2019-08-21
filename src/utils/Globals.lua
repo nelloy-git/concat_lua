@@ -3,6 +3,9 @@ local Settings = require('utils.Settings')
 
 local Globals = {}
 
+---@alias wc3_Unit userdata
+---@alias wc3_Player userdata
+---@alias wc3_Trigger userdata
 
 local initialized = false
 function Globals.init()
@@ -72,7 +75,10 @@ end
 ---@param id integer
 ---@return string
 function ID2str(id)
-    return string.pack(">I4", id)
+    if type(id) == 'number' or type(id) == 'integer' then
+        return string.pack(">I4", id)
+    end
+    return id
 end
 
 
