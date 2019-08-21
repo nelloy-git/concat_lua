@@ -1,38 +1,20 @@
----@type Ability
-local Ability = require('ability.ability')
----@type Trigger
-local Trigger = require('trigger.trigger')
+---@type AbilityDB
+local AbilityDB = require('ability.AbilityDB')
+---@type UnitEvent
+local UnitEvent = require('trigger.events.unitEvent')
 ---@type SpellInstance
 local SpellInstance = require('ability.spellInstance')
 ---@type CasterDB
 local CasterDB = require('ability.casterDB')
 
----@class AbilityEvent
 local AbilityEvent = {}
 
-local initialized = false
 function AbilityEvent.init()
-    if initialized then return nil end
-    -- Init casting start
     ---@type Trigger
-    local casting_trigger = Trigger.new()
-    casting_trigger:addEvent_AnyUnitSpellChannel()
-    casting_trigger:addAction(AbilityEvent.startCast)
-
-    -- Init break casting with orders
-    ---@type Trigger
-    local trigger = Trigger.new()
-    trigger:addEvent_AnyUnitIssuedOrder()
-    trigger:addEvent_AnyUnitIssuedOrderTarget()
-    trigger:addEvent_AnyUnitIssuedOrderPointTarget()
-    trigger:addEvent_AnyUnitIssuedOrderUnitTarget()
-    trigger:addAction(function() CasterDB.rm(GetOrderedUnit()) end)
-
-    initialized = true
+    UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast, nil)
 end
 
 ---@alias SpellTarget Unit|Item|Destructable|nil
-
 ---@return SpellTarget
 function AbilityEvent.getSpellTarget()
     local target = GetSpellTargetUnit()
@@ -46,7 +28,7 @@ end
 function AbilityEvent.startCast()
     Debug("Cast start")
     ---@type Ability
-    local ability = Ability.getAbility(GetSpellAbilityId())
+    local ability = AbilityDB.get(GetSpellAbilityId())
     if ability == nil then return nil end
 
     local target = AbilityEvent.getSpellTarget()

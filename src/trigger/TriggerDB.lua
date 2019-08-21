@@ -1,21 +1,21 @@
 ---@class TriggerDB
 local TriggerDB = {}
 
----@param trigger_obj userdata
+---@param wc3_trigger wc3_Trigger
 ---@param trigger Trigger
-function TriggerDB.add(trigger_obj, trigger)
-    TriggerDB[trigger_obj] = trigger
+function TriggerDB.add(wc3_trigger, trigger)
+    TriggerDB[wc3_trigger] = trigger
 end
 
----@param trigger_obj userdata
-function TriggerDB.rm(trigger_obj)
-    TriggerDB[trigger_obj] = nil
+---@param wc3_trigger wc3_Trigger
+function TriggerDB.rm(wc3_trigger)
+    TriggerDB[wc3_trigger] = nil
 end
 
----@param trigger_obj userdata
+---@param wc3_trigger wc3_Trigger
 ---@return Trigger
-function TriggerDB.get(trigger_obj)
-    return TriggerDB[trigger_obj]
+function TriggerDB.get(wc3_trigger)
+    return TriggerDB[wc3_trigger]
 end
 
 return TriggerDB

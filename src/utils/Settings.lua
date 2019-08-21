@@ -14,6 +14,12 @@ local Settings = {
     UnitParameters = {
         attack_dispersion = 0.15,
         value_to_get_half_cap_for_percent_value = 500
+    },
+    -- ======== --
+    --  Events  --
+    -- ======== --
+    EnabledEvents = {
+        Unit = true
     }
 }
 

@@ -64,7 +64,7 @@ end
 ---@return nil
 function Unit:initCustomData()
     ---@type UnitParameterContainer
-    self.parameter = ParameterContainer.new(self)
+    self.parameter = ParameterContainer.new(self.__wc3_unit)
 end
 
 ---Destroy unit custom data.
@@ -307,107 +307,70 @@ function Unit:unpause()
     PauseUnit(self.__wc3_unit, false)
 end
 
-local __replaced_functions = {
-    GetLevelingUnit = GetLevelingUnit,
-    GetLearningUnit = GetLearningUnit,
-    GetRevivableUnit = GetRevivableUnit,
-    GetRevivingUnit = GetRevivingUnit,
-    GetAttacker = GetAttacker,
-    GetRescuer = GetRescuer,
-    GetDyingUnit = GetDyingUnit,
-    GetKillingUnit = GetKillingUnit,
-    GetDecayingUnit = GetDecayingUnit,
-    GetConstructingStructure = GetConstructingStructure,
-    GetCancelledStructure = GetCancelledStructure,
-    GetConstructedStructure = GetConstructedStructure,
-    GetResearchingUnit = GetResearchingUnit,
-    GetTrainedUnit = GetTrainedUnit,
-    GetDetectedUnit = GetDetectedUnit,
-    GetSummoningUnit = GetSummoningUnit,
-    GetSummonedUnit = GetSummonedUnit,
-    GetTransportUnit = GetTransportUnit,
-    GetLoadedUnit = GetLoadedUnit,
-    GetSellingUnit = GetSellingUnit,
-    GetSoldUnit = GetSoldUnit,
-    GetBuyingUnit = GetBuyingUnit,
-    GetChangingUnit = GetChangingUnit,
-    GetManipulatingUnit = GetManipulatingUnit,
-    GetOrderedUnit = GetOrderedUnit,
-    GetOrderTargetUnit = GetOrderTargetUnit,
-    GetSpellAbilityUnit = GetSpellAbilityUnit,
-    GetSpellTargetUnit = GetSpellTargetUnit,
-    GetTriggerUnit = GetTriggerUnit,
-    GetEventDamage = GetEventDamage,
-    GetEventDamageSource = GetEventDamageSource,
-    GetEventTargetUnit = GetEventTargetUnit,
-    CreateUnit = CreateUnit,
-    CreateCorpse = CreateCorpse,
-}
-
 ---@return Unit
-function GetLevelingUnit() return UnitDB.get(__replaced_functions.GetLevelingUnit()) end
+function Unit.GetLevelingUnit() return UnitDB.get(GetLevelingUnit()) end
 ---@return Unit
-function GetLearningUnit() return UnitDB.get(__replaced_functions.GetLearningUnit()) end
+function Unit.GetLearningUnit() return UnitDB.get(GetLearningUnit()) end
 ---@return Unit
-function GetRevivableUnit() return UnitDB.get(__replaced_functions.GetRevivableUnit()) end
+function Unit.GetRevivableUnit() return UnitDB.get(GetRevivableUnit()) end
 ---@return Unit
-function GetRevivingUnit() return UnitDB.get(__replaced_functions.GetRevivingUnit()) end
+function Unit.GetRevivingUnit() return UnitDB.get(GetRevivingUnit()) end
 ---@return Unit
-function GetAttacker() return UnitDB.get(__replaced_functions.GetAttacker()) end
+function Unit.GetAttacker() return UnitDB.get(GetAttacker()) end
 ---@return Unit
-function GetRescuer() return UnitDB.get(__replaced_functions.GetRescuer()) end
+function Unit.GetRescuer() return UnitDB.get(GetRescuer()) end
 ---@return Unit
-function GetDyingUnit() return UnitDB.get(__replaced_functions.GetDyingUnit()) end
+function Unit.GetDyingUnit() return UnitDB.get(GetDyingUnit()) end
 ---@return Unit
-function GetKillingUnit() return UnitDB.get(__replaced_functions.GetKillingUnit()) end
+function Unit.GetKillingUnit() return UnitDB.get(GetKillingUnit()) end
 ---@return Unit
-function GetDecayingUnit() return UnitDB.get(__replaced_functions.GetDecayingUnit()) end
+function Unit.GetDecayingUnit() return UnitDB.get(GetDecayingUnit()) end
 ---@return Unit
-function GetConstructingStructure() return UnitDB.get(__replaced_functions.GetConstructingStructure()) end
+function Unit.GetConstructingStructure() return UnitDB.get(GetConstructingStructure()) end
 ---@return Unit
-function GetCancelledStructure() return UnitDB.get(__replaced_functions.GetCancelledStructure()) end
+function Unit.GetCancelledStructure() return UnitDB.get(GetCancelledStructure()) end
 ---@return Unit
-function GetConstructedStructure() return UnitDB.get(__replaced_functions.GetConstructedStructure()) end
+function Unit.GetConstructedStructure() return UnitDB.get(GetConstructedStructure()) end
 ---@return Unit
-function GetResearchingUnit() return UnitDB.get(__replaced_functions.GetResearchingUnit()) end
+function Unit.GetResearchingUnit() return UnitDB.get(GetResearchingUnit()) end
 ---@return Unit
-function GetTrainedUnit() return UnitDB.get(__replaced_functions.GetTrainedUnit()) end
+function Unit.GetTrainedUnit() return UnitDB.get(GetTrainedUnit()) end
 ---@return Unit
-function GetDetectedUnit() return UnitDB.get(__replaced_functions.GetDetectedUnit()) end
+function Unit.GetDetectedUnit() return UnitDB.get(GetDetectedUnit()) end
 ---@return Unit
-function GetSummoningUnit() return UnitDB.get(__replaced_functions.GetSummoningUnit()) end
+function Unit.GetSummoningUnit() return UnitDB.get(GetSummoningUnit()) end
 ---@return Unit
-function GetSummonedUnit() return UnitDB.get(__replaced_functions.GetSummonedUnit()) end
+function Unit.GetSummonedUnit() return UnitDB.get(GetSummonedUnit()) end
 ---@return Unit
-function GetTransportUnit() return UnitDB.get(__replaced_functions.GetTransportUnit()) end
+function Unit.GetTransportUnit() return UnitDB.get(GetTransportUnit()) end
 ---@return Unit
-function GetLoadedUnit() return UnitDB.get(__replaced_functions.GetLoadedUnit()) end
+function Unit.GetLoadedUnit() return UnitDB.get(GetLoadedUnit()) end
 ---@return Unit
-function GetSellingUnit() return UnitDB.get(__replaced_functions.GetSellingUnit()) end
+function Unit.GetSellingUnit() return UnitDB.get(GetSellingUnit()) end
 ---@return Unit
-function GetSoldUnit() return UnitDB.get(__replaced_functions.GetSoldUnit()) end
+function Unit.GetSoldUnit() return UnitDB.get(GetSoldUnit()) end
 ---@return Unit
-function GetBuyingUnit() return UnitDB.get(__replaced_functions.GetBuyingUnit()) end
+function Unit.GetBuyingUnit() return UnitDB.get(GetBuyingUnit()) end
 ---@return Unit
-function GetChangingUnit() return UnitDB.get(__replaced_functions.GetChangingUnit()) end
+function Unit.GetChangingUnit() return UnitDB.get(GetChangingUnit()) end
 ---@return Unit
-function GetManipulatingUnit() return UnitDB.get(__replaced_functions.GetManipulatingUnit()) end
+function Unit.GetManipulatingUnit() return UnitDB.get(GetManipulatingUnit()) end
 ---@return Unit
-function GetOrderedUnit() return UnitDB.get(__replaced_functions.GetOrderedUnit()) end
+function Unit.GetOrderedUnit() return UnitDB.get(GetOrderedUnit()) end
 ---@return Unit
-function GetOrderTargetUnit() return UnitDB.get(__replaced_functions.GetOrderTargetUnit()) end
+function Unit.GetOrderTargetUnit() return UnitDB.get(GetOrderTargetUnit()) end
 ---@return Unit
-function GetSpellAbilityUnit() return UnitDB.get(__replaced_functions.GetSpellAbilityUnit()) end
+function Unit.GetSpellAbilityUnit() return UnitDB.get(GetSpellAbilityUnit()) end
 ---@return Unit
-function GetSpellTargetUnit() return UnitDB.get(__replaced_functions.GetSpellTargetUnit()) end
+function Unit.GetSpellTargetUnit() return UnitDB.get(GetSpellTargetUnit()) end
 ---@return Unit
-function GetTriggerUnit() return UnitDB.get(__replaced_functions.GetTriggerUnit()) end
+function Unit.GetTriggerUnit() return UnitDB.get(GetTriggerUnit()) end
 ---@return Unit
-function GetEventDamage() return UnitDB.get(__replaced_functions.GetEventDamage()) end
+function Unit.GetEventDamage() return UnitDB.get(GetEventDamage()) end
 ---@return Unit
-function GetEventDamageSource() return UnitDB.get(__replaced_functions.GetEventDamageSource()) end
+function Unit.GetEventDamageSource() return UnitDB.get(GetEventDamageSource()) end
 ---@return Unit
-function GetEventTargetUnit() return UnitDB.get(__replaced_functions.GetEventTargetUnit()) end
+function Unit.GetEventTargetUnit() return UnitDB.get(GetEventTargetUnit()) end
 --============================================================================
 -- Unit API
 --============================================================================

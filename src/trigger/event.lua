@@ -1,4 +1,3 @@
----@class TriggerEvent
 local Event = {
     Game = {},
     Player = {},

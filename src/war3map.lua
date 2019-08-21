@@ -29,7 +29,7 @@ function RunInitialization()
     local Init = require('utils.Init')
     Init.start()
 
-    --local Trigger = require('trigger.Trigger')
+    local Trigger = require('trigger.Trigger')
     --@type Timer
     --glTimer = require('utils.globalTimer')
     

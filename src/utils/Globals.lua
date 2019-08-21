@@ -8,6 +8,13 @@ local Globals = {}
 ---@alias wc3_Trigger userdata
 
 local initialized = false
+
+local Requirements = compiletime(function()
+    local requirements = {}
+    if Settings.EnabledEvents.Unit then table.insert(requirements, require('trigger.events.unitEvent')) end
+end)
+
+
 function Globals.init()
     if initialized then return nil end
 

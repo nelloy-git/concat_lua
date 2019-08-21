@@ -19,7 +19,7 @@ local crit_and_dodge_id = compiletime(function()
     we_abil:setChancetoEvade(0, 1)
     we_abil:setNeverMiss(true, 1)
     we_abil:setHeroAbility(false)
-    return id
+    return ID(id)
 end)
 
 ---Generated ability for magic resistance.
@@ -31,7 +31,7 @@ local resist_id = compiletime(function()
     we_abil:setName("Resistance")
     we_abil:setLevels(1)
     we_abil:setDamageReduction(0, 1)
-    return id
+    return ID(id)
 end)
 
 local book_id = compiletime(function()
@@ -47,6 +47,7 @@ local book_id = compiletime(function()
     we_abil:setSpellList(ID2str(crit_and_dodge_id)..','..ID2str(resist_id))
     we_abil:setMinimumSpells(0, 1)
     we_abil:setBaseOrderID(order_id, 1)
+    return ID(id)
 end)
 
 ---@param wc3_unit wc3_Unit
@@ -98,9 +99,10 @@ end
 function UnitApplyParameter.resistance(wc3_unit, val)
     if GetUnitAbilityLevel(wc3_unit, book_id) <= 0 then
         UnitAddAbility(wc3_unit, book_id)
+        BlzUnitHideAbility(wc3_unit, book_id, true)
     end
-    local units_ability = BlzGetUnitAbility(wc3_unit, resist_id)
-    BlzSetAbilityRealLevelField(units_ability, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 1, val)
+    local unit_ability = BlzGetUnitAbility(wc3_unit, resist_id)
+    BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 1, val)
 end
 
 ---@param wc3_unit wc3_Unit
@@ -144,9 +146,10 @@ end
 function UnitApplyParameter.critChance(wc3_unit, val)
     if GetUnitAbilityLevel(wc3_unit, book_id) <= 0 then
         UnitAddAbility(wc3_unit, book_id)
+        BlzUnitHideAbility(wc3_unit, book_id, true)
     end
-    local units_ability = BlzGetUnitAbility(wc3_unit, crit_and_dodge_id)
-    BlzSetAbilityRealLevelField(units_ability, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 1, val)
+    local unit_ability = BlzGetUnitAbility(wc3_unit, crit_and_dodge_id)
+    BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 1, val)
 end
 
 ---@param wc3_unit wc3_Unit
@@ -155,9 +158,10 @@ end
 function UnitApplyParameter.critPower(wc3_unit, val)
     if GetUnitAbilityLevel(wc3_unit, book_id) <= 0 then
         UnitAddAbility(wc3_unit, book_id)
+        BlzUnitHideAbility(wc3_unit, book_id, true)
     end
-    local units_ability = BlzGetUnitAbility(wc3_unit, crit_and_dodge_id)
-    BlzSetAbilityRealLevelField(units_ability, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 1, val)
+    local unit_ability = BlzGetUnitAbility(wc3_unit, crit_and_dodge_id)
+    BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 1, val)
 end
 
 ---@param wc3_unit wc3_Unit
@@ -167,9 +171,10 @@ function UnitApplyParameter.dodgeChance(wc3_unit, val)
     val = val / 100 -- percents to [0:1]
     if GetUnitAbilityLevel(wc3_unit, book_id) <= 0 then
         UnitAddAbility(wc3_unit, book_id)
+        BlzUnitHideAbility(wc3_unit, book_id, true)
     end
-    local units_ability = BlzGetUnitAbility(wc3_unit, crit_and_dodge_id)
-    BlzSetAbilityRealLevelField(units_ability, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 1, val)
+    local unit_ability = BlzGetUnitAbility(wc3_unit, crit_and_dodge_id)
+    BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 1, val)
 end
 
 ---@param wc3_unit wc3_Unit

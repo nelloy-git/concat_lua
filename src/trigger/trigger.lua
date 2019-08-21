@@ -4,8 +4,8 @@ local Settings = require('utils.Settings')
 local TriggerDB = require('trigger.TriggerDB')
 ---@type TriggerAction
 local TriggerAction = require('trigger.TriggerAction')
----@type TriggerEvent
-local TriggerEvent = require('trigger.TriggerEvent')
+
+local Event = require('trigger.event')
 
 ---@class Trigger
 local Trigger = {}
@@ -39,15 +39,15 @@ end
 
 ---@return Trigger
 function Trigger.new()
-    local trigger_obj = CreateTrigger()
+    local wc3_trigger = CreateTrigger()
     ---@type Trigger
     local trigger = {
-        __trigger_obj = trigger_obj,
-        __action_obj = TriggerAddCondition(trigger_obj, runTriggerActions),
+        __wc3_trigger = wc3_trigger,
+        __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions),
         __actions = {}
     }
     setmetatable(trigger, Trigger_meta)
-    TriggerDB.add(trigger.__trigger_obj, trigger)
+    TriggerDB.add(trigger.__wc3_trigger, trigger)
 
     return trigger
 end
@@ -55,18 +55,18 @@ end
 ---@return nil
 function Trigger:destroy()
     self:clearActions()
-    DestroyTrigger(self.__trigger_obj)
-    self.__trigger_obj = nil
+    DestroyTrigger(self.__wc3_trigger)
+    self.__wc3_trigger = nil
 end
 
----@return userdata
+---@return wc3_Trigger
 function Trigger:getObj()
-    return self.__trigger_obj
+    return self.__wc3_trigger
 end
 
----@return userdata
+---@return wc3_Trigger
 function Trigger:getActionObj()
-    return self.__action_obj
+    return self.__wc3_action
 end
 
 ---@param callback function
@@ -107,35 +107,35 @@ end
 ---Function executes all callbacks of function.
 ---@return nil
 function Trigger:execute()
-    TriggerExecute(self.__trigger_obj)
+    TriggerExecute(self.__wc3_trigger)
 end
 
 ---@param event TriggerGameEvent
 function Trigger:addEvent_Game(event)
-    TriggerEvent.Game[event](self)
+    Event.Game[event](self.__wc3_trigger)
 end
 
 ---@param event TriggerPlayerEvent
 ---@param wc3_player wc3_Player
 function Trigger:addEvent_Player(event, wc3_player)
-    TriggerEvent.Player[event](self, wc3_player)
+    Event.Player[event](self.__wc3_trigger, wc3_player)
 end
 
 ---@param event TriggerUnitEvent
 ---@param wc3_unit wc3_Unit
 function Trigger:addEvent_Unit(event, wc3_unit)
-    TriggerEvent.Unit[event](self, wc3_unit)
+    Event.Unit[event](self.__wc3_trigger, wc3_unit)
 end
 
 ---@param event TriggerPlayerUnitEvent
 ---@param wc3_player wc3_Player
 function Trigger:addEvent_PlayerUnit(event, wc3_player)
-    TriggerEvent.PlayerUnit[event](self, wc3_player)
+    Event.PlayerUnit[event](self.__wc3_trigger, wc3_player)
 end
 
 ---@param event TriggerAnyUnitEvent
 function Trigger:addEvent_AnyUnit(event)
-    TriggerEvent.AnyUnit[event](self)
+    Event.AnyUnit[event](self.__wc3_trigger)
 end
 
 return Trigger
