@@ -627,93 +627,142 @@ __require_data.module["unit.unit"] = function()
     end
     return Unit
 end
-__require_data.module["trigger.Trigger"] = function()
-    local Settings = require("utils.Settings")
-    local TriggerDB = require("trigger.TriggerDB")
-    local TriggerAction = require("trigger.TriggerAction")
-    local Event = require("trigger.event")
-    local Trigger = {}
-    local Trigger_meta = {__index = Trigger, __gc = Trigger.destroy}
-    function Trigger_meta.__tostring(self)
-      return string.format("Trigger with %d action(s).", #self.__actions)
+__require_data.module["ability.casterDB"] = function()
+    local CasterDB = {}
+    function CasterDB.add(caster, data)
+      CasterDB[caster] = data
     end
-    local function runTriggerActions()
-      local self = TriggerDB.get(GetTriggeringTrigger())
-      for i = 1, #self.__actions do
-        local action = self.__actions[i]
-        if (Settings.debug) then
-          local succes, result = pcall(action.run, action)
-          if (not succes) then
-            Debug("Error in trigger")
-            Debug(result)
-          end
-        else
-          action:run()
-        end
+    function CasterDB.rm(caster)
+      CasterDB[caster] = nil
+    end
+    function CasterDB.get(caster)
+      return CasterDB[caster]
+    end
+    return CasterDB
+end
+__require_data.module["ability.spellInstance"] = function()
+    local SpellInstance = {}
+    local SpellInstance_meta = {__index = SpellInstance}
+    function SpellInstance.new(ability, caster, target, x, y, full_time)
+      local data = {_ability = ability, _caster = caster, _target = target, _x = x, _y = y, _time = 0, _full_time = full_time}
+      setmetatable(data, SpellInstance_meta)
+      return data
+    end
+    function SpellInstance:getAll()
+      return self._ability, self._caster, self._target, self._x, self._y, self._time, self._full_time
+    end
+    function SpellInstance:addTime(delta)
+      self._time = (self._time+delta)
+    end
+    function SpellInstance:getTime()
+      return self._time
+    end
+    function SpellInstance:getFullTime()
+      return self._full_time
+    end
+    function SpellInstance:getAbility()
+      return self._ability
+    end
+    function SpellInstance:getCaster()
+      return self._caster
+    end
+    function SpellInstance:getTarget()
+      return self._target
+    end
+    function SpellInstance:getX()
+      return self._x
+    end
+    function SpellInstance:getY()
+      return self._y
+    end
+    return SpellInstance
+end
+__require_data.module["ability.AbilityDB"] = function()
+    local AbilityDB = {}
+    function AbilityDB.add(ability_id, ability)
+      AbilityDB[ability_id] = ability
+    end
+    function AbilityDB.rm(ability_id)
+      AbilityDB[ability_id] = nil
+    end
+    function AbilityDB.get(ability_id)
+      return AbilityDB[ability_id]
+    end
+    return AbilityDB
+end
+__require_data.module["ability.AbilityEvent"] = function()
+    local AbilityDB = require("ability.AbilityDB")
+    local UnitEvent = require("trigger.events.unitEvent")
+    local SpellInstance = require("ability.spellInstance")
+    local CasterDB = require("ability.casterDB")
+    local AbilityEvent = {}
+    function AbilityEvent.init()
+      UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast, nil)
+    end
+    function AbilityEvent.getSpellTarget()
+      local target = GetSpellTargetUnit()
+      if (target == nil) then
+        target = GetSpellTargetItem()
       end
-      return true
-    end
-    function Trigger.new()
-      local wc3_trigger = CreateTrigger()
-      local trigger = {__wc3_trigger = wc3_trigger, __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions), __actions = {}}
-      setmetatable(trigger, Trigger_meta)
-      TriggerDB.add(trigger.__wc3_trigger, trigger)
-      return trigger
-    end
-    function Trigger:destroy()
-      self:clearActions()
-      DestroyTrigger(self.__wc3_trigger)
-      self.__wc3_trigger = nil
-    end
-    function Trigger:getObj()
-      return self.__wc3_trigger
-    end
-    function Trigger:getActionObj()
-      return self.__wc3_action
-    end
-    function Trigger:addAction(callback, data)
-      local action = TriggerAction.new(callback, data)
-      table.insert(self.__actions, (#self.__actions+1), action)
-      return action
-    end
-    function Trigger:removeAction(action)
-      local pos = -1
-      for i = 1, #self.__actions do
-        if (self.__actions[i] == action) then
-          pos = i
-          break
-        end
+      if (target == nil) then
+        target = GetSpellTargetDestructable()
       end
-      if (pos > 0) then
-        table.remove(self.__actions, pos)
-        return true
+      return target
+    end
+    function AbilityEvent.startCast()
+      Debug("Cast start")
+      local ability = AbilityDB.get(GetSpellAbilityId())
+      if (ability == nil) then
+        return nil
       end
-      return false
+      local target = AbilityEvent.getSpellTarget()
+      local caster = GetSpellAbilityUnit()
+      local x = GetSpellTargetX()
+      local y = GetSpellTargetY()
+      local continue = ability:runCallback("start", caster, target, x, y)
+      if (not continue) then
+        caster:orderStop()
+        return nil
+      end
+      local data = SpellInstance.new(ability, caster, target, x, y, ability:getCastingTime(caster))
+      glTimer.addAction(0, AbilityEvent.timerPeriod, data)
+      CasterDB.add(caster, data)
+      Debug("Cast start")
     end
-    function Trigger:clearActions()
-      while(#self.__actions > 0) do
-        table.remove(self.__actions, 1)
+    function AbilityEvent.timerPeriod(spell_data)
+      local ability, caster, target, x, y, cur_time, full_time = spell_data:getAll()
+      local caster_data = CasterDB.get(caster)
+      Debug(spell_data, caster_data)
+      if (caster_data ~= spell_data) then
+        ability:runCallback("interrupt", caster, target, x, y, cur_time, full_time)
+        CasterDB.rm(caster)
+        return nil
+      end
+      local delta = glTimer.getPrecision()
+      cur_time = (cur_time+delta)
+      if (cur_time >= full_time) then
+        ability:runCallback("finish", caster, target, x, y, full_time)
+        CasterDB.rm(caster)
+        return nil
+      end
+      local continue = ability:runCallback("casting", caster, target, x, y, cur_time, full_time)
+      if (continue) then
+        spell_data:addTime(delta)
+        caster_data:addTime(delta)
+        glTimer.addAction(0, AbilityEvent.timerPeriod, spell_data)
+      else
+        ability:runCallback("interrupt", caster, target, x, y, cur_time, full_time)
+        CasterDB.rm(caster)
       end
     end
-    function Trigger:execute()
-      TriggerExecute(self.__wc3_trigger)
+    function AbilityEvent.getUnitCastingData(caster)
+      local data = CasterDB[caster]
+      if (data == nil) then
+        return nil, -1, -1
+      end
+      return data.ability, data.time, data.full_time
     end
-    function Trigger:addEvent_Game(event)
-      Event.Game[event](self.__wc3_trigger)
-    end
-    function Trigger:addEvent_Player(event, wc3_player)
-      Event.Player[event](self.__wc3_trigger, wc3_player)
-    end
-    function Trigger:addEvent_Unit(event, wc3_unit)
-      Event.Unit[event](self.__wc3_trigger, wc3_unit)
-    end
-    function Trigger:addEvent_PlayerUnit(event, wc3_player)
-      Event.PlayerUnit[event](self.__wc3_trigger, wc3_player)
-    end
-    function Trigger:addEvent_AnyUnit(event)
-      Event.AnyUnit[event](self.__wc3_trigger)
-    end
-    return Trigger
+    return AbilityEvent
 end
 __require_data.module["utils.timer.TimerDB"] = function()
     local TimerDB = {}
@@ -1653,6 +1702,17 @@ __require_data.module["trigger.events.unitEvent"] = function()
       end
       UnitEvent.__triggers.AnyUnitDie = Trigger.new()
       UnitEvent.__triggers.AnyUnitDie:addEvent_AnyUnit("Death")
+      UnitEvent.__triggers.AnyUnitStartChannelAbility = Trigger.new()
+      UnitEvent.__triggers.AnyUnitStartChannelAbility:addEvent_AnyUnit("SpellChannel")
+      UnitEvent.__triggers.AnyUnitIssuedAnyOrder = Trigger.new()
+      UnitEvent.__triggers.AnyUnitIssuedAnyOrder:addEvent_AnyUnit("IssuedOrder")
+      UnitEvent.__triggers.AnyUnitIssuedAnyOrder:addEvent_AnyUnit("IssuedOrderTarget")
+      UnitEvent.__triggers.AnyUnitIssuedAnyOrder:addEvent_AnyUnit("IssuedOrderUnitTarget")
+      UnitEvent.__triggers.AnyUnitIssuedAnyOrder:addEvent_AnyUnit("IssuedOrderPointTarget")
+      UnitEvent.__triggers.AnyUnitSelected = Trigger.new()
+      UnitEvent.__triggers.AnyUnitSelected:addEvent_AnyUnit("Selected")
+      UnitEvent.__triggers.AnyUnitDeselected = Trigger.new()
+      UnitEvent.__triggers.AnyUnitDeselected:addEvent_AnyUnit("Deselected")
       initialized = true
     end
     function UnitEvent.getTrigger(name)
@@ -1796,7 +1856,7 @@ end
     DestroyTimer(GetExpiredTimer())
     local Init = require("utils.Init")
     Init.start()
-    local Trigger = require("trigger.Trigger")
+    require("ability.AbilityEvent")
     local Unit = require("unit.unit")
     local u = Unit.new(Player(0), "hfoo", 0, 0, 0)
   end

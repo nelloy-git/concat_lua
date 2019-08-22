@@ -26,6 +26,7 @@ local AbilityDB = {}
 ---| '"interrupt"'   #Callback is called when unit interrupted casting.
 ---| '"finish"'      #Callback is called if casting was not interrupted and cast time passed.
 
+
 ---@alias AbilityStartCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number):boolean
 ---@alias AbilityCastingCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number, cur_time:number, full_time:number):boolean
 ---@alias AbilityInterruptCallback fun(caster:Unit, target:Unit|userdata|nil, x:number, y:number, cur_time:number, full_time:number)
