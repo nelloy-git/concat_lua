@@ -46,7 +46,6 @@ function Unit.new(wc3_player, id, x, y, face, is_dead)
     return unit
 end
 
----@return nil
 function Unit:destroy()
     self:destroyCustomData()
 
@@ -61,14 +60,12 @@ function Unit:getObj()
 end
 
 ---Initialize unit custom data.
----@return nil
 function Unit:initCustomData()
     ---@type UnitParameterContainer
     self.parameter = ParameterContainer.new(self.__wc3_unit)
 end
 
 ---Destroy unit custom data.
----@return nil
 function Unit:destroyCustomData()
 end
 
@@ -87,7 +84,6 @@ end
 ---@param green number
 ---@param blue number
 ---@param alpha number
----@return nil
 function Unit:setVertexColor(red, green, blue, alpha)
     red = math.floor(255 * torange(red, 0, 1))
     green = math.floor(255 * torange(green, 0, 1))
@@ -102,14 +98,12 @@ function Unit:getOwningPlayer()
 end
 
 ---@param pos Vec2
----@return nil
 function Unit:setPos2(pos)
     self:setX(pos.x)
     self:setY(pos.y)
 end
 
 ---@param pos Vec3
----@return nil
 function Unit:setPos3(pos)
     self:setX(pos.x)
     self:setY(pos.y)
@@ -117,19 +111,16 @@ function Unit:setPos3(pos)
 end
 
 ---@param x number
----@return nil
 function Unit:setX(x)
     SetUnitX(self.__wc3_unit, x)
 end
 
 ---@param y number
----@return nil
 function Unit:setY(y)
     SetUnitY(self.__wc3_unit, y)
 end
 
 ---@param z number
----@return nil
 function Unit:setZ(z)
     self:setFlyHeight(z - GetTerrainZ(self:getX(), self:getY()))
 end
@@ -176,7 +167,6 @@ end
 
 ---@param angle number
 ---@param time number|nil
----@return nil
 function Unit:setFacing(angle, time)
     if time == nil or time <= 0 then
         SetUnitFacing(self.__wc3_unit, angle)
@@ -187,7 +177,6 @@ end
 
 ---@param target Vec2
 ---@param time number|nil
----@return nil
 function Unit:setFacingTo(target, time)
     local x, y = self:getPos()
     local angle = 180 + (180 / math.pi) * math.atan(y - target.y, x - target.x)
@@ -205,7 +194,6 @@ function Unit:getMoveSpeed()
 end
 
 ---@param speed number
----@return nil
 function Unit:setMoveSpeed(speed)
     SetUnitMoveSpeed(self.__wc3_unit, speed)
 end
@@ -216,7 +204,6 @@ function Unit:getTurnSpeed()
 end
 
 ---@param speed number
----@return nil
 function Unit:setTurnSpeed(speed)
     SetUnitTurnSpeed(self.__wc3_unit, speed)
 end
@@ -248,24 +235,20 @@ function Unit:setAbilityLevel(ability_id)
 end
 
 ---@param flag boolean
----@return nil
 function Unit:setInvulnerable(flag)
     SetUnitInvulnerable(self.__wc3_unit, flag)
 end
 
 ---@param time number
----@return nil
 function Unit:applyTimedLife(time)
     UnitApplyTimedLife(self.__wc3_unit, 0, time)
 end
 
 ---@param order_id integer
----@return nil
 function Unit:issueImmediateOrderById(order_id)
     IssueImmediateOrderById(self.__wc3_unit, order_id)
 end
 
----@return nil
 function Unit:orderStop()
     self:issueImmediateOrderById(851972)
 end
@@ -297,12 +280,10 @@ function Unit:setAnimationSpeed(scale)
     SetUnitTimeScale(self.__wc3_unit, scale)
 end
 
----@return nil
 function Unit:pause()
     PauseUnit(self.__wc3_unit, true)
 end
 
----@return nil
 function Unit:unpause()
     PauseUnit(self.__wc3_unit, false)
 end
