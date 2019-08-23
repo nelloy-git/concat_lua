@@ -6,7 +6,7 @@ local Settings = {
     -- ======= --
     Timer = {
         glTimer_period = 0.03125,
-        run_test = true,
+        run_test = false,
     },
     -- ================= --
     --  Unit parameters  --
