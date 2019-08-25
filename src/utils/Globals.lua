@@ -33,6 +33,19 @@ function Globals.init()
     initialized = true
 end
 
+function runFuncInDebug(func, ...)
+    if Settings.debug then 
+        local success, result = pcall(func, ...)
+        if success then
+            return result
+        else
+            Debug(result)
+            return nil
+        end
+    else
+        return func(...)
+    end
+end
 
 local compiletime_print = print
 ---Function prints data to local player in debug mode.

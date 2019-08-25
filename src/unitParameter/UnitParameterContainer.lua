@@ -38,7 +38,7 @@ function ParameterContainer.new(wc3_unit)
     container.__cooldown = UnitParameter.new(wc3_unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
 
     -- Add hero stats
-    local string_id = ID2str(wc3_unit)
+    local string_id = ID2str(GetUnitTypeId(wc3_unit))
     local first = string_id:sub(1, 1)
     if first == string.upper(first) then
         container.strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)

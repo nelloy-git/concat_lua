@@ -29,7 +29,7 @@ function RunInitialization()
     local Init = require('utils.Init')
     Init.start()
 
-    require('ability.AbilityEvent')
+    require('ability.warlord.summon')
     --@type Timer
     --glTimer = require('utils.globalTimer')
     
@@ -46,9 +46,10 @@ function RunInitialization()
     --Debug(Player(0))
 
     ---@type Ability
-    --local summon_abil = require('ability.warlord.summon')
+    local summon_abil = require('ability.warlord.summon')
+    Debug(type(summon_abil))
     --local rush_abil = require('ability.warlord.rush')
-    --u:addAbility(summon_abil)
+    u:addAbility(summon_abil:getId())
     --u:addAbility(rush_abil)
 end
 

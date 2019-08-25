@@ -1,6 +1,8 @@
 ---@type AbilityDB
 local AbilityDB = require('ability.AbilityDB')
 
+require('ability.AbilityEvent')
+
 ---@class Ability
 local Ability = {}
 local Ability_meta = {
@@ -31,6 +33,7 @@ function Ability.new(id)
         __id = id,
         __callback = {},
         __casting_time_func = nil,
+        __flag = {}
     }
     setmetatable(ability, Ability_meta)
     AbilityDB.add(id, ability)
@@ -59,7 +62,10 @@ end
 ---@param cast_data SpellData
 ---@return boolean
 function Ability:runCallback(callback_type, cast_data)
-    return self.__callback[callback_type](cast_data)
+    if type(self.__callback[callback_type]) == 'function' then
+        return self.__callback[callback_type](cast_data)
+    end
+    return true
 end
 
 ---@alias AbilityWhileCastingFlag string

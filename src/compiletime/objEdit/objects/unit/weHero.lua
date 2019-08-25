@@ -33,11 +33,11 @@ function WeHero:setFormationRank(data) self:addField(WeField.new("ufor", 'int', 
 ---@param data string
 function WeHero:setStructuresBuilt(data) self:addField(WeField.new("ubui", 'string', nil, nil, data)) end
 ---@param data boolean
-function WeHero:hideHeroDeathMsg(data) self:addField(WeField.new("uhhd", 'bool', nil, nil, data)) end
+function WeHero:setHideHeroDeathMsg(data) self:addField(WeField.new("uhhd", 'bool', nil, nil, data)) end
 ---@param data boolean
-function WeHero:hideHeroInterfaceIcon(data) self:addField(WeField.new("uhhb", 'bool', nil, nil, data)) end
+function WeHero:setHideHeroInterfaceIcon(data) self:addField(WeField.new("uhhb", 'bool', nil, nil, data)) end
 ---@param data boolean
-function WeHero:hideHeroMinimapDisplay(data) self:addField(WeField.new("uhhm", 'bool', nil, nil, data)) end
+function WeHero:setHideHeroMinimapDisplay(data) self:addField(WeField.new("uhhm", 'bool', nil, nil, data)) end
 ---@param data string
 function WeHero:setTooltipRevive(data) self:addField(WeField.new("utpr", 'string', nil, nil, data)) end
 ---@param data string

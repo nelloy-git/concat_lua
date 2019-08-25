@@ -6,6 +6,1576 @@
     end
     return __require_data.result[name]
   end
+__require_data.module["unit.unit"] = function()
+    local ParameterContainer = require("unitParameter.UnitParameterContainer")
+    local UnitDB = require("unit.unitDB")
+    local Unit = {}
+    local Unit_meta = {__index = Unit, __gc = Unit.destroy}
+    function Unit_meta.__tostring(self)
+      return string.format("Unit %s (%s) at [%.2f, %.2f, %.2f]", self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
+    end
+    function Unit.new(wc3_player, id, x, y, face, is_dead)
+      id = ID(id)
+      local wc3_unit = nil
+      if (is_dead) then
+        wc3_unit = CreateCorpse(wc3_player, id, x, y, face)
+      else
+        wc3_unit = CreateUnit(wc3_player, id, x, y, face)
+      end
+      local unit = {__id = id, __wc3_unit = wc3_unit}
+      setmetatable(unit, Unit_meta)
+      UnitDB.add(unit.__wc3_unit, unit)
+      unit:initCustomData()
+      return unit
+    end
+    function Unit:destroy()
+      self:destroyCustomData()
+      UnitDB.rm(self.__wc3_unit)
+      RemoveUnit(self.__wc3_unit)
+      self.__wc3_unit = nil
+    end
+    function Unit:getObj()
+      return self.__wc3_unit
+    end
+    function Unit:initCustomData()
+      self.parameter = runFuncInDebug(ParameterContainer.new, self.__wc3_unit)
+    end
+    function Unit:destroyCustomData()
+
+    end
+    function Unit:getId()
+      return self.__id
+    end
+    function Unit:getName()
+      return GetUnitName(self.__wc3_unit)
+    end
+    function Unit:setVertexColor(red, green, blue, alpha)
+      red = math.floor((255*torange(red, 0, 1)))
+      green = math.floor((255*torange(green, 0, 1)))
+      blue = math.floor((255*torange(blue, 0, 1)))
+      alpha = math.floor((255*torange(alpha, 0, 1)))
+      SetUnitVertexColor(self.__wc3_unit, red, green, blue, alpha)
+    end
+    function Unit:getOwningPlayer()
+      return GetOwningPlayer(self.__wc3_unit)
+    end
+    function Unit:setPos2(pos)
+      self:setX(pos.x)
+      self:setY(pos.y)
+    end
+    function Unit:setPos3(pos)
+      self:setX(pos.x)
+      self:setY(pos.y)
+      self:setZ(pos.z)
+    end
+    function Unit:setX(x)
+      SetUnitX(self.__wc3_unit, x)
+    end
+    function Unit:setY(y)
+      SetUnitY(self.__wc3_unit, y)
+    end
+    function Unit:setZ(z)
+      self:setFlyHeight((z-GetTerrainZ(self:getX(), self:getY())))
+    end
+    function Unit:getPos2()
+      return Vec2.new(self:getX(), self:getY())
+    end
+    function Unit:getPos3()
+      return Vec3.new(self:getX(), self:getY(), self:getZ())
+    end
+    function Unit:getX()
+      return GetUnitX(self.__wc3_unit)
+    end
+    function Unit:getY()
+      return GetUnitY(self.__wc3_unit)
+    end
+    function Unit:getZ()
+      return (GetTerrainZ(self:getX(), self:getY())+self:getFlyHeight())
+    end
+    function Unit:getFlyHeight()
+      return GetUnitFlyHeight(self.__wc3_unit)
+    end
+    function Unit:setFlyHeigth(height)
+      return SetUnitFlyHeight(self.__wc3_unit, height)
+    end
+    function Unit:getDefaultsFlyHeight()
+      return GetUnitDefaultFlyHeight(self.__wc3_unit)
+    end
+    function Unit:setFacing(angle, time)
+      if (time == nil or time <= 0) then
+        SetUnitFacing(self.__wc3_unit, angle)
+      else
+        SetUnitFacingTimed(self.__wc3_unit, angle, time)
+      end
+    end
+    function Unit:setFacingTo(target, time)
+      local x, y = self:getPos()
+      local angle = (180+((180/math.pi)*math.atan((y-target.y), (x-target.x))))
+      self:setFacing(angle, time)
+    end
+    function Unit:getFacing()
+      return GetUnitFacing(self.__wc3_unit)
+    end
+    function Unit:getMoveSpeed()
+      return GetUnitMoveSpeed(self.__wc3_unit)
+    end
+    function Unit:setMoveSpeed(speed)
+      SetUnitMoveSpeed(self.__wc3_unit, speed)
+    end
+    function Unit:getTurnSpeed()
+      return GetUnitTurnSpeed(self.__wc3_unit)
+    end
+    function Unit:setTurnSpeed(speed)
+      SetUnitTurnSpeed(self.__wc3_unit, speed)
+    end
+    function Unit:getDefaultTurnSpeed()
+      return GetUnitDefaultTurnSpeed(self.__wc3_unit)
+    end
+    function Unit:addAbility(ability_id)
+      UnitAddAbility(self.__wc3_unit, ability_id)
+    end
+    function Unit:removeAbility(ability_id)
+      UnitRemoveAbility(self.__wc3_unit, ability_id)
+    end
+    function Unit:getAbilityLevel(ability_id)
+      return GetUnitAbilityLevel(self.__wc3_unit, ability_id)
+    end
+    function Unit:setAbilityLevel(ability_id)
+      SetUnitAbilityLevel(self.__wc3_unit, ability_id)
+    end
+    function Unit:setInvulnerable(flag)
+      SetUnitInvulnerable(self.__wc3_unit, flag)
+    end
+    function Unit:applyTimedLife(time)
+      UnitApplyTimedLife(self.__wc3_unit, 0, time)
+    end
+    function Unit:issueImmediateOrderById(order_id)
+      IssueImmediateOrderById(self.__wc3_unit, order_id)
+    end
+    function Unit:orderStop()
+      self:issueImmediateOrderById(851972)
+    end
+    function Unit:issuePointOrderById(order_id, x, y)
+      IssuePointOrderById(self.__wc3_unit, order_id, x, y)
+    end
+    function Unit:setMoveSpeed(speed)
+      SetUnitMoveSpeed(self.__wc3_unit, speed)
+    end
+    function Unit:setTurnSpeed(speed)
+      SetUnitTurnSpeed(self.__wc3_unit, speed)
+    end
+    function Unit:playAnimation(animation)
+      SetUnitAnimation(self.__wc3_unit, animation)
+    end
+    function Unit:setAnimationSpeed(scale)
+      SetUnitTimeScale(self.__wc3_unit, scale)
+    end
+    function Unit:pause()
+      PauseUnit(self.__wc3_unit, true)
+    end
+    function Unit:unpause()
+      PauseUnit(self.__wc3_unit, false)
+    end
+    function Unit.get(wc3_unit)
+      return UnitDB.get(wc3_unit)
+    end
+    function Unit.GetLevelingUnit()
+      return UnitDB.get(GetLevelingUnit())
+    end
+    function Unit.GetLearningUnit()
+      return UnitDB.get(GetLearningUnit())
+    end
+    function Unit.GetRevivableUnit()
+      return UnitDB.get(GetRevivableUnit())
+    end
+    function Unit.GetRevivingUnit()
+      return UnitDB.get(GetRevivingUnit())
+    end
+    function Unit.GetAttacker()
+      return UnitDB.get(GetAttacker())
+    end
+    function Unit.GetRescuer()
+      return UnitDB.get(GetRescuer())
+    end
+    function Unit.GetDyingUnit()
+      return UnitDB.get(GetDyingUnit())
+    end
+    function Unit.GetKillingUnit()
+      return UnitDB.get(GetKillingUnit())
+    end
+    function Unit.GetDecayingUnit()
+      return UnitDB.get(GetDecayingUnit())
+    end
+    function Unit.GetConstructingStructure()
+      return UnitDB.get(GetConstructingStructure())
+    end
+    function Unit.GetCancelledStructure()
+      return UnitDB.get(GetCancelledStructure())
+    end
+    function Unit.GetConstructedStructure()
+      return UnitDB.get(GetConstructedStructure())
+    end
+    function Unit.GetResearchingUnit()
+      return UnitDB.get(GetResearchingUnit())
+    end
+    function Unit.GetTrainedUnit()
+      return UnitDB.get(GetTrainedUnit())
+    end
+    function Unit.GetDetectedUnit()
+      return UnitDB.get(GetDetectedUnit())
+    end
+    function Unit.GetSummoningUnit()
+      return UnitDB.get(GetSummoningUnit())
+    end
+    function Unit.GetSummonedUnit()
+      return UnitDB.get(GetSummonedUnit())
+    end
+    function Unit.GetTransportUnit()
+      return UnitDB.get(GetTransportUnit())
+    end
+    function Unit.GetLoadedUnit()
+      return UnitDB.get(GetLoadedUnit())
+    end
+    function Unit.GetSellingUnit()
+      return UnitDB.get(GetSellingUnit())
+    end
+    function Unit.GetSoldUnit()
+      return UnitDB.get(GetSoldUnit())
+    end
+    function Unit.GetBuyingUnit()
+      return UnitDB.get(GetBuyingUnit())
+    end
+    function Unit.GetChangingUnit()
+      return UnitDB.get(GetChangingUnit())
+    end
+    function Unit.GetManipulatingUnit()
+      return UnitDB.get(GetManipulatingUnit())
+    end
+    function Unit.GetOrderedUnit()
+      return UnitDB.get(GetOrderedUnit())
+    end
+    function Unit.GetOrderTargetUnit()
+      return UnitDB.get(GetOrderTargetUnit())
+    end
+    function Unit.GetSpellAbilityUnit()
+      return UnitDB.get(GetSpellAbilityUnit())
+    end
+    function Unit.GetSpellTargetUnit()
+      return UnitDB.get(GetSpellTargetUnit())
+    end
+    function Unit.GetTriggerUnit()
+      return UnitDB.get(GetTriggerUnit())
+    end
+    function Unit.GetEventDamage()
+      return UnitDB.get(GetEventDamage())
+    end
+    function Unit.GetEventDamageSource()
+      return UnitDB.get(GetEventDamageSource())
+    end
+    function Unit.GetEventTargetUnit()
+      return UnitDB.get(GetEventTargetUnit())
+    end
+    return Unit
+end
+__require_data.module["unit.HeroCompiletimeData"] = function()
+    local HeroCompiletimeData = {}
+    local HeroCompiletimeData_meta = {__index = HeroCompiletimeData}
+    function HeroCompiletimeData.new()
+      local data = {}
+      setmetatable(data, HeroCompiletimeData_meta)
+      return data
+    end
+    function HeroCompiletimeData:setField(name, value)
+      self[name] = value
+    end
+    function HeroCompiletimeData:getField(name)
+      return self[name]
+    end
+    function HeroCompiletimeData:generate(base_id)
+      if (not WeObjEdit) then
+        print("WeObjEdit module is not loaded.")
+        return nil
+      end
+      self.Id = WeObjEdit.Utils.nextHeroId()
+      local hero = WeObjEdit.Unit.Hero.new(self.Id, ID2str(ID(base_id)))
+      if (self.Name) then
+        hero:setName(self.Name)
+      end
+      if (self.TooltipExtended) then
+        hero:setTooltipExtended(self.TooltipExtended)
+      end
+      if (self.TooltipBasic) then
+        hero:setTooltipBasic(self.TooltipBasic)
+      end
+      if (self.RequirementsLevels) then
+        hero:setRequirementsLevels(self.RequirementsLevels)
+      end
+      if (self.Requirements) then
+        hero:setRequirements(self.Requirements)
+      end
+      if (self.Hotkey) then
+        hero:setHotkey(self.Hotkey)
+      end
+      if (self.Description) then
+        hero:setDescription(self.Description)
+      end
+      if (self.ButtonPositionY) then
+        hero:setButtonPositionY(self.ButtonPositionY)
+      end
+      if (self.ButtonPositionX) then
+        hero:setButtonPositionX(self.ButtonPositionX)
+      end
+      if (self.ItemsSold) then
+        hero:setItemsSold(self.ItemsSold)
+      end
+      if (self.UnitsSold) then
+        hero:setUnitsSold(self.UnitsSold)
+      end
+      if (self.HideMinimapDisplay) then
+        hero:setHideMinimapDisplay(self.HideMinimapDisplay)
+      end
+      if (self.UseExtendedLineofSight) then
+        hero:setUseExtendedLineofSight(self.UseExtendedLineofSight)
+      end
+      if (self.UseClickHelper) then
+        hero:setUseClickHelper(self.UseClickHelper)
+      end
+      if (self.UpgradesUsed) then
+        hero:setUpgradesUsed(self.UpgradesUsed)
+      end
+      if (self.UnitSoundSet) then
+        hero:setUnitSoundSet(self.UnitSoundSet)
+      end
+      if (self.UnitClassification) then
+        hero:setUnitClassification(self.UnitClassification)
+      end
+      if (self.MovementType) then
+        hero:setMovementType(self.MovementType)
+      end
+      if (self.TurnRate) then
+        hero:setTurnRate(self.TurnRate)
+      end
+      if (self.TintingColorBlue) then
+        hero:setTintingColorBlue(self.TintingColorBlue)
+      end
+      if (self.TintingColorGreen) then
+        hero:setTintingColorGreen(self.TintingColorGreen)
+      end
+      if (self.TintingColorRed) then
+        hero:setTintingColorRed(self.TintingColorRed)
+      end
+      if (self.Tilesets) then
+        hero:setTilesets(self.Tilesets)
+      end
+      if (self.TeamColor) then
+        hero:setTeamColor(self.TeamColor)
+      end
+      if (self.TargetedAs) then
+        hero:setTargetedAs(self.TargetedAs)
+      end
+      if (self.ArtTarget) then
+        hero:setArtTarget(self.ArtTarget)
+      end
+      if (self.StockStartDelay) then
+        hero:setStockStartDelay(self.StockStartDelay)
+      end
+      if (self.StockReplenishInterval) then
+        hero:setStockReplenishInterval(self.StockReplenishInterval)
+      end
+      if (self.StockMaximum) then
+        hero:setStockMaximum(self.StockMaximum)
+      end
+      if (self.SpeedMinimum) then
+        hero:setSpeedMinimum(self.SpeedMinimum)
+      end
+      if (self.SpeedMaximum) then
+        hero:setSpeedMaximum(self.SpeedMaximum)
+      end
+      if (self.SpeedBase) then
+        hero:setSpeedBase(self.SpeedBase)
+      end
+      if (self.ArtSpecial) then
+        hero:setArtSpecial(self.ArtSpecial)
+      end
+      if (self.Sleeps) then
+        hero:setSleeps(self.Sleeps)
+      end
+      if (self.SightRadiusNight) then
+        hero:setSightRadiusNight(self.SightRadiusNight)
+      end
+      if (self.SightRadiusDay) then
+        hero:setSightRadiusDay(self.SightRadiusDay)
+      end
+      if (self.ShadowTextureBuilding) then
+        hero:setShadowTextureBuilding(self.ShadowTextureBuilding)
+      end
+      if (self.ShadowImageWidth) then
+        hero:setShadowImageWidth(self.ShadowImageWidth)
+      end
+      if (self.ShadowImageUnit) then
+        hero:setShadowImageUnit(self.ShadowImageUnit)
+      end
+      if (self.ShadowImageHeight) then
+        hero:setShadowImageHeight(self.ShadowImageHeight)
+      end
+      if (self.ShadowImageCenterY) then
+        hero:setShadowImageCenterY(self.ShadowImageCenterY)
+      end
+      if (self.ShadowImageCenterX) then
+        hero:setShadowImageCenterX(self.ShadowImageCenterX)
+      end
+      if (self.SelectionScale) then
+        hero:setSelectionScale(self.SelectionScale)
+      end
+      if (self.SelectionCircleOnWater) then
+        hero:setSelectionCircleOnWater(self.SelectionCircleOnWater)
+      end
+      if (self.SelectionCircleHeight) then
+        hero:setSelectionCircleHeight(self.SelectionCircleHeight)
+      end
+      if (self.ScalingValue) then
+        hero:setScalingValue(self.ScalingValue)
+      end
+      if (self.ScaleProjectiles) then
+        hero:setScaleProjectiles(self.ScaleProjectiles)
+      end
+      if (self.RequiredBoneNames) then
+        hero:setRequiredBoneNames(self.RequiredBoneNames)
+      end
+      if (self.RequiredAttachmentLinkNames) then
+        hero:setRequiredAttachmentLinkNames(self.RequiredAttachmentLinkNames)
+      end
+      if (self.RequiredAnimationNamesAttachments) then
+        hero:setRequiredAnimationNamesAttachments(self.RequiredAnimationNamesAttachments)
+      end
+      if (self.RequiredAnimationNames) then
+        hero:setRequiredAnimationNames(self.RequiredAnimationNames)
+      end
+      if (self.RepairTime) then
+        hero:setRepairTime(self.RepairTime)
+      end
+      if (self.RepairLumberCost) then
+        hero:setRepairLumberCost(self.RepairLumberCost)
+      end
+      if (self.RepairGoldCost) then
+        hero:setRepairGoldCost(self.RepairGoldCost)
+      end
+      if (self.RandomSound) then
+        hero:setRandomSound(self.RandomSound)
+      end
+      if (self.Race) then
+        hero:setRace(self.Race)
+      end
+      if (self.PropulsionWindowdegrees) then
+        hero:setPropulsionWindowdegrees(self.PropulsionWindowdegrees)
+      end
+      if (self.ProjectileLaunchZSwimming) then
+        hero:setProjectileLaunchZSwimming(self.ProjectileLaunchZSwimming)
+      end
+      if (self.ProjectileLaunchZ) then
+        hero:setProjectileLaunchZ(self.ProjectileLaunchZ)
+      end
+      if (self.ProjectileLaunchY) then
+        hero:setProjectileLaunchY(self.ProjectileLaunchY)
+      end
+      if (self.ProjectileLaunchX) then
+        hero:setProjectileLaunchX(self.ProjectileLaunchX)
+      end
+      if (self.ProjectileImpactZSwimming) then
+        hero:setProjectileImpactZSwimming(self.ProjectileImpactZSwimming)
+      end
+      if (self.ProjectileImpactZ) then
+        hero:setProjectileImpactZ(self.ProjectileImpactZ)
+      end
+      if (self.Priority) then
+        hero:setPriority(self.Priority)
+      end
+      if (self.PointValue) then
+        hero:setPointValue(self.PointValue)
+      end
+      if (self.PlaceableInEditor) then
+        hero:setPlaceableInEditor(self.PlaceableInEditor)
+      end
+      if (self.OrientationInterpolation) then
+        hero:setOrientationInterpolation(self.OrientationInterpolation)
+      end
+      if (self.OccluderHeight) then
+        hero:setOccluderHeight(self.OccluderHeight)
+      end
+      if (self.NormalAbilities) then
+        hero:setNormalAbilities(self.NormalAbilities)
+      end
+      if (self.NameEditorSuffix) then
+        hero:setNameEditorSuffix(self.NameEditorSuffix)
+      end
+      if (self.MovementSound) then
+        hero:setMovementSound(self.MovementSound)
+      end
+      if (self.ModelFileExtraVersions) then
+        hero:setModelFileExtraVersions(self.ModelFileExtraVersions)
+      end
+      if (self.ModelFile) then
+        hero:setModelFile(self.ModelFile)
+      end
+      if (self.MinimumAttackRange) then
+        hero:setMinimumAttackRange(self.MinimumAttackRange)
+      end
+      if (self.MaximumRollAngledegrees) then
+        hero:setMaximumRollAngledegrees(self.MaximumRollAngledegrees)
+      end
+      if (self.MaximumPitchAngledegrees) then
+        hero:setMaximumPitchAngledegrees(self.MaximumPitchAngledegrees)
+      end
+      if (self.ManaRegeneration) then
+        hero:setManaRegeneration(self.ManaRegeneration)
+      end
+      if (self.ManaMaximum) then
+        hero:setManaMaximum(self.ManaMaximum)
+      end
+      if (self.ManaInitialAmount) then
+        hero:setManaInitialAmount(self.ManaInitialAmount)
+      end
+      if (self.LumberCost) then
+        hero:setLumberCost(self.LumberCost)
+      end
+      if (self.SoundLoopingFadeOutRate) then
+        hero:setSoundLoopingFadeOutRate(self.SoundLoopingFadeOutRate)
+      end
+      if (self.SoundLoopingFadeInRate) then
+        hero:setSoundLoopingFadeInRate(self.SoundLoopingFadeInRate)
+      end
+      if (self.IsaBuilding) then
+        hero:setIsaBuilding(self.IsaBuilding)
+      end
+      if (self.IconScoreScreen) then
+        hero:setIconScoreScreen(self.IconScoreScreen)
+      end
+      if (self.IconGameInterface) then
+        hero:setIconGameInterface(self.IconGameInterface)
+      end
+      if (self.HitPointsRegenerationType) then
+        hero:setHitPointsRegenerationType(self.HitPointsRegenerationType)
+      end
+      if (self.HitPointsRegenerationRate) then
+        hero:setHitPointsRegenerationRate(self.HitPointsRegenerationRate)
+      end
+      if (self.HitPointsMaximumBase) then
+        hero:setHitPointsMaximumBase(self.HitPointsMaximumBase)
+      end
+      if (self.MovementHeightMinimum) then
+        hero:setMovementHeightMinimum(self.MovementHeightMinimum)
+      end
+      if (self.MovementHeight) then
+        hero:setMovementHeight(self.MovementHeight)
+      end
+      if (self.HasWaterShadow) then
+        hero:setHasWaterShadow(self.HasWaterShadow)
+      end
+      if (self.HasTilesetSpecificData) then
+        hero:setHasTilesetSpecificData(self.HasTilesetSpecificData)
+      end
+      if (self.GoldCost) then
+        hero:setGoldCost(self.GoldCost)
+      end
+      if (self.GoldBountyAwardedSidesperDie) then
+        hero:setGoldBountyAwardedSidesperDie(self.GoldBountyAwardedSidesperDie)
+      end
+      if (self.GoldBountyAwardedbooleanofDice) then
+        hero:setGoldBountyAwardedbooleanofDice(self.GoldBountyAwardedbooleanofDice)
+      end
+      if (self.GoldBountyAwardedBase) then
+        hero:setGoldBountyAwardedBase(self.GoldBountyAwardedBase)
+      end
+      if (self.LumberBountyAwardedSidesperDie) then
+        hero:setLumberBountyAwardedSidesperDie(self.LumberBountyAwardedSidesperDie)
+      end
+      if (self.LumberBountyAwardedbooleanofDice) then
+        hero:setLumberBountyAwardedbooleanofDice(self.LumberBountyAwardedbooleanofDice)
+      end
+      if (self.LumberBountyAwardedBase) then
+        hero:setLumberBountyAwardedBase(self.LumberBountyAwardedBase)
+      end
+      if (self.FoodProduced) then
+        hero:setFoodProduced(self.FoodProduced)
+      end
+      if (self.FoodCost) then
+        hero:setFoodCost(self.FoodCost)
+      end
+      if (self.FogOfWarSampleRadius) then
+        hero:setFogOfWarSampleRadius(self.FogOfWarSampleRadius)
+      end
+      if (self.ElevationSampleRadius) then
+        hero:setElevationSampleRadius(self.ElevationSampleRadius)
+      end
+      if (self.ElevationSamplePoints) then
+        hero:setElevationSamplePoints(self.ElevationSamplePoints)
+      end
+      if (self.DisplayasNeutralHostile) then
+        hero:setDisplayasNeutralHostile(self.DisplayasNeutralHostile)
+      end
+      if (self.DependencyEquivalents) then
+        hero:setDependencyEquivalents(self.DependencyEquivalents)
+      end
+      if (self.DefenseUpgradeBonus) then
+        hero:setDefenseUpgradeBonus(self.DefenseUpgradeBonus)
+      end
+      if (self.ArmorType) then
+        hero:setArmorType(self.ArmorType)
+      end
+      if (self.DefenseBase) then
+        hero:setDefenseBase(self.DefenseBase)
+      end
+      if (self.DefaultActiveAbility) then
+        hero:setDefaultActiveAbility(self.DefaultActiveAbility)
+      end
+      if (self.DeathType) then
+        hero:setDeathType(self.DeathType)
+      end
+      if (self.DeathTimeseconds) then
+        hero:setDeathTimeseconds(self.DeathTimeseconds)
+      end
+      if (self.CollisionSize) then
+        hero:setCollisionSize(self.CollisionSize)
+      end
+      if (self.CategorizationSpecial) then
+        hero:setCategorizationSpecial(self.CategorizationSpecial)
+      end
+      if (self.CategorizationCampaign) then
+        hero:setCategorizationCampaign(self.CategorizationCampaign)
+      end
+      if (self.CanFlee) then
+        hero:setCanFlee(self.CanFlee)
+      end
+      if (self.CanDropItemsOnDeath) then
+        hero:setCanDropItemsOnDeath(self.CanDropItemsOnDeath)
+      end
+      if (self.BuildTime) then
+        hero:setBuildTime(self.BuildTime)
+      end
+      if (self.AttacksEnabled) then
+        hero:setAttacksEnabled(self.AttacksEnabled)
+      end
+      if (self.Attack2WeaponType) then
+        hero:setAttack2WeaponType(self.Attack2WeaponType)
+      end
+      if (self.Attack2WeaponSound) then
+        hero:setAttack2WeaponSound(self.Attack2WeaponSound)
+      end
+      if (self.Attack2TargetsAllowed) then
+        hero:setAttack2TargetsAllowed(self.Attack2TargetsAllowed)
+      end
+      if (self.Attack2ShowUI) then
+        hero:setAttack2ShowUI(self.Attack2ShowUI)
+      end
+      if (self.Attack2RangeMotionBuffer) then
+        hero:setAttack2RangeMotionBuffer(self.Attack2RangeMotionBuffer)
+      end
+      if (self.Attack2Range) then
+        hero:setAttack2Range(self.Attack2Range)
+      end
+      if (self.Attack2ProjectileSpeed) then
+        hero:setAttack2ProjectileSpeed(self.Attack2ProjectileSpeed)
+      end
+      if (self.Attack2ProjectileHomingEnabled) then
+        hero:setAttack2ProjectileHomingEnabled(self.Attack2ProjectileHomingEnabled)
+      end
+      if (self.Attack2ProjectileArt) then
+        hero:setAttack2ProjectileArt(self.Attack2ProjectileArt)
+      end
+      if (self.Attack2ProjectileArc) then
+        hero:setAttack2ProjectileArc(self.Attack2ProjectileArc)
+      end
+      if (self.Attack2MaximumbooleanofTargets) then
+        hero:setAttack2MaximumbooleanofTargets(self.Attack2MaximumbooleanofTargets)
+      end
+      if (self.Attack2DamageUpgradeAmount) then
+        hero:setAttack2DamageUpgradeAmount(self.Attack2DamageUpgradeAmount)
+      end
+      if (self.Attack2DamageSpillRadius) then
+        hero:setAttack2DamageSpillRadius(self.Attack2DamageSpillRadius)
+      end
+      if (self.Attack2DamageSpillDistance) then
+        hero:setAttack2DamageSpillDistance(self.Attack2DamageSpillDistance)
+      end
+      if (self.Attack2DamageSidesperDie) then
+        hero:setAttack2DamageSidesperDie(self.Attack2DamageSidesperDie)
+      end
+      if (self.Attack2DamagebooleanofDice) then
+        hero:setAttack2DamagebooleanofDice(self.Attack2DamagebooleanofDice)
+      end
+      if (self.Attack2DamageLossFactor) then
+        hero:setAttack2DamageLossFactor(self.Attack2DamageLossFactor)
+      end
+      if (self.Attack2DamageFactorSmall) then
+        hero:setAttack2DamageFactorSmall(self.Attack2DamageFactorSmall)
+      end
+      if (self.Attack2DamageFactorMedium) then
+        hero:setAttack2DamageFactorMedium(self.Attack2DamageFactorMedium)
+      end
+      if (self.Attack2DamageBase) then
+        hero:setAttack2DamageBase(self.Attack2DamageBase)
+      end
+      if (self.Attack2CooldownTime) then
+        hero:setAttack2CooldownTime(self.Attack2CooldownTime)
+      end
+      if (self.Attack2AttackType) then
+        hero:setAttack2AttackType(self.Attack2AttackType)
+      end
+      if (self.Attack2AreaofEffectTargets) then
+        hero:setAttack2AreaofEffectTargets(self.Attack2AreaofEffectTargets)
+      end
+      if (self.Attack2AreaofEffectSmallDamage) then
+        hero:setAttack2AreaofEffectSmallDamage(self.Attack2AreaofEffectSmallDamage)
+      end
+      if (self.Attack2AreaofEffectMediumDamage) then
+        hero:setAttack2AreaofEffectMediumDamage(self.Attack2AreaofEffectMediumDamage)
+      end
+      if (self.Attack2AreaofEffectFullDamage) then
+        hero:setAttack2AreaofEffectFullDamage(self.Attack2AreaofEffectFullDamage)
+      end
+      if (self.Attack2AnimationDamagePoint) then
+        hero:setAttack2AnimationDamagePoint(self.Attack2AnimationDamagePoint)
+      end
+      if (self.Attack2AnimationBackswingPoint) then
+        hero:setAttack2AnimationBackswingPoint(self.Attack2AnimationBackswingPoint)
+      end
+      if (self.Attack1WeaponType) then
+        hero:setAttack1WeaponType(self.Attack1WeaponType)
+      end
+      if (self.Attack1WeaponSound) then
+        hero:setAttack1WeaponSound(self.Attack1WeaponSound)
+      end
+      if (self.Attack1TargetsAllowed) then
+        hero:setAttack1TargetsAllowed(self.Attack1TargetsAllowed)
+      end
+      if (self.Attack1ShowUI) then
+        hero:setAttack1ShowUI(self.Attack1ShowUI)
+      end
+      if (self.Attack1RangeMotionBuffer) then
+        hero:setAttack1RangeMotionBuffer(self.Attack1RangeMotionBuffer)
+      end
+      if (self.Attack1Range) then
+        hero:setAttack1Range(self.Attack1Range)
+      end
+      if (self.Attack1ProjectileSpeed) then
+        hero:setAttack1ProjectileSpeed(self.Attack1ProjectileSpeed)
+      end
+      if (self.Attack1ProjectileHomingEnabled) then
+        hero:setAttack1ProjectileHomingEnabled(self.Attack1ProjectileHomingEnabled)
+      end
+      if (self.Attack1ProjectileArt) then
+        hero:setAttack1ProjectileArt(self.Attack1ProjectileArt)
+      end
+      if (self.Attack1ProjectileArc) then
+        hero:setAttack1ProjectileArc(self.Attack1ProjectileArc)
+      end
+      if (self.Attack1MaximumbooleanofTargets) then
+        hero:setAttack1MaximumbooleanofTargets(self.Attack1MaximumbooleanofTargets)
+      end
+      if (self.Attack1DamageUpgradeAmount) then
+        hero:setAttack1DamageUpgradeAmount(self.Attack1DamageUpgradeAmount)
+      end
+      if (self.Attack1DamageSpillRadius) then
+        hero:setAttack1DamageSpillRadius(self.Attack1DamageSpillRadius)
+      end
+      if (self.Attack1DamageSpillDistance) then
+        hero:setAttack1DamageSpillDistance(self.Attack1DamageSpillDistance)
+      end
+      if (self.Attack1DamageSidesperDie) then
+        hero:setAttack1DamageSidesperDie(self.Attack1DamageSidesperDie)
+      end
+      if (self.Attack1DamagebooleanofDice) then
+        hero:setAttack1DamagebooleanofDice(self.Attack1DamagebooleanofDice)
+      end
+      if (self.Attack1DamageLossFactor) then
+        hero:setAttack1DamageLossFactor(self.Attack1DamageLossFactor)
+      end
+      if (self.Attack1DamageFactorSmall) then
+        hero:setAttack1DamageFactorSmall(self.Attack1DamageFactorSmall)
+      end
+      if (self.Attack1DamageFactorMedium) then
+        hero:setAttack1DamageFactorMedium(self.Attack1DamageFactorMedium)
+      end
+      if (self.Attack1DamageBase) then
+        hero:setAttack1DamageBase(self.Attack1DamageBase)
+      end
+      if (self.Attack1CooldownTime) then
+        hero:setAttack1CooldownTime(self.Attack1CooldownTime)
+      end
+      if (self.Attack1AttackType) then
+        hero:setAttack1AttackType(self.Attack1AttackType)
+      end
+      if (self.Attack1AreaofEffectTargets) then
+        hero:setAttack1AreaofEffectTargets(self.Attack1AreaofEffectTargets)
+      end
+      if (self.Attack1AreaofEffectSmallDamage) then
+        hero:setAttack1AreaofEffectSmallDamage(self.Attack1AreaofEffectSmallDamage)
+      end
+      if (self.Attack1AreaofEffectMediumDamage) then
+        hero:setAttack1AreaofEffectMediumDamage(self.Attack1AreaofEffectMediumDamage)
+      end
+      if (self.Attack1AreaofEffectFullDamage) then
+        hero:setAttack1AreaofEffectFullDamage(self.Attack1AreaofEffectFullDamage)
+      end
+      if (self.Attack1AnimationDamagePoint) then
+        hero:setAttack1AnimationDamagePoint(self.Attack1AnimationDamagePoint)
+      end
+      if (self.Attack1AnimationBackswingPoint) then
+        hero:setAttack1AnimationBackswingPoint(self.Attack1AnimationBackswingPoint)
+      end
+      if (self.ArmorSoundType) then
+        hero:setArmorSoundType(self.ArmorSoundType)
+      end
+      if (self.AnimationWalkSpeed) then
+        hero:setAnimationWalkSpeed(self.AnimationWalkSpeed)
+      end
+      if (self.AnimationRunSpeed) then
+        hero:setAnimationRunSpeed(self.AnimationRunSpeed)
+      end
+      if (self.AnimationCastPoint) then
+        hero:setAnimationCastPoint(self.AnimationCastPoint)
+      end
+      if (self.AnimationCastBackswing) then
+        hero:setAnimationCastBackswing(self.AnimationCastBackswing)
+      end
+      if (self.AnimationBlendTimeseconds) then
+        hero:setAnimationBlendTimeseconds(self.AnimationBlendTimeseconds)
+      end
+      if (self.AllowCustomTeamColor) then
+        hero:setAllowCustomTeamColor(self.AllowCustomTeamColor)
+      end
+      if (self.AIPlacementType) then
+        hero:setAIPlacementType(self.AIPlacementType)
+      end
+      if (self.AIPlacementRadius) then
+        hero:setAIPlacementRadius(self.AIPlacementRadius)
+      end
+      if (self.TransportedSize) then
+        hero:setTransportedSize(self.TransportedSize)
+      end
+      if (self.Level) then
+        hero:setLevel(self.Level)
+      end
+      if (self.GroupSeparationPriority) then
+        hero:setGroupSeparationPriority(self.GroupSeparationPriority)
+      end
+      if (self.GroupSeparationParameter) then
+        hero:setGroupSeparationParameter(self.GroupSeparationParameter)
+      end
+      if (self.GroupSeparationGroupNumber) then
+        hero:setGroupSeparationGroupNumber(self.GroupSeparationGroupNumber)
+      end
+      if (self.GroupSeparationEnabled) then
+        hero:setGroupSeparationEnabled(self.GroupSeparationEnabled)
+      end
+      if (self.FormationRank) then
+        hero:setFormationRank(self.FormationRank)
+      end
+      if (self.StructuresBuilt) then
+        hero:setStructuresBuilt(self.StructuresBuilt)
+      end
+      if (self.HideHeroDeathMsg) then
+        hero:setHideHeroDeathMsg(self.HideHeroDeathMsg)
+      end
+      if (self.HideHeroInterfaceIcon) then
+        hero:setHideHeroInterfaceIcon(self.HideHeroInterfaceIcon)
+      end
+      if (self.HideHeroMinimapDisplay) then
+        hero:setHideHeroMinimapDisplay(self.HideHeroMinimapDisplay)
+      end
+      if (self.TooltipRevive) then
+        hero:setTooltipRevive(self.TooltipRevive)
+      end
+      if (self.TooltipAwaken) then
+        hero:setTooltipAwaken(self.TooltipAwaken)
+      end
+      if (self.StrengthPerLevel) then
+        hero:setStrengthPerLevel(self.StrengthPerLevel)
+      end
+      if (self.StartingStrength) then
+        hero:setStartingStrength(self.StartingStrength)
+      end
+      if (self.StartingIntelligence) then
+        hero:setStartingIntelligence(self.StartingIntelligence)
+      end
+      if (self.StartingAgility) then
+        hero:setStartingAgility(self.StartingAgility)
+      end
+      if (self.ProperNamesUsed) then
+        hero:setProperNamesUsed(self.ProperNamesUsed)
+      end
+      if (self.ProperNames) then
+        hero:setProperNames(self.ProperNames)
+      end
+      if (self.PrimaryAttribute) then
+        hero:setPrimaryAttribute(self.PrimaryAttribute)
+      end
+      if (self.IntelligencePerLevel) then
+        hero:setIntelligencePerLevel(self.IntelligencePerLevel)
+      end
+      if (self.HeroRevivalLocations) then
+        hero:setHeroRevivalLocations(self.HeroRevivalLocations)
+      end
+      if (self.HeroAbilities) then
+        hero:setHeroAbilities(self.HeroAbilities)
+      end
+      if (self.AgilityPerLevel) then
+        hero:setAgilityPerLevel(self.AgilityPerLevel)
+      end
+      if (self.RequierementsForTier1) then
+        hero:setRequierementsForTier1(self.RequierementsForTier1)
+      end
+      if (self.RequierementsForTier2) then
+        hero:setRequierementsForTier2(self.RequierementsForTier2)
+      end
+      if (self.RequierementsForTier3) then
+        hero:setRequierementsForTier3(self.RequierementsForTier3)
+      end
+      if (self.RequierementsForTier4) then
+        hero:setRequierementsForTier4(self.RequierementsForTier4)
+      end
+      if (self.RequierementsForTier5) then
+        hero:setRequierementsForTier5(self.RequierementsForTier5)
+      end
+      if (self.RequierementsForTier6) then
+        hero:setRequierementsForTier6(self.RequierementsForTier6)
+      end
+      if (self.RequierementsForTier7) then
+        hero:setRequierementsForTier7(self.RequierementsForTier7)
+      end
+      if (self.RequierementsForTier8) then
+        hero:setRequierementsForTier8(self.RequierementsForTier8)
+      end
+      if (self.RequierementsForTier9) then
+        hero:setRequierementsForTier9(self.RequierementsForTier9)
+      end
+      if (self.UpgradesTo) then
+        hero:setUpgradesTo(self.UpgradesTo)
+      end
+      if (self.UnitsTrained) then
+        hero:setUnitsTrained(self.UnitsTrained)
+      end
+      if (self.RevivesDeadHeros) then
+        hero:setRevivesDeadHeros(self.RevivesDeadHeros)
+      end
+      if (self.ResearchesAvailable) then
+        hero:setResearchesAvailable(self.ResearchesAvailable)
+      end
+      if (self.PlacementRequiresWaterRadius) then
+        hero:setPlacementRequiresWaterRadius(self.PlacementRequiresWaterRadius)
+      end
+      if (self.PlacementRequires) then
+        hero:setPlacementRequires(self.PlacementRequires)
+      end
+      if (self.PlacementPreventedBy) then
+        hero:setPlacementPreventedBy(self.PlacementPreventedBy)
+      end
+      if (self.PathingMap) then
+        hero:setPathingMap(self.PathingMap)
+      end
+      if (self.NeutralBuildingValidAsRandomBuilding) then
+        hero:setNeutralBuildingValidAsRandomBuilding(self.NeutralBuildingValidAsRandomBuilding)
+      end
+      if (self.NeutralBuildingShowsMinimapIcon) then
+        hero:setNeutralBuildingShowsMinimapIcon(self.NeutralBuildingShowsMinimapIcon)
+      end
+      if (self.ItemsMade) then
+        hero:setItemsMade(self.ItemsMade)
+      end
+      if (self.GroundTexture) then
+        hero:setGroundTexture(self.GroundTexture)
+      end
+      if (self.ConstructionSound) then
+        hero:setConstructionSound(self.ConstructionSound)
+      end
+      if (self.TooltipRevive) then
+        hero:setTooltipRevive(self.TooltipRevive)
+      end
+      if (self.TooltipAwaken) then
+        hero:setTooltipAwaken(self.TooltipAwaken)
+      end
+      if (self.StrengthPerLevel) then
+        hero:setStrengthPerLevel(self.StrengthPerLevel)
+      end
+      if (self.StartingStrength) then
+        hero:setStartingStrength(self.StartingStrength)
+      end
+      if (self.StartingIntelligence) then
+        hero:setStartingIntelligence(self.StartingIntelligence)
+      end
+      if (self.StartingAgility) then
+        hero:setStartingAgility(self.StartingAgility)
+      end
+      if (self.ProperNamesUsed) then
+        hero:setProperNamesUsed(self.ProperNamesUsed)
+      end
+      if (self.ProperNames) then
+        hero:setProperNames(self.ProperNames)
+      end
+      if (self.PrimaryAttribute) then
+        hero:setPrimaryAttribute(self.PrimaryAttribute)
+      end
+      if (self.IntelligencePerLevel) then
+        hero:setIntelligencePerLevel(self.IntelligencePerLevel)
+      end
+      if (self.HeroRevivalLocations) then
+        hero:setHeroRevivalLocations(self.HeroRevivalLocations)
+      end
+      if (self.HeroAbilities) then
+        hero:setHeroAbilities(self.HeroAbilities)
+      end
+      if (self.AgilityPerLevel) then
+        hero:setAgilityPerLevel(self.AgilityPerLevel)
+      end
+    end
+    return HeroCompiletimeData
+end
+__require_data.module["ability.ChannelCompiletimeData"] = function()
+    local ChannelCompiletimeData = {}
+    local ChannelCompiletimeData_meta = {__index = ChannelCompiletimeData}
+    ChannelCompiletimeData.option = {is_visible = 1, is_areaTarget = 2, is_matereal = 4, is_universal = 8, is_group = 16}
+    function ChannelCompiletimeData.new()
+      local data = {}
+      setmetatable(data, ChannelCompiletimeData_meta)
+      return data
+    end
+    function ChannelCompiletimeData:setField(name, value)
+      self[name] = value
+    end
+    function ChannelCompiletimeData:getField(name)
+      return self[name]
+    end
+    function ChannelCompiletimeData:generate()
+      if (not WeObjEdit) then
+        print("WeObjEdit module is not loaded.")
+        return nil
+      end
+      self.Id = WeObjEdit.Utils.nextAbilId()
+      self.OrderId = WeObjEdit.Utils.nextOrderId()
+      local abil = WeObjEdit.Ability.Channel.new(self.Id)
+      local max_lvl = 1
+      if (self.Levels) then
+        max_lvl = self.Levels
+      end
+      abil:setLevels(max_lvl)
+      if (self.Name) then
+        abil:setName(self.Name)
+      end
+      if (self.EditorSuffix) then
+        abil:setEditorSuffix(self.EditorSuffix)
+      end
+      if (self.HeroAbility) then
+        abil:setHeroAbility(self.HeroAbility)
+      end
+      if (self.ItemAbility) then
+        abil:setItemAbility(self.ItemAbility)
+      end
+      if (self.Race) then
+        abil:setRace(self.Race)
+      end
+      if (self.ButtonPositionNormalX) then
+        abil:setButtonPositionNormalX(self.ButtonPositionNormalX)
+      end
+      if (self.ButtonPositionNormalY) then
+        abil:setButtonPositionNormalY(self.ButtonPositionNormalY)
+      end
+      if (self.ButtonPositionTurnOffX) then
+        abil:setButtonPositionTurnOffX(self.ButtonPositionTurnOffX)
+      end
+      if (self.ButtonPositionTurnOffY) then
+        abil:setButtonPositionTurnOffY(self.ButtonPositionTurnOffY)
+      end
+      if (self.ButtonPositionResearchX) then
+        abil:setButtonPositionResearchX(self.ButtonPositionResearchX)
+      end
+      if (self.ButtonPositionResearchY) then
+        abil:setButtonPositionResearchY(self.ButtonPositionResearchY)
+      end
+      if (self.IconNormal) then
+        abil:setIconNormal(self.IconNormal)
+      end
+      if (self.IconTurnOff) then
+        abil:setIconTurnOff(self.IconTurnOff)
+      end
+      if (self.IconResearch) then
+        abil:setIconResearch(self.IconResearch)
+      end
+      if (self.ArtCaster) then
+        abil:setArtCaster(self.ArtCaster)
+      end
+      if (self.ArtTarget) then
+        abil:setArtTarget(self.ArtTarget)
+      end
+      if (self.ArtSpecial) then
+        abil:setArtSpecial(self.ArtSpecial)
+      end
+      if (self.ArtEffect) then
+        abil:setArtEffect(self.ArtEffect)
+      end
+      if (self.AreaEffect) then
+        abil:setAreaEffect(self.AreaEffect)
+      end
+      if (self.LightningEffects) then
+        abil:setLightningEffects(self.LightningEffects)
+      end
+      if (self.MissileArt) then
+        abil:setMissileArt(self.MissileArt)
+      end
+      if (self.MissileSpeed) then
+        abil:setMissileSpeed(self.MissileSpeed)
+      end
+      if (self.MissileArc) then
+        abil:setMissileArc(self.MissileArc)
+      end
+      if (self.MissileHomingEnabled) then
+        abil:setMissileHomingEnabled(self.MissileHomingEnabled)
+      end
+      if (self.TargetAttachments) then
+        abil:setTargetAttachments(self.TargetAttachments)
+      end
+      if (self.TargetAttachmentPoint) then
+        abil:setTargetAttachmentPoint(self.TargetAttachmentPoint)
+      end
+      if (self.TargetAttachmentPoint1) then
+        abil:setTargetAttachmentPoint1(self.TargetAttachmentPoint1)
+      end
+      if (self.TargetAttachmentPoint2) then
+        abil:setTargetAttachmentPoint2(self.TargetAttachmentPoint2)
+      end
+      if (self.TargetAttachmentPoint3) then
+        abil:setTargetAttachmentPoint3(self.TargetAttachmentPoint3)
+      end
+      if (self.TargetAttachmentPoint4) then
+        abil:setTargetAttachmentPoint4(self.TargetAttachmentPoint4)
+      end
+      if (self.TargetAttachmentPoint5) then
+        abil:setTargetAttachmentPoint5(self.TargetAttachmentPoint5)
+      end
+      if (self.CasterAttachments) then
+        abil:setCasterAttachments(self.CasterAttachments)
+      end
+      if (self.CasterAttachmentPoint) then
+        abil:setCasterAttachmentPoint(self.CasterAttachmentPoint)
+      end
+      if (self.CasterAttachmentPoint1) then
+        abil:setCasterAttachmentPoint1(self.CasterAttachmentPoint1)
+      end
+      if (self.SpecialAttachmentPoint) then
+        abil:setSpecialAttachmentPoint(self.SpecialAttachmentPoint)
+      end
+      if (self.AnimationNames) then
+        abil:setAnimationNames(self.AnimationNames)
+      end
+      if (self.TooltipLearn) then
+        abil:setTooltipLearn(self.TooltipLearn)
+      end
+      if (self.TooltipLearnExtended) then
+        abil:setTooltipLearnExtended(self.TooltipLearnExtended)
+      end
+      if (self.HotkeyLearn) then
+        abil:setHotkeyLearn(self.HotkeyLearn)
+      end
+      if (self.HotkeyNormal) then
+        abil:setHotkeyNormal(self.HotkeyNormal)
+      end
+      if (self.HotkeyTurnOff) then
+        abil:setHotkeyTurnOff(self.HotkeyTurnOff)
+      end
+      if (self.Requirements) then
+        abil:setRequirements(self.Requirements)
+      end
+      if (self.RequirementsLevels) then
+        abil:setRequirementsLevels(self.RequirementsLevels)
+      end
+      if (self.CheckDependencies) then
+        abil:setCheckDependencies(self.CheckDependencies)
+      end
+      if (self.PriorityforSpellSteal) then
+        abil:setPriorityforSpellSteal(self.PriorityforSpellSteal)
+      end
+      if (self.OrderStringUseTurnOn) then
+        abil:setOrderStringUseTurnOn(self.OrderStringUseTurnOn)
+      end
+      if (self.OrderStringTurnOff) then
+        abil:setOrderStringTurnOff(self.OrderStringTurnOff)
+      end
+      if (self.OrderStringActivate) then
+        abil:setOrderStringActivate(self.OrderStringActivate)
+      end
+      if (self.OrderStringDeactivate) then
+        abil:setOrderStringDeactivate(self.OrderStringDeactivate)
+      end
+      if (self.EffectSound) then
+        abil:setEffectSound(self.EffectSound)
+      end
+      if (self.EffectSoundLooping) then
+        abil:setEffectSoundLooping(self.EffectSoundLooping)
+      end
+      if (self.Levels) then
+        abil:setLevels(self.Levels)
+      end
+      if (self.RequiredLevel) then
+        abil:setRequiredLevel(self.RequiredLevel)
+      end
+      if (self.LevelSkipRequirement) then
+        abil:setLevelSkipRequirement(self.LevelSkipRequirement)
+      end
+      for lvl = 1, max_lvl do
+        abil:setBaseOrderID(self.OrderId, lvl)
+        if (self.TooltipNormal) then
+          abil:setTooltipNormal(self.TooltipNormal, lvl)
+        end
+        if (self.TooltipTurnOff) then
+          abil:setTooltipTurnOff(self.TooltipTurnOff, lvl)
+        end
+        if (self.TooltipNormalExtended) then
+          abil:setTooltipNormalExtended(self.TooltipNormalExtended, lvl)
+        end
+        if (self.TooltipTurnOffExtended) then
+          abil:setTooltipTurnOffExtended(self.TooltipTurnOffExtended, lvl)
+        end
+        if (self.TargetsAllowed) then
+          abil:setTargetsAllowed(self.TargetsAllowed, lvl)
+        end
+        if (self.CastingTime) then
+          abil:setCastingTime(self.CastingTime, lvl)
+        end
+        if (self.DurationNormal) then
+          abil:setDurationNormal(self.DurationNormal, lvl)
+        end
+        if (self.DurationHero) then
+          abil:setDurationHero(self.DurationHero, lvl)
+        end
+        if (self.Cooldown) then
+          abil:setCooldown(self.Cooldown, lvl)
+        end
+        if (self.ManaCost) then
+          abil:setManaCost(self.ManaCost, lvl)
+        end
+        if (self.AreaofEffect) then
+          abil:setAreaofEffect(self.AreaofEffect, lvl)
+        end
+        if (self.CastRange) then
+          abil:setCastRange(self.CastRange, lvl)
+        end
+        if (self.Buffs) then
+          abil:setBuffs(self.Buffs, lvl)
+        end
+        if (self.Effects) then
+          abil:setEffects(self.Effects, lvl)
+        end
+        if (self.ArtDuration) then
+          abil:setArtDuration(self.ArtDuration, lvl)
+        end
+        if (self.BaseOrderID) then
+          abil:setBaseOrderID(self.BaseOrderID, lvl)
+        end
+        if (self.DisableOtherAbilities) then
+          abil:setDisableOtherAbilities(self.DisableOtherAbilities, lvl)
+        end
+        if (self.FollowThroughTime) then
+          abil:setFollowThroughTime(self.FollowThroughTime, lvl)
+        end
+        if (self.TargetType) then
+          abil:setTargetType(self.TargetType, lvl)
+        end
+        if (self.Options) then
+          abil:setOptions(self.Options, lvl)
+        end
+      end
+      return self.Id
+    end
+    return ChannelCompiletimeData
+end
+__require_data.module["ability.warlord.settings"] = function()
+    local WarlordSettings = {SpearmanUnit = {ModelFile = "war3mapImported\\units\\SwordNya.mdx", Name = "Spearman", Id = "HM#$", NormalAbilities = "Avul,Aloc", SpeedBase = 1}, SummonSpearman = {CustomCastingTime = 1, Name = "Summon spearman", CastRange = 500, HotkeyNormal = "X", Cooldown = 0, ArtTarget = "", Levels = 1, ArtCaster = "", Id = "AM#'", DisableOtherAbilities = false, CastingTime = 0, TooltipNormal = "Summon spearman", ArtEffect = "", AreaofEffect = 150, Options = 3, OrderId = "acidbomb", FollowThroughTime = 0, TargetType = "point", ArtSpecial = "", TooltipNormalExtended = "Summons invulnerale spirit warrior."}}
+    return WarlordSettings
+end
+__require_data.module["ability.SummonsDB"] = function()
+    local SummonDB = {}
+    local MastersDB = {}
+    local SlavesDB = {}
+    function SummonDB.addSlave(slave, master)
+      SlavesDB[slave] = master
+      if (not MastersDB[master]) then
+        MastersDB[master] = {}
+      end
+      table.insert(MastersDB[master], 1, slave)
+    end
+    function SummonDB.rmSlave(slave)
+      local master = SummonDB[slave]
+      SummonDB[slave] = nil
+      if (not master) then
+        Debug("SummonDB: error triing to remove non summon unit.")
+        return false
+      end
+      local slaves = MastersDB[master]
+      if (#slaves == 1) then
+        MastersDB[master] = nil
+        return true
+      end
+      local pos = -1
+      for i = 0, #slaves do
+        if (slaves[i] == slave) then
+          pos = i
+          break
+        end
+      end
+      if (pos > 0) then
+        table.remove(slaves, pos)
+        return true
+      end
+      return false
+    end
+    function SummonDB.getMaster(slave)
+      return SlavesDB[slave]
+    end
+    function SummonDB.getSlaves(master)
+      return MastersDB[master]
+    end
+    return SummonDB
+end
+__require_data.module["ability.SpellData"] = function()
+    local SpellData = {}
+    local SpellData_meta = {__index = SpellData}
+    function SpellData.new(ability, caster, target, x, y)
+      local data = {__ability = ability, __caster = caster, __target = target, __x = x, __y = y, __cur_time = 0, __cast_time = 0}
+      setmetatable(data, SpellData_meta)
+      return data
+    end
+    function SpellData:getAll()
+      return self.__ability, self.__caster, self.__target, self.__x, self.__y, self.__cur_time, self.__full_time
+    end
+    function SpellData:addTime(delta)
+      self.__cur_time = (self.__cur_time+delta)
+    end
+    function SpellData:isFinished()
+      return self.__cur_time >= self.__cast_time
+    end
+    function SpellData:setCastTime(time)
+      self.__cast_time = time
+    end
+    function SpellData:getTime()
+      return self.__cur_time
+    end
+    function SpellData:getCastTime()
+      return self.__cast_time
+    end
+    function SpellData:getAbility()
+      return self.__ability
+    end
+    function SpellData:getCaster()
+      return self.__caster
+    end
+    function SpellData:getTarget()
+      return self.__target
+    end
+    function SpellData:getX()
+      return self.__x
+    end
+    function SpellData:getY()
+      return self.__y
+    end
+    return SpellData
+end
+__require_data.module["ability.CasterDB"] = function()
+    local CasterDB = {}
+    function CasterDB.add(caster, data)
+      CasterDB[caster] = data
+    end
+    function CasterDB.rm(caster)
+      CasterDB[caster] = nil
+    end
+    function CasterDB.get(caster)
+      return CasterDB[caster]
+    end
+    return CasterDB
+end
+__require_data.module["ability.AbilityEvent"] = function()
+    local AbilityDB = require("ability.AbilityDB")
+    local UnitEvent = require("trigger.events.unitEvent")
+    local CasterDB = require("ability.CasterDB")
+    local SpellData = require("ability.SpellData")
+    local CastTimer = glTimer
+    local AbilityEvent = {}
+    function AbilityEvent.init()
+      UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast, nil)
+    end
+    function AbilityEvent.getSpellTarget()
+      local target = GetSpellTargetUnit()
+      if (not target) then
+        target = GetSpellTargetItem()
+      end
+      if (not target) then
+        target = GetSpellTargetDestructable()
+      end
+      return target
+    end
+    function AbilityEvent.startCast()
+      Debug("Cast start")
+      local ability = AbilityDB.get(GetSpellAbilityId())
+      if (ability == nil) then
+        return nil
+      end
+      local target = AbilityEvent.getSpellTarget()
+      local caster = GetSpellAbilityUnit()
+      local x = GetSpellTargetX()
+      local y = GetSpellTargetY()
+      local spell_data = SpellData.new(ability, caster, target, x, y)
+      local cast_time = ability:getCastingTime(spell_data)
+      spell_data:setCastTime(cast_time)
+      local continue = ability:runCallback("start", spell_data)
+      if (not continue) then
+        caster:orderStop()
+        return nil
+      end
+      if (not ability:getCanMoveWhileCasting()) then
+
+      end
+      CastTimer:addAction(0, AbilityEvent.timerPeriod, spell_data)
+      CasterDB.add(caster, spell_data)
+      Debug("Cast started")
+    end
+    function AbilityEvent.timerPeriod(spell_data)
+      if (spell_data ~= CasterDB.get(spell_data:getCaster())) then
+        local abil = spell_data:getAbility()
+        abil:runCallback("interrupt", spell_data)
+        return nil
+      end
+      local delta = CastTimer:getPeriod()
+      spell_data:addTime(delta)
+      if (spell_data:isFinished()) then
+        local abil = spell_data:getAbility()
+        abil:runCallback("finish", spell_data)
+        CasterDB.rm(spell_data:getCaster())
+        return nil
+      end
+      local abil = spell_data:getAbility()
+      local continue = abil:runCallback("casting", spell_data)
+      if (continue) then
+        CastTimer:addAction(0, AbilityEvent.timerPeriod, spell_data)
+      else
+        abil:runCallback("interrupt", spell_data)
+        CasterDB.rm(spell_data:getCaster())
+      end
+    end
+    return AbilityEvent
+end
+__require_data.module["ability.AbilityDB"] = function()
+    local AbilityDB = {}
+    function AbilityDB.add(ability_id, ability)
+      AbilityDB[ability_id] = ability
+    end
+    function AbilityDB.rm(ability_id)
+      AbilityDB[ability_id] = nil
+    end
+    function AbilityDB.get(ability_id)
+      return AbilityDB[ability_id]
+    end
+    return AbilityDB
+end
+__require_data.module["ability.Ability"] = function()
+    local AbilityDB = require("ability.AbilityDB")
+    require("ability.AbilityEvent")
+    local Ability = {}
+    local Ability_meta = {__index = Ability}
+    function Ability_meta.__tostring(self)
+      local str = string.format("Ability %s (%s) with callbacks: ", self:getName(), ID2str(self:getId()))
+      local callbacks = ""
+      if (self:getCallback("start")) then
+        callbacks = callbacks..",start"
+      end
+      if (self:getCallback("casting")) then
+        callbacks = callbacks..",casting"
+      end
+      if (self:getCallback("interrupt")) then
+        callbacks = callbacks..",interrupt"
+      end
+      if (self:getCallback("finish")) then
+        callbacks = callbacks..",finish"
+      end
+      callbacks = callbacks:sub(2)
+      return str..callbacks
+    end
+    function Ability.new(id)
+      id = ID(id)
+      local ability = {__id = id, __callback = {}, __casting_time_func = nil, __flag = {}}
+      setmetatable(ability, Ability_meta)
+      AbilityDB.add(id, ability)
+      return ability
+    end
+    function Ability:getId()
+      return self.__id
+    end
+    function Ability:setCallback(callback, callback_type)
+      self.__callback[callback_type] = callback
+    end
+    function Ability:getCallback(callback_type)
+      return self.__callback[callback_type]
+    end
+    function Ability:runCallback(callback_type, cast_data)
+      if (type(self.__callback[callback_type]) == "function") then
+        return self.__callback[callback_type](cast_data)
+      end
+      return true
+    end
+    function Ability:setCanMoveWhileCasting(flag)
+      self._can_move = flag
+    end
+    function Ability:getCanMoveWhileCasting()
+      return self._can_move
+    end
+    function Ability:setCastingTimeFunction(func)
+      self.__casting_time_func = func
+    end
+    function Ability:getCastingTime(data)
+      if (type(self.__casting_time_func) == "function") then
+        return self.__casting_time_func(data)
+      end
+      return 0
+    end
+    function Ability:setName(name)
+      self.__name = name
+    end
+    function Ability:getName()
+      return self.__name
+    end
+    function Ability:setTooltip(tooltip, lvl, wc3_player)
+      if (wc3_player == nil) then
+        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
+      elseif (wc3_player == GetLocalPlayer()) then
+        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
+      end
+
+    end
+    function Ability:setExtendedTooltip(ext_tooltip, lvl, wc3_player)
+      if (wc3_player == nil) then
+        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+      elseif (wc3_player == GetLocalPlayer()) then
+        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+      end
+
+    end
+    function Ability:setIcon(icon_path, wc3_player)
+      if (wc3_player == nil) then
+        BlzSetAbilityIcon(self.__id, icon_path)
+      elseif (wc3_player == GetLocalPlayer()) then
+        BlzSetAbilityIcon(self.__id, icon_path)
+      end
+
+    end
+    function Ability:setPosition(x, y, wc3_player)
+      if (wc3_player == nil) then
+        BlzSetAbilityPosX(self.__id, x)
+        BlzSetAbilityPosY(self.__id, y)
+      elseif (wc3_player == GetLocalPlayer()) then
+        BlzSetAbilityPosX(self.__id, x)
+        BlzSetAbilityPosY(self.__id, y)
+      end
+
+    end
+    return Ability
+end
 __require_data.module["unit.unitDB"] = function()
     local UnitDB = {}
     function UnitDB.add(unit_obj, unit)
@@ -220,7 +1790,7 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
       container.__critPower = UnitParameter.new(wc3_unit, 1, ApplyParam.critPower, MathParam.linear)
       container.__dodge = UnitParameter.new(wc3_unit, 0, ApplyParam.dodgeChance, MathParam.percent, 75)
       container.__cooldown = UnitParameter.new(wc3_unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
-      local string_id = ID2str(wc3_unit)
+      local string_id = ID2str(GetUnitTypeId(wc3_unit))
       local first = string_id:sub(1, 1)
       if (first == string.upper(first)) then
         container.strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)
@@ -359,7 +1929,7 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
     end
     return ParameterContainer
 end
-__require_data.module["unit.unit"] = function()
+__require_data.module["unit.Unit"] = function()
     local ParameterContainer = require("unitParameter.UnitParameterContainer")
     local UnitDB = require("unit.unitDB")
     local Unit = {}
@@ -391,7 +1961,7 @@ __require_data.module["unit.unit"] = function()
       return self.__wc3_unit
     end
     function Unit:initCustomData()
-      self.parameter = ParameterContainer.new(self.__wc3_unit)
+      self.parameter = runFuncInDebug(ParameterContainer.new, self.__wc3_unit)
     end
     function Unit:destroyCustomData()
 
@@ -529,6 +2099,9 @@ __require_data.module["unit.unit"] = function()
     function Unit:unpause()
       PauseUnit(self.__wc3_unit, false)
     end
+    function Unit.get(wc3_unit)
+      return UnitDB.get(wc3_unit)
+    end
     function Unit.GetLevelingUnit()
       return UnitDB.get(GetLevelingUnit())
     end
@@ -627,142 +2200,40 @@ __require_data.module["unit.unit"] = function()
     end
     return Unit
 end
-__require_data.module["ability.casterDB"] = function()
-    local CasterDB = {}
-    function CasterDB.add(caster, data)
-      CasterDB[caster] = data
-    end
-    function CasterDB.rm(caster)
-      CasterDB[caster] = nil
-    end
-    function CasterDB.get(caster)
-      return CasterDB[caster]
-    end
-    return CasterDB
-end
-__require_data.module["ability.spellInstance"] = function()
-    local SpellInstance = {}
-    local SpellInstance_meta = {__index = SpellInstance}
-    function SpellInstance.new(ability, caster, target, x, y, full_time)
-      local data = {_ability = ability, _caster = caster, _target = target, _x = x, _y = y, _time = 0, _full_time = full_time}
-      setmetatable(data, SpellInstance_meta)
-      return data
-    end
-    function SpellInstance:getAll()
-      return self._ability, self._caster, self._target, self._x, self._y, self._time, self._full_time
-    end
-    function SpellInstance:addTime(delta)
-      self._time = (self._time+delta)
-    end
-    function SpellInstance:getTime()
-      return self._time
-    end
-    function SpellInstance:getFullTime()
-      return self._full_time
-    end
-    function SpellInstance:getAbility()
-      return self._ability
-    end
-    function SpellInstance:getCaster()
-      return self._caster
-    end
-    function SpellInstance:getTarget()
-      return self._target
-    end
-    function SpellInstance:getX()
-      return self._x
-    end
-    function SpellInstance:getY()
-      return self._y
-    end
-    return SpellInstance
-end
-__require_data.module["ability.AbilityDB"] = function()
-    local AbilityDB = {}
-    function AbilityDB.add(ability_id, ability)
-      AbilityDB[ability_id] = ability
-    end
-    function AbilityDB.rm(ability_id)
-      AbilityDB[ability_id] = nil
-    end
-    function AbilityDB.get(ability_id)
-      return AbilityDB[ability_id]
-    end
-    return AbilityDB
-end
-__require_data.module["ability.AbilityEvent"] = function()
-    local AbilityDB = require("ability.AbilityDB")
+__require_data.module["ability.warlord.summon"] = function()
+    local Unit = require("unit.Unit")
     local UnitEvent = require("trigger.events.unitEvent")
-    local SpellInstance = require("ability.spellInstance")
-    local CasterDB = require("ability.casterDB")
-    local AbilityEvent = {}
-    function AbilityEvent.init()
-      UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast, nil)
+    local Ability = require("ability.Ability")
+    local SummonDB = require("ability.SummonsDB")
+    local FullData = require("ability.warlord.settings")
+    local AbilityData = FullData.SummonSpearman
+    local SummonData = FullData.SpearmanUnit
+    local SummonCrystalSwordmanAbility = Ability.new(AbilityData.Id)
+    function SummonCrystalSwordmanAbility.init()
+      UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
+          local unit = Unit.GetDyingUnit()
+          local dying_id = unit:getId()
+          if (dying_id == ID(SummonData.Id)) then
+            SummonDB.rmSlave(unit:getObj())
+          end
+      end)
     end
-    function AbilityEvent.getSpellTarget()
-      local target = GetSpellTargetUnit()
-      if (target == nil) then
-        target = GetSpellTargetItem()
-      end
-      if (target == nil) then
-        target = GetSpellTargetDestructable()
-      end
-      return target
+    local function finishCastingCallback(spell_data)
+      Debug("Finish")
+      local caster = spell_data:getCaster()
+      local owner = GetOwningPlayer(caster)
+      local unit = Unit.new(owner, SummonData.Id, spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))
+      unit:setVertexColor(1, 1, 1, 0.35)
+      unit:applyTimedLife(10)
+      SummonDB.addSlave(unit:getObj(), caster)
+      unit.parameter:setAttacksPerSec(1)
     end
-    function AbilityEvent.startCast()
-      Debug("Cast start")
-      local ability = AbilityDB.get(GetSpellAbilityId())
-      if (ability == nil) then
-        return nil
-      end
-      local target = AbilityEvent.getSpellTarget()
-      local caster = GetSpellAbilityUnit()
-      local x = GetSpellTargetX()
-      local y = GetSpellTargetY()
-      local continue = ability:runCallback("start", caster, target, x, y)
-      if (not continue) then
-        caster:orderStop()
-        return nil
-      end
-      local data = SpellInstance.new(ability, caster, target, x, y, ability:getCastingTime(caster))
-      glTimer.addAction(0, AbilityEvent.timerPeriod, data)
-      CasterDB.add(caster, data)
-      Debug("Cast start")
-    end
-    function AbilityEvent.timerPeriod(spell_data)
-      local ability, caster, target, x, y, cur_time, full_time = spell_data:getAll()
-      local caster_data = CasterDB.get(caster)
-      Debug(spell_data, caster_data)
-      if (caster_data ~= spell_data) then
-        ability:runCallback("interrupt", caster, target, x, y, cur_time, full_time)
-        CasterDB.rm(caster)
-        return nil
-      end
-      local delta = glTimer.getPrecision()
-      cur_time = (cur_time+delta)
-      if (cur_time >= full_time) then
-        ability:runCallback("finish", caster, target, x, y, full_time)
-        CasterDB.rm(caster)
-        return nil
-      end
-      local continue = ability:runCallback("casting", caster, target, x, y, cur_time, full_time)
-      if (continue) then
-        spell_data:addTime(delta)
-        caster_data:addTime(delta)
-        glTimer.addAction(0, AbilityEvent.timerPeriod, spell_data)
-      else
-        ability:runCallback("interrupt", caster, target, x, y, cur_time, full_time)
-        CasterDB.rm(caster)
-      end
-    end
-    function AbilityEvent.getUnitCastingData(caster)
-      local data = CasterDB[caster]
-      if (data == nil) then
-        return nil, -1, -1
-      end
-      return data.ability, data.time, data.full_time
-    end
-    return AbilityEvent
+    SummonCrystalSwordmanAbility:setName(AbilityData.TooltipNormal)
+    SummonCrystalSwordmanAbility:setCastingTimeFunction(function()
+        return AbilityData.CustomCastingTime
+    end)
+    SummonCrystalSwordmanAbility:setCallback(finishCastingCallback, "finish")
+    return SummonCrystalSwordmanAbility
 end
 __require_data.module["utils.timer.TimerDB"] = function()
     local TimerDB = {}
@@ -1724,7 +3195,7 @@ __require_data.module["trigger.events.unitEvent"] = function()
     return UnitEvent
 end
 __require_data.module["utils.Settings"] = function()
-    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = true}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}, EnabledEvents = {Unit = true}}
+    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = false}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}, EnabledEvents = {Unit = true}}
     return Settings
 end
 __require_data.module["utils.Globals"] = function()
@@ -1741,6 +3212,19 @@ __require_data.module["utils.Globals"] = function()
       local Timer = require("utils.timer.Timer")
       glTimer = Timer.new(Settings.Timer.glTimer_period)
       initialized = true
+    end
+    function runFuncInDebug(func, ...)
+      if (Settings.debug) then
+        local success, result = pcall(func, ...)
+        if (success) then
+          return result
+        else
+          Debug(result)
+          return nil
+        end
+      else
+        return func(...)
+      end
     end
     local compiletime_print = print
     function Debug(...)
@@ -1856,9 +3340,12 @@ end
     DestroyTimer(GetExpiredTimer())
     local Init = require("utils.Init")
     Init.start()
-    require("ability.AbilityEvent")
+    require("ability.warlord.summon")
     local Unit = require("unit.unit")
     local u = Unit.new(Player(0), "hfoo", 0, 0, 0)
+    local summon_abil = require("ability.warlord.summon")
+    Debug(type(summon_abil))
+    u:addAbility(summon_abil:getId())
   end
   function InitCustomPlayerSlots()
     SetPlayerStartLocation(Player(0), 0)

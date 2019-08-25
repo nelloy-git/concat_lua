@@ -3,7 +3,7 @@ local AbilityDB = require('ability.AbilityDB')
 ---@type UnitEvent
 local UnitEvent = require('trigger.events.unitEvent')
 ---@type CasterDB
-local CasterDB = require('ability.casterDB')
+local CasterDB = require('ability.CasterDB')
 ---@type SpellData
 local SpellData = require('ability.SpellData')
 ---@type Timer

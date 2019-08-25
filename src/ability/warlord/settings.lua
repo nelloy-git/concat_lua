@@ -1,7 +1,9 @@
----@type ChannelCompiletimeData
-local AbilityData = require('ability.channelCompiletimeData')
-
+---@class WarlordAbilitiesSettings
 local WarlordSettings = compiletime(function()
+    ---@type ChannelCompiletimeData
+    local AbilityData = require('ability.ChannelCompiletimeData')
+    ---@type HeroCompiletimeData
+    local HeroData = require('unit.HeroCompiletimeData')
     -- ================= --
     --  Summon spearman  --
     -- ================= --
@@ -26,16 +28,22 @@ local WarlordSettings = compiletime(function()
     SummonSpearmanData:setField("FollowThroughTime", 0)
     SummonSpearmanData:generate()
 
+    local SpearmanData = HeroData.new()
+    SpearmanData:setField("Name", "Spearman")
+    SpearmanData:setField("ModelFile", "war3mapImported\\\\units\\\\SwordNya.mdx")
+    SpearmanData:setField("NormalAbilities", "Avul,Aloc")
+    SpearmanData:setField("SpeedBase", 1)
+    SpearmanData:generate("Hpal")
+
     -- ============= --
     --  Spirit rush  --
     -- ============= --
 
     local settings = {
-        SummonSpearman = SummonSpearmanData
+        SummonSpearman = SummonSpearmanData,
+        SpearmanUnit = SpearmanData
     }
     return settings
 end)
-
-setmetatable(WarlordSettings.SummonSpearman, {__index = AbilityData})
 
 return WarlordSettings

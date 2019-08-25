@@ -62,7 +62,7 @@ end
 ---Initialize unit custom data.
 function Unit:initCustomData()
     ---@type UnitParameterContainer
-    self.parameter = ParameterContainer.new(self.__wc3_unit)
+    self.parameter = runFuncInDebug(ParameterContainer.new, self.__wc3_unit)
 end
 
 ---Destroy unit custom data.
@@ -288,6 +288,8 @@ function Unit:unpause()
     PauseUnit(self.__wc3_unit, false)
 end
 
+---@return Unit
+function Unit.get(wc3_unit) return UnitDB.get(wc3_unit) end
 ---@return Unit
 function Unit.GetLevelingUnit() return UnitDB.get(GetLevelingUnit()) end
 ---@return Unit
