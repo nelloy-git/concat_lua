@@ -28,6 +28,9 @@ function UnitEvent.init()
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitDeselected"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitDeselected"]:addEvent_AnyUnit("Deselected")
+    ---@type Trigger
+    UnitEvent.__triggers["AnyUnitAttacked"] = Trigger.new()
+    UnitEvent.__triggers["AnyUnitAttacked"]:addEvent_AnyUnit("Attacked")
 
     initialized = true
 end
@@ -38,6 +41,7 @@ end
 ---| '"AnyUnitStartChannelAbility"'
 ---| '"AnyUnitSelected"'
 ---| '"AnyUnitDeselected"'
+---| '"AnyUnitAttacked"'
 
 ---@param name UnitEventName
 function UnitEvent.getTrigger(name)

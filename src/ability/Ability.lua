@@ -68,20 +68,19 @@ function Ability:runCallback(callback_type, cast_data)
     end
 end
 
----@alias AbilityWhileCastingFlag string
----| '"MoveInterrupt"'
----| '"DamagedInterrupt"'
----| '"AttackInterrupt"'
----| '"CastingInterrupt"'
+---@alias AbilityFlag string
+---| '"OrderInterrupt"'
 
 ---@param flag boolean
-function Ability:setCanMoveWhileCasting(flag)
-    self._can_move = flag
+---@param flag_name AbilityFlag
+function Ability:setFlag(flag, flag_name)
+    self.__flag[flag_name] = flag
 end
 
+---@param flag_name AbilityFlag
 ---@return boolean
-function Ability:getCanMoveWhileCasting()
-    return self._can_move
+function Ability:getFlag(flag_name)
+    return self.__flag[flag_name]
 end
 
 ---Set ability casting time.

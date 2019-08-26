@@ -20,7 +20,8 @@ local AbilityEvent = {}
 
 function AbilityEvent.init()
     ---@type Trigger
-    UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast, nil)
+    UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast)
+    UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(AbilityEvent.issuedOrder)
 end
 
 ---@return wc3_Unit|wc3_Item|wc3_Destructable|nil
@@ -49,9 +50,6 @@ function AbilityEvent.startCast()
     local continue = ability:runCallback("start", spell_data)
     if not continue then caster:orderStop() return nil end
 
-    if not ability:getCanMoveWhileCasting() then
-
-    end
     CastTimer:addAction(0, AbilityEvent.timerPeriod, spell_data)
     CasterDB.add(caster, spell_data)
 end
@@ -84,6 +82,18 @@ function AbilityEvent.timerPeriod(spell_data)
         abil:runCallback("interrupt", spell_data)
         CasterDB.rm(spell_data:getCaster())
     end
+end
+
+function AbilityEvent.issuedOrder()
+    local spell_data = CasterDB.get(GetSpellAbilityUnit())
+    local ability = spell_data.getAbility()
+    if ability:getFlag("OrderInterrupt") then
+        CasterDB.rm(GetSpellAbilityUnit())
+    end
+end
+
+---@param unit wc3_Unit
+function AbilityEvent.unitPause(unit)
 end
 
 return AbilityEvent
