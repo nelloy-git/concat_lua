@@ -1,7 +1,7 @@
 ---@type Settings
 local Settings = require('utils.Settings')
----@type TriggerDB
-local TriggerDB = require('trigger.TriggerDB')
+---@type DataBase
+local DataBase = require('utils.DataBase')
 ---@type TriggerAction
 local TriggerAction = require('trigger.TriggerAction')
 
@@ -13,6 +13,7 @@ local Trigger_meta = {
     __index = Trigger,
     __gc = Trigger.destroy
 }
+local TriggerDB = DataBase.new('userdata', 'table')
 
 ---@param self Trigger
 function Trigger_meta.__tostring(self)
@@ -20,7 +21,7 @@ function Trigger_meta.__tostring(self)
 end
 
 local function runTriggerActions()
-    local self = TriggerDB.get(GetTriggeringTrigger())
+    local self = TriggerDB:get(GetTriggeringTrigger())
     for i = 1, #self.__actions do
         ---@type TriggerAction
         local action = self.__actions[i]
@@ -47,7 +48,7 @@ function Trigger.new()
         __actions = {}
     }
     setmetatable(trigger, Trigger_meta)
-    TriggerDB.add(trigger.__wc3_trigger, trigger)
+    TriggerDB:add(trigger.__wc3_trigger, trigger)
 
     return trigger
 end

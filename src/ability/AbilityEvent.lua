@@ -86,7 +86,8 @@ end
 
 function AbilityEvent.issuedOrder()
     local spell_data = CasterDB.get(GetSpellAbilityUnit())
-    local ability = spell_data.getAbility()
+    if not spell_data then return nil end
+    local ability = spell_data:getAbility()
     if ability:getFlag("OrderInterrupt") then
         CasterDB.rm(GetSpellAbilityUnit())
     end

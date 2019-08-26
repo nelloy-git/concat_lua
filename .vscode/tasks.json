@@ -6,7 +6,7 @@
         {
             "label": "Compile",
             "type": "shell",
-            "command": "python3 ${config:lua-wc3.exePath} ${workspaceFolder}/${config:lua-wc3.sourceFolder} ${workspaceFolder}/${config:lua-wc3.destinationFolder}"
+            "command": "python ${config:lua-wc3.exePath} ${workspaceFolder}/${config:lua-wc3.sourceFolder} ${workspaceFolder}/${config:lua-wc3.destinationFolder}"
         },
         {
             "label": "Run",

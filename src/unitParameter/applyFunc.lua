@@ -194,7 +194,7 @@ end
 ---@param wc3_unit wc3_Unit
 ---@param val number
 ---@return nil
-function UnitApplyParameter.strength(wc3_unit, val)
+function UnitApplyParameter.intelligence(wc3_unit, val)
     SetHeroInt(wc3_unit, math.floor(val), true)
 end
 

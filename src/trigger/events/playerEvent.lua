@@ -15,8 +15,8 @@ function PlayerEvent.init()
 
     ---@type Trigger
     PlayerEvent.__triggers["LocalPlayerMouseMove"] = Trigger.new()
-    PlayerEvent.__triggers["LocalPlayerMouseMove"]:addEvent_PlayerMouseMove(GetLocalPlayer())
-    ---@type Trigger
+    PlayerEvent.__triggers["LocalPlayerMouseMove"]:addEvent_Player("MouseMove", GetLocalPlayer())
+    --PlayerEvent.__triggers["LocalPlayerMouseMove"]:addEvent_PlayerMouseMove(GetLocalPlayer())
 
     initialized = true
 end

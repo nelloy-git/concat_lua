@@ -15,7 +15,7 @@ local WarlordSettings = compiletime(function()
     SummonSpearmanData:setField("AreaofEffect", 150)
     SummonSpearmanData:setField("Cooldown", 0)
     SummonSpearmanData:setField("CastingTime", 0)
-    SummonSpearmanData:setField("CustomCastingTime", 1)
+    SummonSpearmanData:setField("CustomCastingTime", 3)
     SummonSpearmanData:setField("HotkeyNormal", "X")
     SummonSpearmanData:setField("ArtCaster", "")
     SummonSpearmanData:setField("ArtEffect", "")
@@ -33,12 +33,24 @@ local WarlordSettings = compiletime(function()
     SpearmanData:setField("ModelFile", "war3mapImported\\\\units\\\\SwordNya.mdx")
     SpearmanData:setField("NormalAbilities", "Avul,Aloc")
     SpearmanData:setField("SpeedBase", 1)
+    SpearmanData:setField("CollisionSize", 0)
+    SpearmanData:setField("HideHeroDeathMsg", true)
+    SpearmanData:setField("HideHeroInterfaceIcon", true)
+    SpearmanData:setField("HideHeroMinimapDisplay", true)
     SpearmanData:generate("Hpal")
 
     -- ============= --
     --  Spirit rush  --
     -- ============= --
+    local SpiritRushData = AbilityData.new()
+    SpiritRushData:setField("Name", "Spirit rush")
+    SpiritRushData:setField("TooltipNormal", "Spirit rush")
+    SpiritRushData:setField("TooltipNormalExtended", "All summoned spirits attack target area.")
+    SpiritRushData:setField("CastRange", 500)
+    SpiritRushData:setField("AreaofEffect", 150)
 
+
+    -- Save settings --
     local settings = {
         SummonSpearman = SummonSpearmanData,
         SpearmanUnit = SpearmanData

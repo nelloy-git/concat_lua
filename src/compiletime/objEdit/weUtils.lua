@@ -115,8 +115,8 @@ end
 function  WeUtils.getErrorPos()
     local str = ''
     local i = 2
-    while Debug.getinfo(i, 'ln') ~= nil do
-        local func = Debug.getinfo(i, 'lnS')
+    while debug.getinfo(i, 'ln') ~= nil do
+        local func = debug.getinfo(i, 'lnS')
         local source_type = func.source:sub(#func.source - 3, #func.source)
         if func.source:sub(#func.source - 3, #func.source) == '.lua' then
             str = '  ' .. func.source .. ':' .. tostring(func.currentline) .. '\n' .. str

@@ -17,9 +17,12 @@ end
 ---@param slave wc3_Unit
 ---@return boolean
 function SummonDB.rmSlave(slave)
-    local master = SummonDB[slave]
-    SummonDB[slave] = nil
-    if not master then Debug("SummonDB: error triing to remove non summon unit.") return false end
+    local master = SlavesDB[slave]
+    if not master then
+        Debug("SummonDB: error trying to remove non summon unit.")
+        return false
+    end
+    SlavesDB[slave] = nil
     local slaves = MastersDB[master]
 
     if #slaves == 1 then

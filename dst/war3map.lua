@@ -1017,7 +1017,7 @@ __require_data.module["ability.ChannelCompiletimeData"] = function()
     return ChannelCompiletimeData
 end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SpearmanUnit = {NormalAbilities = "Avul,Aloc", SpeedBase = 1, ModelFile = "war3mapImported\\units\\SwordNya.mdx", Id = "HM#$", Name = "Spearman"}, SummonSpearman = {Options = 3, ArtEffect = "", DisableOtherAbilities = false, CastingTime = 0, Id = "AM#'", CastRange = 500, OrderId = "acidbomb", ArtSpecial = "", HotkeyNormal = "X", FollowThroughTime = 0, CustomCastingTime = 1, Cooldown = 0, TargetType = "point", ArtTarget = "", Levels = 1, AreaofEffect = 150, TooltipNormalExtended = "Summons invulnerale spirit warrior.", ArtCaster = "", TooltipNormal = "Summon spearman", Name = "Summon spearman"}}
+    local WarlordSettings = {SpearmanUnit = {NormalAbilities = "Avul,Aloc", SpeedBase = 1, HideHeroInterfaceIcon = true, Name = "Spearman", Id = "HM#$", HideHeroMinimapDisplay = true, CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroDeathMsg = true}, SummonSpearman = {ArtEffect = "", CastingTime = 0, ArtTarget = "", Options = 3, Name = "Summon spearman", OrderId = "acidbomb", TooltipNormal = "Summon spearman", FollowThroughTime = 0, Id = "AM#'", CustomCastingTime = 1, DisableOtherAbilities = false, CastRange = 500, TooltipNormalExtended = "Summons invulnerale spirit warrior.", Cooldown = 0, Levels = 1, ArtSpecial = "", AreaofEffect = 150, ArtCaster = "", HotkeyNormal = "X", TargetType = "point"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -1032,12 +1032,12 @@ __require_data.module["ability.SummonsDB"] = function()
       table.insert(MastersDB[master], 1, slave)
     end
     function SummonDB.rmSlave(slave)
-      local master = SummonDB[slave]
-      SummonDB[slave] = nil
+      local master = SlavesDB[slave]
       if (not master) then
-        Debug("SummonDB: error triing to remove non summon unit.")
+        Debug("SummonDB: error trying to remove non summon unit.")
         return false
       end
+      SlavesDB[slave] = nil
       local slaves = MastersDB[master]
       if (#slaves == 1) then
         MastersDB[master] = nil
@@ -1141,7 +1141,8 @@ __require_data.module["ability.AbilityEvent"] = function()
     local CastTimer = glTimer
     local AbilityEvent = {}
     function AbilityEvent.init()
-      UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast, nil)
+      UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.startCast)
+      UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(AbilityEvent.issuedOrder)
     end
     function AbilityEvent.getSpellTarget()
       local target = GetSpellTargetUnit()
@@ -1154,7 +1155,6 @@ __require_data.module["ability.AbilityEvent"] = function()
       return target
     end
     function AbilityEvent.startCast()
-      Debug("Cast start")
       local ability = AbilityDB.get(GetSpellAbilityId())
       if (ability == nil) then
         return nil
@@ -1171,12 +1171,8 @@ __require_data.module["ability.AbilityEvent"] = function()
         caster:orderStop()
         return nil
       end
-      if (not ability:getCanMoveWhileCasting()) then
-
-      end
       CastTimer:addAction(0, AbilityEvent.timerPeriod, spell_data)
       CasterDB.add(caster, spell_data)
-      Debug("Cast started")
     end
     function AbilityEvent.timerPeriod(spell_data)
       if (spell_data ~= CasterDB.get(spell_data:getCaster())) then
@@ -1200,6 +1196,19 @@ __require_data.module["ability.AbilityEvent"] = function()
         abil:runCallback("interrupt", spell_data)
         CasterDB.rm(spell_data:getCaster())
       end
+    end
+    function AbilityEvent.issuedOrder()
+      local spell_data = CasterDB.get(GetSpellAbilityUnit())
+      if (not spell_data) then
+        return nil
+      end
+      local ability = spell_data:getAbility()
+      if (ability:getFlag("OrderInterrupt")) then
+        CasterDB.rm(GetSpellAbilityUnit())
+      end
+    end
+    function AbilityEvent.unitPause(unit)
+
     end
     return AbilityEvent
 end
@@ -1243,13 +1252,17 @@ __require_data.module["ability.Ability"] = function()
       return self.__callback[callback_type]
     end
     function Ability:runCallback(callback_type, cast_data)
-      return self.__callback[callback_type](cast_data)
+      if (type(self.__callback[callback_type]) == "function") then
+        return self.__callback[callback_type](cast_data)
+      else
+        return true
+      end
     end
-    function Ability:setCanMoveWhileCasting(flag)
-      self._can_move = flag
+    function Ability:setFlag(flag, flag_name)
+      self.__flag[flag_name] = flag
     end
-    function Ability:getCanMoveWhileCasting()
-      return self._can_move
+    function Ability:getFlag(flag_name)
+      return self.__flag[flag_name]
     end
     function Ability:setCastingTimeFunction(func)
       self.__casting_time_func = func
@@ -1419,7 +1432,7 @@ __require_data.module["unitParameter.applyFunc"] = function()
     function UnitApplyParameter.agility(wc3_unit, val)
       SetHeroAgi(wc3_unit, math.floor(val), true)
     end
-    function UnitApplyParameter.strength(wc3_unit, val)
+    function UnitApplyParameter.intelligence(wc3_unit, val)
       SetHeroInt(wc3_unit, math.floor(val), true)
     end
     return UnitApplyParameter
@@ -1502,6 +1515,13 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
       local container = {}
       setmetatable(container, ParameterContainer_meta)
       UnitParameterContainerDB.add(wc3_unit)
+      local string_id = ID2str(GetUnitTypeId(wc3_unit))
+      local first = string_id:sub(1, 1)
+      if (first == string.upper(first)) then
+        container.__strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)
+        container.__agility = UnitParameter.new(wc3_unit, 1, ApplyParam.agility, MathParam.linear)
+        container.__intelligence = UnitParameter.new(wc3_unit, 1, ApplyParam.intelligence, MathParam.linear)
+      end
       container.__attack = UnitParameter.new(wc3_unit, 1, ApplyParam.attack, MathParam.linear)
       container.__attackSpeed = UnitParameter.new(wc3_unit, 2, ApplyParam.attackSpeed, MathParam.inverseLinear)
       container.__armor = UnitParameter.new(wc3_unit, 0, ApplyParam.armor, MathParam.linear)
@@ -1516,13 +1536,6 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
       container.__critPower = UnitParameter.new(wc3_unit, 1, ApplyParam.critPower, MathParam.linear)
       container.__dodge = UnitParameter.new(wc3_unit, 0, ApplyParam.dodgeChance, MathParam.percent, 75)
       container.__cooldown = UnitParameter.new(wc3_unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
-      local string_id = ID2str(GetUnitTypeId(wc3_unit))
-      local first = string_id:sub(1, 1)
-      if (first == string.upper(first)) then
-        container.strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)
-        container.agility = UnitParameter.new(wc3_unit, 1, ApplyParam.agility, MathParam.linear)
-        container.intelligence = UnitParameter.new(wc3_unit, 1, ApplyParam.intelligence, MathParam.linear)
-      end
       return container
     end
     function ParameterContainer.get(wc3_unit)
@@ -1946,7 +1959,6 @@ __require_data.module["ability.warlord.summon"] = function()
       end)
     end
     local function finishCastingCallback(spell_data)
-      Debug("Finish")
       local caster = spell_data:getCaster()
       local owner = GetOwningPlayer(caster)
       local unit = Unit.new(owner, SummonData.Id, spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))
@@ -2148,7 +2160,7 @@ __require_data.module["trigger.events.playerEvent"] = function()
         return nil
       end
       PlayerEvent.__triggers.LocalPlayerMouseMove = Trigger.new()
-      PlayerEvent.__triggers.LocalPlayerMouseMove:addEvent_PlayerMouseMove(GetLocalPlayer())
+      PlayerEvent.__triggers.LocalPlayerMouseMove:addEvent_Player("MouseMove", GetLocalPlayer())
       initialized = true
     end
     function PlayerEvent.getTrigger(event)
@@ -2809,31 +2821,50 @@ __require_data.module["trigger.TriggerAction"] = function()
     end
     return TriggerAction
 end
-__require_data.module["trigger.TriggerDB"] = function()
-    local TriggerDB = {}
-    function TriggerDB.add(wc3_trigger, trigger)
-      TriggerDB[wc3_trigger] = trigger
+__require_data.module["utils.DataBase"] = function()
+    local DataBase = {}
+    local DataBase_meta = {__index = DataBase}
+    function DataBase.new(key_type, value_type)
+      local db = {__key_type = key_type, __value_type = value_type}
+      setmetatable(db, DataBase_meta)
+      return db
     end
-    function TriggerDB.rm(wc3_trigger)
-      TriggerDB[wc3_trigger] = nil
+    function DataBase:add(key, value)
+      if (type(key) ~= self.__key_type) then
+        error("DataBase: wrong key type.")
+      end
+      if (type(value) ~= self.__value_type) then
+        error("DataBase: wrong value type.")
+      end
+      self[key] = value
     end
-    function TriggerDB.get(wc3_trigger)
-      return TriggerDB[wc3_trigger]
+    function DataBase:remove(key)
+      if (type(key) ~= self.__key_type) then
+        error("DataBase: wrong key type.")
+      end
+      self[key] = nil
     end
-    return TriggerDB
+    function DataBase:get(key)
+      if (type(key) ~= self.__key_type) then
+        error("DataBase: wrong key type.")
+      end
+      return self[key]
+    end
+    return DataBase
 end
 __require_data.module["trigger.Trigger"] = function()
     local Settings = require("utils.Settings")
-    local TriggerDB = require("trigger.TriggerDB")
+    local DataBase = require("utils.DataBase")
     local TriggerAction = require("trigger.TriggerAction")
     local Event = require("trigger.Event")
     local Trigger = {}
     local Trigger_meta = {__index = Trigger, __gc = Trigger.destroy}
+    local TriggerDB = DataBase.new("userdata", "table")
     function Trigger_meta.__tostring(self)
       return string.format("Trigger with %d action(s).", #self.__actions)
     end
     local function runTriggerActions()
-      local self = TriggerDB.get(GetTriggeringTrigger())
+      local self = TriggerDB:get(GetTriggeringTrigger())
       for i = 1, #self.__actions do
         local action = self.__actions[i]
         if (Settings.debug) then
@@ -2852,7 +2883,7 @@ __require_data.module["trigger.Trigger"] = function()
       local wc3_trigger = CreateTrigger()
       local trigger = {__wc3_trigger = wc3_trigger, __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions), __actions = {}}
       setmetatable(trigger, Trigger_meta)
-      TriggerDB.add(trigger.__wc3_trigger, trigger)
+      TriggerDB:add(trigger.__wc3_trigger, trigger)
       return trigger
     end
     function Trigger:destroy()
@@ -2931,6 +2962,8 @@ __require_data.module["trigger.events.unitEvent"] = function()
       UnitEvent.__triggers.AnyUnitSelected:addEvent_AnyUnit("Selected")
       UnitEvent.__triggers.AnyUnitDeselected = Trigger.new()
       UnitEvent.__triggers.AnyUnitDeselected:addEvent_AnyUnit("Deselected")
+      UnitEvent.__triggers.AnyUnitAttacked = Trigger.new()
+      UnitEvent.__triggers.AnyUnitAttacked:addEvent_AnyUnit("Attacked")
       initialized = true
     end
     function UnitEvent.getTrigger(name)

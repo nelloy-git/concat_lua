@@ -19,6 +19,16 @@ function ParameterContainer.new(wc3_unit)
     setmetatable(container, ParameterContainer_meta)
     UnitParameterContainerDB.add(wc3_unit)
 
+    -- Add hero stats
+    local string_id = ID2str(GetUnitTypeId(wc3_unit))
+    local first = string_id:sub(1, 1)
+    if first == string.upper(first) then
+        container.__strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)
+        container.__agility = UnitParameter.new(wc3_unit, 1, ApplyParam.agility, MathParam.linear)
+        container.__intelligence = UnitParameter.new(wc3_unit, 1, ApplyParam.intelligence, MathParam.linear)
+    end
+
+    -- Add hero stats
     container.__attack = UnitParameter.new(wc3_unit, 1, ApplyParam.attack, MathParam.linear)
     container.__attackSpeed = UnitParameter.new(wc3_unit, 2, ApplyParam.attackSpeed, MathParam.inverseLinear)
     container.__armor = UnitParameter.new(wc3_unit, 0, ApplyParam.armor, MathParam.linear)
@@ -36,15 +46,6 @@ function ParameterContainer.new(wc3_unit)
     container.__critPower = UnitParameter.new(wc3_unit, 1, ApplyParam.critPower, MathParam.linear)
     container.__dodge = UnitParameter.new(wc3_unit, 0, ApplyParam.dodgeChance, MathParam.percent, 75)
     container.__cooldown = UnitParameter.new(wc3_unit, 0, ApplyParam.cooldown, MathParam.percent, 75)
-
-    -- Add hero stats
-    local string_id = ID2str(GetUnitTypeId(wc3_unit))
-    local first = string_id:sub(1, 1)
-    if first == string.upper(first) then
-        container.strength = UnitParameter.new(wc3_unit, 1, ApplyParam.strength, MathParam.linear)
-        container.agility = UnitParameter.new(wc3_unit, 1, ApplyParam.agility, MathParam.linear)
-        container.intelligence = UnitParameter.new(wc3_unit, 1, ApplyParam.intelligence, MathParam.linear)
-    end
 
     return container
 end
