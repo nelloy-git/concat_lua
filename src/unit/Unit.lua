@@ -1,7 +1,9 @@
 ---@type UnitParameterContainer
 local ParameterContainer = require('unitParameter.UnitParameterContainer')
 ---@type UnitDB
-local UnitDB = require('unit.unitDB')
+local UnitDB = require('unit.UnitDB')
+
+require('trigger.events.unitEvent')
 
 ---@class UnitObject : userdata
 

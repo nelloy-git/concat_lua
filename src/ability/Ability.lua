@@ -1,3 +1,5 @@
+---@type AbilityEvent
+require('ability.AbilityEvent')
 ---@type AbilityDB
 local AbilityDB = require('ability.AbilityDB')
 
@@ -59,7 +61,11 @@ end
 ---@param cast_data SpellData
 ---@return boolean
 function Ability:runCallback(callback_type, cast_data)
-    return self.__callback[callback_type](cast_data)
+    if type(self.__callback[callback_type]) == 'function' then
+        return self.__callback[callback_type](cast_data)
+    else
+        return true
+    end
 end
 
 ---@alias AbilityWhileCastingFlag string

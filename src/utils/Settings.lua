@@ -19,7 +19,8 @@ local Settings = {
     --  Events  --
     -- ======== --
     EnabledEvents = {
-        Unit = true
+        Unit = true,
+        Player = true
     }
 }
 

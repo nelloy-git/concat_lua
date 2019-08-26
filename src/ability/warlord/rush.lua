@@ -3,7 +3,7 @@ local Ability = require('ability.ability')
 ---@type Ability
 local SummonSwordman = require('ability.warlord.summon')
 ---@type Unit
-local Unit = require('unit.unit')
+local Unit = require('unit.Unit')
 ---@type Player
 local Players = require('player.player')
 ---@type PlayerEvent

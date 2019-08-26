@@ -30,7 +30,6 @@ end
 
 ---@param spell_data SpellData
 local function finishCastingCallback(spell_data)
-    Debug("Finish")
     local caster = spell_data:getCaster()
     local owner = GetOwningPlayer(caster)
     local unit = Unit.new(owner, SummonData["Id"], spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))

@@ -38,7 +38,7 @@ function RunInitialization()
     
 
     ---@type Unit
-    local Unit = require('unit.unit')
+    local Unit = require('unit.Unit')
     --Debug(Player(0))
     local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
     --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)

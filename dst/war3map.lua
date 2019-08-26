@@ -6,277 +6,6 @@
     end
     return __require_data.result[name]
   end
-__require_data.module["unit.unit"] = function()
-    local ParameterContainer = require("unitParameter.UnitParameterContainer")
-    local UnitDB = require("unit.unitDB")
-    local Unit = {}
-    local Unit_meta = {__index = Unit, __gc = Unit.destroy}
-    function Unit_meta.__tostring(self)
-      return string.format("Unit %s (%s) at [%.2f, %.2f, %.2f]", self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
-    end
-    function Unit.new(wc3_player, id, x, y, face, is_dead)
-      id = ID(id)
-      local wc3_unit = nil
-      if (is_dead) then
-        wc3_unit = CreateCorpse(wc3_player, id, x, y, face)
-      else
-        wc3_unit = CreateUnit(wc3_player, id, x, y, face)
-      end
-      local unit = {__id = id, __wc3_unit = wc3_unit}
-      setmetatable(unit, Unit_meta)
-      UnitDB.add(unit.__wc3_unit, unit)
-      unit:initCustomData()
-      return unit
-    end
-    function Unit:destroy()
-      self:destroyCustomData()
-      UnitDB.rm(self.__wc3_unit)
-      RemoveUnit(self.__wc3_unit)
-      self.__wc3_unit = nil
-    end
-    function Unit:getObj()
-      return self.__wc3_unit
-    end
-    function Unit:initCustomData()
-      self.parameter = runFuncInDebug(ParameterContainer.new, self.__wc3_unit)
-    end
-    function Unit:destroyCustomData()
-
-    end
-    function Unit:getId()
-      return self.__id
-    end
-    function Unit:getName()
-      return GetUnitName(self.__wc3_unit)
-    end
-    function Unit:setVertexColor(red, green, blue, alpha)
-      red = math.floor((255*torange(red, 0, 1)))
-      green = math.floor((255*torange(green, 0, 1)))
-      blue = math.floor((255*torange(blue, 0, 1)))
-      alpha = math.floor((255*torange(alpha, 0, 1)))
-      SetUnitVertexColor(self.__wc3_unit, red, green, blue, alpha)
-    end
-    function Unit:getOwningPlayer()
-      return GetOwningPlayer(self.__wc3_unit)
-    end
-    function Unit:setPos2(pos)
-      self:setX(pos.x)
-      self:setY(pos.y)
-    end
-    function Unit:setPos3(pos)
-      self:setX(pos.x)
-      self:setY(pos.y)
-      self:setZ(pos.z)
-    end
-    function Unit:setX(x)
-      SetUnitX(self.__wc3_unit, x)
-    end
-    function Unit:setY(y)
-      SetUnitY(self.__wc3_unit, y)
-    end
-    function Unit:setZ(z)
-      self:setFlyHeight((z-GetTerrainZ(self:getX(), self:getY())))
-    end
-    function Unit:getPos2()
-      return Vec2.new(self:getX(), self:getY())
-    end
-    function Unit:getPos3()
-      return Vec3.new(self:getX(), self:getY(), self:getZ())
-    end
-    function Unit:getX()
-      return GetUnitX(self.__wc3_unit)
-    end
-    function Unit:getY()
-      return GetUnitY(self.__wc3_unit)
-    end
-    function Unit:getZ()
-      return (GetTerrainZ(self:getX(), self:getY())+self:getFlyHeight())
-    end
-    function Unit:getFlyHeight()
-      return GetUnitFlyHeight(self.__wc3_unit)
-    end
-    function Unit:setFlyHeigth(height)
-      return SetUnitFlyHeight(self.__wc3_unit, height)
-    end
-    function Unit:getDefaultsFlyHeight()
-      return GetUnitDefaultFlyHeight(self.__wc3_unit)
-    end
-    function Unit:setFacing(angle, time)
-      if (time == nil or time <= 0) then
-        SetUnitFacing(self.__wc3_unit, angle)
-      else
-        SetUnitFacingTimed(self.__wc3_unit, angle, time)
-      end
-    end
-    function Unit:setFacingTo(target, time)
-      local x, y = self:getPos()
-      local angle = (180+((180/math.pi)*math.atan((y-target.y), (x-target.x))))
-      self:setFacing(angle, time)
-    end
-    function Unit:getFacing()
-      return GetUnitFacing(self.__wc3_unit)
-    end
-    function Unit:getMoveSpeed()
-      return GetUnitMoveSpeed(self.__wc3_unit)
-    end
-    function Unit:setMoveSpeed(speed)
-      SetUnitMoveSpeed(self.__wc3_unit, speed)
-    end
-    function Unit:getTurnSpeed()
-      return GetUnitTurnSpeed(self.__wc3_unit)
-    end
-    function Unit:setTurnSpeed(speed)
-      SetUnitTurnSpeed(self.__wc3_unit, speed)
-    end
-    function Unit:getDefaultTurnSpeed()
-      return GetUnitDefaultTurnSpeed(self.__wc3_unit)
-    end
-    function Unit:addAbility(ability_id)
-      UnitAddAbility(self.__wc3_unit, ability_id)
-    end
-    function Unit:removeAbility(ability_id)
-      UnitRemoveAbility(self.__wc3_unit, ability_id)
-    end
-    function Unit:getAbilityLevel(ability_id)
-      return GetUnitAbilityLevel(self.__wc3_unit, ability_id)
-    end
-    function Unit:setAbilityLevel(ability_id)
-      SetUnitAbilityLevel(self.__wc3_unit, ability_id)
-    end
-    function Unit:setInvulnerable(flag)
-      SetUnitInvulnerable(self.__wc3_unit, flag)
-    end
-    function Unit:applyTimedLife(time)
-      UnitApplyTimedLife(self.__wc3_unit, 0, time)
-    end
-    function Unit:issueImmediateOrderById(order_id)
-      IssueImmediateOrderById(self.__wc3_unit, order_id)
-    end
-    function Unit:orderStop()
-      self:issueImmediateOrderById(851972)
-    end
-    function Unit:issuePointOrderById(order_id, x, y)
-      IssuePointOrderById(self.__wc3_unit, order_id, x, y)
-    end
-    function Unit:setMoveSpeed(speed)
-      SetUnitMoveSpeed(self.__wc3_unit, speed)
-    end
-    function Unit:setTurnSpeed(speed)
-      SetUnitTurnSpeed(self.__wc3_unit, speed)
-    end
-    function Unit:playAnimation(animation)
-      SetUnitAnimation(self.__wc3_unit, animation)
-    end
-    function Unit:setAnimationSpeed(scale)
-      SetUnitTimeScale(self.__wc3_unit, scale)
-    end
-    function Unit:pause()
-      PauseUnit(self.__wc3_unit, true)
-    end
-    function Unit:unpause()
-      PauseUnit(self.__wc3_unit, false)
-    end
-    function Unit.get(wc3_unit)
-      return UnitDB.get(wc3_unit)
-    end
-    function Unit.GetLevelingUnit()
-      return UnitDB.get(GetLevelingUnit())
-    end
-    function Unit.GetLearningUnit()
-      return UnitDB.get(GetLearningUnit())
-    end
-    function Unit.GetRevivableUnit()
-      return UnitDB.get(GetRevivableUnit())
-    end
-    function Unit.GetRevivingUnit()
-      return UnitDB.get(GetRevivingUnit())
-    end
-    function Unit.GetAttacker()
-      return UnitDB.get(GetAttacker())
-    end
-    function Unit.GetRescuer()
-      return UnitDB.get(GetRescuer())
-    end
-    function Unit.GetDyingUnit()
-      return UnitDB.get(GetDyingUnit())
-    end
-    function Unit.GetKillingUnit()
-      return UnitDB.get(GetKillingUnit())
-    end
-    function Unit.GetDecayingUnit()
-      return UnitDB.get(GetDecayingUnit())
-    end
-    function Unit.GetConstructingStructure()
-      return UnitDB.get(GetConstructingStructure())
-    end
-    function Unit.GetCancelledStructure()
-      return UnitDB.get(GetCancelledStructure())
-    end
-    function Unit.GetConstructedStructure()
-      return UnitDB.get(GetConstructedStructure())
-    end
-    function Unit.GetResearchingUnit()
-      return UnitDB.get(GetResearchingUnit())
-    end
-    function Unit.GetTrainedUnit()
-      return UnitDB.get(GetTrainedUnit())
-    end
-    function Unit.GetDetectedUnit()
-      return UnitDB.get(GetDetectedUnit())
-    end
-    function Unit.GetSummoningUnit()
-      return UnitDB.get(GetSummoningUnit())
-    end
-    function Unit.GetSummonedUnit()
-      return UnitDB.get(GetSummonedUnit())
-    end
-    function Unit.GetTransportUnit()
-      return UnitDB.get(GetTransportUnit())
-    end
-    function Unit.GetLoadedUnit()
-      return UnitDB.get(GetLoadedUnit())
-    end
-    function Unit.GetSellingUnit()
-      return UnitDB.get(GetSellingUnit())
-    end
-    function Unit.GetSoldUnit()
-      return UnitDB.get(GetSoldUnit())
-    end
-    function Unit.GetBuyingUnit()
-      return UnitDB.get(GetBuyingUnit())
-    end
-    function Unit.GetChangingUnit()
-      return UnitDB.get(GetChangingUnit())
-    end
-    function Unit.GetManipulatingUnit()
-      return UnitDB.get(GetManipulatingUnit())
-    end
-    function Unit.GetOrderedUnit()
-      return UnitDB.get(GetOrderedUnit())
-    end
-    function Unit.GetOrderTargetUnit()
-      return UnitDB.get(GetOrderTargetUnit())
-    end
-    function Unit.GetSpellAbilityUnit()
-      return UnitDB.get(GetSpellAbilityUnit())
-    end
-    function Unit.GetSpellTargetUnit()
-      return UnitDB.get(GetSpellTargetUnit())
-    end
-    function Unit.GetTriggerUnit()
-      return UnitDB.get(GetTriggerUnit())
-    end
-    function Unit.GetEventDamage()
-      return UnitDB.get(GetEventDamage())
-    end
-    function Unit.GetEventDamageSource()
-      return UnitDB.get(GetEventDamageSource())
-    end
-    function Unit.GetEventTargetUnit()
-      return UnitDB.get(GetEventTargetUnit())
-    end
-    return Unit
-end
 __require_data.module["unit.HeroCompiletimeData"] = function()
     local HeroCompiletimeData = {}
     local HeroCompiletimeData_meta = {__index = HeroCompiletimeData}
@@ -1288,7 +1017,7 @@ __require_data.module["ability.ChannelCompiletimeData"] = function()
     return ChannelCompiletimeData
 end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SpearmanUnit = {ModelFile = "war3mapImported\\units\\SwordNya.mdx", Name = "Spearman", Id = "HM#$", NormalAbilities = "Avul,Aloc", SpeedBase = 1}, SummonSpearman = {CustomCastingTime = 1, Name = "Summon spearman", CastRange = 500, HotkeyNormal = "X", Cooldown = 0, ArtTarget = "", Levels = 1, ArtCaster = "", Id = "AM#'", DisableOtherAbilities = false, CastingTime = 0, TooltipNormal = "Summon spearman", ArtEffect = "", AreaofEffect = 150, Options = 3, OrderId = "acidbomb", FollowThroughTime = 0, TargetType = "point", ArtSpecial = "", TooltipNormalExtended = "Summons invulnerale spirit warrior."}}
+    local WarlordSettings = {SpearmanUnit = {NormalAbilities = "Avul,Aloc", SpeedBase = 1, ModelFile = "war3mapImported\\units\\SwordNya.mdx", Id = "HM#$", Name = "Spearman"}, SummonSpearman = {Options = 3, ArtEffect = "", DisableOtherAbilities = false, CastingTime = 0, Id = "AM#'", CastRange = 500, OrderId = "acidbomb", ArtSpecial = "", HotkeyNormal = "X", FollowThroughTime = 0, CustomCastingTime = 1, Cooldown = 0, TargetType = "point", ArtTarget = "", Levels = 1, AreaofEffect = 150, TooltipNormalExtended = "Summons invulnerale spirit warrior.", ArtCaster = "", TooltipNormal = "Summon spearman", Name = "Summon spearman"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -1391,6 +1120,19 @@ __require_data.module["ability.CasterDB"] = function()
     end
     return CasterDB
 end
+__require_data.module["ability.AbilityDB"] = function()
+    local AbilityDB = {}
+    function AbilityDB.add(ability_id, ability)
+      AbilityDB[ability_id] = ability
+    end
+    function AbilityDB.rm(ability_id)
+      AbilityDB[ability_id] = nil
+    end
+    function AbilityDB.get(ability_id)
+      return AbilityDB[ability_id]
+    end
+    return AbilityDB
+end
 __require_data.module["ability.AbilityEvent"] = function()
     local AbilityDB = require("ability.AbilityDB")
     local UnitEvent = require("trigger.events.unitEvent")
@@ -1461,22 +1203,9 @@ __require_data.module["ability.AbilityEvent"] = function()
     end
     return AbilityEvent
 end
-__require_data.module["ability.AbilityDB"] = function()
-    local AbilityDB = {}
-    function AbilityDB.add(ability_id, ability)
-      AbilityDB[ability_id] = ability
-    end
-    function AbilityDB.rm(ability_id)
-      AbilityDB[ability_id] = nil
-    end
-    function AbilityDB.get(ability_id)
-      return AbilityDB[ability_id]
-    end
-    return AbilityDB
-end
 __require_data.module["ability.Ability"] = function()
-    local AbilityDB = require("ability.AbilityDB")
     require("ability.AbilityEvent")
+    local AbilityDB = require("ability.AbilityDB")
     local Ability = {}
     local Ability_meta = {__index = Ability}
     function Ability_meta.__tostring(self)
@@ -1499,7 +1228,7 @@ __require_data.module["ability.Ability"] = function()
     end
     function Ability.new(id)
       id = ID(id)
-      local ability = {__id = id, __callback = {}, __casting_time_func = nil, __flag = {}}
+      local ability = {__id = id, __callback = {}, __casting_time_func = nil}
       setmetatable(ability, Ability_meta)
       AbilityDB.add(id, ability)
       return ability
@@ -1514,10 +1243,7 @@ __require_data.module["ability.Ability"] = function()
       return self.__callback[callback_type]
     end
     function Ability:runCallback(callback_type, cast_data)
-      if (type(self.__callback[callback_type]) == "function") then
-        return self.__callback[callback_type](cast_data)
-      end
-      return true
+      return self.__callback[callback_type](cast_data)
     end
     function Ability:setCanMoveWhileCasting(flag)
       self._can_move = flag
@@ -1576,7 +1302,7 @@ __require_data.module["ability.Ability"] = function()
     end
     return Ability
 end
-__require_data.module["unit.unitDB"] = function()
+__require_data.module["unit.UnitDB"] = function()
     local UnitDB = {}
     function UnitDB.add(unit_obj, unit)
       UnitDB[unit_obj] = unit
@@ -1931,7 +1657,8 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
 end
 __require_data.module["unit.Unit"] = function()
     local ParameterContainer = require("unitParameter.UnitParameterContainer")
-    local UnitDB = require("unit.unitDB")
+    local UnitDB = require("unit.UnitDB")
+    require("trigger.events.unitEvent")
     local Unit = {}
     local Unit_meta = {__index = Unit, __gc = Unit.destroy}
     function Unit_meta.__tostring(self)
@@ -2412,7 +2139,27 @@ __require_data.module["utils.math.Vec2"] = function()
     end
     return Vec2
 end
-__require_data.module["trigger.event"] = function()
+__require_data.module["trigger.events.playerEvent"] = function()
+    local Trigger = require("trigger.Trigger")
+    local PlayerEvent = {__triggers = {}}
+    local initialized = false
+    function PlayerEvent.init()
+      if (initialized) then
+        return nil
+      end
+      PlayerEvent.__triggers.LocalPlayerMouseMove = Trigger.new()
+      PlayerEvent.__triggers.LocalPlayerMouseMove:addEvent_PlayerMouseMove(GetLocalPlayer())
+      initialized = true
+    end
+    function PlayerEvent.getTrigger(event)
+      if (not initialized) then
+        PlayerEvent.init()
+      end
+      return PlayerEvent.__triggers[event]
+    end
+    return PlayerEvent
+end
+__require_data.module["trigger.Event"] = function()
     local Event = {Game = {}, Player = {}, PlayerUnit = {}, AnyUnit = {}, Unit = {}}
     Event.Game.Victory = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_VICTORY)
@@ -3075,11 +2822,11 @@ __require_data.module["trigger.TriggerDB"] = function()
     end
     return TriggerDB
 end
-__require_data.module["trigger.trigger"] = function()
+__require_data.module["trigger.Trigger"] = function()
     local Settings = require("utils.Settings")
     local TriggerDB = require("trigger.TriggerDB")
     local TriggerAction = require("trigger.TriggerAction")
-    local Event = require("trigger.event")
+    local Event = require("trigger.Event")
     local Trigger = {}
     local Trigger_meta = {__index = Trigger, __gc = Trigger.destroy}
     function Trigger_meta.__tostring(self)
@@ -3164,7 +2911,7 @@ __require_data.module["trigger.trigger"] = function()
     return Trigger
 end
 __require_data.module["trigger.events.unitEvent"] = function()
-    local Trigger = require("trigger.trigger")
+    local Trigger = require("trigger.Trigger")
     local UnitEvent = {__triggers = {}}
     local initialized = false
     function UnitEvent.init()
@@ -3195,14 +2942,14 @@ __require_data.module["trigger.events.unitEvent"] = function()
     return UnitEvent
 end
 __require_data.module["utils.Settings"] = function()
-    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = false}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}, EnabledEvents = {Unit = true}}
+    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = false}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}, EnabledEvents = {Unit = true, Player = true}}
     return Settings
 end
 __require_data.module["utils.Globals"] = function()
     local Settings = require("utils.Settings")
     local Globals = {}
     local initialized = false
-    local Requirements = nil
+    
     function Globals.init()
       if (initialized) then
         return nil
@@ -3341,7 +3088,7 @@ end
     local Init = require("utils.Init")
     Init.start()
     require("ability.warlord.summon")
-    local Unit = require("unit.unit")
+    local Unit = require("unit.Unit")
     local u = Unit.new(Player(0), "hfoo", 0, 0, 0)
     local summon_abil = require("ability.warlord.summon")
     Debug(type(summon_abil))

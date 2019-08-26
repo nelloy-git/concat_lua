@@ -5,7 +5,7 @@ local TriggerDB = require('trigger.TriggerDB')
 ---@type TriggerAction
 local TriggerAction = require('trigger.TriggerAction')
 
-local Event = require('trigger.event')
+local Event = require('trigger.Event')
 
 ---@class Trigger
 local Trigger = {}

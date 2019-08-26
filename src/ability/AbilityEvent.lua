@@ -34,7 +34,6 @@ end
 ---Calls this function when any unit starts casting ability.
 ---@return nil
 function AbilityEvent.startCast()
-    Debug("Cast start")
     ---@type Ability
     local ability = AbilityDB.get(GetSpellAbilityId())
     if ability == nil then return nil end
@@ -55,7 +54,6 @@ function AbilityEvent.startCast()
     end
     CastTimer:addAction(0, AbilityEvent.timerPeriod, spell_data)
     CasterDB.add(caster, spell_data)
-    Debug("Cast started")
 end
 
 ---Global timer calls this function every loop for every casting ability.

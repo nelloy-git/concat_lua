@@ -11,9 +11,10 @@ local Globals = {}
 
 local initialized = false
 
-local Requirements = compiletime(function()
+compiletime(function()
     local requirements = {}
     if Settings.EnabledEvents.Unit then table.insert(requirements, require('trigger.events.unitEvent')) end
+    if Settings.EnabledEvents.Player then table.insert(requirements, require('trigger.events.playerEvent')) end
 end)
 
 
