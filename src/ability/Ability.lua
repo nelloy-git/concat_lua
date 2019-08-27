@@ -4,7 +4,9 @@ require('ability.AbilityEvent')
 local AbilityDB = require('ability.AbilityDB')
 
 ---@class Ability
-local Ability = {}
+local Ability = {
+    __type = 'Ability'
+}
 local Ability_meta = {
     __index = Ability
 }

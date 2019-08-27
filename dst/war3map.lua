@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SpearmanUnit = {Id = "HM#$", NormalAbilities = "Avul,Aloc", HideHeroDeathMsg = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx", Name = "Spearman", CollisionSize = 0, HideHeroInterfaceIcon = true, SpeedBase = 1, HideHeroMinimapDisplay = true}, SummonSpearman = {ArtSpecial = "", ArtTarget = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", TargetType = "point", CastingTime = 0, ArtCaster = "", TooltipNormal = "Summon spearman", DisableOtherAbilities = false, Levels = 1, CustomCastingTime = 3, ArtEffect = "", Cooldown = 0, Name = "Summon spearman", CastRange = 500, AreaofEffect = 150, Id = "AM#'", Options = 3, FollowThroughTime = 0, HotkeyNormal = "X", OrderId = "acidbomb"}}
+    local WarlordSettings = {SummonSpearman = {TooltipNormalExtended = "Summons invulnerale spirit warrior.", AreaofEffect = 150, Levels = 1, OrderId = "acidbomb", Name = "Summon spearman", Id = "AM#'", FollowThroughTime = 0, TargetType = "point", TooltipNormal = "Summon spearman", DisableOtherAbilities = false, ArtCaster = "", HotkeyNormal = "X", ArtSpecial = "", CastingTime = 0, Options = 3, CustomCastingTime = 3, ArtTarget = "", Cooldown = 0, CastRange = 500, ArtEffect = ""}, SpearmanUnit = {Name = "Spearman", HideHeroInterfaceIcon = true, HideHeroMinimapDisplay = true, SpeedBase = 1, NormalAbilities = "Avul,Aloc", CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroDeathMsg = true, Id = "HM#$"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -648,9 +648,9 @@ end
 __require_data.module["unit.Unit"] = function()
     local ParameterContainer = require("unitParameter.UnitParameterContainer")
     local DataBase = require("utils.DataBase")
-    local UnitDB = DataBase.new("userdata", "Unit")
-    local Unit = {__type = "class Unit"}
-    local Unit_meta = {__type = "Unit", __index = Unit, __gc = Unit.destroy}
+    local Unit = {__type = "Unit"}
+    local Unit_meta = {__index = Unit, __gc = Unit.destroy}
+    local UnitDB = DataBase.new("userdata", type(Unit))
     function Unit_meta.__tostring(self)
       return string.format("Unit %s (%s) at [%.2f, %.2f, %.2f]", self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
     end
@@ -1808,22 +1808,22 @@ __require_data.module["utils.DataBase"] = function()
     end
     function DataBase:add(key, value)
       if (type(key) ~= self.__key_type) then
-        error("DataBase: wrong key type.")
+        error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
       end
       if (type(value) ~= self.__value_type) then
-        error("DataBase: wrong value type.")
+        error("DataBase: wrong value type. Need "..self.__value_type.." got "..type(value))
       end
       self[key] = value
     end
     function DataBase:remove(key)
       if (type(key) ~= self.__key_type) then
-        error("DataBase: wrong key type.")
+        error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
       end
       self[key] = nil
     end
     function DataBase:get(key)
       if (type(key) ~= self.__key_type) then
-        error("DataBase: wrong key type.")
+        error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
       end
       return self[key]
     end
@@ -1834,9 +1834,9 @@ __require_data.module["utils.trigger.Trigger"] = function()
     local DataBase = require("utils.DataBase")
     local TriggerAction = require("utils.trigger.TriggerAction")
     local TriggerEvent = require("utils.trigger.TriggerEvent")
-    local Trigger = {}
+    local Trigger = {__type = "Trigger"}
     local Trigger_meta = {__index = Trigger, __gc = Trigger.destroy}
-    local TriggerDB = DataBase.new("userdata", "table")
+    local TriggerDB = DataBase.new("userdata", type(Trigger))
     function Trigger_meta.__tostring(self)
       local events = " "
       for i = 1, #self.__events do

@@ -9,16 +9,15 @@ local TriggerEvent = require('utils.trigger.TriggerEvent')
 
 ---@class Trigger
 local Trigger = {
-    __type = 'class Trigger'
+    __type = 'Trigger'
 }
 local Trigger_meta = {
-    __type = 'Trigger',
     __index = Trigger,
     __gc = Trigger.destroy
 }
 
 ---wc3_Trigger -> Trigger
-local TriggerDB = DataBase.new('userdata', 'table')
+local TriggerDB = DataBase.new('userdata', type(Trigger))
 
 ---@param self Trigger
 function Trigger_meta.__tostring(self)

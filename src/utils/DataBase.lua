@@ -21,10 +21,10 @@ end
 ---@param value any
 function DataBase:add(key, value)
     if type(key) ~= self.__key_type then
-        error("DataBase: wrong key type.")
+        error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
     end
     if type(value) ~=self.__value_type then
-        error("DataBase: wrong value type.")
+        error("DataBase: wrong value type. Need "..self.__value_type.." got "..type(value))
     end
     self[key] = value
 end
@@ -32,7 +32,7 @@ end
 ---@param key any
 function DataBase:remove(key)
     if type(key) ~= self.__key_type then
-        error("DataBase: wrong key type.")
+        error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
     end
     self[key] = nil
 end
@@ -41,7 +41,7 @@ end
 ---@return any
 function DataBase:get(key)
     if type(key) ~= self.__key_type then
-        error("DataBase: wrong key type.")
+        error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
     end
     return self[key]
 end

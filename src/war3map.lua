@@ -47,7 +47,7 @@ function RunInitialization()
 
     ---@type Ability
     local summon_abil = require('ability.warlord.summon')
-    Debug(type(summon_abil))
+    --Debug(type(summon_abil))
     --local rush_abil = require('ability.warlord.rush')
     u:addAbility(summon_abil:getId())
     --u:addAbility(rush_abil)

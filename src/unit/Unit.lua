@@ -7,10 +7,9 @@ local DataBase = require('utils.DataBase')
 
 ---@class Unit
 local Unit = {
-    __type = 'class Unit'
+    __type = 'Unit'
 }
 local Unit_meta = {
-    __type = 'Unit',
     __index = Unit,
     __gc = Unit.destroy
 }
@@ -19,8 +18,8 @@ local Unit_meta = {
 --setmetatable(s, {__type = 'a'})
 --print(type(s))
 
----wc3_Trigger -> Trigger
-local UnitDB = DataBase.new('userdata', type(Unit_meta))
+---wc3_Unit -> Unit
+local UnitDB = DataBase.new('userdata', type(Unit))
 
 ---@param self Unit
 ---@return string
