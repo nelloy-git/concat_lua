@@ -1,18 +1,26 @@
 ---@type UnitParameterContainer
 local ParameterContainer = require('unitParameter.UnitParameterContainer')
----@type UnitDB
-local UnitDB = require('unit.UnitDB')
-
-require('trigger.events.unitEvent')
+---@type DataBase
+local DataBase = require('utils.DataBase')
 
 ---@class UnitObject : userdata
 
 ---@class Unit
-local Unit = {}
+local Unit = {
+    __type = 'class Unit'
+}
 local Unit_meta = {
+    __type = 'Unit',
     __index = Unit,
     __gc = Unit.destroy
 }
+
+--local s = 'aaa'
+--setmetatable(s, {__type = 'a'})
+--print(type(s))
+
+---wc3_Trigger -> Trigger
+local UnitDB = DataBase.new('userdata', type(Unit_meta))
 
 ---@param self Unit
 ---@return string
@@ -41,7 +49,7 @@ function Unit.new(wc3_player, id, x, y, face, is_dead)
         __wc3_unit = wc3_unit
     }
     setmetatable(unit, Unit_meta)
-    UnitDB.add(unit.__wc3_unit, unit)
+    UnitDB:add(unit.__wc3_unit, unit)
 
     unit:initCustomData()
 
@@ -51,7 +59,7 @@ end
 function Unit:destroy()
     self:destroyCustomData()
 
-    UnitDB.rm(self.__wc3_unit)
+    UnitDB:rm(self.__wc3_unit)
     RemoveUnit(self.__wc3_unit)
     self.__wc3_unit = nil
 end
@@ -291,71 +299,71 @@ function Unit:unpause()
 end
 
 ---@return Unit
-function Unit.get(wc3_unit) return UnitDB.get(wc3_unit) end
+function Unit.get(wc3_unit) return UnitDB:get(wc3_unit) end
 ---@return Unit
-function Unit.GetLevelingUnit() return UnitDB.get(GetLevelingUnit()) end
+function Unit.GetLevelingUnit() return UnitDB:get(GetLevelingUnit()) end
 ---@return Unit
-function Unit.GetLearningUnit() return UnitDB.get(GetLearningUnit()) end
+function Unit.GetLearningUnit() return UnitDB:get(GetLearningUnit()) end
 ---@return Unit
-function Unit.GetRevivableUnit() return UnitDB.get(GetRevivableUnit()) end
+function Unit.GetRevivableUnit() return UnitDB:get(GetRevivableUnit()) end
 ---@return Unit
-function Unit.GetRevivingUnit() return UnitDB.get(GetRevivingUnit()) end
+function Unit.GetRevivingUnit() return UnitDB:get(GetRevivingUnit()) end
 ---@return Unit
-function Unit.GetAttacker() return UnitDB.get(GetAttacker()) end
+function Unit.GetAttacker() return UnitDB:get(GetAttacker()) end
 ---@return Unit
-function Unit.GetRescuer() return UnitDB.get(GetRescuer()) end
+function Unit.GetRescuer() return UnitDB:get(GetRescuer()) end
 ---@return Unit
-function Unit.GetDyingUnit() return UnitDB.get(GetDyingUnit()) end
+function Unit.GetDyingUnit() return UnitDB:get(GetDyingUnit()) end
 ---@return Unit
-function Unit.GetKillingUnit() return UnitDB.get(GetKillingUnit()) end
+function Unit.GetKillingUnit() return UnitDB:get(GetKillingUnit()) end
 ---@return Unit
-function Unit.GetDecayingUnit() return UnitDB.get(GetDecayingUnit()) end
+function Unit.GetDecayingUnit() return UnitDB:get(GetDecayingUnit()) end
 ---@return Unit
-function Unit.GetConstructingStructure() return UnitDB.get(GetConstructingStructure()) end
+function Unit.GetConstructingStructure() return UnitDB:get(GetConstructingStructure()) end
 ---@return Unit
-function Unit.GetCancelledStructure() return UnitDB.get(GetCancelledStructure()) end
+function Unit.GetCancelledStructure() return UnitDB:get(GetCancelledStructure()) end
 ---@return Unit
-function Unit.GetConstructedStructure() return UnitDB.get(GetConstructedStructure()) end
+function Unit.GetConstructedStructure() return UnitDB:get(GetConstructedStructure()) end
 ---@return Unit
-function Unit.GetResearchingUnit() return UnitDB.get(GetResearchingUnit()) end
+function Unit.GetResearchingUnit() return UnitDB:get(GetResearchingUnit()) end
 ---@return Unit
-function Unit.GetTrainedUnit() return UnitDB.get(GetTrainedUnit()) end
+function Unit.GetTrainedUnit() return UnitDB:get(GetTrainedUnit()) end
 ---@return Unit
-function Unit.GetDetectedUnit() return UnitDB.get(GetDetectedUnit()) end
+function Unit.GetDetectedUnit() return UnitDB:get(GetDetectedUnit()) end
 ---@return Unit
-function Unit.GetSummoningUnit() return UnitDB.get(GetSummoningUnit()) end
+function Unit.GetSummoningUnit() return UnitDB:get(GetSummoningUnit()) end
 ---@return Unit
-function Unit.GetSummonedUnit() return UnitDB.get(GetSummonedUnit()) end
+function Unit.GetSummonedUnit() return UnitDB:get(GetSummonedUnit()) end
 ---@return Unit
-function Unit.GetTransportUnit() return UnitDB.get(GetTransportUnit()) end
+function Unit.GetTransportUnit() return UnitDB:get(GetTransportUnit()) end
 ---@return Unit
-function Unit.GetLoadedUnit() return UnitDB.get(GetLoadedUnit()) end
+function Unit.GetLoadedUnit() return UnitDB:get(GetLoadedUnit()) end
 ---@return Unit
-function Unit.GetSellingUnit() return UnitDB.get(GetSellingUnit()) end
+function Unit.GetSellingUnit() return UnitDB:get(GetSellingUnit()) end
 ---@return Unit
-function Unit.GetSoldUnit() return UnitDB.get(GetSoldUnit()) end
+function Unit.GetSoldUnit() return UnitDB:get(GetSoldUnit()) end
 ---@return Unit
-function Unit.GetBuyingUnit() return UnitDB.get(GetBuyingUnit()) end
+function Unit.GetBuyingUnit() return UnitDB:get(GetBuyingUnit()) end
 ---@return Unit
-function Unit.GetChangingUnit() return UnitDB.get(GetChangingUnit()) end
+function Unit.GetChangingUnit() return UnitDB:get(GetChangingUnit()) end
 ---@return Unit
-function Unit.GetManipulatingUnit() return UnitDB.get(GetManipulatingUnit()) end
+function Unit.GetManipulatingUnit() return UnitDB:get(GetManipulatingUnit()) end
 ---@return Unit
-function Unit.GetOrderedUnit() return UnitDB.get(GetOrderedUnit()) end
+function Unit.GetOrderedUnit() return UnitDB:get(GetOrderedUnit()) end
 ---@return Unit
-function Unit.GetOrderTargetUnit() return UnitDB.get(GetOrderTargetUnit()) end
+function Unit.GetOrderTargetUnit() return UnitDB:get(GetOrderTargetUnit()) end
 ---@return Unit
-function Unit.GetSpellAbilityUnit() return UnitDB.get(GetSpellAbilityUnit()) end
+function Unit.GetSpellAbilityUnit() return UnitDB:get(GetSpellAbilityUnit()) end
 ---@return Unit
-function Unit.GetSpellTargetUnit() return UnitDB.get(GetSpellTargetUnit()) end
+function Unit.GetSpellTargetUnit() return UnitDB:get(GetSpellTargetUnit()) end
 ---@return Unit
-function Unit.GetTriggerUnit() return UnitDB.get(GetTriggerUnit()) end
+function Unit.GetTriggerUnit() return UnitDB:get(GetTriggerUnit()) end
 ---@return Unit
-function Unit.GetEventDamage() return UnitDB.get(GetEventDamage()) end
+function Unit.GetEventDamage() return UnitDB:get(GetEventDamage()) end
 ---@return Unit
-function Unit.GetEventDamageSource() return UnitDB.get(GetEventDamageSource()) end
+function Unit.GetEventDamageSource() return UnitDB:get(GetEventDamageSource()) end
 ---@return Unit
-function Unit.GetEventTargetUnit() return UnitDB.get(GetEventTargetUnit()) end
+function Unit.GetEventTargetUnit() return UnitDB:get(GetEventTargetUnit()) end
 --============================================================================
 -- Unit API
 --============================================================================

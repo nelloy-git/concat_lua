@@ -13,8 +13,8 @@ local initialized = false
 
 compiletime(function()
     local requirements = {}
-    if Settings.EnabledEvents.Unit then table.insert(requirements, require('trigger.events.unitEvent')) end
-    if Settings.EnabledEvents.Player then table.insert(requirements, require('trigger.events.playerEvent')) end
+    if Settings.EnabledEvents.Unit then table.insert(requirements, require('utils.trigger.events.UnitEvents')) end
+    if Settings.EnabledEvents.Player then table.insert(requirements, require('utils.trigger.events.PlayerEvents')) end
 end)
 
 
@@ -93,7 +93,6 @@ function ID(id)
     return nil
 end
 
-
 ---@Converts integer id to string id.
 ---@param id integer
 ---@return string
@@ -104,8 +103,6 @@ function ID2str(id)
     return id
 end
 
-
-
 ---If val < min returns min. If val > max returns max.
 ---@param val number
 ---@param min number
@@ -115,6 +112,14 @@ function torange(val, min, max)
     if val < min then return min end
     if val > max then return max end
     return val
+end
+
+local original_type = _G.type
+function type(val)
+    local lua_type = original_type(val)
+    if lua_type ~= 'table' then return lua_type end
+    if val.__type then return val.__type end
+    return 'table'
 end
 
 return Globals

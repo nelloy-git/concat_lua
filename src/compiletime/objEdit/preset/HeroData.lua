@@ -270,7 +270,7 @@ end
 ---@param base_id string|integer
 ---@return integer
 function HeroCompiletimeData:generate(base_id)
-    if not WeObjEdit then print('WeObjEdit module is not loaded.') return nil end
+    local WeObjEdit = require('compiletime.objEdit.objEdit')
 
     self["Id"] = WeObjEdit.Utils.nextHeroId()
     local hero = WeObjEdit.Unit.Hero.new(self["Id"], ID2str(ID(base_id)))

@@ -1,7 +1,7 @@
 ---@type Unit
 local Unit = require('unit.Unit')
 ---@type UnitEvent
-local UnitEvent = require('trigger.events.unitEvent')
+local UnitEvent = require('utils.trigger.events.UnitEvents')
 ---@type Ability
 local Ability = require('ability.Ability')
 ---@type SummonDB

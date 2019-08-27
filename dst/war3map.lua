@@ -6,1018 +6,8 @@
     end
     return __require_data.result[name]
   end
-__require_data.module["unit.HeroCompiletimeData"] = function()
-    local HeroCompiletimeData = {}
-    local HeroCompiletimeData_meta = {__index = HeroCompiletimeData}
-    function HeroCompiletimeData.new()
-      local data = {}
-      setmetatable(data, HeroCompiletimeData_meta)
-      return data
-    end
-    function HeroCompiletimeData:setField(name, value)
-      self[name] = value
-    end
-    function HeroCompiletimeData:getField(name)
-      return self[name]
-    end
-    function HeroCompiletimeData:generate(base_id)
-      if (not WeObjEdit) then
-        print("WeObjEdit module is not loaded.")
-        return nil
-      end
-      self.Id = WeObjEdit.Utils.nextHeroId()
-      local hero = WeObjEdit.Unit.Hero.new(self.Id, ID2str(ID(base_id)))
-      if (self.Name) then
-        hero:setName(self.Name)
-      end
-      if (self.TooltipExtended) then
-        hero:setTooltipExtended(self.TooltipExtended)
-      end
-      if (self.TooltipBasic) then
-        hero:setTooltipBasic(self.TooltipBasic)
-      end
-      if (self.RequirementsLevels) then
-        hero:setRequirementsLevels(self.RequirementsLevels)
-      end
-      if (self.Requirements) then
-        hero:setRequirements(self.Requirements)
-      end
-      if (self.Hotkey) then
-        hero:setHotkey(self.Hotkey)
-      end
-      if (self.Description) then
-        hero:setDescription(self.Description)
-      end
-      if (self.ButtonPositionY) then
-        hero:setButtonPositionY(self.ButtonPositionY)
-      end
-      if (self.ButtonPositionX) then
-        hero:setButtonPositionX(self.ButtonPositionX)
-      end
-      if (self.ItemsSold) then
-        hero:setItemsSold(self.ItemsSold)
-      end
-      if (self.UnitsSold) then
-        hero:setUnitsSold(self.UnitsSold)
-      end
-      if (self.HideMinimapDisplay) then
-        hero:setHideMinimapDisplay(self.HideMinimapDisplay)
-      end
-      if (self.UseExtendedLineofSight) then
-        hero:setUseExtendedLineofSight(self.UseExtendedLineofSight)
-      end
-      if (self.UseClickHelper) then
-        hero:setUseClickHelper(self.UseClickHelper)
-      end
-      if (self.UpgradesUsed) then
-        hero:setUpgradesUsed(self.UpgradesUsed)
-      end
-      if (self.UnitSoundSet) then
-        hero:setUnitSoundSet(self.UnitSoundSet)
-      end
-      if (self.UnitClassification) then
-        hero:setUnitClassification(self.UnitClassification)
-      end
-      if (self.MovementType) then
-        hero:setMovementType(self.MovementType)
-      end
-      if (self.TurnRate) then
-        hero:setTurnRate(self.TurnRate)
-      end
-      if (self.TintingColorBlue) then
-        hero:setTintingColorBlue(self.TintingColorBlue)
-      end
-      if (self.TintingColorGreen) then
-        hero:setTintingColorGreen(self.TintingColorGreen)
-      end
-      if (self.TintingColorRed) then
-        hero:setTintingColorRed(self.TintingColorRed)
-      end
-      if (self.Tilesets) then
-        hero:setTilesets(self.Tilesets)
-      end
-      if (self.TeamColor) then
-        hero:setTeamColor(self.TeamColor)
-      end
-      if (self.TargetedAs) then
-        hero:setTargetedAs(self.TargetedAs)
-      end
-      if (self.ArtTarget) then
-        hero:setArtTarget(self.ArtTarget)
-      end
-      if (self.StockStartDelay) then
-        hero:setStockStartDelay(self.StockStartDelay)
-      end
-      if (self.StockReplenishInterval) then
-        hero:setStockReplenishInterval(self.StockReplenishInterval)
-      end
-      if (self.StockMaximum) then
-        hero:setStockMaximum(self.StockMaximum)
-      end
-      if (self.SpeedMinimum) then
-        hero:setSpeedMinimum(self.SpeedMinimum)
-      end
-      if (self.SpeedMaximum) then
-        hero:setSpeedMaximum(self.SpeedMaximum)
-      end
-      if (self.SpeedBase) then
-        hero:setSpeedBase(self.SpeedBase)
-      end
-      if (self.ArtSpecial) then
-        hero:setArtSpecial(self.ArtSpecial)
-      end
-      if (self.Sleeps) then
-        hero:setSleeps(self.Sleeps)
-      end
-      if (self.SightRadiusNight) then
-        hero:setSightRadiusNight(self.SightRadiusNight)
-      end
-      if (self.SightRadiusDay) then
-        hero:setSightRadiusDay(self.SightRadiusDay)
-      end
-      if (self.ShadowTextureBuilding) then
-        hero:setShadowTextureBuilding(self.ShadowTextureBuilding)
-      end
-      if (self.ShadowImageWidth) then
-        hero:setShadowImageWidth(self.ShadowImageWidth)
-      end
-      if (self.ShadowImageUnit) then
-        hero:setShadowImageUnit(self.ShadowImageUnit)
-      end
-      if (self.ShadowImageHeight) then
-        hero:setShadowImageHeight(self.ShadowImageHeight)
-      end
-      if (self.ShadowImageCenterY) then
-        hero:setShadowImageCenterY(self.ShadowImageCenterY)
-      end
-      if (self.ShadowImageCenterX) then
-        hero:setShadowImageCenterX(self.ShadowImageCenterX)
-      end
-      if (self.SelectionScale) then
-        hero:setSelectionScale(self.SelectionScale)
-      end
-      if (self.SelectionCircleOnWater) then
-        hero:setSelectionCircleOnWater(self.SelectionCircleOnWater)
-      end
-      if (self.SelectionCircleHeight) then
-        hero:setSelectionCircleHeight(self.SelectionCircleHeight)
-      end
-      if (self.ScalingValue) then
-        hero:setScalingValue(self.ScalingValue)
-      end
-      if (self.ScaleProjectiles) then
-        hero:setScaleProjectiles(self.ScaleProjectiles)
-      end
-      if (self.RequiredBoneNames) then
-        hero:setRequiredBoneNames(self.RequiredBoneNames)
-      end
-      if (self.RequiredAttachmentLinkNames) then
-        hero:setRequiredAttachmentLinkNames(self.RequiredAttachmentLinkNames)
-      end
-      if (self.RequiredAnimationNamesAttachments) then
-        hero:setRequiredAnimationNamesAttachments(self.RequiredAnimationNamesAttachments)
-      end
-      if (self.RequiredAnimationNames) then
-        hero:setRequiredAnimationNames(self.RequiredAnimationNames)
-      end
-      if (self.RepairTime) then
-        hero:setRepairTime(self.RepairTime)
-      end
-      if (self.RepairLumberCost) then
-        hero:setRepairLumberCost(self.RepairLumberCost)
-      end
-      if (self.RepairGoldCost) then
-        hero:setRepairGoldCost(self.RepairGoldCost)
-      end
-      if (self.RandomSound) then
-        hero:setRandomSound(self.RandomSound)
-      end
-      if (self.Race) then
-        hero:setRace(self.Race)
-      end
-      if (self.PropulsionWindowdegrees) then
-        hero:setPropulsionWindowdegrees(self.PropulsionWindowdegrees)
-      end
-      if (self.ProjectileLaunchZSwimming) then
-        hero:setProjectileLaunchZSwimming(self.ProjectileLaunchZSwimming)
-      end
-      if (self.ProjectileLaunchZ) then
-        hero:setProjectileLaunchZ(self.ProjectileLaunchZ)
-      end
-      if (self.ProjectileLaunchY) then
-        hero:setProjectileLaunchY(self.ProjectileLaunchY)
-      end
-      if (self.ProjectileLaunchX) then
-        hero:setProjectileLaunchX(self.ProjectileLaunchX)
-      end
-      if (self.ProjectileImpactZSwimming) then
-        hero:setProjectileImpactZSwimming(self.ProjectileImpactZSwimming)
-      end
-      if (self.ProjectileImpactZ) then
-        hero:setProjectileImpactZ(self.ProjectileImpactZ)
-      end
-      if (self.Priority) then
-        hero:setPriority(self.Priority)
-      end
-      if (self.PointValue) then
-        hero:setPointValue(self.PointValue)
-      end
-      if (self.PlaceableInEditor) then
-        hero:setPlaceableInEditor(self.PlaceableInEditor)
-      end
-      if (self.OrientationInterpolation) then
-        hero:setOrientationInterpolation(self.OrientationInterpolation)
-      end
-      if (self.OccluderHeight) then
-        hero:setOccluderHeight(self.OccluderHeight)
-      end
-      if (self.NormalAbilities) then
-        hero:setNormalAbilities(self.NormalAbilities)
-      end
-      if (self.NameEditorSuffix) then
-        hero:setNameEditorSuffix(self.NameEditorSuffix)
-      end
-      if (self.MovementSound) then
-        hero:setMovementSound(self.MovementSound)
-      end
-      if (self.ModelFileExtraVersions) then
-        hero:setModelFileExtraVersions(self.ModelFileExtraVersions)
-      end
-      if (self.ModelFile) then
-        hero:setModelFile(self.ModelFile)
-      end
-      if (self.MinimumAttackRange) then
-        hero:setMinimumAttackRange(self.MinimumAttackRange)
-      end
-      if (self.MaximumRollAngledegrees) then
-        hero:setMaximumRollAngledegrees(self.MaximumRollAngledegrees)
-      end
-      if (self.MaximumPitchAngledegrees) then
-        hero:setMaximumPitchAngledegrees(self.MaximumPitchAngledegrees)
-      end
-      if (self.ManaRegeneration) then
-        hero:setManaRegeneration(self.ManaRegeneration)
-      end
-      if (self.ManaMaximum) then
-        hero:setManaMaximum(self.ManaMaximum)
-      end
-      if (self.ManaInitialAmount) then
-        hero:setManaInitialAmount(self.ManaInitialAmount)
-      end
-      if (self.LumberCost) then
-        hero:setLumberCost(self.LumberCost)
-      end
-      if (self.SoundLoopingFadeOutRate) then
-        hero:setSoundLoopingFadeOutRate(self.SoundLoopingFadeOutRate)
-      end
-      if (self.SoundLoopingFadeInRate) then
-        hero:setSoundLoopingFadeInRate(self.SoundLoopingFadeInRate)
-      end
-      if (self.IsaBuilding) then
-        hero:setIsaBuilding(self.IsaBuilding)
-      end
-      if (self.IconScoreScreen) then
-        hero:setIconScoreScreen(self.IconScoreScreen)
-      end
-      if (self.IconGameInterface) then
-        hero:setIconGameInterface(self.IconGameInterface)
-      end
-      if (self.HitPointsRegenerationType) then
-        hero:setHitPointsRegenerationType(self.HitPointsRegenerationType)
-      end
-      if (self.HitPointsRegenerationRate) then
-        hero:setHitPointsRegenerationRate(self.HitPointsRegenerationRate)
-      end
-      if (self.HitPointsMaximumBase) then
-        hero:setHitPointsMaximumBase(self.HitPointsMaximumBase)
-      end
-      if (self.MovementHeightMinimum) then
-        hero:setMovementHeightMinimum(self.MovementHeightMinimum)
-      end
-      if (self.MovementHeight) then
-        hero:setMovementHeight(self.MovementHeight)
-      end
-      if (self.HasWaterShadow) then
-        hero:setHasWaterShadow(self.HasWaterShadow)
-      end
-      if (self.HasTilesetSpecificData) then
-        hero:setHasTilesetSpecificData(self.HasTilesetSpecificData)
-      end
-      if (self.GoldCost) then
-        hero:setGoldCost(self.GoldCost)
-      end
-      if (self.GoldBountyAwardedSidesperDie) then
-        hero:setGoldBountyAwardedSidesperDie(self.GoldBountyAwardedSidesperDie)
-      end
-      if (self.GoldBountyAwardedbooleanofDice) then
-        hero:setGoldBountyAwardedbooleanofDice(self.GoldBountyAwardedbooleanofDice)
-      end
-      if (self.GoldBountyAwardedBase) then
-        hero:setGoldBountyAwardedBase(self.GoldBountyAwardedBase)
-      end
-      if (self.LumberBountyAwardedSidesperDie) then
-        hero:setLumberBountyAwardedSidesperDie(self.LumberBountyAwardedSidesperDie)
-      end
-      if (self.LumberBountyAwardedbooleanofDice) then
-        hero:setLumberBountyAwardedbooleanofDice(self.LumberBountyAwardedbooleanofDice)
-      end
-      if (self.LumberBountyAwardedBase) then
-        hero:setLumberBountyAwardedBase(self.LumberBountyAwardedBase)
-      end
-      if (self.FoodProduced) then
-        hero:setFoodProduced(self.FoodProduced)
-      end
-      if (self.FoodCost) then
-        hero:setFoodCost(self.FoodCost)
-      end
-      if (self.FogOfWarSampleRadius) then
-        hero:setFogOfWarSampleRadius(self.FogOfWarSampleRadius)
-      end
-      if (self.ElevationSampleRadius) then
-        hero:setElevationSampleRadius(self.ElevationSampleRadius)
-      end
-      if (self.ElevationSamplePoints) then
-        hero:setElevationSamplePoints(self.ElevationSamplePoints)
-      end
-      if (self.DisplayasNeutralHostile) then
-        hero:setDisplayasNeutralHostile(self.DisplayasNeutralHostile)
-      end
-      if (self.DependencyEquivalents) then
-        hero:setDependencyEquivalents(self.DependencyEquivalents)
-      end
-      if (self.DefenseUpgradeBonus) then
-        hero:setDefenseUpgradeBonus(self.DefenseUpgradeBonus)
-      end
-      if (self.ArmorType) then
-        hero:setArmorType(self.ArmorType)
-      end
-      if (self.DefenseBase) then
-        hero:setDefenseBase(self.DefenseBase)
-      end
-      if (self.DefaultActiveAbility) then
-        hero:setDefaultActiveAbility(self.DefaultActiveAbility)
-      end
-      if (self.DeathType) then
-        hero:setDeathType(self.DeathType)
-      end
-      if (self.DeathTimeseconds) then
-        hero:setDeathTimeseconds(self.DeathTimeseconds)
-      end
-      if (self.CollisionSize) then
-        hero:setCollisionSize(self.CollisionSize)
-      end
-      if (self.CategorizationSpecial) then
-        hero:setCategorizationSpecial(self.CategorizationSpecial)
-      end
-      if (self.CategorizationCampaign) then
-        hero:setCategorizationCampaign(self.CategorizationCampaign)
-      end
-      if (self.CanFlee) then
-        hero:setCanFlee(self.CanFlee)
-      end
-      if (self.CanDropItemsOnDeath) then
-        hero:setCanDropItemsOnDeath(self.CanDropItemsOnDeath)
-      end
-      if (self.BuildTime) then
-        hero:setBuildTime(self.BuildTime)
-      end
-      if (self.AttacksEnabled) then
-        hero:setAttacksEnabled(self.AttacksEnabled)
-      end
-      if (self.Attack2WeaponType) then
-        hero:setAttack2WeaponType(self.Attack2WeaponType)
-      end
-      if (self.Attack2WeaponSound) then
-        hero:setAttack2WeaponSound(self.Attack2WeaponSound)
-      end
-      if (self.Attack2TargetsAllowed) then
-        hero:setAttack2TargetsAllowed(self.Attack2TargetsAllowed)
-      end
-      if (self.Attack2ShowUI) then
-        hero:setAttack2ShowUI(self.Attack2ShowUI)
-      end
-      if (self.Attack2RangeMotionBuffer) then
-        hero:setAttack2RangeMotionBuffer(self.Attack2RangeMotionBuffer)
-      end
-      if (self.Attack2Range) then
-        hero:setAttack2Range(self.Attack2Range)
-      end
-      if (self.Attack2ProjectileSpeed) then
-        hero:setAttack2ProjectileSpeed(self.Attack2ProjectileSpeed)
-      end
-      if (self.Attack2ProjectileHomingEnabled) then
-        hero:setAttack2ProjectileHomingEnabled(self.Attack2ProjectileHomingEnabled)
-      end
-      if (self.Attack2ProjectileArt) then
-        hero:setAttack2ProjectileArt(self.Attack2ProjectileArt)
-      end
-      if (self.Attack2ProjectileArc) then
-        hero:setAttack2ProjectileArc(self.Attack2ProjectileArc)
-      end
-      if (self.Attack2MaximumbooleanofTargets) then
-        hero:setAttack2MaximumbooleanofTargets(self.Attack2MaximumbooleanofTargets)
-      end
-      if (self.Attack2DamageUpgradeAmount) then
-        hero:setAttack2DamageUpgradeAmount(self.Attack2DamageUpgradeAmount)
-      end
-      if (self.Attack2DamageSpillRadius) then
-        hero:setAttack2DamageSpillRadius(self.Attack2DamageSpillRadius)
-      end
-      if (self.Attack2DamageSpillDistance) then
-        hero:setAttack2DamageSpillDistance(self.Attack2DamageSpillDistance)
-      end
-      if (self.Attack2DamageSidesperDie) then
-        hero:setAttack2DamageSidesperDie(self.Attack2DamageSidesperDie)
-      end
-      if (self.Attack2DamagebooleanofDice) then
-        hero:setAttack2DamagebooleanofDice(self.Attack2DamagebooleanofDice)
-      end
-      if (self.Attack2DamageLossFactor) then
-        hero:setAttack2DamageLossFactor(self.Attack2DamageLossFactor)
-      end
-      if (self.Attack2DamageFactorSmall) then
-        hero:setAttack2DamageFactorSmall(self.Attack2DamageFactorSmall)
-      end
-      if (self.Attack2DamageFactorMedium) then
-        hero:setAttack2DamageFactorMedium(self.Attack2DamageFactorMedium)
-      end
-      if (self.Attack2DamageBase) then
-        hero:setAttack2DamageBase(self.Attack2DamageBase)
-      end
-      if (self.Attack2CooldownTime) then
-        hero:setAttack2CooldownTime(self.Attack2CooldownTime)
-      end
-      if (self.Attack2AttackType) then
-        hero:setAttack2AttackType(self.Attack2AttackType)
-      end
-      if (self.Attack2AreaofEffectTargets) then
-        hero:setAttack2AreaofEffectTargets(self.Attack2AreaofEffectTargets)
-      end
-      if (self.Attack2AreaofEffectSmallDamage) then
-        hero:setAttack2AreaofEffectSmallDamage(self.Attack2AreaofEffectSmallDamage)
-      end
-      if (self.Attack2AreaofEffectMediumDamage) then
-        hero:setAttack2AreaofEffectMediumDamage(self.Attack2AreaofEffectMediumDamage)
-      end
-      if (self.Attack2AreaofEffectFullDamage) then
-        hero:setAttack2AreaofEffectFullDamage(self.Attack2AreaofEffectFullDamage)
-      end
-      if (self.Attack2AnimationDamagePoint) then
-        hero:setAttack2AnimationDamagePoint(self.Attack2AnimationDamagePoint)
-      end
-      if (self.Attack2AnimationBackswingPoint) then
-        hero:setAttack2AnimationBackswingPoint(self.Attack2AnimationBackswingPoint)
-      end
-      if (self.Attack1WeaponType) then
-        hero:setAttack1WeaponType(self.Attack1WeaponType)
-      end
-      if (self.Attack1WeaponSound) then
-        hero:setAttack1WeaponSound(self.Attack1WeaponSound)
-      end
-      if (self.Attack1TargetsAllowed) then
-        hero:setAttack1TargetsAllowed(self.Attack1TargetsAllowed)
-      end
-      if (self.Attack1ShowUI) then
-        hero:setAttack1ShowUI(self.Attack1ShowUI)
-      end
-      if (self.Attack1RangeMotionBuffer) then
-        hero:setAttack1RangeMotionBuffer(self.Attack1RangeMotionBuffer)
-      end
-      if (self.Attack1Range) then
-        hero:setAttack1Range(self.Attack1Range)
-      end
-      if (self.Attack1ProjectileSpeed) then
-        hero:setAttack1ProjectileSpeed(self.Attack1ProjectileSpeed)
-      end
-      if (self.Attack1ProjectileHomingEnabled) then
-        hero:setAttack1ProjectileHomingEnabled(self.Attack1ProjectileHomingEnabled)
-      end
-      if (self.Attack1ProjectileArt) then
-        hero:setAttack1ProjectileArt(self.Attack1ProjectileArt)
-      end
-      if (self.Attack1ProjectileArc) then
-        hero:setAttack1ProjectileArc(self.Attack1ProjectileArc)
-      end
-      if (self.Attack1MaximumbooleanofTargets) then
-        hero:setAttack1MaximumbooleanofTargets(self.Attack1MaximumbooleanofTargets)
-      end
-      if (self.Attack1DamageUpgradeAmount) then
-        hero:setAttack1DamageUpgradeAmount(self.Attack1DamageUpgradeAmount)
-      end
-      if (self.Attack1DamageSpillRadius) then
-        hero:setAttack1DamageSpillRadius(self.Attack1DamageSpillRadius)
-      end
-      if (self.Attack1DamageSpillDistance) then
-        hero:setAttack1DamageSpillDistance(self.Attack1DamageSpillDistance)
-      end
-      if (self.Attack1DamageSidesperDie) then
-        hero:setAttack1DamageSidesperDie(self.Attack1DamageSidesperDie)
-      end
-      if (self.Attack1DamagebooleanofDice) then
-        hero:setAttack1DamagebooleanofDice(self.Attack1DamagebooleanofDice)
-      end
-      if (self.Attack1DamageLossFactor) then
-        hero:setAttack1DamageLossFactor(self.Attack1DamageLossFactor)
-      end
-      if (self.Attack1DamageFactorSmall) then
-        hero:setAttack1DamageFactorSmall(self.Attack1DamageFactorSmall)
-      end
-      if (self.Attack1DamageFactorMedium) then
-        hero:setAttack1DamageFactorMedium(self.Attack1DamageFactorMedium)
-      end
-      if (self.Attack1DamageBase) then
-        hero:setAttack1DamageBase(self.Attack1DamageBase)
-      end
-      if (self.Attack1CooldownTime) then
-        hero:setAttack1CooldownTime(self.Attack1CooldownTime)
-      end
-      if (self.Attack1AttackType) then
-        hero:setAttack1AttackType(self.Attack1AttackType)
-      end
-      if (self.Attack1AreaofEffectTargets) then
-        hero:setAttack1AreaofEffectTargets(self.Attack1AreaofEffectTargets)
-      end
-      if (self.Attack1AreaofEffectSmallDamage) then
-        hero:setAttack1AreaofEffectSmallDamage(self.Attack1AreaofEffectSmallDamage)
-      end
-      if (self.Attack1AreaofEffectMediumDamage) then
-        hero:setAttack1AreaofEffectMediumDamage(self.Attack1AreaofEffectMediumDamage)
-      end
-      if (self.Attack1AreaofEffectFullDamage) then
-        hero:setAttack1AreaofEffectFullDamage(self.Attack1AreaofEffectFullDamage)
-      end
-      if (self.Attack1AnimationDamagePoint) then
-        hero:setAttack1AnimationDamagePoint(self.Attack1AnimationDamagePoint)
-      end
-      if (self.Attack1AnimationBackswingPoint) then
-        hero:setAttack1AnimationBackswingPoint(self.Attack1AnimationBackswingPoint)
-      end
-      if (self.ArmorSoundType) then
-        hero:setArmorSoundType(self.ArmorSoundType)
-      end
-      if (self.AnimationWalkSpeed) then
-        hero:setAnimationWalkSpeed(self.AnimationWalkSpeed)
-      end
-      if (self.AnimationRunSpeed) then
-        hero:setAnimationRunSpeed(self.AnimationRunSpeed)
-      end
-      if (self.AnimationCastPoint) then
-        hero:setAnimationCastPoint(self.AnimationCastPoint)
-      end
-      if (self.AnimationCastBackswing) then
-        hero:setAnimationCastBackswing(self.AnimationCastBackswing)
-      end
-      if (self.AnimationBlendTimeseconds) then
-        hero:setAnimationBlendTimeseconds(self.AnimationBlendTimeseconds)
-      end
-      if (self.AllowCustomTeamColor) then
-        hero:setAllowCustomTeamColor(self.AllowCustomTeamColor)
-      end
-      if (self.AIPlacementType) then
-        hero:setAIPlacementType(self.AIPlacementType)
-      end
-      if (self.AIPlacementRadius) then
-        hero:setAIPlacementRadius(self.AIPlacementRadius)
-      end
-      if (self.TransportedSize) then
-        hero:setTransportedSize(self.TransportedSize)
-      end
-      if (self.Level) then
-        hero:setLevel(self.Level)
-      end
-      if (self.GroupSeparationPriority) then
-        hero:setGroupSeparationPriority(self.GroupSeparationPriority)
-      end
-      if (self.GroupSeparationParameter) then
-        hero:setGroupSeparationParameter(self.GroupSeparationParameter)
-      end
-      if (self.GroupSeparationGroupNumber) then
-        hero:setGroupSeparationGroupNumber(self.GroupSeparationGroupNumber)
-      end
-      if (self.GroupSeparationEnabled) then
-        hero:setGroupSeparationEnabled(self.GroupSeparationEnabled)
-      end
-      if (self.FormationRank) then
-        hero:setFormationRank(self.FormationRank)
-      end
-      if (self.StructuresBuilt) then
-        hero:setStructuresBuilt(self.StructuresBuilt)
-      end
-      if (self.HideHeroDeathMsg) then
-        hero:setHideHeroDeathMsg(self.HideHeroDeathMsg)
-      end
-      if (self.HideHeroInterfaceIcon) then
-        hero:setHideHeroInterfaceIcon(self.HideHeroInterfaceIcon)
-      end
-      if (self.HideHeroMinimapDisplay) then
-        hero:setHideHeroMinimapDisplay(self.HideHeroMinimapDisplay)
-      end
-      if (self.TooltipRevive) then
-        hero:setTooltipRevive(self.TooltipRevive)
-      end
-      if (self.TooltipAwaken) then
-        hero:setTooltipAwaken(self.TooltipAwaken)
-      end
-      if (self.StrengthPerLevel) then
-        hero:setStrengthPerLevel(self.StrengthPerLevel)
-      end
-      if (self.StartingStrength) then
-        hero:setStartingStrength(self.StartingStrength)
-      end
-      if (self.StartingIntelligence) then
-        hero:setStartingIntelligence(self.StartingIntelligence)
-      end
-      if (self.StartingAgility) then
-        hero:setStartingAgility(self.StartingAgility)
-      end
-      if (self.ProperNamesUsed) then
-        hero:setProperNamesUsed(self.ProperNamesUsed)
-      end
-      if (self.ProperNames) then
-        hero:setProperNames(self.ProperNames)
-      end
-      if (self.PrimaryAttribute) then
-        hero:setPrimaryAttribute(self.PrimaryAttribute)
-      end
-      if (self.IntelligencePerLevel) then
-        hero:setIntelligencePerLevel(self.IntelligencePerLevel)
-      end
-      if (self.HeroRevivalLocations) then
-        hero:setHeroRevivalLocations(self.HeroRevivalLocations)
-      end
-      if (self.HeroAbilities) then
-        hero:setHeroAbilities(self.HeroAbilities)
-      end
-      if (self.AgilityPerLevel) then
-        hero:setAgilityPerLevel(self.AgilityPerLevel)
-      end
-      if (self.RequierementsForTier1) then
-        hero:setRequierementsForTier1(self.RequierementsForTier1)
-      end
-      if (self.RequierementsForTier2) then
-        hero:setRequierementsForTier2(self.RequierementsForTier2)
-      end
-      if (self.RequierementsForTier3) then
-        hero:setRequierementsForTier3(self.RequierementsForTier3)
-      end
-      if (self.RequierementsForTier4) then
-        hero:setRequierementsForTier4(self.RequierementsForTier4)
-      end
-      if (self.RequierementsForTier5) then
-        hero:setRequierementsForTier5(self.RequierementsForTier5)
-      end
-      if (self.RequierementsForTier6) then
-        hero:setRequierementsForTier6(self.RequierementsForTier6)
-      end
-      if (self.RequierementsForTier7) then
-        hero:setRequierementsForTier7(self.RequierementsForTier7)
-      end
-      if (self.RequierementsForTier8) then
-        hero:setRequierementsForTier8(self.RequierementsForTier8)
-      end
-      if (self.RequierementsForTier9) then
-        hero:setRequierementsForTier9(self.RequierementsForTier9)
-      end
-      if (self.UpgradesTo) then
-        hero:setUpgradesTo(self.UpgradesTo)
-      end
-      if (self.UnitsTrained) then
-        hero:setUnitsTrained(self.UnitsTrained)
-      end
-      if (self.RevivesDeadHeros) then
-        hero:setRevivesDeadHeros(self.RevivesDeadHeros)
-      end
-      if (self.ResearchesAvailable) then
-        hero:setResearchesAvailable(self.ResearchesAvailable)
-      end
-      if (self.PlacementRequiresWaterRadius) then
-        hero:setPlacementRequiresWaterRadius(self.PlacementRequiresWaterRadius)
-      end
-      if (self.PlacementRequires) then
-        hero:setPlacementRequires(self.PlacementRequires)
-      end
-      if (self.PlacementPreventedBy) then
-        hero:setPlacementPreventedBy(self.PlacementPreventedBy)
-      end
-      if (self.PathingMap) then
-        hero:setPathingMap(self.PathingMap)
-      end
-      if (self.NeutralBuildingValidAsRandomBuilding) then
-        hero:setNeutralBuildingValidAsRandomBuilding(self.NeutralBuildingValidAsRandomBuilding)
-      end
-      if (self.NeutralBuildingShowsMinimapIcon) then
-        hero:setNeutralBuildingShowsMinimapIcon(self.NeutralBuildingShowsMinimapIcon)
-      end
-      if (self.ItemsMade) then
-        hero:setItemsMade(self.ItemsMade)
-      end
-      if (self.GroundTexture) then
-        hero:setGroundTexture(self.GroundTexture)
-      end
-      if (self.ConstructionSound) then
-        hero:setConstructionSound(self.ConstructionSound)
-      end
-      if (self.TooltipRevive) then
-        hero:setTooltipRevive(self.TooltipRevive)
-      end
-      if (self.TooltipAwaken) then
-        hero:setTooltipAwaken(self.TooltipAwaken)
-      end
-      if (self.StrengthPerLevel) then
-        hero:setStrengthPerLevel(self.StrengthPerLevel)
-      end
-      if (self.StartingStrength) then
-        hero:setStartingStrength(self.StartingStrength)
-      end
-      if (self.StartingIntelligence) then
-        hero:setStartingIntelligence(self.StartingIntelligence)
-      end
-      if (self.StartingAgility) then
-        hero:setStartingAgility(self.StartingAgility)
-      end
-      if (self.ProperNamesUsed) then
-        hero:setProperNamesUsed(self.ProperNamesUsed)
-      end
-      if (self.ProperNames) then
-        hero:setProperNames(self.ProperNames)
-      end
-      if (self.PrimaryAttribute) then
-        hero:setPrimaryAttribute(self.PrimaryAttribute)
-      end
-      if (self.IntelligencePerLevel) then
-        hero:setIntelligencePerLevel(self.IntelligencePerLevel)
-      end
-      if (self.HeroRevivalLocations) then
-        hero:setHeroRevivalLocations(self.HeroRevivalLocations)
-      end
-      if (self.HeroAbilities) then
-        hero:setHeroAbilities(self.HeroAbilities)
-      end
-      if (self.AgilityPerLevel) then
-        hero:setAgilityPerLevel(self.AgilityPerLevel)
-      end
-    end
-    return HeroCompiletimeData
-end
-__require_data.module["ability.ChannelCompiletimeData"] = function()
-    local ChannelCompiletimeData = {}
-    local ChannelCompiletimeData_meta = {__index = ChannelCompiletimeData}
-    ChannelCompiletimeData.option = {is_visible = 1, is_areaTarget = 2, is_matereal = 4, is_universal = 8, is_group = 16}
-    function ChannelCompiletimeData.new()
-      local data = {}
-      setmetatable(data, ChannelCompiletimeData_meta)
-      return data
-    end
-    function ChannelCompiletimeData:setField(name, value)
-      self[name] = value
-    end
-    function ChannelCompiletimeData:getField(name)
-      return self[name]
-    end
-    function ChannelCompiletimeData:generate()
-      if (not WeObjEdit) then
-        print("WeObjEdit module is not loaded.")
-        return nil
-      end
-      self.Id = WeObjEdit.Utils.nextAbilId()
-      self.OrderId = WeObjEdit.Utils.nextOrderId()
-      local abil = WeObjEdit.Ability.Channel.new(self.Id)
-      local max_lvl = 1
-      if (self.Levels) then
-        max_lvl = self.Levels
-      end
-      abil:setLevels(max_lvl)
-      if (self.Name) then
-        abil:setName(self.Name)
-      end
-      if (self.EditorSuffix) then
-        abil:setEditorSuffix(self.EditorSuffix)
-      end
-      if (self.HeroAbility) then
-        abil:setHeroAbility(self.HeroAbility)
-      end
-      if (self.ItemAbility) then
-        abil:setItemAbility(self.ItemAbility)
-      end
-      if (self.Race) then
-        abil:setRace(self.Race)
-      end
-      if (self.ButtonPositionNormalX) then
-        abil:setButtonPositionNormalX(self.ButtonPositionNormalX)
-      end
-      if (self.ButtonPositionNormalY) then
-        abil:setButtonPositionNormalY(self.ButtonPositionNormalY)
-      end
-      if (self.ButtonPositionTurnOffX) then
-        abil:setButtonPositionTurnOffX(self.ButtonPositionTurnOffX)
-      end
-      if (self.ButtonPositionTurnOffY) then
-        abil:setButtonPositionTurnOffY(self.ButtonPositionTurnOffY)
-      end
-      if (self.ButtonPositionResearchX) then
-        abil:setButtonPositionResearchX(self.ButtonPositionResearchX)
-      end
-      if (self.ButtonPositionResearchY) then
-        abil:setButtonPositionResearchY(self.ButtonPositionResearchY)
-      end
-      if (self.IconNormal) then
-        abil:setIconNormal(self.IconNormal)
-      end
-      if (self.IconTurnOff) then
-        abil:setIconTurnOff(self.IconTurnOff)
-      end
-      if (self.IconResearch) then
-        abil:setIconResearch(self.IconResearch)
-      end
-      if (self.ArtCaster) then
-        abil:setArtCaster(self.ArtCaster)
-      end
-      if (self.ArtTarget) then
-        abil:setArtTarget(self.ArtTarget)
-      end
-      if (self.ArtSpecial) then
-        abil:setArtSpecial(self.ArtSpecial)
-      end
-      if (self.ArtEffect) then
-        abil:setArtEffect(self.ArtEffect)
-      end
-      if (self.AreaEffect) then
-        abil:setAreaEffect(self.AreaEffect)
-      end
-      if (self.LightningEffects) then
-        abil:setLightningEffects(self.LightningEffects)
-      end
-      if (self.MissileArt) then
-        abil:setMissileArt(self.MissileArt)
-      end
-      if (self.MissileSpeed) then
-        abil:setMissileSpeed(self.MissileSpeed)
-      end
-      if (self.MissileArc) then
-        abil:setMissileArc(self.MissileArc)
-      end
-      if (self.MissileHomingEnabled) then
-        abil:setMissileHomingEnabled(self.MissileHomingEnabled)
-      end
-      if (self.TargetAttachments) then
-        abil:setTargetAttachments(self.TargetAttachments)
-      end
-      if (self.TargetAttachmentPoint) then
-        abil:setTargetAttachmentPoint(self.TargetAttachmentPoint)
-      end
-      if (self.TargetAttachmentPoint1) then
-        abil:setTargetAttachmentPoint1(self.TargetAttachmentPoint1)
-      end
-      if (self.TargetAttachmentPoint2) then
-        abil:setTargetAttachmentPoint2(self.TargetAttachmentPoint2)
-      end
-      if (self.TargetAttachmentPoint3) then
-        abil:setTargetAttachmentPoint3(self.TargetAttachmentPoint3)
-      end
-      if (self.TargetAttachmentPoint4) then
-        abil:setTargetAttachmentPoint4(self.TargetAttachmentPoint4)
-      end
-      if (self.TargetAttachmentPoint5) then
-        abil:setTargetAttachmentPoint5(self.TargetAttachmentPoint5)
-      end
-      if (self.CasterAttachments) then
-        abil:setCasterAttachments(self.CasterAttachments)
-      end
-      if (self.CasterAttachmentPoint) then
-        abil:setCasterAttachmentPoint(self.CasterAttachmentPoint)
-      end
-      if (self.CasterAttachmentPoint1) then
-        abil:setCasterAttachmentPoint1(self.CasterAttachmentPoint1)
-      end
-      if (self.SpecialAttachmentPoint) then
-        abil:setSpecialAttachmentPoint(self.SpecialAttachmentPoint)
-      end
-      if (self.AnimationNames) then
-        abil:setAnimationNames(self.AnimationNames)
-      end
-      if (self.TooltipLearn) then
-        abil:setTooltipLearn(self.TooltipLearn)
-      end
-      if (self.TooltipLearnExtended) then
-        abil:setTooltipLearnExtended(self.TooltipLearnExtended)
-      end
-      if (self.HotkeyLearn) then
-        abil:setHotkeyLearn(self.HotkeyLearn)
-      end
-      if (self.HotkeyNormal) then
-        abil:setHotkeyNormal(self.HotkeyNormal)
-      end
-      if (self.HotkeyTurnOff) then
-        abil:setHotkeyTurnOff(self.HotkeyTurnOff)
-      end
-      if (self.Requirements) then
-        abil:setRequirements(self.Requirements)
-      end
-      if (self.RequirementsLevels) then
-        abil:setRequirementsLevels(self.RequirementsLevels)
-      end
-      if (self.CheckDependencies) then
-        abil:setCheckDependencies(self.CheckDependencies)
-      end
-      if (self.PriorityforSpellSteal) then
-        abil:setPriorityforSpellSteal(self.PriorityforSpellSteal)
-      end
-      if (self.OrderStringUseTurnOn) then
-        abil:setOrderStringUseTurnOn(self.OrderStringUseTurnOn)
-      end
-      if (self.OrderStringTurnOff) then
-        abil:setOrderStringTurnOff(self.OrderStringTurnOff)
-      end
-      if (self.OrderStringActivate) then
-        abil:setOrderStringActivate(self.OrderStringActivate)
-      end
-      if (self.OrderStringDeactivate) then
-        abil:setOrderStringDeactivate(self.OrderStringDeactivate)
-      end
-      if (self.EffectSound) then
-        abil:setEffectSound(self.EffectSound)
-      end
-      if (self.EffectSoundLooping) then
-        abil:setEffectSoundLooping(self.EffectSoundLooping)
-      end
-      if (self.Levels) then
-        abil:setLevels(self.Levels)
-      end
-      if (self.RequiredLevel) then
-        abil:setRequiredLevel(self.RequiredLevel)
-      end
-      if (self.LevelSkipRequirement) then
-        abil:setLevelSkipRequirement(self.LevelSkipRequirement)
-      end
-      for lvl = 1, max_lvl do
-        abil:setBaseOrderID(self.OrderId, lvl)
-        if (self.TooltipNormal) then
-          abil:setTooltipNormal(self.TooltipNormal, lvl)
-        end
-        if (self.TooltipTurnOff) then
-          abil:setTooltipTurnOff(self.TooltipTurnOff, lvl)
-        end
-        if (self.TooltipNormalExtended) then
-          abil:setTooltipNormalExtended(self.TooltipNormalExtended, lvl)
-        end
-        if (self.TooltipTurnOffExtended) then
-          abil:setTooltipTurnOffExtended(self.TooltipTurnOffExtended, lvl)
-        end
-        if (self.TargetsAllowed) then
-          abil:setTargetsAllowed(self.TargetsAllowed, lvl)
-        end
-        if (self.CastingTime) then
-          abil:setCastingTime(self.CastingTime, lvl)
-        end
-        if (self.DurationNormal) then
-          abil:setDurationNormal(self.DurationNormal, lvl)
-        end
-        if (self.DurationHero) then
-          abil:setDurationHero(self.DurationHero, lvl)
-        end
-        if (self.Cooldown) then
-          abil:setCooldown(self.Cooldown, lvl)
-        end
-        if (self.ManaCost) then
-          abil:setManaCost(self.ManaCost, lvl)
-        end
-        if (self.AreaofEffect) then
-          abil:setAreaofEffect(self.AreaofEffect, lvl)
-        end
-        if (self.CastRange) then
-          abil:setCastRange(self.CastRange, lvl)
-        end
-        if (self.Buffs) then
-          abil:setBuffs(self.Buffs, lvl)
-        end
-        if (self.Effects) then
-          abil:setEffects(self.Effects, lvl)
-        end
-        if (self.ArtDuration) then
-          abil:setArtDuration(self.ArtDuration, lvl)
-        end
-        if (self.BaseOrderID) then
-          abil:setBaseOrderID(self.BaseOrderID, lvl)
-        end
-        if (self.DisableOtherAbilities) then
-          abil:setDisableOtherAbilities(self.DisableOtherAbilities, lvl)
-        end
-        if (self.FollowThroughTime) then
-          abil:setFollowThroughTime(self.FollowThroughTime, lvl)
-        end
-        if (self.TargetType) then
-          abil:setTargetType(self.TargetType, lvl)
-        end
-        if (self.Options) then
-          abil:setOptions(self.Options, lvl)
-        end
-      end
-      return self.Id
-    end
-    return ChannelCompiletimeData
-end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SpearmanUnit = {NormalAbilities = "Avul,Aloc", SpeedBase = 1, HideHeroInterfaceIcon = true, Name = "Spearman", Id = "HM#$", HideHeroMinimapDisplay = true, CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroDeathMsg = true}, SummonSpearman = {ArtEffect = "", CastingTime = 0, ArtTarget = "", Options = 3, Name = "Summon spearman", OrderId = "acidbomb", TooltipNormal = "Summon spearman", FollowThroughTime = 0, Id = "AM#'", CustomCastingTime = 1, DisableOtherAbilities = false, CastRange = 500, TooltipNormalExtended = "Summons invulnerale spirit warrior.", Cooldown = 0, Levels = 1, ArtSpecial = "", AreaofEffect = 150, ArtCaster = "", HotkeyNormal = "X", TargetType = "point"}}
+    local WarlordSettings = {SpearmanUnit = {Id = "HM#$", NormalAbilities = "Avul,Aloc", HideHeroDeathMsg = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx", Name = "Spearman", CollisionSize = 0, HideHeroInterfaceIcon = true, SpeedBase = 1, HideHeroMinimapDisplay = true}, SummonSpearman = {ArtSpecial = "", ArtTarget = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", TargetType = "point", CastingTime = 0, ArtCaster = "", TooltipNormal = "Summon spearman", DisableOtherAbilities = false, Levels = 1, CustomCastingTime = 3, ArtEffect = "", Cooldown = 0, Name = "Summon spearman", CastRange = 500, AreaofEffect = 150, Id = "AM#'", Options = 3, FollowThroughTime = 0, HotkeyNormal = "X", OrderId = "acidbomb"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -1135,7 +125,7 @@ __require_data.module["ability.AbilityDB"] = function()
 end
 __require_data.module["ability.AbilityEvent"] = function()
     local AbilityDB = require("ability.AbilityDB")
-    local UnitEvent = require("trigger.events.unitEvent")
+    local UnitEvent = require("utils.trigger.events.UnitEvents")
     local CasterDB = require("ability.CasterDB")
     local SpellData = require("ability.SpellData")
     local CastTimer = glTimer
@@ -1314,19 +304,6 @@ __require_data.module["ability.Ability"] = function()
 
     end
     return Ability
-end
-__require_data.module["unit.UnitDB"] = function()
-    local UnitDB = {}
-    function UnitDB.add(unit_obj, unit)
-      UnitDB[unit_obj] = unit
-    end
-    function UnitDB.rm(unit_obj)
-      UnitDB[unit_obj] = nil
-    end
-    function UnitDB.get(unit_obj)
-      return UnitDB[unit_obj]
-    end
-    return UnitDB
 end
 __require_data.module["unitParameter.mathFunc"] = function()
     local Settings = require("utils.Settings")
@@ -1670,10 +647,10 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
 end
 __require_data.module["unit.Unit"] = function()
     local ParameterContainer = require("unitParameter.UnitParameterContainer")
-    local UnitDB = require("unit.UnitDB")
-    require("trigger.events.unitEvent")
-    local Unit = {}
-    local Unit_meta = {__index = Unit, __gc = Unit.destroy}
+    local DataBase = require("utils.DataBase")
+    local UnitDB = DataBase.new("userdata", "Unit")
+    local Unit = {__type = "class Unit"}
+    local Unit_meta = {__type = "Unit", __index = Unit, __gc = Unit.destroy}
     function Unit_meta.__tostring(self)
       return string.format("Unit %s (%s) at [%.2f, %.2f, %.2f]", self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
     end
@@ -1687,13 +664,13 @@ __require_data.module["unit.Unit"] = function()
       end
       local unit = {__id = id, __wc3_unit = wc3_unit}
       setmetatable(unit, Unit_meta)
-      UnitDB.add(unit.__wc3_unit, unit)
+      UnitDB:add(unit.__wc3_unit, unit)
       unit:initCustomData()
       return unit
     end
     function Unit:destroy()
       self:destroyCustomData()
-      UnitDB.rm(self.__wc3_unit)
+      UnitDB:rm(self.__wc3_unit)
       RemoveUnit(self.__wc3_unit)
       self.__wc3_unit = nil
     end
@@ -1840,109 +817,109 @@ __require_data.module["unit.Unit"] = function()
       PauseUnit(self.__wc3_unit, false)
     end
     function Unit.get(wc3_unit)
-      return UnitDB.get(wc3_unit)
+      return UnitDB:get(wc3_unit)
     end
     function Unit.GetLevelingUnit()
-      return UnitDB.get(GetLevelingUnit())
+      return UnitDB:get(GetLevelingUnit())
     end
     function Unit.GetLearningUnit()
-      return UnitDB.get(GetLearningUnit())
+      return UnitDB:get(GetLearningUnit())
     end
     function Unit.GetRevivableUnit()
-      return UnitDB.get(GetRevivableUnit())
+      return UnitDB:get(GetRevivableUnit())
     end
     function Unit.GetRevivingUnit()
-      return UnitDB.get(GetRevivingUnit())
+      return UnitDB:get(GetRevivingUnit())
     end
     function Unit.GetAttacker()
-      return UnitDB.get(GetAttacker())
+      return UnitDB:get(GetAttacker())
     end
     function Unit.GetRescuer()
-      return UnitDB.get(GetRescuer())
+      return UnitDB:get(GetRescuer())
     end
     function Unit.GetDyingUnit()
-      return UnitDB.get(GetDyingUnit())
+      return UnitDB:get(GetDyingUnit())
     end
     function Unit.GetKillingUnit()
-      return UnitDB.get(GetKillingUnit())
+      return UnitDB:get(GetKillingUnit())
     end
     function Unit.GetDecayingUnit()
-      return UnitDB.get(GetDecayingUnit())
+      return UnitDB:get(GetDecayingUnit())
     end
     function Unit.GetConstructingStructure()
-      return UnitDB.get(GetConstructingStructure())
+      return UnitDB:get(GetConstructingStructure())
     end
     function Unit.GetCancelledStructure()
-      return UnitDB.get(GetCancelledStructure())
+      return UnitDB:get(GetCancelledStructure())
     end
     function Unit.GetConstructedStructure()
-      return UnitDB.get(GetConstructedStructure())
+      return UnitDB:get(GetConstructedStructure())
     end
     function Unit.GetResearchingUnit()
-      return UnitDB.get(GetResearchingUnit())
+      return UnitDB:get(GetResearchingUnit())
     end
     function Unit.GetTrainedUnit()
-      return UnitDB.get(GetTrainedUnit())
+      return UnitDB:get(GetTrainedUnit())
     end
     function Unit.GetDetectedUnit()
-      return UnitDB.get(GetDetectedUnit())
+      return UnitDB:get(GetDetectedUnit())
     end
     function Unit.GetSummoningUnit()
-      return UnitDB.get(GetSummoningUnit())
+      return UnitDB:get(GetSummoningUnit())
     end
     function Unit.GetSummonedUnit()
-      return UnitDB.get(GetSummonedUnit())
+      return UnitDB:get(GetSummonedUnit())
     end
     function Unit.GetTransportUnit()
-      return UnitDB.get(GetTransportUnit())
+      return UnitDB:get(GetTransportUnit())
     end
     function Unit.GetLoadedUnit()
-      return UnitDB.get(GetLoadedUnit())
+      return UnitDB:get(GetLoadedUnit())
     end
     function Unit.GetSellingUnit()
-      return UnitDB.get(GetSellingUnit())
+      return UnitDB:get(GetSellingUnit())
     end
     function Unit.GetSoldUnit()
-      return UnitDB.get(GetSoldUnit())
+      return UnitDB:get(GetSoldUnit())
     end
     function Unit.GetBuyingUnit()
-      return UnitDB.get(GetBuyingUnit())
+      return UnitDB:get(GetBuyingUnit())
     end
     function Unit.GetChangingUnit()
-      return UnitDB.get(GetChangingUnit())
+      return UnitDB:get(GetChangingUnit())
     end
     function Unit.GetManipulatingUnit()
-      return UnitDB.get(GetManipulatingUnit())
+      return UnitDB:get(GetManipulatingUnit())
     end
     function Unit.GetOrderedUnit()
-      return UnitDB.get(GetOrderedUnit())
+      return UnitDB:get(GetOrderedUnit())
     end
     function Unit.GetOrderTargetUnit()
-      return UnitDB.get(GetOrderTargetUnit())
+      return UnitDB:get(GetOrderTargetUnit())
     end
     function Unit.GetSpellAbilityUnit()
-      return UnitDB.get(GetSpellAbilityUnit())
+      return UnitDB:get(GetSpellAbilityUnit())
     end
     function Unit.GetSpellTargetUnit()
-      return UnitDB.get(GetSpellTargetUnit())
+      return UnitDB:get(GetSpellTargetUnit())
     end
     function Unit.GetTriggerUnit()
-      return UnitDB.get(GetTriggerUnit())
+      return UnitDB:get(GetTriggerUnit())
     end
     function Unit.GetEventDamage()
-      return UnitDB.get(GetEventDamage())
+      return UnitDB:get(GetEventDamage())
     end
     function Unit.GetEventDamageSource()
-      return UnitDB.get(GetEventDamageSource())
+      return UnitDB:get(GetEventDamageSource())
     end
     function Unit.GetEventTargetUnit()
-      return UnitDB.get(GetEventTargetUnit())
+      return UnitDB:get(GetEventTargetUnit())
     end
     return Unit
 end
 __require_data.module["ability.warlord.summon"] = function()
     local Unit = require("unit.Unit")
-    local UnitEvent = require("trigger.events.unitEvent")
+    local UnitEvent = require("utils.trigger.events.UnitEvents")
     local Ability = require("ability.Ability")
     local SummonDB = require("ability.SummonsDB")
     local FullData = require("ability.warlord.settings")
@@ -2151,8 +1128,8 @@ __require_data.module["utils.math.Vec2"] = function()
     end
     return Vec2
 end
-__require_data.module["trigger.events.playerEvent"] = function()
-    local Trigger = require("trigger.Trigger")
+__require_data.module["utils.trigger.events.PlayerEvents"] = function()
+    local Trigger = require("utils.trigger.Trigger")
     local PlayerEvent = {__triggers = {}}
     local initialized = false
     function PlayerEvent.init()
@@ -2171,634 +1148,634 @@ __require_data.module["trigger.events.playerEvent"] = function()
     end
     return PlayerEvent
 end
-__require_data.module["trigger.Event"] = function()
-    local Event = {Game = {}, Player = {}, PlayerUnit = {}, AnyUnit = {}, Unit = {}}
-    Event.Game.Victory = function(wc3_trigger)
+__require_data.module["utils.trigger.TriggerEvent"] = function()
+    local TriggerEvent = {Game = {}, Player = {}, PlayerUnit = {}, AnyUnit = {}, Unit = {}}
+    TriggerEvent.Game.Victory = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_VICTORY)
     end
-    Event.Game.End = function(wc3_trigger)
+    TriggerEvent.Game.End = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_END_LEVEL)
     end
-    Event.Game.VariableLimit = function(wc3_trigger)
+    TriggerEvent.Game.VariableLimit = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_VARIABLE_LIMIT)
     end
-    Event.Game.StateLimit = function(wc3_trigger)
+    TriggerEvent.Game.StateLimit = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_STATE_LIMIT)
     end
-    Event.Game.TimerExpired = function(wc3_trigger)
+    TriggerEvent.Game.TimerExpired = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TIMER_EXPIRED)
     end
-    Event.Game.EnterRegion = function(wc3_trigger)
+    TriggerEvent.Game.EnterRegion = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_ENTER_REGION)
     end
-    Event.Game.LeaveRegion = function(wc3_trigger)
+    TriggerEvent.Game.LeaveRegion = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_LEAVE_REGION)
     end
-    Event.Game.TrackableHit = function(wc3_trigger)
+    TriggerEvent.Game.TrackableHit = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TRACKABLE_HIT)
     end
-    Event.Game.TrackableTrack = function(wc3_trigger)
+    TriggerEvent.Game.TrackableTrack = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TRACKABLE_TRACK)
     end
-    Event.Game.ShowSkill = function(wc3_trigger)
+    TriggerEvent.Game.ShowSkill = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_SHOW_SKILL)
     end
-    Event.Game.BuildSubmenu = function(wc3_trigger)
+    TriggerEvent.Game.BuildSubmenu = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_BUILD_SUBMENU)
     end
-    Event.Game.Loaded = function(wc3_trigger)
+    TriggerEvent.Game.Loaded = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_LOADED)
     end
-    Event.Game.TournamentFinishSoon = function(wc3_trigger)
+    TriggerEvent.Game.TournamentFinishSoon = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TOURNAMENT_FINISH_SOON)
     end
-    Event.Game.TournamentFinishNow = function(wc3_trigger)
+    TriggerEvent.Game.TournamentFinishNow = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TOURNAMENT_FINISH_NOW)
     end
-    Event.Game.Save = function(wc3_trigger)
+    TriggerEvent.Game.Save = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_SAVE)
     end
-    Event.Game.CustomUIFrame = function(wc3_trigger)
+    TriggerEvent.Game.CustomUIFrame = function(wc3_trigger)
         TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_CUSTOM_UI_FRAME)
     end
-    Event.Player.StateLimit = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.StateLimit = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_STATE_LIMIT)
     end
-    Event.Player.AllianceChanged = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.AllianceChanged = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ALLIANCE_CHANGED)
     end
-    Event.Player.Defeat = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.Defeat = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_DEFEAT)
     end
-    Event.Player.Victory = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.Victory = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_VICTORY)
     end
-    Event.Player.Leave = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.Leave = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_LEAVE)
     end
-    Event.Player.Chat = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.Chat = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_CHAT)
     end
-    Event.Player.EndCinematic = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.EndCinematic = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_END_CINEMATIC)
     end
-    Event.Player.ArrowLeft_Down = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowLeft_Down = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_LEFT_DOWN)
     end
-    Event.Player.ArrowLeft_Up = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowLeft_Up = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_LEFT_UP)
     end
-    Event.Player.ArrowRight_Down = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowRight_Down = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_RIGHT_DOWN)
     end
-    Event.Player.ArrowRight_Up = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowRight_Up = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_RIGHT_UP)
     end
-    Event.Player.ArrowDown_Down = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowDown_Down = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_DOWN_DOWN)
     end
-    Event.Player.ArrowDown_Up = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowDown_Up = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_DOWN_UP)
     end
-    Event.Player.ArrowUp_Down = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowUp_Down = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_UP_DOWN)
     end
-    Event.Player.ArrowUp_Up = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.ArrowUp_Up = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_UP_UP)
     end
-    Event.Player.MouseDown = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.MouseDown = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_MOUSE_DOWN)
     end
-    Event.Player.MouseUp = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.MouseUp = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_MOUSE_UP)
     end
-    Event.Player.MouseMove = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.MouseMove = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_MOUSE_MOVE)
     end
-    Event.Player.SyncData = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.SyncData = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_SYNC_DATA)
     end
-    Event.Player.Key = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.Key = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY)
     end
-    Event.Player.KeyDown = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.KeyDown = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_DOWN)
     end
-    Event.Player.KeyUp = function(wc3_trigger, wc3_player)
+    TriggerEvent.Player.KeyUp = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_UP)
     end
-    Event.PlayerUnit.Attacked = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Attacked = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ATTACKED)
     end
-    Event.PlayerUnit.Resqued = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Resqued = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESCUED)
     end
-    Event.PlayerUnit.Death = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Death = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DEATH)
     end
-    Event.PlayerUnit.Decay = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Decay = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DECAY)
     end
-    Event.PlayerUnit.Death = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Death = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DETECTED)
     end
-    Event.PlayerUnit.Hidden = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Hidden = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_HIDDEN)
     end
-    Event.PlayerUnit.Selected = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Selected = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SELECTED)
     end
-    Event.PlayerUnit.Deselected = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Deselected = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DESELECTED)
     end
-    Event.PlayerUnit.ConstructStart = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ConstructStart = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CONSTRUCT_START)
     end
-    Event.PlayerUnit.ConstructCancel = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ConstructCancel = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
     end
-    Event.PlayerUnit.ConstructFinish = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ConstructFinish = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
     end
-    Event.PlayerUnit.UpgradeStart = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.UpgradeStart = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_UPGRADE_START)
     end
-    Event.PlayerUnit.Cancel = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Cancel = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
     end
-    Event.PlayerUnit.Finish = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Finish = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_UPGRADE_FINISH)
     end
-    Event.PlayerUnit.TrainStart = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.TrainStart = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_TRAIN_START)
     end
-    Event.PlayerUnit.TrainCancel = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.TrainCancel = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_TRAIN_CANCEL)
     end
-    Event.PlayerUnit.TrainFinish = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.TrainFinish = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_TRAIN_FINISH)
     end
-    Event.PlayerUnit.ResearchStart = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ResearchStart = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_START)
     end
-    Event.PlayerUnit.ResearchCancel = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ResearchCancel = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
     end
-    Event.PlayerUnit.ResearchFinish = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ResearchFinish = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
     end
-    Event.PlayerUnit.IssuedOrder = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.IssuedOrder = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_ORDER)
     end
-    Event.PlayerUnit.IssuedOrderPointTartet = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.IssuedOrderPointTartet = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
     end
-    Event.PlayerUnit.IssuedOrderTarget = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.IssuedOrderTarget = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
     end
-    Event.PlayerUnit.IssuedOrderUnitTarget = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.IssuedOrderUnitTarget = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
     end
-    Event.PlayerUnit.Level = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Level = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_LEVEL)
     end
-    Event.PlayerUnit.Skill = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Skill = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_SKILL)
     end
-    Event.PlayerUnit.Revivable = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Revivable = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVABLE)
     end
-    Event.PlayerUnit.ReviveStart = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ReviveStart = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_START)
     end
-    Event.PlayerUnit.ReviveCance = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ReviveCance = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_CANCEL)
     end
-    Event.PlayerUnit.ReviveFinish = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ReviveFinish = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_FINISH)
     end
-    Event.PlayerUnit.Summon = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Summon = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SUMMON)
     end
-    Event.PlayerUnit.DropItem = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.DropItem = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DROP_ITEM)
     end
-    Event.PlayerUnit.PickUpItem = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.PickUpItem = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_PICKUP_ITEM)
     end
-    Event.PlayerUnit.UseItem = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.UseItem = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_USE_ITEM)
     end
-    Event.PlayerUnit.Loaded = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Loaded = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_LOADED)
     end
-    Event.PlayerUnit.Damaged = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Damaged = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DAMAGED)
     end
-    Event.PlayerUnit.Damaging = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Damaging = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DAMAGING)
     end
-    Event.PlayerUnit.Sell = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.Sell = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SELL)
     end
-    Event.PlayerUnit.ChangeOwner = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.ChangeOwner = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CHANGE_OWNER)
     end
-    Event.PlayerUnit.SellItem = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.SellItem = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SELL_ITEM)
     end
-    Event.PlayerUnit.SpellChannel = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.SpellChannel = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_CHANNEL)
     end
-    Event.PlayerUnit.SpellCast = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.SpellCast = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_CAST)
     end
-    Event.PlayerUnit.SpellEffect = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.SpellEffect = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     end
-    Event.PlayerUnit.SpellFinish = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.SpellFinish = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_FINISH)
     end
-    Event.PlayerUnit.SpellEndCast = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.SpellEndCast = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
     end
-    Event.PlayerUnit.PawnItem = function(wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit.PawnItem = function(wc3_trigger, wc3_player)
         TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_PAWN_ITEM)
     end
-    Event.AnyUnit.Attacked = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Attacked = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ATTACKED)
         end
     end
-    Event.AnyUnit.Resqued = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Resqued = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESCUED)
         end
     end
-    Event.AnyUnit.Death = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Death = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DEATH)
         end
     end
-    Event.AnyUnit.Decay = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Decay = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DECAY)
         end
     end
-    Event.AnyUnit.Detect = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Detect = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DETECTED)
         end
     end
-    Event.AnyUnit.Hidden = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Hidden = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_HIDDEN)
         end
     end
-    Event.AnyUnit.Selected = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Selected = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SELECTED)
         end
     end
-    Event.AnyUnit.Deselected = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Deselected = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DESELECTED)
         end
     end
-    Event.AnyUnit.ConstructStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ConstructStart = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_START)
         end
     end
-    Event.AnyUnit.ConstructCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ConstructCancel = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
         end
     end
-    Event.AnyUnit.ConstructFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ConstructFinish = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
         end
     end
-    Event.AnyUnit.UpgradeStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.UpgradeStart = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_START)
         end
     end
-    Event.AnyUnit.Cancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Cancel = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
         end
     end
-    Event.AnyUnit.Finish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Finish = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_FINISH)
         end
     end
-    Event.AnyUnit.TrainStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.TrainStart = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_START)
         end
     end
-    Event.AnyUnit.TrainCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.TrainCancel = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_CANCEL)
         end
     end
-    Event.AnyUnit.TrainFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.TrainFinish = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_FINISH)
         end
     end
-    Event.AnyUnit.ResearchStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ResearchStart = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_START)
         end
     end
-    Event.AnyUnit.ResearchCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ResearchCancel = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
         end
     end
-    Event.AnyUnit.ResearchFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ResearchFinish = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_FINISH)
         end
     end
-    Event.AnyUnit.IssuedOrder = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrder = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_ORDER)
         end
     end
-    Event.AnyUnit.IssuedOrderPointTarget = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrderPointTarget = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
         end
     end
-    Event.AnyUnit.IssuedOrderTarget = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrderTarget = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
         end
     end
-    Event.AnyUnit.IssuedOrderUnitTarget = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrderUnitTarget = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
         end
     end
-    Event.AnyUnit.Level = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Level = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_LEVEL)
         end
     end
-    Event.AnyUnit.Skill = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Skill = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_SKILL)
         end
     end
-    Event.AnyUnit.Revivable = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Revivable = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVABLE)
         end
     end
-    Event.AnyUnit.ReviveStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ReviveStart = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_START)
         end
     end
-    Event.AnyUnit.ReviveCance = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ReviveCance = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_CANCEL)
         end
     end
-    Event.AnyUnit.ReviveFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ReviveFinish = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_FINISH)
         end
     end
-    Event.AnyUnit.Summon = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Summon = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SUMMON)
         end
     end
-    Event.AnyUnit.DropItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.DropItem = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DROP_ITEM)
         end
     end
-    Event.AnyUnit.PickUpItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.PickUpItem = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_PICKUP_ITEM)
         end
     end
-    Event.AnyUnit.UseItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.UseItem = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_USE_ITEM)
         end
     end
-    Event.AnyUnit.Loaded = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Loaded = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_LOADED)
         end
     end
-    Event.AnyUnit.Damaged = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Damaged = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DAMAGED)
         end
     end
-    Event.AnyUnit.Damaging = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Damaging = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DAMAGING)
         end
     end
-    Event.AnyUnit.Sell = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Sell = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SELL)
         end
     end
-    Event.AnyUnit.ChangeOwner = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ChangeOwner = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CHANGE_OWNER)
         end
     end
-    Event.AnyUnit.SellItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SellItem = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SELL_ITEM)
         end
     end
-    Event.AnyUnit.SpellChannel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellChannel = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_CHANNEL)
         end
     end
-    Event.AnyUnit.SpellCast = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellCast = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_CAST)
         end
     end
-    Event.AnyUnit.SpellEffect = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellEffect = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_EFFECT)
         end
     end
-    Event.AnyUnit.SpellFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellFinish = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_FINISH)
         end
     end
-    Event.AnyUnit.SpellEndCast = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellEndCast = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_ENDCAST)
         end
     end
-    Event.AnyUnit.PawnItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.PawnItem = function(wc3_trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
           TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_PAWN_ITEM)
         end
     end
-    Event.Unit.Damaged = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Damaged = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DAMAGED)
     end
-    Event.Unit.Damaging = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Damaging = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DAMAGING)
     end
-    Event.Unit.Death = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Death = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DEATH)
     end
-    Event.Unit.Decay = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Decay = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DECAY)
     end
-    Event.Unit.Detected = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Detected = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DETECTED)
     end
-    Event.Unit.Hiden = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Hiden = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HIDDEN)
     end
-    Event.Unit.Selected = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Selected = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SELECTED)
     end
-    Event.Unit.Deselected = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Deselected = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DESELECTED)
     end
-    Event.Unit.StateLimit = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.StateLimit = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_STATE_LIMIT)
     end
-    Event.Unit.AcquiredTarget = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.AcquiredTarget = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ACQUIRED_TARGET)
     end
-    Event.Unit.TargetInRange = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.TargetInRange = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TARGET_IN_RANGE)
     end
-    Event.Unit.Attacked = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Attacked = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ATTACKED)
     end
-    Event.Unit.Resqued = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Resqued = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESCUED)
     end
-    Event.Unit.ConstructCancel = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ConstructCancel = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CONSTRUCT_CANCEL)
     end
-    Event.Unit.ConstructFinish = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ConstructFinish = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CONSTRUCT_FINISH)
     end
-    Event.Unit.UpgradeStart = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.UpgradeStart = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_START)
     end
-    Event.Unit.UpgradeCancel = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.UpgradeCancel = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_CANCEL)
     end
-    Event.Unit.UpgradeFinish = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.UpgradeFinish = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_FINISH)
     end
-    Event.Unit.TrainStart = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.TrainStart = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TRAIN_START)
     end
-    Event.Unit.TrainCancel = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.TrainCancel = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TRAIN_CANCEL)
     end
-    Event.Unit.TrainFinish = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.TrainFinish = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TRAIN_FINISH)
     end
-    Event.Unit.ResearchStart = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ResearchStart = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESEARCH_START)
     end
-    Event.Unit.ResearchCancel = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ResearchCancel = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESEARCH_CANCEL)
     end
-    Event.Unit.ResearchFinish = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ResearchFinish = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESEARCH_FINISH)
     end
-    Event.Unit.IssuedOrder = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.IssuedOrder = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ISSUED_ORDER)
     end
-    Event.Unit.IssuedOrderPoint = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.IssuedOrderPoint = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ISSUED_POINT_ORDER)
     end
-    Event.Unit.IssuedOrderTarget = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.IssuedOrderTarget = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ISSUED_TARGET_ORDER)
     end
-    Event.Unit.Level = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Level = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_LEVEL)
     end
-    Event.Unit.Skill = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Skill = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_SKILL)
     end
-    Event.Unit.Revivable = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Revivable = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVABLE)
     end
-    Event.Unit.ReviveStart = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ReviveStart = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVE_START)
     end
-    Event.Unit.ReviveCancel = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ReviveCancel = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVE_CANCEL)
     end
-    Event.Unit.ReviveFinish = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ReviveFinish = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVE_FINISH)
     end
-    Event.Unit.Summon = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Summon = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SUMMON)
     end
-    Event.Unit.DropItem = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.DropItem = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DROP_ITEM)
     end
-    Event.Unit.PickUpItem = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.PickUpItem = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_PICKUP_ITEM)
     end
-    Event.Unit.UseItem = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.UseItem = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_USE_ITEM)
     end
-    Event.Unit.Loaded = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Loaded = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_LOADED)
     end
-    Event.Unit.Sell = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.Sell = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SELL)
     end
-    Event.Unit.ChangeOwner = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.ChangeOwner = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CHANGE_OWNER)
     end
-    Event.Unit.SellItem = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.SellItem = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SELL_ITEM)
     end
-    Event.Unit.SpellChannel = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.SpellChannel = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_CHANNEL)
     end
-    Event.Unit.SpellCast = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.SpellCast = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_CAST)
     end
-    Event.Unit.SpellEffect = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.SpellEffect = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_EFFECT)
     end
-    Event.Unit.SpellFinish = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.SpellFinish = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_FINISH)
     end
-    Event.Unit.SpellEndCast = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.SpellEndCast = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_ENDCAST)
     end
-    Event.Unit.PawnItem = function(wc3_trigger, wc3_unit)
+    TriggerEvent.Unit.PawnItem = function(wc3_trigger, wc3_unit)
         TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_PAWN_ITEM)
     end
-    return Event
+    return TriggerEvent
 end
-__require_data.module["trigger.TriggerAction"] = function()
+__require_data.module["utils.trigger.TriggerAction"] = function()
     local TriggerAction = {}
     local TriggerAction_meta = {__index = TriggerAction, __gc = TriggerAction.destroy}
     function TriggerAction.new(callback, data)
@@ -2852,16 +1829,20 @@ __require_data.module["utils.DataBase"] = function()
     end
     return DataBase
 end
-__require_data.module["trigger.Trigger"] = function()
+__require_data.module["utils.trigger.Trigger"] = function()
     local Settings = require("utils.Settings")
     local DataBase = require("utils.DataBase")
-    local TriggerAction = require("trigger.TriggerAction")
-    local Event = require("trigger.Event")
+    local TriggerAction = require("utils.trigger.TriggerAction")
+    local TriggerEvent = require("utils.trigger.TriggerEvent")
     local Trigger = {}
     local Trigger_meta = {__index = Trigger, __gc = Trigger.destroy}
     local TriggerDB = DataBase.new("userdata", "table")
     function Trigger_meta.__tostring(self)
-      return string.format("Trigger with %d action(s).", #self.__actions)
+      local events = " "
+      for i = 1, #self.__events do
+        events = events..self.__events[i].." "
+      end
+      return string.format("Trigger with events: %s\\nHas %d action(s).", events, #self.__actions)
     end
     local function runTriggerActions()
       local self = TriggerDB:get(GetTriggeringTrigger())
@@ -2881,7 +1862,7 @@ __require_data.module["trigger.Trigger"] = function()
     end
     function Trigger.new()
       local wc3_trigger = CreateTrigger()
-      local trigger = {__wc3_trigger = wc3_trigger, __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions), __actions = {}}
+      local trigger = {__wc3_trigger = wc3_trigger, __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions), __actions = {}, __events = {}}
       setmetatable(trigger, Trigger_meta)
       TriggerDB:add(trigger.__wc3_trigger, trigger)
       return trigger
@@ -2894,8 +1875,8 @@ __require_data.module["trigger.Trigger"] = function()
     function Trigger:getObj()
       return self.__wc3_trigger
     end
-    function Trigger:getActionObj()
-      return self.__wc3_action
+    function Trigger:getActions()
+      return self.__actions
     end
     function Trigger:addAction(callback, data)
       local action = TriggerAction.new(callback, data)
@@ -2925,24 +1906,29 @@ __require_data.module["trigger.Trigger"] = function()
       TriggerExecute(self.__wc3_trigger)
     end
     function Trigger:addEvent_Game(event)
-      Event.Game[event](self.__wc3_trigger)
+      TriggerEvent.Game[event](self.__wc3_trigger)
+      table.insert(self.__events, 1, "Game_"..event)
     end
     function Trigger:addEvent_Player(event, wc3_player)
-      Event.Player[event](self.__wc3_trigger, wc3_player)
+      TriggerEvent.Player[event](self.__wc3_trigger, wc3_player)
+      table.insert(self.__events, 1, "Player_"..event)
     end
     function Trigger:addEvent_Unit(event, wc3_unit)
-      Event.Unit[event](self.__wc3_trigger, wc3_unit)
+      TriggerEvent.Unit[event](self.__wc3_trigger, wc3_unit)
+      table.insert(self.__events, 1, "Unit_"..event)
     end
     function Trigger:addEvent_PlayerUnit(event, wc3_player)
-      Event.PlayerUnit[event](self.__wc3_trigger, wc3_player)
+      TriggerEvent.PlayerUnit[event](self.__wc3_trigger, wc3_player)
+      table.insert(self.__events, 1, "PlayerUnit_"..event)
     end
     function Trigger:addEvent_AnyUnit(event)
-      Event.AnyUnit[event](self.__wc3_trigger)
+      TriggerEvent.AnyUnit[event](self.__wc3_trigger)
+      table.insert(self.__events, 1, "AnyUnit_"..event)
     end
     return Trigger
 end
-__require_data.module["trigger.events.unitEvent"] = function()
-    local Trigger = require("trigger.Trigger")
+__require_data.module["utils.trigger.events.UnitEvents"] = function()
+    local Trigger = require("utils.trigger.Trigger")
     local UnitEvent = {__triggers = {}}
     local initialized = false
     function UnitEvent.init()
@@ -3063,6 +2049,17 @@ __require_data.module["utils.Globals"] = function()
       end
       return val
     end
+    local original_type = _G.type
+    function type(val)
+      local lua_type = original_type(val)
+      if (lua_type ~= "table") then
+        return lua_type
+      end
+      if (val.__type) then
+        return val.__type
+      end
+      return "table"
+    end
     return Globals
 end
 __require_data.module["utils.Init"] = function()
@@ -3079,14 +2076,14 @@ __require_data.module["utils.Init"] = function()
             __require_data.result[name] = result
             __require_data.loaded[name] = true
           else
-            Debug(string.format("Error in loading %s\n%s", name, result))
+            Debug(string.format("Error in loading %s\\n%s", name, result))
           end
         end
         if (__require_data.result[name] ~= nil) then
           if (__require_data.result[name].init ~= nil) then
             local success, result = pcall(__require_data.result[name].init)
             if (not success) then
-              Debug(string.format("Error in %s initialization\n%s", name, result))
+              Debug(string.format("Error in %s initialization\\n%s", name, result))
             end
           end
         end
@@ -3139,7 +2136,7 @@ end
   end
   function main()
     SetCameraBounds((-3328.0+GetCameraMargin(CAMERA_MARGIN_LEFT)), (-3584.0+GetCameraMargin(CAMERA_MARGIN_BOTTOM)), (3328.0-GetCameraMargin(CAMERA_MARGIN_RIGHT)), (3072.0-GetCameraMargin(CAMERA_MARGIN_TOP)), (-3328.0+GetCameraMargin(CAMERA_MARGIN_LEFT)), (3072.0-GetCameraMargin(CAMERA_MARGIN_TOP)), (3328.0-GetCameraMargin(CAMERA_MARGIN_RIGHT)), (-3584.0+GetCameraMargin(CAMERA_MARGIN_BOTTOM)))
-    SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
+    SetDayNightModels("Environment\\\\DNC\\\\DNCLordaeron\\\\DNCLordaeronTerrain\\\\DNCLordaeronTerrain.mdl", "Environment\\\\DNC\\\\DNCLordaeron\\\\DNCLordaeronUnit\\\\DNCLordaeronUnit.mdl")
     NewSoundEnvironment("Default")
     SetAmbientDaySound("LordaeronSummerDay")
     SetAmbientNightSound("LordaeronSummerNight")

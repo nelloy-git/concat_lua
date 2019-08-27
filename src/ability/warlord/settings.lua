@@ -1,13 +1,11 @@
 ---@class WarlordAbilitiesSettings
 local WarlordSettings = compiletime(function()
-    ---@type ChannelCompiletimeData
-    local AbilityData = require('ability.ChannelCompiletimeData')
-    ---@type HeroCompiletimeData
-    local HeroData = require('unit.HeroCompiletimeData')
+    local Channel = WeObjEdit.Preset.Channel
+    local Hero = WeObjEdit.Preset.Hero
     -- ================= --
     --  Summon spearman  --
     -- ================= --
-    local SummonSpearmanData = AbilityData.new()
+    local SummonSpearmanData = Channel.new()
     SummonSpearmanData:setField("Name", "Summon spearman")
     SummonSpearmanData:setField("TooltipNormal", "Summon spearman")
     SummonSpearmanData:setField("TooltipNormalExtended", "Summons invulnerale spirit warrior.")
@@ -22,15 +20,15 @@ local WarlordSettings = compiletime(function()
     SummonSpearmanData:setField("ArtSpecial", "")
     SummonSpearmanData:setField("ArtTarget", "")
     SummonSpearmanData:setField("Levels", 1)
-    SummonSpearmanData:setField("Options", AbilityData.option.is_visible + AbilityData.option.is_areaTarget)
+    SummonSpearmanData:setField("Options", Channel.option.is_visible + Channel.option.is_areaTarget)
     SummonSpearmanData:setField("TargetType", "point")
     SummonSpearmanData:setField("DisableOtherAbilities", false)
     SummonSpearmanData:setField("FollowThroughTime", 0)
     SummonSpearmanData:generate()
 
-    local SpearmanData = HeroData.new()
+    local SpearmanData = Hero.new()
     SpearmanData:setField("Name", "Spearman")
-    SpearmanData:setField("ModelFile", "war3mapImported\\\\units\\\\SwordNya.mdx")
+    SpearmanData:setField("ModelFile", "war3mapImported\\units\\SwordNya.mdx")
     SpearmanData:setField("NormalAbilities", "Avul,Aloc")
     SpearmanData:setField("SpeedBase", 1)
     SpearmanData:setField("CollisionSize", 0)
@@ -42,12 +40,12 @@ local WarlordSettings = compiletime(function()
     -- ============= --
     --  Spirit rush  --
     -- ============= --
-    local SpiritRushData = AbilityData.new()
+    local SpiritRushData = Channel.new()
     SpiritRushData:setField("Name", "Spirit rush")
     SpiritRushData:setField("TooltipNormal", "Spirit rush")
     SpiritRushData:setField("TooltipNormalExtended", "All summoned spirits attack target area.")
+    SpiritRushData:setField("TargetType", "point")
     SpiritRushData:setField("CastRange", 500)
-    SpiritRushData:setField("AreaofEffect", 150)
 
 
     -- Save settings --

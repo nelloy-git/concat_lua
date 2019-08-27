@@ -1,7 +1,7 @@
 ---@type AbilityDB
 local AbilityDB = require('ability.AbilityDB')
 ---@type UnitEvent
-local UnitEvent = require('trigger.events.unitEvent')
+local UnitEvent = require('utils.trigger.events.UnitEvents')
 ---@type CasterDB
 local CasterDB = require('ability.CasterDB')
 ---@type SpellData

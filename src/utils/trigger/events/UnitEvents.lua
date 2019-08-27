@@ -1,5 +1,5 @@
 ---@type Trigger
-local Trigger = require('trigger.Trigger')
+local Trigger = require('utils.trigger.Trigger')
 
 ---@class UnitEvent
 local UnitEvent = {

@@ -3,21 +3,30 @@ local Settings = require('utils.Settings')
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 ---@type TriggerAction
-local TriggerAction = require('trigger.TriggerAction')
-
-local Event = require('trigger.Event')
+local TriggerAction = require('utils.trigger.TriggerAction')
+---@type TriggerEvent
+local TriggerEvent = require('utils.trigger.TriggerEvent')
 
 ---@class Trigger
-local Trigger = {}
+local Trigger = {
+    __type = 'class Trigger'
+}
 local Trigger_meta = {
+    __type = 'Trigger',
     __index = Trigger,
     __gc = Trigger.destroy
 }
+
+---wc3_Trigger -> Trigger
 local TriggerDB = DataBase.new('userdata', 'table')
 
 ---@param self Trigger
 function Trigger_meta.__tostring(self)
-    return string.format("Trigger with %d action(s).", #self.__actions)
+    local events = " "
+    for i = 1, #self.__events do
+        events = events..self.__events[i].." "
+    end
+    return string.format("Trigger with events: %s\nHas %d action(s).", events, #self.__actions)
 end
 
 local function runTriggerActions()
@@ -45,7 +54,8 @@ function Trigger.new()
     local trigger = {
         __wc3_trigger = wc3_trigger,
         __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions),
-        __actions = {}
+        __actions = {},
+        __events = {}
     }
     setmetatable(trigger, Trigger_meta)
     TriggerDB:add(trigger.__wc3_trigger, trigger)
@@ -65,9 +75,9 @@ function Trigger:getObj()
     return self.__wc3_trigger
 end
 
----@return wc3_Trigger
-function Trigger:getActionObj()
-    return self.__wc3_action
+---@return TriggerAction[]
+function Trigger:getActions()
+    return self.__actions
 end
 
 ---@param callback function
@@ -113,30 +123,35 @@ end
 
 ---@param event TriggerGameEvent
 function Trigger:addEvent_Game(event)
-    Event.Game[event](self.__wc3_trigger)
+    TriggerEvent.Game[event](self.__wc3_trigger)
+    table.insert(self.__events, 1, "Game_"..event)
 end
 
 ---@param event TriggerPlayerEvent
 ---@param wc3_player wc3_Player
 function Trigger:addEvent_Player(event, wc3_player)
-    Event.Player[event](self.__wc3_trigger, wc3_player)
+    TriggerEvent.Player[event](self.__wc3_trigger, wc3_player)
+    table.insert(self.__events, 1, "Player_"..event)
 end
 
 ---@param event TriggerUnitEvent
 ---@param wc3_unit wc3_Unit
 function Trigger:addEvent_Unit(event, wc3_unit)
-    Event.Unit[event](self.__wc3_trigger, wc3_unit)
+    TriggerEvent.Unit[event](self.__wc3_trigger, wc3_unit)
+    table.insert(self.__events, 1, "Unit_"..event)
 end
 
 ---@param event TriggerPlayerUnitEvent
 ---@param wc3_player wc3_Player
 function Trigger:addEvent_PlayerUnit(event, wc3_player)
-    Event.PlayerUnit[event](self.__wc3_trigger, wc3_player)
+    TriggerEvent.PlayerUnit[event](self.__wc3_trigger, wc3_player)
+    table.insert(self.__events, 1, "PlayerUnit_"..event)
 end
 
 ---@param event TriggerAnyUnitEvent
 function Trigger:addEvent_AnyUnit(event)
-    Event.AnyUnit[event](self.__wc3_trigger)
+    TriggerEvent.AnyUnit[event](self.__wc3_trigger)
+    table.insert(self.__events, 1, "AnyUnit_"..event)
 end
 
 return Trigger

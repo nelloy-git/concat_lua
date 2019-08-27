@@ -110,7 +110,7 @@ end
 
 ---@return integer
 function ChannelCompiletimeData:generate()
-    if not WeObjEdit then print('WeObjEdit module is not loaded.') return nil end
+    local WeObjEdit = require('compiletime.objEdit.objEdit')
 
     self["Id"] = WeObjEdit.Utils.nextAbilId()
     self["OrderId"] = WeObjEdit.Utils.nextOrderId()

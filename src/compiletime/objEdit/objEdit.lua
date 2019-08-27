@@ -43,8 +43,10 @@ function ObjEdit.init(src_path, dst_path)
 
     -- Presets
     ObjEdit.Preset = {}
-    ---@type ChannelWePreset
-    ObjEdit.Preset.Channel = require('compiletime.objEdit.preset.channel')
+    ---@type ChannelCompiletimeData
+    ObjEdit.Preset.Channel = require('compiletime.objEdit.preset.ChannelData')
+    ---@type HeroCompiletimeData
+    ObjEdit.Preset.Hero = require('compiletime.objEdit.preset.HeroData')
 
 end
 
