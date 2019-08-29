@@ -11,7 +11,7 @@ local ParameterContainer = {}
 local ParameterContainer_meta = {__index = ParameterContainer}
 
 ---Create new ParameterContainer.
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@return UnitParameterContainer
 function ParameterContainer.new(wc3_unit)
     ---@type UnitParameterContainer
@@ -50,7 +50,7 @@ function ParameterContainer.new(wc3_unit)
     return container
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@return UnitParameterContainer
 function ParameterContainer.get(wc3_unit)
     return UnitParameterContainerDB.get(wc3_unit)

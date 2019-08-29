@@ -1,3 +1,4 @@
+---@alias wc3_handle userdata
 ---@alias wc3_agent userdata
 ---@alias wc3_event userdata
 ---@alias wc3_player userdata
@@ -130,8 +131,6 @@
 ---@alias wc3_regentype userdata
 ---@alias wc3_unitcategory userdata
 ---@alias wc3_pathingflag userdata
-
-
 
 ---@param i integer
 ---@return wc3_race
@@ -406,1382 +405,5208 @@ function AbilityId2String(abilityId) end
 ---@param objectId integer
 ---@return string
 function GetObjectName(objectId) end
---[[
-function GetBJMaxPlayers()             takes nothing returns integer
-function GetBJPlayerNeutralVictim()    takes nothing returns integer
-function GetBJPlayerNeutralExtra()     takes nothing returns integer
-function GetBJMaxPlayerSlots()         takes nothing returns integer
-function GetPlayerNeutralPassive()     takes nothing returns integer
-function GetPlayerNeutralAggressive()  takes nothing returns integer
-function GetGamePlacement()     takes nothing returns placement
-function GetGameSpeed()         takes nothing returns gamespeed
-function GetGameDifficulty()    takes nothing returns gamedifficulty
-function GetResourceDensity()   takes nothing returns mapdensity
-function GetCreatureDensity()   takes nothing returns mapdensity
-function GetStartLocationX()    takes integer whichStartLocation returns real
-function GetStartLocationY()    takes integer whichStartLocation returns real
-function GetStartLocationLoc()  takes integer whichStartLocation returns location
-function GetFilterUnit()       takes nothing returns unit
-function GetEnumUnit()         takes nothing returns unit
-function GetFilterDestructable()   takes nothing returns destructable
-function GetEnumDestructable()     takes nothing returns destructable
-function GetFilterItem()           takes nothing returns item
-function GetEnumItem()             takes nothing returns item
-function GetFilterPlayer()     takes nothing returns player
-function GetEnumPlayer()       takes nothing returns player
-function GetTriggeringTrigger()    takes nothing returns trigger
-function GetTriggerEventId()       takes nothing returns eventid
-function GetTriggerEvalCount()     takes trigger whichTrigger returns integer
-function GetTriggerExecCount()     takes trigger whichTrigger returns integer
-function GetEventGameState() takes nothing returns gamestate
-function GetWinningPlayer() takes nothing returns player
-function GetTriggeringRegion() takes nothing returns region
-function GetEnteringUnit() takes nothing returns unit
-function GetLeavingUnit() takes nothing returns unit
-function GetTriggeringTrackable() takes nothing returns trackable
-function GetClickedButton() takes nothing returns button
-function GetClickedDialog()    takes nothing returns dialog
-function GetTournamentFinishSoonTimeRemaining() takes nothing returns real
-function GetTournamentFinishNowRule() takes nothing returns integer
-function GetTournamentFinishNowPlayer() takes nothing returns player
-function GetTournamentScore() takes player whichPlayer returns integer
-function GetSaveBasicFilename() takes nothing returns string
-function GetTriggerPlayer() takes nothing returns player
-function GetLevelingUnit() takes nothing returns unit
-function GetLearningUnit()      takes nothing returns unit
-function GetLearnedSkill()      takes nothing returns integer
-function GetLearnedSkillLevel() takes nothing returns integer
-function GetRevivableUnit() takes nothing returns unit
-function GetRevivingUnit() takes nothing returns unit
-function GetAttacker() takes nothing returns unit
-function GetRescuer()  takes nothing returns unit
-function GetDyingUnit() takes nothing returns unit
-function GetKillingUnit() takes nothing returns unit
-function GetDecayingUnit() takes nothing returns unit
-function GetConstructingStructure() takes nothing returns unit
-function GetCancelledStructure() takes nothing returns unit
-function GetConstructedStructure() takes nothing returns unit
-function GetResearchingUnit() takes nothing returns unit
-function GetResearched() takes nothing returns integer
-function GetTrainedUnitType() takes nothing returns integer
-function GetTrainedUnit() takes nothing returns unit
-function GetDetectedUnit() takes nothing returns unit
-function GetSummoningUnit()    takes nothing returns unit
-function GetSummonedUnit()     takes nothing returns unit
-function GetTransportUnit()    takes nothing returns unit
-function GetLoadedUnit()       takes nothing returns unit
-function GetSellingUnit()      takes nothing returns unit
-function GetSoldUnit()         takes nothing returns unit
-function GetBuyingUnit()       takes nothing returns unit
-function GetSoldItem()         takes nothing returns item
-function GetChangingUnit()             takes nothing returns unit
-function GetChangingUnitPrevOwner()    takes nothing returns player
-function GetManipulatingUnit() takes nothing returns unit
-function GetManipulatedItem()  takes nothing returns item
-function GetOrderedUnit() takes nothing returns unit
-function GetIssuedOrderId() takes nothing returns integer
-function GetOrderPointX() takes nothing returns real
-function GetOrderPointY() takes nothing returns real
-function GetOrderPointLoc() takes nothing returns location
-function GetOrderTarget()              takes nothing returns widget
-function GetOrderTargetDestructable()  takes nothing returns destructable
-function GetOrderTargetItem()          takes nothing returns item
-function GetOrderTargetUnit()          takes nothing returns unit
-function GetSpellAbilityUnit()         takes nothing returns unit
-function GetSpellAbilityId()           takes nothing returns integer
-function GetSpellAbility()             takes nothing returns ability
-function GetSpellTargetLoc()           takes nothing returns location
-function GetSpellTargetX()				takes nothing returns real
-function GetSpellTargetY()				takes nothing returns real
-function GetSpellTargetDestructable()  takes nothing returns destructable
-function GetSpellTargetItem()          takes nothing returns item
-function GetSpellTargetUnit()          takes nothing returns unit
-function GetEventPlayerState() takes nothing returns playerstate
-function GetEventPlayerChatString() takes nothing returns string
-function GetEventPlayerChatStringMatched() takes nothing returns string
-function GetTriggerUnit() takes nothing returns unit
-function GetEventUnitState() takes nothing returns unitstate
-function GetEventDamage() takes nothing returns real
-function GetEventDamageSource() takes nothing returns unit
-function GetEventDetectingPlayer() takes nothing returns player
-function GetEventTargetUnit() takes nothing returns unit
-function GetTriggerWidget() takes nothing returns widget
-function GetTriggerDestructable() takes nothing returns destructable
-function GetItemName()     takes item whichItem returns string
-function GetHeroLevel()        takes unit whichHero returns integer
-function GetUnitLevel()        takes unit whichUnit returns integer
-function GetUnitX()            takes unit whichUnit returns real
-function GetUnitY()            takes unit whichUnit returns real
-function GetUnitLoc()          takes unit whichUnit returns location
-function GetUnitFacing()       takes unit whichUnit returns real
-function GetUnitMoveSpeed()    takes unit whichUnit returns real
-function GetUnitDefaultMoveSpeed() takes unit whichUnit returns real
-function GetUnitState()        takes unit whichUnit, unitstate whichUnitState returns real
-function GetOwningPlayer()     takes unit whichUnit returns player
-function GetUnitTypeId()       takes unit whichUnit returns integer
-function GetUnitRace()         takes unit whichUnit returns race
-function GetUnitName()         takes unit whichUnit returns string
-function GetUnitFoodUsed()     takes unit whichUnit returns integer
-function GetUnitFoodMade()     takes unit whichUnit returns integer
-function GetFoodMade()         takes integer unitId returns integer
-function GetFoodUsed()         takes integer unitId returns integer
-function GetUnitRallyPoint()           takes unit whichUnit returns location
-function GetUnitRallyUnit()            takes unit whichUnit returns unit
-function GetUnitRallyDestructable()    takes unit whichUnit returns destructable
-function IsUnitInGroup()       takes unit whichUnit, group whichGroup returns boolean
-function IsUnitInForce()       takes unit whichUnit, force whichForce returns boolean
-function IsUnitOwnedByPlayer() takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitAlly()          takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitEnemy()         takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitVisible()       takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitDetected()      takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitInvisible()     takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitFogged()        takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitMasked()        takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitSelected()      takes unit whichUnit, player whichPlayer returns boolean
-function IsUnitRace()          takes unit whichUnit, race whichRace returns boolean
-function IsUnitType()          takes unit whichUnit, unittype whichUnitType returns boolean
-function IsUnit()              takes unit whichUnit, unit whichSpecifiedUnit returns boolean
-function IsUnitInRange()       takes unit whichUnit, unit otherUnit, real distance returns boolean
-function IsUnitInRangeXY()     takes unit whichUnit, real x, real y, real distance returns boolean
-function IsUnitInRangeLoc()    takes unit whichUnit, location whichLocation, real distance returns boolean
-function IsUnitHidden()        takes unit whichUnit returns boolean
-function IsUnitIllusion()      takes unit whichUnit returns boolean
-function IsUnitInTransport()   takes unit whichUnit, unit whichTransport returns boolean
-function IsUnitLoaded()        takes unit whichUnit returns boolean
-function IsHeroUnitId()        takes integer unitId returns boolean
-function IsUnitIdType()        takes integer unitId, unittype whichUnitType returns boolean
-function Player()              takes integer number returns player
-function GetLocalPlayer()      takes nothing returns player
-function IsPlayerAlly()        takes player whichPlayer, player otherPlayer returns boolean
-function IsPlayerEnemy()       takes player whichPlayer, player otherPlayer returns boolean
-function IsPlayerInForce()     takes player whichPlayer, force whichForce returns boolean
-function IsPlayerObserver()    takes player whichPlayer returns boolean
-function IsVisibleToPlayer()           takes real x, real y, player whichPlayer returns boolean
-function IsLocationVisibleToPlayer()   takes location whichLocation, player whichPlayer returns boolean
-function IsFoggedToPlayer()            takes real x, real y, player whichPlayer returns boolean
-function IsLocationFoggedToPlayer()    takes location whichLocation, player whichPlayer returns boolean
-function IsMaskedToPlayer()            takes real x, real y, player whichPlayer returns boolean
-function IsLocationMaskedToPlayer()    takes location whichLocation, player whichPlayer returns boolean
-function GetPlayerRace()           takes player whichPlayer returns race
-function GetPlayerId()             takes player whichPlayer returns integer
-function GetPlayerUnitCount()      takes player whichPlayer, boolean includeIncomplete returns integer
-function GetPlayerTypedUnitCount() takes player whichPlayer, string unitName, boolean includeIncomplete, boolean includeUpgrades returns integer
-function GetPlayerStructureCount() takes player whichPlayer, boolean includeIncomplete returns integer
-function GetPlayerState()          takes player whichPlayer, playerstate whichPlayerState returns integer
-function GetPlayerScore()          takes player whichPlayer, playerscore whichPlayerScore returns integer
-function GetPlayerAlliance()       takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting returns boolean
-function GetPlayerHandicap()       takes player whichPlayer returns real
-function GetPlayerHandicapXP()     takes player whichPlayer returns real
-function SetPlayerHandicap()       takes player whichPlayer, real handicap returns nothing
-function SetPlayerHandicapXP()     takes player whichPlayer, real handicap returns nothing
-function SetPlayerTechMaxAllowed() takes player whichPlayer, integer techid, integer maximum returns nothing
-function GetPlayerTechMaxAllowed() takes player whichPlayer, integer techid returns integer
-function AddPlayerTechResearched() takes player whichPlayer, integer techid, integer levels returns nothing
-function SetPlayerTechResearched() takes player whichPlayer, integer techid, integer setToLevel returns nothing
-function GetPlayerTechResearched() takes player whichPlayer, integer techid, boolean specificonly returns boolean
-function GetPlayerTechCount()      takes player whichPlayer, integer techid, boolean specificonly returns integer
-function GetFloatGameState()   takes fgamestate whichFloatGameState returns real
-function GetIntegerGameState() takes igamestate whichIntegerGameState returns integer
-function GetCameraBoundMinX()          takes nothing returns real
-function GetCameraBoundMinY()          takes nothing returns real
-function GetCameraBoundMaxX()          takes nothing returns real
-function GetCameraBoundMaxY()          takes nothing returns real
-function GetCameraField()              takes camerafield whichField returns real
-function GetCameraTargetPositionX()    takes nothing returns real
-function GetCameraTargetPositionY()    takes nothing returns real
-function GetCameraTargetPositionZ()    takes nothing returns real
-function GetCameraTargetPositionLoc()  takes nothing returns location
-function GetCameraEyePositionX()       takes nothing returns real
-function GetCameraEyePositionY()       takes nothing returns real
-function GetCameraEyePositionZ()       takes nothing returns real
-function GetCameraEyePositionLoc()     takes nothing returns location
+---@return integer
+function GetBJMaxPlayers() end
+---@return integer
+function GetBJPlayerNeutralVictim() end
+---@return integer
+function GetBJPlayerNeutralExtra() end
+---@return integer
+function GetBJMaxPlayerSlots() end
+---@return integer
+function GetPlayerNeutralPassive() end
+---@return integer
+function GetPlayerNeutralAggressive() end
+---@return wc3_placement
+function GetGamePlacement() end
+---@return wc3_gamespeed
+function GetGameSpeed() end
+---@return wc3_gamedifficulty
+function GetGameDifficulty() end
+---@return wc3_mapdensity
+function GetResourceDensity() end
+---@return wc3_mapdensity
+function GetCreatureDensity() end
+---@param whichStartLocation integer
+---@return number
+function GetStartLocationX(whichStartLocation) end
+---@param whichStartLocation integer
+---@return number
+function GetStartLocationY(whichStartLocation) end
+---@param whichStartLocation integer
+---@return number
+function GetStartLocationLoc(whichStartLocation) end
+---@return wc3_unit
+function GetFilterUnit() end
+---@return wc3_unit
+function GetEnumUnit() end
+---@return wc3_destructable
+function GetFilterDestructable() end
+---@return wc3_destructable
+function GetEnumDestructable() end
+---@return wc3_item
+function GetFilterItem() end
+---@return wc3_item
+function GetEnumItem() end
+---@return wc3_player
+function GetFilterPlayer() end
+---@return wc3_player
+function GetEnumPlayer() end
+---@return wc3_trigger
+function GetTriggeringTrigger() end
+---@return wc3_eventid 
+function GetTriggerEventId() end
+---@param whichTrigger wc3_trigger
+---@return integer
+function GetTriggerEvalCount(whichTrigger) end
+---@param whichTrigger wc3_trigger
+---@return integer
+function GetTriggerExecCount(whichTrigger) end
+---@return wc3_gamestate
+function GetEventGameState() end
+---@return wc3_player
+function GetWinningPlayer() end
+---@return wc3_region
+function GetTriggeringRegion() end
+---@return wc3_unit
+function GetEnteringUnit() end
+---@return wc3_unit
+function GetLeavingUnit() end
+---@return wc3_trackable
+function GetTriggeringTrackable() end
+---@return wc3_button
+function GetClickedButton() end
+---@return wc3_dialog
+function GetClickedDialog() end
+---@return number
+function GetTournamentFinishSoonTimeRemaining() end
+---@return integer
+function GetTournamentFinishNowRule() end
+---@return wc3_player
+function GetTournamentFinishNowPlayer() end
+---@param whichPlayer wc3_player
+---@return integer
+function GetTournamentScore(whichPlayer) end
+---@return string
+function GetSaveBasicFilename() end
+---@return wc3_player
+function GetTriggerPlayer() end
+---@return wc3_unit
+function GetLevelingUnit() end
+---@return wc3_unit
+function GetLearningUnit() end
+---@return integer
+function GetLearnedSkill() end
+---@return integer
+function GetLearnedSkillLevel() end
+---@return wc3_unit
+function GetRevivableUnit() end
+---@return wc3_unit
+function GetRevivingUnit() end
+---@return wc3_unit
+function GetAttacker() end
+---@return wc3_unit
+function GetRescuer() end
+---@return wc3_unit
+function GetDyingUnit() end
+---@return wc3_unit
+function GetKillingUnit() end
+---@return wc3_unit
+function GetDecayingUnit() end
+---@return wc3_unit
+function GetConstructingStructure() end
+---@return wc3_unit
+function GetCancelledStructure() end
+---@return wc3_unit
+function GetConstructedStructure() end
+---@return wc3_unit
+function GetResearchingUnit() end
+---@return integer
+function GetResearched() end
+---@return integer
+function GetTrainedUnitType() end
+---@return wc3_unit
+function GetTrainedUnit() end
+---@return wc3_unit
+function GetDetectedUnit() end
+---@return wc3_unit
+function GetSummoningUnit() end
+---@return wc3_unit
+function GetSummonedUnit() end
+---@return wc3_unit
+function GetTransportUnit() end
+---@return wc3_unit
+function GetLoadedUnit() end
+---@return wc3_unit
+function GetSellingUnit() end
+---@return wc3_unit
+function GetSoldUnit() end
+---@return wc3_unit
+function GetBuyingUnit() end
+---@return wc3_item
+function GetSoldItem() end
+---@return wc3_unit
+function GetChangingUnit() end
+---@return wc3_player
+function GetChangingUnitPrevOwner() end
+---@return wc3_unit
+function GetManipulatingUnit() end
+---@return wc3_item
+function GetManipulatedItem() end
+---@return wc3_unit
+function GetOrderedUnit() end
+---@return integer
+function GetIssuedOrderId() end
+---@return number
+function GetOrderPointX() end
+---@return number
+function GetOrderPointY() end
+---@return wc3_location
+function GetOrderPointLoc() end
+---@return wc3_widget
+function GetOrderTarget() end
+---@return wc3_destructable
+function GetOrderTargetDestructable() end
+---@return wc3_item
+function GetOrderTargetItem() end
+---@return wc3_unit
+function GetOrderTargetUnit() end
+---@return wc3_unit
+function GetSpellAbilityUnit() end
+---@return integer
+function GetSpellAbilityId() end
+---@return wc3_ability
+function GetSpellAbility() end
+---@return wc3_location
+function GetSpellTargetLoc() end
+---@return number
+function GetSpellTargetX() end
+---@return number
+function GetSpellTargetY() end
+---@return wc3_destructable
+function GetSpellTargetDestructable() end
+---@return wc3_item
+function GetSpellTargetItem() end
+---@return wc3_unit
+function GetSpellTargetUnit() end
+---@return wc3_playerstate
+function GetEventPlayerState() end
+---@return string
+function GetEventPlayerChatString() end
+---@return string
+function GetEventPlayerChatStringMatched() end
+---@return wc3_unit
+function GetTriggerUnit() end
+---@return wc3_unitstate
+function GetEventUnitState() end
+---@return number
+function GetEventDamage() end
+---@return wc3_unit
+function GetEventDamageSource() end
+---@return wc3_player
+function GetEventDetectingPlayer() end
+---@return wc3_unit
+function GetEventTargetUnit() end
+---@return wc3_widget
+function GetTriggerWidget() end
+---@return wc3_destructable
+function GetTriggerDestructable() end
+---@param whichItem wc3_item
+---@return string
+function GetItemName(whichItem) end
+---@param whichHero wc3_unit
+---@return integer
+function GetHeroLevel(whichHero) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitLevel(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitX(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitY(whichUnit) end
+---@param whichUnit wc3_unit
+---@return wc3_location
+function GetUnitLoc(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitFacing(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitMoveSpeed(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitDefaultMoveSpeed(whichUnit) end
+---@param whichUnit wc3_unit
+---@return wc3_player
+function GetOwningPlayer(whichUnit) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitTypeId(whichUnit) end
+---@param whichUnit wc3_unit
+---@return wc3_race
+function GetUnitRace(whichUnit) end
+---@param whichUnit wc3_unit
+---@return string
+function GetUnitName(whichUnit) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitFoodUsed(whichUnit) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitFoodMade(whichUnit) end
+---@param unitId integer
+---@return integer
+function GetFoodMade(unitId) end
+---@param unitId integer
+---@return integer
+function GetFoodUsed(unitId) end
+---@param whichUnit wc3_unit
+---@return wc3_location
+function GetUnitRallyPoint(whichUnit) end
+---@param whichUnit wc3_unit
+---@return wc3_unit
+function GetUnitRallyUnit(whichUnit) end
+---@param whichUnit wc3_unit
+---@return wc3_destructable
+function GetUnitRallyDestructable(whichUnit) end
+---@param whichUnit wc3_unit
+---@param whichUnitState wc3_unitstate
+---@return number
+function GetUnitState(whichUnit, whichUnitState) end
+---@param whichUnit wc3_unit
+---@param whichGroup wc3_group
+---@return boolean
+function IsUnitInGroup(whichUnit, whichGroup) end
+---@param whichUnit wc3_unit
+---@param whichForce wc3_force
+---@return boolean
+function IsUnitInForce(whichUnit, whichForce) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitOwnedByPlayer(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitAlly(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitEnemy(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitVisible(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitDetected(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitInvisible(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitFogged(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitMasked(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@return boolean
+function IsUnitSelected(whichUnit, whichPlayer) end
+---@param whichUnit wc3_unit
+---@param whichRace wc3_race
+---@return boolean
+function IsUnitRace(whichUnit, whichRace) end
+---@param whichUnit wc3_unit
+---@param whichUnitType wc3_unittype
+---@return boolean
+function IsUnitType(whichUnit, whichUnitType) end
+---@param whichUnit wc3_unit
+---@param whichSpecifiedUnit wc3_unit
+---@return boolean
+function IsUnit(whichUnit, whichSpecifiedUnit) end
+---@param whichUnit wc3_unit
+---@param otherUnit wc3_unit
+---@param distance number
+---@return boolean
+function IsUnitInRange(whichUnit, otherUnit, distance) end
+---@param whichUnit wc3_unit
+---@param x number
+---@param y number
+---@param distance number
+function IsUnitInRangeXY(whichUnit, x, y, distance) end
+---@param whichUnit wc3_unit
+---@param whichLocation wc3_location
+---@param distance number
+function IsUnitInRangeLoc(whichUnit, whichLocation, distance) end
+---@param whichUnit wc3_unit
+---@return boolean
+function IsUnitHidden(whichUnit) end
+---@param whichUnit wc3_unit
+---@return boolean
+function IsUnitIllusion(whichUnit) end
+---@param whichUnit wc3_unit
+---@param whichTransport wc3_unit
+---@return  boolean
+function IsUnitInTransport(whichUnit, whichTransport) end
+---@param whichUnit wc3_unit
+---@return boolean
+function IsUnitLoaded(whichUnit) end
+---@param unitId integer
+---@return boolean
+function IsHeroUnitId(unitId) end
+---@param unitId integer
+---@param whichUnitType wc3_unittype
+---@return boolean
+function IsUnitIdType(unitId,whichUnitType) end
+---@param num integer
+---@return wc3_player
+function Player(num) end
+---@return wc3_player
+function GetLocalPlayer() end
+---@param whichPlayer wc3_player
+---@param otherPlayer wc3_player
+---@return boolean
+function IsPlayerAlly(whichPlayer,otherPlayer) end
+---@param whichPlayer wc3_player
+---@param otherPlayer wc3_player
+---@return boolean
+function IsPlayerEnemy(whichPlayer,otherPlayer) end
+---@param whichPlayer wc3_player
+---@param whichForce wc3_force
+---@return boolean
+function IsPlayerInForce(whichPlayer,whichForce) end
+---@param whichPlayer wc3_player
+---@return boolean
+function IsPlayerObserver(whichPlayer) end
+---@param x number
+---@param y number
+---@param whichPlayer wc3_player
+---@return boolean
+function IsVisibleToPlayer(x,y,whichPlayer) end
+---@param whichLocation wc3_location
+---@param whichPlayer wc3_player
+---@return boolean
+function IsLocationVisibleToPlayer(whichLocation,whichPlayer) end
+---@param x number
+---@param y number
+---@param whichPlayer wc3_player
+---@return boolean
+function IsFoggedToPlayer(x,y,whichPlayer) end
+---@param whichLocation wc3_location
+---@param whichPlayer wc3_player
+---@return boolean
+function IsLocationFoggedToPlayer(whichLocation,whichPlayer) end
+---@param x number
+---@param y number
+---@param whichPlayer wc3_player
+---@return boolean
+function IsMaskedToPlayer(x,y,whichPlayer) end
+---@param whichLocation wc3_location
+---@param whichPlayer wc3_player
+---@return boolean
+function IsLocationMaskedToPlayer(whichLocation,whichPlayer) end
+---@param whichPlayer wc3_player
+---@return wc3_race
+function GetPlayerRace(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return integer
+function GetPlayerId(whichPlayer) end
+---@param whichPlayer wc3_player
+---@param includeIncomplete boolean
+---@return integer
+function GetPlayerUnitCount(whichPlayer,includeIncomplete) end
+---@param whichPlayer wc3_player
+---@param unitName string
+---@param includeIncomplete boolean
+---@param includeUpgrades boolean
+---@return integer
+function GetPlayerTypedUnitCount(whichPlayer,unitName,includeIncomplete,includeUpgrades) end
+---@param whichPlayer wc3_player
+---@param includeIncomplete boolean
+---@return integer
+function GetPlayerStructureCount(whichPlayer,includeIncomplete) end
+---@param whichPlayer wc3_player
+---@param whichPlayerState wc3_playerstate
+---@return integer
+function GetPlayerState(whichPlayer,whichPlayerState) end
+---@param whichPlayer wc3_player
+---@param whichPlayerScore wc3_playerscore
+---@return integer
+function GetPlayerScore(whichPlayer,whichPlayerScore) end
+---@param sourcePlayer wc3_player
+---@param otherPlayer wc3_player
+---@param whichAllianceSetting wc3_alliancetype
+---@return boolean
+function GetPlayerAlliance(sourcePlayer,otherPlayer,whichAllianceSetting) end
+---@param whichPlayer wc3_player
+---@return number
+function GetPlayerHandicap(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return number
+function GetPlayerHandicapXP(whichPlayer) end
+---@param whichPlayer wc3_player
+---@param handicap number
+function SetPlayerHandicap(whichPlayer,handicap) end
+---@param whichPlayer wc3_player
+---@param handicap number
+function SetPlayerHandicapXP(whichPlayer,handicap) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@param maximum integer
+function SetPlayerTechMaxAllowed(whichPlayer,techid,maximum) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@return integer
+function GetPlayerTechMaxAllowed(whichPlayer,techid) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@param levels integer
+function AddPlayerTechResearched(whichPlayer,techid,levels) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@param setToLevel integer
+function SetPlayerTechResearched(whichPlayer,techid,setToLevel) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@param specificonly boolean
+---@return boolean
+function GetPlayerTechResearched(whichPlayer,techid,specificonly) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@param specificonly boolean
+---@return integer
+function GetPlayerTechCount(whichPlayer,techid,specificonly) end
+---@param whichFloatGameState wc3_fgamestate
+---@return number
+function GetFloatGameState(whichFloatGameState) end
+---@param whichIntegerGameState wc3_igamestate
+---@return integer
+function GetIntegerGameState(whichIntegerGameState) end
+---@return number
+function GetCameraBoundMinX() end
+---@return number
+function GetCameraBoundMinY() end
+---@return number
+function GetCameraBoundMaxX() end
+---@return number
+function GetCameraBoundMaxY() end
+---@param whichField wc3_camerafield
+---@return number
+function GetCameraField(whichField) end
+---@return number
+function GetCameraTargetPositionX() end
+---@return number
+function GetCameraTargetPositionY() end
+---@return number
+function GetCameraTargetPositionZ() end
+---@return wc3_location
+function GetCameraTargetPositionLoc() end
+---@return number
+function GetCameraEyePositionX() end
+---@return number
+function GetCameraEyePositionY() end
+---@return number
+function GetCameraEyePositionZ() end
+---@return wc3_location
+function GetCameraEyePositionLoc() end
+---@param whichStartLoc integer
+---@param x number
+---@param y number
+function DefineStartLocation(whichStartLoc,x,y) end
+---@param degrees number
+---@return number
+function Deg2Rad(degrees) end
+---@param radians number
+---@return number
+function Rad2Deg(radians) end
+---@param radians number
+---@return number
+function Sin(radians) end
+---@param radians number
+---@return number
+function Cos(radians) end
+---@param radians number
+---@return number
+function Tan(radians) end
+---@param y number
+---@return number
+function Asin(y) end
+---@param x number
+---@return number
+function Acos(x) end
+---@param x number
+---@return number
+function Atan(x) end
+---@param y number
+---@param x number
+---@return number
+function Atan2(y,x) end
+---@param x number
+---@return number
+function SquareRoot(x) end
+---@param x number
+---@param power number
+---@return number
+function Pow(x,power) end
+---@param i integer
+---@return number
+function I2R(i) end
+---@param r number
+---@return integer
+function R2I(r) end
+---@param i integer
+---@return string
+function I2S(i) end
+---@param r number
+---@return string
+function R2S(r) end
+---@param r number
+---@param width integer
+---@param precision integer
+---@return string
+function R2SW(r,width,precision) end
+---@param s string
+---@return integer
+function S2I(s) end
+---@param s string
+---@return number
+function S2R(s) end
+---@param h wc3_handle
+---@return integer
+function GetHandleId(h) end
+---@param source string
+---@param str_start integer
+---@param str_end integer
+---@return string
+function SubString(source,str_start,str_end) end
+---@param s string
+---@return integer
+function StringLength(s) end
+---@param source string
+---@param upper boolean
+---@return string
+function StringCase(source,upper) end
+---@param s string
+---@return integer
+function StringHash(s) end
+---@param source string
+---@return string
+function GetLocalizedString(source) end
+---@param source string
+---@return integer
+function GetLocalizedHotkey(source) end
+---@param name string
+function SetMapName(name) end
+---@param description string
+function SetMapDescription(description) end
+---@param teamcount integer
+function SetTeams(teamcount) end
+---@param playercount integer
+function SetPlayers(playercount) end
+---@param whichStartLoc integer
+---@param whichLocation wc3_location
+function DefineStartLocationLoc(whichStartLoc,whichLocation) end
+---@param whichStartLoc integer
+---@param prioSlotCount integer
+function SetStartLocPrioCount(whichStartLoc,prioSlotCount) end
+---@param whichStartLoc integer
+---@param prioSlotIndex integer
+---@param otherStartLocIndex integer
+---@param priority wc3_startlocprio
+function SetStartLocPrio(whichStartLoc,prioSlotIndex,otherStartLocIndex,priority) end
+---@param whichStartLoc integer
+---@param prioSlotIndex integer
+---@return integer
+function GetStartLocPrioSlot(whichStartLoc,prioSlotIndex) end
+---@param whichStartLoc integer
+---@param prioSlotIndex integer
+---@return wc3_startlocprio
+function GetStartLocPrio(whichStartLoc,prioSlotIndex) end
+---@param whichGameType wc3_gametype
+---@param value boolean
+function SetGameTypeSupported(whichGameType,value) end
+---@param whichMapFlag wc3_mapflag
+---@param value boolean
+function SetMapFlag(whichMapFlag,value) end
+---@param whichPlacementType wc3_placement
+function SetGamePlacement(whichPlacementType) end
+---@param whichspeed wc3_gamespeed
+function SetGameSpeed(whichspeed) end
+---@param whichdifficulty wc3_gamedifficulty
+function SetGameDifficulty(whichdifficulty) end
+---@param whichdensity wc3_mapdensity
+function SetResourceDensity(whichdensity) end
+---@param whichdensity wc3_mapdensity
+function SetCreatureDensity(whichdensity) end
+---@return integer
+function GetTeams() end
+---@return integer
+function GetPlayers() end
+---@param whichGameType wc3_gametype
+---@return boolean
+function IsGameTypeSupported(whichGameType) end
+---@return wc3_gametype
+function GetGameTypeSelected() end
+---@param whichMapFlag wc3_mapflag
+---@return boolean
+function IsMapFlagSet(whichMapFlag) end
+---@param whichPlayer wc3_player
+---@param whichTeam integer
+function SetPlayerTeam(whichPlayer,whichTeam) end
+---@param whichPlayer wc3_player
+---@param startLocIndex integer
+function SetPlayerStartLocation(whichPlayer,startLocIndex) end
+---@param whichPlayer wc3_player
+---@param startLocIndex integer
+function ForcePlayerStartLocation(whichPlayer,startLocIndex) end
+---@param whichPlayer wc3_player
+---@param color wc3_playercolor
+function SetPlayerColor(whichPlayer,color) end
+---@param sourcePlayer wc3_player
+---@param otherPlayer wc3_player
+---@param whichAllianceSetting wc3_alliancetype
+---@param value boolean
+function SetPlayerAlliance(sourcePlayer,otherPlayer,whichAllianceSetting,value) end
+---@param sourcePlayer wc3_player
+---@param otherPlayer wc3_player
+---@param whichResource wc3_playerstate
+---@param rate integer
+function SetPlayerTaxRate(sourcePlayer,otherPlayer,whichResource,rate) end
+---@param whichPlayer wc3_player
+---@param whichRacePreference wc3_racepreference
+function SetPlayerRacePreference(whichPlayer,whichRacePreference) end
+---@param whichPlayer wc3_player
+---@param value boolean
+function SetPlayerRaceSelectable(whichPlayer,value) end
+---@param whichPlayer wc3_player
+---@param controlType wc3_mapcontrol
+function SetPlayerController(whichPlayer,controlType) end
+---@param whichPlayer wc3_player
+---@param name string
+function SetPlayerName(whichPlayer,name) end
+---@param whichPlayer wc3_player
+---@param flag boolean
+function SetPlayerOnScoreScreen(whichPlayer,flag) end
+---@param whichPlayer wc3_player
+---@return integer
+function GetPlayerTeam(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return integer
+function GetPlayerStartLocation(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return wc3_playercolor
+function GetPlayerColor(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return boolean
+function GetPlayerSelectable(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return wc3_mapcontrol
+function GetPlayerController(whichPlayer) end
+---@param whichPlayer wc3_player
+---@return wc3_playerslotstate
+function GetPlayerSlotState(whichPlayer) end
+---@param sourcePlayer wc3_player
+---@param otherPlayer wc3_player
+---@param whichResource wc3_playerstate
+---@return integer
+function GetPlayerTaxRate(sourcePlayer,otherPlayer,whichResource) end
+---@param whichPlayer wc3_player
+---@param pref wc3_racepreference
+---@return boolean
+function IsPlayerRacePrefSet(whichPlayer,pref) end
+---@param whichPlayer wc3_player
+---@return string
+function GetPlayerName(whichPlayer) end
+---@return wc3_timer
+function CreateTimer() end
+---@param whichTimer wc3_timer
+function DestroyTimer(whichTimer) end
+---@param whichTimer wc3_timer
+---@param timeout number
+---@param periodic boolean
+---@param handlerFunc function
+function TimerStart(whichTimer,timeout,periodic,handlerFunc) end
+---@param whichTimer wc3_timer
+---@return number
+function TimerGetElapsed(whichTimer) end
+---@param whichTimer wc3_timer
+---@return number
+function TimerGetRemaining(whichTimer) end
+---@param whichTimer wc3_timer
+---@return number
+function TimerGetTimeout(whichTimer) end
+---@param whichTimer wc3_timer
+function PauseTimer(whichTimer) end
+---@param whichTimer wc3_timer
+function ResumeTimer(whichTimer) end
+---@return wc3_timer
+function GetExpiredTimer() end
+---@return wc3_group
+function CreateGroup() end
+---@param whichGroup wc3_group
+function DestroyGroup(whichGroup) end
+---@param whichGroup wc3_group
+---@param whichUnit wc3_unit
+---@return boolean
+function GroupAddUnit(whichGroup,whichUnit) end
+---@param whichGroup wc3_group
+---@param whichUnit wc3_unit
+---@return boolean
+function GroupRemoveUnit(whichGroup,whichUnit) end
+---@param whichGroup wc3_group
+---@param addGroup wc3_group
+---@return integer
+function BlzGroupAddGroupFast(whichGroup,addGroup) end
+---@param whichGroup wc3_group
+---@param removeGroup wc3_group
+---@return integer
+function BlzGroupRemoveGroupFast(whichGroup,removeGroup) end
+---@param whichGroup wc3_group
+function GroupClear(whichGroup) end
+---@param whichGroup wc3_group
+---@return integer
+function BlzGroupGetSize(whichGroup) end
+---@param whichGroup wc3_group
+---@param index integer
+---@return wc3_unit
+function BlzGroupUnitAt(whichGroup,index) end
+---@param whichGroup wc3_group
+---@param unitname string
+---@param filter wc3_boolexpr
+function GroupEnumUnitsOfType(whichGroup,unitname,filter) end
+---@param whichGroup wc3_group
+---@param whichPlayer wc3_player
+---@param filter wc3_boolexpr
+function GroupEnumUnitsOfPlayer(whichGroup,whichPlayer,filter) end
+---@param whichGroup wc3_group
+---@param unitname string
+---@param filter wc3_boolexpr
+---@param countLimit integer
+function GroupEnumUnitsOfTypeCounted(whichGroup,unitname,filter,countLimit) end
+---@param whichGroup wc3_group
+---@param r wc3_rect
+---@param filter wc3_boolexpr
+function GroupEnumUnitsInRect(whichGroup,r,filter) end
+---@param whichGroup wc3_group
+---@param r wc3_rect
+---@param filter wc3_boolexpr
+---@param countLimit integer
+function GroupEnumUnitsInRectCounted(whichGroup,r,filter,countLimit) end
+---@param whichGroup wc3_group
+---@param x number
+---@param y number
+---@param radius number
+---@param filter wc3_boolexpr
+function GroupEnumUnitsInRange(whichGroup,x,y,radius,filter) end
+---@param whichGroup wc3_group
+---@param whichLocation wc3_location
+---@param radius number
+---@param filter wc3_boolexpr
+function GroupEnumUnitsInRangeOfLoc(whichGroup,whichLocation,radius,filter) end
+---@param whichGroup wc3_group
+---@param x number
+---@param y number
+---@param radius number
+---@param filter wc3_boolexpr
+---@param countLimit integer
+function GroupEnumUnitsInRangeCounted(whichGroup,x,y,radius,filter,countLimit) end
+---@param whichGroup wc3_group
+---@param whichLocation wc3_location
+---@param radius number
+---@param filter wc3_boolexpr
+---@param countLimit integer
+function GroupEnumUnitsInRangeOfLocCounted(whichGroup,whichLocation,radius,filter,countLimit) end
+---@param whichGroup wc3_group
+---@param whichPlayer wc3_player
+---@param filter wc3_boolexpr
+function GroupEnumUnitsSelected(whichGroup,whichPlayer,filter) end
+---@param whichGroup wc3_group
+---@param order string
+---@return boolean
+function GroupImmediateOrder(whichGroup,order) end
+---@param whichGroup wc3_group
+---@param order integer
+---@return boolean
+function GroupImmediateOrderById(whichGroup,order) end
+---@param whichGroup wc3_group
+---@param order string
+---@param x number
+---@param y number
+---@return boolean
+function GroupPointOrder(whichGroup,order,x,y) end
+---@param whichGroup wc3_group
+---@param order string
+---@param whichLocation wc3_location
+---@return boolean
+function GroupPointOrderLoc(whichGroup,order,whichLocation) end
+---@param whichGroup wc3_group
+---@param order integer
+---@param x number
+---@param y number
+---@return boolean
+function GroupPointOrderById(whichGroup,order,x,y) end
+---@param whichGroup wc3_group
+---@param order integer
+---@param whichLocation wc3_location
+---@return boolean
+function GroupPointOrderByIdLoc(whichGroup,order,whichLocation) end
+---@param whichGroup wc3_group
+---@param order string
+---@param targetWidget wc3_widget
+---@return boolean
+function GroupTargetOrder(whichGroup,order,targetWidget) end
+---@param whichGroup wc3_group
+---@param order integer
+---@param targetWidget wc3_widget
+---@return boolean
+function GroupTargetOrderById(whichGroup,order,targetWidget) end
+---@param whichGroup wc3_group
+---@param callback function
+function ForGroup(whichGroup,callback) end
+---@param whichGroup wc3_group
+---@return wc3_unit
+function FirstOfGroup(whichGroup) end
+---@return wc3_force
+function CreateForce() end
+---@param whichForce wc3_force
+function DestroyForce(whichForce) end
+---@param whichForce wc3_force
+---@param whichPlayer wc3_player
+function ForceAddPlayer(whichForce,whichPlayer) end
+---@param whichForce wc3_force
+---@param whichPlayer wc3_player
+function ForceRemovePlayer(whichForce,whichPlayer) end
+---@param whichForce wc3_force
+---@param whichPlayer wc3_player
+---@return boolean
+function BlzForceHasPlayer(whichForce,whichPlayer) end
+---@param whichForce wc3_force
+function ForceClear(whichForce) end
+---@param whichForce wc3_force
+---@param filter wc3_boolexpr
+function ForceEnumPlayers(whichForce,filter) end
+---@param whichForce wc3_force
+---@param filter wc3_boolexpr
+---@param countLimit integer
+function ForceEnumPlayersCounted(whichForce,filter,countLimit) end
+---@param whichForce wc3_force
+---@param whichPlayer wc3_player
+---@param filter wc3_boolexpr
+function ForceEnumAllies(whichForce,whichPlayer,filter) end
+---@param whichForce wc3_force
+---@param whichPlayer wc3_player
+---@param filter wc3_boolexpr
+function ForceEnumEnemies(whichForce,whichPlayer,filter) end
+---@param whichForce wc3_force
+---@param callback function
+function ForForce(whichForce,callback) end
+---@param minx number
+---@param miny number
+---@param maxx number
+---@param maxy number
+---@return wc3_rect
+function Rect(minx,miny,maxx,maxy) end
+---@param min wc3_location
+---@param max wc3_location
+---@return wc3_rect
+function RectFromLoc(min,max) end
+---@param whichRect wc3_rect
+function RemoveRect(whichRect) end
+---@param whichRect wc3_rect
+---@param minx number
+---@param miny number
+---@param maxx number
+---@param maxy number
+function SetRect(whichRect,minx,miny,maxx,maxy) end
+---@param whichRect wc3_rect
+---@param min wc3_location
+---@param max wc3_location
+function SetRectFromLoc(whichRect,min,max) end
+---@param whichRect wc3_rect
+---@param newCenterX number
+---@param newCenterY number
+function MoveRectTo(whichRect,newCenterX,newCenterY) end
+---@param whichRect wc3_rect
+---@param newCenterLoc wc3_location
+function MoveRectToLoc(whichRect,newCenterLoc) end
+---@param whichRect wc3_rect
+---@return number
+function GetRectCenterX(whichRect) end
+---@param whichRect wc3_rect
+---@return number
+function GetRectCenterY(whichRect) end
+---@param whichRect wc3_rect
+---@return number
+function GetRectMinX(whichRect) end
+---@param whichRect wc3_rect
+---@return number
+function GetRectMinY(whichRect) end
+---@param whichRect wc3_rect
+---@return number
+function GetRectMaxX(whichRect) end
+---@param whichRect wc3_rect
+---@return number
+function GetRectMaxY(whichRect) end
+---@return wc3_region
+function CreateRegion() end
+---@param whichRegion wc3_region
+function RemoveRegion(whichRegion) end
+---@param whichRegion wc3_region
+---@param r wc3_rect
+function RegionAddRect(whichRegion,r) end
+---@param whichRegion wc3_region
+---@param r wc3_rect
+function RegionClearRect(whichRegion,r) end
+---@param whichRegion wc3_region
+---@param x number
+---@param y number
+function RegionAddCell(whichRegion,x,y) end
+---@param whichRegion wc3_region
+---@param whichLocation wc3_location
+function RegionAddCellAtLoc(whichRegion,whichLocation) end
+---@param whichRegion wc3_region
+---@param x number
+---@param y number
+function RegionClearCell(whichRegion,x,y) end
+---@param whichRegion wc3_region
+---@param whichLocation wc3_location
+function RegionClearCellAtLoc(whichRegion,whichLocation) end
+---@param x number
+---@param y number
+---@return wc3_location
+function Location(x,y) end
+---@param whichLocation wc3_location
+function RemoveLocation(whichLocation) end
+---@param whichLocation wc3_location
+---@param newX number
+---@param newY number
+function MoveLocation(whichLocation,newX,newY) end
+---@param whichLocation wc3_location
+---@return number
+function GetLocationX(whichLocation) end
+---@param whichLocation wc3_location
+---@return number
+function GetLocationY(whichLocation) end
+---@param whichLocation wc3_location
+---@return number
+function GetLocationZ(whichLocation) end
+---@param whichRegion wc3_region
+---@param whichUnit wc3_unit
+---@return boolean
+function IsUnitInRegion(whichRegion,whichUnit) end
+---@param whichRegion wc3_region
+---@param x number
+---@param y number
+---@return boolean
+function IsPointInRegion(whichRegion,x,y) end
+---@param whichRegion wc3_region
+---@param whichLocation wc3_location
+---@return boolean
+function IsLocationInRegion(whichRegion,whichLocation) end
+---@return wc3_rect
+function GetWorldBounds() end
+---@return wc3_trigger
+function CreateTrigger() end
+---@param whichTrigger wc3_trigger
+function DestroyTrigger(whichTrigger) end
+---@param whichTrigger wc3_trigger
+function ResetTrigger(whichTrigger) end
+---@param whichTrigger wc3_trigger
+function EnableTrigger(whichTrigger) end
+---@param whichTrigger wc3_trigger
+function DisableTrigger(whichTrigger) end
+---@param whichTrigger wc3_trigger
+---@return boolean
+function IsTriggerEnabled(whichTrigger) end
+---@param whichTrigger wc3_trigger
+---@param flag boolean
+function TriggerWaitOnSleeps(whichTrigger,flag) end
+---@param whichTrigger wc3_trigger
+---@return boolean
+function IsTriggerWaitOnSleeps(whichTrigger) end
+---@param funcName string
+function ExecuteFunc(funcName) end
+---@param operandA wc3_boolexpr
+---@param operandB wc3_boolexpr
+---@return wc3_boolexpr
+function And(operandA,operandB) end
+---@param operandA wc3_boolexpr
+---@param operandB wc3_boolexpr
+---@return wc3_boolexpr
+function Or(operandA,operandB) end
+---@param operand wc3_boolexpr
+---@return wc3_boolexpr
+function Not(operand) end
+---@param func function
+---@return wc3_conditionfunc
+function Condition(func) end
+---@param c wc3_conditionfunc
+function DestroyCondition(c) end
+---@param func function
+---@return wc3_filterfunc
+function Filter(func) end
+---@param f wc3_filterfunc
+function DestroyFilter(f) end
+---@param e wc3_boolexpr
+function DestroyBoolExpr(e) end
+---@param whichTrigger wc3_trigger
+---@param varName string
+---@param opcode wc3_limitop
+---@param limitval number
+---@return wc3_event
+function TriggerRegisterVariableEvent(whichTrigger,varName,opcode,limitval) end
+---@param whichTrigger wc3_trigger
+---@param timeout number
+---@param periodic boolean
+---@return wc3_event
+function TriggerRegisterTimerEvent(whichTrigger,timeout,periodic) end
+---@param whichTrigger wc3_trigger
+---@param t wc3_timer
+---@return wc3_event
+function TriggerRegisterTimerExpireEvent(whichTrigger,t) end
+---@param whichTrigger wc3_trigger
+---@param whichState wc3_gamestate
+---@param opcode wc3_limitop
+---@param limitval number
+---@return wc3_event
+function TriggerRegisterGameStateEvent(whichTrigger,whichState,opcode,limitval) end
+---@param whichTrigger wc3_trigger
+---@param whichDialog wc3_dialog
+---@return wc3_event
+function TriggerRegisterDialogEvent(whichTrigger,whichDialog) end
+---@param whichTrigger wc3_trigger
+---@param whichButton wc3_button
+---@return wc3_event
+function TriggerRegisterDialogButtonEvent(whichTrigger,whichButton) end
+---@param whichTrigger wc3_trigger
+---@param whichGameEvent wc3_gameevent
+---@return wc3_event
+function TriggerRegisterGameEvent(whichTrigger,whichGameEvent) end
+---@param whichTrigger wc3_trigger
+---@param whichRegion wc3_region
+---@param filter wc3_boolexpr
+---@return wc3_event
+function TriggerRegisterEnterRegion(whichTrigger,whichRegion,filter) end
+---@param whichTrigger wc3_trigger
+---@param whichRegion wc3_region
+---@param filter wc3_boolexpr
+---@return wc3_event
+function TriggerRegisterLeaveRegion(whichTrigger,whichRegion,filter) end
+---@param whichTrigger wc3_trigger
+---@param t wc3_trackable
+---@return wc3_event
+function TriggerRegisterTrackableHitEvent(whichTrigger,t) end
+---@param whichTrigger wc3_trigger
+---@param t wc3_trackable
+---@return wc3_event
+function TriggerRegisterTrackableTrackEvent(whichTrigger,t) end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param whichPlayerEvent wc3_playerevent
+---@return wc3_event
+function TriggerRegisterPlayerEvent(whichTrigger,whichPlayer,whichPlayerEvent) end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param whichPlayerUnitEvent wc3_playerunitevent
+---@param filter wc3_boolexpr
+---@return wc3_event
+function TriggerRegisterPlayerUnitEvent(whichTrigger,whichPlayer,whichPlayerUnitEvent,filter) end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param whichAlliance wc3_alliancetype
+---@return wc3_event
+function TriggerRegisterPlayerAllianceChange(whichTrigger,whichPlayer,whichAlliance) end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param whichState wc3_playerstate
+---@param opcode wc3_limitop
+---@param limitval number
+---@return wc3_event
+function TriggerRegisterPlayerStateEvent(whichTrigger,whichPlayer,whichState,opcode,limitval) end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param chatMessageToDetect string
+---@param exactMatchOnly boolean
+---@return wc3_event
+function TriggerRegisterPlayerChatEvent(whichTrigger,whichPlayer,chatMessageToDetect,exactMatchOnly) end
+---@param whichTrigger wc3_trigger
+---@param whichWidget wc3_widget
+---@return wc3_event
+function TriggerRegisterDeathEvent(whichTrigger,whichWidget) end
+---@param whichTrigger wc3_trigger
+---@param whichUnit wc3_unit
+---@param whichState wc3_unitstate
+---@param opcode wc3_limitop
+---@param limitval number
+---@return wc3_event
+function TriggerRegisterUnitStateEvent(whichTrigger,whichUnit,whichState,opcode,limitval) end
+---@param whichTrigger wc3_trigger
+---@param whichUnit wc3_unit
+---@param whichEvent wc3_unitevent
+---@return wc3_event
+function TriggerRegisterUnitEvent(whichTrigger,whichUnit,whichEvent) end
+---@param whichTrigger wc3_trigger
+---@param whichUnit wc3_unit
+---@param whichEvent wc3_unitevent
+---@param filter wc3_boolexpr
+---@return wc3_event
+function TriggerRegisterFilterUnitEvent(whichTrigger,whichUnit,whichEvent,filter) end
+---@param whichTrigger wc3_trigger
+---@param whichUnit wc3_unit
+---@param range number
+---@param filter wc3_boolexpr
+---@return wc3_event
+function TriggerRegisterUnitInRange(whichTrigger,whichUnit,range,filter) end
+---@param whichTrigger wc3_trigger
+---@param condition wc3_boolexpr
+---@return wc3_triggercondition
+function TriggerAddCondition(whichTrigger,condition) end
+---@param whichTrigger wc3_trigger
+---@param whichCondition wc3_triggercondition
+function TriggerRemoveCondition(whichTrigger,whichCondition) end
+---@param whichTrigger wc3_trigger
+function TriggerClearConditions(whichTrigger) end
+---@param whichTrigger wc3_trigger
+---@param actionFunc function
+---@return wc3_triggeraction
+function TriggerAddAction(whichTrigger,actionFunc) end
+---@param whichTrigger wc3_trigger
+---@param whichAction wc3_triggeraction
+function TriggerRemoveAction(whichTrigger,whichAction) end
+---@param whichTrigger wc3_trigger
+function TriggerClearActions(whichTrigger) end
+---@param timeout number
+function TriggerSleepAction(timeout) end
+---@param s wc3_sound
+---@param offset number
+function TriggerWaitForSound(s,offset) end
+---@param whichTrigger wc3_trigger
+---@return boolean
+function TriggerEvaluate(whichTrigger) end
+---@param whichTrigger wc3_trigger
+function TriggerExecute(whichTrigger) end
+---@param whichTrigger wc3_trigger
+function TriggerExecuteWait(whichTrigger) end
+function TriggerSyncStart() end
+function TriggerSyncReady() end
+---@param whichWidget wc3_widget
+---@return number
+function GetWidgetLife(whichWidget) end
+---@param whichWidget wc3_widget
+---@param newLife number
+function SetWidgetLife(whichWidget,newLife) end
+---@param whichWidget wc3_widget
+---@return number
+function GetWidgetX(whichWidget) end
+---@param whichWidget wc3_widget
+---@return number
+function GetWidgetY(whichWidget) end
+---@param objectid integer
+---@param x number
+---@param y number
+---@param face number
+---@param scale number
+---@param variation integer
+---@return wc3_destructable
+function CreateDestructable(objectid,x,y,face,scale,variation) end
+---@param objectid integer
+---@param x number
+---@param y number
+---@param z number
+---@param face number
+---@param scale number
+---@param variation integer
+---@return wc3_destructable
+function CreateDestructableZ(objectid,x,y,z,face,scale,variation) end
+---@param objectid integer
+---@param x number
+---@param y number
+---@param face number
+---@param scale number
+---@param variation integer
+---@return wc3_destructable
+function CreateDeadDestructable(objectid,x,y,face,scale,variation) end
+---@param objectid integer
+---@param x number
+---@param y number
+---@param z number
+---@param face number
+---@param scale number
+---@param variation integer
+---@return wc3_destructable
+function CreateDeadDestructableZ(objectid,x,y,z,face,scale,variation) end
+---@param d wc3_destructable
+function RemoveDestructable(d) end
+---@param d wc3_destructable
+function KillDestructable(d) end
+---@param d wc3_destructable
+---@param flag boolean
+function SetDestructableInvulnerable(d,flag) end
+---@param d wc3_destructable
+---@return boolean
+function IsDestructableInvulnerable(d) end
+---@param r wc3_rect
+---@param filter wc3_boolexpr
+---@param actionFunc function
+function EnumDestructablesInRect(r,filter,actionFunc) end
+---@param d wc3_destructable
+---@return integer
+function GetDestructableTypeId(d) end
+---@param d wc3_destructable
+---@return number
+function GetDestructableX(d) end
+---@param d wc3_destructable
+---@return number
+function GetDestructableY(d) end
+---@param d wc3_destructable
+---@param life number
+function SetDestructableLife(d,life) end
+---@param d wc3_destructable
+---@return number
+function GetDestructableLife(d) end
+---@param d wc3_destructable
+---@param max number
+function SetDestructableMaxLife(d,max) end
+---@param d wc3_destructable
+---@return number
+function GetDestructableMaxLife(d) end
+---@param d wc3_destructable
+---@param life number
+---@param birth boolean
+function DestructableRestoreLife(d,life,birth) end
+---@param d wc3_destructable
+---@param whichAnimation string
+function QueueDestructableAnimation(d,whichAnimation) end
+---@param d wc3_destructable
+---@param whichAnimation string
+function SetDestructableAnimation(d,whichAnimation) end
+---@param d wc3_destructable
+---@param speedFactor number
+function SetDestructableAnimationSpeed(d,speedFactor) end
+---@param d wc3_destructable
+---@param flag boolean
+function ShowDestructable(d,flag) end
+---@param d wc3_destructable
+---@return number
+function GetDestructableOccluderHeight(d) end
+---@param d wc3_destructable
+---@param height number
+function SetDestructableOccluderHeight(d,height) end
+---@param d wc3_destructable
+---@return string
+function GetDestructableName(d) end
+---@param itemid integer
+---@param x number
+---@param y number
+---@return wc3_item
+function CreateItem(itemid,x,y) end
+---@param whichItem wc3_item
+function RemoveItem(whichItem) end
+---@param whichItem wc3_item
+---@return wc3_player
+function GetItemPlayer(whichItem) end
+---@param i wc3_item
+---@return integer
+function GetItemTypeId(i) end
+---@param i wc3_item
+---@return number
+function GetItemX(i) end
+---@param i wc3_item
+---@return number
+function GetItemY(i) end
+---@param i wc3_item
+---@param x number
+---@param y number
 
-native Deg2Rad  takes real degrees returns real
-native Rad2Deg  takes real radians returns real
-native Sin      takes real radians returns real
-native Cos      takes real radians returns real
-native Tan      takes real radians returns real
-native Asin     takes real y returns real
-native Acos     takes real x returns real
-native Atan     takes real x returns real
-native Atan2    takes real y, real x returns real
-native SquareRoot takes real x returns real
-native Pow      takes real x, real power returns real
-native I2R  takes integer i returns real
-native R2I  takes real r returns integer
-native I2S  takes integer i returns string
-native R2S  takes real r returns string
-native R2SW takes real r, integer width, integer precision returns string
-native S2I  takes string s returns integer
-native S2R  takes string s returns real
-native GetHandleId takes handle h returns integer
-native SubString takes string source, integer start, integer end returns string
-native StringLength takes string s returns integer
-native StringCase takes string source, boolean upper returns string
-native StringHash takes string s returns integer
-native GetLocalizedString takes string source returns string
-native GetLocalizedHotkey takes string source returns integer
-native SetMapName           takes string name returns nothing
-native SetMapDescription    takes string description returns nothing
-native SetTeams             takes integer teamcount returns nothing
-native SetPlayers           takes integer playercount returns nothing
-native DefineStartLocation      takes integer whichStartLoc, real x, real y returns nothing
-native DefineStartLocationLoc   takes integer whichStartLoc, location whichLocation returns nothing
-native SetStartLocPrioCount     takes integer whichStartLoc, integer prioSlotCount returns nothing
-native SetStartLocPrio          takes integer whichStartLoc, integer prioSlotIndex, integer otherStartLocIndex, startlocprio priority returns nothing
-native GetStartLocPrioSlot      takes integer whichStartLoc, integer prioSlotIndex returns integer
-native GetStartLocPrio          takes integer whichStartLoc, integer prioSlotIndex returns startlocprio
-native SetGameTypeSupported takes gametype whichGameType, boolean value returns nothing
-native SetMapFlag           takes mapflag whichMapFlag, boolean value returns nothing
-native SetGamePlacement     takes placement whichPlacementType returns nothing
-native SetGameSpeed         takes gamespeed whichspeed returns nothing
-native SetGameDifficulty    takes gamedifficulty whichdifficulty returns nothing
-native SetResourceDensity   takes mapdensity whichdensity returns nothing
-native SetCreatureDensity   takes mapdensity whichdensity returns nothing
-native GetTeams             takes nothing returns integer
-native GetPlayers           takes nothing returns integer
-native IsGameTypeSupported  takes gametype whichGameType returns boolean
-native GetGameTypeSelected  takes nothing returns gametype
-native IsMapFlagSet         takes mapflag whichMapFlag returns boolean
-native SetPlayerTeam            takes player whichPlayer, integer whichTeam returns nothing
-native SetPlayerStartLocation   takes player whichPlayer, integer startLocIndex returns nothing
-native ForcePlayerStartLocation takes player whichPlayer, integer startLocIndex returns nothing 
-native SetPlayerColor           takes player whichPlayer, playercolor color returns nothing
-native SetPlayerAlliance        takes player sourcePlayer, player otherPlayer, alliancetype whichAllianceSetting, boolean value returns nothing
-native SetPlayerTaxRate         takes player sourcePlayer, player otherPlayer, playerstate whichResource, integer rate returns nothing
-native SetPlayerRacePreference  takes player whichPlayer, racepreference whichRacePreference returns nothing
-native SetPlayerRaceSelectable  takes player whichPlayer, boolean value returns nothing
-native SetPlayerController      takes player whichPlayer, mapcontrol controlType returns nothing
-native SetPlayerName            takes player whichPlayer, string name returns nothing
-native SetPlayerOnScoreScreen   takes player whichPlayer, boolean flag returns nothing
-native GetPlayerTeam            takes player whichPlayer returns integer
-native GetPlayerStartLocation   takes player whichPlayer returns integer
-native GetPlayerColor           takes player whichPlayer returns playercolor
-native GetPlayerSelectable      takes player whichPlayer returns boolean
-native GetPlayerController      takes player whichPlayer returns mapcontrol
-native GetPlayerSlotState       takes player whichPlayer returns playerslotstate
-native GetPlayerTaxRate         takes player sourcePlayer, player otherPlayer, playerstate whichResource returns integer
-native IsPlayerRacePrefSet      takes player whichPlayer, racepreference pref returns boolean
-native GetPlayerName            takes player whichPlayer returns string
-native CreateTimer          takes nothing returns timer
-native DestroyTimer         takes timer whichTimer returns nothing
-native TimerStart           takes timer whichTimer, real timeout, boolean periodic, code handlerFunc returns nothing
-native TimerGetElapsed      takes timer whichTimer returns real
-native TimerGetRemaining    takes timer whichTimer returns real
-native TimerGetTimeout      takes timer whichTimer returns real
-native PauseTimer           takes timer whichTimer returns nothing
-native ResumeTimer          takes timer whichTimer returns nothing
-native GetExpiredTimer      takes nothing returns timer
-native CreateGroup                          takes nothing returns group
-native DestroyGroup                         takes group whichGroup returns nothing
-native GroupAddUnit                         takes group whichGroup, unit whichUnit returns boolean
-native GroupRemoveUnit                      takes group whichGroup, unit whichUnit returns boolean
-native BlzGroupAddGroupFast                 takes group whichGroup, group addGroup returns integer
-native BlzGroupRemoveGroupFast              takes group whichGroup, group removeGroup returns integer
-native GroupClear                           takes group whichGroup returns nothing
-native BlzGroupGetSize                      takes group whichGroup returns integer
-native BlzGroupUnitAt                       takes group whichGroup, integer index returns unit
-native GroupEnumUnitsOfType                 takes group whichGroup, string unitname, boolexpr filter returns nothing
-native GroupEnumUnitsOfPlayer               takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-native GroupEnumUnitsOfTypeCounted          takes group whichGroup, string unitname, boolexpr filter, integer countLimit returns nothing
-native GroupEnumUnitsInRect                 takes group whichGroup, rect r, boolexpr filter returns nothing
-native GroupEnumUnitsInRectCounted          takes group whichGroup, rect r, boolexpr filter, integer countLimit returns nothing
-native GroupEnumUnitsInRange                takes group whichGroup, real x, real y, real radius, boolexpr filter returns nothing
-native GroupEnumUnitsInRangeOfLoc           takes group whichGroup, location whichLocation, real radius, boolexpr filter returns nothing
-native GroupEnumUnitsInRangeCounted         takes group whichGroup, real x, real y, real radius, boolexpr filter, integer countLimit returns nothing
-native GroupEnumUnitsInRangeOfLocCounted    takes group whichGroup, location whichLocation, real radius, boolexpr filter, integer countLimit returns nothing
-native GroupEnumUnitsSelected               takes group whichGroup, player whichPlayer, boolexpr filter returns nothing
-native GroupImmediateOrder                  takes group whichGroup, string order returns boolean
-native GroupImmediateOrderById              takes group whichGroup, integer order returns boolean
-native GroupPointOrder                      takes group whichGroup, string order, real x, real y returns boolean
-native GroupPointOrderLoc                   takes group whichGroup, string order, location whichLocation returns boolean
-native GroupPointOrderById                  takes group whichGroup, integer order, real x, real y returns boolean
-native GroupPointOrderByIdLoc               takes group whichGroup, integer order, location whichLocation returns boolean
-native GroupTargetOrder                     takes group whichGroup, string order, widget targetWidget returns boolean
-native GroupTargetOrderById                 takes group whichGroup, integer order, widget targetWidget returns boolean
-native ForGroup                 takes group whichGroup, code callback returns nothing
-native FirstOfGroup             takes group whichGroup returns unit
-native CreateForce              takes nothing returns force
-native DestroyForce             takes force whichForce returns nothing
-native ForceAddPlayer           takes force whichForce, player whichPlayer returns nothing
-native ForceRemovePlayer        takes force whichForce, player whichPlayer returns nothing
-native BlzForceHasPlayer        takes force whichForce, player whichPlayer returns boolean
-native ForceClear               takes force whichForce returns nothing
-native ForceEnumPlayers         takes force whichForce, boolexpr filter returns nothing
-native ForceEnumPlayersCounted  takes force whichForce, boolexpr filter, integer countLimit returns nothing
-native ForceEnumAllies          takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-native ForceEnumEnemies         takes force whichForce, player whichPlayer, boolexpr filter returns nothing
-native ForForce                 takes force whichForce, code callback returns nothing
-native Rect                     takes real minx, real miny, real maxx, real maxy returns rect
-native RectFromLoc              takes location min, location max returns rect
-native RemoveRect               takes rect whichRect returns nothing
-native SetRect                  takes rect whichRect, real minx, real miny, real maxx, real maxy returns nothing
-native SetRectFromLoc           takes rect whichRect, location min, location max returns nothing
-native MoveRectTo               takes rect whichRect, real newCenterX, real newCenterY returns nothing
-native MoveRectToLoc            takes rect whichRect, location newCenterLoc returns nothing
-native GetRectCenterX           takes rect whichRect returns real
-native GetRectCenterY           takes rect whichRect returns real
-native GetRectMinX              takes rect whichRect returns real
-native GetRectMinY              takes rect whichRect returns real
-native GetRectMaxX              takes rect whichRect returns real
-native GetRectMaxY              takes rect whichRect returns real
-native CreateRegion             takes nothing returns region
-native RemoveRegion             takes region whichRegion returns nothing
-native RegionAddRect            takes region whichRegion, rect r returns nothing
-native RegionClearRect          takes region whichRegion, rect r returns nothing
-native RegionAddCell           takes region whichRegion, real x, real y returns nothing
-native RegionAddCellAtLoc      takes region whichRegion, location whichLocation returns nothing
-native RegionClearCell         takes region whichRegion, real x, real y returns nothing
-native RegionClearCellAtLoc    takes region whichRegion, location whichLocation returns nothing
-native Location                 takes real x, real y returns location
-native RemoveLocation           takes location whichLocation returns nothing
-native MoveLocation             takes location whichLocation, real newX, real newY returns nothing
-native GetLocationX             takes location whichLocation returns real
-native GetLocationY             takes location whichLocation returns real
-native GetLocationZ             takes location whichLocation returns real
-native IsUnitInRegion               takes region whichRegion, unit whichUnit returns boolean
-native IsPointInRegion              takes region whichRegion, real x, real y returns boolean
-native IsLocationInRegion           takes region whichRegion, location whichLocation returns boolean
-native GetWorldBounds           takes nothing returns rect
-native CreateTrigger    takes nothing returns trigger
-native DestroyTrigger   takes trigger whichTrigger returns nothing
-native ResetTrigger     takes trigger whichTrigger returns nothing
-native EnableTrigger    takes trigger whichTrigger returns nothing
-native DisableTrigger   takes trigger whichTrigger returns nothing
-native IsTriggerEnabled takes trigger whichTrigger returns boolean
-native TriggerWaitOnSleeps   takes trigger whichTrigger, boolean flag returns nothing
-native IsTriggerWaitOnSleeps takes trigger whichTrigger returns boolean
-native ExecuteFunc          takes string funcName returns nothing
-native And              takes boolexpr operandA, boolexpr operandB returns boolexpr
-native Or               takes boolexpr operandA, boolexpr operandB returns boolexpr
-native Not              takes boolexpr operand returns boolexpr
-native Condition        takes code func returns conditionfunc
-native DestroyCondition takes conditionfunc c returns nothing
-native Filter           takes code func returns filterfunc
-native DestroyFilter    takes filterfunc f returns nothing
-native DestroyBoolExpr  takes boolexpr e returns nothing
-native TriggerRegisterVariableEvent takes trigger whichTrigger, string varName, limitop opcode, real limitval returns event
-native TriggerRegisterTimerEvent takes trigger whichTrigger, real timeout, boolean periodic returns event
-native TriggerRegisterTimerExpireEvent takes trigger whichTrigger, timer t returns event
-native TriggerRegisterGameStateEvent takes trigger whichTrigger, gamestate whichState, limitop opcode, real limitval returns event
-native TriggerRegisterDialogEvent       takes trigger whichTrigger, dialog whichDialog returns event
-native TriggerRegisterDialogButtonEvent takes trigger whichTrigger, button whichButton returns event
-native TriggerRegisterGameEvent takes trigger whichTrigger, gameevent whichGameEvent returns event
-native TriggerRegisterEnterRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
-native TriggerRegisterLeaveRegion takes trigger whichTrigger, region whichRegion, boolexpr filter returns event
-native TriggerRegisterTrackableHitEvent takes trigger whichTrigger, trackable t returns event
-native TriggerRegisterTrackableTrackEvent takes trigger whichTrigger, trackable t returns event
-native TriggerRegisterPlayerEvent takes trigger whichTrigger, player  whichPlayer, playerevent whichPlayerEvent returns event
-native TriggerRegisterPlayerUnitEvent takes trigger whichTrigger, player whichPlayer, playerunitevent whichPlayerUnitEvent, boolexpr filter returns event
-native TriggerRegisterPlayerAllianceChange takes trigger whichTrigger, player whichPlayer, alliancetype whichAlliance returns event
-native TriggerRegisterPlayerStateEvent takes trigger whichTrigger, player whichPlayer, playerstate whichState, limitop opcode, real limitval returns event
-native TriggerRegisterPlayerChatEvent takes trigger whichTrigger, player whichPlayer, string chatMessageToDetect, boolean exactMatchOnly returns event
-native TriggerRegisterDeathEvent takes trigger whichTrigger, widget whichWidget returns event
-native TriggerRegisterUnitStateEvent takes trigger whichTrigger, unit whichUnit, unitstate whichState, limitop opcode, real limitval returns event
-native TriggerRegisterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent returns event
-native TriggerRegisterFilterUnitEvent takes trigger whichTrigger, unit whichUnit, unitevent whichEvent, boolexpr filter returns event
-native TriggerRegisterUnitInRange takes trigger whichTrigger, unit whichUnit, real range, boolexpr filter returns event
-native TriggerAddCondition    takes trigger whichTrigger, boolexpr condition returns triggercondition
-native TriggerRemoveCondition takes trigger whichTrigger, triggercondition whichCondition returns nothing
-native TriggerClearConditions takes trigger whichTrigger returns nothing
-native TriggerAddAction     takes trigger whichTrigger, code actionFunc returns triggeraction
-native TriggerRemoveAction  takes trigger whichTrigger, triggeraction whichAction returns nothing
-native TriggerClearActions  takes trigger whichTrigger returns nothing
-native TriggerSleepAction   takes real timeout returns nothing
-native TriggerWaitForSound  takes sound s, real offset returns nothing
-native TriggerEvaluate      takes trigger whichTrigger returns boolean
-native TriggerExecute       takes trigger whichTrigger returns nothing
-native TriggerExecuteWait   takes trigger whichTrigger returns nothing
-native TriggerSyncStart     takes nothing returns nothing
-native TriggerSyncReady     takes nothing returns nothing
-native  GetWidgetLife   takes widget whichWidget returns real
-native  SetWidgetLife   takes widget whichWidget, real newLife returns nothing
-native  GetWidgetX      takes widget whichWidget returns real
-native  GetWidgetY      takes widget whichWidget returns real
-native          CreateDestructable          takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-native          CreateDestructableZ         takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-native          CreateDeadDestructable      takes integer objectid, real x, real y, real face, real scale, integer variation returns destructable
-native          CreateDeadDestructableZ     takes integer objectid, real x, real y, real z, real face, real scale, integer variation returns destructable
-native          RemoveDestructable          takes destructable d returns nothing
-native          KillDestructable            takes destructable d returns nothing
-native          SetDestructableInvulnerable takes destructable d, boolean flag returns nothing
-native          IsDestructableInvulnerable  takes destructable d returns boolean
-native          EnumDestructablesInRect     takes rect r, boolexpr filter, code actionFunc returns nothing
-native          GetDestructableTypeId       takes destructable d returns integer
-native          GetDestructableX            takes destructable d returns real
-native          GetDestructableY            takes destructable d returns real
-native          SetDestructableLife         takes destructable d, real life returns nothing
-native          GetDestructableLife         takes destructable d returns real
-native          SetDestructableMaxLife      takes destructable d, real max returns nothing
-native          GetDestructableMaxLife      takes destructable d returns real
-native          DestructableRestoreLife     takes destructable d, real life, boolean birth returns nothing
-native          QueueDestructableAnimation  takes destructable d, string whichAnimation returns nothing
-native          SetDestructableAnimation    takes destructable d, string whichAnimation returns nothing
-native          SetDestructableAnimationSpeed takes destructable d, real speedFactor returns nothing
-native          ShowDestructable            takes destructable d, boolean flag returns nothing
-native          GetDestructableOccluderHeight takes destructable d returns real
-native          SetDestructableOccluderHeight takes destructable d, real height returns nothing
-native          GetDestructableName         takes destructable d returns string
-native          CreateItem      takes integer itemid, real x, real y returns item
-native          RemoveItem      takes item whichItem returns nothing
-native          GetItemPlayer   takes item whichItem returns player
-native          GetItemTypeId   takes item i returns integer
-native          GetItemX        takes item i returns real
-native          GetItemY        takes item i returns real
-native          SetItemPosition takes item i, real x, real y returns nothing
-native          SetItemDropOnDeath  takes item whichItem, boolean flag returns nothing
-native          SetItemDroppable takes item i, boolean flag returns nothing
-native          SetItemPawnable takes item i, boolean flag returns nothing
-native          SetItemPlayer    takes item whichItem, player whichPlayer, boolean changeColor returns nothing
-native          SetItemInvulnerable takes item whichItem, boolean flag returns nothing
-native          IsItemInvulnerable  takes item whichItem returns boolean
-native          SetItemVisible  takes item whichItem, boolean show returns nothing
-native          IsItemVisible   takes item whichItem returns boolean
-native          IsItemOwned     takes item whichItem returns boolean
-native          IsItemPowerup   takes item whichItem returns boolean
-native          IsItemSellable  takes item whichItem returns boolean
-native          IsItemPawnable  takes item whichItem returns boolean
-native          IsItemIdPowerup takes integer itemId returns boolean
-native          IsItemIdSellable takes integer itemId returns boolean
-native          IsItemIdPawnable takes integer itemId returns boolean
-native          EnumItemsInRect     takes rect r, boolexpr filter, code actionFunc returns nothing
-native          GetItemLevel    takes item whichItem returns integer
-native          GetItemType     takes item whichItem returns itemtype
-native          SetItemDropID   takes item whichItem, integer unitId returns nothing
-native          GetItemCharges  takes item whichItem returns integer
-native          SetItemCharges  takes item whichItem, integer charges returns nothing
-native          GetItemUserData takes item whichItem returns integer
-native          SetItemUserData takes item whichItem, integer data returns nothing
-native          CreateUnit              takes player id, integer unitid, real x, real y, real face returns unit
-native          CreateUnitByName        takes player whichPlayer, string unitname, real x, real y, real face returns unit
-native          CreateUnitAtLoc         takes player id, integer unitid, location whichLocation, real face returns unit
-native          CreateUnitAtLocByName   takes player id, string unitname, location whichLocation, real face returns unit
-native          CreateCorpse            takes player whichPlayer, integer unitid, real x, real y, real face returns unit
-native          KillUnit            takes unit whichUnit returns nothing
-native          RemoveUnit          takes unit whichUnit returns nothing
-native          ShowUnit            takes unit whichUnit, boolean show returns nothing
-native          SetUnitState        takes unit whichUnit, unitstate whichUnitState, real newVal returns nothing
-native          SetUnitX            takes unit whichUnit, real newX returns nothing
-native          SetUnitY            takes unit whichUnit, real newY returns nothing
-native          SetUnitPosition     takes unit whichUnit, real newX, real newY returns nothing
-native          SetUnitPositionLoc  takes unit whichUnit, location whichLocation returns nothing
-native          SetUnitFacing       takes unit whichUnit, real facingAngle returns nothing
-native          SetUnitFacingTimed  takes unit whichUnit, real facingAngle, real duration returns nothing
-native          SetUnitMoveSpeed    takes unit whichUnit, real newSpeed returns nothing
-native          SetUnitFlyHeight    takes unit whichUnit, real newHeight, real rate returns nothing
-native          SetUnitTurnSpeed    takes unit whichUnit, real newTurnSpeed returns nothing
-native          SetUnitPropWindow   takes unit whichUnit, real newPropWindowAngle returns nothing
-native          SetUnitAcquireRange takes unit whichUnit, real newAcquireRange returns nothing
-native          SetUnitCreepGuard   takes unit whichUnit, boolean creepGuard returns nothing
-native          GetUnitAcquireRange     takes unit whichUnit returns real
-native          GetUnitTurnSpeed        takes unit whichUnit returns real
-native          GetUnitPropWindow       takes unit whichUnit returns real
-native          GetUnitFlyHeight        takes unit whichUnit returns real
-native          GetUnitDefaultAcquireRange      takes unit whichUnit returns real
-native          GetUnitDefaultTurnSpeed         takes unit whichUnit returns real
-native          GetUnitDefaultPropWindow        takes unit whichUnit returns real
-native          GetUnitDefaultFlyHeight         takes unit whichUnit returns real
-native          SetUnitOwner        takes unit whichUnit, player whichPlayer, boolean changeColor returns nothing
-native          SetUnitColor        takes unit whichUnit, playercolor whichColor returns nothing
-native          SetUnitScale        takes unit whichUnit, real scaleX, real scaleY, real scaleZ returns nothing
-native          SetUnitTimeScale    takes unit whichUnit, real timeScale returns nothing
-native          SetUnitBlendTime    takes unit whichUnit, real blendTime returns nothing
-native          SetUnitVertexColor  takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
-native          QueueUnitAnimation          takes unit whichUnit, string whichAnimation returns nothing
-native          SetUnitAnimation            takes unit whichUnit, string whichAnimation returns nothing
-native          SetUnitAnimationByIndex     takes unit whichUnit, integer whichAnimation returns nothing
-native          SetUnitAnimationWithRarity  takes unit whichUnit, string whichAnimation, raritycontrol rarity returns nothing
-native          AddUnitAnimationProperties  takes unit whichUnit, string animProperties, boolean add returns nothing
-native          SetUnitLookAt       takes unit whichUnit, string whichBone, unit lookAtTarget, real offsetX, real offsetY, real offsetZ returns nothing
-native          ResetUnitLookAt     takes unit whichUnit returns nothing
-native          SetUnitRescuable    takes unit whichUnit, player byWhichPlayer, boolean flag returns nothing
-native          SetUnitRescueRange  takes unit whichUnit, real range returns nothing
-native          SetHeroStr          takes unit whichHero, integer newStr, boolean permanent returns nothing
-native          SetHeroAgi          takes unit whichHero, integer newAgi, boolean permanent returns nothing
-native          SetHeroInt          takes unit whichHero, integer newInt, boolean permanent returns nothing
-native          GetHeroStr          takes unit whichHero, boolean includeBonuses returns integer
-native          GetHeroAgi          takes unit whichHero, boolean includeBonuses returns integer
-native          GetHeroInt          takes unit whichHero, boolean includeBonuses returns integer
-native          UnitStripHeroLevel  takes unit whichHero, integer howManyLevels returns boolean
-native          GetHeroXP           takes unit whichHero returns integer
-native          SetHeroXP           takes unit whichHero, integer newXpVal,  boolean showEyeCandy returns nothing
-native          GetHeroSkillPoints      takes unit whichHero returns integer
-native          UnitModifySkillPoints   takes unit whichHero, integer skillPointDelta returns boolean
-native          AddHeroXP           takes unit whichHero, integer xpToAdd,   boolean showEyeCandy returns nothing
-native          SetHeroLevel        takes unit whichHero, integer level,  boolean showEyeCandy returns nothing
-native          GetHeroProperName   takes unit whichHero returns string
-native          SuspendHeroXP       takes unit whichHero, boolean flag returns nothing
-native          IsSuspendedXP       takes unit whichHero returns boolean
-native          SelectHeroSkill     takes unit whichHero, integer abilcode returns nothing
-native          GetUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-native          DecUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-native          IncUnitAbilityLevel takes unit whichUnit, integer abilcode returns integer
-native          SetUnitAbilityLevel takes unit whichUnit, integer abilcode, integer level returns integer
-native          ReviveHero          takes unit whichHero, real x, real y, boolean doEyecandy returns boolean
-native          ReviveHeroLoc       takes unit whichHero, location loc, boolean doEyecandy returns boolean
-native          SetUnitExploded     takes unit whichUnit, boolean exploded returns nothing
-native          SetUnitInvulnerable takes unit whichUnit, boolean flag returns nothing
-native          PauseUnit           takes unit whichUnit, boolean flag returns nothing
-native          IsUnitPaused        takes unit whichHero returns boolean
-native          SetUnitPathing      takes unit whichUnit, boolean flag returns nothing
-native          ClearSelection      takes nothing returns nothing
-native          SelectUnit          takes unit whichUnit, boolean flag returns nothing
-native          GetUnitPointValue       takes unit whichUnit returns integer
-native          GetUnitPointValueByType takes integer unitType returns integer
-native          UnitAddItem             takes unit whichUnit, item whichItem returns boolean
-native          UnitAddItemById         takes unit whichUnit, integer itemId returns item
-native          UnitAddItemToSlotById   takes unit whichUnit, integer itemId, integer itemSlot returns boolean
-native          UnitRemoveItem          takes unit whichUnit, item whichItem returns nothing
-native          UnitRemoveItemFromSlot  takes unit whichUnit, integer itemSlot returns item
-native          UnitHasItem             takes unit whichUnit, item whichItem returns boolean
-native          UnitItemInSlot          takes unit whichUnit, integer itemSlot returns item
-native          UnitInventorySize       takes unit whichUnit returns integer
-native          UnitDropItemPoint       takes unit whichUnit, item whichItem, real x, real y returns boolean
-native          UnitDropItemSlot        takes unit whichUnit, item whichItem, integer slot returns boolean
-native          UnitDropItemTarget      takes unit whichUnit, item whichItem, widget target returns boolean
-native          UnitUseItem             takes unit whichUnit, item whichItem returns boolean
-native          UnitUseItemPoint        takes unit whichUnit, item whichItem, real x, real y returns boolean
-native          UnitUseItemTarget       takes unit whichUnit, item whichItem, widget target returns boolean
-native          SetUnitUseFood      takes unit whichUnit, boolean useFood returns nothing
-native UnitShareVision              takes unit whichUnit, player whichPlayer, boolean share returns nothing
-native UnitSuspendDecay             takes unit whichUnit, boolean suspend returns nothing
-native UnitAddType                  takes unit whichUnit, unittype whichUnitType returns boolean
-native UnitRemoveType               takes unit whichUnit, unittype whichUnitType returns boolean
-native UnitAddAbility               takes unit whichUnit, integer abilityId returns boolean
-native UnitRemoveAbility            takes unit whichUnit, integer abilityId returns boolean
-native UnitMakeAbilityPermanent     takes unit whichUnit, boolean permanent, integer abilityId returns boolean
-native UnitRemoveBuffs              takes unit whichUnit, boolean removePositive, boolean removeNegative returns nothing
-native UnitRemoveBuffsEx            takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns nothing
-native UnitHasBuffsEx               takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns boolean
-native UnitCountBuffsEx             takes unit whichUnit, boolean removePositive, boolean removeNegative, boolean magic, boolean physical, boolean timedLife, boolean aura, boolean autoDispel returns integer
-native UnitAddSleep                 takes unit whichUnit, boolean add returns nothing
-native UnitCanSleep                 takes unit whichUnit returns boolean
-native UnitAddSleepPerm             takes unit whichUnit, boolean add returns nothing
-native UnitCanSleepPerm             takes unit whichUnit returns boolean
-native UnitIsSleeping               takes unit whichUnit returns boolean
-native UnitWakeUp                   takes unit whichUnit returns nothing
-native UnitApplyTimedLife           takes unit whichUnit, integer buffId, real duration returns nothing
-native UnitIgnoreAlarm              takes unit whichUnit, boolean flag returns boolean
-native UnitIgnoreAlarmToggled       takes unit whichUnit returns boolean
-native UnitResetCooldown            takes unit whichUnit returns nothing
-native UnitSetConstructionProgress  takes unit whichUnit, integer constructionPercentage returns nothing
-native UnitSetUpgradeProgress       takes unit whichUnit, integer upgradePercentage returns nothing
-native UnitPauseTimedLife           takes unit whichUnit, boolean flag returns nothing
-native UnitSetUsesAltIcon           takes unit whichUnit, boolean flag returns nothing
-native UnitDamagePoint              takes unit whichUnit, real delay, real radius, real x, real y, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
-native UnitDamageTarget             takes unit whichUnit, widget target, real amount, boolean attack, boolean ranged, attacktype attackType, damagetype damageType, weapontype weaponType returns boolean
-native IssueImmediateOrder          takes unit whichUnit, string order returns boolean
-native IssueImmediateOrderById      takes unit whichUnit, integer order returns boolean
-native IssuePointOrder              takes unit whichUnit, string order, real x, real y returns boolean
-native IssuePointOrderLoc           takes unit whichUnit, string order, location whichLocation returns boolean
-native IssuePointOrderById          takes unit whichUnit, integer order, real x, real y returns boolean
-native IssuePointOrderByIdLoc       takes unit whichUnit, integer order, location whichLocation returns boolean
-native IssueTargetOrder             takes unit whichUnit, string order, widget targetWidget returns boolean
-native IssueTargetOrderById         takes unit whichUnit, integer order, widget targetWidget returns boolean
-native IssueInstantPointOrder       takes unit whichUnit, string order, real x, real y, widget instantTargetWidget returns boolean
-native IssueInstantPointOrderById   takes unit whichUnit, integer order, real x, real y, widget instantTargetWidget returns boolean
-native IssueInstantTargetOrder      takes unit whichUnit, string order, widget targetWidget, widget instantTargetWidget returns boolean
-native IssueInstantTargetOrderById  takes unit whichUnit, integer order, widget targetWidget, widget instantTargetWidget returns boolean
-native IssueBuildOrder              takes unit whichPeon, string unitToBuild, real x, real y returns boolean
-native IssueBuildOrderById          takes unit whichPeon, integer unitId, real x, real y returns boolean
-native IssueNeutralImmediateOrder       takes player forWhichPlayer, unit neutralStructure, string unitToBuild returns boolean
-native IssueNeutralImmediateOrderById   takes player forWhichPlayer,unit neutralStructure, integer unitId returns boolean
-native IssueNeutralPointOrder           takes player forWhichPlayer,unit neutralStructure, string unitToBuild, real x, real y returns boolean
-native IssueNeutralPointOrderById       takes player forWhichPlayer,unit neutralStructure, integer unitId, real x, real y returns boolean
-native IssueNeutralTargetOrder          takes player forWhichPlayer,unit neutralStructure, string unitToBuild, widget target returns boolean
-native IssueNeutralTargetOrderById      takes player forWhichPlayer,unit neutralStructure, integer unitId, widget target returns boolean
-native GetUnitCurrentOrder          takes unit whichUnit returns integer
-native SetResourceAmount            takes unit whichUnit, integer amount returns nothing
-native AddResourceAmount            takes unit whichUnit, integer amount returns nothing
-native GetResourceAmount            takes unit whichUnit returns integer
-native WaygateGetDestinationX       takes unit waygate returns real
-native WaygateGetDestinationY       takes unit waygate returns real
-native WaygateSetDestination        takes unit waygate, real x, real y returns nothing
-native WaygateActivate              takes unit waygate, boolean activate returns nothing
-native WaygateIsActive              takes unit waygate returns boolean
-native AddItemToAllStock            takes integer itemId, integer currentStock, integer stockMax returns nothing
-native AddItemToStock               takes unit whichUnit, integer itemId, integer currentStock, integer stockMax returns nothing
-native AddUnitToAllStock            takes integer unitId, integer currentStock, integer stockMax returns nothing
-native AddUnitToStock               takes unit whichUnit, integer unitId, integer currentStock, integer stockMax returns nothing
-native RemoveItemFromAllStock       takes integer itemId returns nothing
-native RemoveItemFromStock          takes unit whichUnit, integer itemId returns nothing
-native RemoveUnitFromAllStock       takes integer unitId returns nothing
-native RemoveUnitFromStock          takes unit whichUnit, integer unitId returns nothing
-native SetAllItemTypeSlots          takes integer slots returns nothing
-native SetAllUnitTypeSlots          takes integer slots returns nothing
-native SetItemTypeSlots             takes unit whichUnit, integer slots returns nothing
-native SetUnitTypeSlots             takes unit whichUnit, integer slots returns nothing
-native GetUnitUserData              takes unit whichUnit returns integer
-native SetUnitUserData              takes unit whichUnit, integer data returns nothing
-native SetPlayerUnitsOwner takes player whichPlayer, integer newOwner returns nothing
-native CripplePlayer takes player whichPlayer, force toWhichPlayers, boolean flag returns nothing
-native SetPlayerAbilityAvailable        takes player whichPlayer, integer abilid, boolean avail returns nothing
-native SetPlayerState   takes player whichPlayer, playerstate whichPlayerState, integer value returns nothing
-native RemovePlayer     takes player whichPlayer, playergameresult gameResult returns nothing
-native CachePlayerHeroData takes player whichPlayer returns nothing
-native  SetFogStateRect      takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision returns nothing
-native  SetFogStateRadius    takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision returns nothing
-native  SetFogStateRadiusLoc takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision returns nothing
-native  FogMaskEnable        takes boolean enable returns nothing
-native  IsFogMaskEnabled     takes nothing returns boolean
-native  FogEnable            takes boolean enable returns nothing
-native  IsFogEnabled         takes nothing returns boolean
-native CreateFogModifierRect        takes player forWhichPlayer, fogstate whichState, rect where, boolean useSharedVision, boolean afterUnits returns fogmodifier
-native CreateFogModifierRadius      takes player forWhichPlayer, fogstate whichState, real centerx, real centerY, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-native CreateFogModifierRadiusLoc   takes player forWhichPlayer, fogstate whichState, location center, real radius, boolean useSharedVision, boolean afterUnits returns fogmodifier
-native DestroyFogModifier           takes fogmodifier whichFogModifier returns nothing
-native FogModifierStart             takes fogmodifier whichFogModifier returns nothing
-native FogModifierStop              takes fogmodifier whichFogModifier returns nothing
-native VersionGet takes nothing returns version
-native VersionCompatible takes version whichVersion returns boolean
-native VersionSupported takes version whichVersion returns boolean
-native EndGame takes boolean doScoreScreen returns nothing
-native          ChangeLevel         takes string newLevel, boolean doScoreScreen returns nothing
-native          RestartGame         takes boolean doScoreScreen returns nothing
-native          ReloadGame          takes nothing returns nothing
-native          SetCampaignMenuRace takes race r returns nothing
-native          SetCampaignMenuRaceEx takes integer campaignIndex returns nothing
-native          ForceCampaignSelectScreen takes nothing returns nothing
-native          LoadGame            takes string saveFileName, boolean doScoreScreen returns nothing
-native          SaveGame            takes string saveFileName returns nothing
-native          RenameSaveDirectory takes string sourceDirName, string destDirName returns boolean
-native          RemoveSaveDirectory takes string sourceDirName returns boolean
-native          CopySaveGame        takes string sourceSaveName, string destSaveName returns boolean
-native          SaveGameExists      takes string saveName returns boolean
-native          SyncSelections      takes nothing returns nothing
-native          SetFloatGameState   takes fgamestate whichFloatGameState, real value returns nothing
-native          SetIntegerGameState takes igamestate whichIntegerGameState, integer value returns nothing
-native  SetTutorialCleared      takes boolean cleared returns nothing
-native  SetMissionAvailable     takes integer campaignNumber, integer missionNumber, boolean available returns nothing
-native  SetCampaignAvailable    takes integer campaignNumber, boolean available  returns nothing
-native  SetOpCinematicAvailable takes integer campaignNumber, boolean available  returns nothing
-native  SetEdCinematicAvailable takes integer campaignNumber, boolean available  returns nothing
-native  GetDefaultDifficulty    takes nothing returns gamedifficulty
-native  SetDefaultDifficulty    takes gamedifficulty g returns nothing
-native  SetCustomCampaignButtonVisible  takes integer whichButton, boolean visible returns nothing
-native  GetCustomCampaignButtonVisible  takes integer whichButton returns boolean
-native  DoNotSaveReplay         takes nothing returns nothing
-native DialogCreate                 takes nothing returns dialog
-native DialogDestroy                takes dialog whichDialog returns nothing
-native DialogClear                  takes dialog whichDialog returns nothing
-native DialogSetMessage             takes dialog whichDialog, string messageText returns nothing
-native DialogAddButton              takes dialog whichDialog, string buttonText, integer hotkey returns button
-native DialogAddQuitButton          takes dialog whichDialog, boolean doScoreScreen, string buttonText, integer hotkey returns button
-native DialogDisplay                takes player whichPlayer, dialog whichDialog, boolean flag returns nothing
-native  ReloadGameCachesFromDisk takes nothing returns boolean
-native  InitGameCache    takes string campaignFile returns gamecache
-native  SaveGameCache    takes gamecache whichCache returns boolean
-native  StoreInteger					takes gamecache cache, string missionKey, string key, integer value returns nothing
-native  StoreReal						takes gamecache cache, string missionKey, string key, real value returns nothing
-native  StoreBoolean					takes gamecache cache, string missionKey, string key, boolean value returns nothing
-native  StoreUnit						takes gamecache cache, string missionKey, string key, unit whichUnit returns boolean
-native  StoreString						takes gamecache cache, string missionKey, string key, string value returns boolean
-native SyncStoredInteger        takes gamecache cache, string missionKey, string key returns nothing
-native SyncStoredReal           takes gamecache cache, string missionKey, string key returns nothing
-native SyncStoredBoolean        takes gamecache cache, string missionKey, string key returns nothing
-native SyncStoredUnit           takes gamecache cache, string missionKey, string key returns nothing
-native SyncStoredString         takes gamecache cache, string missionKey, string key returns nothing
-native  HaveStoredInteger					takes gamecache cache, string missionKey, string key returns boolean
-native  HaveStoredReal						takes gamecache cache, string missionKey, string key returns boolean
-native  HaveStoredBoolean					takes gamecache cache, string missionKey, string key returns boolean
-native  HaveStoredUnit						takes gamecache cache, string missionKey, string key returns boolean
-native  HaveStoredString					takes gamecache cache, string missionKey, string key returns boolean
-native  FlushGameCache						takes gamecache cache returns nothing
-native  FlushStoredMission					takes gamecache cache, string missionKey returns nothing
-native  FlushStoredInteger					takes gamecache cache, string missionKey, string key returns nothing
-native  FlushStoredReal						takes gamecache cache, string missionKey, string key returns nothing
-native  FlushStoredBoolean					takes gamecache cache, string missionKey, string key returns nothing
-native  FlushStoredUnit						takes gamecache cache, string missionKey, string key returns nothing
-native  FlushStoredString					takes gamecache cache, string missionKey, string key returns nothing
-native  GetStoredInteger				takes gamecache cache, string missionKey, string key returns integer
-native  GetStoredReal					takes gamecache cache, string missionKey, string key returns real
-native  GetStoredBoolean				takes gamecache cache, string missionKey, string key returns boolean
-native  GetStoredString					takes gamecache cache, string missionKey, string key returns string
-native  RestoreUnit						takes gamecache cache, string missionKey, string key, player forWhichPlayer, real x, real y, real facing returns unit
-native  InitHashtable    takes nothing returns hashtable
-native  SaveInteger						takes hashtable table, integer parentKey, integer childKey, integer value returns nothing
-native  SaveReal						takes hashtable table, integer parentKey, integer childKey, real value returns nothing
-native  SaveBoolean						takes hashtable table, integer parentKey, integer childKey, boolean value returns nothing
-native  SaveStr							takes hashtable table, integer parentKey, integer childKey, string value returns boolean
-native  SavePlayerHandle				takes hashtable table, integer parentKey, integer childKey, player whichPlayer returns boolean
-native  SaveWidgetHandle				takes hashtable table, integer parentKey, integer childKey, widget whichWidget returns boolean
-native  SaveDestructableHandle			takes hashtable table, integer parentKey, integer childKey, destructable whichDestructable returns boolean
-native  SaveItemHandle					takes hashtable table, integer parentKey, integer childKey, item whichItem returns boolean
-native  SaveUnitHandle					takes hashtable table, integer parentKey, integer childKey, unit whichUnit returns boolean
-native  SaveAbilityHandle				takes hashtable table, integer parentKey, integer childKey, ability whichAbility returns boolean
-native  SaveTimerHandle					takes hashtable table, integer parentKey, integer childKey, timer whichTimer returns boolean
-native  SaveTriggerHandle				takes hashtable table, integer parentKey, integer childKey, trigger whichTrigger returns boolean
-native  SaveTriggerConditionHandle		takes hashtable table, integer parentKey, integer childKey, triggercondition whichTriggercondition returns boolean
-native  SaveTriggerActionHandle			takes hashtable table, integer parentKey, integer childKey, triggeraction whichTriggeraction returns boolean
-native  SaveTriggerEventHandle			takes hashtable table, integer parentKey, integer childKey, event whichEvent returns boolean
-native  SaveForceHandle					takes hashtable table, integer parentKey, integer childKey, force whichForce returns boolean
-native  SaveGroupHandle					takes hashtable table, integer parentKey, integer childKey, group whichGroup returns boolean
-native  SaveLocationHandle				takes hashtable table, integer parentKey, integer childKey, location whichLocation returns boolean
-native  SaveRectHandle					takes hashtable table, integer parentKey, integer childKey, rect whichRect returns boolean
-native  SaveBooleanExprHandle			takes hashtable table, integer parentKey, integer childKey, boolexpr whichBoolexpr returns boolean
-native  SaveSoundHandle					takes hashtable table, integer parentKey, integer childKey, sound whichSound returns boolean
-native  SaveEffectHandle				takes hashtable table, integer parentKey, integer childKey, effect whichEffect returns boolean
-native  SaveUnitPoolHandle				takes hashtable table, integer parentKey, integer childKey, unitpool whichUnitpool returns boolean
-native  SaveItemPoolHandle				takes hashtable table, integer parentKey, integer childKey, itempool whichItempool returns boolean
-native  SaveQuestHandle					takes hashtable table, integer parentKey, integer childKey, quest whichQuest returns boolean
-native  SaveQuestItemHandle				takes hashtable table, integer parentKey, integer childKey, questitem whichQuestitem returns boolean
-native  SaveDefeatConditionHandle		takes hashtable table, integer parentKey, integer childKey, defeatcondition whichDefeatcondition returns boolean
-native  SaveTimerDialogHandle			takes hashtable table, integer parentKey, integer childKey, timerdialog whichTimerdialog returns boolean
-native  SaveLeaderboardHandle			takes hashtable table, integer parentKey, integer childKey, leaderboard whichLeaderboard returns boolean
-native  SaveMultiboardHandle			takes hashtable table, integer parentKey, integer childKey, multiboard whichMultiboard returns boolean
-native  SaveMultiboardItemHandle		takes hashtable table, integer parentKey, integer childKey, multiboarditem whichMultiboarditem returns boolean
-native  SaveTrackableHandle				takes hashtable table, integer parentKey, integer childKey, trackable whichTrackable returns boolean
-native  SaveDialogHandle				takes hashtable table, integer parentKey, integer childKey, dialog whichDialog returns boolean
-native  SaveButtonHandle				takes hashtable table, integer parentKey, integer childKey, button whichButton returns boolean
-native  SaveTextTagHandle				takes hashtable table, integer parentKey, integer childKey, texttag whichTexttag returns boolean
-native  SaveLightningHandle				takes hashtable table, integer parentKey, integer childKey, lightning whichLightning returns boolean
-native  SaveImageHandle					takes hashtable table, integer parentKey, integer childKey, image whichImage returns boolean
-native  SaveUbersplatHandle				takes hashtable table, integer parentKey, integer childKey, ubersplat whichUbersplat returns boolean
-native  SaveRegionHandle				takes hashtable table, integer parentKey, integer childKey, region whichRegion returns boolean
-native  SaveFogStateHandle				takes hashtable table, integer parentKey, integer childKey, fogstate whichFogState returns boolean
-native  SaveFogModifierHandle			takes hashtable table, integer parentKey, integer childKey, fogmodifier whichFogModifier returns boolean
-native  SaveAgentHandle					takes hashtable table, integer parentKey, integer childKey, agent whichAgent returns boolean
-native  SaveHashtableHandle				takes hashtable table, integer parentKey, integer childKey, hashtable whichHashtable returns boolean
-native  SaveFrameHandle					takes hashtable table, integer parentKey, integer childKey, framehandle whichFrameHandle returns boolean
-native  LoadInteger					takes hashtable table, integer parentKey, integer childKey returns integer
-native  LoadReal					takes hashtable table, integer parentKey, integer childKey returns real
-native  LoadBoolean				    takes hashtable table, integer parentKey, integer childKey returns boolean
-native  LoadStr 					takes hashtable table, integer parentKey, integer childKey returns string
-native  LoadPlayerHandle			takes hashtable table, integer parentKey, integer childKey returns player
-native  LoadWidgetHandle			takes hashtable table, integer parentKey, integer childKey returns widget
-native  LoadDestructableHandle		takes hashtable table, integer parentKey, integer childKey returns destructable
-native  LoadItemHandle				takes hashtable table, integer parentKey, integer childKey returns item
-native  LoadUnitHandle				takes hashtable table, integer parentKey, integer childKey returns unit
-native  LoadAbilityHandle			takes hashtable table, integer parentKey, integer childKey returns ability
-native  LoadTimerHandle				takes hashtable table, integer parentKey, integer childKey returns timer
-native  LoadTriggerHandle			takes hashtable table, integer parentKey, integer childKey returns trigger
-native  LoadTriggerConditionHandle	takes hashtable table, integer parentKey, integer childKey returns triggercondition
-native  LoadTriggerActionHandle		takes hashtable table, integer parentKey, integer childKey returns triggeraction
-native  LoadTriggerEventHandle		takes hashtable table, integer parentKey, integer childKey returns event
-native  LoadForceHandle				takes hashtable table, integer parentKey, integer childKey returns force
-native  LoadGroupHandle				takes hashtable table, integer parentKey, integer childKey returns group
-native  LoadLocationHandle			takes hashtable table, integer parentKey, integer childKey returns location
-native  LoadRectHandle				takes hashtable table, integer parentKey, integer childKey returns rect
-native  LoadBooleanExprHandle		takes hashtable table, integer parentKey, integer childKey returns boolexpr
-native  LoadSoundHandle				takes hashtable table, integer parentKey, integer childKey returns sound
-native  LoadEffectHandle			takes hashtable table, integer parentKey, integer childKey returns effect
-native  LoadUnitPoolHandle			takes hashtable table, integer parentKey, integer childKey returns unitpool
-native  LoadItemPoolHandle			takes hashtable table, integer parentKey, integer childKey returns itempool
-native  LoadQuestHandle				takes hashtable table, integer parentKey, integer childKey returns quest
-native  LoadQuestItemHandle			takes hashtable table, integer parentKey, integer childKey returns questitem
-native  LoadDefeatConditionHandle	takes hashtable table, integer parentKey, integer childKey returns defeatcondition
-native  LoadTimerDialogHandle		takes hashtable table, integer parentKey, integer childKey returns timerdialog
-native  LoadLeaderboardHandle		takes hashtable table, integer parentKey, integer childKey returns leaderboard
-native  LoadMultiboardHandle		takes hashtable table, integer parentKey, integer childKey returns multiboard
-native  LoadMultiboardItemHandle	takes hashtable table, integer parentKey, integer childKey returns multiboarditem
-native  LoadTrackableHandle			takes hashtable table, integer parentKey, integer childKey returns trackable
-native  LoadDialogHandle			takes hashtable table, integer parentKey, integer childKey returns dialog
-native  LoadButtonHandle			takes hashtable table, integer parentKey, integer childKey returns button
-native  LoadTextTagHandle			takes hashtable table, integer parentKey, integer childKey returns texttag
-native  LoadLightningHandle			takes hashtable table, integer parentKey, integer childKey returns lightning
-native  LoadImageHandle				takes hashtable table, integer parentKey, integer childKey returns image
-native  LoadUbersplatHandle			takes hashtable table, integer parentKey, integer childKey returns ubersplat
-native  LoadRegionHandle			takes hashtable table, integer parentKey, integer childKey returns region
-native  LoadFogStateHandle			takes hashtable table, integer parentKey, integer childKey returns fogstate
-native  LoadFogModifierHandle		takes hashtable table, integer parentKey, integer childKey returns fogmodifier
-native  LoadHashtableHandle			takes hashtable table, integer parentKey, integer childKey returns hashtable
-native  LoadFrameHandle				takes hashtable table, integer parentKey, integer childKey returns framehandle
-native  HaveSavedInteger					takes hashtable table, integer parentKey, integer childKey returns boolean
-native  HaveSavedReal						takes hashtable table, integer parentKey, integer childKey returns boolean
-native  HaveSavedBoolean					takes hashtable table, integer parentKey, integer childKey returns boolean
-native  HaveSavedString					    takes hashtable table, integer parentKey, integer childKey returns boolean
-native  HaveSavedHandle     				takes hashtable table, integer parentKey, integer childKey returns boolean
-native  RemoveSavedInteger					takes hashtable table, integer parentKey, integer childKey returns nothing
-native  RemoveSavedReal						takes hashtable table, integer parentKey, integer childKey returns nothing
-native  RemoveSavedBoolean					takes hashtable table, integer parentKey, integer childKey returns nothing
-native  RemoveSavedString					takes hashtable table, integer parentKey, integer childKey returns nothing
-native  RemoveSavedHandle					takes hashtable table, integer parentKey, integer childKey returns nothing
-native  FlushParentHashtable						takes hashtable table returns nothing
-native  FlushChildHashtable					takes hashtable table, integer parentKey returns nothing
-native GetRandomInt takes integer lowBound, integer highBound returns integer
-native GetRandomReal takes real lowBound, real highBound returns real
-native CreateUnitPool           takes nothing returns unitpool
-native DestroyUnitPool          takes unitpool whichPool returns nothing
-native UnitPoolAddUnitType      takes unitpool whichPool, integer unitId, real weight returns nothing
-native UnitPoolRemoveUnitType   takes unitpool whichPool, integer unitId returns nothing
-native PlaceRandomUnit          takes unitpool whichPool, player forWhichPlayer, real x, real y, real facing returns unit
-native CreateItemPool           takes nothing returns itempool
-native DestroyItemPool          takes itempool whichItemPool returns nothing
-native ItemPoolAddItemType      takes itempool whichItemPool, integer itemId, real weight returns nothing
-native ItemPoolRemoveItemType   takes itempool whichItemPool, integer itemId returns nothing
-native PlaceRandomItem          takes itempool whichItemPool, real x, real y returns item
-native ChooseRandomCreep        takes integer level returns integer
-native ChooseRandomNPBuilding   takes nothing returns integer
-native ChooseRandomItem         takes integer level returns integer
-native ChooseRandomItemEx       takes itemtype whichType, integer level returns integer
-native SetRandomSeed            takes integer seed returns nothing
-native SetTerrainFog                takes real a, real b, real c, real d, real e returns nothing
-native ResetTerrainFog              takes nothing returns nothing
-native SetUnitFog                   takes real a, real b, real c, real d, real e returns nothing
-native SetTerrainFogEx              takes integer style, real zstart, real zend, real density, real red, real green, real blue returns nothing
-native DisplayTextToPlayer          takes player toPlayer, real x, real y, string message returns nothing
-native DisplayTimedTextToPlayer     takes player toPlayer, real x, real y, real duration, string message returns nothing
-native DisplayTimedTextFromPlayer   takes player toPlayer, real x, real y, real duration, string message returns nothing
-native ClearTextMessages            takes nothing returns nothing
-native SetDayNightModels            takes string terrainDNCFile, string unitDNCFile returns nothing
-native SetSkyModel                  takes string skyModelFile returns nothing
-native EnableUserControl            takes boolean b returns nothing
-native EnableUserUI                 takes boolean b returns nothing
-native SuspendTimeOfDay             takes boolean b returns nothing
-native SetTimeOfDayScale            takes real r returns nothing
-native GetTimeOfDayScale            takes nothing returns real
-native ShowInterface                takes boolean flag, real fadeDuration returns nothing
-native PauseGame                    takes boolean flag returns nothing
-native UnitAddIndicator             takes unit whichUnit, integer red, integer green, integer blue, integer alpha returns nothing
-native AddIndicator                 takes widget whichWidget, integer red, integer green, integer blue, integer alpha returns nothing
-native PingMinimap                  takes real x, real y, real duration returns nothing
-native PingMinimapEx                takes real x, real y, real duration, integer red, integer green, integer blue, boolean extraEffects returns nothing
-native EnableOcclusion              takes boolean flag returns nothing
-native SetIntroShotText             takes string introText returns nothing
-native SetIntroShotModel            takes string introModelPath returns nothing
-native EnableWorldFogBoundary       takes boolean b returns nothing
-native PlayModelCinematic           takes string modelName returns nothing
-native PlayCinematic                takes string movieName returns nothing
-native ForceUIKey                   takes string key returns nothing
-native ForceUICancel                takes nothing returns nothing
-native DisplayLoadDialog            takes nothing returns nothing
-native SetAltMinimapIcon            takes string iconPath returns nothing
-native DisableRestartMission        takes boolean flag returns nothing
-native CreateTextTag                takes nothing returns texttag
-native DestroyTextTag               takes texttag t returns nothing
-native SetTextTagText               takes texttag t, string s, real height returns nothing
-native SetTextTagPos                takes texttag t, real x, real y, real heightOffset returns nothing
-native SetTextTagPosUnit            takes texttag t, unit whichUnit, real heightOffset returns nothing
-native SetTextTagColor              takes texttag t, integer red, integer green, integer blue, integer alpha returns nothing
-native SetTextTagVelocity           takes texttag t, real xvel, real yvel returns nothing
-native SetTextTagVisibility         takes texttag t, boolean flag returns nothing
-native SetTextTagSuspended          takes texttag t, boolean flag returns nothing
-native SetTextTagPermanent          takes texttag t, boolean flag returns nothing
-native SetTextTagAge                takes texttag t, real age returns nothing
-native SetTextTagLifespan           takes texttag t, real lifespan returns nothing
-native SetTextTagFadepoint          takes texttag t, real fadepoint returns nothing
-native SetReservedLocalHeroButtons  takes integer reserved returns nothing
-native GetAllyColorFilterState      takes nothing returns integer
-native SetAllyColorFilterState      takes integer state returns nothing
-native GetCreepCampFilterState      takes nothing returns boolean
-native SetCreepCampFilterState      takes boolean state returns nothing
-native EnableMinimapFilterButtons   takes boolean enableAlly, boolean enableCreep returns nothing
-native EnableDragSelect             takes boolean state, boolean ui returns nothing
-native EnablePreSelect              takes boolean state, boolean ui returns nothing
-native EnableSelect                 takes boolean state, boolean ui returns nothing
-native CreateTrackable      takes string trackableModelPath, real x, real y, real facing returns trackable
-native CreateQuest          takes nothing returns quest
-native DestroyQuest         takes quest whichQuest returns nothing
-native QuestSetTitle        takes quest whichQuest, string title returns nothing
-native QuestSetDescription  takes quest whichQuest, string description returns nothing
-native QuestSetIconPath     takes quest whichQuest, string iconPath returns nothing
-native QuestSetRequired     takes quest whichQuest, boolean required   returns nothing
-native QuestSetCompleted    takes quest whichQuest, boolean completed  returns nothing
-native QuestSetDiscovered   takes quest whichQuest, boolean discovered returns nothing
-native QuestSetFailed       takes quest whichQuest, boolean failed     returns nothing
-native QuestSetEnabled      takes quest whichQuest, boolean enabled    returns nothing
-native IsQuestRequired     takes quest whichQuest returns boolean
-native IsQuestCompleted    takes quest whichQuest returns boolean
-native IsQuestDiscovered   takes quest whichQuest returns boolean
-native IsQuestFailed       takes quest whichQuest returns boolean
-native IsQuestEnabled      takes quest whichQuest returns boolean
-native QuestCreateItem          takes quest whichQuest returns questitem
-native QuestItemSetDescription  takes questitem whichQuestItem, string description returns nothing
-native QuestItemSetCompleted    takes questitem whichQuestItem, boolean completed returns nothing
-native IsQuestItemCompleted     takes questitem whichQuestItem returns boolean
-native CreateDefeatCondition            takes nothing returns defeatcondition
-native DestroyDefeatCondition           takes defeatcondition whichCondition returns nothing
-native DefeatConditionSetDescription    takes defeatcondition whichCondition, string description returns nothing
-native FlashQuestDialogButton   takes nothing returns nothing
-native ForceQuestDialogUpdate   takes nothing returns nothing
-native CreateTimerDialog                takes timer t returns timerdialog
-native DestroyTimerDialog               takes timerdialog whichDialog returns nothing
-native TimerDialogSetTitle              takes timerdialog whichDialog, string title returns nothing
-native TimerDialogSetTitleColor         takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
-native TimerDialogSetTimeColor          takes timerdialog whichDialog, integer red, integer green, integer blue, integer alpha returns nothing
-native TimerDialogSetSpeed              takes timerdialog whichDialog, real speedMultFactor returns nothing
-native TimerDialogDisplay               takes timerdialog whichDialog, boolean display returns nothing
-native IsTimerDialogDisplayed           takes timerdialog whichDialog returns boolean
-native TimerDialogSetRealTimeRemaining  takes timerdialog whichDialog, real timeRemaining returns nothing
-native CreateLeaderboard                takes nothing returns leaderboard
-native DestroyLeaderboard               takes leaderboard lb returns nothing
-native LeaderboardDisplay               takes leaderboard lb, boolean show returns nothing
-native IsLeaderboardDisplayed           takes leaderboard lb returns boolean
-native LeaderboardGetItemCount          takes leaderboard lb returns integer
-native LeaderboardSetSizeByItemCount    takes leaderboard lb, integer count returns nothing
-native LeaderboardAddItem               takes leaderboard lb, string label, integer value, player p returns nothing
-native LeaderboardRemoveItem            takes leaderboard lb, integer index returns nothing
-native LeaderboardRemovePlayerItem      takes leaderboard lb, player p returns nothing
-native LeaderboardClear                 takes leaderboard lb returns nothing
-native LeaderboardSortItemsByValue      takes leaderboard lb, boolean ascending returns nothing
-native LeaderboardSortItemsByPlayer     takes leaderboard lb, boolean ascending returns nothing
-native LeaderboardSortItemsByLabel      takes leaderboard lb, boolean ascending returns nothing
-native LeaderboardHasPlayerItem         takes leaderboard lb, player p returns boolean
-native LeaderboardGetPlayerIndex        takes leaderboard lb, player p returns integer
-native LeaderboardSetLabel              takes leaderboard lb, string label returns nothing
-native LeaderboardGetLabelText          takes leaderboard lb returns string
-native PlayerSetLeaderboard             takes player toPlayer, leaderboard lb returns nothing
-native PlayerGetLeaderboard             takes player toPlayer returns leaderboard
-native LeaderboardSetLabelColor         takes leaderboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-native LeaderboardSetValueColor         takes leaderboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-native LeaderboardSetStyle              takes leaderboard lb, boolean showLabel, boolean showNames, boolean showValues, boolean showIcons returns nothing
-native LeaderboardSetItemValue          takes leaderboard lb, integer whichItem, integer val returns nothing
-native LeaderboardSetItemLabel          takes leaderboard lb, integer whichItem, string val returns nothing
-native LeaderboardSetItemStyle          takes leaderboard lb, integer whichItem, boolean showLabel, boolean showValue, boolean showIcon returns nothing
-native LeaderboardSetItemLabelColor     takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
-native LeaderboardSetItemValueColor     takes leaderboard lb, integer whichItem, integer red, integer green, integer blue, integer alpha returns nothing
-native CreateMultiboard                 takes nothing returns multiboard
-native DestroyMultiboard                takes multiboard lb returns nothing
-native MultiboardDisplay                takes multiboard lb, boolean show returns nothing
-native IsMultiboardDisplayed            takes multiboard lb returns boolean
-native MultiboardMinimize               takes multiboard lb, boolean minimize returns nothing
-native IsMultiboardMinimized            takes multiboard lb returns boolean
-native MultiboardClear                  takes multiboard lb returns nothing
-native MultiboardSetTitleText           takes multiboard lb, string label returns nothing
-native MultiboardGetTitleText           takes multiboard lb returns string
-native MultiboardSetTitleTextColor      takes multiboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-native MultiboardGetRowCount            takes multiboard lb returns integer
-native MultiboardGetColumnCount         takes multiboard lb returns integer
-native MultiboardSetColumnCount         takes multiboard lb, integer count returns nothing
-native MultiboardSetRowCount            takes multiboard lb, integer count returns nothing
-native MultiboardSetItemsStyle          takes multiboard lb, boolean showValues, boolean showIcons returns nothing
-native MultiboardSetItemsValue          takes multiboard lb, string value returns nothing
-native MultiboardSetItemsValueColor     takes multiboard lb, integer red, integer green, integer blue, integer alpha returns nothing
-native MultiboardSetItemsWidth          takes multiboard lb, real width returns nothing
-native MultiboardSetItemsIcon           takes multiboard lb, string iconPath returns nothing
-native MultiboardGetItem                takes multiboard lb, integer row, integer column returns multiboarditem
-native MultiboardReleaseItem            takes multiboarditem mbi returns nothing
-native MultiboardSetItemStyle           takes multiboarditem mbi, boolean showValue, boolean showIcon returns nothing
-native MultiboardSetItemValue           takes multiboarditem mbi, string val returns nothing
-native MultiboardSetItemValueColor      takes multiboarditem mbi, integer red, integer green, integer blue, integer alpha returns nothing
-native MultiboardSetItemWidth           takes multiboarditem mbi, real width returns nothing
-native MultiboardSetItemIcon            takes multiboarditem mbi, string iconFileName returns nothing
-native MultiboardSuppressDisplay        takes boolean flag returns nothing
-native SetCameraPosition            takes real x, real y returns nothing
-native SetCameraQuickPosition       takes real x, real y returns nothing
-native SetCameraBounds              takes real x1, real y1, real x2, real y2, real x3, real y3, real x4, real y4 returns nothing
-native StopCamera                   takes nothing returns nothing
-native ResetToGameCamera            takes real duration returns nothing
-native PanCameraTo                  takes real x, real y returns nothing
-native PanCameraToTimed             takes real x, real y, real duration returns nothing
-native PanCameraToWithZ             takes real x, real y, real zOffsetDest returns nothing
-native PanCameraToTimedWithZ        takes real x, real y, real zOffsetDest, real duration returns nothing
-native SetCinematicCamera           takes string cameraModelFile returns nothing
-native SetCameraRotateMode          takes real x, real y, real radiansToSweep, real duration returns nothing
-native SetCameraField               takes camerafield whichField, real value, real duration returns nothing
-native AdjustCameraField            takes camerafield whichField, real offset, real duration returns nothing
-native SetCameraTargetController    takes unit whichUnit, real xoffset, real yoffset, boolean inheritOrientation returns nothing
-native SetCameraOrientController    takes unit whichUnit, real xoffset, real yoffset returns nothing
-native CreateCameraSetup                    takes nothing returns camerasetup
-native CameraSetupSetField                  takes camerasetup whichSetup, camerafield whichField, real value, real duration returns nothing
-native CameraSetupGetField                  takes camerasetup whichSetup, camerafield whichField returns real
-native CameraSetupSetDestPosition           takes camerasetup whichSetup, real x, real y, real duration returns nothing
-native CameraSetupGetDestPositionLoc        takes camerasetup whichSetup returns location
-native CameraSetupGetDestPositionX          takes camerasetup whichSetup returns real
-native CameraSetupGetDestPositionY          takes camerasetup whichSetup returns real
-native CameraSetupApply                     takes camerasetup whichSetup, boolean doPan, boolean panTimed returns nothing
-native CameraSetupApplyWithZ                takes camerasetup whichSetup, real zDestOffset returns nothing
-native CameraSetupApplyForceDuration        takes camerasetup whichSetup, boolean doPan, real forceDuration returns nothing
-native CameraSetupApplyForceDurationWithZ   takes camerasetup whichSetup, real zDestOffset, real forceDuration returns nothing
-native CameraSetTargetNoise             takes real mag, real velocity returns nothing
-native CameraSetSourceNoise             takes real mag, real velocity returns nothing
-native CameraSetTargetNoiseEx           takes real mag, real velocity, boolean vertOnly returns nothing
-native CameraSetSourceNoiseEx           takes real mag, real velocity, boolean vertOnly returns nothing
-native CameraSetSmoothingFactor         takes real factor returns nothing
-native SetCineFilterTexture             takes string filename returns nothing
-native SetCineFilterBlendMode           takes blendmode whichMode returns nothing
-native SetCineFilterTexMapFlags         takes texmapflags whichFlags returns nothing
-native SetCineFilterStartUV             takes real minu, real minv, real maxu, real maxv returns nothing
-native SetCineFilterEndUV               takes real minu, real minv, real maxu, real maxv returns nothing
-native SetCineFilterStartColor          takes integer red, integer green, integer blue, integer alpha returns nothing
-native SetCineFilterEndColor            takes integer red, integer green, integer blue, integer alpha returns nothing
-native SetCineFilterDuration            takes real duration returns nothing
-native DisplayCineFilter                takes boolean flag returns nothing
-native IsCineFilterDisplayed            takes nothing returns boolean
-native SetCinematicScene                takes integer portraitUnitId, playercolor color, string speakerTitle, string text, real sceneDuration, real voiceoverDuration returns nothing
-native EndCinematicScene                takes nothing returns nothing
-native ForceCinematicSubtitles          takes boolean flag returns nothing
-native GetCameraMargin                  takes integer whichMargin returns real
-native NewSoundEnvironment          takes string environmentName returns nothing
-native CreateSound                  takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string eaxSetting returns sound
-native CreateSoundFilenameWithLabel takes string fileName, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate, string SLKEntryName returns sound
-native CreateSoundFromLabel         takes string soundLabel, boolean looping, boolean is3D, boolean stopwhenoutofrange, integer fadeInRate, integer fadeOutRate returns sound
-native CreateMIDISound              takes string soundLabel, integer fadeInRate, integer fadeOutRate returns sound
-native SetSoundParamsFromLabel      takes sound soundHandle, string soundLabel returns nothing
-native SetSoundDistanceCutoff       takes sound soundHandle, real cutoff returns nothing
-native SetSoundChannel              takes sound soundHandle, integer channel returns nothing
-native SetSoundVolume               takes sound soundHandle, integer volume returns nothing
-native SetSoundPitch                takes sound soundHandle, real pitch returns nothing
-native SetSoundPlayPosition         takes sound soundHandle, integer millisecs returns nothing
-native SetSoundDistances            takes sound soundHandle, real minDist, real maxDist returns nothing
-native SetSoundConeAngles           takes sound soundHandle, real inside, real outside, integer outsideVolume returns nothing
-native SetSoundConeOrientation      takes sound soundHandle, real x, real y, real z returns nothing
-native SetSoundPosition             takes sound soundHandle, real x, real y, real z returns nothing
-native SetSoundVelocity             takes sound soundHandle, real x, real y, real z returns nothing
-native AttachSoundToUnit            takes sound soundHandle, unit whichUnit returns nothing
-native StartSound                   takes sound soundHandle returns nothing
-native StopSound                    takes sound soundHandle, boolean killWhenDone, boolean fadeOut returns nothing
-native KillSoundWhenDone            takes sound soundHandle returns nothing
-native SetMapMusic                  takes string musicName, boolean random, integer index returns nothing
-native ClearMapMusic                takes nothing returns nothing
-native PlayMusic                    takes string musicName returns nothing
-native PlayMusicEx                  takes string musicName, integer frommsecs, integer fadeinmsecs returns nothing
-native StopMusic                    takes boolean fadeOut returns nothing
-native ResumeMusic                  takes nothing returns nothing
-native PlayThematicMusic            takes string musicFileName returns nothing
-native PlayThematicMusicEx          takes string musicFileName, integer frommsecs returns nothing
-native EndThematicMusic             takes nothing returns nothing
-native SetMusicVolume               takes integer volume returns nothing
-native SetMusicPlayPosition         takes integer millisecs returns nothing
-native SetThematicMusicPlayPosition takes integer millisecs returns nothing
-native SetSoundDuration             takes sound soundHandle, integer duration returns nothing
-native GetSoundDuration             takes sound soundHandle returns integer
-native GetSoundFileDuration         takes string musicFileName returns integer
-native VolumeGroupSetVolume         takes volumegroup vgroup, real scale returns nothing
-native VolumeGroupReset             takes nothing returns nothing
-native GetSoundIsPlaying            takes sound soundHandle returns boolean
-native GetSoundIsLoading            takes sound soundHandle returns boolean
-native RegisterStackedSound         takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
-native UnregisterStackedSound       takes sound soundHandle, boolean byPosition, real rectwidth, real rectheight returns nothing
-native AddWeatherEffect             takes rect where, integer effectID returns weathereffect
-native RemoveWeatherEffect          takes weathereffect whichEffect returns nothing
-native EnableWeatherEffect          takes weathereffect whichEffect, boolean enable returns nothing
-native TerrainDeformCrater          takes real x, real y, real radius, real depth, integer duration, boolean permanent returns terraindeformation
-native TerrainDeformRipple          takes real x, real y, real radius, real depth, integer duration, integer count, real spaceWaves, real timeWaves, real radiusStartPct, boolean limitNeg returns terraindeformation
-native TerrainDeformWave            takes real x, real y, real dirX, real dirY, real distance, real speed, real radius, real depth, integer trailTime, integer count returns terraindeformation
-native TerrainDeformRandom          takes real x, real y, real radius, real minDelta, real maxDelta, integer duration, integer updateInterval returns terraindeformation
-native TerrainDeformStop            takes terraindeformation deformation, integer duration returns nothing
-native TerrainDeformStopAll         takes nothing returns nothing
-native AddSpecialEffect             takes string modelName, real x, real y returns effect
-native AddSpecialEffectLoc          takes string modelName, location where returns effect
-native AddSpecialEffectTarget       takes string modelName, widget targetWidget, string attachPointName returns effect
-native DestroyEffect                takes effect whichEffect returns nothing
-native AddSpellEffect               takes string abilityString, effecttype t, real x, real y returns effect
-native AddSpellEffectLoc            takes string abilityString, effecttype t,location where returns effect
-native AddSpellEffectById           takes integer abilityId, effecttype t,real x, real y returns effect
-native AddSpellEffectByIdLoc        takes integer abilityId, effecttype t,location where returns effect
-native AddSpellEffectTarget         takes string modelName, effecttype t, widget targetWidget, string attachPoint returns effect
-native AddSpellEffectTargetById     takes integer abilityId, effecttype t, widget targetWidget, string attachPoint returns effect
-native AddLightning                 takes string codeName, boolean checkVisibility, real x1, real y1, real x2, real y2 returns lightning
-native AddLightningEx               takes string codeName, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns lightning
-native DestroyLightning             takes lightning whichBolt returns boolean
-native MoveLightning                takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real x2, real y2 returns boolean
-native MoveLightningEx              takes lightning whichBolt, boolean checkVisibility, real x1, real y1, real z1, real x2, real y2, real z2 returns boolean
-native GetLightningColorA           takes lightning whichBolt returns real
-native GetLightningColorR           takes lightning whichBolt returns real
-native GetLightningColorG           takes lightning whichBolt returns real
-native GetLightningColorB           takes lightning whichBolt returns real
-native SetLightningColor            takes lightning whichBolt, real r, real g, real b, real a returns boolean
-native GetAbilityEffect             takes string abilityString, effecttype t, integer index returns string
-native GetAbilityEffectById         takes integer abilityId, effecttype t, integer index returns string
-native GetAbilitySound              takes string abilityString, soundtype t returns string
-native GetAbilitySoundById          takes integer abilityId, soundtype t returns string
-native GetTerrainCliffLevel         takes real x, real y returns integer
-native SetWaterBaseColor            takes integer red, integer green, integer blue, integer alpha returns nothing
-native SetWaterDeforms              takes boolean val returns nothing
-native GetTerrainType               takes real x, real y returns integer
-native GetTerrainVariance           takes real x, real y returns integer
-native SetTerrainType               takes real x, real y, integer terrainType, integer variation, integer area, integer shape returns nothing
-native IsTerrainPathable            takes real x, real y, pathingtype t returns boolean
-native SetTerrainPathable           takes real x, real y, pathingtype t, boolean flag returns nothing
-native CreateImage                  takes string file, real sizeX, real sizeY, real sizeZ, real posX, real posY, real posZ, real originX, real originY, real originZ, integer imageType returns image
-native DestroyImage                 takes image whichImage returns nothing
-native ShowImage                    takes image whichImage, boolean flag returns nothing
-native SetImageConstantHeight       takes image whichImage, boolean flag, real height returns nothing
-native SetImagePosition             takes image whichImage, real x, real y, real z returns nothing
-native SetImageColor                takes image whichImage, integer red, integer green, integer blue, integer alpha returns nothing
-native SetImageRender               takes image whichImage, boolean flag returns nothing
-native SetImageRenderAlways         takes image whichImage, boolean flag returns nothing
-native SetImageAboveWater           takes image whichImage, boolean flag, boolean useWaterAlpha returns nothing
-native SetImageType                 takes image whichImage, integer imageType returns nothing
-native CreateUbersplat              takes real x, real y, string name, integer red, integer green, integer blue, integer alpha, boolean forcePaused, boolean noBirthTime returns ubersplat
-native DestroyUbersplat             takes ubersplat whichSplat returns nothing
-native ResetUbersplat               takes ubersplat whichSplat returns nothing
-native FinishUbersplat              takes ubersplat whichSplat returns nothing
-native ShowUbersplat                takes ubersplat whichSplat, boolean flag returns nothing
-native SetUbersplatRender           takes ubersplat whichSplat, boolean flag returns nothing
-native SetUbersplatRenderAlways     takes ubersplat whichSplat, boolean flag returns nothing
-native SetBlight                takes player whichPlayer, real x, real y, real radius, boolean addBlight returns nothing
-native SetBlightRect            takes player whichPlayer, rect r, boolean addBlight returns nothing
-native SetBlightPoint           takes player whichPlayer, real x, real y, boolean addBlight returns nothing
-native SetBlightLoc             takes player whichPlayer, location whichLocation, real radius, boolean addBlight returns nothing
-native CreateBlightedGoldmine   takes player id, real x, real y, real face returns unit
-native IsPointBlighted          takes real x, real y returns boolean
-native SetDoodadAnimation       takes real x, real y, real radius, integer doodadID, boolean nearestOnly, string animName, boolean animRandom returns nothing
-native SetDoodadAnimationRect   takes rect r, integer doodadID, string animName, boolean animRandom returns nothing
-native StartMeleeAI         takes player num, string script                 returns nothing
-native StartCampaignAI      takes player num, string script                 returns nothing
-native CommandAI            takes player num, integer command, integer data returns nothing
-native PauseCompAI          takes player p,   boolean pause                 returns nothing
-native GetAIDifficulty      takes player num                                returns aidifficulty
-native RemoveGuardPosition  takes unit hUnit                                returns nothing
-native RecycleGuardPosition takes unit hUnit                                returns nothing
-native RemoveAllGuardPositions takes player num                             returns nothing
-native Cheat            takes string cheatStr returns nothing
-native IsNoVictoryCheat takes nothing returns boolean
-native IsNoDefeatCheat  takes nothing returns boolean
-native Preload          takes string filename returns nothing
-native PreloadEnd       takes real timeout returns nothing
-native PreloadStart     takes nothing returns nothing
-native PreloadRefresh   takes nothing returns nothing
-native PreloadEndEx     takes nothing returns nothing
-native PreloadGenClear  takes nothing returns nothing
-native PreloadGenStart  takes nothing returns nothing
-native PreloadGenEnd    takes string filename returns nothing
-native Preloader        takes string filename returns nothing
-native AutomationSetTestType                    takes string testType returns nothing
-native AutomationTestStart                      takes string testName returns nothing
-native AutomationTestEnd                        takes nothing returns nothing
-native AutomationTestingFinished                takes nothing returns nothing
-native BlzGetTriggerPlayerMouseX                   takes nothing returns real
-native BlzGetTriggerPlayerMouseY                   takes nothing returns real
-native BlzGetTriggerPlayerMousePosition            takes nothing returns location
-native BlzGetTriggerPlayerMouseButton              takes nothing returns mousebuttontype
-native BlzSetAbilityTooltip                        takes integer abilCode, string tooltip, integer level returns nothing
-native BlzSetAbilityActivatedTooltip               takes integer abilCode, string tooltip, integer level returns nothing
-native BlzSetAbilityExtendedTooltip                takes integer abilCode, string extendedTooltip, integer level returns nothing
-native BlzSetAbilityActivatedExtendedTooltip       takes integer abilCode, string extendedTooltip, integer level returns nothing
-native BlzSetAbilityResearchTooltip                takes integer abilCode, string researchTooltip, integer level returns nothing
-native BlzSetAbilityResearchExtendedTooltip        takes integer abilCode, string researchExtendedTooltip, integer level returns nothing
-native BlzGetAbilityTooltip                        takes integer abilCode, integer level returns string
-native BlzGetAbilityActivatedTooltip               takes integer abilCode, integer level returns string
-native BlzGetAbilityExtendedTooltip                takes integer abilCode, integer level returns string
-native BlzGetAbilityActivatedExtendedTooltip       takes integer abilCode, integer level returns string
-native BlzGetAbilityResearchTooltip                takes integer abilCode, integer level returns string
-native BlzGetAbilityResearchExtendedTooltip        takes integer abilCode, integer level returns string
-native BlzSetAbilityIcon                           takes integer abilCode, string iconPath returns nothing
-native BlzGetAbilityIcon                           takes integer abilCode returns string
-native BlzSetAbilityActivatedIcon                  takes integer abilCode, string iconPath returns nothing
-native BlzGetAbilityActivatedIcon                  takes integer abilCode returns string
-native BlzGetAbilityPosX                           takes integer abilCode returns integer
-native BlzGetAbilityPosY                           takes integer abilCode returns integer
-native BlzSetAbilityPosX                           takes integer abilCode, integer x returns nothing
-native BlzSetAbilityPosY                           takes integer abilCode, integer y returns nothing
-native BlzGetAbilityActivatedPosX                  takes integer abilCode returns integer
-native BlzGetAbilityActivatedPosY                  takes integer abilCode returns integer
-native BlzSetAbilityActivatedPosX                  takes integer abilCode, integer x returns nothing
-native BlzSetAbilityActivatedPosY                  takes integer abilCode, integer y returns nothing
-native BlzGetUnitMaxHP                             takes unit whichUnit returns integer
-native BlzSetUnitMaxHP                             takes unit whichUnit, integer hp returns nothing
-native BlzGetUnitMaxMana                           takes unit whichUnit returns integer
-native BlzSetUnitMaxMana                           takes unit whichUnit, integer mana returns nothing
-native BlzSetItemName                              takes item whichItem, string name returns nothing
-native BlzSetItemDescription                       takes item whichItem, string description returns nothing
-native BlzGetItemDescription                       takes item whichItem returns string
-native BlzSetItemTooltip                           takes item whichItem, string tooltip returns nothing
-native BlzGetItemTooltip                           takes item whichItem returns string
-native BlzSetItemExtendedTooltip                   takes item whichItem, string extendedTooltip returns nothing
-native BlzGetItemExtendedTooltip                   takes item whichItem returns string
-native BlzSetItemIconPath                          takes item whichItem, string iconPath returns nothing
-native BlzGetItemIconPath                          takes item whichItem returns string
-native BlzSetUnitName                              takes unit whichUnit, string name returns nothing
-native BlzSetHeroProperName                        takes unit whichUnit, string heroProperName returns nothing
-native BlzGetUnitBaseDamage                        takes unit whichUnit, integer weaponIndex returns integer
-native BlzSetUnitBaseDamage                        takes unit whichUnit, integer baseDamage, integer weaponIndex returns nothing
-native BlzGetUnitDiceNumber                        takes unit whichUnit, integer weaponIndex returns integer
-native BlzSetUnitDiceNumber                        takes unit whichUnit, integer diceNumber, integer weaponIndex returns nothing
-native BlzGetUnitDiceSides                         takes unit whichUnit, integer weaponIndex returns integer
-native BlzSetUnitDiceSides                         takes unit whichUnit, integer diceSides, integer weaponIndex returns nothing
-native BlzGetUnitAttackCooldown                    takes unit whichUnit, integer weaponIndex returns real
-native BlzSetUnitAttackCooldown                    takes unit whichUnit, real cooldown, integer weaponIndex returns nothing
-native BlzSetSpecialEffectColorByPlayer            takes effect whichEffect, player whichPlayer returns nothing
-native BlzSetSpecialEffectColor                    takes effect whichEffect, integer r, integer g, integer b returns nothing
-native BlzSetSpecialEffectAlpha                    takes effect whichEffect, integer alpha returns nothing
-native BlzSetSpecialEffectScale                    takes effect whichEffect, real scale returns nothing
-native BlzSetSpecialEffectPosition                 takes effect whichEffect, real x, real y, real z returns nothing
-native BlzSetSpecialEffectHeight                   takes effect whichEffect, real height returns nothing
-native BlzSetSpecialEffectTimeScale                takes effect whichEffect, real timeScale returns nothing
-native BlzSetSpecialEffectTime                     takes effect whichEffect, real time returns nothing
-native BlzSetSpecialEffectOrientation              takes effect whichEffect, real yaw, real pitch, real roll returns nothing
-native BlzSetSpecialEffectYaw                      takes effect whichEffect, real yaw returns nothing
-native BlzSetSpecialEffectPitch                    takes effect whichEffect, real pitch returns nothing
-native BlzSetSpecialEffectRoll                     takes effect whichEffect, real roll returns nothing
-native BlzSetSpecialEffectX                        takes effect whichEffect, real x returns nothing
-native BlzSetSpecialEffectY                        takes effect whichEffect, real y returns nothing
-native BlzSetSpecialEffectZ                        takes effect whichEffect, real z returns nothing
-native BlzSetSpecialEffectPositionLoc              takes effect whichEffect, location loc returns nothing
-native BlzGetLocalSpecialEffectX                   takes effect whichEffect returns real
-native BlzGetLocalSpecialEffectY                   takes effect whichEffect returns real
-native BlzGetLocalSpecialEffectZ                   takes effect whichEffect returns real
-native BlzSpecialEffectClearSubAnimations          takes effect whichEffect returns nothing
-native BlzSpecialEffectRemoveSubAnimation          takes effect whichEffect, subanimtype whichSubAnim returns nothing
-native BlzSpecialEffectAddSubAnimation             takes effect whichEffect, subanimtype whichSubAnim returns nothing
-native BlzPlaySpecialEffect                        takes effect whichEffect, animtype whichAnim returns nothing
-native BlzPlaySpecialEffectWithTimeScale           takes effect whichEffect, animtype whichAnim, real timeScale returns nothing
-native BlzGetAnimName                              takes animtype whichAnim returns string
-native BlzGetUnitArmor                             takes unit whichUnit returns real
-native BlzSetUnitArmor                             takes unit whichUnit, real armorAmount returns nothing
-native BlzUnitHideAbility                          takes unit whichUnit, integer abilId, boolean flag returns nothing
-native BlzUnitDisableAbility                       takes unit whichUnit, integer abilId, boolean flag, boolean hideUI returns nothing
-native BlzUnitCancelTimedLife                      takes unit whichUnit returns nothing
-native BlzIsUnitSelectable                         takes unit whichUnit returns boolean
-native BlzIsUnitInvulnerable                       takes unit whichUnit returns boolean
-native BlzUnitInterruptAttack                      takes unit whichUnit returns nothing
-native BlzGetUnitCollisionSize                     takes unit whichUnit returns real
-native BlzGetAbilityManaCost                       takes integer abilId, integer level returns integer
-native BlzGetAbilityCooldown                       takes integer abilId, integer level returns real
-native BlzSetUnitAbilityCooldown                   takes unit whichUnit, integer abilId, integer level, real cooldown returns nothing
-native BlzGetUnitAbilityCooldown                   takes unit whichUnit, integer abilId, integer level returns real
-native BlzGetUnitAbilityCooldownRemaining          takes unit whichUnit, integer abilId returns real
-native BlzEndUnitAbilityCooldown                   takes unit whichUnit, integer abilCode returns nothing
-native BlzGetUnitAbilityManaCost                   takes unit whichUnit, integer abilId, integer level returns integer
-native BlzSetUnitAbilityManaCost                   takes unit whichUnit, integer abilId, integer level, integer manaCost returns nothing
-native BlzGetLocalUnitZ                            takes unit whichUnit returns real    
-native BlzDecPlayerTechResearched                  takes player whichPlayer, integer techid, integer levels returns nothing
-native BlzSetEventDamage                           takes real damage returns nothing
-native BlzGetEventDamageTarget 	                   takes nothing returns unit
-native BlzGetEventAttackType  	                   takes nothing returns attacktype
-native BlzGetEventDamageType                       takes nothing returns damagetype
-native BlzGetEventWeaponType  	                   takes nothing returns weapontype
-native BlzSetEventAttackType                       takes attacktype attackType returns boolean
-native BlzSetEventDamageType                       takes damagetype damageType returns boolean
-native BlzSetEventWeaponType                       takes weapontype weaponType returns boolean
-native RequestExtraIntegerData                     takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns integer
-native RequestExtraBooleanData                     takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns boolean
-native RequestExtraStringData                      takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns string
-native RequestExtraRealData                        takes integer dataType, player whichPlayer, string param1, string param2, boolean param3, integer param4, integer param5, integer param6 returns real
-native BlzGetUnitZ                                 takes unit whichUnit returns real
-native BlzEnableSelections                         takes boolean enableSelection, boolean enableSelectionCircle returns nothing
-native BlzIsSelectionEnabled                       takes nothing returns boolean
-native BlzIsSelectionCircleEnabled                 takes nothing returns boolean
-native BlzCameraSetupApplyForceDurationSmooth      takes camerasetup whichSetup, boolean doPan, real forcedDuration, real easeInDuration, real easeOutDuration, real smoothFactor returns nothing
-native BlzEnableTargetIndicator                    takes boolean enable returns nothing
-native BlzIsTargetIndicatorEnabled                 takes nothing returns boolean
-native BlzGetOriginFrame                           takes originframetype frameType, integer index returns framehandle
-native BlzEnableUIAutoPosition                     takes boolean enable returns nothing
-native BlzHideOriginFrames                         takes boolean enable returns nothing
-native BlzConvertColor                             takes integer a, integer r, integer g, integer b returns integer
-native BlzLoadTOCFile                              takes string TOCFile returns boolean
-native BlzCreateFrame                              takes string name, framehandle owner, integer priority, integer createContext returns framehandle
-native BlzCreateSimpleFrame                        takes string name, framehandle owner, integer createContext returns framehandle
-native BlzCreateFrameByType                        takes string typeName, string name, framehandle owner, string inherits, integer createContext returns framehandle
-native BlzDestroyFrame                             takes framehandle frame returns nothing
-native BlzFrameSetPoint                            takes framehandle frame, framepointtype point, framehandle relative, framepointtype relativePoint, real x, real y returns nothing
-native BlzFrameSetAbsPoint                         takes framehandle frame, framepointtype point, real x, real y returns nothing
-native BlzFrameClearAllPoints                      takes framehandle frame returns nothing
-native BlzFrameSetAllPoints                        takes framehandle frame, framehandle relative returns nothing
-native BlzFrameSetVisible                          takes framehandle frame, boolean visible returns nothing
-native BlzFrameIsVisible                           takes framehandle frame returns boolean
-native BlzGetFrameByName                           takes string name, integer createContext returns framehandle
-native BlzFrameGetName                             takes framehandle frame returns string
-native BlzFrameClick                               takes framehandle frame returns nothing
-native BlzFrameSetText                             takes framehandle frame, string text returns nothing
-native BlzFrameGetText                             takes framehandle frame returns string
-native BlzFrameSetTextSizeLimit                    takes framehandle frame, integer size returns nothing
-native BlzFrameGetTextSizeLimit                    takes framehandle frame returns integer
-native BlzFrameSetTextColor                        takes framehandle frame, integer color returns nothing
-native BlzFrameSetFocus                            takes framehandle frame, boolean flag returns nothing
-native BlzFrameSetModel                            takes framehandle frame, string modelFile, integer cameraIndex returns nothing
-native BlzFrameSetEnable                           takes framehandle frame, boolean enabled returns nothing
-native BlzFrameGetEnable                           takes framehandle frame returns boolean
-native BlzFrameSetAlpha                            takes framehandle frame, integer alpha returns nothing
-native BlzFrameGetAlpha                            takes framehandle frame returns integer
-native BlzFrameSetSpriteAnimate                    takes framehandle frame, integer primaryProp, integer flags returns nothing
-native BlzFrameSetTexture                          takes framehandle frame, string texFile, integer flag, boolean blend returns nothing
-native BlzFrameSetScale                            takes framehandle frame, real scale returns nothing
-native BlzFrameSetTooltip                          takes framehandle frame, framehandle tooltip returns nothing
-native BlzFrameCageMouse                           takes framehandle frame, boolean enable returns nothing
-native BlzFrameSetValue                            takes framehandle frame, real value returns nothing
-native BlzFrameGetValue                            takes framehandle frame returns real
-native BlzFrameSetMinMaxValue                      takes framehandle frame, real minValue, real maxValue returns nothing
-native BlzFrameSetStepSize                         takes framehandle frame, real stepSize returns nothing
-native BlzFrameSetSize                             takes framehandle frame, real width, real height returns nothing
-native BlzFrameSetVertexColor                      takes framehandle frame, integer color returns nothing
-native BlzFrameSetLevel                            takes framehandle frame, integer level returns nothing
-native BlzFrameSetParent                           takes framehandle frame, framehandle parent returns nothing
-native BlzFrameGetParent                           takes framehandle frame returns framehandle
-native BlzFrameGetHeight                           takes framehandle frame returns real
-native BlzFrameGetWidth                            takes framehandle frame returns real
-native BlzFrameSetFont                             takes framehandle frame, string fileName, real height, integer flags returns nothing
-native BlzFrameSetTextAlignment                    takes framehandle frame, textaligntype vert, textaligntype horz returns nothing
-native BlzTriggerRegisterFrameEvent                takes trigger whichTrigger, framehandle frame, frameeventtype eventId returns event
-native BlzGetTriggerFrame                          takes nothing returns framehandle
-native BlzGetTriggerFrameEvent                     takes nothing returns frameeventtype
-native BlzTriggerRegisterPlayerSyncEvent           takes trigger whichTrigger, player whichPlayer, string prefix, boolean fromServer returns event
-native BlzSendSyncData                             takes string prefix, string data returns boolean
-native BlzGetTriggerSyncPrefix                     takes nothing returns string
-native BlzGetTriggerSyncData                       takes nothing returns string
-native BlzTriggerRegisterPlayerKeyEvent            takes trigger whichTrigger, player whichPlayer, oskeytype key, integer metaKey, boolean keyDown returns event
-native BlzGetTriggerPlayerKey                      takes nothing returns oskeytype
-native BlzGetTriggerPlayerMetaKey                  takes nothing returns integer
-native BlzGetTriggerPlayerIsKeyDown                takes nothing returns boolean
-native BlzEnableCursor                             takes boolean enable returns nothing
-native BlzSetMousePos                              takes integer x, integer y returns nothing
-native BlzGetLocalClientWidth                      takes nothing returns integer
-native BlzGetLocalClientHeight                     takes nothing returns integer
-native BlzIsLocalClientActive                      takes nothing returns boolean
-native BlzGetMouseFocusUnit                        takes nothing returns unit
-native BlzChangeMinimapTerrainTex                  takes string texFile returns boolean
-native BlzGetLocale                                takes nothing returns string
-native BlzGetSpecialEffectScale                    takes effect whichEffect returns real
-native BlzSetSpecialEffectMatrixScale              takes effect whichEffect, real x, real y, real z returns nothing
-native BlzResetSpecialEffectMatrix                 takes effect whichEffect returns nothing
-native BlzGetUnitAbility                           takes unit whichUnit, integer abilId returns ability
-native BlzGetUnitAbilityByIndex                    takes unit whichUnit, integer index returns ability
-native BlzDisplayChatMessage                       takes player whichPlayer, integer recipient, string message returns nothing
-native BlzPauseUnitEx                              takes unit whichUnit, boolean flag returns nothing
-native BlzBitOr                                    takes integer x, integer y returns integer
-native BlzBitAnd                                   takes integer x, integer y returns integer
-native BlzBitXor                                   takes integer x, integer y returns integer 
-native BlzGetAbilityBooleanField                   takes ability whichAbility, abilitybooleanfield whichField returns boolean
-native BlzGetAbilityIntegerField                   takes ability whichAbility, abilityintegerfield whichField returns integer
-native BlzGetAbilityRealField                      takes ability whichAbility, abilityrealfield whichField returns real
-native BlzGetAbilityStringField                    takes ability whichAbility, abilitystringfield whichField returns string
-native BlzGetAbilityBooleanLevelField              takes ability whichAbility, abilitybooleanlevelfield whichField, integer level returns boolean
-native BlzGetAbilityIntegerLevelField              takes ability whichAbility, abilityintegerlevelfield whichField, integer level returns integer
-native BlzGetAbilityRealLevelField                 takes ability whichAbility, abilityreallevelfield whichField, integer level returns real
-native BlzGetAbilityStringLevelField               takes ability whichAbility, abilitystringlevelfield whichField, integer level returns string
-native BlzGetAbilityBooleanLevelArrayField         takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index returns boolean
-native BlzGetAbilityIntegerLevelArrayField         takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index returns integer
-native BlzGetAbilityRealLevelArrayField            takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index returns real
-native BlzGetAbilityStringLevelArrayField          takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index returns string
-native BlzSetAbilityBooleanField                   takes ability whichAbility, abilitybooleanfield whichField, boolean value returns boolean
-native BlzSetAbilityIntegerField                   takes ability whichAbility, abilityintegerfield whichField, integer value returns boolean
-native BlzSetAbilityRealField                      takes ability whichAbility, abilityrealfield whichField, real value returns boolean
-native BlzSetAbilityStringField                    takes ability whichAbility, abilitystringfield whichField, string value returns boolean
-native BlzSetAbilityBooleanLevelField              takes ability whichAbility, abilitybooleanlevelfield whichField, integer level, boolean value returns boolean
-native BlzSetAbilityIntegerLevelField              takes ability whichAbility, abilityintegerlevelfield whichField, integer level, integer value returns boolean
-native BlzSetAbilityRealLevelField                 takes ability whichAbility, abilityreallevelfield whichField, integer level, real value returns boolean
-native BlzSetAbilityStringLevelField               takes ability whichAbility, abilitystringlevelfield whichField, integer level, string value returns boolean
-native BlzSetAbilityBooleanLevelArrayField         takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, integer index, boolean value returns boolean
-native BlzSetAbilityIntegerLevelArrayField         takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer index, integer value returns boolean
-native BlzSetAbilityRealLevelArrayField            takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, integer index, real value returns boolean
-native BlzSetAbilityStringLevelArrayField          takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, integer index, string value returns boolean
-native BlzAddAbilityBooleanLevelArrayField         takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns boolean
-native BlzAddAbilityIntegerLevelArrayField         takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns boolean
-native BlzAddAbilityRealLevelArrayField            takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns boolean
-native BlzAddAbilityStringLevelArrayField          takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns boolean
-native BlzRemoveAbilityBooleanLevelArrayField      takes ability whichAbility, abilitybooleanlevelarrayfield whichField, integer level, boolean value returns boolean
-native BlzRemoveAbilityIntegerLevelArrayField      takes ability whichAbility, abilityintegerlevelarrayfield whichField, integer level, integer value returns boolean
-native BlzRemoveAbilityRealLevelArrayField         takes ability whichAbility, abilityreallevelarrayfield whichField, integer level, real value returns boolean
-native BlzRemoveAbilityStringLevelArrayField       takes ability whichAbility, abilitystringlevelarrayfield whichField, integer level, string value returns boolean
-native BlzGetItemAbilityByIndex                    takes item whichItem, integer index returns ability
-native BlzGetItemAbility                           takes item whichItem, integer abilCode returns ability
-native BlzItemAddAbility                           takes item whichItem, integer abilCode returns boolean
-native BlzGetItemBooleanField                      takes item whichItem, itembooleanfield whichField returns boolean
-native BlzGetItemIntegerField                      takes item whichItem, itemintegerfield whichField returns integer
-native BlzGetItemRealField                         takes item whichItem, itemrealfield whichField returns real
-native BlzGetItemStringField                       takes item whichItem, itemstringfield whichField returns string
-native BlzSetItemBooleanField                      takes item whichItem, itembooleanfield whichField, boolean value returns boolean
-native BlzSetItemIntegerField                      takes item whichItem, itemintegerfield whichField, integer value returns boolean
-native BlzSetItemRealField                         takes item whichItem, itemrealfield whichField, real value returns boolean
-native BlzSetItemStringField                       takes item whichItem, itemstringfield whichField, string value returns boolean
-native BlzItemRemoveAbility                        takes item whichItem, integer abilCode returns boolean
-native BlzGetUnitBooleanField                      takes unit whichUnit, unitbooleanfield whichField returns boolean
-native BlzGetUnitIntegerField                      takes unit whichUnit, unitintegerfield whichField returns integer
-native BlzGetUnitRealField                         takes unit whichUnit, unitrealfield whichField returns real
-native BlzGetUnitStringField                       takes unit whichUnit, unitstringfield whichField returns string
-native BlzSetUnitBooleanField                      takes unit whichUnit, unitbooleanfield whichField, boolean value returns boolean
-native BlzSetUnitIntegerField                      takes unit whichUnit, unitintegerfield whichField, integer value returns boolean
-native BlzSetUnitRealField                         takes unit whichUnit, unitrealfield whichField, real value returns boolean
-native BlzSetUnitStringField                       takes unit whichUnit, unitstringfield whichField, string value returns boolean
-native BlzGetUnitWeaponBooleanField                takes unit whichUnit, unitweaponbooleanfield whichField, integer index returns boolean
-native BlzGetUnitWeaponIntegerField                takes unit whichUnit, unitweaponintegerfield whichField, integer index returns integer
-native BlzGetUnitWeaponRealField                   takes unit whichUnit, unitweaponrealfield whichField, integer index returns real
-native BlzGetUnitWeaponStringField                 takes unit whichUnit, unitweaponstringfield whichField, integer index returns string
-native BlzSetUnitWeaponBooleanField                takes unit whichUnit, unitweaponbooleanfield whichField, integer index, boolean value returns boolean
-native BlzSetUnitWeaponIntegerField                takes unit whichUnit, unitweaponintegerfield whichField, integer index, integer value returns boolean
-native BlzSetUnitWeaponRealField                   takes unit whichUnit, unitweaponrealfield whichField, integer index, real value returns boolean
-native BlzSetUnitWeaponStringField                 takes unit whichUnit, unitweaponstringfield whichField, integer index, string value returns boolean
-]]--
+function SetItemPosition(i,x,y) end
+---@param whichItem wc3_item
+---@param flag boolean
+
+function SetItemDropOnDeath(whichItem,flag) end
+---@param i wc3_item
+---@param flag boolean
+
+function SetItemDroppable(i,flag) end
+---@param i wc3_item
+---@param flag boolean
+
+function SetItemPawnable(i,flag) end
+---@param whichItem wc3_item
+---@param whichPlayer wc3_player
+---@param changeColor boolean
+
+function SetItemPlayer(whichItem,whichPlayer,changeColor) end
+---@param whichItem wc3_item
+---@param flag boolean
+
+function SetItemInvulnerable(whichItem,flag) end
+---@param whichItem wc3_item
+---@return boolean
+function IsItemInvulnerable(whichItem) end
+---@param whichItem wc3_item
+---@param show boolean
+
+function SetItemVisible(whichItem,show) end
+---@param whichItem wc3_item
+---@return boolean
+function IsItemVisible(whichItem) end
+---@param whichItem wc3_item
+---@return boolean
+function IsItemOwned(whichItem) end
+---@param whichItem wc3_item
+---@return boolean
+function IsItemPowerup(whichItem) end
+---@param whichItem wc3_item
+---@return boolean
+function IsItemSellable(whichItem) end
+---@param whichItem wc3_item
+---@return boolean
+function IsItemPawnable(whichItem) end
+---@param itemId integer
+---@return boolean
+function IsItemIdPowerup(itemId) end
+---@param itemId integer
+---@return boolean
+function IsItemIdSellable(itemId) end
+---@param itemId integer
+---@return boolean
+function IsItemIdPawnable(itemId) end
+---@param r wc3_rect
+---@param filter wc3_boolexpr
+---@param actionFunc function
+
+function EnumItemsInRect(r,filter,actionFunc) end
+---@param whichItem wc3_item
+---@return integer
+function GetItemLevel(whichItem) end
+---@param whichItem wc3_item
+---@return wc3_itemtype
+function GetItemType(whichItem) end
+---@param whichItem wc3_item
+---@param unitId integer
+
+function SetItemDropID(whichItem,unitId) end
+---@param whichItem wc3_item
+---@return integer
+function GetItemCharges(whichItem) end
+---@param whichItem wc3_item
+---@param charges integer
+
+function SetItemCharges(whichItem,charges) end
+---@param whichItem wc3_item
+---@return integer
+function GetItemUserData(whichItem) end
+---@param whichItem wc3_item
+---@param data integer
+
+function SetItemUserData(whichItem,data) end
+---@param id wc3_player
+---@param unitid integer
+---@param x number
+---@param y number
+---@param face number
+---@return wc3_unit
+function CreateUnit(id,unitid,x,y,face) end
+---@param whichPlayer wc3_player
+---@param unitname string
+---@param x number
+---@param y number
+---@param face number
+---@return wc3_unit
+function CreateUnitByName(whichPlayer,unitname,x,y,face) end
+---@param id wc3_player
+---@param unitid integer
+---@param whichLocation wc3_location
+---@param face number
+---@return wc3_unit
+function CreateUnitAtLoc(id,unitid,whichLocation,face) end
+---@param id wc3_player
+---@param unitname string
+---@param whichLocation wc3_location
+---@param face number
+---@return wc3_unit
+function CreateUnitAtLocByName(id,unitname,whichLocation,face) end
+---@param whichPlayer wc3_player
+---@param unitid integer
+---@param x number
+---@param y number
+---@param face number
+---@return wc3_unit
+function CreateCorpse(whichPlayer,unitid,x,y,face) end
+---@param whichUnit wc3_unit
+
+function KillUnit(whichUnit) end
+---@param whichUnit wc3_unit
+
+function RemoveUnit(whichUnit) end
+---@param whichUnit wc3_unit
+---@param show boolean
+
+function ShowUnit(whichUnit,show) end
+---@param whichUnit wc3_unit
+---@param whichUnitState wc3_unitstate
+---@param newVal number
+
+function SetUnitState(whichUnit,whichUnitState,newVal) end
+---@param whichUnit wc3_unit
+---@param newX number
+
+function SetUnitX(whichUnit,newX) end
+---@param whichUnit wc3_unit
+---@param newY number
+
+function SetUnitY(whichUnit,newY) end
+---@param whichUnit wc3_unit
+---@param newX number
+---@param newY number
+
+function SetUnitPosition(whichUnit,newX,newY) end
+---@param whichUnit wc3_unit
+---@param whichLocation wc3_location
+
+function SetUnitPositionLoc(whichUnit,whichLocation) end
+---@param whichUnit wc3_unit
+---@param facingAngle number
+
+function SetUnitFacing(whichUnit,facingAngle) end
+---@param whichUnit wc3_unit
+---@param facingAngle number
+---@param duration number
+
+function SetUnitFacingTimed(whichUnit,facingAngle,duration) end
+---@param whichUnit wc3_unit
+---@param newSpeed number
+
+function SetUnitMoveSpeed(whichUnit,newSpeed) end
+---@param whichUnit wc3_unit
+---@param newHeight number
+---@param rate number
+
+function SetUnitFlyHeight(whichUnit,newHeight,rate) end
+---@param whichUnit wc3_unit
+---@param newTurnSpeed number
+
+function SetUnitTurnSpeed(whichUnit,newTurnSpeed) end
+---@param whichUnit wc3_unit
+---@param newPropWindowAngle number
+
+function SetUnitPropWindow(whichUnit,newPropWindowAngle) end
+---@param whichUnit wc3_unit
+---@param newAcquireRange number
+
+function SetUnitAcquireRange(whichUnit,newAcquireRange) end
+---@param whichUnit wc3_unit
+---@param creepGuard boolean
+
+function SetUnitCreepGuard(whichUnit,creepGuard) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitAcquireRange(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitTurnSpeed(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitPropWindow(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitFlyHeight(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitDefaultAcquireRange(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitDefaultTurnSpeed(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitDefaultPropWindow(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function GetUnitDefaultFlyHeight(whichUnit) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@param changeColor boolean
+
+function SetUnitOwner(whichUnit,whichPlayer,changeColor) end
+---@param whichUnit wc3_unit
+---@param whichColor wc3_playercolor
+
+function SetUnitColor(whichUnit,whichColor) end
+---@param whichUnit wc3_unit
+---@param scaleX number
+---@param scaleY number
+---@param scaleZ number
+
+function SetUnitScale(whichUnit,scaleX,scaleY,scaleZ) end
+---@param whichUnit wc3_unit
+---@param timeScale number
+
+function SetUnitTimeScale(whichUnit,timeScale) end
+---@param whichUnit wc3_unit
+---@param blendTime number
+
+function SetUnitBlendTime(whichUnit,blendTime) end
+---@param whichUnit wc3_unit
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+
+function SetUnitVertexColor(whichUnit,red,green,blue,alpha) end
+---@param whichUnit wc3_unit
+---@param whichAnimation string
+
+function QueueUnitAnimation(whichUnit,whichAnimation) end
+---@param whichUnit wc3_unit
+---@param whichAnimation string
+
+function SetUnitAnimation(whichUnit,whichAnimation) end
+---@param whichUnit wc3_unit
+---@param whichAnimation integer
+
+function SetUnitAnimationByIndex(whichUnit,whichAnimation) end
+---@param whichUnit wc3_unit
+---@param whichAnimation string
+---@param rarity wc3_raritycontrol
+
+function SetUnitAnimationWithRarity(whichUnit,whichAnimation,rarity) end
+---@param whichUnit wc3_unit
+---@param animProperties string
+---@param add boolean
+
+function AddUnitAnimationProperties(whichUnit,animProperties,add) end
+---@param whichUnit wc3_unit
+---@param whichBone string
+---@param lookAtTarget wc3_unit
+---@param offsetX number
+---@param offsetY number
+---@param offsetZ number
+
+function SetUnitLookAt(whichUnit,whichBone,lookAtTarget,offsetX,offsetY,offsetZ) end
+---@param whichUnit wc3_unit
+
+function ResetUnitLookAt(whichUnit) end
+---@param whichUnit wc3_unit
+---@param byWhichPlayer wc3_player
+---@param flag boolean
+
+function SetUnitRescuable(whichUnit,byWhichPlayer,flag) end
+---@param whichUnit wc3_unit
+---@param range number
+
+function SetUnitRescueRange(whichUnit,range) end
+---@param whichHero wc3_unit
+---@param newStr integer
+---@param permanent boolean
+
+function SetHeroStr(whichHero,newStr,permanent) end
+---@param whichHero wc3_unit
+---@param newAgi integer
+---@param permanent boolean
+
+function SetHeroAgi(whichHero,newAgi,permanent) end
+---@param whichHero wc3_unit
+---@param newInt integer
+---@param permanent boolean
+
+function SetHeroInt(whichHero,newInt,permanent) end
+---@param whichHero wc3_unit
+---@param includeBonuses boolean
+---@return integer
+function GetHeroStr(whichHero,includeBonuses) end
+---@param whichHero wc3_unit
+---@param includeBonuses boolean
+---@return integer
+function GetHeroAgi(whichHero,includeBonuses) end
+---@param whichHero wc3_unit
+---@param includeBonuses boolean
+---@return integer
+function GetHeroInt(whichHero,includeBonuses) end
+---@param whichHero wc3_unit
+---@param howManyLevels integer
+---@return boolean
+function UnitStripHeroLevel(whichHero,howManyLevels) end
+---@param whichHero wc3_unit
+---@return integer
+function GetHeroXP(whichHero) end
+---@param whichHero wc3_unit
+---@param newXpVal integer
+---@param showEyeCandy boolean
+
+function SetHeroXP(whichHero,newXpVal,showEyeCandy) end
+---@param whichHero wc3_unit
+---@return integer
+function GetHeroSkillPoints(whichHero) end
+---@param whichHero wc3_unit
+---@param skillPointDelta integer
+---@return boolean
+function UnitModifySkillPoints(whichHero,skillPointDelta) end
+---@param whichHero wc3_unit
+---@param xpToAdd integer
+---@param showEyeCandy boolean
+
+function AddHeroXP(whichHero,xpToAdd,showEyeCandy) end
+---@param whichHero wc3_unit
+---@param level integer
+---@param showEyeCandy boolean
+
+function SetHeroLevel(whichHero,level,showEyeCandy) end
+---@param whichHero wc3_unit
+---@return string
+function GetHeroProperName(whichHero) end
+---@param whichHero wc3_unit
+---@param flag boolean
+
+function SuspendHeroXP(whichHero,flag) end
+---@param whichHero wc3_unit
+---@return boolean
+function IsSuspendedXP(whichHero) end
+---@param whichHero wc3_unit
+---@param abilcode integer
+
+function SelectHeroSkill(whichHero,abilcode) end
+---@param whichUnit wc3_unit
+---@param abilcode integer
+---@return integer
+function GetUnitAbilityLevel(whichUnit,abilcode) end
+---@param whichUnit wc3_unit
+---@param abilcode integer
+---@return integer
+function DecUnitAbilityLevel(whichUnit,abilcode) end
+---@param whichUnit wc3_unit
+---@param abilcode integer
+---@return integer
+function IncUnitAbilityLevel(whichUnit,abilcode) end
+---@param whichUnit wc3_unit
+---@param abilcode integer
+---@param level integer
+---@return integer
+function SetUnitAbilityLevel(whichUnit,abilcode,level) end
+---@param whichHero wc3_unit
+---@param x number
+---@param y number
+---@param doEyecandy boolean
+---@return boolean
+function ReviveHero(whichHero,x,y,doEyecandy) end
+---@param whichHero wc3_unit
+---@param loc wc3_location
+---@param doEyecandy boolean
+---@return boolean
+function ReviveHeroLoc(whichHero,loc,doEyecandy) end
+---@param whichUnit wc3_unit
+---@param exploded boolean
+
+function SetUnitExploded(whichUnit,exploded) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+
+function SetUnitInvulnerable(whichUnit,flag) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+
+function PauseUnit(whichUnit,flag) end
+---@param whichHero wc3_unit
+---@return boolean
+function IsUnitPaused(whichHero) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+
+function SetUnitPathing(whichUnit,flag) end
+function ClearSelection() end
+---@param whichUnit wc3_unit
+---@param flag boolean
+
+function SelectUnit(whichUnit,flag) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitPointValue(whichUnit) end
+---@param unitType integer
+---@return integer
+function GetUnitPointValueByType(unitType) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@return boolean
+function UnitAddItem(whichUnit,whichItem) end
+---@param whichUnit wc3_unit
+---@param itemId integer
+---@return wc3_item
+function UnitAddItemById(whichUnit,itemId) end
+---@param whichUnit wc3_unit
+---@param itemId integer
+---@param itemSlot integer
+---@return boolean
+function UnitAddItemToSlotById(whichUnit,itemId,itemSlot) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+
+function UnitRemoveItem(whichUnit,whichItem) end
+---@param whichUnit wc3_unit
+---@param itemSlot integer
+---@return wc3_item
+function UnitRemoveItemFromSlot(whichUnit,itemSlot) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@return boolean
+function UnitHasItem(whichUnit,whichItem) end
+---@param whichUnit wc3_unit
+---@param itemSlot integer
+---@return wc3_item
+function UnitItemInSlot(whichUnit,itemSlot) end
+---@param whichUnit wc3_unit
+---@return integer
+function UnitInventorySize(whichUnit) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@param x number
+---@param y number
+---@return boolean
+function UnitDropItemPoint(whichUnit,whichItem,x,y) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@param slot integer
+---@return boolean
+function UnitDropItemSlot(whichUnit,whichItem,slot) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@param target wc3_widget
+---@return boolean
+function UnitDropItemTarget(whichUnit,whichItem,target) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@return boolean
+function UnitUseItem(whichUnit,whichItem) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@param x number
+---@param y number
+---@return boolean
+function UnitUseItemPoint(whichUnit,whichItem,x,y) end
+---@param whichUnit wc3_unit
+---@param whichItem wc3_item
+---@param target wc3_widget
+---@return boolean
+function UnitUseItemTarget(whichUnit,whichItem,target) end
+---@param whichUnit wc3_unit
+---@param useFood boolean
+
+function SetUnitUseFood(whichUnit,useFood) end
+---@param whichUnit wc3_unit
+---@param whichPlayer wc3_player
+---@param share boolean
+
+function UnitShareVision(whichUnit,whichPlayer,share) end
+---@param whichUnit wc3_unit
+---@param suspend boolean
+
+function UnitSuspendDecay(whichUnit,suspend) end
+---@param whichUnit wc3_unit
+---@param whichUnitType wc3_unittype
+---@return boolean
+function UnitAddType(whichUnit,whichUnitType) end
+---@param whichUnit wc3_unit
+---@param whichUnitType wc3_unittype
+---@return boolean
+function UnitRemoveType(whichUnit,whichUnitType) end
+---@param whichUnit wc3_unit
+---@param abilityId integer
+---@return boolean
+function UnitAddAbility(whichUnit,abilityId) end
+---@param whichUnit wc3_unit
+---@param abilityId integer
+---@return boolean
+function UnitRemoveAbility(whichUnit,abilityId) end
+---@param whichUnit wc3_unit
+---@param permanent boolean
+---@param abilityId integer
+---@return boolean
+function UnitMakeAbilityPermanent(whichUnit,permanent,abilityId) end
+---@param whichUnit wc3_unit
+---@param removePositive boolean
+---@param removeNegative boolean
+
+function UnitRemoveBuffs(whichUnit,removePositive,removeNegative) end
+---@param whichUnit wc3_unit
+---@param removePositive boolean
+---@param removeNegative boolean
+---@param magic boolean
+---@param physical boolean
+---@param timedLife boolean
+---@param aura boolean
+---@param autoDispel boolean
+
+function UnitRemoveBuffsEx(whichUnit,removePositive,removeNegative,magic,physical,timedLife,aura,autoDispel) end
+---@param whichUnit wc3_unit
+---@param removePositive boolean
+---@param removeNegative boolean
+---@param magic boolean
+---@param physical boolean
+---@param timedLife boolean
+---@param aura boolean
+---@param autoDispel boolean
+---@return boolean
+function UnitHasBuffsEx(whichUnit,removePositive,removeNegative,magic,physical,timedLife,aura,autoDispel) end
+---@param whichUnit wc3_unit
+---@param removePositive boolean
+---@param removeNegative boolean
+---@param magic boolean
+---@param physical boolean
+---@param timedLife boolean
+---@param aura boolean
+---@param autoDispel boolean
+---@return integer
+function UnitCountBuffsEx(whichUnit,removePositive,removeNegative,magic,physical,timedLife,aura,autoDispel) end
+---@param whichUnit wc3_unit
+---@param add boolean
+
+function UnitAddSleep(whichUnit,add) end
+---@param whichUnit wc3_unit
+---@return boolean
+function UnitCanSleep(whichUnit) end
+---@param whichUnit wc3_unit
+---@param add boolean
+
+function UnitAddSleepPerm(whichUnit,add) end
+---@param whichUnit wc3_unit
+---@return boolean
+function UnitCanSleepPerm(whichUnit) end
+---@param whichUnit wc3_unit
+---@return boolean
+function UnitIsSleeping(whichUnit) end
+---@param whichUnit wc3_unit
+
+function UnitWakeUp(whichUnit) end
+---@param whichUnit wc3_unit
+---@param buffId integer
+---@param duration number
+
+function UnitApplyTimedLife(whichUnit,buffId,duration) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+---@return boolean
+function UnitIgnoreAlarm(whichUnit,flag) end
+---@param whichUnit wc3_unit
+---@return boolean
+function UnitIgnoreAlarmToggled(whichUnit) end
+---@param whichUnit wc3_unit
+
+function UnitResetCooldown(whichUnit) end
+---@param whichUnit wc3_unit
+---@param constructionPercentage integer
+
+function UnitSetConstructionProgress(whichUnit,constructionPercentage) end
+---@param whichUnit wc3_unit
+---@param upgradePercentage integer
+
+function UnitSetUpgradeProgress(whichUnit,upgradePercentage) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+
+function UnitPauseTimedLife(whichUnit,flag) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+
+function UnitSetUsesAltIcon(whichUnit,flag) end
+---@param whichUnit wc3_unit
+---@param delay number
+---@param radius number
+---@param x number
+---@param y number
+---@param amount number
+---@param attack boolean
+---@param ranged boolean
+---@param attackType wc3_attacktype
+---@param damageType wc3_damagetype
+---@param weaponType wc3_weapontype
+---@return boolean
+function UnitDamagePoint(whichUnit,delay,radius,x,y,amount,attack,ranged,attackType,damageType,weaponType) end
+---@param whichUnit wc3_unit
+---@param target wc3_widget
+---@param amount number
+---@param attack boolean
+---@param ranged boolean
+---@param attackType wc3_attacktype
+---@param damageType wc3_damagetype
+---@param weaponType wc3_weapontype
+---@return boolean
+function UnitDamageTarget(whichUnit,target,amount,attack,ranged,attackType,damageType,weaponType) end
+---@param whichUnit wc3_unit
+---@param order string
+---@return boolean
+function IssueImmediateOrder(whichUnit,order) end
+---@param whichUnit wc3_unit
+---@param order integer
+---@return boolean
+function IssueImmediateOrderById(whichUnit,order) end
+---@param whichUnit wc3_unit
+---@param order string
+---@param x number
+---@param y number
+---@return boolean
+function IssuePointOrder(whichUnit,order,x,y) end
+---@param whichUnit wc3_unit
+---@param order string
+---@param whichLocation wc3_location
+---@return boolean
+function IssuePointOrderLoc(whichUnit,order,whichLocation) end
+---@param whichUnit wc3_unit
+---@param order integer
+---@param x number
+---@param y number
+---@return boolean
+function IssuePointOrderById(whichUnit,order,x,y) end
+---@param whichUnit wc3_unit
+---@param order integer
+---@param whichLocation wc3_location
+---@return boolean
+function IssuePointOrderByIdLoc(whichUnit,order,whichLocation) end
+---@param whichUnit wc3_unit
+---@param order string
+---@param targetWidget wc3_widget
+---@return boolean
+function IssueTargetOrder(whichUnit,order,targetWidget) end
+---@param whichUnit wc3_unit
+---@param order integer
+---@param targetWidget wc3_widget
+---@return boolean
+function IssueTargetOrderById(whichUnit,order,targetWidget) end
+---@param whichUnit wc3_unit
+---@param order string
+---@param x number
+---@param y number
+---@param instantTargetWidget wc3_widget
+---@return boolean
+function IssueInstantPointOrder(whichUnit,order,x,y,instantTargetWidget) end
+---@param whichUnit wc3_unit
+---@param order integer
+---@param x number
+---@param y number
+---@param instantTargetWidget wc3_widget
+---@return boolean
+function IssueInstantPointOrderById(whichUnit,order,x,y,instantTargetWidget) end
+---@param whichUnit wc3_unit
+---@param order string
+---@param targetWidget wc3_widget
+---@param instantTargetWidget wc3_widget
+---@return boolean
+function IssueInstantTargetOrder(whichUnit,order,targetWidget,instantTargetWidget) end
+---@param whichUnit wc3_unit
+---@param order integer
+---@param targetWidget wc3_widget
+---@param instantTargetWidget wc3_widget
+---@return boolean
+function IssueInstantTargetOrderById(whichUnit,order,targetWidget,instantTargetWidget) end
+---@param whichPeon wc3_unit
+---@param unitToBuild string
+---@param x number
+---@param y number
+---@return boolean
+function IssueBuildOrder(whichPeon,unitToBuild,x,y) end
+---@param whichPeon wc3_unit
+---@param unitId integer
+---@param x number
+---@param y number
+---@return boolean
+function IssueBuildOrderById(whichPeon,unitId,x,y) end
+---@param forWhichPlayer wc3_player
+---@param neutralStructure wc3_unit
+---@param unitToBuild string
+---@return boolean
+function IssueNeutralImmediateOrder(forWhichPlayer,neutralStructure,unitToBuild) end
+---@param forWhichPlayer wc3_player
+---@param neutralStructure wc3_unit
+---@param unitId integer
+---@return boolean
+function IssueNeutralImmediateOrderById(forWhichPlayer,neutralStructure,unitId) end
+---@param forWhichPlayer wc3_player
+---@param neutralStructure wc3_unit
+---@param unitToBuild string
+---@param x number
+---@param y number
+---@return boolean
+function IssueNeutralPointOrder(forWhichPlayer,neutralStructure,unitToBuild,x,y) end
+---@param forWhichPlayer wc3_player
+---@param neutralStructure wc3_unit
+---@param unitId integer
+---@param x number
+---@param y number
+---@return boolean
+function IssueNeutralPointOrderById(forWhichPlayer,neutralStructure,unitId,x,y) end
+---@param forWhichPlayer wc3_player
+---@param neutralStructure wc3_unit
+---@param unitToBuild string
+---@param target wc3_widget
+---@return boolean
+function IssueNeutralTargetOrder(forWhichPlayer,neutralStructure,unitToBuild,target) end
+---@param forWhichPlayer wc3_player
+---@param neutralStructure wc3_unit
+---@param unitId integer
+---@param target wc3_widget
+---@return boolean
+function IssueNeutralTargetOrderById(forWhichPlayer,neutralStructure,unitId,target) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitCurrentOrder(whichUnit) end
+---@param whichUnit wc3_unit
+---@param amount integer
+
+function SetResourceAmount(whichUnit,amount) end
+---@param whichUnit wc3_unit
+---@param amount integer
+
+function AddResourceAmount(whichUnit,amount) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetResourceAmount(whichUnit) end
+---@param waygate wc3_unit
+---@return number
+function WaygateGetDestinationX(waygate) end
+---@param waygate wc3_unit
+---@return number
+function WaygateGetDestinationY(waygate) end
+---@param waygate wc3_unit
+---@param x number
+---@param y number
+
+function WaygateSetDestination(waygate,x,y) end
+---@param waygate wc3_unit
+---@param activate boolean
+
+function WaygateActivate(waygate,activate) end
+---@param waygate wc3_unit
+---@return boolean
+function WaygateIsActive(waygate) end
+---@param itemId integer
+---@param currentStock integer
+---@param stockMax integer
+
+function AddItemToAllStock(itemId,currentStock,stockMax) end
+---@param whichUnit wc3_unit
+---@param itemId integer
+---@param currentStock integer
+---@param stockMax integer
+
+function AddItemToStock(whichUnit,itemId,currentStock,stockMax) end
+---@param unitId integer
+---@param currentStock integer
+---@param stockMax integer
+
+function AddUnitToAllStock(unitId,currentStock,stockMax) end
+---@param whichUnit wc3_unit
+---@param unitId integer
+---@param currentStock integer
+---@param stockMax integer
+
+function AddUnitToStock(whichUnit,unitId,currentStock,stockMax) end
+---@param itemId integer
+
+function RemoveItemFromAllStock(itemId) end
+---@param whichUnit wc3_unit
+---@param itemId integer
+
+function RemoveItemFromStock(whichUnit,itemId) end
+---@param unitId integer
+
+function RemoveUnitFromAllStock(unitId) end
+---@param whichUnit wc3_unit
+---@param unitId integer
+
+function RemoveUnitFromStock(whichUnit,unitId) end
+---@param slots integer
+
+function SetAllItemTypeSlots(slots) end
+---@param slots integer
+
+function SetAllUnitTypeSlots(slots) end
+---@param whichUnit wc3_unit
+---@param slots integer
+
+function SetItemTypeSlots(whichUnit,slots) end
+---@param whichUnit wc3_unit
+---@param slots integer
+
+function SetUnitTypeSlots(whichUnit,slots) end
+---@param whichUnit wc3_unit
+---@return integer
+function GetUnitUserData(whichUnit) end
+---@param whichUnit wc3_unit
+---@param data integer
+
+function SetUnitUserData(whichUnit,data) end
+---@param whichPlayer wc3_player
+---@param newOwner integer
+
+function SetPlayerUnitsOwner(whichPlayer,newOwner) end
+---@param whichPlayer wc3_player
+---@param toWhichPlayers wc3_force
+---@param flag boolean
+
+function CripplePlayer(whichPlayer,toWhichPlayers,flag) end
+---@param whichPlayer wc3_player
+---@param abilid integer
+---@param avail boolean
+
+function SetPlayerAbilityAvailable(whichPlayer,abilid,avail) end
+---@param whichPlayer wc3_player
+---@param whichPlayerState wc3_playerstate
+---@param value integer
+
+function SetPlayerState(whichPlayer,whichPlayerState,value) end
+---@param whichPlayer wc3_player
+---@param gameResult wc3_playergameresult
+
+function RemovePlayer(whichPlayer,gameResult) end
+---@param whichPlayer wc3_player
+
+function CachePlayerHeroData(whichPlayer) end
+---@param forWhichPlayer wc3_player
+---@param whichState wc3_fogstate
+---@param where wc3_rect
+---@param useSharedVision boolean
+function SetFogStateRect(forWhichPlayer,whichState,where,useSharedVision) end
+---@param forWhichPlayer wc3_player
+---@param whichState wc3_fogstate
+---@param centerx number
+---@param centerY number
+---@param radius number
+---@param useSharedVision boolean
+function SetFogStateRadius(forWhichPlayer,whichState,centerx,centerY,radius,useSharedVision) end
+---@param forWhichPlayer wc3_player
+---@param whichState wc3_fogstate
+---@param center wc3_location
+---@param radius number
+---@param useSharedVision boolean
+function SetFogStateRadiusLoc(forWhichPlayer,whichState,center,radius,useSharedVision) end
+---@param enable boolean
+function FogMaskEnable(enable) end
+---@return boolean
+function IsFogMaskEnabled() end
+---@param enable boolean
+function FogEnable(enable) end
+---@return boolean
+function IsFogEnabled() end
+---@param forWhichPlayer wc3_player
+---@param whichState wc3_fogstate
+---@param where wc3_rect
+---@param useSharedVision boolean
+---@param afterUnits boolean
+---@return wc3_fogmodifier
+function CreateFogModifierRect(forWhichPlayer,whichState,where,useSharedVision,afterUnits) end
+---@param forWhichPlayer wc3_player
+---@param whichState wc3_fogstate
+---@param centerx number
+---@param centerY number
+---@param radius number
+---@param useSharedVision boolean
+---@param afterUnits boolean
+---@return wc3_fogmodifier
+function CreateFogModifierRadius(forWhichPlayer,whichState,centerx,centerY,radius,useSharedVision,afterUnits) end
+---@param forWhichPlayer wc3_player
+---@param whichState wc3_fogstate
+---@param center wc3_location
+---@param radius number
+---@param useSharedVision boolean
+---@param afterUnits boolean
+---@return wc3_fogmodifier
+function CreateFogModifierRadiusLoc(forWhichPlayer,whichState,center,radius,useSharedVision,afterUnits) end
+---@param whichFogModifier wc3_fogmodifier
+function DestroyFogModifier(whichFogModifier) end
+---@param whichFogModifier wc3_fogmodifier
+function FogModifierStart(whichFogModifier) end
+---@param whichFogModifier wc3_fogmodifier
+function FogModifierStop(whichFogModifier) end
+---@return wc3_version
+function VersionGet() end
+---@param whichVersion wc3_version
+---@return boolean
+function VersionCompatible(whichVersion) end
+---@param whichVersion wc3_version
+---@return boolean
+function VersionSupported(whichVersion) end
+---@param doScoreScreen boolean
+function EndGame(doScoreScreen) end
+---@param newLevel string
+---@param doScoreScreen boolean
+function ChangeLevel(newLevel,doScoreScreen) end
+---@param doScoreScreen boolean
+function RestartGame(doScoreScreen) end
+function ReloadGame() end
+---@param r wc3_race
+function SetCampaignMenuRace(r) end
+---@param campaignIndex integer
+function SetCampaignMenuRaceEx(campaignIndex) end
+function ForceCampaignSelectScreen() end
+---@param saveFileName string
+---@param doScoreScreen boolean
+function LoadGame(saveFileName,doScoreScreen) end
+---@param saveFileName string
+function SaveGame(saveFileName) end
+---@param sourceDirName string
+---@param destDirName string
+---@return boolean
+function RenameSaveDirectory(sourceDirName,destDirName) end
+---@param sourceDirName string
+---@return boolean
+function RemoveSaveDirectory(sourceDirName) end
+---@param sourceSaveName string
+---@param destSaveName string
+---@return boolean
+function CopySaveGame(sourceSaveName,destSaveName) end
+---@param saveName string
+---@return boolean
+function SaveGameExists(saveName) end
+function SyncSelections() end
+---@param whichFloatGameState wc3_fgamestate
+---@param value number
+function SetFloatGameState(whichFloatGameState,value) end
+---@param whichIntegerGameState wc3_igamestate
+---@param value integer
+function SetIntegerGameState(whichIntegerGameState,value) end
+---@param cleared boolean
+function SetTutorialCleared(cleared) end
+---@param campaignNumber integer
+---@param missionNumber integer
+---@param available boolean
+function SetMissionAvailable(campaignNumber,missionNumber,available) end
+---@param campaignNumber integer
+---@param available boolean
+function SetCampaignAvailable(campaignNumber,available) end
+---@param campaignNumber integer
+---@param available boolean
+function SetOpCinematicAvailable(campaignNumber,available) end
+---@param campaignNumber integer
+---@param available boolean
+function SetEdCinematicAvailable(campaignNumber,available) end
+---@return wc3_gamedifficulty
+function GetDefaultDifficulty() end
+---@param g wc3_gamedifficulty
+function SetDefaultDifficulty(g) end
+---@param whichButton integer
+---@param visible boolean
+function SetCustomCampaignButtonVisible(whichButton,visible) end
+---@param whichButton integer
+---@return boolean
+function GetCustomCampaignButtonVisible(whichButton) end
+function DoNotSaveReplay() end
+---@return wc3_dialog
+function DialogCreate() end
+---@param whichDialog wc3_dialog
+function DialogDestroy(whichDialog) end
+---@param whichDialog wc3_dialog
+function DialogClear(whichDialog) end
+---@param whichDialog wc3_dialog
+---@param messageText string
+function DialogSetMessage(whichDialog,messageText) end
+---@param whichDialog wc3_dialog
+---@param buttonText string
+---@param hotkey integer
+---@return wc3_button
+function DialogAddButton(whichDialog,buttonText,hotkey) end
+---@param whichDialog wc3_dialog
+---@param doScoreScreen boolean
+---@param buttonText string
+---@param hotkey integer
+---@return wc3_button
+function DialogAddQuitButton(whichDialog,doScoreScreen,buttonText,hotkey) end
+---@param whichPlayer wc3_player
+---@param whichDialog wc3_dialog
+---@param flag boolean
+function DialogDisplay(whichPlayer,whichDialog,flag) end
+---@return boolean
+function ReloadGameCachesFromDisk() end
+---@param campaignFile string
+---@return wc3_gamecache
+function InitGameCache(campaignFile) end
+---@param whichCache wc3_gamecache
+---@return boolean
+function SaveGameCache(whichCache) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@param value integer
+
+function StoreInteger(cache,missionKey,key,value) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@param value number
+
+function StoreReal(cache,missionKey,key,value) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@param value boolean
+
+function StoreBoolean(cache,missionKey,key,value) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@param whichUnit wc3_unit
+---@return boolean
+function StoreUnit(cache,missionKey,key,whichUnit) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@param value string
+---@return boolean
+function StoreString(cache,missionKey,key,value) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function SyncStoredInteger(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function SyncStoredReal(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function SyncStoredBoolean(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function SyncStoredUnit(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function SyncStoredString(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return boolean
+function HaveStoredInteger(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return boolean
+function HaveStoredReal(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return boolean
+function HaveStoredBoolean(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return boolean
+function HaveStoredUnit(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return boolean
+function HaveStoredString(cache,missionKey,key) end
+---@param cache wc3_gamecache
+
+function FlushGameCache(cache) end
+---@param cache wc3_gamecache
+---@param missionKey string
+
+function FlushStoredMission(cache,missionKey) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function FlushStoredInteger(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function FlushStoredReal(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function FlushStoredBoolean(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function FlushStoredUnit(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+
+function FlushStoredString(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return integer
+function GetStoredInteger(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return number
+function GetStoredReal(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return boolean
+function GetStoredBoolean(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@return string
+function GetStoredString(cache,missionKey,key) end
+---@param cache wc3_gamecache
+---@param missionKey string
+---@param key string
+---@param forWhichPlayer wc3_player
+---@param x number
+---@param y number
+---@param facing number
+---@return wc3_unit
+function RestoreUnit(cache,missionKey,key,forWhichPlayer,x,y,facing) end
+---@return wc3_hashtable
+function InitHashtable() end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param value integer
+
+function SaveInteger(table,parentKey,childKey,value) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param value number
+
+function SaveReal(table,parentKey,childKey,value) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param value boolean
+
+function SaveBoolean(table,parentKey,childKey,value) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param value string
+---@return boolean
+function SaveStr(table,parentKey,childKey,value) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichPlayer wc3_player
+---@return boolean
+function SavePlayerHandle(table,parentKey,childKey,whichPlayer) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichWidget wc3_widget
+---@return boolean
+function SaveWidgetHandle(table,parentKey,childKey,whichWidget) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichDestructable wc3_destructable
+---@return boolean
+function SaveDestructableHandle(table,parentKey,childKey,whichDestructable) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichItem wc3_item
+---@return boolean
+function SaveItemHandle(table,parentKey,childKey,whichItem) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichUnit wc3_unit
+---@return boolean
+function SaveUnitHandle(table,parentKey,childKey,whichUnit) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichAbility wc3_ability
+---@return boolean
+function SaveAbilityHandle(table,parentKey,childKey,whichAbility) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTimer wc3_timer
+---@return boolean
+function SaveTimerHandle(table,parentKey,childKey,whichTimer) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTrigger wc3_trigger
+---@return boolean
+function SaveTriggerHandle(table,parentKey,childKey,whichTrigger) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTriggercondition wc3_triggercondition
+---@return boolean
+function SaveTriggerConditionHandle(table,parentKey,childKey,whichTriggercondition) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTriggeraction wc3_triggeraction
+---@return boolean
+function SaveTriggerActionHandle(table,parentKey,childKey,whichTriggeraction) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichEvent wc3_event
+---@return boolean
+function SaveTriggerEventHandle(table,parentKey,childKey,whichEvent) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichForce wc3_force
+---@return boolean
+function SaveForceHandle(table,parentKey,childKey,whichForce) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichGroup wc3_group
+---@return boolean
+function SaveGroupHandle(table,parentKey,childKey,whichGroup) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichLocation wc3_location
+---@return boolean
+function SaveLocationHandle(table,parentKey,childKey,whichLocation) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichRect wc3_rect
+---@return boolean
+function SaveRectHandle(table,parentKey,childKey,whichRect) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichBoolexpr wc3_boolexpr
+---@return boolean
+function SaveBooleanExprHandle(table,parentKey,childKey,whichBoolexpr) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichSound wc3_sound
+---@return boolean
+function SaveSoundHandle(table,parentKey,childKey,whichSound) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichEffect wc3_effect
+---@return boolean
+function SaveEffectHandle(table,parentKey,childKey,whichEffect) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichUnitpool wc3_unitpool
+---@return boolean
+function SaveUnitPoolHandle(table,parentKey,childKey,whichUnitpool) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichItempool wc3_itempool
+---@return boolean
+function SaveItemPoolHandle(table,parentKey,childKey,whichItempool) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichQuest wc3_quest
+---@return boolean
+function SaveQuestHandle(table,parentKey,childKey,whichQuest) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichQuestitem wc3_questitem
+---@return boolean
+function SaveQuestItemHandle(table,parentKey,childKey,whichQuestitem) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichDefeatcondition wc3_defeatcondition
+---@return boolean
+function SaveDefeatConditionHandle(table,parentKey,childKey,whichDefeatcondition) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTimerdialog wc3_timerdialog
+---@return boolean
+function SaveTimerDialogHandle(table,parentKey,childKey,whichTimerdialog) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichLeaderboard wc3_leaderboard
+---@return boolean
+function SaveLeaderboardHandle(table,parentKey,childKey,whichLeaderboard) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichMultiboard wc3_multiboard
+---@return boolean
+function SaveMultiboardHandle(table,parentKey,childKey,whichMultiboard) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichMultiboarditem wc3_multiboarditem
+---@return boolean
+function SaveMultiboardItemHandle(table,parentKey,childKey,whichMultiboarditem) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTrackable wc3_trackable
+---@return boolean
+function SaveTrackableHandle(table,parentKey,childKey,whichTrackable) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichDialog wc3_dialog
+---@return boolean
+function SaveDialogHandle(table,parentKey,childKey,whichDialog) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichButton wc3_button
+---@return boolean
+function SaveButtonHandle(table,parentKey,childKey,whichButton) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichTexttag wc3_texttag
+---@return boolean
+function SaveTextTagHandle(table,parentKey,childKey,whichTexttag) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichLightning wc3_lightning
+---@return boolean
+function SaveLightningHandle(table,parentKey,childKey,whichLightning) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichImage wc3_image
+---@return boolean
+function SaveImageHandle(table,parentKey,childKey,whichImage) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichUbersplat wc3_ubersplat
+---@return boolean
+function SaveUbersplatHandle(table,parentKey,childKey,whichUbersplat) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichRegion wc3_region
+---@return boolean
+function SaveRegionHandle(table,parentKey,childKey,whichRegion) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichFogState wc3_fogstate
+---@return boolean
+function SaveFogStateHandle(table,parentKey,childKey,whichFogState) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichFogModifier wc3_fogmodifier
+---@return boolean
+function SaveFogModifierHandle(table,parentKey,childKey,whichFogModifier) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichAgent wc3_agent
+---@return boolean
+function SaveAgentHandle(table,parentKey,childKey,whichAgent) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichHashtable wc3_hashtable
+---@return boolean
+function SaveHashtableHandle(table,parentKey,childKey,whichHashtable) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@param whichFrameHandle wc3_framehandle
+---@return boolean
+function SaveFrameHandle(table,parentKey,childKey,whichFrameHandle) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return integer
+function LoadInteger(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return number
+function LoadReal(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return boolean
+function LoadBoolean(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return string
+function LoadStr(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_player
+function LoadPlayerHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_widget
+function LoadWidgetHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_destructable
+function LoadDestructableHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_item
+function LoadItemHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_unit
+function LoadUnitHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_ability
+function LoadAbilityHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_timer
+function LoadTimerHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_trigger
+function LoadTriggerHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_triggercondition
+function LoadTriggerConditionHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_triggeraction
+function LoadTriggerActionHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_event
+function LoadTriggerEventHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_force
+function LoadForceHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_group
+function LoadGroupHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_location
+function LoadLocationHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_rect
+function LoadRectHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_boolexpr
+function LoadBooleanExprHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_sound
+function LoadSoundHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_effect
+function LoadEffectHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_unitpool
+function LoadUnitPoolHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_itempool
+function LoadItemPoolHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_quest
+function LoadQuestHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_questitem
+function LoadQuestItemHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_defeatcondition
+function LoadDefeatConditionHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_timerdialog
+function LoadTimerDialogHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_leaderboard
+function LoadLeaderboardHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_multiboard
+function LoadMultiboardHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_multiboarditem
+function LoadMultiboardItemHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_trackable
+function LoadTrackableHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_dialog
+function LoadDialogHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_button
+function LoadButtonHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_texttag
+function LoadTextTagHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_lightning
+function LoadLightningHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_image
+function LoadImageHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_ubersplat
+function LoadUbersplatHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_region
+function LoadRegionHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_fogstate
+function LoadFogStateHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_fogmodifier
+function LoadFogModifierHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_hashtable
+function LoadHashtableHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return wc3_framehandle
+function LoadFrameHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return boolean
+function HaveSavedInteger(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return boolean
+function HaveSavedReal(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return boolean
+function HaveSavedBoolean(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return boolean
+function HaveSavedString(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+---@return boolean
+function HaveSavedHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+
+function RemoveSavedInteger(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+
+function RemoveSavedReal(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+
+function RemoveSavedBoolean(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+function RemoveSavedString(table,parentKey,childKey) end
+---@param table wc3_hashtable
+---@param parentKey integer
+---@param childKey integer
+function RemoveSavedHandle(table,parentKey,childKey) end
+---@param table wc3_hashtable
+function FlushParentHashtable(table) end
+---@param table wc3_hashtable
+---@param parentKey integer
+function FlushChildHashtable(table,parentKey) end
+---@param lowBound integer
+---@param highBound integer
+---@return integer
+function GetRandomInt(lowBound,highBound) end
+---@param lowBound number
+---@param highBound number
+---@return number
+function GetRandomReal(lowBound,highBound) end
+---@return wc3_unitpool
+function CreateUnitPool() end
+---@param whichPool wc3_unitpool
+function DestroyUnitPool(whichPool) end
+---@param whichPool wc3_unitpool
+---@param unitId integer
+---@param weight number
+function UnitPoolAddUnitType(whichPool,unitId,weight) end
+---@param whichPool wc3_unitpool
+---@param unitId integer
+function UnitPoolRemoveUnitType(whichPool,unitId) end
+---@param whichPool wc3_unitpool
+---@param forWhichPlayer wc3_player
+---@param x number
+---@param y number
+---@param facing number
+---@return wc3_unit
+function PlaceRandomUnit(whichPool,forWhichPlayer,x,y,facing) end
+---@return wc3_itempool
+function CreateItemPool() end
+---@param whichItemPool wc3_itempool
+
+function DestroyItemPool(whichItemPool) end
+---@param whichItemPool wc3_itempool
+---@param itemId integer
+---@param weight number
+
+function ItemPoolAddItemType(whichItemPool,itemId,weight) end
+---@param whichItemPool wc3_itempool
+---@param itemId integer
+
+function ItemPoolRemoveItemType(whichItemPool,itemId) end
+---@param whichItemPool wc3_itempool
+---@param x number
+---@param y number
+---@return wc3_item
+function PlaceRandomItem(whichItemPool,x,y) end
+---@param level integer
+---@return integer
+function ChooseRandomCreep(level) end
+---@return integer
+function ChooseRandomNPBuilding() end
+---@param level integer
+---@return integer
+function ChooseRandomItem(level) end
+---@param whichType wc3_itemtype
+---@param level integer
+---@return integer
+function ChooseRandomItemEx(whichType,level) end
+---@param seed integer
+function SetRandomSeed(seed) end
+---@param a number
+---@param b number
+---@param c number
+---@param d number
+---@param e number
+function SetTerrainFog(a,b,c,d,e) end
+function ResetTerrainFog() end
+---@param a number
+---@param b number
+---@param c number
+---@param d number
+---@param e number
+function SetUnitFog(a,b,c,d,e) end
+---@param style integer
+---@param zstart number
+---@param zend number
+---@param density number
+---@param red number
+---@param green number
+---@param blue number
+function SetTerrainFogEx(style,zstart,zend,density,red,green,blue) end
+---@param toPlayer wc3_player
+---@param x number
+---@param y number
+---@param message string
+function DisplayTextToPlayer(toPlayer,x,y,message) end
+---@param toPlayer wc3_player
+---@param x number
+---@param y number
+---@param duration number
+---@param message string
+function DisplayTimedTextToPlayer(toPlayer,x,y,duration,message) end
+---@param toPlayer wc3_player
+---@param x number
+---@param y number
+---@param duration number
+---@param message string
+function DisplayTimedTextFromPlayer(toPlayer,x,y,duration,message) end
+function ClearTextMessages() end
+---@param terrainDNCFile string
+---@param unitDNCFile string
+function SetDayNightModels(terrainDNCFile,unitDNCFile) end
+---@param skyModelFile string
+function SetSkyModel(skyModelFile) end
+---@param b boolean
+function EnableUserControl(b) end
+---@param b boolean
+function EnableUserUI(b) end
+---@param b boolean
+function SuspendTimeOfDay(b) end
+---@param r number
+function SetTimeOfDayScale(r) end
+---@return number
+function GetTimeOfDayScale() end
+---@param flag boolean
+---@param fadeDuration number
+function ShowInterface(flag,fadeDuration) end
+---@param flag boolean
+function PauseGame(flag) end
+---@param whichUnit wc3_unit
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function UnitAddIndicator(whichUnit,red,green,blue,alpha) end
+---@param whichWidget wc3_widget
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function AddIndicator(whichWidget,red,green,blue,alpha) end
+---@param x number
+---@param y number
+---@param duration number
+
+function PingMinimap(x,y,duration) end
+---@param x number
+---@param y number
+---@param duration number
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param extraEffects boolean
+function PingMinimapEx(x,y,duration,red,green,blue,extraEffects) end
+---@param flag boolean
+function EnableOcclusion(flag) end
+---@param introText string
+function SetIntroShotText(introText) end
+---@param introModelPath string
+function SetIntroShotModel(introModelPath) end
+---@param b boolean
+function EnableWorldFogBoundary(b) end
+---@param modelName string
+function PlayModelCinematic(modelName) end
+---@param movieName string
+function PlayCinematic(movieName) end
+---@param key string
+function ForceUIKey(key) end
+function ForceUICancel() end
+function DisplayLoadDialog() end
+---@param iconPath string
+function SetAltMinimapIcon(iconPath) end
+---@param flag boolean
+function DisableRestartMission(flag) end
+---@return wc3_texttag
+function CreateTextTag() end
+---@param t wc3_texttag
+
+function DestroyTextTag(t) end
+---@param t wc3_texttag
+---@param s string
+---@param height number
+
+function SetTextTagText(t,s,height) end
+---@param t wc3_texttag
+---@param x number
+---@param y number
+---@param heightOffset number
+
+function SetTextTagPos(t,x,y,heightOffset) end
+---@param t wc3_texttag
+---@param whichUnit wc3_unit
+---@param heightOffset number
+
+function SetTextTagPosUnit(t,whichUnit,heightOffset) end
+---@param t wc3_texttag
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+
+function SetTextTagColor(t,red,green,blue,alpha) end
+---@param t wc3_texttag
+---@param xvel number
+---@param yvel number
+
+function SetTextTagVelocity(t,xvel,yvel) end
+---@param t wc3_texttag
+---@param flag boolean
+
+function SetTextTagVisibility(t,flag) end
+---@param t wc3_texttag
+---@param flag boolean
+
+function SetTextTagSuspended(t,flag) end
+---@param t wc3_texttag
+---@param flag boolean
+
+function SetTextTagPermanent(t,flag) end
+---@param t wc3_texttag
+---@param age number
+
+function SetTextTagAge(t,age) end
+---@param t wc3_texttag
+---@param lifespan number
+
+function SetTextTagLifespan(t,lifespan) end
+---@param t wc3_texttag
+---@param fadepoint number
+
+function SetTextTagFadepoint(t,fadepoint) end
+---@param reserved integer
+
+function SetReservedLocalHeroButtons(reserved) end
+---@return integer
+function GetAllyColorFilterState() end
+---@param state integer
+
+function SetAllyColorFilterState(state) end
+---@return boolean
+function GetCreepCampFilterState() end
+---@param state boolean
+
+function SetCreepCampFilterState(state) end
+---@param enableAlly boolean
+---@param enableCreep boolean
+
+function EnableMinimapFilterButtons(enableAlly,enableCreep) end
+---@param state boolean
+---@param ui boolean
+
+function EnableDragSelect(state,ui) end
+---@param state boolean
+---@param ui boolean
+
+function EnablePreSelect(state,ui) end
+---@param state boolean
+---@param ui boolean
+
+function EnableSelect(state,ui) end
+---@param trackableModelPath string
+---@param x number
+---@param y number
+---@param facing number
+---@return wc3_trackable
+function CreateTrackable(trackableModelPath,x,y,facing) end
+---@return wc3_quest
+function CreateQuest() end
+---@param whichQuest wc3_quest
+
+function DestroyQuest(whichQuest) end
+---@param whichQuest wc3_quest
+---@param title string
+
+function QuestSetTitle(whichQuest,title) end
+---@param whichQuest wc3_quest
+---@param description string
+
+function QuestSetDescription(whichQuest,description) end
+---@param whichQuest wc3_quest
+---@param iconPath string
+
+function QuestSetIconPath(whichQuest,iconPath) end
+---@param whichQuest wc3_quest
+---@param required boolean
+
+function QuestSetRequired(whichQuest,required) end
+---@param whichQuest wc3_quest
+---@param completed boolean
+
+function QuestSetCompleted(whichQuest,completed) end
+---@param whichQuest wc3_quest
+---@param discovered boolean
+
+function QuestSetDiscovered(whichQuest,discovered) end
+---@param whichQuest wc3_quest
+---@param failed boolean
+
+function QuestSetFailed(whichQuest,failed) end
+---@param whichQuest wc3_quest
+---@param enabled boolean
+
+function QuestSetEnabled(whichQuest,enabled) end
+---@param whichQuest wc3_quest
+---@return boolean
+function IsQuestRequired(whichQuest) end
+---@param whichQuest wc3_quest
+---@return boolean
+function IsQuestCompleted(whichQuest) end
+---@param whichQuest wc3_quest
+---@return boolean
+function IsQuestDiscovered(whichQuest) end
+---@param whichQuest wc3_quest
+---@return boolean
+function IsQuestFailed(whichQuest) end
+---@param whichQuest wc3_quest
+---@return boolean
+function IsQuestEnabled(whichQuest) end
+---@param whichQuest wc3_quest
+---@return wc3_questitem
+function QuestCreateItem(whichQuest) end
+---@param whichQuestItem wc3_questitem
+---@param description string
+function QuestItemSetDescription(whichQuestItem,description) end
+---@param whichQuestItem wc3_questitem
+---@param completed boolean
+function QuestItemSetCompleted(whichQuestItem,completed) end
+---@param whichQuestItem wc3_questitem
+---@return boolean
+function IsQuestItemCompleted(whichQuestItem) end
+---@return wc3_defeatcondition
+function CreateDefeatCondition() end
+---@param whichCondition wc3_defeatcondition
+function DestroyDefeatCondition(whichCondition) end
+---@param whichCondition wc3_defeatcondition
+---@param description string
+function DefeatConditionSetDescription(whichCondition,description) end
+function FlashQuestDialogButton() end
+function ForceQuestDialogUpdate() end
+---@param t wc3_timer
+---@return wc3_timerdialog
+function CreateTimerDialog(t) end
+---@param whichDialog wc3_timerdialog
+
+function DestroyTimerDialog(whichDialog) end
+---@param whichDialog wc3_timerdialog
+---@param title string
+
+function TimerDialogSetTitle(whichDialog,title) end
+---@param whichDialog wc3_timerdialog
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+
+function TimerDialogSetTitleColor(whichDialog,red,green,blue,alpha) end
+---@param whichDialog wc3_timerdialog
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+
+function TimerDialogSetTimeColor(whichDialog,red,green,blue,alpha) end
+---@param whichDialog wc3_timerdialog
+---@param speedMultFactor number
+
+function TimerDialogSetSpeed(whichDialog,speedMultFactor) end
+---@param whichDialog wc3_timerdialog
+---@param display boolean
+
+function TimerDialogDisplay(whichDialog,display) end
+---@param whichDialog wc3_timerdialog
+---@return boolean
+function IsTimerDialogDisplayed(whichDialog) end
+---@param whichDialog wc3_timerdialog
+---@param timeRemaining number
+
+function TimerDialogSetRealTimeRemaining(whichDialog,timeRemaining) end
+---@return wc3_leaderboard
+function CreateLeaderboard() end
+---@param lb wc3_leaderboard
+
+function DestroyLeaderboard(lb) end
+---@param lb wc3_leaderboard
+---@param show boolean
+
+function LeaderboardDisplay(lb,show) end
+---@param lb wc3_leaderboard
+---@return boolean
+function IsLeaderboardDisplayed(lb) end
+---@param lb wc3_leaderboard
+---@return integer
+function LeaderboardGetItemCount(lb) end
+---@param lb wc3_leaderboard
+---@param count integer
+
+function LeaderboardSetSizeByItemCount(lb,count) end
+---@param lb wc3_leaderboard
+---@param label string
+---@param value integer
+---@param p wc3_player
+function LeaderboardAddItem(lb,label,value,p) end
+---@param lb wc3_leaderboard
+---@param index integer
+function LeaderboardRemoveItem(lb,index) end
+---@param lb wc3_leaderboard
+---@param p wc3_player
+function LeaderboardRemovePlayerItem(lb,p) end
+---@param lb wc3_leaderboard
+function LeaderboardClear(lb) end
+---@param lb wc3_leaderboard
+---@param ascending boolean
+function LeaderboardSortItemsByValue(lb,ascending) end
+---@param lb wc3_leaderboard
+---@param ascending boolean
+function LeaderboardSortItemsByPlayer(lb,ascending) end
+---@param lb wc3_leaderboard
+---@param ascending boolean
+function LeaderboardSortItemsByLabel(lb,ascending) end
+---@param lb wc3_leaderboard
+---@param p wc3_player
+---@return boolean
+function LeaderboardHasPlayerItem(lb,p) end
+---@param lb wc3_leaderboard
+---@param p wc3_player
+---@return integer
+function LeaderboardGetPlayerIndex(lb,p) end
+---@param lb wc3_leaderboard
+---@param label string
+function LeaderboardSetLabel(lb,label) end
+---@param lb wc3_leaderboard
+---@return string
+function LeaderboardGetLabelText(lb) end
+---@param toPlayer wc3_player
+---@param lb wc3_leaderboard
+function PlayerSetLeaderboard(toPlayer,lb) end
+---@param toPlayer wc3_player
+---@return wc3_leaderboard
+function PlayerGetLeaderboard(toPlayer) end
+---@param lb wc3_leaderboard
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function LeaderboardSetLabelColor(lb,red,green,blue,alpha) end
+---@param lb wc3_leaderboard
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function LeaderboardSetValueColor(lb,red,green,blue,alpha) end
+---@param lb wc3_leaderboard
+---@param showLabel boolean
+---@param showNames boolean
+---@param showValues boolean
+---@param showIcons boolean
+function LeaderboardSetStyle(lb,showLabel,showNames,showValues,showIcons) end
+---@param lb wc3_leaderboard
+---@param whichItem integer
+---@param val integer
+function LeaderboardSetItemValue(lb,whichItem,val) end
+---@param lb wc3_leaderboard
+---@param whichItem integer
+---@param val string
+function LeaderboardSetItemLabel(lb,whichItem,val) end
+---@param lb wc3_leaderboard
+---@param whichItem integer
+---@param showLabel boolean
+---@param showValue boolean
+---@param showIcon boolean
+function LeaderboardSetItemStyle(lb,whichItem,showLabel,showValue,showIcon) end
+---@param lb wc3_leaderboard
+---@param whichItem integer
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function LeaderboardSetItemLabelColor(lb,whichItem,red,green,blue,alpha) end
+---@param lb wc3_leaderboard
+---@param whichItem integer
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function LeaderboardSetItemValueColor(lb,whichItem,red,green,blue,alpha) end
+---@return wc3_multiboard
+function CreateMultiboard() end
+---@param lb wc3_multiboard
+function DestroyMultiboard(lb) end
+---@param lb wc3_multiboard
+---@param show boolean
+function MultiboardDisplay(lb,show) end
+---@param lb wc3_multiboard
+---@return boolean
+function IsMultiboardDisplayed(lb) end
+---@param lb wc3_multiboard
+---@param minimize boolean
+function MultiboardMinimize(lb,minimize) end
+---@param lb wc3_multiboard
+---@return boolean
+function IsMultiboardMinimized(lb) end
+---@param lb wc3_multiboard
+function MultiboardClear(lb) end
+---@param lb wc3_multiboard
+---@param label string
+function MultiboardSetTitleText(lb,label) end
+---@param lb wc3_multiboard
+---@return string
+function MultiboardGetTitleText(lb) end
+---@param lb wc3_multiboard
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function MultiboardSetTitleTextColor(lb,red,green,blue,alpha) end
+---@param lb wc3_multiboard
+---@return integer
+function MultiboardGetRowCount(lb) end
+---@param lb wc3_multiboard
+---@return integer
+function MultiboardGetColumnCount(lb) end
+---@param lb wc3_multiboard
+---@param count integer
+function MultiboardSetColumnCount(lb,count) end
+---@param lb wc3_multiboard
+---@param count integer
+function MultiboardSetRowCount(lb,count) end
+---@param lb wc3_multiboard
+---@param showValues boolean
+---@param showIcons boolean
+function MultiboardSetItemsStyle(lb,showValues,showIcons) end
+---@param lb wc3_multiboard
+---@param value string
+function MultiboardSetItemsValue(lb,value) end
+---@param lb wc3_multiboard
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function MultiboardSetItemsValueColor(lb,red,green,blue,alpha) end
+---@param lb wc3_multiboard
+---@param width number
+function MultiboardSetItemsWidth(lb,width) end
+---@param lb wc3_multiboard
+---@param iconPath string
+function MultiboardSetItemsIcon(lb,iconPath) end
+---@param lb wc3_multiboard
+---@param row integer
+---@param column integer
+---@return wc3_multiboarditem
+function MultiboardGetItem(lb,row,column) end
+---@param mbi wc3_multiboarditem
+function MultiboardReleaseItem(mbi) end
+---@param mbi wc3_multiboarditem
+---@param showValue boolean
+---@param showIcon boolean
+function MultiboardSetItemStyle(mbi,showValue,showIcon) end
+---@param mbi wc3_multiboarditem
+---@param val string
+function MultiboardSetItemValue(mbi,val) end
+---@param mbi wc3_multiboarditem
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function MultiboardSetItemValueColor(mbi,red,green,blue,alpha) end
+---@param mbi wc3_multiboarditem
+---@param width number
+function MultiboardSetItemWidth(mbi,width) end
+---@param mbi wc3_multiboarditem
+---@param iconFileName string
+function MultiboardSetItemIcon(mbi,iconFileName) end
+---@param flag boolean
+function MultiboardSuppressDisplay(flag) end
+---@param x number
+---@param y number
+function SetCameraPosition(x,y) end
+---@param x number
+---@param y number
+function SetCameraQuickPosition(x,y) end
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@param x3 number
+---@param y3 number
+---@param x4 number
+---@param y4 number
+function SetCameraBounds(x1,y1,x2,y2,x3,y3,x4,y4) end
+function StopCamera() end
+---@param duration number
+function ResetToGameCamera(duration) end
+---@param x number
+---@param y number
+function PanCameraTo(x,y) end
+---@param x number
+---@param y number
+---@param duration number
+function PanCameraToTimed(x,y,duration) end
+---@param x number
+---@param y number
+---@param zOffsetDest number
+function PanCameraToWithZ(x,y,zOffsetDest) end
+---@param x number
+---@param y number
+---@param zOffsetDest number
+---@param duration number
+function PanCameraToTimedWithZ(x,y,zOffsetDest,duration) end
+---@param cameraModelFile string
+function SetCinematicCamera(cameraModelFile) end
+---@param x number
+---@param y number
+---@param radiansToSweep number
+---@param duration number
+function SetCameraRotateMode(x,y,radiansToSweep,duration) end
+---@param whichField wc3_camerafield
+---@param value number
+---@param duration number
+function SetCameraField(whichField,value,duration) end
+---@param whichField wc3_camerafield
+---@param offset number
+---@param duration number
+function AdjustCameraField(whichField,offset,duration) end
+---@param whichUnit wc3_unit
+---@param xoffset number
+---@param yoffset number
+---@param inheritOrientation boolean
+function SetCameraTargetController(whichUnit,xoffset,yoffset,inheritOrientation) end
+---@param whichUnit wc3_unit
+---@param xoffset number
+---@param yoffset number
+function SetCameraOrientController(whichUnit,xoffset,yoffset) end
+---@return wc3_camerasetup
+function CreateCameraSetup() end
+---@param whichSetup wc3_camerasetup
+---@param whichField wc3_camerafield
+---@param value number
+---@param duration number
+function CameraSetupSetField(whichSetup,whichField,value,duration) end
+---@param whichSetup wc3_camerasetup
+---@param whichField wc3_camerafield
+---@return number
+function CameraSetupGetField(whichSetup,whichField) end
+---@param whichSetup wc3_camerasetup
+---@param x number
+---@param y number
+---@param duration number
+function CameraSetupSetDestPosition(whichSetup,x,y,duration) end
+---@param whichSetup wc3_camerasetup
+---@return wc3_location
+function CameraSetupGetDestPositionLoc(whichSetup) end
+---@param whichSetup wc3_camerasetup
+---@return number
+function CameraSetupGetDestPositionX(whichSetup) end
+---@param whichSetup wc3_camerasetup
+---@return number
+function CameraSetupGetDestPositionY(whichSetup) end
+---@param whichSetup wc3_camerasetup
+---@param doPan boolean
+---@param panTimed boolean
+function CameraSetupApply(whichSetup,doPan,panTimed) end
+---@param whichSetup wc3_camerasetup
+---@param zDestOffset number
+function CameraSetupApplyWithZ(whichSetup,zDestOffset) end
+---@param whichSetup wc3_camerasetup
+---@param doPan boolean
+---@param forceDuration number
+function CameraSetupApplyForceDuration(whichSetup,doPan,forceDuration) end
+---@param whichSetup wc3_camerasetup
+---@param zDestOffset number
+---@param forceDuration number
+function CameraSetupApplyForceDurationWithZ(whichSetup,zDestOffset,forceDuration) end
+---@param mag number
+---@param velocity number
+function CameraSetTargetNoise(mag,velocity) end
+---@param mag number
+---@param velocity number
+function CameraSetSourceNoise(mag,velocity) end
+---@param mag number
+---@param velocity number
+---@param vertOnly boolean
+function CameraSetTargetNoiseEx(mag,velocity,vertOnly) end
+---@param mag number
+---@param velocity number
+---@param vertOnly boolean
+function CameraSetSourceNoiseEx(mag,velocity,vertOnly) end
+---@param factor number
+function CameraSetSmoothingFactor(factor) end
+---@param filename string
+function SetCineFilterTexture(filename) end
+---@param whichMode wc3_blendmode
+function SetCineFilterBlendMode(whichMode) end
+---@param whichFlags wc3_texmapflags
+function SetCineFilterTexMapFlags(whichFlags) end
+---@param minu number
+---@param minv number
+---@param maxu number
+---@param maxv number
+function SetCineFilterStartUV(minu,minv,maxu,maxv) end
+---@param minu number
+---@param minv number
+---@param maxu number
+---@param maxv number
+function SetCineFilterEndUV(minu,minv,maxu,maxv) end
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function SetCineFilterStartColor(red,green,blue,alpha) end
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function SetCineFilterEndColor(red,green,blue,alpha) end
+---@param duration number
+function SetCineFilterDuration(duration) end
+---@param flag boolean
+function DisplayCineFilter(flag) end
+---@return boolean
+function IsCineFilterDisplayed() end
+---@param portraitUnitId integer
+---@param color wc3_playercolor
+---@param speakerTitle string
+---@param text string
+---@param sceneDuration number
+---@param voiceoverDuration number
+function SetCinematicScene(portraitUnitId,color,speakerTitle,text,sceneDuration,voiceoverDuration) end
+function EndCinematicScene() end
+---@param flag boolean
+function ForceCinematicSubtitles(flag) end
+---@param whichMargin integer
+---@return number
+function GetCameraMargin(whichMargin) end
+---@param environmentName string
+function NewSoundEnvironment(environmentName) end
+---@param fileName string
+---@param looping boolean
+---@param is3D boolean
+---@param stopwhenoutofrange boolean
+---@param fadeInRate integer
+---@param fadeOutRate integer
+---@param eaxSetting string
+---@return wc3_sound
+function CreateSound(fileName,looping,is3D,stopwhenoutofrange,fadeInRate,fadeOutRate,eaxSetting) end
+---@param fileName string
+---@param looping boolean
+---@param is3D boolean
+---@param stopwhenoutofrange boolean
+---@param fadeInRate integer
+---@param fadeOutRate integer
+---@param SLKEntryName string
+---@return wc3_sound
+function CreateSoundFilenameWithLabel(fileName,looping,is3D,stopwhenoutofrange,fadeInRate,fadeOutRate,SLKEntryName) end
+---@param soundLabel string
+---@param looping boolean
+---@param is3D boolean
+---@param stopwhenoutofrange boolean
+---@param fadeInRate integer
+---@param fadeOutRate integer
+---@return wc3_sound
+function CreateSoundFromLabel(soundLabel,looping,is3D,stopwhenoutofrange,fadeInRate,fadeOutRate) end
+---@param soundLabel string
+---@param fadeInRate integer
+---@param fadeOutRate integer
+---@return wc3_sound
+function CreateMIDISound(soundLabel,fadeInRate,fadeOutRate) end
+---@param soundHandle wc3_sound
+---@param soundLabel string
+function SetSoundParamsFromLabel(soundHandle,soundLabel) end
+---@param soundHandle wc3_sound
+---@param cutoff number
+function SetSoundDistanceCutoff(soundHandle,cutoff) end
+---@param soundHandle wc3_sound
+---@param channel integer
+function SetSoundChannel(soundHandle,channel) end
+---@param soundHandle wc3_sound
+---@param volume integer
+function SetSoundVolume(soundHandle,volume) end
+---@param soundHandle wc3_sound
+---@param pitch number
+function SetSoundPitch(soundHandle,pitch) end
+---@param soundHandle wc3_sound
+---@param millisecs integer
+function SetSoundPlayPosition(soundHandle,millisecs) end
+---@param soundHandle wc3_sound
+---@param minDist number
+---@param maxDist number
+function SetSoundDistances(soundHandle,minDist,maxDist) end
+---@param soundHandle wc3_sound
+---@param inside number
+---@param outside number
+---@param outsideVolume integer
+function SetSoundConeAngles(soundHandle,inside,outside,outsideVolume) end
+---@param soundHandle wc3_sound
+---@param x number
+---@param y number
+---@param z number
+function SetSoundConeOrientation(soundHandle,x,y,z) end
+---@param soundHandle wc3_sound
+---@param x number
+---@param y number
+---@param z number
+function SetSoundPosition(soundHandle,x,y,z) end
+---@param soundHandle wc3_sound
+---@param x number
+---@param y number
+---@param z number
+function SetSoundVelocity(soundHandle,x,y,z) end
+---@param soundHandle wc3_sound
+---@param whichUnit wc3_unit
+function AttachSoundToUnit(soundHandle,whichUnit) end
+---@param soundHandle wc3_sound
+function StartSound(soundHandle) end
+---@param soundHandle wc3_sound
+---@param killWhenDone boolean
+---@param fadeOut boolean
+function StopSound(soundHandle,killWhenDone,fadeOut) end
+---@param soundHandle wc3_sound
+function KillSoundWhenDone(soundHandle) end
+---@param musicName string
+---@param random boolean
+---@param index integer
+function SetMapMusic(musicName,random,index) end
+function ClearMapMusic() end
+---@param musicName string
+function PlayMusic(musicName) end
+---@param musicName string
+---@param frommsecs integer
+---@param fadeinmsecs integer
+function PlayMusicEx(musicName,frommsecs,fadeinmsecs) end
+---@param fadeOut boolean
+function StopMusic(fadeOut) end
+function ResumeMusic() end
+---@param musicFileName string
+function PlayThematicMusic(musicFileName) end
+---@param musicFileName string
+---@param frommsecs integer
+function PlayThematicMusicEx(musicFileName,frommsecs) end
+function EndThematicMusic() end
+---@param volume integer
+function SetMusicVolume(volume) end
+---@param millisecs integer
+function SetMusicPlayPosition(millisecs) end
+---@param millisecs integer
+function SetThematicMusicPlayPosition(millisecs) end
+---@param soundHandle wc3_sound
+---@param duration integer
+function SetSoundDuration(soundHandle,duration) end
+---@param soundHandle wc3_sound
+---@return integer
+function GetSoundDuration(soundHandle) end
+---@param musicFileName string
+---@return integer
+function GetSoundFileDuration(musicFileName) end
+---@param vgroup wc3_volumegroup
+---@param scale number
+function VolumeGroupSetVolume(vgroup,scale) end
+function VolumeGroupReset() end
+---@param soundHandle wc3_sound
+---@return boolean
+function GetSoundIsPlaying(soundHandle) end
+---@param soundHandle wc3_sound
+---@return boolean
+function GetSoundIsLoading(soundHandle) end
+---@param soundHandle wc3_sound
+---@param byPosition boolean
+---@param rectwidth number
+---@param rectheight number
+function RegisterStackedSound(soundHandle,byPosition,rectwidth,rectheight) end
+---@param soundHandle wc3_sound
+---@param byPosition boolean
+---@param rectwidth number
+---@param rectheight number
+function UnregisterStackedSound(soundHandle,byPosition,rectwidth,rectheight) end
+---@param where wc3_rect
+---@param effectID integer
+---@return wc3_weathereffect
+function AddWeatherEffect(where,effectID) end
+---@param whichEffect wc3_weathereffect
+function RemoveWeatherEffect(whichEffect) end
+---@param whichEffect wc3_weathereffect
+---@param enable boolean
+function EnableWeatherEffect(whichEffect,enable) end
+---@param x number
+---@param y number
+---@param radius number
+---@param depth number
+---@param duration integer
+---@param permanent boolean
+---@return wc3_terraindeformation
+function TerrainDeformCrater(x,y,radius,depth,duration,permanent) end
+---@param x number
+---@param y number
+---@param radius number
+---@param depth number
+---@param duration integer
+---@param count integer
+---@param spaceWaves number
+---@param timeWaves number
+---@param radiusStartPct number
+---@param limitNeg boolean
+---@return wc3_terraindeformation
+function TerrainDeformRipple(x,y,radius,depth,duration,count,spaceWaves,timeWaves,radiusStartPct,limitNeg) end
+---@param x number
+---@param y number
+---@param dirX number
+---@param dirY number
+---@param distance number
+---@param speed number
+---@param radius number
+---@param depth number
+---@param trailTime integer
+---@param count integer
+---@return wc3_terraindeformation
+function TerrainDeformWave(x,y,dirX,dirY,distance,speed,radius,depth,trailTime,count) end
+---@param x number
+---@param y number
+---@param radius number
+---@param minDelta number
+---@param maxDelta number
+---@param duration integer
+---@param updateInterval integer
+---@return wc3_terraindeformation
+function TerrainDeformRandom(x,y,radius,minDelta,maxDelta,duration,updateInterval) end
+---@param deformation wc3_terraindeformation
+---@param duration integer
+function TerrainDeformStop(deformation,duration) end
+function TerrainDeformStopAll() end
+---@param modelName string
+---@param x number
+---@param y number
+---@return wc3_effect
+function AddSpecialEffect(modelName,x,y) end
+---@param modelName string
+---@param where wc3_location
+---@return wc3_effect
+function AddSpecialEffectLoc(modelName,where) end
+---@param modelName string
+---@param targetWidget wc3_widget
+---@param attachPointName string
+---@return wc3_effect
+function AddSpecialEffectTarget(modelName,targetWidget,attachPointName) end
+---@param whichEffect wc3_effect
+function DestroyEffect(whichEffect) end
+---@param abilityString string
+---@param t wc3_effecttype
+---@param x number
+---@param y number
+---@return wc3_effect
+function AddSpellEffect(abilityString,t,x,y) end
+---@param abilityString string
+---@param t wc3_effecttype
+---@param where wc3_location
+---@return wc3_effect
+function AddSpellEffectLoc(abilityString,t,where) end
+---@param abilityId integer
+---@param t wc3_effecttype
+---@param x number
+---@param y number
+---@return wc3_effect
+function AddSpellEffectById(abilityId,t,x,y) end
+---@param abilityId integer
+---@param t wc3_effecttype
+---@param where wc3_location
+---@return wc3_effect
+function AddSpellEffectByIdLoc(abilityId,t,where) end
+---@param modelName string
+---@param t wc3_effecttype
+---@param targetWidget wc3_widget
+---@param attachPoint string
+---@return wc3_effect
+function AddSpellEffectTarget(modelName,t,targetWidget,attachPoint) end
+---@param abilityId integer
+---@param t wc3_effecttype
+---@param targetWidget wc3_widget
+---@param attachPoint string
+---@return wc3_effect
+function AddSpellEffectTargetById(abilityId,t,targetWidget,attachPoint) end
+---@param codeName string
+---@param checkVisibility boolean
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@return wc3_lightning
+function AddLightning(codeName,checkVisibility,x1,y1,x2,y2) end
+---@param codeName string
+---@param checkVisibility boolean
+---@param x1 number
+---@param y1 number
+---@param z1 number
+---@param x2 number
+---@param y2 number
+---@param z2 number
+---@return wc3_lightning
+function AddLightningEx(codeName,checkVisibility,x1,y1,z1,x2,y2,z2) end
+---@param whichBolt wc3_lightning
+---@return boolean
+function DestroyLightning(whichBolt) end
+---@param whichBolt wc3_lightning
+---@param checkVisibility boolean
+---@param x1 number
+---@param y1 number
+---@param x2 number
+---@param y2 number
+---@return boolean
+function MoveLightning(whichBolt,checkVisibility,x1,y1,x2,y2) end
+---@param whichBolt wc3_lightning
+---@param checkVisibility boolean
+---@param x1 number
+---@param y1 number
+---@param z1 number
+---@param x2 number
+---@param y2 number
+---@param z2 number
+---@return boolean
+function MoveLightningEx(whichBolt,checkVisibility,x1,y1,z1,x2,y2,z2) end
+---@param whichBolt wc3_lightning
+---@return number
+function GetLightningColorA(whichBolt) end
+---@param whichBolt wc3_lightning
+---@return number
+function GetLightningColorR(whichBolt) end
+---@param whichBolt wc3_lightning
+---@return number
+function GetLightningColorG(whichBolt) end
+---@param whichBolt wc3_lightning
+---@return number
+function GetLightningColorB(whichBolt) end
+---@param whichBolt wc3_lightning
+---@param r number
+---@param g number
+---@param b number
+---@param a number
+---@return boolean
+function SetLightningColor(whichBolt,r,g,b,a) end
+---@param abilityString string
+---@param t wc3_effecttype
+---@param index integer
+---@return string
+function GetAbilityEffect(abilityString,t,index) end
+---@param abilityId integer
+---@param t wc3_effecttype
+---@param index integer
+---@return string
+function GetAbilityEffectById(abilityId,t,index) end
+---@param abilityString string
+---@param t wc3_soundtype
+---@return string
+function GetAbilitySound(abilityString,t) end
+---@param abilityId integer
+---@param t wc3_soundtype
+---@return string
+function GetAbilitySoundById(abilityId,t) end
+---@param x number
+---@param y number
+---@return integer
+function GetTerrainCliffLevel(x,y) end
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function SetWaterBaseColor(red,green,blue,alpha) end
+---@param val boolean
+function SetWaterDeforms(val) end
+---@param x number
+---@param y number
+---@return integer
+function GetTerrainType(x,y) end
+---@param x number
+---@param y number
+---@return integer
+function GetTerrainVariance(x,y) end
+---@param x number
+---@param y number
+---@param terrainType integer
+---@param variation integer
+---@param area integer
+---@param shape integer
+function SetTerrainType(x,y,terrainType,variation,area,shape) end
+---@param x number
+---@param y number
+---@param t wc3_pathingtype
+---@return boolean
+function IsTerrainPathable(x,y,t) end
+---@param x number
+---@param y number
+---@param t wc3_pathingtype
+---@param flag boolean
+function SetTerrainPathable(x,y,t,flag) end
+---@param file string
+---@param sizeX number
+---@param sizeY number
+---@param sizeZ number
+---@param posX number
+---@param posY number
+---@param posZ number
+---@param originX number
+---@param originY number
+---@param originZ number
+---@param imageType integer
+---@return wc3_image
+function CreateImage(file,sizeX,sizeY,sizeZ,posX,posY,posZ,originX,originY,originZ,imageType) end
+---@param whichImage wc3_image
+function DestroyImage(whichImage) end
+---@param whichImage wc3_image
+---@param flag boolean
+function ShowImage(whichImage,flag) end
+---@param whichImage wc3_image
+---@param flag boolean
+---@param height number
+function SetImageConstantHeight(whichImage,flag,height) end
+---@param whichImage wc3_image
+---@param x number
+---@param y number
+---@param z number
+function SetImagePosition(whichImage,x,y,z) end
+---@param whichImage wc3_image
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+function SetImageColor(whichImage,red,green,blue,alpha) end
+---@param whichImage wc3_image
+---@param flag boolean
+function SetImageRender(whichImage,flag) end
+---@param whichImage wc3_image
+---@param flag boolean
+function SetImageRenderAlways(whichImage,flag) end
+---@param whichImage wc3_image
+---@param flag boolean
+---@param useWaterAlpha boolean
+function SetImageAboveWater(whichImage,flag,useWaterAlpha) end
+---@param whichImage wc3_image
+---@param imageType integer
+function SetImageType(whichImage,imageType) end
+---@param x number
+---@param y number
+---@param name string
+---@param red integer
+---@param green integer
+---@param blue integer
+---@param alpha integer
+---@param forcePaused boolean
+---@param noBirthTime boolean
+---@return wc3_ubersplat
+function CreateUbersplat(x,y,name,red,green,blue,alpha,forcePaused,noBirthTime) end
+---@param whichSplat wc3_ubersplat
+function DestroyUbersplat(whichSplat) end
+---@param whichSplat wc3_ubersplat
+function ResetUbersplat(whichSplat) end
+---@param whichSplat wc3_ubersplat
+function FinishUbersplat(whichSplat) end
+---@param whichSplat wc3_ubersplat
+---@param flag boolean
+function ShowUbersplat(whichSplat,flag) end
+---@param whichSplat wc3_ubersplat
+---@param flag boolean
+function SetUbersplatRender(whichSplat,flag) end
+---@param whichSplat wc3_ubersplat
+---@param flag boolean
+function SetUbersplatRenderAlways(whichSplat,flag) end
+---@param whichPlayer wc3_player
+---@param x number
+---@param y number
+---@param radius number
+---@param addBlight boolean
+function SetBlight(whichPlayer,x,y,radius,addBlight) end
+---@param whichPlayer wc3_player
+---@param r wc3_rect
+---@param addBlight boolean
+function SetBlightRect(whichPlayer,r,addBlight) end
+---@param whichPlayer wc3_player
+---@param x number
+---@param y number
+---@param addBlight boolean
+function SetBlightPoint(whichPlayer,x,y,addBlight) end
+---@param whichPlayer wc3_player
+---@param whichLocation wc3_location
+---@param radius number
+---@param addBlight boolean
+function SetBlightLoc(whichPlayer,whichLocation,radius,addBlight) end
+---@param id wc3_player
+---@param x number
+---@param y number
+---@param face number
+---@return wc3_unit
+function CreateBlightedGoldmine(id,x,y,face) end
+---@param x number
+---@param y number
+---@return boolean
+function IsPointBlighted(x,y) end
+---@param x number
+---@param y number
+---@param radius number
+---@param doodadID integer
+---@param nearestOnly boolean
+---@param animName string
+---@param animRandom boolean
+function SetDoodadAnimation(x,y,radius,doodadID,nearestOnly,animName,animRandom) end
+---@param r wc3_rect
+---@param doodadID integer
+---@param animName string
+---@param animRandom boolean
+function SetDoodadAnimationRect(r,doodadID,animName,animRandom) end
+---@param num wc3_player
+---@param script string
+function StartMeleeAI(num,script) end
+---@param num wc3_player
+---@param script string
+function StartCampaignAI(num,script) end
+---@param num wc3_player
+---@param command integer
+---@param data integer
+function CommandAI(num,command,data) end
+---@param p wc3_player
+---@param pause boolean
+function PauseCompAI(p,pause) end
+---@param num wc3_player
+---@return wc3_aidifficulty
+function GetAIDifficulty(num) end
+---@param hUnit wc3_unit
+function RemoveGuardPosition(hUnit) end
+---@param hUnit wc3_unit
+function RecycleGuardPosition(hUnit) end
+---@param num wc3_player
+function RemoveAllGuardPositions(num) end
+---@param cheatStr string
+function Cheat(cheatStr) end
+---@return boolean
+function IsNoVictoryCheat() end
+---@return boolean
+function IsNoDefeatCheat() end
+---@param filename string
+function Preload(filename) end
+---@param timeout number
+function PreloadEnd(timeout) end
+function PreloadStart() end
+function PreloadRefresh() end
+function PreloadEndEx() end
+function PreloadGenClear() end
+function PreloadGenStart() end
+---@param filename string
+function PreloadGenEnd(filename) end
+---@param filename string
+function Preloader(filename) end
+---@param testType string
+function AutomationSetTestType(testType) end
+---@param testName string
+function AutomationTestStart(testName) end
+function AutomationTestEnd() end
+function AutomationTestingFinished() end
+---@return number
+function BlzGetTriggerPlayerMouseX() end
+---@return number
+function BlzGetTriggerPlayerMouseY() end
+---@return wc3_location
+function BlzGetTriggerPlayerMousePosition() end
+---@return wc3_mousebuttontype
+function BlzGetTriggerPlayerMouseButton() end
+---@param abilCode integer
+---@param tooltip string
+---@param level integer
+function BlzSetAbilityTooltip(abilCode,tooltip,level) end
+---@param abilCode integer
+---@param tooltip string
+---@param level integer
+function BlzSetAbilityActivatedTooltip(abilCode,tooltip,level) end
+---@param abilCode integer
+---@param extendedTooltip string
+---@param level integer
+function BlzSetAbilityExtendedTooltip(abilCode,extendedTooltip,level) end
+---@param abilCode integer
+---@param extendedTooltip string
+---@param level integer
+function BlzSetAbilityActivatedExtendedTooltip(abilCode,extendedTooltip,level) end
+---@param abilCode integer
+---@param researchTooltip string
+---@param level integer
+function BlzSetAbilityResearchTooltip(abilCode,researchTooltip,level) end
+---@param abilCode integer
+---@param researchExtendedTooltip string
+---@param level integer
+function BlzSetAbilityResearchExtendedTooltip(abilCode,researchExtendedTooltip,level) end
+---@param abilCode integer
+---@param level integer
+---@return string
+function BlzGetAbilityTooltip(abilCode,level) end
+---@param abilCode integer
+---@param level integer
+---@return string
+function BlzGetAbilityActivatedTooltip(abilCode,level) end
+---@param abilCode integer
+---@param level integer
+---@return string
+function BlzGetAbilityExtendedTooltip(abilCode,level) end
+---@param abilCode integer
+---@param level integer
+---@return string
+function BlzGetAbilityActivatedExtendedTooltip(abilCode,level) end
+---@param abilCode integer
+---@param level integer
+---@return string
+function BlzGetAbilityResearchTooltip(abilCode,level) end
+---@param abilCode integer
+---@param level integer
+---@return string
+function BlzGetAbilityResearchExtendedTooltip(abilCode,level) end
+---@param abilCode integer
+---@param iconPath string
+function BlzSetAbilityIcon(abilCode,iconPath) end
+---@param abilCode integer
+---@return string
+function BlzGetAbilityIcon(abilCode) end
+---@param abilCode integer
+---@param iconPath string
+function BlzSetAbilityActivatedIcon(abilCode,iconPath) end
+---@param abilCode integer
+---@return string
+function BlzGetAbilityActivatedIcon(abilCode) end
+---@param abilCode integer
+---@return integer
+function BlzGetAbilityPosX(abilCode) end
+---@param abilCode integer
+---@return integer
+function BlzGetAbilityPosY(abilCode) end
+---@param abilCode integer
+---@param x integer
+function BlzSetAbilityPosX(abilCode,x) end
+---@param abilCode integer
+---@param y integer
+function BlzSetAbilityPosY(abilCode,y) end
+---@param abilCode integer
+---@return integer
+function BlzGetAbilityActivatedPosX(abilCode) end
+---@param abilCode integer
+---@return integer
+function BlzGetAbilityActivatedPosY(abilCode) end
+---@param abilCode integer
+---@param x integer
+function BlzSetAbilityActivatedPosX(abilCode,x) end
+---@param abilCode integer
+---@param y integer
+function BlzSetAbilityActivatedPosY(abilCode,y) end
+---@param whichUnit wc3_unit
+---@return integer
+function BlzGetUnitMaxHP(whichUnit) end
+---@param whichUnit wc3_unit
+---@param hp integer
+function BlzSetUnitMaxHP(whichUnit,hp) end
+---@param whichUnit wc3_unit
+---@return integer
+function BlzGetUnitMaxMana(whichUnit) end
+---@param whichUnit wc3_unit
+---@param mana integer
+function BlzSetUnitMaxMana(whichUnit,mana) end
+---@param whichItem wc3_item
+---@param name string
+function BlzSetItemName(whichItem,name) end
+---@param whichItem wc3_item
+---@param description string
+function BlzSetItemDescription(whichItem,description) end
+---@param whichItem wc3_item
+---@return string
+function BlzGetItemDescription(whichItem) end
+---@param whichItem wc3_item
+---@param tooltip string
+function BlzSetItemTooltip(whichItem,tooltip) end
+---@param whichItem wc3_item
+---@return string
+function BlzGetItemTooltip(whichItem) end
+---@param whichItem wc3_item
+---@param extendedTooltip string
+function BlzSetItemExtendedTooltip(whichItem,extendedTooltip) end
+---@param whichItem wc3_item
+---@return string
+function BlzGetItemExtendedTooltip(whichItem) end
+---@param whichItem wc3_item
+---@param iconPath string
+function BlzSetItemIconPath(whichItem,iconPath) end
+---@param whichItem wc3_item
+---@return string
+function BlzGetItemIconPath(whichItem) end
+---@param whichUnit wc3_unit
+---@param name string
+function BlzSetUnitName(whichUnit,name) end
+---@param whichUnit wc3_unit
+---@param heroProperName string
+function BlzSetHeroProperName(whichUnit,heroProperName) end
+---@param whichUnit wc3_unit
+---@param weaponIndex integer
+---@return integer
+function BlzGetUnitBaseDamage(whichUnit,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param baseDamage integer
+---@param weaponIndex integer
+function BlzSetUnitBaseDamage(whichUnit,baseDamage,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param weaponIndex integer
+---@return integer
+function BlzGetUnitDiceNumber(whichUnit,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param diceNumber integer
+---@param weaponIndex integer
+function BlzSetUnitDiceNumber(whichUnit,diceNumber,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param weaponIndex integer
+---@return integer
+function BlzGetUnitDiceSides(whichUnit,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param diceSides integer
+---@param weaponIndex integer
+function BlzSetUnitDiceSides(whichUnit,diceSides,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param weaponIndex integer
+---@return number
+function BlzGetUnitAttackCooldown(whichUnit,weaponIndex) end
+---@param whichUnit wc3_unit
+---@param cooldown number
+---@param weaponIndex integer
+function BlzSetUnitAttackCooldown(whichUnit,cooldown,weaponIndex) end
+---@param whichEffect wc3_effect
+---@param whichPlayer wc3_player
+function BlzSetSpecialEffectColorByPlayer(whichEffect,whichPlayer) end
+---@param whichEffect wc3_effect
+---@param r integer
+---@param g integer
+---@param b integer
+function BlzSetSpecialEffectColor(whichEffect,r,g,b) end
+---@param whichEffect wc3_effect
+---@param alpha integer
+function BlzSetSpecialEffectAlpha(whichEffect,alpha) end
+---@param whichEffect wc3_effect
+---@param scale number
+function BlzSetSpecialEffectScale(whichEffect,scale) end
+---@param whichEffect wc3_effect
+---@param x number
+---@param y number
+---@param z number
+function BlzSetSpecialEffectPosition(whichEffect,x,y,z) end
+---@param whichEffect wc3_effect
+---@param height number
+function BlzSetSpecialEffectHeight(whichEffect,height) end
+---@param whichEffect wc3_effect
+---@param timeScale number
+function BlzSetSpecialEffectTimeScale(whichEffect,timeScale) end
+---@param whichEffect wc3_effect
+---@param time number
+function BlzSetSpecialEffectTime(whichEffect,time) end
+---@param whichEffect wc3_effect
+---@param yaw number
+---@param pitch number
+---@param roll number
+function BlzSetSpecialEffectOrientation(whichEffect,yaw,pitch,roll) end
+---@param whichEffect wc3_effect
+---@param yaw number
+function BlzSetSpecialEffectYaw(whichEffect,yaw) end
+---@param whichEffect wc3_effect
+---@param pitch number
+function BlzSetSpecialEffectPitch(whichEffect,pitch) end
+---@param whichEffect wc3_effect
+---@param roll number
+function BlzSetSpecialEffectRoll(whichEffect,roll) end
+---@param whichEffect wc3_effect
+---@param x number
+function BlzSetSpecialEffectX(whichEffect,x) end
+---@param whichEffect wc3_effect
+---@param y number
+function BlzSetSpecialEffectY(whichEffect,y) end
+---@param whichEffect wc3_effect
+---@param z number
+function BlzSetSpecialEffectZ(whichEffect,z) end
+---@param whichEffect wc3_effect
+---@param loc wc3_location
+function BlzSetSpecialEffectPositionLoc(whichEffect,loc) end
+---@param whichEffect wc3_effect
+---@return number
+function BlzGetLocalSpecialEffectX(whichEffect) end
+---@param whichEffect wc3_effect
+---@return number
+function BlzGetLocalSpecialEffectY(whichEffect) end
+---@param whichEffect wc3_effect
+---@return number
+function BlzGetLocalSpecialEffectZ(whichEffect) end
+---@param whichEffect wc3_effect
+function BlzSpecialEffectClearSubAnimations(whichEffect) end
+---@param whichEffect wc3_effect
+---@param whichSubAnim wc3_subanimtype
+function BlzSpecialEffectRemoveSubAnimation(whichEffect,whichSubAnim) end
+---@param whichEffect wc3_effect
+---@param whichSubAnim wc3_subanimtype
+function BlzSpecialEffectAddSubAnimation(whichEffect,whichSubAnim) end
+---@param whichEffect wc3_effect
+---@param whichAnim wc3_animtype
+function BlzPlaySpecialEffect(whichEffect,whichAnim) end
+---@param whichEffect wc3_effect
+---@param whichAnim wc3_animtype
+---@param timeScale number
+function BlzPlaySpecialEffectWithTimeScale(whichEffect,whichAnim,timeScale) end
+---@param whichAnim wc3_animtype
+---@return string
+function BlzGetAnimName(whichAnim) end
+---@param whichUnit wc3_unit
+---@return number
+function BlzGetUnitArmor(whichUnit) end
+---@param whichUnit wc3_unit
+---@param armorAmount number
+function BlzSetUnitArmor(whichUnit,armorAmount) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@param flag boolean
+function BlzUnitHideAbility(whichUnit,abilId,flag) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@param flag boolean
+---@param hideUI boolean
+function BlzUnitDisableAbility(whichUnit,abilId,flag,hideUI) end
+---@param whichUnit wc3_unit
+function BlzUnitCancelTimedLife(whichUnit) end
+---@param whichUnit wc3_unit
+---@return boolean
+function BlzIsUnitSelectable(whichUnit) end
+---@param whichUnit wc3_unit
+---@return boolean
+function BlzIsUnitInvulnerable(whichUnit) end
+---@param whichUnit wc3_unit
+function BlzUnitInterruptAttack(whichUnit) end
+---@param whichUnit wc3_unit
+---@return number
+function BlzGetUnitCollisionSize(whichUnit) end
+---@param abilId integer
+---@param level integer
+---@return integer
+function BlzGetAbilityManaCost(abilId,level) end
+---@param abilId integer
+---@param level integer
+---@return number
+function BlzGetAbilityCooldown(abilId,level) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@param level integer
+---@param cooldown number
+function BlzSetUnitAbilityCooldown(whichUnit,abilId,level,cooldown) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@param level integer
+---@return number
+function BlzGetUnitAbilityCooldown(whichUnit,abilId,level) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@return number
+function BlzGetUnitAbilityCooldownRemaining(whichUnit,abilId) end
+---@param whichUnit wc3_unit
+---@param abilCode integer
+function BlzEndUnitAbilityCooldown(whichUnit,abilCode) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@param level integer
+---@return integer
+function BlzGetUnitAbilityManaCost(whichUnit,abilId,level) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@param level integer
+---@param manaCost integer
+function BlzSetUnitAbilityManaCost(whichUnit,abilId,level,manaCost) end
+---@param whichUnit wc3_unit
+---@return number
+function BlzGetLocalUnitZ(whichUnit) end
+---@param whichPlayer wc3_player
+---@param techid integer
+---@param levels integer
+function BlzDecPlayerTechResearched(whichPlayer,techid,levels) end
+---@param damage number
+function BlzSetEventDamage(damage) end
+---@return wc3_unit
+function BlzGetEventDamageTarget() end
+---@return wc3_attacktype
+function BlzGetEventAttackType() end
+---@return wc3_damagetype
+function BlzGetEventDamageType() end
+---@return wc3_weapontype
+function BlzGetEventWeaponType() end
+---@param attackType wc3_attacktype
+---@return boolean
+function BlzSetEventAttackType(attackType) end
+---@param damageType wc3_damagetype
+---@return boolean
+function BlzSetEventDamageType(damageType) end
+---@param weaponType wc3_weapontype
+---@return boolean
+function BlzSetEventWeaponType(weaponType) end
+---@param dataType integer
+---@param whichPlayer wc3_player
+---@param param1 string
+---@param param2 string
+---@param param3 boolean
+---@param param4 integer
+---@param param5 integer
+---@param param6 integer
+---@return integer
+function RequestExtraIntegerData(dataType,whichPlayer,param1,param2,param3,param4,param5,param6) end
+---@param dataType integer
+---@param whichPlayer wc3_player
+---@param param1 string
+---@param param2 string
+---@param param3 boolean
+---@param param4 integer
+---@param param5 integer
+---@param param6 integer
+---@return boolean
+function RequestExtraBooleanData(dataType,whichPlayer,param1,param2,param3,param4,param5,param6) end
+---@param dataType integer
+---@param whichPlayer wc3_player
+---@param param1 string
+---@param param2 string
+---@param param3 boolean
+---@param param4 integer
+---@param param5 integer
+---@param param6 integer
+---@return string
+function RequestExtraStringData(dataType,whichPlayer,param1,param2,param3,param4,param5,param6) end
+---@param dataType integer
+---@param whichPlayer wc3_player
+---@param param1 string
+---@param param2 string
+---@param param3 boolean
+---@param param4 integer
+---@param param5 integer
+---@param param6 integer
+---@return number
+function RequestExtraRealData(dataType,whichPlayer,param1,param2,param3,param4,param5,param6) end
+---@param whichUnit wc3_unit
+---@return number
+function BlzGetUnitZ(whichUnit) end
+---@param enableSelection boolean
+---@param enableSelectionCircle boolean
+function BlzEnableSelections(enableSelection,enableSelectionCircle) end
+---@return boolean
+function BlzIsSelectionEnabled() end
+---@return boolean
+function BlzIsSelectionCircleEnabled() end
+---@param whichSetup wc3_camerasetup
+---@param doPan boolean
+---@param forcedDuration number
+---@param easeInDuration number
+---@param easeOutDuration number
+---@param smoothFactor number
+function BlzCameraSetupApplyForceDurationSmooth(whichSetup,doPan,forcedDuration,easeInDuration,easeOutDuration,smoothFactor) end
+---@param enable boolean
+function BlzEnableTargetIndicator(enable) end
+---@return boolean
+function BlzIsTargetIndicatorEnabled() end
+---@param frameType wc3_originframetype
+---@param index integer
+---@return wc3_framehandle
+function BlzGetOriginFrame(frameType,index) end
+---@param enable boolean
+function BlzEnableUIAutoPosition(enable) end
+---@param enable boolean
+function BlzHideOriginFrames(enable) end
+---@param a integer
+---@param r integer
+---@param g integer
+---@param b integer
+---@return integer
+function BlzConvertColor(a,r,g,b) end
+---@param TOCFile string
+---@return boolean
+function BlzLoadTOCFile(TOCFile) end
+---@param name string
+---@param owner wc3_framehandle
+---@param priority integer
+---@param createContext integer
+---@return wc3_framehandle
+function BlzCreateFrame(name,owner,priority,createContext) end
+---@param name string
+---@param owner wc3_framehandle
+---@param createContext integer
+---@return wc3_framehandle
+function BlzCreateSimpleFrame(name,owner,createContext) end
+---@param typeName string
+---@param name string
+---@param owner wc3_framehandle
+---@param inherits string
+---@param createContext integer
+---@return wc3_framehandle
+function BlzCreateFrameByType(typeName,name,owner,inherits,createContext) end
+---@param frame wc3_framehandle
+function BlzDestroyFrame(frame) end
+---@param frame wc3_framehandle
+---@param point wc3_framepointtype
+---@param relative wc3_framehandle
+---@param relativePoint wc3_framepointtype
+---@param x number
+---@param y number
+function BlzFrameSetPoint(frame,point,relative,relativePoint,x,y) end
+---@param frame wc3_framehandle
+---@param point wc3_framepointtype
+---@param x number
+---@param y number
+function BlzFrameSetAbsPoint(frame,point,x,y) end
+---@param frame wc3_framehandle
+function BlzFrameClearAllPoints(frame) end
+---@param frame wc3_framehandle
+---@param relative wc3_framehandle
+function BlzFrameSetAllPoints(frame,relative) end
+---@param frame wc3_framehandle
+---@param visible boolean
+function BlzFrameSetVisible(frame,visible) end
+---@param frame wc3_framehandle
+---@return boolean
+function BlzFrameIsVisible(frame) end
+---@param name string
+---@param createContext integer
+---@return wc3_framehandle
+function BlzGetFrameByName(name,createContext) end
+---@param frame wc3_framehandle
+---@return string
+function BlzFrameGetName(frame) end
+---@param frame wc3_framehandle
+function BlzFrameClick(frame) end
+---@param frame wc3_framehandle
+---@param text string
+function BlzFrameSetText(frame,text) end
+---@param frame wc3_framehandle
+---@return string
+function BlzFrameGetText(frame) end
+---@param frame wc3_framehandle
+---@param size integer
+function BlzFrameSetTextSizeLimit(frame,size) end
+---@param frame wc3_framehandle
+---@return integer
+function BlzFrameGetTextSizeLimit(frame) end
+---@param frame wc3_framehandle
+---@param color integer
+function BlzFrameSetTextColor(frame,color) end
+---@param frame wc3_framehandle
+---@param flag boolean
+function BlzFrameSetFocus(frame,flag) end
+---@param frame wc3_framehandle
+---@param modelFile string
+---@param cameraIndex integer
+function BlzFrameSetModel(frame,modelFile,cameraIndex) end
+---@param frame wc3_framehandle
+---@param enabled boolean
+function BlzFrameSetEnable(frame,enabled) end
+---@param frame wc3_framehandle
+---@return boolean
+function BlzFrameGetEnable(frame) end
+---@param frame wc3_framehandle
+---@param alpha integer
+function BlzFrameSetAlpha(frame,alpha) end
+---@param frame wc3_framehandle
+---@return integer
+function BlzFrameGetAlpha(frame) end
+---@param frame wc3_framehandle
+---@param primaryProp integer
+---@param flags integer
+function BlzFrameSetSpriteAnimate(frame,primaryProp,flags) end
+---@param frame wc3_framehandle
+---@param texFile string
+---@param flag integer
+---@param blend boolean
+function BlzFrameSetTexture(frame,texFile,flag,blend) end
+---@param frame wc3_framehandle
+---@param scale number
+function BlzFrameSetScale(frame,scale) end
+---@param frame wc3_framehandle
+---@param tooltip wc3_framehandle
+function BlzFrameSetTooltip(frame,tooltip) end
+---@param frame wc3_framehandle
+---@param enable boolean
+function BlzFrameCageMouse(frame,enable) end
+---@param frame wc3_framehandle
+---@param value number
+function BlzFrameSetValue(frame,value) end
+---@param frame wc3_framehandle
+---@return number
+function BlzFrameGetValue(frame) end
+---@param frame wc3_framehandle
+---@param minValue number
+---@param maxValue number
+function BlzFrameSetMinMaxValue(frame,minValue,maxValue) end
+---@param frame wc3_framehandle
+---@param stepSize number
+function BlzFrameSetStepSize(frame,stepSize) end
+---@param frame wc3_framehandle
+---@param width number
+---@param height number
+function BlzFrameSetSize(frame,width,height) end
+---@param frame wc3_framehandle
+---@param color integer
+function BlzFrameSetVertexColor(frame,color) end
+---@param frame wc3_framehandle
+---@param level integer
+function BlzFrameSetLevel(frame,level) end
+---@param frame wc3_framehandle
+---@param parent wc3_framehandle
+function BlzFrameSetParent(frame,parent) end
+---@param frame wc3_framehandle
+---@return wc3_framehandle
+function BlzFrameGetParent(frame) end
+---@param frame wc3_framehandle
+---@return number
+function BlzFrameGetHeight(frame) end
+---@param frame wc3_framehandle
+---@return number
+function BlzFrameGetWidth(frame) end
+---@param frame wc3_framehandle
+---@param fileName string
+---@param height number
+---@param flags integer
+function BlzFrameSetFont(frame,fileName,height,flags) end
+---@param frame wc3_framehandle
+---@param vert wc3_textaligntype
+---@param horz wc3_textaligntype
+function BlzFrameSetTextAlignment(frame,vert,horz) end
+---@param whichTrigger wc3_trigger
+---@param frame wc3_framehandle
+---@param eventId wc3_frameeventtype
+---@return wc3_event
+function BlzTriggerRegisterFrameEvent(whichTrigger,frame,eventId) end
+---@return wc3_framehandle
+function BlzGetTriggerFrame() end
+---@return wc3_frameeventtype
+function BlzGetTriggerFrameEvent() end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param prefix string
+---@param fromServer boolean
+---@return wc3_event
+function BlzTriggerRegisterPlayerSyncEvent(whichTrigger,whichPlayer,prefix,fromServer) end
+---@param prefix string
+---@param data string
+---@return boolean
+function BlzSendSyncData(prefix,data) end
+---@return string
+function BlzGetTriggerSyncPrefix() end
+---@return string
+function BlzGetTriggerSyncData() end
+---@param whichTrigger wc3_trigger
+---@param whichPlayer wc3_player
+---@param key wc3_oskeytype
+---@param metaKey integer
+---@param keyDown boolean
+---@return wc3_event
+function BlzTriggerRegisterPlayerKeyEvent(whichTrigger,whichPlayer,key,metaKey,keyDown) end
+---@return wc3_oskeytype
+function BlzGetTriggerPlayerKey() end
+---@return integer
+function BlzGetTriggerPlayerMetaKey() end
+---@return boolean
+function BlzGetTriggerPlayerIsKeyDown() end
+---@param enable boolean
+function BlzEnableCursor(enable) end
+---@param x integer
+---@param y integer
+function BlzSetMousePos(x,y) end
+---@return integer
+function BlzGetLocalClientWidth() end
+---@return integer
+function BlzGetLocalClientHeight() end
+---@return boolean
+function BlzIsLocalClientActive() end
+---@return wc3_unit
+function BlzGetMouseFocusUnit() end
+---@param texFile string
+---@return boolean
+function BlzChangeMinimapTerrainTex(texFile) end
+---@return string
+function BlzGetLocale() end
+---@param whichEffect wc3_effect
+---@return number
+function BlzGetSpecialEffectScale(whichEffect) end
+---@param whichEffect wc3_effect
+---@param x number
+---@param y number
+---@param z number
+function BlzSetSpecialEffectMatrixScale(whichEffect,x,y,z) end
+---@param whichEffect wc3_effect
+function BlzResetSpecialEffectMatrix(whichEffect) end
+---@param whichUnit wc3_unit
+---@param abilId integer
+---@return wc3_ability
+function BlzGetUnitAbility(whichUnit,abilId) end
+---@param whichUnit wc3_unit
+---@param index integer
+---@return wc3_ability
+function BlzGetUnitAbilityByIndex(whichUnit,index) end
+---@param whichPlayer wc3_player
+---@param recipient integer
+---@param message string
+function BlzDisplayChatMessage(whichPlayer,recipient,message) end
+---@param whichUnit wc3_unit
+---@param flag boolean
+function BlzPauseUnitEx(whichUnit,flag) end
+---@param x integer
+---@param y integer
+---@return integer
+function BlzBitOr(x,y) end
+---@param x integer
+---@param y integer
+---@return integer
+function BlzBitAnd(x,y) end
+---@param x integer
+---@param y integer
+---@return integer
+function BlzBitXor(x,y) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanfield
+---@return boolean
+function BlzGetAbilityBooleanField(whichAbility,whichField) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerfield
+---@return integer
+function BlzGetAbilityIntegerField(whichAbility,whichField) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityrealfield
+---@return number
+function BlzGetAbilityRealField(whichAbility,whichField) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringfield
+---@return string
+function BlzGetAbilityStringField(whichAbility,whichField) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanlevelfield
+---@param level integer
+---@return boolean
+function BlzGetAbilityBooleanLevelField(whichAbility,whichField,level) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerlevelfield
+---@param level integer
+---@return integer
+function BlzGetAbilityIntegerLevelField(whichAbility,whichField,level) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityreallevelfield
+---@param level integer
+---@return number
+function BlzGetAbilityRealLevelField(whichAbility,whichField,level) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringlevelfield
+---@param level integer
+---@return string
+function BlzGetAbilityStringLevelField(whichAbility,whichField,level) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanlevelarrayfield
+---@param level integer
+---@param index integer
+---@return boolean
+function BlzGetAbilityBooleanLevelArrayField(whichAbility,whichField,level,index) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerlevelarrayfield
+---@param level integer
+---@param index integer
+---@return integer
+function BlzGetAbilityIntegerLevelArrayField(whichAbility,whichField,level,index) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityreallevelarrayfield
+---@param level integer
+---@param index integer
+---@return number
+function BlzGetAbilityRealLevelArrayField(whichAbility,whichField,level,index) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringlevelarrayfield
+---@param level integer
+---@param index integer
+---@return string
+function BlzGetAbilityStringLevelArrayField(whichAbility,whichField,level,index) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanfield
+---@param value boolean
+---@return boolean
+function BlzSetAbilityBooleanField(whichAbility,whichField,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerfield
+---@param value integer
+---@return boolean
+function BlzSetAbilityIntegerField(whichAbility,whichField,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityrealfield
+---@param value number
+---@return boolean
+function BlzSetAbilityRealField(whichAbility,whichField,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringfield
+---@param value string
+---@return boolean
+function BlzSetAbilityStringField(whichAbility,whichField,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanlevelfield
+---@param level integer
+---@param value boolean
+---@return boolean
+function BlzSetAbilityBooleanLevelField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerlevelfield
+---@param level integer
+---@param value integer
+---@return boolean
+function BlzSetAbilityIntegerLevelField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityreallevelfield
+---@param level integer
+---@param value number
+---@return boolean
+function BlzSetAbilityRealLevelField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringlevelfield
+---@param level integer
+---@param value string
+---@return boolean
+function BlzSetAbilityStringLevelField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanlevelarrayfield
+---@param level integer
+---@param index integer
+---@param value boolean
+---@return boolean
+function BlzSetAbilityBooleanLevelArrayField(whichAbility,whichField,level,index,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerlevelarrayfield
+---@param level integer
+---@param index integer
+---@param value integer
+---@return boolean
+function BlzSetAbilityIntegerLevelArrayField(whichAbility,whichField,level,index,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityreallevelarrayfield
+---@param level integer
+---@param index integer
+---@param value number
+---@return boolean
+function BlzSetAbilityRealLevelArrayField(whichAbility,whichField,level,index,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringlevelarrayfield
+---@param level integer
+---@param index integer
+---@param value string
+---@return boolean
+function BlzSetAbilityStringLevelArrayField(whichAbility,whichField,level,index,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanlevelarrayfield
+---@param level integer
+---@param value boolean
+---@return boolean
+function BlzAddAbilityBooleanLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerlevelarrayfield
+---@param level integer
+---@param value integer
+---@return boolean
+function BlzAddAbilityIntegerLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityreallevelarrayfield
+---@param level integer
+---@param value number
+---@return boolean
+function BlzAddAbilityRealLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringlevelarrayfield
+---@param level integer
+---@param value string
+---@return boolean
+function BlzAddAbilityStringLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitybooleanlevelarrayfield
+---@param level integer
+---@param value boolean
+---@return boolean
+function BlzRemoveAbilityBooleanLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityintegerlevelarrayfield
+---@param level integer
+---@param value integer
+---@return boolean
+function BlzRemoveAbilityIntegerLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilityreallevelarrayfield
+---@param level integer
+---@param value number
+---@return boolean
+function BlzRemoveAbilityRealLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichAbility wc3_ability
+---@param whichField wc3_abilitystringlevelarrayfield
+---@param level integer
+---@param value string
+---@return boolean
+function BlzRemoveAbilityStringLevelArrayField(whichAbility,whichField,level,value) end
+---@param whichItem wc3_item
+---@param index integer
+---@return wc3_ability
+function BlzGetItemAbilityByIndex(whichItem,index) end
+---@param whichItem wc3_item
+---@param abilCode integer
+---@return wc3_ability
+function BlzGetItemAbility(whichItem,abilCode) end
+---@param whichItem wc3_item
+---@param abilCode integer
+---@return boolean
+function BlzItemAddAbility(whichItem,abilCode) end
+---@param whichItem wc3_item
+---@param whichField wc3_itembooleanfield
+---@return boolean
+function BlzGetItemBooleanField(whichItem,whichField) end
+---@param whichItem wc3_item
+---@param whichField wc3_itemintegerfield
+---@return integer
+function BlzGetItemIntegerField(whichItem,whichField) end
+---@param whichItem wc3_item
+---@param whichField wc3_itemrealfield
+---@return number
+function BlzGetItemRealField(whichItem,whichField) end
+---@param whichItem wc3_item
+---@param whichField wc3_itemstringfield
+---@return string
+function BlzGetItemStringField(whichItem,whichField) end
+---@param whichItem wc3_item
+---@param whichField wc3_itembooleanfield
+---@param value boolean
+---@return boolean
+function BlzSetItemBooleanField(whichItem,whichField,value) end
+---@param whichItem wc3_item
+---@param whichField wc3_itemintegerfield
+---@param value integer
+---@return boolean
+function BlzSetItemIntegerField(whichItem,whichField,value) end
+---@param whichItem wc3_item
+---@param whichField wc3_itemrealfield
+---@param value number
+---@return boolean
+function BlzSetItemRealField(whichItem,whichField,value) end
+---@param whichItem wc3_item
+---@param whichField wc3_itemstringfield
+---@param value string
+---@return boolean
+function BlzSetItemStringField(whichItem,whichField,value) end
+---@param whichItem wc3_item
+---@param abilCode integer
+---@return boolean
+function BlzItemRemoveAbility(whichItem,abilCode) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitbooleanfield
+---@return boolean
+function BlzGetUnitBooleanField(whichUnit,whichField) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitintegerfield
+---@return integer
+function BlzGetUnitIntegerField(whichUnit,whichField) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitrealfield
+---@return number
+function BlzGetUnitRealField(whichUnit,whichField) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitstringfield
+---@return string
+function BlzGetUnitStringField(whichUnit,whichField) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitbooleanfield
+---@param value boolean
+---@return boolean
+function BlzSetUnitBooleanField(whichUnit,whichField,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitintegerfield
+---@param value integer
+---@return boolean
+function BlzSetUnitIntegerField(whichUnit,whichField,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitrealfield
+---@param value number
+---@return boolean
+function BlzSetUnitRealField(whichUnit,whichField,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitstringfield
+---@param value string
+---@return boolean
+function BlzSetUnitStringField(whichUnit,whichField,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponbooleanfield
+---@param index integer
+---@return boolean
+function BlzGetUnitWeaponBooleanField(whichUnit,whichField,index) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponintegerfield
+---@param index integer
+---@return integer
+function BlzGetUnitWeaponIntegerField(whichUnit,whichField,index) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponrealfield
+---@param index integer
+---@return number
+function BlzGetUnitWeaponRealField(whichUnit,whichField,index) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponstringfield
+---@param index integer
+---@return string
+function BlzGetUnitWeaponStringField(whichUnit,whichField,index) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponbooleanfield
+---@param index integer
+---@param value boolean
+---@return boolean
+function BlzSetUnitWeaponBooleanField(whichUnit,whichField,index,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponintegerfield
+---@param index integer
+---@param value integer
+---@return boolean
+function BlzSetUnitWeaponIntegerField(whichUnit,whichField,index,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponrealfield
+---@param index integer
+---@param value number
+---@return boolean
+function BlzSetUnitWeaponRealField(whichUnit,whichField,index,value) end
+---@param whichUnit wc3_unit
+---@param whichField wc3_unitweaponstringfield
+---@param index integer
+---@param value string
+---@return boolean
+function BlzSetUnitWeaponStringField(whichUnit,whichField,index,value) end

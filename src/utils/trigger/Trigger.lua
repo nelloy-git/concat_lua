@@ -16,7 +16,7 @@ local Trigger_meta = {
     __gc = Trigger.destroy
 }
 
----wc3_Trigger -> Trigger
+---wc3_trigger -> Trigger
 local TriggerDB = DataBase.new('userdata', type(Trigger))
 
 ---@param self Trigger
@@ -69,7 +69,7 @@ function Trigger:destroy()
     self.__wc3_trigger = nil
 end
 
----@return wc3_Trigger
+---@return wc3_trigger
 function Trigger:getObj()
     return self.__wc3_trigger
 end
@@ -127,21 +127,21 @@ function Trigger:addEvent_Game(event)
 end
 
 ---@param event TriggerPlayerEvent
----@param wc3_player wc3_Player
+---@param wc3_player wc3_player
 function Trigger:addEvent_Player(event, wc3_player)
     TriggerEvent.Player[event](self.__wc3_trigger, wc3_player)
     table.insert(self.__events, 1, "Player_"..event)
 end
 
 ---@param event TriggerUnitEvent
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 function Trigger:addEvent_Unit(event, wc3_unit)
     TriggerEvent.Unit[event](self.__wc3_trigger, wc3_unit)
     table.insert(self.__events, 1, "Unit_"..event)
 end
 
 ---@param event TriggerPlayerUnitEvent
----@param wc3_player wc3_Player
+---@param wc3_player wc3_player
 function Trigger:addEvent_PlayerUnit(event, wc3_player)
     TriggerEvent.PlayerUnit[event](self.__wc3_trigger, wc3_player)
     table.insert(self.__events, 1, "PlayerUnit_"..event)

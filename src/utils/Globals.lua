@@ -3,14 +3,7 @@ local Settings = require('utils.Settings')
 
 local Globals = {}
 
----@alias wc3_Unit userdata
----@alias wc3_Destructable userdata
----@alias wc3_Item userdata
----@alias wc3_Player userdata
----@alias wc3_Trigger userdata
-
 local initialized = false
-
 compiletime(function()
     local requirements = {}
     if Settings.EnabledEvents.Unit then table.insert(requirements, require('utils.trigger.events.UnitEvents')) end

@@ -18,7 +18,7 @@ local Unit_meta = {
 --setmetatable(s, {__type = 'a'})
 --print(type(s))
 
----wc3_Unit -> Unit
+---wc3_unit -> Unit
 local UnitDB = DataBase.new('userdata', type(Unit))
 
 ---@param self Unit

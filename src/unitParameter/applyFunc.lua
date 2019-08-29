@@ -50,7 +50,7 @@ local book_id = compiletime(function()
     return ID(id)
 end)
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.attack(wc3_unit, val)
@@ -63,7 +63,7 @@ function UnitApplyParameter.attack(wc3_unit, val)
     BlzSetUnitDiceSides(wc3_unit, math.floor(dice_sides + 1), 0)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.attackSpeed(wc3_unit, val)
@@ -71,14 +71,14 @@ function UnitApplyParameter.attackSpeed(wc3_unit, val)
     BlzSetUnitAttackCooldown(wc3_unit, val, 1)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.armor(wc3_unit, val)
     BlzSetUnitArmor(wc3_unit, math.floor(val))
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.spellPower(wc3_unit, val)
@@ -86,14 +86,14 @@ function UnitApplyParameter.spellPower(wc3_unit, val)
 end
 
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.castSpeed(wc3_unit, val)
     -- TODO
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.resistance(wc3_unit, val)
@@ -105,42 +105,42 @@ function UnitApplyParameter.resistance(wc3_unit, val)
     BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_DAMAGE_REDUCTION_ISR2, 1, val)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.cooldown(wc3_unit, val)
     -- TODO
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.health(wc3_unit, val)
     BlzSetUnitMaxHP(wc3_unit, math.floor(val))
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.regeneration(wc3_unit, val)
     BlzSetUnitRealField(wc3_unit, UNIT_RF_HIT_POINTS_REGENERATION_RATE, val)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.mana(wc3_unit, val)
     BlzSetUnitMaxMana(wc3_unit, math.floor(val))
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.recovery(wc3_unit, val)
     BlzSetUnitRealField(wc3_unit, UNIT_RF_MANA_REGENERATION, val)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.critChance(wc3_unit, val)
@@ -152,7 +152,7 @@ function UnitApplyParameter.critChance(wc3_unit, val)
     BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE, 1, val)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.critPower(wc3_unit, val)
@@ -164,7 +164,7 @@ function UnitApplyParameter.critPower(wc3_unit, val)
     BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2, 1, val)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.dodgeChance(wc3_unit, val)
@@ -177,21 +177,21 @@ function UnitApplyParameter.dodgeChance(wc3_unit, val)
     BlzSetAbilityRealLevelField(unit_ability, ABILITY_RLF_CHANCE_TO_EVADE_OCR4, 1, val)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.strength(wc3_unit, val)
     SetHeroStr(wc3_unit, math.floor(val), true)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.agility(wc3_unit, val)
     SetHeroAgi(wc3_unit, math.floor(val), true)
 end
 
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param val number
 ---@return nil
 function UnitApplyParameter.intelligence(wc3_unit, val)

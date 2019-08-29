@@ -5,7 +5,7 @@ local UnitParameter_meta = {
 }
 
 ---Create new parameter for unit.
----@param wc3_unit wc3_Unit
+---@param wc3_unit wc3_unit
 ---@param base number
 ---@param apply_param_func function
 ---@param math_func function

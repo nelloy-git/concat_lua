@@ -24,7 +24,7 @@ function AbilityEvent.init()
     UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(AbilityEvent.issuedOrder)
 end
 
----@return wc3_Unit|wc3_Item|wc3_Destructable|nil
+---@return wc3_unit|wc3_item|wc3_destructable|nil
 function AbilityEvent.getSpellTarget()
     local target = GetSpellTargetUnit()
     if not target then target = GetSpellTargetItem() end
@@ -93,7 +93,7 @@ function AbilityEvent.issuedOrder()
     end
 end
 
----@param unit wc3_Unit
+---@param unit wc3_unit
 function AbilityEvent.unitPause(unit)
 end
 

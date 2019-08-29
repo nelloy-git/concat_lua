@@ -113,7 +113,7 @@ end
 ---Function changes ability tooltip for player. (nil for all players)
 ---@param tooltip string
 ---@param lvl integer
----@param wc3_player wc3_Player
+---@param wc3_player wc3_player
 function Ability:setTooltip(tooltip, lvl, wc3_player)
     if wc3_player == nil then
         BlzSetAbilityTooltip(self.__id, tooltip, lvl)
@@ -125,7 +125,7 @@ end
 ---Function changes ability extended tooltip for player. (nil for all players)
 ---@param ext_tooltip string
 ---@param lvl integer
----@param wc3_player wc3_Player
+---@param wc3_player wc3_player
 function Ability:setExtendedTooltip(ext_tooltip, lvl, wc3_player)
     if wc3_player == nil then
         BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
@@ -136,7 +136,7 @@ end
 
 ---Function changes ability icon for player. (nil for all players)
 ---@param icon_path string
----@param wc3_player wc3_Player
+---@param wc3_player wc3_player
 function Ability:setIcon(icon_path, wc3_player)
     if wc3_player == nil then
         BlzSetAbilityIcon(self.__id, icon_path)
@@ -148,7 +148,7 @@ end
 ---Function moves ability button to position. (nil for all players)
 ---@param x integer
 ---@param y integer
----@param wc3_player wc3_Player
+---@param wc3_player wc3_player
 function Ability:setPosition(x, y, wc3_player)
     if wc3_player == nil then
         BlzSetAbilityPosX(self.__id, x)

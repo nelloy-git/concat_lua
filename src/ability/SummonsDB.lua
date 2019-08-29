@@ -4,8 +4,8 @@ local SummonDB = {}
 local MastersDB = {}
 local SlavesDB = {}
 
----@param slave wc3_Unit
----@param master wc3_Unit
+---@param slave wc3_unit
+---@param master wc3_unit
 function SummonDB.addSlave(slave, master)
     SlavesDB[slave] = master
     if not MastersDB[master] then
@@ -14,7 +14,7 @@ function SummonDB.addSlave(slave, master)
     table.insert(MastersDB[master], 1, slave)
 end
 
----@param slave wc3_Unit
+---@param slave wc3_unit
 ---@return boolean
 function SummonDB.rmSlave(slave)
     local master = SlavesDB[slave]
@@ -45,14 +45,14 @@ function SummonDB.rmSlave(slave)
     return false
 end
 
----@param slave wc3_Unit
----@return wc3_Unit
+---@param slave wc3_unit
+---@return wc3_unit
 function SummonDB.getMaster(slave)
     return SlavesDB[slave]
 end
 
----@param master wc3_Unit
----@return wc3_Unit
+---@param master wc3_unit
+---@return wc3_unit
 function SummonDB.getSlaves(master)
     return MastersDB[master]
 end
