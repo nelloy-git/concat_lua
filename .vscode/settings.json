@@ -4115,5 +4115,6 @@
         "PATHING_FLAG_UNFLOATABLE",
         "PATHING_FLAG_UNAMPHIBIOUS",
         "PATHING_FLAG_UNITEMPLACABLE"
-    ]
+    ],
+    "Lua.workspace.maxPreload": 3000
 }

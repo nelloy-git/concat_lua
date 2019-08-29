@@ -93,7 +93,7 @@ function ID(id)
     return nil
 end
 
----@Converts integer id to string id.
+---Converts integer id to string id.
 ---@param id integer
 ---@return string
 function ID2str(id)

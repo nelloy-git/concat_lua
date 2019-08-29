@@ -30,17 +30,14 @@ function RunInitialization()
     Init.start()
 
     require('ability.warlord.summon')
-    --@type Timer
-    --glTimer = require('utils.globalTimer')
-    
-    --require('ability.warlord.settings')
-    --require('interface.frames.castBar')
-    
 
     ---@type Unit
     local Unit = require('unit.Unit')
     --Debug(Player(0))
+
     local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
+
     --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
     --Debug(u)
     --Debug(Player(0))
