@@ -1,16 +1,15 @@
 ---@class Vec3
-local Vec3 = {}
+local Vec3 = {
+    __type = "ClassVec3"
+}
 local Vec3_meta = {
+    __type = "Vec3",
     __index = Vec3,
+    __tostring = function(self) return string.format('Vec3[%.2f, %.2f, %.2f]', self.x, self.y, self.z) end
 }
 
----@param self Vec3
-function Vec3_meta.__tostring(self)
-    return string.format('[%.2f, %.2f, %.2f]', self.x, self.y, self.z)
-end
-
-local loc = nil
-function Vec3.init()
+local loc
+if not is_compiletime then
     loc = Location(0, 0)
 end
 

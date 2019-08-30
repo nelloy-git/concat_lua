@@ -123,7 +123,8 @@ end
 local function check_test()
     DestroyTimer(GetExpiredTimer())
     for i = 1, count do
-        if test_result[i] ~= i // 2 then Debug('Timer test failed') return nil end
+        a, b = modf(i/2)
+        if test_result[i] ~= a then Debug('Timer test failed') return nil end
     end
     test_timer:destroy()
     Debug("Timer test passed.")

@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SummonSpearman = {TooltipNormalExtended = "Summons invulnerale spirit warrior.", AreaofEffect = 150, Levels = 1, OrderId = "acidbomb", Name = "Summon spearman", Id = "AM#'", FollowThroughTime = 0, TargetType = "point", TooltipNormal = "Summon spearman", DisableOtherAbilities = false, ArtCaster = "", HotkeyNormal = "X", ArtSpecial = "", CastingTime = 0, Options = 3, CustomCastingTime = 3, ArtTarget = "", Cooldown = 0, CastRange = 500, ArtEffect = ""}, SpearmanUnit = {Name = "Spearman", HideHeroInterfaceIcon = true, HideHeroMinimapDisplay = true, SpeedBase = 1, NormalAbilities = "Avul,Aloc", CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroDeathMsg = true, Id = "HM#$"}}
+    local WarlordSettings = {SpearmanUnit = {HideHeroInterfaceIcon = true, NormalAbilities = "Avul,Aloc", Name = "Spearman", SpeedBase = 1, HideHeroMinimapDisplay = true, HideHeroDeathMsg = true, Id = "HM#$", CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx"}, SummonSpearman = {ArtEffect = "", ArtCaster = "", DisableOtherAbilities = false, AreaofEffect = 150, FollowThroughTime = 0, TooltipNormal = "Summon spearman", ArtSpecial = "", ArtTarget = "", Levels = 1, HotkeyNormal = "X", Options = 3, CastingTime = 0, Id = "AM#'", TooltipNormalExtended = "Summons invulnerale spirit warrior.", Cooldown = 0, CustomCastingTime = 3, TargetType = "point", Name = "Summon spearman", CastRange = 500, OrderId = "acidbomb"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -205,7 +205,7 @@ end
 __require_data.module["ability.Ability"] = function()
     require("ability.AbilityEvent")
     local AbilityDB = require("ability.AbilityDB")
-    local Ability = {}
+    local Ability = {__type = "Ability"}
     local Ability_meta = {__index = Ability}
     function Ability_meta.__tostring(self)
       local str = string.format("Ability %s (%s) with callbacks: ", self:getName(), ID2str(self:getId()))
@@ -648,15 +648,15 @@ end
 __require_data.module["unit.Unit"] = function()
     local ParameterContainer = require("unitParameter.UnitParameterContainer")
     local DataBase = require("utils.DataBase")
-    local Unit = {__type = "Unit"}
-    local Unit_meta = {__index = Unit, __gc = Unit.destroy}
+    local Unit = {__type = "ClassUnit"}
+    local Unit_meta = {__type = "Unit", __index = Unit, __gc = Unit.destroy}
     local UnitDB = DataBase.new("userdata", type(Unit))
     function Unit_meta.__tostring(self)
       return string.format("Unit %s (%s) at [%.2f, %.2f, %.2f]", self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
     end
     function Unit.new(wc3_player, id, x, y, face, is_dead)
       id = ID(id)
-      local wc3_unit = nil
+      local wc3_unit
       if (is_dead) then
         wc3_unit = CreateCorpse(wc3_player, id, x, y, face)
       else
@@ -1074,7 +1074,8 @@ __require_data.module["utils.timer.Timer"] = function()
     local function check_test()
       DestroyTimer(GetExpiredTimer())
       for i = 1, count do
-        if (test_result[i] ~= (i//2)) then
+        a, b = modf((i/2))
+        if (test_result[i] ~= a) then
           Debug("Timer test failed")
           return nil
         end
@@ -2055,10 +2056,14 @@ __require_data.module["utils.Globals"] = function()
       if (lua_type ~= "table") then
         return lua_type
       end
-      if (val.__type) then
+      local meta = getmetatable(val)
+      if (meta and meta.__type) then
+        return meta.__type
+      elseif (not meta and val.__type) then
         return val.__type
       end
-      return "table"
+
+      return lua_type
     end
     return Globals
 end
@@ -2120,8 +2125,8 @@ end
     require("ability.warlord.summon")
     local Unit = require("unit.Unit")
     local u = Unit.new(Player(0), "hfoo", 0, 0, 0)
+    local u2 = Unit.new(Player(1), "hfoo", 0, 0, 0)
     local summon_abil = require("ability.warlord.summon")
-    Debug(type(summon_abil))
     u:addAbility(summon_abil:getId())
   end
   function InitCustomPlayerSlots()

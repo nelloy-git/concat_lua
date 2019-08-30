@@ -3,75 +3,70 @@ local ParameterContainer = require('unitParameter.UnitParameterContainer')
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 
----@class UnitObject : userdata
-
 ---@class Unit
 local Unit = {
-    __type = 'Unit'
+    __type = 'ClassUnit',
+    __db = DataBase.new('userdata', 'Unit')
 }
+
 local Unit_meta = {
+    __type = 'Unit',
     __index = Unit,
+    __tostring = function(self)
+        return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]', self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
+    end,
     __gc = Unit.destroy
 }
 
---local s = 'aaa'
---setmetatable(s, {__type = 'a'})
---print(type(s))
-
----wc3_unit -> Unit
-local UnitDB = DataBase.new('userdata', type(Unit))
-
----@param self Unit
----@return string
-function Unit_meta.__tostring(self)
-    return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]',
-                         self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
-end
-
----@param wc3_player userdata
+---@param player player
 ---@param id string | integer
 ---@param x number
 ---@param y number
 ---@param face number
 ---@return Unit
-function Unit.new(wc3_player, id, x, y, face, is_dead)
+function Unit.new(player, id, x, y, face, is_dead)
     id = ID(id)
-    local wc3_unit = nil
+    local unit_obj
     if is_dead then
-        wc3_unit = CreateCorpse(wc3_player, id, x, y, face)
+        unit_obj = CreateCorpse(player, id, x, y, face)
     else
-        wc3_unit = CreateUnit(wc3_player, id, x, y, face)
+        unit_obj = CreateUnit(player, id, x, y, face)
     end
     ---@type Unit
     local unit = {
         __id = id,
-        __wc3_unit = wc3_unit
+        __unit_obj = unit_obj
     }
     setmetatable(unit, Unit_meta)
-    UnitDB:add(unit.__wc3_unit, unit)
+    Unit.__db:add(unit.__unit_obj, unit)
 
     unit:initCustomData()
 
     return unit
 end
 
+---@param unit unit
+function Unit.get(unit)
+    Unit.__db:get(unit)
+end
+
 function Unit:destroy()
     self:destroyCustomData()
 
-    UnitDB:rm(self.__wc3_unit)
-    RemoveUnit(self.__wc3_unit)
-    self.__wc3_unit = nil
+    Unit.__db:rm(self.__unit_obj)
+    RemoveUnit(self.__unit_obj)
+    self.__unit_obj = nil
 end
 
----@return UnitObject
+---@return unit
 function Unit:getObj()
-    return self.__wc3_unit
+    return self.__unit_obj
 end
 
 ---Initialize unit custom data.
 function Unit:initCustomData()
     ---@type UnitParameterContainer
-    self.parameter = runFuncInDebug(ParameterContainer.new, self.__wc3_unit)
+    self.parameter = runFuncInDebug(ParameterContainer.new, self.__unit_obj)
 end
 
 ---Destroy unit custom data.
@@ -85,7 +80,7 @@ end
 
 ---@return string
 function Unit:getName()
-    return GetUnitName(self.__wc3_unit)
+    return GetUnitName(self.__unit_obj)
 end
 
 ---Function sets unit color. Colors should be in range [0 : 1].
@@ -98,12 +93,12 @@ function Unit:setVertexColor(red, green, blue, alpha)
     green = math.floor(255 * torange(green, 0, 1))
     blue = math.floor(255 * torange(blue, 0, 1))
     alpha = math.floor(255 * torange(alpha, 0, 1))
-    SetUnitVertexColor(self.__wc3_unit, red, green, blue, alpha)
+    SetUnitVertexColor(self.__unit_obj, red, green, blue, alpha)
 end
 
 ---@return integer
 function Unit:getOwningPlayer()
-    return GetOwningPlayer(self.__wc3_unit)
+    return GetOwningPlayer(self.__unit_obj)
 end
 
 ---@param pos Vec2
@@ -121,12 +116,12 @@ end
 
 ---@param x number
 function Unit:setX(x)
-    SetUnitX(self.__wc3_unit, x)
+    SetUnitX(self.__unit_obj, x)
 end
 
 ---@param y number
 function Unit:setY(y)
-    SetUnitY(self.__wc3_unit, y)
+    SetUnitY(self.__unit_obj, y)
 end
 
 ---@param z number
@@ -146,12 +141,12 @@ end
 
 ---@return number
 function Unit:getX()
-    return GetUnitX(self.__wc3_unit)
+    return GetUnitX(self.__unit_obj)
 end
 
 ---@return number
 function Unit:getY()
-    return GetUnitY(self.__wc3_unit)
+    return GetUnitY(self.__unit_obj)
 end
 
 ---@return number
@@ -161,26 +156,26 @@ end
 
 ---@return number
 function Unit:getFlyHeight()
-    return GetUnitFlyHeight(self.__wc3_unit)
+    return GetUnitFlyHeight(self.__unit_obj)
 end
 
 ---@return number
 function Unit:setFlyHeigth(height)
-    return SetUnitFlyHeight(self.__wc3_unit, height)
+    return SetUnitFlyHeight(self.__unit_obj, height)
 end
 
 ---@return number
 function Unit:getDefaultsFlyHeight()
-    return GetUnitDefaultFlyHeight(self.__wc3_unit)
+    return GetUnitDefaultFlyHeight(self.__unit_obj)
 end
 
 ---@param angle number
 ---@param time number|nil
 function Unit:setFacing(angle, time)
     if time == nil or time <= 0 then
-        SetUnitFacing(self.__wc3_unit, angle)
+        SetUnitFacing(self.__unit_obj, angle)
     else
-        SetUnitFacingTimed(self.__wc3_unit, angle, time)
+        SetUnitFacingTimed(self.__unit_obj, angle, time)
     end
 end
 
@@ -194,68 +189,68 @@ end
 
 ---@return number
 function Unit:getFacing()
-    return GetUnitFacing(self.__wc3_unit)
+    return GetUnitFacing(self.__unit_obj)
 end
 
 ---@return number
 function Unit:getMoveSpeed()
-    return GetUnitMoveSpeed(self.__wc3_unit)
+    return GetUnitMoveSpeed(self.__unit_obj)
 end
 
 ---@param speed number
 function Unit:setMoveSpeed(speed)
-    SetUnitMoveSpeed(self.__wc3_unit, speed)
+    SetUnitMoveSpeed(self.__unit_obj, speed)
 end
 
 ---@return number
 function Unit:getTurnSpeed()
-    return GetUnitTurnSpeed(self.__wc3_unit)
+    return GetUnitTurnSpeed(self.__unit_obj)
 end
 
 ---@param speed number
 function Unit:setTurnSpeed(speed)
-    SetUnitTurnSpeed(self.__wc3_unit, speed)
+    SetUnitTurnSpeed(self.__unit_obj, speed)
 end
 
 ---@return number
 function Unit:getDefaultTurnSpeed()
-    return GetUnitDefaultTurnSpeed(self.__wc3_unit)
+    return GetUnitDefaultTurnSpeed(self.__unit_obj)
 end
 
 ---@param ability_id integer
 function Unit:addAbility(ability_id)
-    UnitAddAbility(self.__wc3_unit, ability_id)
+    UnitAddAbility(self.__unit_obj, ability_id)
 end
 
 ---@param ability_id integer
 function Unit:removeAbility(ability_id)
-    UnitRemoveAbility(self.__wc3_unit, ability_id)
+    UnitRemoveAbility(self.__unit_obj, ability_id)
 end
 
 ---@param ability_id integer
 ---@return integer
 function Unit:getAbilityLevel(ability_id)
-    return GetUnitAbilityLevel(self.__wc3_unit, ability_id)
+    return GetUnitAbilityLevel(self.__unit_obj, ability_id)
 end
 
 ---@param ability_id integer
 function Unit:setAbilityLevel(ability_id)
-    SetUnitAbilityLevel(self.__wc3_unit, ability_id)
+    SetUnitAbilityLevel(self.__unit_obj, ability_id)
 end
 
 ---@param flag boolean
 function Unit:setInvulnerable(flag)
-    SetUnitInvulnerable(self.__wc3_unit, flag)
+    SetUnitInvulnerable(self.__unit_obj, flag)
 end
 
 ---@param time number
 function Unit:applyTimedLife(time)
-    UnitApplyTimedLife(self.__wc3_unit, 0, time)
+    UnitApplyTimedLife(self.__unit_obj, 0, time)
 end
 
 ---@param order_id integer
 function Unit:issueImmediateOrderById(order_id)
-    IssueImmediateOrderById(self.__wc3_unit, order_id)
+    IssueImmediateOrderById(self.__unit_obj, order_id)
 end
 
 function Unit:orderStop()
@@ -266,103 +261,169 @@ end
 ---@param x number
 ---@param y number
 function Unit:issuePointOrderById(order_id, x, y)
-    IssuePointOrderById(self.__wc3_unit, order_id, x, y)
+    IssuePointOrderById(self.__unit_obj, order_id, x, y)
 end
 
 ---@param speed number
 function Unit:setMoveSpeed(speed)
-    SetUnitMoveSpeed(self.__wc3_unit, speed)
+    SetUnitMoveSpeed(self.__unit_obj, speed)
 end
 
 ---@param speed number
 function Unit:setTurnSpeed(speed)
-    SetUnitTurnSpeed(self.__wc3_unit, speed)
+    SetUnitTurnSpeed(self.__unit_obj, speed)
 end
 
 ---@param animation string
 function Unit:playAnimation(animation)
-    SetUnitAnimation(self.__wc3_unit, animation)
+    SetUnitAnimation(self.__unit_obj, animation)
 end
 
 ---@param scale number
 function Unit:setAnimationSpeed(scale)
-    SetUnitTimeScale(self.__wc3_unit, scale)
+    SetUnitTimeScale(self.__unit_obj, scale)
 end
 
 function Unit:pause()
-    PauseUnit(self.__wc3_unit, true)
+    PauseUnit(self.__unit_obj, true)
 end
 
 function Unit:unpause()
-    PauseUnit(self.__wc3_unit, false)
+    PauseUnit(self.__unit_obj, false)
 end
 
 ---@return Unit
-function Unit.get(wc3_unit) return UnitDB:get(wc3_unit) end
+function Unit.get(wc3_unit)
+    return UnitDB:get(wc3_unit)
+end
 ---@return Unit
-function Unit.GetLevelingUnit() return UnitDB:get(GetLevelingUnit()) end
+function Unit.GetLevelingUnit()
+    return UnitDB:get(GetLevelingUnit())
+end
 ---@return Unit
-function Unit.GetLearningUnit() return UnitDB:get(GetLearningUnit()) end
+function Unit.GetLearningUnit()
+    return UnitDB:get(GetLearningUnit())
+end
 ---@return Unit
-function Unit.GetRevivableUnit() return UnitDB:get(GetRevivableUnit()) end
+function Unit.GetRevivableUnit()
+    return UnitDB:get(GetRevivableUnit())
+end
 ---@return Unit
-function Unit.GetRevivingUnit() return UnitDB:get(GetRevivingUnit()) end
+function Unit.GetRevivingUnit()
+    return UnitDB:get(GetRevivingUnit())
+end
 ---@return Unit
-function Unit.GetAttacker() return UnitDB:get(GetAttacker()) end
+function Unit.GetAttacker()
+    return UnitDB:get(GetAttacker())
+end
 ---@return Unit
-function Unit.GetRescuer() return UnitDB:get(GetRescuer()) end
+function Unit.GetRescuer()
+    return UnitDB:get(GetRescuer())
+end
 ---@return Unit
-function Unit.GetDyingUnit() return UnitDB:get(GetDyingUnit()) end
+function Unit.GetDyingUnit()
+    return UnitDB:get(GetDyingUnit())
+end
 ---@return Unit
-function Unit.GetKillingUnit() return UnitDB:get(GetKillingUnit()) end
+function Unit.GetKillingUnit()
+    return UnitDB:get(GetKillingUnit())
+end
 ---@return Unit
-function Unit.GetDecayingUnit() return UnitDB:get(GetDecayingUnit()) end
+function Unit.GetDecayingUnit()
+    return UnitDB:get(GetDecayingUnit())
+end
 ---@return Unit
-function Unit.GetConstructingStructure() return UnitDB:get(GetConstructingStructure()) end
+function Unit.GetConstructingStructure()
+    return UnitDB:get(GetConstructingStructure())
+end
 ---@return Unit
-function Unit.GetCancelledStructure() return UnitDB:get(GetCancelledStructure()) end
+function Unit.GetCancelledStructure()
+    return UnitDB:get(GetCancelledStructure())
+end
 ---@return Unit
-function Unit.GetConstructedStructure() return UnitDB:get(GetConstructedStructure()) end
+function Unit.GetConstructedStructure()
+    return UnitDB:get(GetConstructedStructure())
+end
 ---@return Unit
-function Unit.GetResearchingUnit() return UnitDB:get(GetResearchingUnit()) end
+function Unit.GetResearchingUnit()
+    return UnitDB:get(GetResearchingUnit())
+end
 ---@return Unit
-function Unit.GetTrainedUnit() return UnitDB:get(GetTrainedUnit()) end
+function Unit.GetTrainedUnit()
+    return UnitDB:get(GetTrainedUnit())
+end
 ---@return Unit
-function Unit.GetDetectedUnit() return UnitDB:get(GetDetectedUnit()) end
+function Unit.GetDetectedUnit()
+    return UnitDB:get(GetDetectedUnit())
+end
 ---@return Unit
-function Unit.GetSummoningUnit() return UnitDB:get(GetSummoningUnit()) end
+function Unit.GetSummoningUnit()
+    return UnitDB:get(GetSummoningUnit())
+end
 ---@return Unit
-function Unit.GetSummonedUnit() return UnitDB:get(GetSummonedUnit()) end
+function Unit.GetSummonedUnit()
+    return UnitDB:get(GetSummonedUnit())
+end
 ---@return Unit
-function Unit.GetTransportUnit() return UnitDB:get(GetTransportUnit()) end
+function Unit.GetTransportUnit()
+    return UnitDB:get(GetTransportUnit())
+end
 ---@return Unit
-function Unit.GetLoadedUnit() return UnitDB:get(GetLoadedUnit()) end
+function Unit.GetLoadedUnit()
+    return UnitDB:get(GetLoadedUnit())
+end
 ---@return Unit
-function Unit.GetSellingUnit() return UnitDB:get(GetSellingUnit()) end
+function Unit.GetSellingUnit()
+    return UnitDB:get(GetSellingUnit())
+end
 ---@return Unit
-function Unit.GetSoldUnit() return UnitDB:get(GetSoldUnit()) end
+function Unit.GetSoldUnit()
+    return UnitDB:get(GetSoldUnit())
+end
 ---@return Unit
-function Unit.GetBuyingUnit() return UnitDB:get(GetBuyingUnit()) end
+function Unit.GetBuyingUnit()
+    return UnitDB:get(GetBuyingUnit())
+end
 ---@return Unit
-function Unit.GetChangingUnit() return UnitDB:get(GetChangingUnit()) end
+function Unit.GetChangingUnit()
+    return UnitDB:get(GetChangingUnit())
+end
 ---@return Unit
-function Unit.GetManipulatingUnit() return UnitDB:get(GetManipulatingUnit()) end
+function Unit.GetManipulatingUnit()
+    return UnitDB:get(GetManipulatingUnit())
+end
 ---@return Unit
-function Unit.GetOrderedUnit() return UnitDB:get(GetOrderedUnit()) end
+function Unit.GetOrderedUnit()
+    return UnitDB:get(GetOrderedUnit())
+end
 ---@return Unit
-function Unit.GetOrderTargetUnit() return UnitDB:get(GetOrderTargetUnit()) end
+function Unit.GetOrderTargetUnit()
+    return UnitDB:get(GetOrderTargetUnit())
+end
 ---@return Unit
-function Unit.GetSpellAbilityUnit() return UnitDB:get(GetSpellAbilityUnit()) end
+function Unit.GetSpellAbilityUnit()
+    return UnitDB:get(GetSpellAbilityUnit())
+end
 ---@return Unit
-function Unit.GetSpellTargetUnit() return UnitDB:get(GetSpellTargetUnit()) end
+function Unit.GetSpellTargetUnit()
+    return UnitDB:get(GetSpellTargetUnit())
+end
 ---@return Unit
-function Unit.GetTriggerUnit() return UnitDB:get(GetTriggerUnit()) end
+function Unit.GetTriggerUnit()
+    return UnitDB:get(GetTriggerUnit())
+end
 ---@return Unit
-function Unit.GetEventDamage() return UnitDB:get(GetEventDamage()) end
+function Unit.GetEventDamage()
+    return UnitDB:get(GetEventDamage())
+end
 ---@return Unit
-function Unit.GetEventDamageSource() return UnitDB:get(GetEventDamageSource()) end
+function Unit.GetEventDamageSource()
+    return UnitDB:get(GetEventDamageSource())
+end
 ---@return Unit
-function Unit.GetEventTargetUnit() return UnitDB:get(GetEventTargetUnit()) end
+function Unit.GetEventTargetUnit()
+    return UnitDB:get(GetEventTargetUnit())
+end
 --============================================================================
 -- Unit API
 --============================================================================

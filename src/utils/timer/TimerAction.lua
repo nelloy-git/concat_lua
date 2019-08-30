@@ -25,7 +25,6 @@ function TimerAction:getTime()
     return self.__time
 end
 
----@Run this action.
 function TimerAction:run()
     self.__callback(self.__data)
 end

@@ -222,15 +222,13 @@ function Effect:setAnimationTime(time)
     BlzSetSpecialEffectTime(self.effect_obj, time)
 end
 
----@alias EffectSubAnimation userdata @Uses warcraft constants starting with SUBANIM_TYPE_
-
----@param sub_anim EffectSubAnimation
+---@param sub_anim subanimtype
 ---@return nil
 function Effect:addSubAnimation(sub_anim)
     BlzSpecialEffectAddSubAnimation(self.effect_obj, sub_anim)
 end
 
----@param sub_anim EffectSubAnimation
+---@param sub_anim subanimtype
 ---@return nil
 function Effect:removeSubAnimation(sub_anim)
     BlzSpecialEffectRemoveSubAnimation(self.effect_obj, sub_anim)
@@ -241,9 +239,7 @@ function Effect:clearSubAnimations()
     BlzSpecialEffectClearSubAnimations(self.effect_obj)
 end
 
----@alias EffectAnimationType userdata @Uses warcraft constants starting with ANIM_TYPE_
-
----@param anim_type EffectAnimationType
+---@param anim_type animtype
 ---@param time_scale number
 ---@return nil
 function Effect:playAnimation(anim_type, time_scale)

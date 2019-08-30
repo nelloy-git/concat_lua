@@ -111,8 +111,13 @@ local original_type = _G.type
 function type(val)
     local lua_type = original_type(val)
     if lua_type ~= 'table' then return lua_type end
-    if val.__type then return val.__type end
-    return 'table'
+    local meta = getmetatable(val)
+    if meta and meta.__type then
+        return meta.__type
+    elseif not meta and val.__type then
+        return val.__type
+    end
+    return lua_type
 end
 
 return Globals
