@@ -1,23 +1,24 @@
----@type AbilityEvent
-require('ability.AbilityEvent')
----@type AbilityDB
-local AbilityDB = require('ability.AbilityDB')
+---@type DataBase
+local DataBase = require('utils.DataBase')
 
 ---@class Ability
 local Ability = {
-    __type = 'Ability'
+    __type = 'AbilityClass',
+    __db = DataBase.new('integer', 'Ability')
 }
 local Ability_meta = {
+    __type = 'Ability',
     __index = Ability
 }
 
 ---@param self Ability
 ---@return string
 function Ability_meta.__tostring(self)
-    local str = string.format('Ability %s (%s) with callbacks: ', self:getName(), ID2str(self:getId()))
+    local str = string.format('%s %s (%s) with callbacks: ',self.__type, self:getName(), ID2str(self:getId()))
     local callbacks = ''
     if self:getCallback("start") then callbacks = callbacks ..',start' end
     if self:getCallback("casting") then callbacks = callbacks ..',casting' end
+    if self:getCallback("cancel") then callbacks = callbacks ..',cancel' end
     if self:getCallback("interrupt") then callbacks = callbacks ..',interrupt' end
     if self:getCallback("finish") then callbacks = callbacks ..',finish' end
     callbacks = callbacks:sub(2)
@@ -37,13 +38,19 @@ function Ability.new(id)
         __casting_time_func = nil,
     }
     setmetatable(ability, Ability_meta)
-    AbilityDB.add(id, ability)
+    Ability.__db:add(id, ability)
     return ability
 end
 
 ---@return integer
 function Ability:getId()
     return self.__id
+end
+
+---@param id number
+---@return Ability
+function Ability.getAbility(id)
+    return Ability.__db:get(id)
 end
 
 ---@param callback AbilityCallback
@@ -71,7 +78,8 @@ function Ability:runCallback(callback_type, cast_data)
 end
 
 ---@alias AbilityFlag string
----| '"OrderInterrupt"'
+---| '"CanBeCanceled"'
+---| '"CancelWithAnyOrder"'
 
 ---@param flag boolean
 ---@param flag_name AbilityFlag
@@ -113,11 +121,11 @@ end
 ---Function changes ability tooltip for player. (nil for all players)
 ---@param tooltip string
 ---@param lvl integer
----@param wc3_player wc3_player
-function Ability:setTooltip(tooltip, lvl, wc3_player)
-    if wc3_player == nil then
+---@param player player
+function Ability:setTooltip(tooltip, lvl, player)
+    if player == nil then
         BlzSetAbilityTooltip(self.__id, tooltip, lvl)
-    elseif wc3_player == GetLocalPlayer() then
+    elseif player == GetLocalPlayer() then
         BlzSetAbilityTooltip(self.__id, tooltip, lvl)
     end
 end
@@ -125,22 +133,22 @@ end
 ---Function changes ability extended tooltip for player. (nil for all players)
 ---@param ext_tooltip string
 ---@param lvl integer
----@param wc3_player wc3_player
-function Ability:setExtendedTooltip(ext_tooltip, lvl, wc3_player)
-    if wc3_player == nil then
+---@param player player
+function Ability:setExtendedTooltip(ext_tooltip, lvl, player)
+    if player == nil then
         BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
-    elseif wc3_player == GetLocalPlayer() then
+    elseif player == GetLocalPlayer() then
         BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
     end
 end
 
 ---Function changes ability icon for player. (nil for all players)
 ---@param icon_path string
----@param wc3_player wc3_player
-function Ability:setIcon(icon_path, wc3_player)
-    if wc3_player == nil then
+---@param player player
+function Ability:setIcon(icon_path, player)
+    if player == nil then
         BlzSetAbilityIcon(self.__id, icon_path)
-    elseif wc3_player == GetLocalPlayer() then
+    elseif player == GetLocalPlayer() then
         BlzSetAbilityIcon(self.__id, icon_path)
     end
 end
@@ -148,12 +156,12 @@ end
 ---Function moves ability button to position. (nil for all players)
 ---@param x integer
 ---@param y integer
----@param wc3_player wc3_player
-function Ability:setPosition(x, y, wc3_player)
-    if wc3_player == nil then
+---@param player player
+function Ability:setPosition(x, y, player)
+    if player == nil then
         BlzSetAbilityPosX(self.__id, x)
         BlzSetAbilityPosY(self.__id, y)
-    elseif wc3_player == GetLocalPlayer() then
+    elseif player == GetLocalPlayer() then
         BlzSetAbilityPosX(self.__id, x)
         BlzSetAbilityPosY(self.__id, y)
     end

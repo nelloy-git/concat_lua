@@ -1,6 +1,9 @@
 ---@class Vec2
-local Vec2 = {}
+local Vec2 = {
+    __type = 'Vec2Class'
+}
 local Vec2_meta = {
+    __type = 'Vec2',
     __index = Vec2,
 }
 
@@ -20,6 +23,10 @@ function Vec2.new(x, y)
     }
     setmetatable(v, Vec2_meta)
     return v
+end
+
+function GetSpellTargetPos()
+    return Vec2.new(GetSpellTargetX(), GetSpellTargetY())
 end
 
 return Vec2

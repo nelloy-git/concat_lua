@@ -1,14 +1,19 @@
 ---@type TimerAction
 local TimerAction = require('utils.timer.TimerAction')
----@type TimerDB
-local TimerDB = require('utils.timer.TimerDB')
+---@type DataBase
+local DataBase = require('utils.DataBase')
 
 ---@class Timer
-local Timer = {}
+local Timer = {
+    __type = 'TimerClass'
+}
 local Timer_meta = {
+    __type = 'Timer',
     __index = Timer,
     __gc = Timer.destroy
 }
+
+local TimerDB = DataBase.new('userdata', type(Timer_meta))
 
 ---@param period number
 ---@return Timer
@@ -21,7 +26,7 @@ function Timer.new(period)
         __actions = {}
     }
     setmetatable(timer, Timer_meta)
-    TimerDB.add(timer.__timer_obj, timer)
+    TimerDB:add(timer.__timer_obj, timer)
     TimerStart(timer.__timer_obj, timer.__period, true, Timer.timeout)
 
     return timer
@@ -114,7 +119,7 @@ end
 
 local count = 10
 local test_result = {}
-local test_timer = nil
+local test_timer
 local function test(num)
     --Debug(num)
     table.insert(test_result, #test_result + 1, num)

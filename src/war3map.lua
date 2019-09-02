@@ -43,11 +43,8 @@ function RunInitialization()
     --Debug(Player(0))
 
     ---@type Ability
-    local summon_abil = require('ability.warlord.summon')
-    --Debug(type(summon_abil))
-    --local rush_abil = require('ability.warlord.rush')
-    u:addAbility(summon_abil:getId())
-    --u:addAbility(rush_abil)
+    local summon_ability = require('ability.warlord.summon')
+    u:addAbility(summon_ability:getId())
 end
 
 function InitCustomPlayerSlots()

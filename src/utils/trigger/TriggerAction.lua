@@ -5,7 +5,7 @@ local TriggerAction_meta = {
     __gc = TriggerAction.destroy
 }
 
----@param callback function
+---@param callback fun()
 ---@param data any
 ---@return TriggerAction
 function TriggerAction.new(callback, data)
@@ -27,7 +27,7 @@ function TriggerAction:run()
     self.__callback(self.__data)
 end
 
----@return function
+---@return fun()
 function TriggerAction:getCallback()
     return self.__callback
 end

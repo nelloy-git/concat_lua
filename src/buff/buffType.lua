@@ -9,7 +9,7 @@ local Buff = {}
 ---@return string, string
 function Buff.new(name, tooltip, icon, effect_path, attach_point)
     local id = {
-        ability = WeObjEdit.Utils.nextAbilId(),
+        ability = WeObjEdit.Utils.nextAbilityId(),
         buff = WeObjEdit.Utils.nextBuffId()
     }
     local objEdit = require('compiletime.objEdit.objEdit')

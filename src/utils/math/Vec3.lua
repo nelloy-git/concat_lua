@@ -1,11 +1,13 @@
 ---@class Vec3
 local Vec3 = {
-    __type = "ClassVec3"
+    __type = "Vec3Class"
 }
 local Vec3_meta = {
     __type = "Vec3",
     __index = Vec3,
-    __tostring = function(self) return string.format('Vec3[%.2f, %.2f, %.2f]', self.x, self.y, self.z) end
+    __tostring = function(self)
+                    return string.format('%s[%.2f, %.2f, %.2f]', self.__type, self.x, self.y, self.z)
+                 end
 }
 
 local loc

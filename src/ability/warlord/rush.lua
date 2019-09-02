@@ -14,7 +14,7 @@ local PlayerEvent = require('player.playerEvent')
 ---@param tooltip string
 ---@param hot_key string
 local function generateDummyAbility(name, tooltip, hot_key)
-    local id = WeObjEdit.Utils.nextAbilId()
+    local id = WeObjEdit.Utils.nextAbilityId()
     local order = WeObjEdit.Utils.nextOrderId()
 
     ---@type ChannelWeAbility
@@ -37,7 +37,7 @@ end
 ---@param cast_time number
 ---@param hot_key string
 local function generateAbility(range, cast_time, hot_key)
-    local id = WeObjEdit.Utils.nextAbilId()
+    local id = WeObjEdit.Utils.nextAbilityId()
     local order = WeObjEdit.Utils.nextOrderId()
 
     ---@type ChannelWeAbility

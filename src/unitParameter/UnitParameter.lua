@@ -5,19 +5,19 @@ local UnitParameter_meta = {
 }
 
 ---Create new parameter for unit.
----@param wc3_unit wc3_unit
+---@param unit unit
 ---@param base number
 ---@param apply_param_func function
 ---@param math_func function
 ---@param max_val number|nil
 ---@return UnitParameter
-function UnitParameter.new(wc3_unit, base, apply_param_func, math_func, max_val)
+function UnitParameter.new(unit, base, apply_param_func, math_func, max_val)
     ---@type UnitParameter
     local parameter = {
-        __wc3_unit = wc3_unit,
+        __wc3_unit = unit,
         __base = base,
         __bonus = 0,
-        __mult = 1,
+        __multiplicator = 1,
         __cap = max_val,
         __apply_param_func = apply_param_func,
         __math_func = math_func
@@ -27,26 +27,26 @@ function UnitParameter.new(wc3_unit, base, apply_param_func, math_func, max_val)
     return parameter
 end
 
----Recomend use in tests only. Function set parameter of unit.
+---Recommend use in tests only. Function set parameter of unit.
 ---@param base number
----@param mult number
+---@param multiplicator number
 ---@param bonus number
 ---@return nil
-function UnitParameter:set(base, mult, bonus)
+function UnitParameter:set(base, multiplicator, bonus)
     self.__base = base
-    self.__mult = mult
+    self.__multiplicator = multiplicator
     self.__bonus = bonus
     self:update()
 end
 
 ---Function adds parameter of unit
 ---@param base number
----@param mult number
+---@param multiplicator number
 ---@param bonus number
 ---@return nil
-function UnitParameter:addAll(base, mult, bonus)
+function UnitParameter:addAll(base, multiplicator, bonus)
     self.__base = self.__base + base
-    self.__mult = self.__mult + mult
+    self.__multiplicator = self.__multiplicator + multiplicator
     self.__bonus = self.__bonus + bonus
     self:update()
 end
@@ -67,15 +67,15 @@ end
 
 ---@param val number
 ---@return nil
-function UnitParameter:addMult(val)
-    self.__mult = self.__mult + val
+function UnitParameter:addMultiplicator(val)
+    self.__multiplicator = self.__multiplicator + val
     self:update()
 end
 
----Function returns base, mult, bonus and result values of parameter.
+---Function returns base, multiplicator, bonus and result values of parameter.
 ---@return number, number, number, number
 function UnitParameter:getAll()
-    return self.__base, self.__mult, self.__bonus, self.__math_func(self.__base, self.__mult, self.__bonus, self.__cap)
+    return self.__base, self.__multiplicator, self.__bonus, self.__math_func(self.__base, self.__multiplicator, self.__bonus, self.__cap)
 end
 
 ---@return number
@@ -89,8 +89,8 @@ function UnitParameter:getBonus()
 end
 
 ---@return number
-function UnitParameter:getMult()
-    return self.__mult
+function UnitParameter:getMultiplicator()
+    return self.__multiplicator
 end
 
 ---@return number
@@ -101,7 +101,7 @@ end
 ---Function updates parameter state.
 ---@return nil
 function UnitParameter:update()
-    self.__res = self.__math_func(self.__base, self.__mult, self.__bonus, self.__cap)
+    self.__res = self.__math_func(self.__base, self.__multiplicator, self.__bonus, self.__cap)
     self.__apply_param_func(self.__wc3_unit, self.__res)
 end
 

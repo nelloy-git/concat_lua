@@ -112,7 +112,7 @@ end
 function ChannelCompiletimeData:generate()
     local WeObjEdit = require('compiletime.objEdit.objEdit')
 
-    self["Id"] = WeObjEdit.Utils.nextAbilId()
+    self["Id"] = WeObjEdit.Utils.nextAbilityId()
     self["OrderId"] = WeObjEdit.Utils.nextOrderId()
 
     local abil = WeObjEdit.Ability.Channel.new(self["Id"])

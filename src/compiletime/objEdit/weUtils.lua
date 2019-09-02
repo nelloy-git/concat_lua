@@ -175,7 +175,7 @@ end
 
 local ABIL_ID = 'AM##'
 ---@return string
-function WeUtils.nextAbilId()
+function WeUtils.nextAbilityId()
     ABIL_ID = nextId(ABIL_ID)
     return ABIL_ID
 end
@@ -196,7 +196,7 @@ end
 
 local UPGR_ID = 'RM##'
 ---@return string
-function WeUtils.nextUpgrId()
+function WeUtils.nextUpgradeId()
     UPGR_ID = nextId(UPGR_ID)
     return UPGR_ID
 end

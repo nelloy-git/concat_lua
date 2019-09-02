@@ -1,33 +1,50 @@
+---@type DataBase
+local DataBase = require('utils.DataBase')
+
 ---@class SpellData
-local SpellData = {}
+local SpellData = {
+    __type = 'SpellDataClass',
+    __db = DataBase.new('userdata', 'SpellData')
+}
 local SpellData_meta = {
-    __index = SpellData
+    __type = 'SpellData',
+    __index = SpellData,
+    __gc = SpellData.destroy
 }
 
 ---@param ability Ability
----@param caster wc3_unit
----@param target wc3_unit|wc3_item|wc3_destructable|nil
----@param x number
----@param y number
+---@param caster unit
+---@param target unit|item|destructable|nil
+---@param target_pos Vec2
 ---@return SpellData
-function SpellData.new(ability, caster, target, x, y)
+function SpellData.new(ability, caster, target, target_pos)
     ---@type SpellData
     local data = {
         __ability = ability,
         __caster = caster,
         __target = target,
-        __x = x,
-        __y = y,
+        __target_pos = target_pos,
         __cur_time = 0,
         __cast_time = 0
     }
     setmetatable(data, SpellData_meta)
+    SpellData.__db:add(caster, data)
+
+    data.__cast_time = ability:getCastingTime(data)
+
     return data
 end
 
----@return Ability, wc3_unit, SpellTarget, number, number, number, number
-function SpellData:getAll()
-    return self.__ability, self.__caster, self.__target, self.__x, self.__y, self.__cur_time, self.__full_time
+function SpellData:destroy()
+    if SpellData.__db:get(self.__caster) == self then
+        SpellData.__db:remove(self.__caster)
+    end
+end
+
+---@param caster unit
+---@return SpellData
+function SpellData.get(caster)
+    return SpellData.__db:get(caster)
 end
 
 ---@param delta number
@@ -38,11 +55,6 @@ end
 ---@return boolean
 function SpellData:isFinished()
     return (self.__cur_time >= self.__cast_time)
-end
-
----@param time number
-function SpellData:setCastTime(time)
-    self.__cast_time = time
 end
 
 ---@return number
@@ -60,24 +72,19 @@ function SpellData:getAbility()
     return self.__ability
 end
 
----@return wc3_unit
+---@return unit
 function SpellData:getCaster()
     return self.__caster
 end
 
----@return wc3_unit|wc3_item|wc3_destructable|nil
+---@return unit|item|destructable|nil
 function SpellData:getTarget()
     return self.__target
 end
 
----@return number
-function SpellData:getX()
-    return self.__x
-end
-
----@return number
-function SpellData:getY()
-    return self.__y
+---@return Vec2
+function SpellData:getTargetPos()
+    return self.__target_pos
 end
 
 return SpellData

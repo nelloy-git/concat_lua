@@ -51,7 +51,7 @@ local TriggerEvent = {
 
 ---@alias TriggerPlayerUnitEvent string
 ---| '"Attacked"'
----| '"Resqued"'
+---| '"Rescued"'
 ---| '"Death"'
 ---| '"Decay"'
 ---| '"Death"'
@@ -71,14 +71,14 @@ local TriggerEvent = {
 ---| '"ResearchCancel"'
 ---| '"ResearchFinish"'
 ---| '"IssuedOrder"'
----| '"IssuedOrderPointTartet"'
+---| '"IssuedOrderPointTarget"'
 ---| '"IssuedOrderTarget"'
 ---| '"IssuedOrderUnitTarget"'
 ---| '"Level"'
 ---| '"Skill"'
 ---| '"Revivable"'
 ---| '"ReviveStart"'
----| '"ReviveCance"'
+---| '"ReviveCancel"'
 ---| '"ReviveFinish"'
 ---| '"Summon"'
 ---| '"DropItem"'
@@ -99,7 +99,7 @@ local TriggerEvent = {
 
 ---@alias TriggerAnyUnitEvent string
 ---| '"Attacked"'
----| '"Resqued"'
+---| '"Rescued"'
 ---| '"Death"'
 ---| '"Decay"'
 ---| '"Detect"'
@@ -126,7 +126,7 @@ local TriggerEvent = {
 ---| '"Skill"'
 ---| '"Revivable"'
 ---| '"ReviveStart"'
----| '"ReviveCance"'
+---| '"ReviveCancel"'
 ---| '"ReviveFinish"'
 ---| '"Summon"'
 ---| '"DropItem"'
@@ -158,7 +158,7 @@ local TriggerEvent = {
 ---| '"AcquiredTarget"'
 ---| '"TargetInRange"'
 ---| '"Attacked"'
----| '"Resqued"'
+---| '"Rescued"'
 ---| '"ConstructCancel"'
 ---| '"ConstructFinish"'
 ---| '"UpgradeStart"'
@@ -235,7 +235,7 @@ local TriggerEvent = {
     TriggerEvent.Player["KeyUp"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_UP) end
 
     TriggerEvent.PlayerUnit["Attacked"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ATTACKED) end
-    TriggerEvent.PlayerUnit["Resqued"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESCUED) end
+    TriggerEvent.PlayerUnit["Rescued"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESCUED) end
     TriggerEvent.PlayerUnit["Death"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DEATH) end
     TriggerEvent.PlayerUnit["Decay"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DECAY) end
     TriggerEvent.PlayerUnit["Death"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DETECTED) end
@@ -255,14 +255,14 @@ local TriggerEvent = {
     TriggerEvent.PlayerUnit["ResearchCancel"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_CANCEL) end
     TriggerEvent.PlayerUnit["ResearchFinish"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_FINISH) end
     TriggerEvent.PlayerUnit["IssuedOrder"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_ORDER) end
-    TriggerEvent.PlayerUnit["IssuedOrderPointTartet"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER) end
+    TriggerEvent.PlayerUnit["IssuedOrderPointTarget"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER) end
     TriggerEvent.PlayerUnit["IssuedOrderTarget"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER) end
     TriggerEvent.PlayerUnit["IssuedOrderUnitTarget"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER) end
     TriggerEvent.PlayerUnit["Level"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_LEVEL) end
     TriggerEvent.PlayerUnit["Skill"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_SKILL) end
     TriggerEvent.PlayerUnit["Revivable"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVABLE) end
     TriggerEvent.PlayerUnit["ReviveStart"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_START) end
-    TriggerEvent.PlayerUnit["ReviveCance"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_CANCEL) end
+    TriggerEvent.PlayerUnit["ReviveCancel"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_CANCEL) end
     TriggerEvent.PlayerUnit["ReviveFinish"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_FINISH) end
     TriggerEvent.PlayerUnit["Summon"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SUMMON) end
     TriggerEvent.PlayerUnit["DropItem"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DROP_ITEM) end
@@ -282,7 +282,7 @@ local TriggerEvent = {
     TriggerEvent.PlayerUnit["PawnItem"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_PAWN_ITEM) end
 
     TriggerEvent.AnyUnit["Attacked"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ATTACKED) end end
-    TriggerEvent.AnyUnit["Resqued"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESCUED) end end
+    TriggerEvent.AnyUnit["Rescued"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESCUED) end end
     TriggerEvent.AnyUnit["Death"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DEATH) end end
     TriggerEvent.AnyUnit["Decay"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DECAY) end end
     TriggerEvent.AnyUnit["Detect"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DETECTED) end end
@@ -309,7 +309,7 @@ local TriggerEvent = {
     TriggerEvent.AnyUnit["Skill"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_SKILL) end end
     TriggerEvent.AnyUnit["Revivable"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVABLE) end end
     TriggerEvent.AnyUnit["ReviveStart"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_START) end end
-    TriggerEvent.AnyUnit["ReviveCance"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_CANCEL) end end
+    TriggerEvent.AnyUnit["ReviveCancel"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_CANCEL) end end
     TriggerEvent.AnyUnit["ReviveFinish"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_FINISH) end end
     TriggerEvent.AnyUnit["Summon"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SUMMON) end end
     TriggerEvent.AnyUnit["DropItem"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DROP_ITEM) end end
@@ -340,7 +340,7 @@ local TriggerEvent = {
     TriggerEvent.Unit["AcquiredTarget"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ACQUIRED_TARGET) end
     TriggerEvent.Unit["TargetInRange"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TARGET_IN_RANGE) end
     TriggerEvent.Unit["Attacked"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ATTACKED) end
-    TriggerEvent.Unit["Resqued"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESCUED) end
+    TriggerEvent.Unit["Rescued"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESCUED) end
     TriggerEvent.Unit["ConstructCancel"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CONSTRUCT_CANCEL) end
     TriggerEvent.Unit["ConstructFinish"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CONSTRUCT_FINISH) end
     TriggerEvent.Unit["UpgradeStart"] = function(wc3_trigger, wc3_unit) TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_START) end
