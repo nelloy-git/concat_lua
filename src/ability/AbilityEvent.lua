@@ -125,6 +125,7 @@ function AbilityEvent.startTargetingAbility(caster, ability)
     UnitAddAbility(caster, ability:getId())
     ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
     ability:runCallback('startTargeting')
+    Debug("Targeting started")
 end
 
 function AbilityEvent.finishTargetingAbility(caster, ability)
@@ -132,6 +133,7 @@ function AbilityEvent.finishTargetingAbility(caster, ability)
     UnitRemoveAbility(caster, ability:getId())
     UnitAddAbility(caster, ability:getUI_Id())
     ability:runCallback('finishTargeting')
+    Debug("Targeting finished")
 end
 
 ---@return unit|item|destructable|nil

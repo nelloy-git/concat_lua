@@ -56,7 +56,7 @@ end)
 function UnitApplyParameter.attack(unit, value)
     local k = 1 - attack_dispersion
     local dmg = k * value
-    local dice_sides = 2 * attack_dispersion * val
+    local dice_sides = 2 * attack_dispersion * value
 
     BlzSetUnitBaseDamage(unit, math.floor(dmg), 0)
     BlzSetUnitDiceNumber(unit, 1, 0)

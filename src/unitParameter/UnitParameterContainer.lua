@@ -24,7 +24,7 @@ function ParameterContainer.new(unit)
     ---@type UnitParameterContainer
     local container = {}
     setmetatable(container, ParameterContainer_meta)
-    ParameterContainerDB:add(unit)
+    ParameterContainerDB:add(unit, container)
 
     -- Add hero stats
     local string_id = ID2str(GetUnitTypeId(unit))

@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SummonSpearman = {ArtTarget = "", ArtSpecial = "", ArtCaster = "", Options = 3, HotkeyNormal = "X", Cooldown = 0, Name = "SummonSpearman", AreaofEffect = 150, TooltipNormal = "Summon spearman", CastRange = 500, OrderId = "acidbomb", Id = "AM#'", FollowThroughTime = 0, DisableOtherAbilities = false, CastingTime = 0, TargetType = "point", ArtEffect = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", Levels = 1, CustomCastingTime = 3}, SpearmanUnit = {SpeedBase = 1, HideHeroDeathMsg = true, NormalAbilities = "Avul,Aloc", Id = "HM#$", CollisionSize = 0, Name = "Spearman", HideHeroInterfaceIcon = true, HideHeroMinimapDisplay = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx"}}
+    local WarlordSettings = {SummonSpearman = {ArtEffect = "", Name = "SummonSpearman", CustomCastingTime = 3, TargetType = "point", ArtSpecial = "", Id = "AM#'", AreaofEffect = 150, CastRange = 500, Cooldown = 0, TooltipNormalExtended = "Summons invulnerale spirit warrior.", DisableOtherAbilities = false, OrderId = "acidbomb", ArtTarget = "", Levels = 1, FollowThroughTime = 0, Options = 3, HotkeyNormal = "X", ArtCaster = "", CastingTime = 0, TooltipNormal = "Summon spearman"}, SpearmanUnit = {HideHeroDeathMsg = true, Name = "Spearman", HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", Id = "HM#$", CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx", SpeedBase = 1, HideHeroInterfaceIcon = true}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -61,10 +61,10 @@ __require_data.module["ability.SummonsDB"] = function()
 end
 __require_data.module["ability.Ability"] = function()
     local DataBase = require("utils.DataBase")
-    local Ability = {__type = "AbilityClass", __targeting_db = DataBase.new("number", "Ability"), __effect_db = DataBase.new("number", "Ability")}
+    local Ability = {__type = "AbilityClass", __ui_db = DataBase.new("number", "Ability"), __db = DataBase.new("number", "Ability")}
     local Ability_meta = {__type = "Ability", __index = Ability}
     function Ability_meta.__tostring(self)
-      local str = string.format("%s %s (%s) with callbacks: ", self.__type, self:getName(), ID2str(self:getId()))
+      local str = string.format("%s %s (%s) with callbacks: ", self.__type, self.__name, ID2str(self.__id))
       local callbacks = ""
       if (self:getCallback("startTargeting")) then
         callbacks = callbacks..",startTargeting"
@@ -90,19 +90,28 @@ __require_data.module["ability.Ability"] = function()
       callbacks = callbacks:sub(2)
       return str..callbacks
     end
-    function Ability.new(id, targeting_id, hotkey)
-      local ability = {__id = ID(id), __targeting_id = ID(targeting_id), __hotkey = hotkey, __callbacks = {}, __casting_time_func = nil}
+    function Ability.new(id, ui_id, hotkey)
+      local ability = {__id = ID(id), __ui_id = ID(ui_id), __hotkey = hotkey, __callbacks = {}, __casting_time_func = nil}
       setmetatable(ability, Ability_meta)
-      Ability.__effect_db:add(ID(id), ability)
-      Ability.__targeting_db:add(ID(targeting_id), ability)
+      Ability.__db:add(ID(id), ability)
+      Ability.__ui_db:add(ID(ui_id), ability)
       return ability
     end
     
     function Ability:getId()
       return self.__id
     end
-    function Ability.getAbility(id)
+    function Ability:getUI_Id()
+      return self.__ui_id
+    end
+    function Ability:getHotkey()
+      return self.__hotkey
+    end
+    function Ability.get(id)
       return Ability.__db:get(id)
+    end
+    function Ability.getUIAbility(id)
+      return Ability.__ui_db:get(id)
     end
     function Ability:setCallback(callback, callback_type)
       self.__callbacks[callback_type] = callback
@@ -140,35 +149,35 @@ __require_data.module["ability.Ability"] = function()
     end
     function Ability:setTooltip(tooltip, lvl, player)
       if (player == nil) then
-        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
       end
 
     end
     function Ability:setExtendedTooltip(ext_tooltip, lvl, player)
       if (player == nil) then
-        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
       end
 
     end
     function Ability:setIcon(icon_path, player)
       if (player == nil) then
-        BlzSetAbilityIcon(self.__id, icon_path)
+        BlzSetAbilityIcon(self.__ui_id, icon_path)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityIcon(self.__id, icon_path)
+        BlzSetAbilityIcon(self.__ui_id, icon_path)
       end
 
     end
     function Ability:setPosition(x, y, player)
       if (player == nil) then
-        BlzSetAbilityPosX(self.__id, x)
-        BlzSetAbilityPosY(self.__id, y)
+        BlzSetAbilityPosX(self.__ui_id, x)
+        BlzSetAbilityPosY(self.__ui_id, y)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityPosX(self.__id, x)
-        BlzSetAbilityPosY(self.__id, y)
+        BlzSetAbilityPosX(self.__ui_id, x)
+        BlzSetAbilityPosY(self.__ui_id, y)
       end
 
     end
@@ -206,7 +215,7 @@ __require_data.module["unitParameter.applyFunc"] = function()
     function UnitApplyParameter.attack(unit, value)
       local k = (1-attack_dispersion)
       local dmg = (k*value)
-      local dice_sides = ((2*attack_dispersion)*val)
+      local dice_sides = ((2*attack_dispersion)*value)
       BlzSetUnitBaseDamage(unit, math.floor(dmg), 0)
       BlzSetUnitDiceNumber(unit, 1, 0)
       BlzSetUnitDiceSides(unit, math.floor((dice_sides+1)), 0)
@@ -351,7 +360,7 @@ __require_data.module["unitParameter.UnitParameterContainer"] = function()
     function ParameterContainer.new(unit)
       local container = {}
       setmetatable(container, ParameterContainer_meta)
-      ParameterContainerDB:add(unit)
+      ParameterContainerDB:add(unit, container)
       local string_id = ID2str(GetUnitTypeId(unit))
       local first = string_id:sub(1, 1)
       if (first == string.upper(first)) then
@@ -678,103 +687,103 @@ end, __gc = Unit.destroy}
       PauseUnit(self.__unit_obj, false)
     end
     function Unit.get(wc3_unit)
-      return UnitDB:get(wc3_unit)
+      return Unit.__db:get(wc3_unit)
     end
     function Unit.GetLevelingUnit()
-      return UnitDB:get(GetLevelingUnit())
+      return Unit.__db:get(GetLevelingUnit())
     end
     function Unit.GetLearningUnit()
-      return UnitDB:get(GetLearningUnit())
+      return Unit.__db:get(GetLearningUnit())
     end
     function Unit.GetRevivableUnit()
-      return UnitDB:get(GetRevivableUnit())
+      return Unit.__db:get(GetRevivableUnit())
     end
     function Unit.GetRevivingUnit()
-      return UnitDB:get(GetRevivingUnit())
+      return Unit.__db:get(GetRevivingUnit())
     end
     function Unit.GetAttacker()
-      return UnitDB:get(GetAttacker())
+      return Unit.__db:get(GetAttacker())
     end
     function Unit.GetRescuer()
-      return UnitDB:get(GetRescuer())
+      return Unit.__db:get(GetRescuer())
     end
     function Unit.GetDyingUnit()
-      return UnitDB:get(GetDyingUnit())
+      return Unit.__db:get(GetDyingUnit())
     end
     function Unit.GetKillingUnit()
-      return UnitDB:get(GetKillingUnit())
+      return Unit.__db:get(GetKillingUnit())
     end
     function Unit.GetDecayingUnit()
-      return UnitDB:get(GetDecayingUnit())
+      return Unit.__db:get(GetDecayingUnit())
     end
     function Unit.GetConstructingStructure()
-      return UnitDB:get(GetConstructingStructure())
+      return Unit.__db:get(GetConstructingStructure())
     end
     function Unit.GetCancelledStructure()
-      return UnitDB:get(GetCancelledStructure())
+      return Unit.__db:get(GetCancelledStructure())
     end
     function Unit.GetConstructedStructure()
-      return UnitDB:get(GetConstructedStructure())
+      return Unit.__db:get(GetConstructedStructure())
     end
     function Unit.GetResearchingUnit()
-      return UnitDB:get(GetResearchingUnit())
+      return Unit.__db:get(GetResearchingUnit())
     end
     function Unit.GetTrainedUnit()
-      return UnitDB:get(GetTrainedUnit())
+      return Unit.__db:get(GetTrainedUnit())
     end
     function Unit.GetDetectedUnit()
-      return UnitDB:get(GetDetectedUnit())
+      return Unit.__db:get(GetDetectedUnit())
     end
     function Unit.GetSummoningUnit()
-      return UnitDB:get(GetSummoningUnit())
+      return Unit.__db:get(GetSummoningUnit())
     end
     function Unit.GetSummonedUnit()
-      return UnitDB:get(GetSummonedUnit())
+      return Unit.__db:get(GetSummonedUnit())
     end
     function Unit.GetTransportUnit()
-      return UnitDB:get(GetTransportUnit())
+      return Unit.__db:get(GetTransportUnit())
     end
     function Unit.GetLoadedUnit()
-      return UnitDB:get(GetLoadedUnit())
+      return Unit.__db:get(GetLoadedUnit())
     end
     function Unit.GetSellingUnit()
-      return UnitDB:get(GetSellingUnit())
+      return Unit.__db:get(GetSellingUnit())
     end
     function Unit.GetSoldUnit()
-      return UnitDB:get(GetSoldUnit())
+      return Unit.__db:get(GetSoldUnit())
     end
     function Unit.GetBuyingUnit()
-      return UnitDB:get(GetBuyingUnit())
+      return Unit.__db:get(GetBuyingUnit())
     end
     function Unit.GetChangingUnit()
-      return UnitDB:get(GetChangingUnit())
+      return Unit.__db:get(GetChangingUnit())
     end
     function Unit.GetManipulatingUnit()
-      return UnitDB:get(GetManipulatingUnit())
+      return Unit.__db:get(GetManipulatingUnit())
     end
     function Unit.GetOrderedUnit()
-      return UnitDB:get(GetOrderedUnit())
+      return Unit.__db:get(GetOrderedUnit())
     end
     function Unit.GetOrderTargetUnit()
-      return UnitDB:get(GetOrderTargetUnit())
+      return Unit.__db:get(GetOrderTargetUnit())
     end
     function Unit.GetSpellAbilityUnit()
-      return UnitDB:get(GetSpellAbilityUnit())
+      return Unit.__db:get(GetSpellAbilityUnit())
     end
     function Unit.GetSpellTargetUnit()
-      return UnitDB:get(GetSpellTargetUnit())
+      return Unit.__db:get(GetSpellTargetUnit())
     end
     function Unit.GetTriggerUnit()
-      return UnitDB:get(GetTriggerUnit())
+      return Unit.__db:get(GetTriggerUnit())
     end
     function Unit.GetEventDamage()
-      return UnitDB:get(GetEventDamage())
+      return Unit.__db:get(GetEventDamage())
     end
     function Unit.GetEventDamageSource()
-      return UnitDB:get(GetEventDamageSource())
+      return Unit.__db:get(GetEventDamageSource())
     end
     function Unit.GetEventTargetUnit()
-      return UnitDB:get(GetEventTargetUnit())
+      return Unit.__db:get(GetEventTargetUnit())
     end
     return Unit
 end

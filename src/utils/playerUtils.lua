@@ -73,7 +73,7 @@ function SelectedUnits.init()
     deselection_trigger:addAction(unitDeselected, nil)
 end
 
----@param player wc3_player
+---@param player player
 ---@return wc3_unit[]
 function SelectedUnits.get(player)
     local copy = {}
@@ -83,7 +83,7 @@ function SelectedUnits.get(player)
     return copy
 end
 
----@param player wc3_player
+---@param player player
 ---@return integer
 function SelectedUnits.count(player)
     return #SelectedUnits[player]
