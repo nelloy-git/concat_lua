@@ -4,7 +4,8 @@ local DataBase = require('utils.DataBase')
 ---@class Ability
 local Ability = {
     __type = 'AbilityClass',
-    __db = DataBase.new('integer', 'Ability')
+    __ui_db = DataBase.new('number', 'Ability'),
+    __db = DataBase.new('number', 'Ability'),
 }
 local Ability_meta = {
     __type = 'Ability',
@@ -14,8 +15,10 @@ local Ability_meta = {
 ---@param self Ability
 ---@return string
 function Ability_meta.__tostring(self)
-    local str = string.format('%s %s (%s) with callbacks: ',self.__type, self:getName(), ID2str(self:getId()))
+    local str = string.format('%s %s (%s) with callbacks: ',self.__type, self.__name, ID2str(self.__id))
     local callbacks = ''
+    if self:getCallback("startTargeting") then callbacks = callbacks ..',startTargeting' end
+    if self:getCallback("finishTargeting") then callbacks = callbacks ..',finishTargeting' end
     if self:getCallback("start") then callbacks = callbacks ..',start' end
     if self:getCallback("casting") then callbacks = callbacks ..',casting' end
     if self:getCallback("cancel") then callbacks = callbacks ..',cancel' end
@@ -28,50 +31,86 @@ end
 ---@alias AbilityCallback fun(data:SpellData):boolean
 
 ---Create new Ability instance.
----@param id string|integer
+---@param id string|number
+---@param ui_id string|number
+---@param hotkey string
 ---@return Ability
-function Ability.new(id)
-    id = ID(id)
+function Ability.new(id, ui_id, hotkey)
+    ---@type Ability
     local ability = {
-        __id = id,
-        __callback = {},
+        __id = ID(id),
+        __ui_id = ID(ui_id),
+        __hotkey = hotkey,
+
+        __callbacks = {},
         __casting_time_func = nil,
     }
     setmetatable(ability, Ability_meta)
-    Ability.__db:add(id, ability)
+    Ability.__db:add(ID(id), ability)
+    Ability.__ui_db:add(ID(ui_id), ability)
+
     return ability
 end
 
----@return integer
+compiletime(function()
+    ---Compiletime only
+    ---@param src ChannelCompiletimeData
+    ---@return number
+    function Ability.generateTargetingAbility(src)
+        local WeObjEdit = require('compiletime.objEdit.objEdit')
+
+        local Channel = WeObjEdit.Preset.Channel
+        local ability = Channel.new(src)
+        ability:setField('Name', src['Name']..'_Targeting')
+        ability:setField('Options', Channel.option.is_visible)
+        return ability:generate()
+    end
+end)
+
+---@return number
 function Ability:getId()
     return self.__id
 end
 
+---@return number
+function Ability:getUI_Id()
+    return self.__ui_id
+end
+
+function Ability:getHotkey()
+    return self.__hotkey
+end
+
 ---@param id number
 ---@return Ability
-function Ability.getAbility(id)
+function Ability.get(id)
     return Ability.__db:get(id)
+end
+
+---@param id number
+---@return Ability
+function Ability.getUIAbility(id)
+    return Ability.__ui_db:get(id)
 end
 
 ---@param callback AbilityCallback
 ---@param callback_type AbilityEventName
----@return nil
 function Ability:setCallback(callback, callback_type)
-    self.__callback[callback_type] = callback
+    self.__callbacks[callback_type] = callback
 end
 
 ---@param callback_type AbilityEventName
 ---@return AbilityCallback
 function Ability:getCallback(callback_type)
-    return self.__callback[callback_type]
+    return self.__callbacks[callback_type]
 end
 
 ---@param callback_type AbilityEventName
 ---@param cast_data SpellData
 ---@return boolean
 function Ability:runCallback(callback_type, cast_data)
-    if type(self.__callback[callback_type]) == 'function' then
-        return self.__callback[callback_type](cast_data)
+    if type(self.__callbacks[callback_type]) == 'function' then
+        return self.__callbacks[callback_type](cast_data)
     else
         return true
     end
@@ -124,9 +163,9 @@ end
 ---@param player player
 function Ability:setTooltip(tooltip, lvl, player)
     if player == nil then
-        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
     end
 end
 
@@ -136,9 +175,9 @@ end
 ---@param player player
 function Ability:setExtendedTooltip(ext_tooltip, lvl, player)
     if player == nil then
-        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
     end
 end
 
@@ -147,9 +186,9 @@ end
 ---@param player player
 function Ability:setIcon(icon_path, player)
     if player == nil then
-        BlzSetAbilityIcon(self.__id, icon_path)
+        BlzSetAbilityIcon(self.__ui_id, icon_path)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityIcon(self.__id, icon_path)
+        BlzSetAbilityIcon(self.__ui_id, icon_path)
     end
 end
 
@@ -159,11 +198,11 @@ end
 ---@param player player
 function Ability:setPosition(x, y, player)
     if player == nil then
-        BlzSetAbilityPosX(self.__id, x)
-        BlzSetAbilityPosY(self.__id, y)
+        BlzSetAbilityPosX(self.__ui_id, x)
+        BlzSetAbilityPosY(self.__ui_id, y)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityPosX(self.__id, x)
-        BlzSetAbilityPosY(self.__id, y)
+        BlzSetAbilityPosX(self.__ui_id, x)
+        BlzSetAbilityPosY(self.__ui_id, y)
     end
 end
 

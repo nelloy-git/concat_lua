@@ -6,7 +6,7 @@ local WarlordSettings = compiletime(function()
     --  Summon spearman  --
     -- ================= --
     local SummonSpearmanData = Channel.new()
-    SummonSpearmanData:setField("Name", "Summon spearman")
+    SummonSpearmanData:setField("Name", "SummonSpearman")
     SummonSpearmanData:setField("TooltipNormal", "Summon spearman")
     SummonSpearmanData:setField("TooltipNormalExtended", "Summons invulnerale spirit warrior.")
     SummonSpearmanData:setField("CastRange", 500)

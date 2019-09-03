@@ -1,35 +1,42 @@
----@class SummonDB
-local SummonDB = {}
+---@type DataBase
+local DataBase = require('utils.DataBase')
+
+---@class SummonsDB
+local SummonsDB = {
+    __masters = DataBase.new('userdata', 'userdata'),
+    __slaves = DataBase.new('userdata', 'table')
+}
 
 local MastersDB = {}
 local SlavesDB = {}
 
----@param slave wc3_unit
----@param master wc3_unit
-function SummonDB.addSlave(slave, master)
-    SlavesDB[slave] = master
-    if not MastersDB[master] then
-        MastersDB[master] = {}
+---@param slave unit
+---@param master unit
+function SummonsDB.addSlave(slave, master)
+    SummonsDB.__masters:add(slave, master)
+    local slaves = SummonsDB.__slaves:get(master)
+    if not slaves then
+        slaves = {}
+        SummonsDB.__slaves:add(master, slaves)
     end
-    table.insert(MastersDB[master], 1, slave)
+    table.insert(slaves, 1, slave)
 end
 
----@param slave wc3_unit
+---@param slave unit
 ---@return boolean
-function SummonDB.rmSlave(slave)
-    local master = SlavesDB[slave]
+function SummonsDB.rmSlave(slave)
+    local master = SummonsDB.__masters:get(slave)
     if not master then
-        Debug("SummonDB: error trying to remove non summon unit.")
+        Debug("SummonDB error: summoned unit does not have master.")
         return false
     end
-    SlavesDB[slave] = nil
-    local slaves = MastersDB[master]
+    SummonsDB.__masters:remove(slave)
 
-    if #slaves == 1 then
-        MastersDB[master] = nil
-        return true
+    local slaves = SummonsDB.__slaves:get(master)
+    if not slaves then
+        Debug("SummonDB error: found master does not have any summons.")
+        return false
     end
-
     local pos = -1
     for i = 0, #slaves do
         if slaves[i] == slave then
@@ -41,20 +48,22 @@ function SummonDB.rmSlave(slave)
     if pos > 0 then
         table.remove(slaves, pos)
         return true
+    else
+        Debug("SummonsDB error: found master does not have unit in summons list.")
     end
     return false
 end
 
----@param slave wc3_unit
----@return wc3_unit
-function SummonDB.getMaster(slave)
-    return SlavesDB[slave]
+---@param slave unit
+---@return unit
+function SummonsDB.getMaster(slave)
+    return SummonsDB.__masters:get(slave)
 end
 
----@param master wc3_unit
----@return wc3_unit
-function SummonDB.getSlaves(master)
-    return MastersDB[master]
+---@param master unit
+---@return unit[]
+function SummonsDB.getSlaves(master)
+    return SummonsDB.__slaves:get(master)
 end
 
-return SummonDB
+return SummonsDB

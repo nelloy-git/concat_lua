@@ -82,7 +82,7 @@ function ID(id)
     elseif type(id) == 'number' and math.fmod(id, 1) == 0 then
         return id
     end
-    print('Wrong id fromat')
+    print('Wrong id format')
     return nil
 end
 

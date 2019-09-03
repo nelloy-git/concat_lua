@@ -8,6 +8,7 @@ local PlayerEvent = {
 
 ---@alias PlayerEventName string
 ---| '"LocalPlayerMouseMove"'
+---| '"LocalPlayerKeyPressed"'
 
 local initialized = false
 function PlayerEvent.init()
@@ -16,7 +17,18 @@ function PlayerEvent.init()
     ---@type Trigger
     PlayerEvent.__triggers["LocalPlayerMouseMove"] = Trigger.new()
     PlayerEvent.__triggers["LocalPlayerMouseMove"]:addEvent_Player("MouseMove", GetLocalPlayer())
-    --PlayerEvent.__triggers["LocalPlayerMouseMove"]:addEvent_PlayerMouseMove(GetLocalPlayer())
+
+    ---@type Trigger
+    PlayerEvent.__triggers["LocalPlayerKeyPressed"] = Trigger.new()
+    PlayerEvent.__triggers["LocalPlayerKeyPressed"]:addEvent_Player("Key", GetLocalPlayer())
+
+    ---@type Trigger
+    PlayerEvent.__triggers["LocalPlayerKeyDown"] = Trigger.new()
+    PlayerEvent.__triggers["LocalPlayerKeyDown"]:addEvent_Player("KeyDown", GetLocalPlayer())
+
+    ---@type Trigger
+    PlayerEvent.__triggers["LocalPlayerKeyUp"] = Trigger.new()
+    PlayerEvent.__triggers["LocalPlayerKeyUp"]:addEvent_Player("KeyUp", GetLocalPlayer())
 
     initialized = true
 end

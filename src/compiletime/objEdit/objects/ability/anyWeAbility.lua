@@ -116,7 +116,7 @@ function AnyWeAbility:setRequirementsLevels(data) self:addField(WeField.new("arq
 ---@param data boolean
 function AnyWeAbility:setCheckDependencies(data) self:addField(WeField.new("achd", 'bool', 0, 0, data)) end
 ---@param data integer
-function AnyWeAbility:setPriorityforSpellSteal(data) self:addField(WeField.new("apri", 'int', 0, 0, data)) end
+function AnyWeAbility:setPriorityForSpellSteal(data) self:addField(WeField.new("apri", 'int', 0, 0, data)) end
 ---@param data string
 function AnyWeAbility:setOrderStringUseTurnOn(data) self:addField(WeField.new("aord", 'string', 0, 0, data)) end
 ---@param data string

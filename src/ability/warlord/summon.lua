@@ -4,8 +4,8 @@ local Unit = require('unit.Unit')
 local UnitEvent = require('utils.trigger.events.UnitEvents')
 ---@type Ability
 local Ability = require('ability.Ability')
----@type SummonDB
-local SummonDB = require('ability.SummonsDB')
+---@type SummonsDB
+local SummonsDB = require('ability.SummonsDB')
 ---@type WarlordAbilitiesSettings
 local FullData = require('ability.warlord.settings')
 ---@type ChannelCompiletimeData
@@ -13,17 +13,20 @@ local AbilityData = FullData.SummonSpearman
 ---@type HeroCompiletimeData
 local SummonData = FullData.SpearmanUnit
 
+local targeting_ability_id = compiletime(Ability.generateTargetingAbility(AbilityData))
 ---@type Ability
-local SummonCrystalSwordmanAbility = Ability.new(AbilityData["Id"])
+local SummonCrystalSpearmanAbility = Ability.new(AbilityData["Id"],
+                                                 targeting_ability_id,
+                                                 AbilityData["HotkeyNormal"])
     
-function SummonCrystalSwordmanAbility.init()
+function SummonCrystalSpearmanAbility.init()
     UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
             ---@type Unit
             local unit = Unit.GetDyingUnit()
             local dying_id = unit:getId()
 
             if dying_id == ID(SummonData["Id"]) then
-                SummonDB.rmSlave(unit:getObj())
+                SummonsDB.rmSlave(unit:getObj())
             end
         end)
 end
@@ -36,14 +39,14 @@ local function finishCastingCallback(spell_data)
     unit:setVertexColor(1, 1, 1, 0.35)
     unit:applyTimedLife(10)
 
-    SummonDB.addSlave(unit:getObj(), caster)
+    SummonsDB.addSlave(unit:getObj(), caster)
 
     unit.parameter:setAttacksPerSec(1)
 end
 
 ---@type Ability
-SummonCrystalSwordmanAbility:setName(AbilityData["TooltipNormal"])
-SummonCrystalSwordmanAbility:setCastingTimeFunction(function() return AbilityData["CustomCastingTime"] end)
-SummonCrystalSwordmanAbility:setCallback(finishCastingCallback, "finish")
+SummonCrystalSpearmanAbility:setName(AbilityData["TooltipNormal"])
+SummonCrystalSpearmanAbility:setCastingTimeFunction(function() return AbilityData["CustomCastingTime"] end)
+SummonCrystalSpearmanAbility:setCallback(finishCastingCallback, "finish")
 
-return SummonCrystalSwordmanAbility
+return SummonCrystalSpearmanAbility

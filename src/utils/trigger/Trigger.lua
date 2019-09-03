@@ -26,7 +26,7 @@ function Trigger_meta.__tostring(self)
     for i = 1, #self.__events do
         events = events..self.__events[i].." "
     end
-    return string.format("Trigger with events: %s\nHas %d action(s).", events, #self.__actions)
+    return string.format("Trigger with events: %s. Has %d action(s).", events, #self.__actions)
 end
 
 local function runTriggerActions()
@@ -37,7 +37,7 @@ local function runTriggerActions()
         if Settings.debug then
             local success, result = pcall(action.run, action)
             if not success then
-                Debug("Error in trigger")
+                Debug("Error in "..tostring(self))
                 Debug(result)
             end
         else
@@ -52,13 +52,13 @@ function Trigger.new()
     local wc3_trigger = CreateTrigger()
     ---@type Trigger
     local trigger = {
-        __wc3_trigger = wc3_trigger,
-        __wc3_action = TriggerAddAction(wc3_trigger, runTriggerActions),
+        __trigger = wc3_trigger,
+        __action_runner = TriggerAddAction(wc3_trigger, runTriggerActions),
         __actions = {},
         __events = {}
     }
     setmetatable(trigger, Trigger_meta)
-    TriggerDB:add(trigger.__wc3_trigger, trigger)
+    TriggerDB:add(trigger.__trigger, trigger)
 
     return trigger
 end
@@ -66,13 +66,13 @@ end
 ---@return nil
 function Trigger:destroy()
     self:clearActions()
-    DestroyTrigger(self.__wc3_trigger)
-    self.__wc3_trigger = nil
+    DestroyTrigger(self.__trigger)
+    self.__trigger = nil
 end
 
 ---@return trigger
 function Trigger:getObj()
-    return self.__wc3_trigger
+    return self.__trigger
 end
 
 ---@return TriggerAction[]
@@ -80,7 +80,12 @@ function Trigger:getActions()
     return self.__actions
 end
 
----@param callback function
+---@return string[]
+function Trigger:getEvents()
+    return self.__events
+end
+
+---@param callback fun(data:any)
 ---@param data any
 ---@return TriggerAction
 function Trigger:addAction(callback, data)
@@ -118,39 +123,58 @@ end
 ---Function executes all callbacks of function.
 ---@return nil
 function Trigger:execute()
-    TriggerExecute(self.__wc3_trigger)
+    TriggerExecute(self.__trigger)
+end
+
+---@param event_type TriggerEventType
+---@param event_name string
+---| TriggerGameEvent
+---| TriggerPlayerEvent
+---| TriggerAnyPlayerEvent
+---| TriggerUnitEvent
+---| TriggerPlayerUnitEvent
+---| TriggerAnyUnitEvent
+function Trigger:addEvent(event_type, event_name, player_or_unit)
+    TriggerEvent[event_type][event_name](self.__trigger, player_or_unit)
+    table.insert(self.__events, 1, event_type..event_name)
 end
 
 ---@param event TriggerGameEvent
 function Trigger:addEvent_Game(event)
-    TriggerEvent.Game[event](self.__wc3_trigger)
+    TriggerEvent.Game[event](self.__trigger)
     table.insert(self.__events, 1, "Game_"..event)
 end
 
 ---@param event TriggerPlayerEvent
----@param wc3_player player
-function Trigger:addEvent_Player(event, wc3_player)
-    TriggerEvent.Player[event](self.__wc3_trigger, wc3_player)
+---@param player player
+function Trigger:addEvent_Player(event, player)
+    TriggerEvent.Player[event](self.__trigger, player)
     table.insert(self.__events, 1, "Player_"..event)
 end
 
+---@param event TriggerAnyPlayerEvent
+function Trigger:addEvent_AnyPlayer(event)
+    TriggerEvent.AnyPlayer[event](self.__trigger)
+    table.insert(self.__events, 1, "AnyPlayer_"..event)
+end
+
 ---@param event TriggerUnitEvent
----@param wc3_unit unit
+---@param unit unit
 function Trigger:addEvent_Unit(event, wc3_unit)
-    TriggerEvent.Unit[event](self.__wc3_trigger, wc3_unit)
+    TriggerEvent.Unit[event](self.__trigger, wc3_unit)
     table.insert(self.__events, 1, "Unit_"..event)
 end
 
 ---@param event TriggerPlayerUnitEvent
----@param wc3_player player
-function Trigger:addEvent_PlayerUnit(event, wc3_player)
-    TriggerEvent.PlayerUnit[event](self.__wc3_trigger, wc3_player)
+---@param player player
+function Trigger:addEvent_PlayerUnit(event, player)
+    TriggerEvent.PlayerUnit[event](self.__trigger, player)
     table.insert(self.__events, 1, "PlayerUnit_"..event)
 end
 
 ---@param event TriggerAnyUnitEvent
 function Trigger:addEvent_AnyUnit(event)
-    TriggerEvent.AnyUnit[event](self.__wc3_trigger)
+    TriggerEvent.AnyUnit[event](self.__trigger)
     table.insert(self.__events, 1, "AnyUnit_"..event)
 end
 

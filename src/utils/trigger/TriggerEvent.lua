@@ -1,11 +1,20 @@
 ---@class TriggerEvent
 local TriggerEvent = {
     Game = {},
+    AnyPlayer = {},
     Player = {},
     PlayerUnit = {},
     AnyUnit = {},
     Unit = {}
 }
+
+---@alias TriggerEventType string
+---| '"Game"'
+---| '"AnyPlayer"'
+---| '"Player"'
+---| '"PlayerUnit"'
+---| '"AnyUnit"'
+---| '"Unit"'
 
 ---@alias TriggerGameEvent string
 ---| '"Victory"'
@@ -26,6 +35,30 @@ local TriggerEvent = {
 ---| '"CustomUIFrame"'
 
 ---@alias TriggerPlayerEvent string
+---| '"StateLimit"'
+---| '"AllianceChanged"'
+---| '"Defeat"'
+---| '"Victory"'
+---| '"Leave"'
+---| '"Chat"'
+---| '"EndCinematic"'
+---| '"ArrowLeft_Down"'
+---| '"ArrowLeft_Up"'
+---| '"ArrowRight_Down"'
+---| '"ArrowRight_Up"'
+---| '"ArrowDown_Down"'
+---| '"ArrowDown_Up"'
+---| '"ArrowUp_Down"'
+---| '"ArrowUp_Up"'
+---| '"MouseDown"'
+---| '"MouseUp"'
+---| '"MouseMove"'
+---| '"SyncData"'
+---| '"Key"'
+---| '"KeyDown"'
+---| '"KeyUp"'
+
+---@alias TriggerAnyPlayerEvent string
 ---| '"StateLimit"'
 ---| '"AllianceChanged"'
 ---| '"Defeat"'
@@ -233,6 +266,29 @@ local TriggerEvent = {
     TriggerEvent.Player["Key"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY) end
     TriggerEvent.Player["KeyDown"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_DOWN) end
     TriggerEvent.Player["KeyUp"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_UP) end
+
+    TriggerEvent.AnyPlayer["StateLimit"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_STATE_LIMIT) end end
+    TriggerEvent.AnyPlayer["AllianceChanged"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ALLIANCE_CHANGED) end end
+    TriggerEvent.AnyPlayer["Defeat"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_DEFEAT) end end
+    TriggerEvent.AnyPlayer["Victory"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_VICTORY) end end
+    TriggerEvent.AnyPlayer["Leave"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_LEAVE) end end
+    TriggerEvent.AnyPlayer["Chat"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_CHAT) end end
+    TriggerEvent.AnyPlayer["EndCinematic"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_END_CINEMATIC) end end
+    TriggerEvent.AnyPlayer["ArrowLeft_Down"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_LEFT_DOWN) end end
+    TriggerEvent.AnyPlayer["ArrowLeft_Up"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_LEFT_UP) end end
+    TriggerEvent.AnyPlayer["ArrowRight_Down"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_RIGHT_DOWN) end end
+    TriggerEvent.AnyPlayer["ArrowRight_Up"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_RIGHT_UP) end end
+    TriggerEvent.AnyPlayer["ArrowDown_Down"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_DOWN_DOWN) end end
+    TriggerEvent.AnyPlayer["ArrowDown_Up"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_DOWN_UP) end end
+    TriggerEvent.AnyPlayer["ArrowUp_Down"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_UP_DOWN) end end
+    TriggerEvent.AnyPlayer["ArrowUp_Up"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_UP_UP) end end
+    TriggerEvent.AnyPlayer["MouseDown"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_MOUSE_DOWN) end end
+    TriggerEvent.AnyPlayer["MouseUp"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_MOUSE_UP) end end
+    TriggerEvent.AnyPlayer["MouseMove"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_MOUSE_MOVE) end end
+    TriggerEvent.AnyPlayer["SyncData"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_SYNC_DATA) end end
+    TriggerEvent.AnyPlayer["Key"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_KEY) end end
+    TriggerEvent.AnyPlayer["KeyDown"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_KEY_DOWN) end end
+    TriggerEvent.AnyPlayer["KeyUp"] = function(wc3_trigger) for i = 0, bj_MAX_PLAYER_SLOTS - 1 do TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_KEY_UP) end end
 
     TriggerEvent.PlayerUnit["Attacked"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ATTACKED) end
     TriggerEvent.PlayerUnit["Rescued"] = function(wc3_trigger, wc3_player) TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESCUED) end
