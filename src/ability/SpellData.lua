@@ -158,12 +158,28 @@ function SpellData:setUserdata(data)
     self.__userdata = data
 end
 
+function SpellData:targeting()
+    self.targeting = true
+end
+
+function SpellData:isTargeting()
+    return self.targeting
+end
+
 function SpellData:cancel()
     self.__cancel = true
 end
 
 function SpellData:isCanceled()
     return self.__cancel
+end
+
+function SpellData:cancelTargeting()
+    self.__cancel_targeting = true
+end
+
+function SpellData:isTargetingCanceled()
+    return self.__cancel_targeting
 end
 
 return SpellData

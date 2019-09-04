@@ -38,7 +38,10 @@ function Init.start()
         ---@type Timer
         local Timer = require("utils.timer.Timer")
         Debug("Timer test.")
-        Timer.test()
+        local success, result = pcall(Timer.test)
+        if not success then
+            Debug(result)
+        end
     end
 end
 

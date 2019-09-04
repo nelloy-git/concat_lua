@@ -50,24 +50,26 @@ function Ability.new(id, ui_id, hotkey)
     Ability.__db:add(ID(id), ability)
     Ability.__ui_db:add(ID(ui_id), ability)
 
+    Debug(ID2str(ability.__id), ID2str(ability.__ui_id))
+
     return ability
 end
 
-compiletime(function()
-    ---Compiletime only
-    ---@param src ChannelCompiletimeData
-    ---@return number
-    function Ability.generateDummyAbility(src)
-        local WeObjEdit = require('compiletime.objEdit.objEdit')
+---Compiletime only
+---@param src ChannelCompiletimeData
+---@return number
+function Ability.generateDummyAbility(src)
+    local WeObjEdit = require('compiletime.objEdit.objEdit')
+    local Channel = WeObjEdit.Preset.Channel
 
-        local Channel = WeObjEdit.Preset.Channel
-        local ability = Channel.new(src)
-        ability:setField('Name', src['Name']..'_Targeting')
-        ability:setField('Options', Channel.option.is_visible)
-        ability:setField('TargetType', 'point')
-        return ability:generate()
-    end
-end)
+    ---@type ChannelCompiletimeData
+    local ability = Channel.new(src)
+    ability:setField('Name', src['Name']..'_Targeting')
+    ability:setField('TooltipNormal', src['Name']..'_Targeting')
+    ability:setField('Options', Channel.option.is_visible)
+    ability:setField('TargetType', 'none')
+    return ability:generate()
+end
 
 ---@return number
 function Ability:getId()

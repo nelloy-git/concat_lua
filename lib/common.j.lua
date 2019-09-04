@@ -1,7 +1,7 @@
 -- Native types
 
----@alias integer number
----@alias handle userdata
+----@alias integer number
+---@class handle:userdata
 ---@alias code function
 
 ---@param value string

@@ -7,7 +7,7 @@ local PlayerEvent = require('utils.trigger.events.PlayerEvents')
 ---@type SpellData
 local SpellData = require('ability.SpellData')
 ---@type DataBase
-local DataBase = require('utils.DataBase')
+--local DataBase = require('utils.DataBase')
 ---@type Settings
 local Settings = require('utils.Settings')
 
@@ -23,7 +23,7 @@ local Settings = require('utils.Settings')
 
 ---@class AbilityEvent
 local AbilityEvent = {
-    __targeting_db = DataBase.new('userdata', 'Ability')
+    --__targeting_db = DataBase.new('userdata', 'Ability')
 }
 
 local cancel_btn_frame
@@ -35,18 +35,31 @@ function AbilityEvent.init()
     if initialized then return nil end
     UnitEvent.init()
     UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.unitUsesAbility)
-    UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(AbilityEvent.unitIssuedOrder)
+    --UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(AbilityEvent.unitIssuedOrder)
+
+    PlayerEvent.init()
+    PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(AbilityEvent.cancelTargetingMouse)
+    PlayerEvent.getTrigger("LocalPlayerKeyDown"):addAction(AbilityEvent.cancelTargetingKeyboard)
 
     AbilityEvent.__cast_timer = glTimer
     AbilityEvent.__cast_timer_period = glTimer:getPeriod()
 
-    cancel_btn_frame = BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 11)
+    cancel_btn_frame = BlzGetOriginFrame(1, 11)
     normal_btn_alpha = BlzFrameGetAlpha(cancel_btn_frame)
     if normal_btn_alpha > 127 then
-        changed_btn_alpha = math.floor(normal_btn_alpha - 5)
+        changed_btn_alpha = 0
     else
-        changed_btn_alpha = math.floor(normal_btn_alpha + 5)
+        changed_btn_alpha = 0
     end
+
+    local function test()
+        Debug('Alpha', BlzFrameGetAlpha(cancel_btn_frame))
+        Debug('Text', BlzFrameGetText(cancel_btn_frame))
+        Debug('Size', BlzFrameGetTextSizeLimit(cancel_btn_frame))
+        Debug('Value', BlzFrameGetValue(cancel_btn_frame))
+        glTimer:addAction(1, test)
+    end
+    test()
 
     initialized = true
 end
@@ -54,10 +67,13 @@ end
 ---Calls this function when any unit starts casting ability.
 function AbilityEvent.unitUsesAbility()
     local id = GetSpellAbilityId()
-    local caster = GetSpellAbilityId()
+    local caster = GetSpellAbilityUnit()
     local ability = Ability.get(id)
     local caster_data = SpellData.get(caster)
 
+    if Settings.Events.VerboseAbility then
+        Debug('Got casting')
+    end
     --- Cancel previous ability.
     if caster_data ~= nil then
         AbilityEvent.cancelCastingAbility(caster_data)
@@ -92,14 +108,18 @@ end
 function AbilityEvent.startTargetingLoop(caster_data)
     local owner = GetOwningPlayer(caster_data:getCaster())
 
-    SetPlayerAbilityAvailable(owner, ability:getUI_Id(), false)
-    SetPlayerAbilityAvailable(owner, ability:getId(), true)
-    ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey())
+    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getUI_Id(), false)
+    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), true)
+    --ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey())
+    AbilityEvent.__cast_timer:addAction(0.05, function() ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey()) end, nil)
 
-    caster_data:getAbility():getHotkey():runCallback('startTargeting', caster_data)
+    caster_data:getAbility():runCallback('startTargeting', caster_data)
 
     if owner == GetLocalPlayer() then
         BlzFrameSetAlpha(cancel_btn_frame, changed_btn_alpha)
+        BlzFrameSetText(cancel_btn_frame, 'azaza')
+        BlzFrameSetTextSizeLimit(cancel_btn_frame, 500)
+        BlzFrameSetValue(cancel_btn_frame, 50)
         local action = PlayerEvent.getTrigger("LocalPlayerMouseMove"):addAction(AbilityEvent.cursorCatcher, caster_data)
         caster_data:setMouseAction(action)
         AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
@@ -121,17 +141,17 @@ function AbilityEvent.targetingLoop(caster_data)
         caster_data:getAbility():runCallback("targeting", caster_data)
         AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
     else
-        AbilityEvent.finishTargetingAbility(data.unit, data.ability)
+        AbilityEvent.finishTargetingAbility(caster_data)
     end
 end
 
 ---@param caster_data SpellData
 function AbilityEvent.finishTargetingAbility(caster_data)
-    local owner = GetOwningPlayer(caster)
+    local owner = GetOwningPlayer(caster_data:getCaster())
 
     PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(caster_data:getMouseAction())
-    SetPlayerAbilityAvailable(owner, ability:getId(), false)
-    SetPlayerAbilityAvailable(owner, ability:getUI_Id(), true)
+    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), false)
+    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getUI_Id(), true)
 
     caster_data:getAbility():runCallback('finishTargeting', caster_data)
 
@@ -161,7 +181,7 @@ function AbilityEvent.startCastingLoop(caster_data)
     AbilityEvent.__cast_timer:addAction(0, AbilityEvent.castingLoop, caster_data)
 
     if Settings.Events.VerboseAbility then
-        Debug(string.format("Casting started - %b", continue))
+        Debug(string.format("Casting started - %b", success))
     end
 end
 
@@ -197,6 +217,13 @@ function AbilityEvent.castingLoop(caster_data)
             Debug("Casting interrupted.")
         end
     end
+end
+
+--- ===================
+---  Cancel targeting.
+--- ===================
+
+function AbilityEvent.cancelTargeting()
 end
 
 ---@return unit|item|destructable|nil

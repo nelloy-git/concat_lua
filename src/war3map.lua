@@ -36,6 +36,9 @@ function RunInitialization()
     --Debug(Player(0))
 
     local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_POINT, 0)
+    BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_BACK_SWING, 0)
+
     local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
 
     --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
@@ -45,6 +48,12 @@ function RunInitialization()
     ---@type Ability
     local summon_ability = require('ability.warlord.summon')
     u:addAbility(summon_ability:getId())
+    u:addAbility(summon_ability:getUI_Id())
+    local id = summon_ability:getId()
+    local ui_id = summon_ability:getUI_Id()
+    Debug(ID2str(id), ID2str(ui_id))
+
+    SetPlayerAbilityAvailable(GetOwningPlayer(u:getObj()), id, false)
 end
 
 function InitCustomPlayerSlots()

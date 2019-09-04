@@ -21,6 +21,7 @@ local Settings = {
     Events = {
         Unit = true,
         Player = true,
+        Ability = true,
         VerboseAbility = true
     }
 }

@@ -37,7 +37,7 @@ function Timer:destroy()
         local action = table.remove(self.__actions, 1)
         action:destroy()
     end
-    TimerDB.rm(self.__timer_obj)
+    TimerDB:remove(self.__timer_obj)
     DestroyTimer(self.__timer_obj)
 end
 
@@ -47,8 +47,10 @@ function Timer:getPeriod()
 end
 
 function Timer.timeout()
-    local self = TimerDB.get(GetExpiredTimer())
+    local self = TimerDB:get(GetExpiredTimer())
     local cur_time = self.__cur_time + self.__period
+    self.__cur_time = cur_time
+
     while #self.__actions > 0 do
         ---@type TimerAction
         local action = table.remove(self.__actions, 1)
@@ -59,7 +61,6 @@ function Timer.timeout()
             break
         end
     end
-    self.__cur_time = cur_time
 end
 
 ---@param time number
@@ -126,13 +127,15 @@ local function test(num)
 end
 
 local function check_test()
-    DestroyTimer(GetExpiredTimer())
-    for i = 1, count do
-        a, b = modf(i/2)
-        if test_result[i] ~= a then Debug('Timer test failed') return nil end
-    end
-    test_timer:destroy()
-    Debug("Timer test passed.")
+    local success, result = pcall( function()
+        DestroyTimer(GetExpiredTimer())
+        for i = 1, count do
+            if test_result[i] ~= i // 2 then Debug('Timer test failed') return nil end
+        end
+        test_timer:destroy()
+        Debug("Timer test passed.")
+    end)
+    if not success then Debug(result) end
 end
 
 function Timer.test()
