@@ -25,6 +25,7 @@ function Vec2.new(x, y)
     return v
 end
 
+---@return Vec2
 function GetSpellTargetPos()
     return Vec2.new(GetSpellTargetX(), GetSpellTargetY())
 end

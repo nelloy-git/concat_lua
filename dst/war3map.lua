@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SummonSpearman = {ArtEffect = "", Name = "SummonSpearman", CustomCastingTime = 3, TargetType = "point", ArtSpecial = "", Id = "AM#'", AreaofEffect = 150, CastRange = 500, Cooldown = 0, TooltipNormalExtended = "Summons invulnerale spirit warrior.", DisableOtherAbilities = false, OrderId = "acidbomb", ArtTarget = "", Levels = 1, FollowThroughTime = 0, Options = 3, HotkeyNormal = "X", ArtCaster = "", CastingTime = 0, TooltipNormal = "Summon spearman"}, SpearmanUnit = {HideHeroDeathMsg = true, Name = "Spearman", HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", Id = "HM#$", CollisionSize = 0, ModelFile = "war3mapImported\\units\\SwordNya.mdx", SpeedBase = 1, HideHeroInterfaceIcon = true}}
+    local WarlordSettings = {SummonSpearman = {CastRange = 500, Levels = 1, ArtEffect = "", DisableOtherAbilities = false, CustomCastingTime = 3, Name = "SummonSpearman", ArtTarget = "", ArtCaster = "", OrderId = "acidbomb", TooltipNormalExtended = "Summons invulnerale spirit warrior.", FollowThroughTime = 0, Id = "AM#'", HotkeyNormal = "X", Options = 3, TargetType = "point", TooltipNormal = "Summon spearman", CastingTime = 0, Cooldown = 0, ArtSpecial = "", AreaofEffect = 150}, SpearmanUnit = {CollisionSize = 0, HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", Id = "HM#$", ModelFile = "war3mapImported\\units\\SwordNya.mdx", SpeedBase = 1, HideHeroInterfaceIcon = true, Name = "Spearman", HideHeroDeathMsg = true}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -69,8 +69,11 @@ __require_data.module["ability.Ability"] = function()
       if (self:getCallback("startTargeting")) then
         callbacks = callbacks..",startTargeting"
       end
-      if (self:getCallback("finishTargeting")) then
-        callbacks = callbacks..",finishTargeting"
+      if (self:getCallback("targeting")) then
+        callbacks = callbacks..",targeting"
+      end
+      if (self:getCallback("cancelTargeting")) then
+        callbacks = callbacks..",cancelTargeting"
       end
       if (self:getCallback("start")) then
         callbacks = callbacks..",start"
@@ -108,10 +111,11 @@ __require_data.module["ability.Ability"] = function()
       return self.__hotkey
     end
     function Ability.get(id)
-      return Ability.__db:get(id)
-    end
-    function Ability.getUIAbility(id)
-      return Ability.__ui_db:get(id)
+      local ability = Ability.__db:get(id)
+      if (not ability) then
+        ability = Ability.__ui_db:get(id)
+      end
+      return ability
     end
     function Ability:setCallback(callback, callback_type)
       self.__callbacks[callback_type] = callback
@@ -1950,7 +1954,7 @@ __require_data.module["utils.trigger.events.UnitEvents"] = function()
     return UnitEvent
 end
 __require_data.module["utils.Settings"] = function()
-    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = false}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}, EnabledEvents = {Unit = true, Player = true}}
+    local Settings = {debug = true, Timer = {glTimer_period = 0.03125, run_test = false}, UnitParameters = {attack_dispersion = 0.15, value_to_get_half_cap_for_percent_value = 500}, Events = {Unit = true, Player = true, VerboseAbility = true}}
     return Settings
 end
 __require_data.module["utils.Globals"] = function()

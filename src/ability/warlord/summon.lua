@@ -13,8 +13,7 @@ local AbilityData = FullData.SummonSpearman
 ---@type HeroCompiletimeData
 local SummonData = FullData.SpearmanUnit
 
-local targeting_ability_id = compiletime(Ability.generateTargetingAbility(AbilityData))
----@type Ability
+local targeting_ability_id = compiletime(Ability.generateDummyAbility(AbilityData))
 local SummonCrystalSpearmanAbility = Ability.new(AbilityData["Id"],
                                                  targeting_ability_id,
                                                  AbilityData["HotkeyNormal"])

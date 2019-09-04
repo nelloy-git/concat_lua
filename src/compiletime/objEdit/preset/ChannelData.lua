@@ -194,7 +194,7 @@ function ChannelCompiletimeData:generate()
         if self["DurationHero"] then ability:setDurationHero(self["DurationHero"], lvl) end
         if self["Cooldown"] then ability:setCooldown(self["Cooldown"], lvl) end
         if self["ManaCost"] then ability:setManaCost(self["ManaCost"], lvl) end
-        if self["AreaofEffect"] then ability:setAreaofEffect(self["AreaofEffect"], lvl) end
+        if self["AreaofEffect"] then ability:setAreaOfEffect(self["AreaofEffect"], lvl) end
         if self["CastRange"] then ability:setCastRange(self["CastRange"], lvl) end
         if self["Buffs"] then ability:setBuffs(self["Buffs"], lvl) end
         if self["Effects"] then ability:setEffects(self["Effects"], lvl) end

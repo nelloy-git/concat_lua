@@ -18,7 +18,8 @@ function Ability_meta.__tostring(self)
     local str = string.format('%s %s (%s) with callbacks: ',self.__type, self.__name, ID2str(self.__id))
     local callbacks = ''
     if self:getCallback("startTargeting") then callbacks = callbacks ..',startTargeting' end
-    if self:getCallback("finishTargeting") then callbacks = callbacks ..',finishTargeting' end
+    if self:getCallback("targeting") then callbacks = callbacks ..',targeting' end
+    if self:getCallback("cancelTargeting") then callbacks = callbacks ..',cancelTargeting' end
     if self:getCallback("start") then callbacks = callbacks ..',start' end
     if self:getCallback("casting") then callbacks = callbacks ..',casting' end
     if self:getCallback("cancel") then callbacks = callbacks ..',cancel' end
@@ -56,13 +57,14 @@ compiletime(function()
     ---Compiletime only
     ---@param src ChannelCompiletimeData
     ---@return number
-    function Ability.generateTargetingAbility(src)
+    function Ability.generateDummyAbility(src)
         local WeObjEdit = require('compiletime.objEdit.objEdit')
 
         local Channel = WeObjEdit.Preset.Channel
         local ability = Channel.new(src)
         ability:setField('Name', src['Name']..'_Targeting')
         ability:setField('Options', Channel.option.is_visible)
+        ability:setField('TargetType', 'point')
         return ability:generate()
     end
 end)
@@ -84,13 +86,11 @@ end
 ---@param id number
 ---@return Ability
 function Ability.get(id)
-    return Ability.__db:get(id)
-end
-
----@param id number
----@return Ability
-function Ability.getUIAbility(id)
-    return Ability.__ui_db:get(id)
+    local ability = Ability.__db:get(id)
+    if not ability then
+        ability = Ability.__ui_db:get(id)
+    end
+    return ability
 end
 
 ---@param callback AbilityCallback

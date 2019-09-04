@@ -13,7 +13,8 @@ local Unit_meta = {
     __type = 'Unit',
     __index = Unit,
     __tostring = function(self)
-        return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]', self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
+        return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]',
+                             self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
     end,
     __gc = Unit.destroy
 }

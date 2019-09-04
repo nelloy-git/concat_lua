@@ -161,7 +161,7 @@ function AnyWeAbility:setCooldown(data, lvl) self:addField(WeField.new("acdn", '
 function AnyWeAbility:setManaCost(data, lvl) self:addField(WeField.new("amcs", 'int', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
-function AnyWeAbility:setAreaofEffect(data, lvl) self:addField(WeField.new("aare", 'unreal', lvl, 0, data)) end
+function AnyWeAbility:setAreaOfEffect(data, lvl) self:addField(WeField.new("aare", 'unreal', lvl, 0, data)) end
 ---@param data number
 ---@param lvl integer
 function AnyWeAbility:setCastRange(data, lvl) self:addField(WeField.new("aran", 'unreal', lvl, 0, data)) end

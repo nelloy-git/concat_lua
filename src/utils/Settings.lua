@@ -18,9 +18,10 @@ local Settings = {
     -- ======== --
     --  Events  --
     -- ======== --
-    EnabledEvents = {
+    Events = {
         Unit = true,
-        Player = true
+        Player = true,
+        VerboseAbility = true
     }
 }
 
