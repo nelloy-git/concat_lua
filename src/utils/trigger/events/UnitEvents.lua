@@ -14,8 +14,11 @@ function UnitEvent.init()
     UnitEvent.__triggers["AnyUnitDie"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitDie"]:addEvent_AnyUnit("Death")
     ---@type Trigger
-    UnitEvent.__triggers["AnyUnitStartChannelAbility"] = Trigger.new()
-    UnitEvent.__triggers["AnyUnitStartChannelAbility"]:addEvent_AnyUnit("SpellChannel")
+    UnitEvent.__triggers["AnyUnitStartCastingAbility"] = Trigger.new()
+    UnitEvent.__triggers["AnyUnitStartCastingAbility"]:addEvent_AnyUnit("SpellChannel")
+    ---@type Trigger
+    UnitEvent.__triggers["AnyUnitFinishCastingAbility"] = Trigger.new()
+    UnitEvent.__triggers["AnyUnitFinishCastingAbility"]:addEvent_AnyUnit("SpellEffect")
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitIssuedAnyOrder"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitIssuedAnyOrder"]:addEvent_AnyUnit("IssuedOrder")
@@ -38,7 +41,8 @@ end
 ---@alias UnitEventName string
 ---| '"AnyUnitDie"'
 ---| '"AnyUnitIssuedAnyOrder"'
----| '"AnyUnitStartChannelAbility"'
+---| '"AnyUnitStartCastingAbility"'
+---| '"AnyUnitFinishCastingAbility"'
 ---| '"AnyUnitSelected"'
 ---| '"AnyUnitDeselected"'
 ---| '"AnyUnitAttacked"'

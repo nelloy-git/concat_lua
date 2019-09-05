@@ -23,16 +23,9 @@ function PlayerEvent.init()
     PlayerEvent.__triggers["LocalPlayerMouseDown"]:addEvent_Player("MouseDown", GetLocalPlayer())
 
     ---@type Trigger
-    PlayerEvent.__triggers["LocalPlayerKeyPressed"] = Trigger.new()
-    PlayerEvent.__triggers["LocalPlayerKeyPressed"]:addEvent_Player("Key", GetLocalPlayer())
+    PlayerEvent.__triggers["LocalPlayerEscDown"] = Trigger.new()
+    PlayerEvent.__triggers["LocalPlayerEscDown"]:addEvent_Keyboard("KeyDown", GetLocalPlayer(), OSKEY_ESCAPE)
 
-    ---@type Trigger
-    PlayerEvent.__triggers["LocalPlayerKeyDown"] = Trigger.new()
-    PlayerEvent.__triggers["LocalPlayerKeyDown"]:addEvent_Player("KeyDown", GetLocalPlayer())
-
-    ---@type Trigger
-    PlayerEvent.__triggers["LocalPlayerKeyUp"] = Trigger.new()
-    PlayerEvent.__triggers["LocalPlayerKeyUp"]:addEvent_Player("KeyUp", GetLocalPlayer())
 
     initialized = true
 end

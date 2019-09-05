@@ -4,38 +4,31 @@ local Ability = require('ability.Ability')
 local UnitEvent = require('utils.trigger.events.UnitEvents')
 ---@type PlayerEvent
 local PlayerEvent = require('utils.trigger.events.PlayerEvents')
----@type SpellData
-local SpellData = require('ability.SpellData')
+---@type SpellCastingData
+local SpellData = require('ability.events.SpellData')
 ---@type DataBase
 --local DataBase = require('utils.DataBase')
 ---@type Settings
 local Settings = require('utils.Settings')
 
 ---@alias AbilityEventName string
----| '"startTargeting"'     #Callback is called when player starts targeting ability.
----| '"targeting"'          #Callback is called every timer period while player is targeting.
----| '"finishTargeting"'    #Callback is called when player cancel targeting ability.
----| '"start"'              #Callback is called when unit starts casting.
----| '"casting"'            #Callback is called every loop of timer while unit is casting an ability.
----| '"cancel"'             #Callback is called when player cancels ability.
----| '"interrupt"'          #Callback is called when unit interrupted casting.
----| '"finish"'             #Callback is called if casting was not interrupted and cast time passed.
+---| '"StartTargeting"'     #Callback is called when player starts targeting ability.
+---| '"Targeting"'          #Callback is called every timer period while player is targeting.
+---| '"FinishTargeting"'    #Callback is called when player cancel targeting ability.
+---| '"Start"'              #Callback is called when unit starts casting.
+---| '"Casting"'            #Callback is called every loop of timer while unit is casting an ability.
+---| '"Cancel"'             #Callback is called when player cancels ability.
+---| '"Interrupt"'          #Callback is called when unit interrupted casting.
+---| '"Finish"'             #Callback is called if casting was not interrupted and cast time passed.
 
 ---@class AbilityEvent
-local AbilityEvent = {
-    --__targeting_db = DataBase.new('userdata', 'Ability')
-}
-
-local cancel_btn_frame
-local normal_btn_alpha
-local changed_btn_alpha
+local AbilityEvent = {}
 
 local initialized = false
 function AbilityEvent.init()
     if initialized then return nil end
     UnitEvent.init()
-    UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.unitUsesAbility)
-    --UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(AbilityEvent.unitIssuedOrder)
+    UnitEvent.getTrigger("AnyUnitStartCastingAbility"):addAction(AbilityEvent.unitUsesAbility)
 
     PlayerEvent.init()
     PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(AbilityEvent.cancelTargetingMouse)
@@ -43,23 +36,6 @@ function AbilityEvent.init()
 
     AbilityEvent.__cast_timer = glTimer
     AbilityEvent.__cast_timer_period = glTimer:getPeriod()
-
-    cancel_btn_frame = BlzGetOriginFrame(1, 11)
-    normal_btn_alpha = BlzFrameGetAlpha(cancel_btn_frame)
-    if normal_btn_alpha > 127 then
-        changed_btn_alpha = 0
-    else
-        changed_btn_alpha = 0
-    end
-
-    local function test()
-        Debug('Alpha', BlzFrameGetAlpha(cancel_btn_frame))
-        Debug('Text', BlzFrameGetText(cancel_btn_frame))
-        Debug('Size', BlzFrameGetTextSizeLimit(cancel_btn_frame))
-        Debug('Value', BlzFrameGetValue(cancel_btn_frame))
-        glTimer:addAction(1, test)
-    end
-    test()
 
     initialized = true
 end
@@ -83,7 +59,7 @@ function AbilityEvent.unitUsesAbility()
     caster_data = SpellData.new(ability, caster)
 
     ---Unit used dummy ability -> start targeting loop.
-    if id == ability:getUI_Id() then
+    if id == ability:getDummyId() then
         AbilityEvent.startTargetingLoop(caster_data)
     ---Unit used main ability -> start casting loop.
     elseif id == ability:getId() then
@@ -95,7 +71,7 @@ end
 ---  Cancel.
 --- =========
 
----@param caster_data SpellData
+---@param caster_data SpellCastingData
 function AbilityEvent.cancelCastingAbility(caster_data)
     caster_data:cancel()
 end
@@ -104,11 +80,11 @@ end
 ---  Targeting.
 --- ============
 
----@param caster_data SpellData
+---@param caster_data SpellCastingData
 function AbilityEvent.startTargetingLoop(caster_data)
     local owner = GetOwningPlayer(caster_data:getCaster())
 
-    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getUI_Id(), false)
+    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getDummyId(), false)
     SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), true)
     --ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey())
     AbilityEvent.__cast_timer:addAction(0.05, function() ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey()) end, nil)
@@ -121,7 +97,7 @@ function AbilityEvent.startTargetingLoop(caster_data)
         BlzFrameSetTextSizeLimit(cancel_btn_frame, 500)
         BlzFrameSetValue(cancel_btn_frame, 50)
         local action = PlayerEvent.getTrigger("LocalPlayerMouseMove"):addAction(AbilityEvent.cursorCatcher, caster_data)
-        caster_data:setMouseAction(action)
+        caster_data:setMouseCatcherAction(action)
         AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
     end
 
@@ -130,12 +106,12 @@ function AbilityEvent.startTargetingLoop(caster_data)
     end
 end
 
----@param spell_data SpellData
+---@param spell_data SpellCastingData
 function AbilityEvent.cursorCatcher(spell_data)
     spell_data:setMousePos(Vec2.new(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseX()))
 end
 
----@param caster_data SpellData
+---@param caster_data SpellCastingData
 function AbilityEvent.targetingLoop(caster_data)
     if BlzFrameGetAlpha(cancel_btn_frame) ~= normal_btn_alpha then
         caster_data:getAbility():runCallback("targeting", caster_data)
@@ -145,13 +121,13 @@ function AbilityEvent.targetingLoop(caster_data)
     end
 end
 
----@param caster_data SpellData
+---@param caster_data SpellCastingData
 function AbilityEvent.finishTargetingAbility(caster_data)
     local owner = GetOwningPlayer(caster_data:getCaster())
 
     PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(caster_data:getMouseAction())
     SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), false)
-    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getUI_Id(), true)
+    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getDummyId(), true)
 
     caster_data:getAbility():runCallback('finishTargeting', caster_data)
 
@@ -164,8 +140,8 @@ end
 ---  Casting
 --- =========
 
----@param caster_data SpellData
----@return SpellData | nil
+---@param caster_data SpellCastingData
+---@return SpellCastingData | nil
 function AbilityEvent.startCastingLoop(caster_data)
     caster_data:setTargetPos(GetSpellTargetPos())
     caster_data:setTarget(AbilityEvent.getSpellTarget())
@@ -185,7 +161,7 @@ function AbilityEvent.startCastingLoop(caster_data)
     end
 end
 
----@param caster_data SpellData
+---@param caster_data SpellCastingData
 function AbilityEvent.castingLoop(caster_data)
     if caster_data:cancel() then
         caster_data:getAbility():runCallback("cancel")

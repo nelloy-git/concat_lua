@@ -1,9 +1,24 @@
 ---@type UnitEvent
-local UnitEvent = require('trigger.events.unitEvent')
+local UnitEvent = require('utils.trigger.events.UnitEvents')
 
+---@class SelectedUnits
 local SelectedUnits = {}
 
-local function unitSelected()
+--- Predefined
+local unitSelected
+local unitDeselected
+
+function SelectedUnits.init()
+    for i = 0, bj_MAX_PLAYER_SLOTS do
+        SelectedUnits[Player(i)] = {}
+    end
+    ---@type Trigger
+    UnitEvent.getTrigger("AnyUnitSelected"):addAction(unitSelected)
+    ---@type Trigger
+    UnitEvent.getTrigger("AnyUnitDeselected"):addAction(unitDeselected)
+end
+
+unitSelected = function()
     local unit = GetTriggerUnit()
     local player = GetTriggerPlayer()
 
@@ -21,7 +36,7 @@ local function unitSelected()
     end
 end
 
-local function unitDeselected()
+unitDeselected = function()
     local unit = GetTriggerUnit()
     local player = GetTriggerPlayer()
 
@@ -39,19 +54,6 @@ local function unitDeselected()
     end
 end
 
-function SelectedUnits.init()
-    for i = 0, bj_MAX_PLAYER_SLOTS do
-        SelectedUnits[Player(i)] = {}
-    end
-    ---@type Trigger
-    local selection_trigger = UnitEvent.getTrigger("AnyUnitSelected")
-    selection_trigger:addAction(unitSelected, nil)
-
-    ---@type Trigger
-    local deselection_trigger = UnitEvent.getTrigger("AnyUnitDeselected")
-    deselection_trigger:addAction(unitDeselected, nil)
-end
-
 ---@param player player
 ---@return unit[]
 function SelectedUnits.get(player)
@@ -60,12 +62,6 @@ function SelectedUnits.get(player)
         table.insert(copy, SelectedUnits[i])
     end
     return copy
-end
-
----@param player player
----@return integer
-function SelectedUnits.count(player)
-    return #SelectedUnits[player]
 end
 
 return SelectedUnits

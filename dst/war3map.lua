@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SpearmanUnit = {CollisionSize = 0, NormalAbilities = "Avul,Aloc", ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroMinimapDisplay = true, HideHeroDeathMsg = true, HideHeroInterfaceIcon = true, Id = "HM#$", Name = "Spearman", SpeedBase = 1}, SummonSpearman = {TooltipNormal = "Summon spearman", HotkeyNormal = "X", ArtEffect = "", DisableOtherAbilities = false, Id = "AM#'", Name = "SummonSpearman", ArtCaster = "", Cooldown = 0, CastRange = 500, TooltipNormalExtended = "Summons invulnerale spirit warrior.", Options = 3, FollowThroughTime = 0, ArtTarget = "", OrderId = "acidbomb", TargetType = "point", Levels = 1, CastingTime = 0, ArtSpecial = "", AreaofEffect = 150, CustomCastingTime = 3}}
+    local WarlordSettings = {SummonSpearman = {OrderId = "acidbomb", HotkeyNormal = "X", TooltipNormal = "Summon spearman", Name = "SummonSpearman", Id = "AM#'", DisableOtherAbilities = false, CustomCastingTime = 3, ArtCaster = "", TargetType = "point", TooltipNormalExtended = "Summons invulnerale spirit warrior.", FollowThroughTime = 0, Levels = 1, ArtEffect = "", CastingTime = 0, ArtSpecial = "", AreaofEffect = 150, Cooldown = 0, ArtTarget = "", Options = 3, CastRange = 500}, SpearmanUnit = {HideHeroDeathMsg = true, HideHeroInterfaceIcon = true, Name = "Spearman", Id = "HM#$", HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", CollisionSize = 0, SpeedBase = 1, ModelFile = "war3mapImported\\units\\SwordNya.mdx"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -870,88 +870,155 @@ __require_data.module["utils.math.Vec2"] = function()
     end
     return Vec2
 end
-__require_data.module["ability.SpellData"] = function()
+__require_data.module["ability.events.SpellCastingData"] = function()
     local DataBase = require("utils.DataBase")
-    local SpellData = {__type = "SpellDataClass", __db = DataBase.new("userdata", "SpellData")}
-    local SpellData_meta = {__type = "SpellData", __index = SpellData, __gc = SpellData.destroy}
-    function SpellData.new(ability, caster)
-      local data = {__ability = ability, __caster = caster}
-      setmetatable(data, SpellData_meta)
-      SpellData.__db:add(caster, data)
+    local SpellCastingData = {__type = "SpellCastingDataClass", __db = DataBase.new("userdata", "SpellCastingData")}
+    local SpellCastingData_meta = {__type = "SpellCastingData", __index = SpellCastingData, __gc = SpellCastingData.destroy}
+    function SpellCastingData.init()
+      SpellCastingData.__timer = glTimer
+    end
+    local mainLoop
+    local destroy
+    function SpellCastingData.new(ability, caster, target, target_pos)
+      local data = {__ability = ability, __caster = caster, __target = target, __target_pos = target_pos}
+      setmetatable(data, SpellCastingData_meta)
+      local cur_data = SpellCastingData.__db:get(caster)
+      if (cur_data) then
+        cur_data:cancel()
+      end
+      SpellCastingData.__db:add(caster, data)
+      local continue = ability:runCallback("StartCasting", data)
+      if (not continue) then
+        data:cancel()
+      end
+      data:setCastingTime(ability:getCastingTime(data))
+      SpellCastingData.__timer:addAction(0, mainLoop, data)
       return data
     end
-    function SpellData:destroy()
-      if (SpellData.__db:get(self.__caster) == self) then
-        SpellData.__db:remove(self.__caster)
+    function destroy(self)
+      if (SpellCastingData.__db:get(self.__caster) == self) then
+        SpellCastingData.__db:remove(self.__caster)
       end
     end
-    function SpellData.get(caster)
-      return SpellData.__db:get(caster)
+    function SpellCastingData.get(caster)
+      return SpellCastingData.__db:get(caster)
     end
-    function SpellData:getAbility()
+    mainLoop = function(self)
+        if (self:isCanceled()) then
+          self.__ability:runCallback("CancelCasting", self)
+          destroy(self)
+        elseif (self:isInterrupted()) then
+          self.__ability:runCallback("InterruptCasting", self)
+          destroy(self)
+        else
+          self.__ability:runCallback("Casting", self)
+          SpellCastingData.__timer:addAction(0, mainLoop, self)
+        end
+
+    end
+    function SpellCastingData:getAbility()
       return self.__ability
     end
-    function SpellData:getCaster()
+    function SpellCastingData:getCaster()
       return self.__caster
     end
-    function SpellData:getElapsedTime()
-      return self.__elapsed_time|0
-    end
-    function SpellData:setElapsedTime(time)
-      self.__elapsed_time = time
-    end
-    function SpellData:addElapsedTime(delta)
-      self.__elapsed_time = (self.__elapsed_time+delta)
-    end
-    function SpellData:isFinished()
-      return self.__elapsed_time >= self.__casting_time
-    end
-    function SpellData:getCastingTime()
-      return self.__casting_time|0
-    end
-    function SpellData:setCastingTime(time)
-      self.__casting_time = time
-    end
-    function SpellData:addCastingTime(delta)
-      self.__casting_time = (self.__casting_time+delta)
-    end
-    function SpellData:getTarget()
+    function SpellCastingData:getTarget()
       return self.__target
     end
-    function SpellData:setTarget(target)
-      self.__target = target
-    end
-    function SpellData:getTargetPos()
+    function SpellCastingData:getTargetPos()
       return self.__target_pos
     end
-    function SpellData:setTargetPos(pos)
-      self.__target_pos = pos
+    function SpellCastingData:getElapsedTime()
+      return self.__elapsed_time|0
     end
-    function SpellData:getMousePos()
-      return self.__mouse_pos
+    function SpellCastingData:setElapsedTime(time)
+      self.__elapsed_time = time
     end
-    function SpellData:setMousePos(pos)
-      self.__mouse_pos = pos
+    function SpellCastingData:addElapsedTime(delta)
+      self.__elapsed_time = (self.__elapsed_time+delta)
     end
-    function SpellData:getMouseAction()
-      return self.__mouse_action
+    function SpellCastingData:isFinished()
+      return self.__elapsed_time >= self.__casting_time
     end
-    function SpellData:setMouseAction(action)
-      self.__mouse_action = action
+    function SpellCastingData:getCastingTime()
+      return self.__casting_time|0
     end
-    function SpellData:getUserdata()
+    function SpellCastingData:setCastingTime(time)
+      self.__casting_time = time
+    end
+    function SpellCastingData:addCastingTime(delta)
+      self.__casting_time = (self.__casting_time+delta)
+    end
+    function SpellCastingData:getUserdata()
       return self.__userdata
     end
-    function SpellData:setUserdata(data)
+    function SpellCastingData:setUserdata(data)
       self.__userdata = data
     end
-    function SpellData:cancel()
+    function SpellCastingData:cancel()
       self.__cancel = true
     end
-    function SpellData:isCanceled()
+    function SpellCastingData:isCanceled()
       return self.__cancel
     end
-    return SpellData
+    function SpellCastingData:interrupt()
+      self.__interrupt = true
+    end
+    function SpellCastingData:isInterrupted()
+      return self.__cancel
+    end
+    return SpellCastingData
+end
+__require_data.module["utils.trigger.events.SelectedUnits"] = function()
+    local UnitEvent = require("utils.trigger.events.UnitEvents")
+    local SelectedUnits = {}
+    local unitSelected
+    local unitDeselected
+    function SelectedUnits.init()
+      for i = 0, bj_MAX_PLAYER_SLOTS do
+        SelectedUnits[Player(i)] = {}
+      end
+      UnitEvent.getTrigger("AnyUnitSelected"):addAction(unitSelected)
+      UnitEvent.getTrigger("AnyUnitDeselected"):addAction(unitDeselected)
+    end
+    unitSelected = function()
+        local unit = GetTriggerUnit()
+        local player = GetTriggerPlayer()
+        local list = SelectedUnits[player]
+        local already_selected = false
+        for i = 1, #list do
+          if (unit == list[i]) then
+            already_selected = true
+            break
+          end
+        end
+        if (not already_selected) then
+          table.insert(list, unit)
+        end
+    end
+    unitDeselected = function()
+        local unit = GetTriggerUnit()
+        local player = GetTriggerPlayer()
+        local list = SelectedUnits[player]
+        local pos = -1
+        for i = 1, #list do
+          if (unit == list[i]) then
+            pos = i
+            break
+          end
+        end
+        if (pos > 0) then
+          table.remove(list, pos)
+        end
+    end
+    function SelectedUnits.get(player)
+      local copy = {}
+      for i = 1, #SelectedUnits[player] do
+        table.insert(copy, SelectedUnits[i])
+      end
+      return copy
+    end
+    return SelectedUnits
 end
 __require_data.module["ability.Ability"] = function()
     local DataBase = require("utils.DataBase")
@@ -1003,12 +1070,13 @@ __require_data.module["ability.Ability"] = function()
       ability:setField("TooltipNormal", src.Name.."_Targeting")
       ability:setField("Options", Channel.option.is_visible)
       ability:setField("TargetType", "none")
+      ability:setField("Cooldown", 0.1)
       return ability:generate()
     end
     function Ability:getId()
       return self.__id
     end
-    function Ability:getUI_Id()
+    function Ability:getDummyId()
       return self.__ui_id
     end
     function Ability:getHotkey()
@@ -1089,159 +1157,106 @@ __require_data.module["ability.Ability"] = function()
       end
 
     end
+    function Ability:giveToUnit(unit)
+      UnitAddAbility(unit, self.__id)
+      UnitAddAbility(unit, self.__ui_id)
+      SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
+    end
+    function Ability:showUIButton(unit)
+      local owner = GetOwningPlayer(unit)
+      SetPlayerAbilityAvailable(owner, self.__id, false)
+      SetPlayerAbilityAvailable(owner, self.__ui_id, true)
+    end
+    function Ability:showMainButton(unit)
+      local owner = GetOwningPlayer(unit)
+      SetPlayerAbilityAvailable(owner, self.__id, true)
+      SetPlayerAbilityAvailable(owner, self.__ui_id, false)
+    end
     return Ability
 end
-__require_data.module["ability.AbilityEvent"] = function()
+__require_data.module["ability.events.DummyAbilityEvent"] = function()
     local Ability = require("ability.Ability")
     local UnitEvent = require("utils.trigger.events.UnitEvents")
     local PlayerEvent = require("utils.trigger.events.PlayerEvents")
-    local SpellData = require("ability.SpellData")
+    local SelectedUnits = require("utils.trigger.events.SelectedUnits")
     local Settings = require("utils.Settings")
-    local AbilityEvent = {}
-    local cancel_btn_frame
-    local normal_btn_alpha
-    local changed_btn_alpha
+    local SpellTargetingData = require("ability.events.SpellCastingData")
+    local DummyAbilityEvent = {}
+    local is_local_player_targeting = false
     local initialized = false
-    function AbilityEvent.init()
+    function DummyAbilityEvent.init()
       if (initialized) then
         return nil
       end
       UnitEvent.init()
-      UnitEvent.getTrigger("AnyUnitStartChannelAbility"):addAction(AbilityEvent.unitUsesAbility)
-      AbilityEvent.__cast_timer = glTimer
-      AbilityEvent.__cast_timer_period = glTimer:getPeriod()
-      cancel_btn_frame = BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 11)
-      normal_btn_alpha = BlzFrameGetAlpha(cancel_btn_frame)
-      if (normal_btn_alpha > 127) then
-        changed_btn_alpha = 0
-      else
-        changed_btn_alpha = 0
-      end
-      local function test()
-        Debug("Alpha", BlzFrameGetAlpha(cancel_btn_frame))
-        Debug("Text", BlzFrameGetText(cancel_btn_frame))
-        Debug("Size", BlzFrameGetTextSizeLimit(cancel_btn_frame))
-        Debug("Value", BlzFrameGetValue(cancel_btn_frame))
-        glTimer:addAction(1, test)
-      end
-      test()
+      UnitEvent.getTrigger("AnyUnitFinishCastingAbility", DummyAbilityEvent.startTargeting)
+      UnitEvent.getTrigger("AnyUnitDeselected", function()
+          local unit = GetTriggerUnit()
+          if (GetOwningPlayer(unit) ~= GetLocalPlayer()) then
+            return nil
+          end
+          if (not is_local_player_targeting) then
+            return nil
+          end
+          local data = SpellTargetingData.get(unit)
+          if (data) then
+            data:cancel()
+          end
+          is_local_player_targeting = false
+          if (Settings.Events.VerboseAbility) then
+            Debug("Targeting canceled.")
+          end
+      end)
+      PlayerEvent.init()
+      PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting())
+      PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
+          if (BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT) then
+            DummyAbilityEvent.cancelTargeting()
+          end
+      end)
       initialized = true
     end
-    function AbilityEvent.unitUsesAbility()
+    function DummyAbilityEvent.startTargeting()
       local id = GetSpellAbilityId()
-      local caster = GetSpellAbilityUnit()
       local ability = Ability.get(id)
-      local caster_data = SpellData.get(caster)
-      if (Settings.Events.VerboseAbility) then
-        Debug("Got casting")
+      local caster = GetSpellAbilityUnit()
+      if (id ~= ability:getUiId()) then
+        local data = SpellTargetingData.get(caster)
+        if (data) then
+          data:cancel()
+          if (Settings.Events.VerboseAbility) then
+            Debug("Targeting canceled bugged.")
+          end
+        end
+        is_local_player_targeting = false
+        return nil
       end
-      if (caster_data ~= nil) then
-        AbilityEvent.cancelCastingAbility(caster_data)
+      if (GetLocalPlayer() ~= GetOwningPlayer(caster)) then
+        return nil
       end
-      caster_data = SpellData.new(ability, caster)
-      if (id == ability:getUI_Id()) then
-        AbilityEvent.startTargetingLoop(caster_data)
-      elseif (id == ability:getId()) then
-        AbilityEvent.startCastingLoop(caster_data)
-      end
-
-    end
-    function AbilityEvent.cancelCastingAbility(caster_data)
-      caster_data:cancel()
-    end
-    function AbilityEvent.startTargetingLoop(caster_data)
-      local owner = GetOwningPlayer(caster_data:getCaster())
-      SetPlayerAbilityAvailable(owner, caster_data:getAbility():getUI_Id(), false)
-      SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), true)
-      AbilityEvent.__cast_timer:addAction(0.05, function()
-          ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey())
-      end, nil)
-      caster_data:getAbility():runCallback("startTargeting", caster_data)
-      if (owner == GetLocalPlayer()) then
-        BlzFrameSetAlpha(cancel_btn_frame, changed_btn_alpha)
-        BlzFrameSetText(cancel_btn_frame, "azaza")
-        BlzFrameSetTextSizeLimit(cancel_btn_frame, 500)
-        BlzFrameSetValue(cancel_btn_frame, 50)
-        local action = PlayerEvent.getTrigger("LocalPlayerMouseMove"):addAction(AbilityEvent.cursorCatcher, caster_data)
-        caster_data:setMouseAction(action)
-        AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
-      end
+      is_local_player_targeting = true
+      SpellTargetingData.new(ability, caster)
       if (Settings.Events.VerboseAbility) then
         Debug("Targeting started")
       end
     end
-    function AbilityEvent.cursorCatcher(spell_data)
-      spell_data:setMousePos(Vec2.new(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseX()))
-    end
-    function AbilityEvent.targetingLoop(caster_data)
-      if (BlzFrameGetAlpha(cancel_btn_frame) ~= normal_btn_alpha) then
-        caster_data:getAbility():runCallback("targeting", caster_data)
-        AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
-      else
-        AbilityEvent.finishTargetingAbility(caster_data)
-      end
-    end
-    function AbilityEvent.finishTargetingAbility(caster_data)
-      local owner = GetOwningPlayer(caster_data:getCaster())
-      PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(caster_data:getMouseAction())
-      SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), false)
-      SetPlayerAbilityAvailable(owner, caster_data:getAbility():getUI_Id(), true)
-      caster_data:getAbility():runCallback("finishTargeting", caster_data)
-      if (Settings.Events.VerboseAbility) then
-        Debug("Targeting finished")
-      end
-    end
-    function AbilityEvent.startCastingLoop(caster_data)
-      caster_data:setTargetPos(GetSpellTargetPos())
-      caster_data:setTarget(AbilityEvent.getSpellTarget())
-      caster_data:setCastingTime(caster_data:getAbility():getCastingTime(caster_data))
-      local success = caster_data:getAbility():runCallback("start", caster_data)
-      if (not success) then
-        caster_data:destroy()
+    function DummyAbilityEvent.cancelTargeting()
+      if (not is_local_player_targeting) then
         return nil
       end
-      AbilityEvent.__cast_timer:addAction(0, AbilityEvent.castingLoop, caster_data)
-      if (Settings.Events.VerboseAbility) then
-        Debug(string.format("Casting started - %b", success))
-      end
-    end
-    function AbilityEvent.castingLoop(caster_data)
-      if (caster_data:cancel()) then
-        caster_data:getAbility():runCallback("cancel")
-        caster_data:destroy()
-        return nil
-      end
-      caster_data:addElapsedTime(AbilityEvent.__cast_timer_period)
-      if (caster_data:isFinished()) then
-        caster_data:getAbility():runCallback("finish", caster_data)
-        caster_data:destroy()
-        if (Settings.Events.VerboseAbility) then
-          Debug("Casting finished.")
-        end
-        return nil
-      end
-      local continue = caster_data:getAbility():runCallback("casting", caster_data)
-      if (continue) then
-        AbilityEvent.__cast_timer:addAction(0, AbilityEvent.castingLoop, caster_data)
-      else
-        caster_data:getAbility():runCallback("interrupt", caster_data)
-        caster_data:destroy()
-        if (Settings.Events.VerboseAbility) then
-          Debug("Casting interrupted.")
+      local selected = SelectedUnits.get(GetLocalPlayer())
+      for i = 1, #selected do
+        local data = SpellTargetingData.get(selected[i])
+        if (data) then
+          data:cancel()
         end
       end
-    end
-    function AbilityEvent.getSpellTarget()
-      local target = GetSpellTargetUnit()
-      if (not target) then
-        target = GetSpellTargetItem()
+      is_local_player_targeting = false
+      if (Settings.Events.VerboseAbility) then
+        Debug("Targeting canceled.")
       end
-      if (not target) then
-        target = GetSpellTargetDestructable()
-      end
-      return target
     end
-    return AbilityEvent
+    return DummyAbilityEvent
 end
 __require_data.module["utils.trigger.events.PlayerEvents"] = function()
     local Trigger = require("utils.trigger.Trigger")
@@ -1253,12 +1268,10 @@ __require_data.module["utils.trigger.events.PlayerEvents"] = function()
       end
       PlayerEvent.__triggers.LocalPlayerMouseMove = Trigger.new()
       PlayerEvent.__triggers.LocalPlayerMouseMove:addEvent_Player("MouseMove", GetLocalPlayer())
-      PlayerEvent.__triggers.LocalPlayerKeyPressed = Trigger.new()
-      PlayerEvent.__triggers.LocalPlayerKeyPressed:addEvent_Player("Key", GetLocalPlayer())
-      PlayerEvent.__triggers.LocalPlayerKeyDown = Trigger.new()
-      PlayerEvent.__triggers.LocalPlayerKeyDown:addEvent_Player("KeyDown", GetLocalPlayer())
-      PlayerEvent.__triggers.LocalPlayerKeyUp = Trigger.new()
-      PlayerEvent.__triggers.LocalPlayerKeyUp:addEvent_Player("KeyUp", GetLocalPlayer())
+      PlayerEvent.__triggers.LocalPlayerMouseDown = Trigger.new()
+      PlayerEvent.__triggers.LocalPlayerMouseDown:addEvent_Player("MouseDown", GetLocalPlayer())
+      PlayerEvent.__triggers.LocalPlayerEscDown = Trigger.new()
+      PlayerEvent.__triggers.LocalPlayerEscDown:addEvent_Keyboard("KeyDown", GetLocalPlayer(), OSKEY_ESCAPE)
       initialized = true
     end
     function PlayerEvent.getTrigger(event)
@@ -1270,739 +1283,745 @@ __require_data.module["utils.trigger.events.PlayerEvents"] = function()
     return PlayerEvent
 end
 __require_data.module["utils.trigger.TriggerEvent"] = function()
-    local TriggerEvent = {Game = {}, AnyPlayer = {}, Player = {}, PlayerUnit = {}, AnyUnit = {}, Unit = {}}
-    TriggerEvent.Game.Victory = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_VICTORY)
+    local TriggerEvent = {Game = {}, AnyPlayer = {}, Player = {}, PlayerUnit = {}, AnyUnit = {}, Unit = {}, Keyboard = {}}
+    TriggerEvent.Game.Victory = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_VICTORY)
     end
-    TriggerEvent.Game.End = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_END_LEVEL)
+    TriggerEvent.Game.End = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_END_LEVEL)
     end
-    TriggerEvent.Game.VariableLimit = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_VARIABLE_LIMIT)
+    TriggerEvent.Game.VariableLimit = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_VARIABLE_LIMIT)
     end
-    TriggerEvent.Game.StateLimit = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_STATE_LIMIT)
+    TriggerEvent.Game.StateLimit = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_STATE_LIMIT)
     end
-    TriggerEvent.Game.TimerExpired = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TIMER_EXPIRED)
+    TriggerEvent.Game.TimerExpired = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_TIMER_EXPIRED)
     end
-    TriggerEvent.Game.EnterRegion = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_ENTER_REGION)
+    TriggerEvent.Game.EnterRegion = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_ENTER_REGION)
     end
-    TriggerEvent.Game.LeaveRegion = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_LEAVE_REGION)
+    TriggerEvent.Game.LeaveRegion = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_LEAVE_REGION)
     end
-    TriggerEvent.Game.TrackableHit = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TRACKABLE_HIT)
+    TriggerEvent.Game.TrackableHit = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_TRACKABLE_HIT)
     end
-    TriggerEvent.Game.TrackableTrack = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TRACKABLE_TRACK)
+    TriggerEvent.Game.TrackableTrack = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_TRACKABLE_TRACK)
     end
-    TriggerEvent.Game.ShowSkill = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_SHOW_SKILL)
+    TriggerEvent.Game.ShowSkill = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_SHOW_SKILL)
     end
-    TriggerEvent.Game.BuildSubmenu = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_BUILD_SUBMENU)
+    TriggerEvent.Game.BuildSubmenu = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_BUILD_SUBMENU)
     end
-    TriggerEvent.Game.Loaded = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_LOADED)
+    TriggerEvent.Game.Loaded = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_LOADED)
     end
-    TriggerEvent.Game.TournamentFinishSoon = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TOURNAMENT_FINISH_SOON)
+    TriggerEvent.Game.TournamentFinishSoon = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_TOURNAMENT_FINISH_SOON)
     end
-    TriggerEvent.Game.TournamentFinishNow = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_TOURNAMENT_FINISH_NOW)
+    TriggerEvent.Game.TournamentFinishNow = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_TOURNAMENT_FINISH_NOW)
     end
-    TriggerEvent.Game.Save = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_SAVE)
+    TriggerEvent.Game.Save = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_SAVE)
     end
-    TriggerEvent.Game.CustomUIFrame = function(wc3_trigger)
-        TriggerRegisterGameEvent(wc3_trigger, EVENT_GAME_CUSTOM_UI_FRAME)
+    TriggerEvent.Game.CustomUIFrame = function(trigger)
+        TriggerRegisterGameEvent(trigger, EVENT_GAME_CUSTOM_UI_FRAME)
     end
-    TriggerEvent.Player.StateLimit = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_STATE_LIMIT)
+    TriggerEvent.Player.StateLimit = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_STATE_LIMIT)
     end
-    TriggerEvent.Player.AllianceChanged = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ALLIANCE_CHANGED)
+    TriggerEvent.Player.AllianceChanged = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ALLIANCE_CHANGED)
     end
-    TriggerEvent.Player.Defeat = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_DEFEAT)
+    TriggerEvent.Player.Defeat = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_DEFEAT)
     end
-    TriggerEvent.Player.Victory = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_VICTORY)
+    TriggerEvent.Player.Victory = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_VICTORY)
     end
-    TriggerEvent.Player.Leave = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_LEAVE)
+    TriggerEvent.Player.Leave = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_LEAVE)
     end
-    TriggerEvent.Player.Chat = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_CHAT)
+    TriggerEvent.Player.Chat = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_CHAT)
     end
-    TriggerEvent.Player.EndCinematic = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_END_CINEMATIC)
+    TriggerEvent.Player.EndCinematic = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_END_CINEMATIC)
     end
-    TriggerEvent.Player.ArrowLeft_Down = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_LEFT_DOWN)
+    TriggerEvent.Player.ArrowLeft_Down = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_LEFT_DOWN)
     end
-    TriggerEvent.Player.ArrowLeft_Up = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_LEFT_UP)
+    TriggerEvent.Player.ArrowLeft_Up = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_LEFT_UP)
     end
-    TriggerEvent.Player.ArrowRight_Down = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_RIGHT_DOWN)
+    TriggerEvent.Player.ArrowRight_Down = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_RIGHT_DOWN)
     end
-    TriggerEvent.Player.ArrowRight_Up = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_RIGHT_UP)
+    TriggerEvent.Player.ArrowRight_Up = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_RIGHT_UP)
     end
-    TriggerEvent.Player.ArrowDown_Down = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_DOWN_DOWN)
+    TriggerEvent.Player.ArrowDown_Down = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_DOWN_DOWN)
     end
-    TriggerEvent.Player.ArrowDown_Up = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_DOWN_UP)
+    TriggerEvent.Player.ArrowDown_Up = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_DOWN_UP)
     end
-    TriggerEvent.Player.ArrowUp_Down = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_UP_DOWN)
+    TriggerEvent.Player.ArrowUp_Down = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_UP_DOWN)
     end
-    TriggerEvent.Player.ArrowUp_Up = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_ARROW_UP_UP)
+    TriggerEvent.Player.ArrowUp_Up = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_ARROW_UP_UP)
     end
-    TriggerEvent.Player.MouseDown = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_MOUSE_DOWN)
+    TriggerEvent.Player.MouseDown = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_MOUSE_DOWN)
     end
-    TriggerEvent.Player.MouseUp = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_MOUSE_UP)
+    TriggerEvent.Player.MouseUp = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_MOUSE_UP)
     end
-    TriggerEvent.Player.MouseMove = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_MOUSE_MOVE)
+    TriggerEvent.Player.MouseMove = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_MOUSE_MOVE)
     end
-    TriggerEvent.Player.SyncData = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_SYNC_DATA)
+    TriggerEvent.Player.SyncData = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_SYNC_DATA)
     end
-    TriggerEvent.Player.Key = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY)
+    TriggerEvent.Player.Key = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_KEY)
     end
-    TriggerEvent.Player.KeyDown = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_DOWN)
+    TriggerEvent.Player.KeyDown = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_KEY_DOWN)
     end
-    TriggerEvent.Player.KeyUp = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerEvent(wc3_trigger, wc3_player, EVENT_PLAYER_KEY_UP)
+    TriggerEvent.Player.KeyUp = function(trigger, player)
+        TriggerRegisterPlayerEvent(trigger, player, EVENT_PLAYER_KEY_UP)
     end
-    TriggerEvent.AnyPlayer.StateLimit = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.StateLimit = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_STATE_LIMIT)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_STATE_LIMIT)
         end
     end
-    TriggerEvent.AnyPlayer.AllianceChanged = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.AllianceChanged = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ALLIANCE_CHANGED)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ALLIANCE_CHANGED)
         end
     end
-    TriggerEvent.AnyPlayer.Defeat = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.Defeat = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_DEFEAT)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_DEFEAT)
         end
     end
-    TriggerEvent.AnyPlayer.Victory = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.Victory = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_VICTORY)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_VICTORY)
         end
     end
-    TriggerEvent.AnyPlayer.Leave = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.Leave = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_LEAVE)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_LEAVE)
         end
     end
-    TriggerEvent.AnyPlayer.Chat = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.Chat = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_CHAT)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_CHAT)
         end
     end
-    TriggerEvent.AnyPlayer.EndCinematic = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.EndCinematic = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_END_CINEMATIC)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_END_CINEMATIC)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowLeft_Down = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowLeft_Down = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_LEFT_DOWN)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_LEFT_DOWN)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowLeft_Up = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowLeft_Up = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_LEFT_UP)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_LEFT_UP)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowRight_Down = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowRight_Down = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_RIGHT_DOWN)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_RIGHT_DOWN)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowRight_Up = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowRight_Up = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_RIGHT_UP)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_RIGHT_UP)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowDown_Down = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowDown_Down = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_DOWN_DOWN)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_DOWN_DOWN)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowDown_Up = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowDown_Up = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_DOWN_UP)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_DOWN_UP)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowUp_Down = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowUp_Down = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_UP_DOWN)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_UP_DOWN)
         end
     end
-    TriggerEvent.AnyPlayer.ArrowUp_Up = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.ArrowUp_Up = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_ARROW_UP_UP)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_ARROW_UP_UP)
         end
     end
-    TriggerEvent.AnyPlayer.MouseDown = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.MouseDown = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_MOUSE_DOWN)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_MOUSE_DOWN)
         end
     end
-    TriggerEvent.AnyPlayer.MouseUp = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.MouseUp = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_MOUSE_UP)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_MOUSE_UP)
         end
     end
-    TriggerEvent.AnyPlayer.MouseMove = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.MouseMove = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_MOUSE_MOVE)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_MOUSE_MOVE)
         end
     end
-    TriggerEvent.AnyPlayer.SyncData = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.SyncData = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_SYNC_DATA)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_SYNC_DATA)
         end
     end
-    TriggerEvent.AnyPlayer.Key = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.Key = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_KEY)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_KEY)
         end
     end
-    TriggerEvent.AnyPlayer.KeyDown = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.KeyDown = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_KEY_DOWN)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_KEY_DOWN)
         end
     end
-    TriggerEvent.AnyPlayer.KeyUp = function(wc3_trigger)
+    TriggerEvent.AnyPlayer.KeyUp = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerEvent(wc3_trigger, Player(i), EVENT_PLAYER_KEY_UP)
+          TriggerRegisterPlayerEvent(trigger, Player(i), EVENT_PLAYER_KEY_UP)
         end
     end
-    TriggerEvent.PlayerUnit.Attacked = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ATTACKED)
+    TriggerEvent.PlayerUnit.Attacked = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_ATTACKED)
     end
-    TriggerEvent.PlayerUnit.Rescued = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESCUED)
+    TriggerEvent.PlayerUnit.Rescued = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_RESCUED)
     end
-    TriggerEvent.PlayerUnit.Death = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DEATH)
+    TriggerEvent.PlayerUnit.Death = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DEATH)
     end
-    TriggerEvent.PlayerUnit.Decay = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DECAY)
+    TriggerEvent.PlayerUnit.Decay = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DECAY)
     end
-    TriggerEvent.PlayerUnit.Death = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DETECTED)
+    TriggerEvent.PlayerUnit.Death = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DETECTED)
     end
-    TriggerEvent.PlayerUnit.Hidden = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_HIDDEN)
+    TriggerEvent.PlayerUnit.Hidden = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_HIDDEN)
     end
-    TriggerEvent.PlayerUnit.Selected = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SELECTED)
+    TriggerEvent.PlayerUnit.Selected = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SELECTED)
     end
-    TriggerEvent.PlayerUnit.Deselected = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DESELECTED)
+    TriggerEvent.PlayerUnit.Deselected = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DESELECTED)
     end
-    TriggerEvent.PlayerUnit.ConstructStart = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CONSTRUCT_START)
+    TriggerEvent.PlayerUnit.ConstructStart = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_CONSTRUCT_START)
     end
-    TriggerEvent.PlayerUnit.ConstructCancel = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
+    TriggerEvent.PlayerUnit.ConstructCancel = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
     end
-    TriggerEvent.PlayerUnit.ConstructFinish = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
+    TriggerEvent.PlayerUnit.ConstructFinish = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
     end
-    TriggerEvent.PlayerUnit.UpgradeStart = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_UPGRADE_START)
+    TriggerEvent.PlayerUnit.UpgradeStart = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_UPGRADE_START)
     end
-    TriggerEvent.PlayerUnit.Cancel = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
+    TriggerEvent.PlayerUnit.Cancel = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
     end
-    TriggerEvent.PlayerUnit.Finish = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_UPGRADE_FINISH)
+    TriggerEvent.PlayerUnit.Finish = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_UPGRADE_FINISH)
     end
-    TriggerEvent.PlayerUnit.TrainStart = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_TRAIN_START)
+    TriggerEvent.PlayerUnit.TrainStart = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_TRAIN_START)
     end
-    TriggerEvent.PlayerUnit.TrainCancel = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_TRAIN_CANCEL)
+    TriggerEvent.PlayerUnit.TrainCancel = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_TRAIN_CANCEL)
     end
-    TriggerEvent.PlayerUnit.TrainFinish = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_TRAIN_FINISH)
+    TriggerEvent.PlayerUnit.TrainFinish = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_TRAIN_FINISH)
     end
-    TriggerEvent.PlayerUnit.ResearchStart = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_START)
+    TriggerEvent.PlayerUnit.ResearchStart = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_RESEARCH_START)
     end
-    TriggerEvent.PlayerUnit.ResearchCancel = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
+    TriggerEvent.PlayerUnit.ResearchCancel = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
     end
-    TriggerEvent.PlayerUnit.ResearchFinish = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+    TriggerEvent.PlayerUnit.ResearchFinish = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_RESEARCH_FINISH)
     end
-    TriggerEvent.PlayerUnit.IssuedOrder = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_ORDER)
+    TriggerEvent.PlayerUnit.IssuedOrder = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_ISSUED_ORDER)
     end
-    TriggerEvent.PlayerUnit.IssuedOrderPointTarget = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+    TriggerEvent.PlayerUnit.IssuedOrderPointTarget = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
     end
-    TriggerEvent.PlayerUnit.IssuedOrderTarget = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+    TriggerEvent.PlayerUnit.IssuedOrderTarget = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
     end
-    TriggerEvent.PlayerUnit.IssuedOrderUnitTarget = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+    TriggerEvent.PlayerUnit.IssuedOrderUnitTarget = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
     end
-    TriggerEvent.PlayerUnit.Level = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_LEVEL)
+    TriggerEvent.PlayerUnit.Level = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_HERO_LEVEL)
     end
-    TriggerEvent.PlayerUnit.Skill = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_SKILL)
+    TriggerEvent.PlayerUnit.Skill = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_HERO_SKILL)
     end
-    TriggerEvent.PlayerUnit.Revivable = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVABLE)
+    TriggerEvent.PlayerUnit.Revivable = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_HERO_REVIVABLE)
     end
-    TriggerEvent.PlayerUnit.ReviveStart = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_START)
+    TriggerEvent.PlayerUnit.ReviveStart = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_HERO_REVIVE_START)
     end
-    TriggerEvent.PlayerUnit.ReviveCancel = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_CANCEL)
+    TriggerEvent.PlayerUnit.ReviveCancel = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_HERO_REVIVE_CANCEL)
     end
-    TriggerEvent.PlayerUnit.ReviveFinish = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_HERO_REVIVE_FINISH)
+    TriggerEvent.PlayerUnit.ReviveFinish = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_HERO_REVIVE_FINISH)
     end
-    TriggerEvent.PlayerUnit.Summon = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SUMMON)
+    TriggerEvent.PlayerUnit.Summon = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SUMMON)
     end
-    TriggerEvent.PlayerUnit.DropItem = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DROP_ITEM)
+    TriggerEvent.PlayerUnit.DropItem = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DROP_ITEM)
     end
-    TriggerEvent.PlayerUnit.PickUpItem = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_PICKUP_ITEM)
+    TriggerEvent.PlayerUnit.PickUpItem = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_PICKUP_ITEM)
     end
-    TriggerEvent.PlayerUnit.UseItem = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_USE_ITEM)
+    TriggerEvent.PlayerUnit.UseItem = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_USE_ITEM)
     end
-    TriggerEvent.PlayerUnit.Loaded = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_LOADED)
+    TriggerEvent.PlayerUnit.Loaded = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_LOADED)
     end
-    TriggerEvent.PlayerUnit.Damaged = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DAMAGED)
+    TriggerEvent.PlayerUnit.Damaged = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DAMAGED)
     end
-    TriggerEvent.PlayerUnit.Damaging = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_DAMAGING)
+    TriggerEvent.PlayerUnit.Damaging = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_DAMAGING)
     end
-    TriggerEvent.PlayerUnit.Sell = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SELL)
+    TriggerEvent.PlayerUnit.Sell = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SELL)
     end
-    TriggerEvent.PlayerUnit.ChangeOwner = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_CHANGE_OWNER)
+    TriggerEvent.PlayerUnit.ChangeOwner = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_CHANGE_OWNER)
     end
-    TriggerEvent.PlayerUnit.SellItem = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SELL_ITEM)
+    TriggerEvent.PlayerUnit.SellItem = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SELL_ITEM)
     end
-    TriggerEvent.PlayerUnit.SpellChannel = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_CHANNEL)
+    TriggerEvent.PlayerUnit.SpellChannel = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SPELL_CHANNEL)
     end
-    TriggerEvent.PlayerUnit.SpellCast = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_CAST)
+    TriggerEvent.PlayerUnit.SpellCast = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SPELL_CAST)
     end
-    TriggerEvent.PlayerUnit.SpellEffect = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_EFFECT)
+    TriggerEvent.PlayerUnit.SpellEffect = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SPELL_EFFECT)
     end
-    TriggerEvent.PlayerUnit.SpellFinish = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_FINISH)
+    TriggerEvent.PlayerUnit.SpellFinish = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SPELL_FINISH)
     end
-    TriggerEvent.PlayerUnit.SpellEndCast = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
+    TriggerEvent.PlayerUnit.SpellEndCast = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_SPELL_ENDCAST)
     end
-    TriggerEvent.PlayerUnit.PawnItem = function(wc3_trigger, wc3_player)
-        TriggerRegisterPlayerUnitEvent(wc3_trigger, wc3_player, EVENT_PLAYER_UNIT_PAWN_ITEM)
+    TriggerEvent.PlayerUnit.PawnItem = function(trigger, player)
+        TriggerRegisterPlayerUnitEvent(trigger, player, EVENT_PLAYER_UNIT_PAWN_ITEM)
     end
-    TriggerEvent.AnyUnit.Attacked = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Attacked = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ATTACKED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_ATTACKED)
         end
     end
-    TriggerEvent.AnyUnit.Rescued = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Rescued = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESCUED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_RESCUED)
         end
     end
-    TriggerEvent.AnyUnit.Death = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Death = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DEATH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DEATH)
         end
     end
-    TriggerEvent.AnyUnit.Decay = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Decay = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DECAY)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DECAY)
         end
     end
-    TriggerEvent.AnyUnit.Detect = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Detect = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DETECTED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DETECTED)
         end
     end
-    TriggerEvent.AnyUnit.Hidden = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Hidden = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_HIDDEN)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_HIDDEN)
         end
     end
-    TriggerEvent.AnyUnit.Selected = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Selected = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SELECTED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SELECTED)
         end
     end
-    TriggerEvent.AnyUnit.Deselected = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Deselected = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DESELECTED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DESELECTED)
         end
     end
-    TriggerEvent.AnyUnit.ConstructStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ConstructStart = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_START)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_START)
         end
     end
-    TriggerEvent.AnyUnit.ConstructCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ConstructCancel = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_CANCEL)
         end
     end
-    TriggerEvent.AnyUnit.ConstructFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ConstructFinish = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_CONSTRUCT_FINISH)
         end
     end
-    TriggerEvent.AnyUnit.UpgradeStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.UpgradeStart = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_START)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_START)
         end
     end
-    TriggerEvent.AnyUnit.Cancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Cancel = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_CANCEL)
         end
     end
-    TriggerEvent.AnyUnit.Finish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Finish = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_FINISH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_UPGRADE_FINISH)
         end
     end
-    TriggerEvent.AnyUnit.TrainStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.TrainStart = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_START)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_START)
         end
     end
-    TriggerEvent.AnyUnit.TrainCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.TrainCancel = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_CANCEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_CANCEL)
         end
     end
-    TriggerEvent.AnyUnit.TrainFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.TrainFinish = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_FINISH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_TRAIN_FINISH)
         end
     end
-    TriggerEvent.AnyUnit.ResearchStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ResearchStart = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_START)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_START)
         end
     end
-    TriggerEvent.AnyUnit.ResearchCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ResearchCancel = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_CANCEL)
         end
     end
-    TriggerEvent.AnyUnit.ResearchFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ResearchFinish = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_FINISH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_RESEARCH_FINISH)
         end
     end
-    TriggerEvent.AnyUnit.IssuedOrder = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrder = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_ORDER)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_ORDER)
         end
     end
-    TriggerEvent.AnyUnit.IssuedOrderPointTarget = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrderPointTarget = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
         end
     end
-    TriggerEvent.AnyUnit.IssuedOrderTarget = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrderTarget = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
         end
     end
-    TriggerEvent.AnyUnit.IssuedOrderUnitTarget = function(wc3_trigger)
+    TriggerEvent.AnyUnit.IssuedOrderUnitTarget = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
         end
     end
-    TriggerEvent.AnyUnit.Level = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Level = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_LEVEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_HERO_LEVEL)
         end
     end
-    TriggerEvent.AnyUnit.Skill = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Skill = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_SKILL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_HERO_SKILL)
         end
     end
-    TriggerEvent.AnyUnit.Revivable = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Revivable = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVABLE)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_HERO_REVIVABLE)
         end
     end
-    TriggerEvent.AnyUnit.ReviveStart = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ReviveStart = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_START)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_START)
         end
     end
-    TriggerEvent.AnyUnit.ReviveCancel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ReviveCancel = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_CANCEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_CANCEL)
         end
     end
-    TriggerEvent.AnyUnit.ReviveFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ReviveFinish = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_FINISH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_HERO_REVIVE_FINISH)
         end
     end
-    TriggerEvent.AnyUnit.Summon = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Summon = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SUMMON)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SUMMON)
         end
     end
-    TriggerEvent.AnyUnit.DropItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.DropItem = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DROP_ITEM)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DROP_ITEM)
         end
     end
-    TriggerEvent.AnyUnit.PickUpItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.PickUpItem = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_PICKUP_ITEM)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_PICKUP_ITEM)
         end
     end
-    TriggerEvent.AnyUnit.UseItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.UseItem = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_USE_ITEM)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_USE_ITEM)
         end
     end
-    TriggerEvent.AnyUnit.Loaded = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Loaded = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_LOADED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_LOADED)
         end
     end
-    TriggerEvent.AnyUnit.Damaged = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Damaged = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DAMAGED)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DAMAGED)
         end
     end
-    TriggerEvent.AnyUnit.Damaging = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Damaging = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_DAMAGING)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_DAMAGING)
         end
     end
-    TriggerEvent.AnyUnit.Sell = function(wc3_trigger)
+    TriggerEvent.AnyUnit.Sell = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SELL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SELL)
         end
     end
-    TriggerEvent.AnyUnit.ChangeOwner = function(wc3_trigger)
+    TriggerEvent.AnyUnit.ChangeOwner = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_CHANGE_OWNER)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_CHANGE_OWNER)
         end
     end
-    TriggerEvent.AnyUnit.SellItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SellItem = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SELL_ITEM)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SELL_ITEM)
         end
     end
-    TriggerEvent.AnyUnit.SpellChannel = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellChannel = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_CHANNEL)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_CHANNEL)
         end
     end
-    TriggerEvent.AnyUnit.SpellCast = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellCast = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_CAST)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_CAST)
         end
     end
-    TriggerEvent.AnyUnit.SpellEffect = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellEffect = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_EFFECT)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_EFFECT)
         end
     end
-    TriggerEvent.AnyUnit.SpellFinish = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellFinish = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_FINISH)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_FINISH)
         end
     end
-    TriggerEvent.AnyUnit.SpellEndCast = function(wc3_trigger)
+    TriggerEvent.AnyUnit.SpellEndCast = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_ENDCAST)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_SPELL_ENDCAST)
         end
     end
-    TriggerEvent.AnyUnit.PawnItem = function(wc3_trigger)
+    TriggerEvent.AnyUnit.PawnItem = function(trigger)
         for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
-          TriggerRegisterPlayerUnitEvent(wc3_trigger, Player(i), EVENT_PLAYER_UNIT_PAWN_ITEM)
+          TriggerRegisterPlayerUnitEvent(trigger, Player(i), EVENT_PLAYER_UNIT_PAWN_ITEM)
         end
     end
-    TriggerEvent.Unit.Damaged = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DAMAGED)
+    TriggerEvent.Unit.Damaged = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DAMAGED)
     end
-    TriggerEvent.Unit.Damaging = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DAMAGING)
+    TriggerEvent.Unit.Damaging = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DAMAGING)
     end
-    TriggerEvent.Unit.Death = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DEATH)
+    TriggerEvent.Unit.Death = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DEATH)
     end
-    TriggerEvent.Unit.Decay = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DECAY)
+    TriggerEvent.Unit.Decay = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DECAY)
     end
-    TriggerEvent.Unit.Detected = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DETECTED)
+    TriggerEvent.Unit.Detected = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DETECTED)
     end
-    TriggerEvent.Unit.Hiden = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HIDDEN)
+    TriggerEvent.Unit.Hiden = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HIDDEN)
     end
-    TriggerEvent.Unit.Selected = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SELECTED)
+    TriggerEvent.Unit.Selected = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SELECTED)
     end
-    TriggerEvent.Unit.Deselected = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DESELECTED)
+    TriggerEvent.Unit.Deselected = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DESELECTED)
     end
-    TriggerEvent.Unit.StateLimit = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_STATE_LIMIT)
+    TriggerEvent.Unit.StateLimit = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_STATE_LIMIT)
     end
-    TriggerEvent.Unit.AcquiredTarget = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ACQUIRED_TARGET)
+    TriggerEvent.Unit.AcquiredTarget = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_ACQUIRED_TARGET)
     end
-    TriggerEvent.Unit.TargetInRange = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TARGET_IN_RANGE)
+    TriggerEvent.Unit.TargetInRange = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_TARGET_IN_RANGE)
     end
-    TriggerEvent.Unit.Attacked = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ATTACKED)
+    TriggerEvent.Unit.Attacked = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_ATTACKED)
     end
-    TriggerEvent.Unit.Rescued = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESCUED)
+    TriggerEvent.Unit.Rescued = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_RESCUED)
     end
-    TriggerEvent.Unit.ConstructCancel = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CONSTRUCT_CANCEL)
+    TriggerEvent.Unit.ConstructCancel = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_CONSTRUCT_CANCEL)
     end
-    TriggerEvent.Unit.ConstructFinish = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CONSTRUCT_FINISH)
+    TriggerEvent.Unit.ConstructFinish = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_CONSTRUCT_FINISH)
     end
-    TriggerEvent.Unit.UpgradeStart = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_START)
+    TriggerEvent.Unit.UpgradeStart = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_UPGRADE_START)
     end
-    TriggerEvent.Unit.UpgradeCancel = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_CANCEL)
+    TriggerEvent.Unit.UpgradeCancel = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_UPGRADE_CANCEL)
     end
-    TriggerEvent.Unit.UpgradeFinish = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_UPGRADE_FINISH)
+    TriggerEvent.Unit.UpgradeFinish = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_UPGRADE_FINISH)
     end
-    TriggerEvent.Unit.TrainStart = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TRAIN_START)
+    TriggerEvent.Unit.TrainStart = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_TRAIN_START)
     end
-    TriggerEvent.Unit.TrainCancel = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TRAIN_CANCEL)
+    TriggerEvent.Unit.TrainCancel = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_TRAIN_CANCEL)
     end
-    TriggerEvent.Unit.TrainFinish = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_TRAIN_FINISH)
+    TriggerEvent.Unit.TrainFinish = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_TRAIN_FINISH)
     end
-    TriggerEvent.Unit.ResearchStart = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESEARCH_START)
+    TriggerEvent.Unit.ResearchStart = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_RESEARCH_START)
     end
-    TriggerEvent.Unit.ResearchCancel = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESEARCH_CANCEL)
+    TriggerEvent.Unit.ResearchCancel = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_RESEARCH_CANCEL)
     end
-    TriggerEvent.Unit.ResearchFinish = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_RESEARCH_FINISH)
+    TriggerEvent.Unit.ResearchFinish = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_RESEARCH_FINISH)
     end
-    TriggerEvent.Unit.IssuedOrder = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ISSUED_ORDER)
+    TriggerEvent.Unit.IssuedOrder = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_ISSUED_ORDER)
     end
-    TriggerEvent.Unit.IssuedOrderPoint = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ISSUED_POINT_ORDER)
+    TriggerEvent.Unit.IssuedOrderPoint = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_ISSUED_POINT_ORDER)
     end
-    TriggerEvent.Unit.IssuedOrderTarget = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_ISSUED_TARGET_ORDER)
+    TriggerEvent.Unit.IssuedOrderTarget = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_ISSUED_TARGET_ORDER)
     end
-    TriggerEvent.Unit.Level = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_LEVEL)
+    TriggerEvent.Unit.Level = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HERO_LEVEL)
     end
-    TriggerEvent.Unit.Skill = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_SKILL)
+    TriggerEvent.Unit.Skill = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HERO_SKILL)
     end
-    TriggerEvent.Unit.Revivable = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVABLE)
+    TriggerEvent.Unit.Revivable = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HERO_REVIVABLE)
     end
-    TriggerEvent.Unit.ReviveStart = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVE_START)
+    TriggerEvent.Unit.ReviveStart = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HERO_REVIVE_START)
     end
-    TriggerEvent.Unit.ReviveCancel = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVE_CANCEL)
+    TriggerEvent.Unit.ReviveCancel = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HERO_REVIVE_CANCEL)
     end
-    TriggerEvent.Unit.ReviveFinish = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_HERO_REVIVE_FINISH)
+    TriggerEvent.Unit.ReviveFinish = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_HERO_REVIVE_FINISH)
     end
-    TriggerEvent.Unit.Summon = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SUMMON)
+    TriggerEvent.Unit.Summon = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SUMMON)
     end
-    TriggerEvent.Unit.DropItem = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_DROP_ITEM)
+    TriggerEvent.Unit.DropItem = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_DROP_ITEM)
     end
-    TriggerEvent.Unit.PickUpItem = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_PICKUP_ITEM)
+    TriggerEvent.Unit.PickUpItem = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_PICKUP_ITEM)
     end
-    TriggerEvent.Unit.UseItem = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_USE_ITEM)
+    TriggerEvent.Unit.UseItem = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_USE_ITEM)
     end
-    TriggerEvent.Unit.Loaded = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_LOADED)
+    TriggerEvent.Unit.Loaded = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_LOADED)
     end
-    TriggerEvent.Unit.Sell = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SELL)
+    TriggerEvent.Unit.Sell = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SELL)
     end
-    TriggerEvent.Unit.ChangeOwner = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_CHANGE_OWNER)
+    TriggerEvent.Unit.ChangeOwner = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_CHANGE_OWNER)
     end
-    TriggerEvent.Unit.SellItem = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SELL_ITEM)
+    TriggerEvent.Unit.SellItem = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SELL_ITEM)
     end
-    TriggerEvent.Unit.SpellChannel = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_CHANNEL)
+    TriggerEvent.Unit.SpellChannel = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SPELL_CHANNEL)
     end
-    TriggerEvent.Unit.SpellCast = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_CAST)
+    TriggerEvent.Unit.SpellCast = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SPELL_CAST)
     end
-    TriggerEvent.Unit.SpellEffect = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_EFFECT)
+    TriggerEvent.Unit.SpellEffect = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SPELL_EFFECT)
     end
-    TriggerEvent.Unit.SpellFinish = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_FINISH)
+    TriggerEvent.Unit.SpellFinish = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SPELL_FINISH)
     end
-    TriggerEvent.Unit.SpellEndCast = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_SPELL_ENDCAST)
+    TriggerEvent.Unit.SpellEndCast = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_SPELL_ENDCAST)
     end
-    TriggerEvent.Unit.PawnItem = function(wc3_trigger, wc3_unit)
-        TriggerRegisterUnitEvent(wc3_trigger, wc3_unit, EVENT_UNIT_PAWN_ITEM)
+    TriggerEvent.Unit.PawnItem = function(trigger, unit)
+        TriggerRegisterUnitEvent(trigger, unit, EVENT_UNIT_PAWN_ITEM)
+    end
+    TriggerEvent.Keyboard.KeyDown = function(trigger, player, key)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, player, key, 0, true)
+    end
+    TriggerEvent.Keyboard.KeyUp = function(trigger, player, key)
+        BlzTriggerRegisterPlayerKeyEvent(trigger, player, key, 0, false)
     end
     return TriggerEvent
 end
@@ -2167,6 +2186,10 @@ __require_data.module["utils.trigger.Trigger"] = function()
       TriggerEvent.AnyUnit[event](self.__trigger)
       table.insert(self.__events, 1, "AnyUnit_"..event)
     end
+    function Trigger:addEvent_Keyboard(event, player, key)
+      TriggerEvent.Keyboard[event](self.__trigger, player, key)
+      table.insert(self.__events, 1, "AnyUnit_"..event)
+    end
     return Trigger
 end
 __require_data.module["utils.trigger.events.UnitEvents"] = function()
@@ -2179,8 +2202,10 @@ __require_data.module["utils.trigger.events.UnitEvents"] = function()
       end
       UnitEvent.__triggers.AnyUnitDie = Trigger.new()
       UnitEvent.__triggers.AnyUnitDie:addEvent_AnyUnit("Death")
-      UnitEvent.__triggers.AnyUnitStartChannelAbility = Trigger.new()
-      UnitEvent.__triggers.AnyUnitStartChannelAbility:addEvent_AnyUnit("SpellChannel")
+      UnitEvent.__triggers.AnyUnitStartCastingAbility = Trigger.new()
+      UnitEvent.__triggers.AnyUnitStartCastingAbility:addEvent_AnyUnit("SpellChannel")
+      UnitEvent.__triggers.AnyUnitFinishCastingAbility = Trigger.new()
+      UnitEvent.__triggers.AnyUnitFinishCastingAbility:addEvent_AnyUnit("SpellEffect")
       UnitEvent.__triggers.AnyUnitIssuedAnyOrder = Trigger.new()
       UnitEvent.__triggers.AnyUnitIssuedAnyOrder:addEvent_AnyUnit("IssuedOrder")
       UnitEvent.__triggers.AnyUnitIssuedAnyOrder:addEvent_AnyUnit("IssuedOrderTarget")
@@ -2373,12 +2398,7 @@ end
     BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_BACK_SWING, 0)
     local u2 = Unit.new(Player(1), "hfoo", 0, 0, 0)
     local summon_ability = require("ability.warlord.summon")
-    u:addAbility(summon_ability:getId())
-    u:addAbility(summon_ability:getUI_Id())
-    local id = summon_ability:getId()
-    local ui_id = summon_ability:getUI_Id()
-    Debug(ID2str(id), ID2str(ui_id))
-    SetPlayerAbilityAvailable(GetOwningPlayer(u:getObj()), id, false)
+    summon_ability:giveToUnit(u:getObj())
   end
   function InitCustomPlayerSlots()
     SetPlayerStartLocation(Player(0), 0)

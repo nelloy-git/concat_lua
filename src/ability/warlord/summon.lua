@@ -30,7 +30,7 @@ function SummonCrystalSpearmanAbility.init()
         end)
 end
 
----@param spell_data SpellData
+---@param spell_data SpellCastingData
 local function finishCastingCallback(spell_data)
     local caster = spell_data:getCaster()
     local owner = GetOwningPlayer(caster)

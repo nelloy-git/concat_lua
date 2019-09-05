@@ -29,7 +29,7 @@ function Ability_meta.__tostring(self)
     return str..callbacks
 end
 
----@alias AbilityCallback fun(data:SpellData):boolean
+---@alias AbilityCallback fun(data:SpellCastingData):boolean
 
 ---Create new Ability instance.
 ---@param id string|number
@@ -68,6 +68,7 @@ function Ability.generateDummyAbility(src)
     ability:setField('TooltipNormal', src['Name']..'_Targeting')
     ability:setField('Options', Channel.option.is_visible)
     ability:setField('TargetType', 'none')
+    ability:setField('Cooldown', 0.1) -- Ability event need at least 0.05 sec cooldown
     return ability:generate()
 end
 
@@ -77,7 +78,7 @@ function Ability:getId()
 end
 
 ---@return number
-function Ability:getUI_Id()
+function Ability:getDummyId()
     return self.__ui_id
 end
 
@@ -108,7 +109,7 @@ function Ability:getCallback(callback_type)
 end
 
 ---@param callback_type AbilityEventName
----@param cast_data SpellData
+---@param cast_data SpellCastingData
 ---@return boolean
 function Ability:runCallback(callback_type, cast_data)
     if type(self.__callbacks[callback_type]) == 'function' then
@@ -140,7 +141,7 @@ function Ability:setCastingTimeFunction(func)
     self.__casting_time_func = func
 end
 
----@param data SpellData
+---@param data SpellCastingData
 ---@return number
 function Ability:getCastingTime(data)
     if type(self.__casting_time_func) == 'function' then
@@ -206,6 +207,27 @@ function Ability:setPosition(x, y, player)
         BlzSetAbilityPosX(self.__ui_id, x)
         BlzSetAbilityPosY(self.__ui_id, y)
     end
+end
+
+---@param unit unit
+function Ability:giveToUnit(unit)
+    UnitAddAbility(unit, self.__id)
+    UnitAddAbility(unit, self.__ui_id)
+    SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
+end
+
+---@param unit unit
+function Ability:showUIButton(unit)
+    local owner = GetOwningPlayer(unit)
+    SetPlayerAbilityAvailable(owner, self.__id, false)
+    SetPlayerAbilityAvailable(owner, self.__ui_id, true)
+end
+
+---@param unit unit
+function Ability:showMainButton(unit)
+    local owner = GetOwningPlayer(unit)
+    SetPlayerAbilityAvailable(owner, self.__id, true)
+    SetPlayerAbilityAvailable(owner, self.__ui_id, false)
 end
 
 return Ability

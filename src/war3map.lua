@@ -47,13 +47,7 @@ function RunInitialization()
 
     ---@type Ability
     local summon_ability = require('ability.warlord.summon')
-    u:addAbility(summon_ability:getId())
-    u:addAbility(summon_ability:getUI_Id())
-    local id = summon_ability:getId()
-    local ui_id = summon_ability:getUI_Id()
-    Debug(ID2str(id), ID2str(ui_id))
-
-    SetPlayerAbilityAvailable(GetOwningPlayer(u:getObj()), id, false)
+    summon_ability:giveToUnit(u:getObj())
 end
 
 function InitCustomPlayerSlots()
@@ -93,9 +87,3 @@ function config()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
     InitGenericPlayerSlots()
 end
-
---compiletime(
---    function ()
---        WeObjEdit.close()
---        WeObjEdit = nil
---    end)

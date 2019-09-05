@@ -178,4 +178,12 @@ function Trigger:addEvent_AnyUnit(event)
     table.insert(self.__events, 1, "AnyUnit_"..event)
 end
 
+---@param event TriggerAnyUnitEvent
+---@param player player
+---@param key oskeytype
+function Trigger:addEvent_Keyboard(event, player, key)
+    TriggerEvent.Keyboard[event](self.__trigger, player, key)
+    table.insert(self.__events, 1, "AnyUnit_"..event)
+end
+
 return Trigger
