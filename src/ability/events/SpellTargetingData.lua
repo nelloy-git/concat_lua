@@ -36,7 +36,8 @@ function SpellTargetingData.new(ability, caster)
     if cur_data then cur_data:cancel() end
 
     ability:showMainButton(caster)
-    ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
+    --ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
+    SpellTargetingData.__timer:addAction(0.05, function() ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey()) end)
     ability:runCallback("StartTargeting", data)
     SpellTargetingData.__db:add(caster, data)
     SpellTargetingData.__timer:addAction(0, mainLoop, data)
@@ -51,6 +52,8 @@ local function destroy(self)
     if SpellTargetingData.__db:get(self.__caster) == self then
         SpellTargetingData.__db:remove(self.__caster)
     end
+
+    Debug("SpellTargetingData destroyed.")
 end
 
 ---@param caster unit
@@ -66,7 +69,7 @@ mainLoop = function(self)
         destroy(self)
     else
         self.__ability:runCallback('Targeting', self)
-        SpellTargetingData.__timer:addAction(0, SpellTargetingData.mainLoop, self)
+        SpellTargetingData.__timer:addAction(0, mainLoop, self)
     end
 end
 

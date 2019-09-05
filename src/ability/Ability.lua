@@ -40,7 +40,7 @@ function Ability.new(id, ui_id, hotkey)
     ---@type Ability
     local ability = {
         __id = ID(id),
-        __ui_id = ID(ui_id),
+        __dummy_id = ID(ui_id),
         __hotkey = hotkey,
 
         __callbacks = {},
@@ -50,7 +50,7 @@ function Ability.new(id, ui_id, hotkey)
     Ability.__db:add(ID(id), ability)
     Ability.__ui_db:add(ID(ui_id), ability)
 
-    Debug(ID2str(ability.__id), ID2str(ability.__ui_id))
+    Debug(ID2str(ability.__id), ID2str(ability.__dummy_id))
 
     return ability
 end
@@ -79,7 +79,7 @@ end
 
 ---@return number
 function Ability:getDummyId()
-    return self.__ui_id
+    return self.__dummy_id
 end
 
 function Ability:getHotkey()
@@ -166,9 +166,9 @@ end
 ---@param player player
 function Ability:setTooltip(tooltip, lvl, player)
     if player == nil then
-        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__dummy_id, tooltip, lvl)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__dummy_id, tooltip, lvl)
     end
 end
 
@@ -178,9 +178,9 @@ end
 ---@param player player
 function Ability:setExtendedTooltip(ext_tooltip, lvl, player)
     if player == nil then
-        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__dummy_id, ext_tooltip, lvl)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__dummy_id, ext_tooltip, lvl)
     end
 end
 
@@ -189,9 +189,9 @@ end
 ---@param player player
 function Ability:setIcon(icon_path, player)
     if player == nil then
-        BlzSetAbilityIcon(self.__ui_id, icon_path)
+        BlzSetAbilityIcon(self.__dummy_id, icon_path)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityIcon(self.__ui_id, icon_path)
+        BlzSetAbilityIcon(self.__dummy_id, icon_path)
     end
 end
 
@@ -201,18 +201,18 @@ end
 ---@param player player
 function Ability:setPosition(x, y, player)
     if player == nil then
-        BlzSetAbilityPosX(self.__ui_id, x)
-        BlzSetAbilityPosY(self.__ui_id, y)
+        BlzSetAbilityPosX(self.__dummy_id, x)
+        BlzSetAbilityPosY(self.__dummy_id, y)
     elseif player == GetLocalPlayer() then
-        BlzSetAbilityPosX(self.__ui_id, x)
-        BlzSetAbilityPosY(self.__ui_id, y)
+        BlzSetAbilityPosX(self.__dummy_id, x)
+        BlzSetAbilityPosY(self.__dummy_id, y)
     end
 end
 
 ---@param unit unit
 function Ability:giveToUnit(unit)
     UnitAddAbility(unit, self.__id)
-    UnitAddAbility(unit, self.__ui_id)
+    UnitAddAbility(unit, self.__dummy_id)
     SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
 end
 
@@ -220,14 +220,14 @@ end
 function Ability:showUIButton(unit)
     local owner = GetOwningPlayer(unit)
     SetPlayerAbilityAvailable(owner, self.__id, false)
-    SetPlayerAbilityAvailable(owner, self.__ui_id, true)
+    SetPlayerAbilityAvailable(owner, self.__dummy_id, true)
 end
 
 ---@param unit unit
 function Ability:showMainButton(unit)
     local owner = GetOwningPlayer(unit)
+    SetPlayerAbilityAvailable(owner, self.__dummy_id, false)
     SetPlayerAbilityAvailable(owner, self.__id, true)
-    SetPlayerAbilityAvailable(owner, self.__ui_id, false)
 end
 
 return Ability

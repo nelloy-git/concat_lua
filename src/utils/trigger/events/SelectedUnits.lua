@@ -9,7 +9,7 @@ local unitSelected
 local unitDeselected
 
 function SelectedUnits.init()
-    for i = 0, bj_MAX_PLAYER_SLOTS do
+    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         SelectedUnits[Player(i)] = {}
     end
     ---@type Trigger
@@ -22,18 +22,20 @@ unitSelected = function()
     local unit = GetTriggerUnit()
     local player = GetTriggerPlayer()
 
-    local list = SelectedUnits[player]
     local already_selected = false
-    for i = 1, #list do
-        if unit == list[i] then
+    for i = 1, #SelectedUnits[player] do
+        if unit == SelectedUnits[player][i] then
             already_selected = true
             break
         end
     end
 
     if not already_selected then
-        table.insert(list, unit)
+        table.insert(SelectedUnits[player], 1, unit)
     end
+
+    Debug(type(unit))
+    Debug("Selecttion added. Length", #SelectedUnits[player])
 end
 
 unitDeselected = function()
@@ -52,6 +54,8 @@ unitDeselected = function()
     if pos > 0 then
         table.remove(list, pos)
     end
+    
+    Debug("Selecttion removed. Length", #SelectedUnits[player])
 end
 
 ---@param player player
@@ -59,8 +63,10 @@ end
 function SelectedUnits.get(player)
     local copy = {}
     for i = 1, #SelectedUnits[player] do
-        table.insert(copy, SelectedUnits[i])
+        table.insert(copy, 1, SelectedUnits[player][i])
+        Debug("Copied", type(SelectedUnits[player][i]))
     end
+    Debug("src:", #SelectedUnits[player], "   copy:", #copy)
     return copy
 end
 

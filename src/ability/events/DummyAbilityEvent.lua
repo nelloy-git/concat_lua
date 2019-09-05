@@ -9,7 +9,7 @@ local SelectedUnits = require('utils.trigger.events.SelectedUnits')
 ---@type Settings
 local Settings = require('utils.Settings')
 ---@type SpellTargetingData
-local SpellTargetingData= require('ability.events.SpellCastingData')
+local SpellTargetingData= require('ability.events.SpellTargetingData')
 
 ---@class DummyAbilityEvent
 local DummyAbilityEvent = {}
@@ -21,8 +21,8 @@ function DummyAbilityEvent.init()
     if initialized then return nil end
 
     UnitEvent.init()
-    UnitEvent.getTrigger("AnyUnitFinishCastingAbility", DummyAbilityEvent.startTargeting)
-    UnitEvent.getTrigger('AnyUnitDeselected', function()
+    UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(DummyAbilityEvent.startTargeting)
+    UnitEvent.getTrigger('AnyUnitDeselected'):addAction(function()
         local unit = GetTriggerUnit()
         if GetOwningPlayer(unit) ~= GetLocalPlayer() then return nil end
 
@@ -38,29 +38,37 @@ function DummyAbilityEvent.init()
     end)
 
     PlayerEvent.init()
-    PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting())
+    PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting)
     PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
         if BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT then
             DummyAbilityEvent.cancelTargeting()
         end
     end)
 
+    Debug("Dummy ability initialized")
+
     initialized = true
 end
 
 
 function DummyAbilityEvent.startTargeting()
+    if Settings.Events.VerboseAbility then
+        Debug("Got casting")
+    end
     local id = GetSpellAbilityId()
     local ability = Ability.get(id)
+    if not ability then return nil end
     local caster = GetSpellAbilityUnit()
 
-    if id ~= ability:getUiId() then
+    if id ~= ability:getDummyId() then
         local data = SpellTargetingData.get(caster)
         if data then
             data:cancel()
-
-            if Settings.Events.VerboseAbility then
-                Debug("Targeting canceled bugged.")
+            if is_local_player_targeting then
+                is_local_player_targeting = false
+                if Settings.Events.VerboseAbility then
+                    Debug("Targeting canceled.")
+                end
             end
         end
         is_local_player_targeting = false
@@ -80,6 +88,7 @@ function DummyAbilityEvent.cancelTargeting()
     if not is_local_player_targeting then return nil end
 
     local selected = SelectedUnits.get(GetLocalPlayer())
+    Debug(#selected)
     for i = 1, #selected do
         local data = SpellTargetingData.get(selected[i])
         if data then data:cancel() end

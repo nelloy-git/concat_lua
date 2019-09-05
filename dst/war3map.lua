@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SummonSpearman = {OrderId = "acidbomb", HotkeyNormal = "X", TooltipNormal = "Summon spearman", Name = "SummonSpearman", Id = "AM#'", DisableOtherAbilities = false, CustomCastingTime = 3, ArtCaster = "", TargetType = "point", TooltipNormalExtended = "Summons invulnerale spirit warrior.", FollowThroughTime = 0, Levels = 1, ArtEffect = "", CastingTime = 0, ArtSpecial = "", AreaofEffect = 150, Cooldown = 0, ArtTarget = "", Options = 3, CastRange = 500}, SpearmanUnit = {HideHeroDeathMsg = true, HideHeroInterfaceIcon = true, Name = "Spearman", Id = "HM#$", HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", CollisionSize = 0, SpeedBase = 1, ModelFile = "war3mapImported\\units\\SwordNya.mdx"}}
+    local WarlordSettings = {SummonSpearman = {AreaofEffect = 150, OrderId = "acidbomb", Options = 3, CustomCastingTime = 3, TargetType = "point", ArtSpecial = "", CastRange = 500, ArtEffect = "", HotkeyNormal = "X", Levels = 1, ArtTarget = "", TooltipNormal = "Summon spearman", Id = "AM#'", DisableOtherAbilities = false, FollowThroughTime = 0, CastingTime = 0, Name = "SummonSpearman", ArtCaster = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", Cooldown = 0}, SpearmanUnit = {SpeedBase = 1, Name = "Spearman", Id = "HM#$", HideHeroInterfaceIcon = true, CollisionSize = 0, HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", HideHeroDeathMsg = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx"}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -870,104 +870,76 @@ __require_data.module["utils.math.Vec2"] = function()
     end
     return Vec2
 end
-__require_data.module["ability.events.SpellCastingData"] = function()
+__require_data.module["ability.events.SpellTargetingData"] = function()
     local DataBase = require("utils.DataBase")
-    local SpellCastingData = {__type = "SpellCastingDataClass", __db = DataBase.new("userdata", "SpellCastingData")}
-    local SpellCastingData_meta = {__type = "SpellCastingData", __index = SpellCastingData, __gc = SpellCastingData.destroy}
-    function SpellCastingData.init()
-      SpellCastingData.__timer = glTimer
+    local PlayerEvent = require("utils.trigger.events.PlayerEvents")
+    local SpellTargetingData = {__type = "SpellTargetingDataClass", __db = DataBase.new("userdata", "SpellTargetingData")}
+    local SpellData_meta = {__type = "SpellTargetingData", __index = SpellTargetingData}
+    function SpellTargetingData.init()
+      SpellTargetingData.__timer = glTimer
     end
     local mainLoop
-    local destroy
-    function SpellCastingData.new(ability, caster, target, target_pos)
-      local data = {__ability = ability, __caster = caster, __target = target, __target_pos = target_pos}
-      setmetatable(data, SpellCastingData_meta)
-      local cur_data = SpellCastingData.__db:get(caster)
+    function SpellTargetingData.new(ability, caster)
+      local data = {__ability = ability, __caster = caster, __action = PlayerEvent.getTrigger("LocalPlayerMouseMove", SpellTargetingData.saveMousePos, data)}
+      setmetatable(data, SpellData_meta)
+      local cur_data = SpellTargetingData.__db:get(caster)
       if (cur_data) then
         cur_data:cancel()
       end
-      SpellCastingData.__db:add(caster, data)
-      local continue = ability:runCallback("StartCasting", data)
-      if (not continue) then
-        data:cancel()
-      end
-      data:setCastingTime(ability:getCastingTime(data))
-      SpellCastingData.__timer:addAction(0, mainLoop, data)
+      ability:showMainButton(caster)
+      SpellTargetingData.__timer:addAction(0.05, function()
+          ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
+      end)
+      ability:runCallback("StartTargeting", data)
+      SpellTargetingData.__db:add(caster, data)
+      SpellTargetingData.__timer:addAction(0, mainLoop, data)
       return data
     end
-    function destroy(self)
-      if (SpellCastingData.__db:get(self.__caster) == self) then
-        SpellCastingData.__db:remove(self.__caster)
+    local function destroy(self)
+      self.__ability:showUIButton(self.__caster)
+      PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(self.__action)
+      if (SpellTargetingData.__db:get(self.__caster) == self) then
+        SpellTargetingData.__db:remove(self.__caster)
       end
+      Debug("SpellTargetingData destroyed.")
     end
-    function SpellCastingData.get(caster)
-      return SpellCastingData.__db:get(caster)
+    function SpellTargetingData.get(caster)
+      return SpellTargetingData.__db:get(caster)
     end
     mainLoop = function(self)
         if (self:isCanceled()) then
-          self.__ability:runCallback("CancelCasting", self)
-          destroy(self)
-        elseif (self:isInterrupted()) then
-          self.__ability:runCallback("InterruptCasting", self)
+          self.__ability:runCallback("FinishTargeting", self)
           destroy(self)
         else
-          self.__ability:runCallback("Casting", self)
-          SpellCastingData.__timer:addAction(0, mainLoop, self)
+          self.__ability:runCallback("Targeting", self)
+          SpellTargetingData.__timer:addAction(0, mainLoop, self)
         end
-
     end
-    function SpellCastingData:getAbility()
+    function SpellTargetingData:getAbility()
       return self.__ability
     end
-    function SpellCastingData:getCaster()
+    function SpellTargetingData:getCaster()
       return self.__caster
     end
-    function SpellCastingData:getTarget()
-      return self.__target
+    function SpellTargetingData:getMousePos()
+      return self.__mouse_pos
     end
-    function SpellCastingData:getTargetPos()
-      return self.__target_pos
+    function SpellTargetingData:saveMousePos()
+      self.__mouse_pos = BlzGetTriggerPlayerMousePosition()
     end
-    function SpellCastingData:getElapsedTime()
-      return self.__elapsed_time|0
-    end
-    function SpellCastingData:setElapsedTime(time)
-      self.__elapsed_time = time
-    end
-    function SpellCastingData:addElapsedTime(delta)
-      self.__elapsed_time = (self.__elapsed_time+delta)
-    end
-    function SpellCastingData:isFinished()
-      return self.__elapsed_time >= self.__casting_time
-    end
-    function SpellCastingData:getCastingTime()
-      return self.__casting_time|0
-    end
-    function SpellCastingData:setCastingTime(time)
-      self.__casting_time = time
-    end
-    function SpellCastingData:addCastingTime(delta)
-      self.__casting_time = (self.__casting_time+delta)
-    end
-    function SpellCastingData:getUserdata()
+    function SpellTargetingData:getUserdata()
       return self.__userdata
     end
-    function SpellCastingData:setUserdata(data)
+    function SpellTargetingData:setUserdata(data)
       self.__userdata = data
     end
-    function SpellCastingData:cancel()
+    function SpellTargetingData:cancel()
       self.__cancel = true
     end
-    function SpellCastingData:isCanceled()
+    function SpellTargetingData:isCanceled()
       return self.__cancel
     end
-    function SpellCastingData:interrupt()
-      self.__interrupt = true
-    end
-    function SpellCastingData:isInterrupted()
-      return self.__cancel
-    end
-    return SpellCastingData
+    return SpellTargetingData
 end
 __require_data.module["utils.trigger.events.SelectedUnits"] = function()
     local UnitEvent = require("utils.trigger.events.UnitEvents")
@@ -975,7 +947,7 @@ __require_data.module["utils.trigger.events.SelectedUnits"] = function()
     local unitSelected
     local unitDeselected
     function SelectedUnits.init()
-      for i = 0, bj_MAX_PLAYER_SLOTS do
+      for i = 0, (bj_MAX_PLAYER_SLOTS-1) do
         SelectedUnits[Player(i)] = {}
       end
       UnitEvent.getTrigger("AnyUnitSelected"):addAction(unitSelected)
@@ -984,17 +956,18 @@ __require_data.module["utils.trigger.events.SelectedUnits"] = function()
     unitSelected = function()
         local unit = GetTriggerUnit()
         local player = GetTriggerPlayer()
-        local list = SelectedUnits[player]
         local already_selected = false
-        for i = 1, #list do
-          if (unit == list[i]) then
+        for i = 1, #SelectedUnits[player] do
+          if (unit == SelectedUnits[player][i]) then
             already_selected = true
             break
           end
         end
         if (not already_selected) then
-          table.insert(list, unit)
+          table.insert(SelectedUnits[player], 1, unit)
         end
+        Debug(type(unit))
+        Debug("Selecttion added. Length", #SelectedUnits[player])
     end
     unitDeselected = function()
         local unit = GetTriggerUnit()
@@ -1010,12 +983,15 @@ __require_data.module["utils.trigger.events.SelectedUnits"] = function()
         if (pos > 0) then
           table.remove(list, pos)
         end
+        Debug("Selecttion removed. Length", #SelectedUnits[player])
     end
     function SelectedUnits.get(player)
       local copy = {}
       for i = 1, #SelectedUnits[player] do
-        table.insert(copy, SelectedUnits[i])
+        table.insert(copy, 1, SelectedUnits[player][i])
+        Debug("Copied", type(SelectedUnits[player][i]))
       end
+      Debug("src:", #SelectedUnits[player], "   copy:", #copy)
       return copy
     end
     return SelectedUnits
@@ -1055,11 +1031,11 @@ __require_data.module["ability.Ability"] = function()
       return str..callbacks
     end
     function Ability.new(id, ui_id, hotkey)
-      local ability = {__id = ID(id), __ui_id = ID(ui_id), __hotkey = hotkey, __callbacks = {}, __casting_time_func = nil}
+      local ability = {__id = ID(id), __dummy_id = ID(ui_id), __hotkey = hotkey, __callbacks = {}, __casting_time_func = nil}
       setmetatable(ability, Ability_meta)
       Ability.__db:add(ID(id), ability)
       Ability.__ui_db:add(ID(ui_id), ability)
-      Debug(ID2str(ability.__id), ID2str(ability.__ui_id))
+      Debug(ID2str(ability.__id), ID2str(ability.__dummy_id))
       return ability
     end
     function Ability.generateDummyAbility(src)
@@ -1077,7 +1053,7 @@ __require_data.module["ability.Ability"] = function()
       return self.__id
     end
     function Ability:getDummyId()
-      return self.__ui_id
+      return self.__dummy_id
     end
     function Ability:getHotkey()
       return self.__hotkey
@@ -1125,52 +1101,52 @@ __require_data.module["ability.Ability"] = function()
     end
     function Ability:setTooltip(tooltip, lvl, player)
       if (player == nil) then
-        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__dummy_id, tooltip, lvl)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityTooltip(self.__ui_id, tooltip, lvl)
+        BlzSetAbilityTooltip(self.__dummy_id, tooltip, lvl)
       end
 
     end
     function Ability:setExtendedTooltip(ext_tooltip, lvl, player)
       if (player == nil) then
-        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__dummy_id, ext_tooltip, lvl)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityExtendedTooltip(self.__ui_id, ext_tooltip, lvl)
+        BlzSetAbilityExtendedTooltip(self.__dummy_id, ext_tooltip, lvl)
       end
 
     end
     function Ability:setIcon(icon_path, player)
       if (player == nil) then
-        BlzSetAbilityIcon(self.__ui_id, icon_path)
+        BlzSetAbilityIcon(self.__dummy_id, icon_path)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityIcon(self.__ui_id, icon_path)
+        BlzSetAbilityIcon(self.__dummy_id, icon_path)
       end
 
     end
     function Ability:setPosition(x, y, player)
       if (player == nil) then
-        BlzSetAbilityPosX(self.__ui_id, x)
-        BlzSetAbilityPosY(self.__ui_id, y)
+        BlzSetAbilityPosX(self.__dummy_id, x)
+        BlzSetAbilityPosY(self.__dummy_id, y)
       elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityPosX(self.__ui_id, x)
-        BlzSetAbilityPosY(self.__ui_id, y)
+        BlzSetAbilityPosX(self.__dummy_id, x)
+        BlzSetAbilityPosY(self.__dummy_id, y)
       end
 
     end
     function Ability:giveToUnit(unit)
       UnitAddAbility(unit, self.__id)
-      UnitAddAbility(unit, self.__ui_id)
+      UnitAddAbility(unit, self.__dummy_id)
       SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
     end
     function Ability:showUIButton(unit)
       local owner = GetOwningPlayer(unit)
       SetPlayerAbilityAvailable(owner, self.__id, false)
-      SetPlayerAbilityAvailable(owner, self.__ui_id, true)
+      SetPlayerAbilityAvailable(owner, self.__dummy_id, true)
     end
     function Ability:showMainButton(unit)
       local owner = GetOwningPlayer(unit)
+      SetPlayerAbilityAvailable(owner, self.__dummy_id, false)
       SetPlayerAbilityAvailable(owner, self.__id, true)
-      SetPlayerAbilityAvailable(owner, self.__ui_id, false)
     end
     return Ability
 end
@@ -1180,7 +1156,7 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
     local PlayerEvent = require("utils.trigger.events.PlayerEvents")
     local SelectedUnits = require("utils.trigger.events.SelectedUnits")
     local Settings = require("utils.Settings")
-    local SpellTargetingData = require("ability.events.SpellCastingData")
+    local SpellTargetingData = require("ability.events.SpellTargetingData")
     local DummyAbilityEvent = {}
     local is_local_player_targeting = false
     local initialized = false
@@ -1189,8 +1165,8 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
         return nil
       end
       UnitEvent.init()
-      UnitEvent.getTrigger("AnyUnitFinishCastingAbility", DummyAbilityEvent.startTargeting)
-      UnitEvent.getTrigger("AnyUnitDeselected", function()
+      UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(DummyAbilityEvent.startTargeting)
+      UnitEvent.getTrigger("AnyUnitDeselected"):addAction(function()
           local unit = GetTriggerUnit()
           if (GetOwningPlayer(unit) ~= GetLocalPlayer()) then
             return nil
@@ -1208,24 +1184,34 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
           end
       end)
       PlayerEvent.init()
-      PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting())
+      PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting)
       PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
           if (BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT) then
             DummyAbilityEvent.cancelTargeting()
           end
       end)
+      Debug("Dummy ability initialized")
       initialized = true
     end
     function DummyAbilityEvent.startTargeting()
+      if (Settings.Events.VerboseAbility) then
+        Debug("Got casting")
+      end
       local id = GetSpellAbilityId()
       local ability = Ability.get(id)
+      if (not ability) then
+        return nil
+      end
       local caster = GetSpellAbilityUnit()
-      if (id ~= ability:getUiId()) then
+      if (id ~= ability:getDummyId()) then
         local data = SpellTargetingData.get(caster)
         if (data) then
           data:cancel()
-          if (Settings.Events.VerboseAbility) then
-            Debug("Targeting canceled bugged.")
+          if (is_local_player_targeting) then
+            is_local_player_targeting = false
+            if (Settings.Events.VerboseAbility) then
+              Debug("Targeting canceled.")
+            end
           end
         end
         is_local_player_targeting = false
@@ -1245,6 +1231,7 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
         return nil
       end
       local selected = SelectedUnits.get(GetLocalPlayer())
+      Debug(#selected)
       for i = 1, #selected do
         local data = SpellTargetingData.get(selected[i])
         if (data) then

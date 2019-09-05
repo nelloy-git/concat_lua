@@ -16,6 +16,7 @@ function UnitEvent.init()
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitStartCastingAbility"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitStartCastingAbility"]:addEvent_AnyUnit("SpellChannel")
+    --UnitEvent.__triggers["AnyUnitStartCastingAbility"]:addAction(function() Debug('azaza') end)
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitFinishCastingAbility"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitFinishCastingAbility"]:addEvent_AnyUnit("SpellEffect")
