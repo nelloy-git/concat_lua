@@ -4,8 +4,6 @@ local Ability = require('ability.ability')
 local SummonSwordman = require('ability.warlord.summon')
 ---@type Unit
 local Unit = require('unit.Unit')
----@type Player
-local Players = require('player.player')
 ---@type PlayerEvent
 local PlayerEvent = require('player.playerEvent')
 
@@ -135,7 +133,7 @@ local function startTargeting(caster, target, x, y)
     local owner_index = caster:getOwningPlayerIndex()
     caster:removeAbility(dummySpiritRush)
     caster:addAbility(SpiritRush)
-    glTimer.addAction(0, function() Debug('Key pressed') Players.forceUIKey(owner_index, hot_key) end, nil)
+    --glTimer.addAction(0, function() Debug('Key pressed') Players.forceUIKey(owner_index, hot_key) end, nil)
     local slaves = SummonSwordman.getSlaves(caster)
     local caster_x, caster_y = caster:getPos()
     local circles = createCircles(#slaves, 0, 0, caster_x, caster_y)

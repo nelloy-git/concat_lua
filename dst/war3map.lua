@@ -6,8 +6,8 @@
     end
     return __require_data.result[name]
   end
-__require_data.module["ability.warlord.settings"] = function()
-    local WarlordSettings = {SummonSpearman = {AreaofEffect = 150, OrderId = "acidbomb", Options = 3, CustomCastingTime = 3, TargetType = "point", ArtSpecial = "", CastRange = 500, ArtEffect = "", HotkeyNormal = "X", Levels = 1, ArtTarget = "", TooltipNormal = "Summon spearman", Id = "AM#'", DisableOtherAbilities = false, FollowThroughTime = 0, CastingTime = 0, Name = "SummonSpearman", ArtCaster = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", Cooldown = 0}, SpearmanUnit = {SpeedBase = 1, Name = "Spearman", Id = "HM#$", HideHeroInterfaceIcon = true, CollisionSize = 0, HideHeroMinimapDisplay = true, NormalAbilities = "Avul,Aloc", HideHeroDeathMsg = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx"}}
+__require_data.module["heroes.warlord.settings"] = function()
+    local WarlordSettings = {SummonSpearman = {DisableOtherAbilities = false, ArtEffect = "", Id = "AM#'", Name = "SummonSpearman", ArtSpecial = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", OrderId = "acidbomb", AreaofEffect = 150, ArtCaster = "", TooltipNormal = "Summon spearman", HotkeyNormal = "X", Levels = 1, TargetType = "point", FollowThroughTime = 0, CastRange = 500, Cooldown = 0, ArtTarget = "", CustomCastingTime = 3, Options = 3, CastingTime = 0}, SpearmanUnit = {Id = "HM#$", Name = "Spearman", NormalAbilities = "Avul,Aloc", HideHeroDeathMsg = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroMinimapDisplay = true, HideHeroInterfaceIcon = true, CollisionSize = 0, SpeedBase = 1}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -58,6 +58,41 @@ __require_data.module["ability.SummonsDB"] = function()
       return SummonsDB.__slaves:get(master)
     end
     return SummonsDB
+end
+__require_data.module["heroes.warlord.summon"] = function()
+    local Unit = require("unit.Unit")
+    local UnitEvent = require("utils.trigger.events.UnitEvents")
+    local Ability = require("ability.Ability")
+    local SummonsDB = require("ability.SummonsDB")
+    local FullData = require("heroes.warlord.settings")
+    local AbilityData = FullData.SummonSpearman
+    local SummonData = FullData.SpearmanUnit
+    local targeting_ability_id = "AM#("
+    local SummonCrystalSpearmanAbility = Ability.new(AbilityData.Id, targeting_ability_id, AbilityData.HotkeyNormal)
+    function SummonCrystalSpearmanAbility.init()
+      UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
+          local unit = Unit.GetDyingUnit()
+          local dying_id = unit:getId()
+          if (dying_id == ID(SummonData.Id)) then
+            SummonsDB.rmSlave(unit:getObj())
+          end
+      end)
+    end
+    local function finishCastingCallback(spell_data)
+      local caster = spell_data:getCaster()
+      local owner = GetOwningPlayer(caster)
+      local unit = Unit.new(owner, SummonData.Id, spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))
+      unit:setVertexColor(1, 1, 1, 0.35)
+      unit:applyTimedLife(10)
+      SummonsDB.addSlave(unit:getObj(), caster)
+      unit.parameter:setAttacksPerSec(1)
+    end
+    SummonCrystalSpearmanAbility:setName(AbilityData.TooltipNormal)
+    SummonCrystalSpearmanAbility:setCastingTimeFunction(function()
+        return AbilityData.CustomCastingTime
+    end)
+    SummonCrystalSpearmanAbility:setCallback(finishCastingCallback, "finish")
+    return SummonCrystalSpearmanAbility
 end
 __require_data.module["unitParameter.mathFunc"] = function()
     local Settings = require("utils.Settings")
@@ -663,41 +698,6 @@ end, __gc = Unit.destroy}
     end
     return Unit
 end
-__require_data.module["ability.warlord.summon"] = function()
-    local Unit = require("unit.Unit")
-    local UnitEvent = require("utils.trigger.events.UnitEvents")
-    local Ability = require("ability.Ability")
-    local SummonsDB = require("ability.SummonsDB")
-    local FullData = require("ability.warlord.settings")
-    local AbilityData = FullData.SummonSpearman
-    local SummonData = FullData.SpearmanUnit
-    local targeting_ability_id = "AM#("
-    local SummonCrystalSpearmanAbility = Ability.new(AbilityData.Id, targeting_ability_id, AbilityData.HotkeyNormal)
-    function SummonCrystalSpearmanAbility.init()
-      UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
-          local unit = Unit.GetDyingUnit()
-          local dying_id = unit:getId()
-          if (dying_id == ID(SummonData.Id)) then
-            SummonsDB.rmSlave(unit:getObj())
-          end
-      end)
-    end
-    local function finishCastingCallback(spell_data)
-      local caster = spell_data:getCaster()
-      local owner = GetOwningPlayer(caster)
-      local unit = Unit.new(owner, SummonData.Id, spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))
-      unit:setVertexColor(1, 1, 1, 0.35)
-      unit:applyTimedLife(10)
-      SummonsDB.addSlave(unit:getObj(), caster)
-      unit.parameter:setAttacksPerSec(1)
-    end
-    SummonCrystalSpearmanAbility:setName(AbilityData.TooltipNormal)
-    SummonCrystalSpearmanAbility:setCastingTimeFunction(function()
-        return AbilityData.CustomCastingTime
-    end)
-    SummonCrystalSpearmanAbility:setCallback(finishCastingCallback, "finish")
-    return SummonCrystalSpearmanAbility
-end
 __require_data.module["utils.timer.TimerAction"] = function()
     local TimerAction = {}
     local TimerAction_meta = {__index = TimerAction}
@@ -871,73 +871,47 @@ __require_data.module["utils.math.Vec2"] = function()
     return Vec2
 end
 __require_data.module["ability.events.SpellTargetingData"] = function()
-    local DataBase = require("utils.DataBase")
-    local PlayerEvent = require("utils.trigger.events.PlayerEvents")
-    local SpellTargetingData = {__type = "SpellTargetingDataClass", __db = DataBase.new("userdata", "SpellTargetingData")}
-    local SpellData_meta = {__type = "SpellTargetingData", __index = SpellTargetingData}
-    function SpellTargetingData.init()
-      SpellTargetingData.__timer = glTimer
-    end
+    local SpellTargetingData = {is_active = false}
     local mainLoop
-    function SpellTargetingData.new(ability, caster)
-      local data = {__ability = ability, __caster = caster, __action = PlayerEvent.getTrigger("LocalPlayerMouseMove", SpellTargetingData.saveMousePos, data)}
-      setmetatable(data, SpellData_meta)
-      local cur_data = SpellTargetingData.__db:get(caster)
-      if (cur_data) then
-        cur_data:cancel()
+    local initialized = false
+    function SpellTargetingData.init()
+      if (initialized) then
+        return nil
       end
+      glTimer:addAction(0, mainLoop)
+      initialized = true
+    end
+    function SpellTargetingData.start(ability, caster)
+      SpellTargetingData.finish()
+      SpellTargetingData.__ability = ability
+      SpellTargetingData.__caster = caster
       ability:showMainButton(caster)
       SpellTargetingData.__timer:addAction(0.05, function()
           ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
       end)
-      ability:runCallback("StartTargeting", data)
-      SpellTargetingData.__db:add(caster, data)
-      SpellTargetingData.__timer:addAction(0, mainLoop, data)
-      return data
+      ability:runCallback("StartTargeting")
+      SpellTargetingData.__is_active = true
     end
-    local function destroy(self)
-      self.__ability:showUIButton(self.__caster)
-      PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(self.__action)
-      if (SpellTargetingData.__db:get(self.__caster) == self) then
-        SpellTargetingData.__db:remove(self.__caster)
+    function SpellTargetingData.finish()
+      if (SpellTargetingData.__is_active) then
+        SpellTargetingData.__ability:showDummyButton(SpellTargetingData.__caster)
+        SpellTargetingData.__ability:runCallback("FinishTargeting")
+        SpellTargetingData.__is_active = false
+        return true
       end
-      Debug("SpellTargetingData destroyed.")
+      return false
     end
-    function SpellTargetingData.get(caster)
-      return SpellTargetingData.__db:get(caster)
-    end
-    mainLoop = function(self)
-        if (self:isCanceled()) then
-          self.__ability:runCallback("FinishTargeting", self)
-          destroy(self)
-        else
-          self.__ability:runCallback("Targeting", self)
-          SpellTargetingData.__timer:addAction(0, mainLoop, self)
+    mainLoop = function()
+        if (SpellTargetingData.__is_active) then
+          SpellTargetingData.__ability:runCallback("Targeting")
+          SpellTargetingData.__timer:addAction(0, mainLoop)
         end
     end
-    function SpellTargetingData:getAbility()
-      return self.__ability
+    function SpellTargetingData.getAbility()
+      return SpellTargetingData.__ability
     end
-    function SpellTargetingData:getCaster()
-      return self.__caster
-    end
-    function SpellTargetingData:getMousePos()
-      return self.__mouse_pos
-    end
-    function SpellTargetingData:saveMousePos()
-      self.__mouse_pos = BlzGetTriggerPlayerMousePosition()
-    end
-    function SpellTargetingData:getUserdata()
-      return self.__userdata
-    end
-    function SpellTargetingData:setUserdata(data)
-      self.__userdata = data
-    end
-    function SpellTargetingData:cancel()
-      self.__cancel = true
-    end
-    function SpellTargetingData:isCanceled()
-      return self.__cancel
+    function SpellTargetingData.getCaster()
+      return SpellTargetingData.__caster
     end
     return SpellTargetingData
 end
@@ -996,54 +970,140 @@ __require_data.module["utils.trigger.events.SelectedUnits"] = function()
     end
     return SelectedUnits
 end
-__require_data.module["ability.Ability"] = function()
+__require_data.module["ability.AbilityUI"] = function()
+    local Ability = require("ability.AbilityData")
+    function Ability:setName(name)
+      self.__name = name
+    end
+    function Ability:getName()
+      return self.__name
+    end
+    function Ability:setTooltip(tooltip, lvl, player)
+      local id = self.__dummy_id
+      if (not id) then
+        id = self.__id
+      end
+      if (player == nil) then
+        BlzSetAbilityTooltip(id, tooltip, lvl)
+      elseif (player == GetLocalPlayer()) then
+        BlzSetAbilityTooltip(id, tooltip, lvl)
+      end
+
+    end
+    function Ability:setExtendedTooltip(ext_tooltip, player, lvl)
+      local id = self.__dummy_id
+      if (not id) then
+        id = self.__id
+      end
+      if (player == nil) then
+        BlzSetAbilityExtendedTooltip(id, ext_tooltip, lvl)
+      elseif (player == GetLocalPlayer()) then
+        BlzSetAbilityExtendedTooltip(id, ext_tooltip, lvl)
+      end
+
+    end
+    function Ability:setIcon(icon_path, player)
+      local id = self.__dummy_id
+      if (not id) then
+        id = self.__id
+      end
+      if (player == nil) then
+        BlzSetAbilityIcon(id, icon_path)
+      elseif (player == GetLocalPlayer()) then
+        BlzSetAbilityIcon(id, icon_path)
+      end
+
+    end
+    function Ability:setPosition(x, y, player)
+      local id = self.__dummy_id
+      if (not id) then
+        id = self.__id
+      end
+      if (player == nil) then
+        BlzSetAbilityPosX(id, x)
+        BlzSetAbilityPosY(id, y)
+      elseif (player == GetLocalPlayer()) then
+        BlzSetAbilityPosX(id, x)
+        BlzSetAbilityPosY(id, y)
+      end
+
+    end
+    function Ability:giveToUnit(unit)
+      UnitAddAbility(unit, self.__id)
+      if (self.__dummy_id) then
+        UnitAddAbility(unit, self.__dummy_id)
+        SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
+      end
+    end
+    function Ability:showDummyButton(unit)
+      if (self.__dummy_id) then
+        local owner = GetOwningPlayer(unit)
+        SetPlayerAbilityAvailable(owner, self.__id, false)
+        SetPlayerAbilityAvailable(owner, self.__dummy_id, true)
+      end
+    end
+    function Ability:showMainButton(unit)
+      if (self.__dummy_id) then
+        local owner = GetOwningPlayer(unit)
+        SetPlayerAbilityAvailable(owner, self.__dummy_id, false)
+        SetPlayerAbilityAvailable(owner, self.__id, true)
+      end
+    end
+end
+__require_data.module["ability.AbilityCallbacks"] = function()
+    local Ability = require("ability.AbilityData")
+    function Ability:setCallback(callback_type, callback)
+      self.__callbacks[callback_type] = callback
+    end
+    function Ability:getCallback(callback_type)
+      return self.__callbacks[callback_type]
+    end
+    function Ability:runCallback(callback_type, cast_data)
+      if (type(self.__callbacks[callback_type]) == "function") then
+        return self.__callbacks[callback_type](cast_data)
+      else
+        return true
+      end
+    end
+    function Ability:setCastingTimeFunction(func)
+      self.__casting_time_func = func
+    end
+    function Ability:getCastingTime(data)
+      if (type(self.__casting_time_func) == "function") then
+        return self.__casting_time_func(data)
+      end
+      return 0
+    end
+    function Ability:setFlag(flag, flag_name)
+      self.__flag[flag_name] = flag
+    end
+    function Ability:getFlag(flag_name)
+      return self.__flag[flag_name]
+    end
+end
+__require_data.module["ability.AbilityData"] = function()
     local DataBase = require("utils.DataBase")
-    local Ability = {__type = "AbilityClass", __ui_db = DataBase.new("number", "Ability"), __db = DataBase.new("number", "Ability")}
+    local Ability = {__type = "AbilityClass", __dummy_db = DataBase.new("number", "Ability"), __db = DataBase.new("number", "Ability")}
     local Ability_meta = {__type = "Ability", __index = Ability}
     function Ability_meta.__tostring(self)
-      local str = string.format("%s %s (%s) with callbacks: ", self.__type, self.__name, ID2str(self.__id))
-      local callbacks = ""
-      if (self:getCallback("startTargeting")) then
-        callbacks = callbacks..",startTargeting"
-      end
-      if (self:getCallback("targeting")) then
-        callbacks = callbacks..",targeting"
-      end
-      if (self:getCallback("cancelTargeting")) then
-        callbacks = callbacks..",cancelTargeting"
-      end
-      if (self:getCallback("start")) then
-        callbacks = callbacks..",start"
-      end
-      if (self:getCallback("casting")) then
-        callbacks = callbacks..",casting"
-      end
-      if (self:getCallback("cancel")) then
-        callbacks = callbacks..",cancel"
-      end
-      if (self:getCallback("interrupt")) then
-        callbacks = callbacks..",interrupt"
-      end
-      if (self:getCallback("finish")) then
-        callbacks = callbacks..",finish"
-      end
-      callbacks = callbacks:sub(2)
-      return str..callbacks
+      return string.format("%s %s (%s)", self.__type, self.__name, ID2str(self.__id))
     end
-    function Ability.new(id, ui_id, hotkey)
-      local ability = {__id = ID(id), __dummy_id = ID(ui_id), __hotkey = hotkey, __callbacks = {}, __casting_time_func = nil}
+    function Ability.new(id, hotkey)
+      local ability = {__id = ID(id), __hotkey = hotkey, __callbacks = {}}
       setmetatable(ability, Ability_meta)
       Ability.__db:add(ID(id), ability)
-      Ability.__ui_db:add(ID(ui_id), ability)
-      Debug(ID2str(ability.__id), ID2str(ability.__dummy_id))
       return ability
+    end
+    function Ability:setDummyAbility(id)
+      self.__dummy_id = ID(id)
+      Ability.__dummy_db:add(ID(id), self)
     end
     function Ability.generateDummyAbility(src)
       local WeObjEdit = require("compiletime.objEdit.objEdit")
       local Channel = WeObjEdit.Preset.Channel
       local ability = Channel.new(src)
-      ability:setField("Name", src.Name.."_Targeting")
-      ability:setField("TooltipNormal", src.Name.."_Targeting")
+      ability:setField("Name", src.Name)
+      ability:setField("TooltipNormal", src.TooltipNormal)
       ability:setField("Options", Channel.option.is_visible)
       ability:setField("TargetType", "none")
       ability:setField("Cooldown", 0.1)
@@ -1061,93 +1121,16 @@ __require_data.module["ability.Ability"] = function()
     function Ability.get(id)
       local ability = Ability.__db:get(id)
       if (not ability) then
-        ability = Ability.__ui_db:get(id)
+        ability = Ability.__dummy_db:get(id)
       end
       return ability
     end
-    function Ability:setCallback(callback, callback_type)
-      self.__callbacks[callback_type] = callback
-    end
-    function Ability:getCallback(callback_type)
-      return self.__callbacks[callback_type]
-    end
-    function Ability:runCallback(callback_type, cast_data)
-      if (type(self.__callbacks[callback_type]) == "function") then
-        return self.__callbacks[callback_type](cast_data)
-      else
-        return true
-      end
-    end
-    function Ability:setFlag(flag, flag_name)
-      self.__flag[flag_name] = flag
-    end
-    function Ability:getFlag(flag_name)
-      return self.__flag[flag_name]
-    end
-    function Ability:setCastingTimeFunction(func)
-      self.__casting_time_func = func
-    end
-    function Ability:getCastingTime(data)
-      if (type(self.__casting_time_func) == "function") then
-        return self.__casting_time_func(data)
-      end
-      return 0
-    end
-    function Ability:setName(name)
-      self.__name = name
-    end
-    function Ability:getName()
-      return self.__name
-    end
-    function Ability:setTooltip(tooltip, lvl, player)
-      if (player == nil) then
-        BlzSetAbilityTooltip(self.__dummy_id, tooltip, lvl)
-      elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityTooltip(self.__dummy_id, tooltip, lvl)
-      end
-
-    end
-    function Ability:setExtendedTooltip(ext_tooltip, lvl, player)
-      if (player == nil) then
-        BlzSetAbilityExtendedTooltip(self.__dummy_id, ext_tooltip, lvl)
-      elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityExtendedTooltip(self.__dummy_id, ext_tooltip, lvl)
-      end
-
-    end
-    function Ability:setIcon(icon_path, player)
-      if (player == nil) then
-        BlzSetAbilityIcon(self.__dummy_id, icon_path)
-      elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityIcon(self.__dummy_id, icon_path)
-      end
-
-    end
-    function Ability:setPosition(x, y, player)
-      if (player == nil) then
-        BlzSetAbilityPosX(self.__dummy_id, x)
-        BlzSetAbilityPosY(self.__dummy_id, y)
-      elseif (player == GetLocalPlayer()) then
-        BlzSetAbilityPosX(self.__dummy_id, x)
-        BlzSetAbilityPosY(self.__dummy_id, y)
-      end
-
-    end
-    function Ability:giveToUnit(unit)
-      UnitAddAbility(unit, self.__id)
-      UnitAddAbility(unit, self.__dummy_id)
-      SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
-    end
-    function Ability:showUIButton(unit)
-      local owner = GetOwningPlayer(unit)
-      SetPlayerAbilityAvailable(owner, self.__id, false)
-      SetPlayerAbilityAvailable(owner, self.__dummy_id, true)
-    end
-    function Ability:showMainButton(unit)
-      local owner = GetOwningPlayer(unit)
-      SetPlayerAbilityAvailable(owner, self.__dummy_id, false)
-      SetPlayerAbilityAvailable(owner, self.__id, true)
-    end
+    return Ability
+end
+__require_data.module["ability.Ability"] = function()
+    local Ability = require("ability.AbilityData")
+    local AbilityCallbacks = require("ability.AbilityCallbacks")
+    local AbilityUI = require("ability.AbilityUI")
     return Ability
 end
 __require_data.module["ability.events.DummyAbilityEvent"] = function()
@@ -1156,9 +1139,8 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
     local PlayerEvent = require("utils.trigger.events.PlayerEvents")
     local SelectedUnits = require("utils.trigger.events.SelectedUnits")
     local Settings = require("utils.Settings")
-    local SpellTargetingData = require("ability.events.SpellTargetingData")
     local DummyAbilityEvent = {}
-    local is_local_player_targeting = false
+    local local_targeting_data = require("ability.events.SpellTargetingData")
     local initialized = false
     function DummyAbilityEvent.init()
       if (initialized) then
@@ -1166,24 +1148,9 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
       end
       UnitEvent.init()
       UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(DummyAbilityEvent.startTargeting)
-      UnitEvent.getTrigger("AnyUnitDeselected"):addAction(function()
-          local unit = GetTriggerUnit()
-          if (GetOwningPlayer(unit) ~= GetLocalPlayer()) then
-            return nil
-          end
-          if (not is_local_player_targeting) then
-            return nil
-          end
-          local data = SpellTargetingData.get(unit)
-          if (data) then
-            data:cancel()
-          end
-          is_local_player_targeting = false
-          if (Settings.Events.VerboseAbility) then
-            Debug("Targeting canceled.")
-          end
-      end)
+      UnitEvent.getTrigger("AnyUnitDeselected"):addAction(DummyAbilityEvent.deselectCaster)
       PlayerEvent.init()
+      PlayerEvent.getTrigger("LocalPlayerShiftDown"):addAction(DummyAbilityEvent.blockShift)
       PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting)
       PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
           if (BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT) then
@@ -1194,51 +1161,48 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
       initialized = true
     end
     function DummyAbilityEvent.startTargeting()
-      if (Settings.Events.VerboseAbility) then
-        Debug("Got casting")
-      end
       local id = GetSpellAbilityId()
       local ability = Ability.get(id)
       if (not ability) then
         return nil
       end
       local caster = GetSpellAbilityUnit()
-      if (id ~= ability:getDummyId()) then
-        local data = SpellTargetingData.get(caster)
-        if (data) then
-          data:cancel()
-          if (is_local_player_targeting) then
-            is_local_player_targeting = false
-            if (Settings.Events.VerboseAbility) then
-              Debug("Targeting canceled.")
-            end
-          end
-        end
-        is_local_player_targeting = false
-        return nil
-      end
       if (GetLocalPlayer() ~= GetOwningPlayer(caster)) then
         return nil
       end
-      is_local_player_targeting = true
-      SpellTargetingData.new(ability, caster)
+      if (id ~= ability:getDummyId()) then
+        DummyAbilityEvent.cancelTargeting()
+        return nil
+      end
+      local_targeting_data.start(ability, caster)
       if (Settings.Events.VerboseAbility) then
         Debug("Targeting started")
       end
     end
-    function DummyAbilityEvent.cancelTargeting()
-      if (not is_local_player_targeting) then
+    function DummyAbilityEvent.deselectCaster()
+      if (GetTriggerPlayer() ~= GetLocalPlayer()) then
         return nil
       end
-      local selected = SelectedUnits.get(GetLocalPlayer())
-      Debug(#selected)
-      for i = 1, #selected do
-        local data = SpellTargetingData.get(selected[i])
-        if (data) then
-          data:cancel()
-        end
+      if (local_targeting_data.getCaster() ~= GetTriggerUnit()) then
+        return nil
       end
-      is_local_player_targeting = false
+      DummyAbilityEvent.cancelTargeting()
+    end
+    function DummyAbilityEvent.blockShift()
+      local player = GetTriggerPlayer()
+      if (player ~= GetLocalPlayer()) then
+        return nil
+      end
+      local selected = SelectedUnits.get(player)
+      for i = 1, #selected do
+        SelectUnit(selected[i], false)
+      end
+      if (local_targeting_data) then
+        local_targeting_data:cancel()
+      end
+    end
+    function DummyAbilityEvent.cancelTargeting()
+      local_targeting_data.finish()
       if (Settings.Events.VerboseAbility) then
         Debug("Targeting canceled.")
       end
@@ -1248,6 +1212,8 @@ end
 __require_data.module["utils.trigger.events.PlayerEvents"] = function()
     local Trigger = require("utils.trigger.Trigger")
     local PlayerEvent = {__triggers = {}}
+    local createKeyboardTrigger
+    local updateMousePos
     local initialized = false
     function PlayerEvent.init()
       if (initialized) then
@@ -1255,17 +1221,39 @@ __require_data.module["utils.trigger.events.PlayerEvents"] = function()
       end
       PlayerEvent.__triggers.LocalPlayerMouseMove = Trigger.new()
       PlayerEvent.__triggers.LocalPlayerMouseMove:addEvent_Player("MouseMove", GetLocalPlayer())
+      PlayerEvent.__triggers.LocalPlayerMouseMove:addAction(updateMousePos)
       PlayerEvent.__triggers.LocalPlayerMouseDown = Trigger.new()
       PlayerEvent.__triggers.LocalPlayerMouseDown:addEvent_Player("MouseDown", GetLocalPlayer())
-      PlayerEvent.__triggers.LocalPlayerEscDown = Trigger.new()
-      PlayerEvent.__triggers.LocalPlayerEscDown:addEvent_Keyboard("KeyDown", GetLocalPlayer(), OSKEY_ESCAPE)
+      createKeyboardTrigger("Escape")
+      createKeyboardTrigger("Shift")
+      createKeyboardTrigger("Q")
+      createKeyboardTrigger("W")
+      createKeyboardTrigger("E")
+      createKeyboardTrigger("R")
+      createKeyboardTrigger("T")
+      createKeyboardTrigger("D")
+      createKeyboardTrigger("F")
+      createKeyboardTrigger("V")
       initialized = true
+    end
+    local local_mouse_pos
+    updateMousePos = function()
+        local_mouse_pos = Vec2(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseY())
+    end
+    createKeyboardTrigger = function(key)
+        PlayerEvent.__triggers["LocalPlayer"..key.."Down"] = Trigger.new()
+        PlayerEvent.__triggers["LocalPlayer"..key.."Down"]:addEvent_Keyboard("KeyDown", GetLocalPlayer(), _G["OSKEY_"..string.upper(key)])
+        PlayerEvent.__triggers["LocalPlayer"..key.."Up"] = Trigger.new()
+        PlayerEvent.__triggers["LocalPlayer"..key.."Up"]:addEvent_Keyboard("KeyUp", GetLocalPlayer(), _G["OSKEY_"..string.upper(key)])
     end
     function PlayerEvent.getTrigger(event)
       if (not initialized) then
         PlayerEvent.init()
       end
       return PlayerEvent.__triggers[event]
+    end
+    function PlayerEvent.getLocalMousePos()
+      return local_mouse_pos
     end
     return PlayerEvent
 end
@@ -2161,8 +2149,8 @@ __require_data.module["utils.trigger.Trigger"] = function()
       TriggerEvent.AnyPlayer[event](self.__trigger)
       table.insert(self.__events, 1, "AnyPlayer_"..event)
     end
-    function Trigger:addEvent_Unit(event, wc3_unit)
-      TriggerEvent.Unit[event](self.__trigger, wc3_unit)
+    function Trigger:addEvent_Unit(event, unit)
+      TriggerEvent.Unit[event](self.__trigger, unit)
       table.insert(self.__events, 1, "Unit_"..event)
     end
     function Trigger:addEvent_PlayerUnit(event, player)
@@ -2378,13 +2366,12 @@ end
     DestroyTimer(GetExpiredTimer())
     local Init = require("utils.Init")
     Init.start()
-    require("ability.warlord.summon")
     local Unit = require("unit.Unit")
     local u = Unit.new(Player(0), "hfoo", 0, 0, 0)
     BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_POINT, 0)
     BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_BACK_SWING, 0)
     local u2 = Unit.new(Player(1), "hfoo", 0, 0, 0)
-    local summon_ability = require("ability.warlord.summon")
+    local summon_ability = require("heroes.warlord.summon")
     summon_ability:giveToUnit(u:getObj())
   end
   function InitCustomPlayerSlots()

@@ -7,7 +7,7 @@ local Ability = require('ability.Ability')
 ---@type SummonsDB
 local SummonsDB = require('ability.SummonsDB')
 ---@type WarlordAbilitiesSettings
-local FullData = require('ability.warlord.settings')
+local FullData = require('heroes.warlord.settings')
 ---@type ChannelCompiletimeData
 local AbilityData = FullData.SummonSpearman
 ---@type HeroCompiletimeData

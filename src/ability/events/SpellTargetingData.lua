@@ -1,75 +1,51 @@
----@type DataBase
-local DataBase = require('utils.DataBase')
----@type PlayerEvent
-local PlayerEvent = require('utils.trigger.events.PlayerEvents')
-
 ---@class SpellTargetingData
 local SpellTargetingData = {
-    __type = 'SpellTargetingDataClass',
-    __db = DataBase.new('userdata', 'SpellTargetingData')
+    is_active = false
 }
-local SpellData_meta = {
-    __type = 'SpellTargetingData',
-    __index = SpellTargetingData,
-}
-
-function SpellTargetingData.init()
-    SpellTargetingData.__timer = glTimer
-end
 
 --- Predefined
 local mainLoop
 
+local initialized = false
+function SpellTargetingData.init()
+    if initialized then return nil end
+
+    glTimer:addAction(0, mainLoop)
+
+    initialized = true
+end
+
 ---@param ability Ability
 ---@param caster unit
 ---@return SpellCastingData
-function SpellTargetingData.new(ability, caster)
-    ---@type SpellCastingData
-    local data = {
-        __ability = ability,
-        __caster = caster,
-        __action = PlayerEvent.getTrigger("LocalPlayerMouseMove", SpellTargetingData.saveMousePos, data)
-    }
-    setmetatable(data, SpellData_meta)
+function SpellTargetingData.start(ability, caster)
+    SpellTargetingData.finish()
 
-    local cur_data = SpellTargetingData.__db:get(caster)
-    if cur_data then cur_data:cancel() end
+    SpellTargetingData.__ability = ability
+    SpellTargetingData.__caster = caster
 
     ability:showMainButton(caster)
-    --ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
     SpellTargetingData.__timer:addAction(0.05, function() ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey()) end)
-    ability:runCallback("StartTargeting", data)
-    SpellTargetingData.__db:add(caster, data)
-    SpellTargetingData.__timer:addAction(0, mainLoop, data)
+    ability:runCallback("StartTargeting")
 
-    return data
+    SpellTargetingData.__is_active = true
 end
 
----@param self SpellTargetingData
-local function destroy(self)
-    self.__ability:showUIButton(self.__caster)
-    PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(self.__action)
-    if SpellTargetingData.__db:get(self.__caster) == self then
-        SpellTargetingData.__db:remove(self.__caster)
+---@return boolean
+function SpellTargetingData.finish()
+    if SpellTargetingData.__is_active then
+        SpellTargetingData.__ability:showDummyButton(SpellTargetingData.__caster)
+        SpellTargetingData.__ability:runCallback("FinishTargeting")
+        SpellTargetingData.__is_active = false
+        return true
     end
-
-    Debug("SpellTargetingData destroyed.")
+    return false
 end
 
----@param caster unit
----@return SpellCastingData
-function SpellTargetingData.get(caster)
-    return SpellTargetingData.__db:get(caster)
-end
-
----@param self SpellTargetingData
-mainLoop = function(self)
-    if self:isCanceled() then
-        self.__ability:runCallback('FinishTargeting', self)
-        destroy(self)
-    else
-        self.__ability:runCallback('Targeting', self)
-        SpellTargetingData.__timer:addAction(0, mainLoop, self)
+mainLoop = function()
+    if SpellTargetingData.__is_active then
+        SpellTargetingData.__ability:runCallback('Targeting')
+        SpellTargetingData.__timer:addAction(0, mainLoop)
     end
 end
 
@@ -78,48 +54,13 @@ end
 --- ============
 
 ---@return Ability
-function SpellTargetingData:getAbility()
-    return self.__ability
+function SpellTargetingData.getAbility()
+    return SpellTargetingData.__ability
 end
 
 ---@return unit
-function SpellTargetingData:getCaster()
-    return self.__caster
-end
-
---- =================
----  Mouse position.
---- =================
-
----@return Vec2
-function SpellTargetingData:getMousePos()
-    return self.__mouse_pos
-end
-
-function SpellTargetingData:saveMousePos()
-    self.__mouse_pos = BlzGetTriggerPlayerMousePosition()
-end
-
---- ==========
----  Userdata
---- ==========
-
----@return any
-function SpellTargetingData:getUserdata()
-    return self.__userdata
-end
-
----@param data any
-function SpellTargetingData:setUserdata(data)
-    self.__userdata = data
-end
-
-function SpellTargetingData:cancel()
-    self.__cancel = true
-end
-
-function SpellTargetingData:isCanceled()
-    return self.__cancel
+function SpellTargetingData.getCaster()
+    return SpellTargetingData.__caster
 end
 
 return SpellTargetingData

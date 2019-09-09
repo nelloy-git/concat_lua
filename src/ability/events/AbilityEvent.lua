@@ -6,33 +6,26 @@ local UnitEvent = require('utils.trigger.events.UnitEvents')
 local PlayerEvent = require('utils.trigger.events.PlayerEvents')
 ---@type SpellCastingData
 local SpellData = require('ability.events.SpellData')
----@type DataBase
---local DataBase = require('utils.DataBase')
 ---@type Settings
 local Settings = require('utils.Settings')
-
----@alias AbilityEventName string
----| '"StartTargeting"'     #Callback is called when player starts targeting ability.
----| '"Targeting"'          #Callback is called every timer period while player is targeting.
----| '"FinishTargeting"'    #Callback is called when player cancel targeting ability.
----| '"Start"'              #Callback is called when unit starts casting.
----| '"Casting"'            #Callback is called every loop of timer while unit is casting an ability.
----| '"Cancel"'             #Callback is called when player cancels ability.
----| '"Interrupt"'          #Callback is called when unit interrupted casting.
----| '"Finish"'             #Callback is called if casting was not interrupted and cast time passed.
 
 ---@class AbilityEvent
 local AbilityEvent = {}
 
+--- Predefined
+local mainLoop
+local cancelCasting
+local getSpellTarget
+local getSpellTargetPos
+local unitIssuedAnyOrder
+
 local initialized = false
 function AbilityEvent.init()
     if initialized then return nil end
-    UnitEvent.init()
-    UnitEvent.getTrigger("AnyUnitStartCastingAbility"):addAction(AbilityEvent.unitUsesAbility)
 
-    PlayerEvent.init()
-    PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(AbilityEvent.cancelTargetingMouse)
-    PlayerEvent.getTrigger("LocalPlayerKeyDown"):addAction(AbilityEvent.cancelTargetingKeyboard)
+    UnitEvent.init()
+    UnitEvent.getTrigger("AnyUnitStartCastingAbility"):addAction(AbilityEvent.unitStartsCasting)
+    UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(unitIssuedAnyOrder)
 
     AbilityEvent.__cast_timer = glTimer
     AbilityEvent.__cast_timer_period = glTimer:getPeriod()
@@ -40,139 +33,38 @@ function AbilityEvent.init()
     initialized = true
 end
 
----Calls this function when any unit starts casting ability.
-function AbilityEvent.unitUsesAbility()
+function AbilityEvent.unitStartsCasting()
     local id = GetSpellAbilityId()
-    local caster = GetSpellAbilityUnit()
     local ability = Ability.get(id)
-    local caster_data = SpellData.get(caster)
+    if not ability then return nil end
+    if id == ability:getDummyId() then return nil end
+
+    local caster = GetSpellAbilityUnit()
+    local data = SpellData.get(caster)
+    if data then cancelCasting(data) end
+
+    data = SpellData.new(ability, caster, getSpellTarget, getSpellTargetPos)
+    ability:runCallback("Start", data)
+
+    if not ability:getFlag("CanMoveWhileCasting") then
+        data.__move_speed = GetUnitMoveSpeed(caster)
+        SetUnitMoveSpeed(caster, 1)
+    end
+
+    AbilityEvent.__cast_timer:addAction(0, mainLoop, data)
 
     if Settings.Events.VerboseAbility then
-        Debug('Got casting')
-    end
-    --- Cancel previous ability.
-    if caster_data ~= nil then
-        AbilityEvent.cancelCastingAbility(caster_data)
-    end
-
-    --- new data
-    caster_data = SpellData.new(ability, caster)
-
-    ---Unit used dummy ability -> start targeting loop.
-    if id == ability:getDummyId() then
-        AbilityEvent.startTargetingLoop(caster_data)
-    ---Unit used main ability -> start casting loop.
-    elseif id == ability:getId() then
-        AbilityEvent.startCastingLoop(caster_data)
+        Debug("Casting started.")
     end
 end
-
---- =========
----  Cancel.
---- =========
-
----@param caster_data SpellCastingData
-function AbilityEvent.cancelCastingAbility(caster_data)
-    caster_data:cancel()
-end
-
---- ============
----  Targeting.
---- ============
-
----@param caster_data SpellCastingData
-function AbilityEvent.startTargetingLoop(caster_data)
-    local owner = GetOwningPlayer(caster_data:getCaster())
-
-    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getDummyId(), false)
-    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), true)
-    --ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey())
-    AbilityEvent.__cast_timer:addAction(0.05, function() ForceUIKeyBJ(owner, caster_data:getAbility():getHotkey()) end, nil)
-
-    caster_data:getAbility():runCallback('startTargeting', caster_data)
-
-    if owner == GetLocalPlayer() then
-        BlzFrameSetAlpha(cancel_btn_frame, changed_btn_alpha)
-        BlzFrameSetText(cancel_btn_frame, 'azaza')
-        BlzFrameSetTextSizeLimit(cancel_btn_frame, 500)
-        BlzFrameSetValue(cancel_btn_frame, 50)
-        local action = PlayerEvent.getTrigger("LocalPlayerMouseMove"):addAction(AbilityEvent.cursorCatcher, caster_data)
-        caster_data:setMouseCatcherAction(action)
-        AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
-    end
-
-    if Settings.Events.VerboseAbility then
-        Debug("Targeting started")
-    end
-end
-
----@param spell_data SpellCastingData
-function AbilityEvent.cursorCatcher(spell_data)
-    spell_data:setMousePos(Vec2.new(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseX()))
-end
-
----@param caster_data SpellCastingData
-function AbilityEvent.targetingLoop(caster_data)
-    if BlzFrameGetAlpha(cancel_btn_frame) ~= normal_btn_alpha then
-        caster_data:getAbility():runCallback("targeting", caster_data)
-        AbilityEvent.__cast_timer:addAction(0, AbilityEvent.targetingLoop, caster_data)
-    else
-        AbilityEvent.finishTargetingAbility(caster_data)
-    end
-end
-
----@param caster_data SpellCastingData
-function AbilityEvent.finishTargetingAbility(caster_data)
-    local owner = GetOwningPlayer(caster_data:getCaster())
-
-    PlayerEvent.getTrigger("LocalPlayerMouseMove"):removeAction(caster_data:getMouseAction())
-    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getId(), false)
-    SetPlayerAbilityAvailable(owner, caster_data:getAbility():getDummyId(), true)
-
-    caster_data:getAbility():runCallback('finishTargeting', caster_data)
-
-    if Settings.Events.VerboseAbility then
-        Debug("Targeting finished")
-    end
-end
-
---- =========
----  Casting
---- =========
 
 ---@param caster_data SpellCastingData
 ---@return SpellCastingData | nil
-function AbilityEvent.startCastingLoop(caster_data)
-    caster_data:setTargetPos(GetSpellTargetPos())
-    caster_data:setTarget(AbilityEvent.getSpellTarget())
-    caster_data:setCastingTime(caster_data:getAbility():getCastingTime(caster_data))
-
-    --- Try start casting.
-    local success = caster_data:getAbility():runCallback("start", caster_data)
-    if not success then
-        caster_data:destroy()
-        return nil
-    end
-
-    AbilityEvent.__cast_timer:addAction(0, AbilityEvent.castingLoop, caster_data)
-
-    if Settings.Events.VerboseAbility then
-        Debug(string.format("Casting started - %b", success))
-    end
-end
-
----@param caster_data SpellCastingData
-function AbilityEvent.castingLoop(caster_data)
-    if caster_data:cancel() then
-        caster_data:getAbility():runCallback("cancel")
-        caster_data:destroy()
-        return nil
-    end
-
+mainLoop = function(caster_data)
     --- Is casting time passed?
     caster_data:addElapsedTime(AbilityEvent.__cast_timer_period)
     if caster_data:isFinished() then
-        caster_data:getAbility():runCallback("finish", caster_data)
+        caster_data:getAbility():runCallback("Finish", caster_data)
         caster_data:destroy()
 
         if Settings.Events.VerboseAbility then
@@ -182,11 +74,11 @@ function AbilityEvent.castingLoop(caster_data)
     end
 
     --- Should unit continue casting or its interrupted.
-    local continue = caster_data:getAbility():runCallback('casting', caster_data)
+    local continue = caster_data:getAbility():runCallback('Casting', caster_data)
     if continue then
         AbilityEvent.__cast_timer:addAction(0, AbilityEvent.castingLoop, caster_data)
     else
-        caster_data:getAbility():runCallback("interrupt", caster_data)
+        caster_data:getAbility():runCallback("Interrupt", caster_data)
         caster_data:destroy()
 
         if Settings.Events.VerboseAbility then
@@ -195,15 +87,30 @@ function AbilityEvent.castingLoop(caster_data)
     end
 end
 
---- ===================
----  Cancel targeting.
---- ===================
+---@param data SpellCastingData
+cancelCasting = function(data)
+    data:getAbility():runCallback("Cancel", data)
+    data:cancel()
 
-function AbilityEvent.cancelTargeting()
+    if not data:getAbility():getFlag("CanMoveWhileCasting") then
+        SetUnitMoveSpeed(data:getCaster(), data.__move_speed)
+    end
+
+    if Settings.Events.VerboseAbility then
+        Debug("Casting canceled.")
+    end
+end
+
+unitIssuedAnyOrder = function()
+    local data = SpellData.get(GetOrderedUnit())
+    if not data then return nil end
+    if data:getAbility():getFlag("CancelWithAnyOrder") then
+        cancelCasting(data)
+    end
 end
 
 ---@return unit|item|destructable|nil
-function AbilityEvent.getSpellTarget()
+getSpellTarget = function()
     local target = GetSpellTargetUnit()
     if not target then target = GetSpellTargetItem() end
     if not target then target = GetSpellTargetDestructable() end

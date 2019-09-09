@@ -1,5 +1,0 @@
-local AbilityEventsUtils = {}
-
-
-
-return AbilityEventsUtils

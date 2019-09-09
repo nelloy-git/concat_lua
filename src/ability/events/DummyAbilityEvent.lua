@@ -8,13 +8,12 @@ local PlayerEvent = require('utils.trigger.events.PlayerEvents')
 local SelectedUnits = require('utils.trigger.events.SelectedUnits')
 ---@type Settings
 local Settings = require('utils.Settings')
----@type SpellTargetingData
-local SpellTargetingData= require('ability.events.SpellTargetingData')
 
 ---@class DummyAbilityEvent
 local DummyAbilityEvent = {}
 
-local is_local_player_targeting = false
+---@type SpellTargetingData
+local local_targeting_data = require('ability.events.SpellTargetingData')
 
 local initialized = false
 function DummyAbilityEvent.init()
@@ -22,22 +21,12 @@ function DummyAbilityEvent.init()
 
     UnitEvent.init()
     UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(DummyAbilityEvent.startTargeting)
-    UnitEvent.getTrigger('AnyUnitDeselected'):addAction(function()
-        local unit = GetTriggerUnit()
-        if GetOwningPlayer(unit) ~= GetLocalPlayer() then return nil end
-
-        if not is_local_player_targeting then return nil end
-
-        local data = SpellTargetingData.get(unit)
-        if data then data:cancel() end
-        is_local_player_targeting = false
-
-        if Settings.Events.VerboseAbility then
-            Debug("Targeting canceled.")
-        end
-    end)
+    UnitEvent.getTrigger('AnyUnitDeselected'):addAction(DummyAbilityEvent.deselectCaster)
 
     PlayerEvent.init()
+    --- Order stack can break system so block shift.
+    PlayerEvent.getTrigger("LocalPlayerShiftDown"):addAction(DummyAbilityEvent.blockShift)
+
     PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting)
     PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
         if BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT then
@@ -50,51 +39,47 @@ function DummyAbilityEvent.init()
     initialized = true
 end
 
-
 function DummyAbilityEvent.startTargeting()
-    if Settings.Events.VerboseAbility then
-        Debug("Got casting")
-    end
     local id = GetSpellAbilityId()
     local ability = Ability.get(id)
     if not ability then return nil end
-    local caster = GetSpellAbilityUnit()
 
-    if id ~= ability:getDummyId() then
-        local data = SpellTargetingData.get(caster)
-        if data then
-            data:cancel()
-            if is_local_player_targeting then
-                is_local_player_targeting = false
-                if Settings.Events.VerboseAbility then
-                    Debug("Targeting canceled.")
-                end
-            end
-        end
-        is_local_player_targeting = false
-        return nil
-    end
+    local caster = GetSpellAbilityUnit()
     if GetLocalPlayer() ~= GetOwningPlayer(caster) then return nil end
 
-    is_local_player_targeting = true
-    SpellTargetingData.new(ability, caster)
+    if id ~= ability:getDummyId() then
+        DummyAbilityEvent.cancelTargeting()
+        return nil
+    end
+
+    local_targeting_data.start(ability, caster)
 
     if Settings.Events.VerboseAbility then
         Debug("Targeting started")
     end
 end
 
-function DummyAbilityEvent.cancelTargeting()
-    if not is_local_player_targeting then return nil end
+function DummyAbilityEvent.deselectCaster()
+    if GetTriggerPlayer() ~= GetLocalPlayer() then return nil end
+    if local_targeting_data.getCaster() ~= GetTriggerUnit() then return nil end
 
-    local selected = SelectedUnits.get(GetLocalPlayer())
-    Debug(#selected)
+    DummyAbilityEvent.cancelTargeting()
+end
+
+function DummyAbilityEvent.blockShift()
+    local player = GetTriggerPlayer()
+    if player ~= GetLocalPlayer() then return nil end
+
+    local selected = SelectedUnits.get(player)
     for i = 1, #selected do
-        local data = SpellTargetingData.get(selected[i])
-        if data then data:cancel() end
+        SelectUnit(selected[i], false)
     end
 
-    is_local_player_targeting = false
+    if local_targeting_data then local_targeting_data:cancel() end
+end
+
+function DummyAbilityEvent.cancelTargeting()
+    local_targeting_data.finish()
 
     if Settings.Events.VerboseAbility then
         Debug("Targeting canceled.")

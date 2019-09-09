@@ -1,10 +1,22 @@
 {
     "Lua.workspace.ignoreDir": [
-        "dst/*"
+        "dst/*",
+        "lib/*"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global",
         "redundant-parameter"
     ],
-    "Lua.workspace.maxPreload": 1000
+    "Lua.workspace.maxPreload": 1000,
+    "Lua.diagnostics.globals": [
+        "compiletime",
+        "is_compiletime",
+        "__require_data",
+        "addCompiletimeFinalize",
+        "src_dir",
+        "dst_dir"
+    ],
+    "Lua.workspace.library": {
+        "./lib" : true
+    }
 }

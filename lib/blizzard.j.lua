@@ -12205,7 +12205,7 @@ function MeleeInitVictoryDefeat()
 	
 	-- Create a timer window for the "finish soon" timeout period, it has no timer
 	-- because it is driven by number time (outside of the game state to avoid desyncs)
-	bj_finishSoonTimerDialog = CreateTimerDialog(null)
+	bj_finishSoonTimerDialog = CreateTimerDialog(nil)
 	
 	-- Set a trigger to fire when we receive a "finish soon" game event
 	trig                     = CreateTrigger()

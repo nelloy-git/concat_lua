@@ -29,8 +29,6 @@ function RunInitialization()
     local Init = require('utils.Init')
     Init.start()
 
-    require('ability.warlord.summon')
-
     ---@type Unit
     local Unit = require('unit.Unit')
     --Debug(Player(0))
@@ -46,7 +44,7 @@ function RunInitialization()
     --Debug(Player(0))
 
     ---@type Ability
-    local summon_ability = require('ability.warlord.summon')
+    local summon_ability = require('heroes.warlord.summon')
     summon_ability:giveToUnit(u:getObj())
 end
 

@@ -160,8 +160,8 @@ end
 
 ---@param event TriggerUnitEvent
 ---@param unit unit
-function Trigger:addEvent_Unit(event, wc3_unit)
-    TriggerEvent.Unit[event](self.__trigger, wc3_unit)
+function Trigger:addEvent_Unit(event, unit)
+    TriggerEvent.Unit[event](self.__trigger, unit)
     table.insert(self.__events, 1, "Unit_"..event)
 end
 
