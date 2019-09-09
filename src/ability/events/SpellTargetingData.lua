@@ -25,7 +25,7 @@ function SpellTargetingData.start(ability, caster)
     SpellTargetingData.__caster = caster
 
     ability:showMainButton(caster)
-    SpellTargetingData.__timer:addAction(0.05, function() ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey()) end)
+    glTimer:addAction(0.05, function() ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey()) end)
     ability:runCallback("StartTargeting")
 
     SpellTargetingData.__is_active = true

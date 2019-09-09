@@ -67,7 +67,7 @@ end
 
 local local_mouse_pos
 updateMousePos = function()
-    local_mouse_pos = Vec2(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseY())
+    local_mouse_pos = Vec2.new(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseY())
 end
 
 createKeyboardTrigger = function(key)

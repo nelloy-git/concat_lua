@@ -23,7 +23,7 @@ local TriggerDB = DataBase.new('userdata', type(Trigger_meta))
 ---@param self Trigger
 function Trigger_meta.__tostring(self)
     local events = " "
-    for i = 1, #self.__events do
+    for i = 1, #self.__events + 1 do
         events = events..self.__events[i].." "
     end
     return string.format("Trigger with events: %s. Has %d action(s).", events, #self.__actions)
@@ -136,46 +136,46 @@ end
 ---| TriggerAnyUnitEvent
 function Trigger:addEvent(event_type, event_name, player_or_unit)
     TriggerEvent[event_type][event_name](self.__trigger, player_or_unit)
-    table.insert(self.__events, 1, event_type..event_name)
+    table.insert(self.__events, #self.__events + 1, event_type..event_name)
 end
 
 ---@param event TriggerGameEvent
 function Trigger:addEvent_Game(event)
     TriggerEvent.Game[event](self.__trigger)
-    table.insert(self.__events, 1, "Game_"..event)
+    table.insert(self.__events, #self.__events + 1, "Game_"..event)
 end
 
 ---@param event TriggerPlayerEvent
 ---@param player player
 function Trigger:addEvent_Player(event, player)
     TriggerEvent.Player[event](self.__trigger, player)
-    table.insert(self.__events, 1, "Player_"..event)
+    table.insert(self.__events, #self.__events + 1, "Player_"..event)
 end
 
 ---@param event TriggerAnyPlayerEvent
 function Trigger:addEvent_AnyPlayer(event)
     TriggerEvent.AnyPlayer[event](self.__trigger)
-    table.insert(self.__events, 1, "AnyPlayer_"..event)
+    table.insert(self.__events, #self.__events + 1, "AnyPlayer_"..event)
 end
 
 ---@param event TriggerUnitEvent
 ---@param unit unit
 function Trigger:addEvent_Unit(event, unit)
     TriggerEvent.Unit[event](self.__trigger, unit)
-    table.insert(self.__events, 1, "Unit_"..event)
+    table.insert(self.__events, #self.__events + 1, "Unit_"..event)
 end
 
 ---@param event TriggerPlayerUnitEvent
 ---@param player player
 function Trigger:addEvent_PlayerUnit(event, player)
     TriggerEvent.PlayerUnit[event](self.__trigger, player)
-    table.insert(self.__events, 1, "PlayerUnit_"..event)
+    table.insert(self.__events, #self.__events + 1, "PlayerUnit_"..event)
 end
 
 ---@param event TriggerAnyUnitEvent
 function Trigger:addEvent_AnyUnit(event)
     TriggerEvent.AnyUnit[event](self.__trigger)
-    table.insert(self.__events, 1, "AnyUnit_"..event)
+    table.insert(self.__events, #self.__events + 1, "AnyUnit_"..event)
 end
 
 ---@param event TriggerAnyUnitEvent
@@ -183,7 +183,7 @@ end
 ---@param key oskeytype
 function Trigger:addEvent_Keyboard(event, player, key)
     TriggerEvent.Keyboard[event](self.__trigger, player, key)
-    table.insert(self.__events, 1, "AnyUnit_"..event)
+    table.insert(self.__events, #self.__events + 1, "AnyUnit_"..event)
 end
 
 return Trigger

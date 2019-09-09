@@ -31,7 +31,10 @@ function SpellCastingData.new(ability, caster, target, target_pos)
         __ability = ability,
         __caster = caster,
         __target = target,
-        __target_pos = target_pos
+        __target_pos = target_pos,
+
+        __elapsed_time = 0,
+        __casting_time = 0
     }
     setmetatable(data, SpellCastingData_meta)
 
@@ -105,7 +108,7 @@ end
 
 ---@return number
 function SpellCastingData:getElapsedTime()
-    return self.__elapsed_time | 0
+    return self.__elapsed_time
 end
 
 ---@param time number
@@ -118,18 +121,13 @@ function SpellCastingData:addElapsedTime(delta)
     self.__elapsed_time = self.__elapsed_time + delta
 end
 
----@return boolean
-function SpellCastingData:isFinished()
-    return (self.__elapsed_time >= self.__casting_time)
-end
-
 --- ===============
 ---  Casting time.
 --- ===============
 
 ---@return number
 function SpellCastingData:getCastingTime()
-    return self.__casting_time | 0
+    return self.__casting_time
 end
 
 ---@param time number
@@ -172,6 +170,14 @@ end
 ---@return boolean
 function SpellCastingData:isInterrupted()
     return self.__cancel
+end
+
+function SpellCastingData:finish()
+    self.__finish = true
+end
+
+function SpellCastingData:isFinished()
+    return self.__finish
 end
 
 return SpellCastingData

@@ -9,6 +9,7 @@ compiletime(function()
     if Settings.Events.Unit then table.insert(requirements, require('utils.trigger.events.UnitEvents')) end
     if Settings.Events.Player then table.insert(requirements, require('utils.trigger.events.PlayerEvents')) end
     if Settings.Events.Ability then table.insert(requirements, require('ability.events.DummyAbilityEvent')) end
+    if Settings.Events.Ability then table.insert(requirements, require('ability.events.AbilityEvent')) end
 end)
 
 

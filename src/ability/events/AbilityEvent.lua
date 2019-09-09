@@ -5,7 +5,7 @@ local UnitEvent = require('utils.trigger.events.UnitEvents')
 ---@type PlayerEvent
 local PlayerEvent = require('utils.trigger.events.PlayerEvents')
 ---@type SpellCastingData
-local SpellData = require('ability.events.SpellData')
+local SpellData = require('ability.events.SpellCastingData')
 ---@type Settings
 local Settings = require('utils.Settings')
 
@@ -48,7 +48,7 @@ function AbilityEvent.unitStartsCasting()
 
     if not ability:getFlag("CanMoveWhileCasting") then
         data.__move_speed = GetUnitMoveSpeed(caster)
-        SetUnitMoveSpeed(caster, 1)
+        SetUnitMoveSpeed(caster, 0)
     end
 
     AbilityEvent.__cast_timer:addAction(0, mainLoop, data)
@@ -58,14 +58,14 @@ function AbilityEvent.unitStartsCasting()
     end
 end
 
----@param caster_data SpellCastingData
+---@param data SpellCastingData
 ---@return SpellCastingData | nil
-mainLoop = function(caster_data)
+mainLoop = function(data)
     --- Is casting time passed?
-    caster_data:addElapsedTime(AbilityEvent.__cast_timer_period)
-    if caster_data:isFinished() then
-        caster_data:getAbility():runCallback("Finish", caster_data)
-        caster_data:destroy()
+    data:addElapsedTime(AbilityEvent.__cast_timer_period)
+    if data:getCastingTime() <= data:getElapsedTime() then
+        data:getAbility():runCallback("Finish", data)
+        data:finish()
 
         if Settings.Events.VerboseAbility then
             Debug("Casting finished.")
@@ -74,12 +74,12 @@ mainLoop = function(caster_data)
     end
 
     --- Should unit continue casting or its interrupted.
-    local continue = caster_data:getAbility():runCallback('Casting', caster_data)
+    local continue = data:getAbility():runCallback('Casting', data)
     if continue then
-        AbilityEvent.__cast_timer:addAction(0, AbilityEvent.castingLoop, caster_data)
+        AbilityEvent.__cast_timer:addAction(0, mainLoop, data)
     else
-        caster_data:getAbility():runCallback("Interrupt", caster_data)
-        caster_data:destroy()
+        data:getAbility():runCallback("Interrupt", data)
+        data:interrupt()
 
         if Settings.Events.VerboseAbility then
             Debug("Casting interrupted.")

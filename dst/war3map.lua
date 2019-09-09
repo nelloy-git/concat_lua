@@ -7,7 +7,7 @@
     return __require_data.result[name]
   end
 __require_data.module["heroes.warlord.settings"] = function()
-    local WarlordSettings = {SummonSpearman = {DisableOtherAbilities = false, ArtEffect = "", Id = "AM#'", Name = "SummonSpearman", ArtSpecial = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", OrderId = "acidbomb", AreaofEffect = 150, ArtCaster = "", TooltipNormal = "Summon spearman", HotkeyNormal = "X", Levels = 1, TargetType = "point", FollowThroughTime = 0, CastRange = 500, Cooldown = 0, ArtTarget = "", CustomCastingTime = 3, Options = 3, CastingTime = 0}, SpearmanUnit = {Id = "HM#$", Name = "Spearman", NormalAbilities = "Avul,Aloc", HideHeroDeathMsg = true, ModelFile = "war3mapImported\\units\\SwordNya.mdx", HideHeroMinimapDisplay = true, HideHeroInterfaceIcon = true, CollisionSize = 0, SpeedBase = 1}}
+    local WarlordSettings = {SpearmanUnit = {HideHeroMinimapDisplay = true, Name = "Spearman", HideHeroDeathMsg = true, NormalAbilities = "Avul,Aloc", Id = "HM#$", HideHeroInterfaceIcon = true, SpeedBase = 1, ModelFile = "war3mapImported\\units\\SwordNya.mdx", CollisionSize = 0}, SummonSpearman = {Options = 3, Name = "SummonSpearman", HotkeyNormal = "X", CustomCastingTime = 3, TooltipNormal = "Summon spearman", Id = "AM#'", ArtSpecial = "", Levels = 1, ArtTarget = "", Cooldown = 0, OrderId = "acidbomb", ArtCaster = "", TooltipNormalExtended = "Summons invulnerale spirit warrior.", DisableOtherAbilities = false, TargetType = "point", CastRange = 500, FollowThroughTime = 0, AreaofEffect = 150, CastingTime = 0, ArtEffect = ""}}
     return WarlordSettings
 end
 __require_data.module["ability.SummonsDB"] = function()
@@ -68,7 +68,8 @@ __require_data.module["heroes.warlord.summon"] = function()
     local AbilityData = FullData.SummonSpearman
     local SummonData = FullData.SpearmanUnit
     local targeting_ability_id = "AM#("
-    local SummonCrystalSpearmanAbility = Ability.new(AbilityData.Id, targeting_ability_id, AbilityData.HotkeyNormal)
+    local SummonCrystalSpearmanAbility = Ability.new(AbilityData.Id, AbilityData.HotkeyNormal)
+    SummonCrystalSpearmanAbility:setDummyAbility(targeting_ability_id)
     function SummonCrystalSpearmanAbility.init()
       UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
           local unit = Unit.GetDyingUnit()
@@ -79,11 +80,19 @@ __require_data.module["heroes.warlord.summon"] = function()
       end)
     end
     local function finishCastingCallback(spell_data)
+      Debug("here")
       local caster = spell_data:getCaster()
+      Debug("here")
       local owner = GetOwningPlayer(caster)
-      local unit = Unit.new(owner, SummonData.Id, spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))
+      Debug("here")
+      local pos = spell_data:getTargetPos()
+      Debug("here")
+      local unit = runFuncInDebug(Unit.new, owner, SummonData.Id, 0, 0, 0)
+      Debug("here")
       unit:setVertexColor(1, 1, 1, 0.35)
+      Debug("here")
       unit:applyTimedLife(10)
+      Debug("here")
       SummonsDB.addSlave(unit:getObj(), caster)
       unit.parameter:setAttacksPerSec(1)
     end
@@ -91,7 +100,7 @@ __require_data.module["heroes.warlord.summon"] = function()
     SummonCrystalSpearmanAbility:setCastingTimeFunction(function()
         return AbilityData.CustomCastingTime
     end)
-    SummonCrystalSpearmanAbility:setCallback(finishCastingCallback, "finish")
+    SummonCrystalSpearmanAbility:setCallback("Finish", finishCastingCallback)
     return SummonCrystalSpearmanAbility
 end
 __require_data.module["unitParameter.mathFunc"] = function()
@@ -870,6 +879,209 @@ __require_data.module["utils.math.Vec2"] = function()
     end
     return Vec2
 end
+__require_data.module["ability.events.SpellCastingData"] = function()
+    local DataBase = require("utils.DataBase")
+    local SpellCastingData = {__type = "SpellCastingDataClass", __db = DataBase.new("userdata", "SpellCastingData")}
+    local SpellCastingData_meta = {__type = "SpellCastingData", __index = SpellCastingData, __gc = SpellCastingData.destroy}
+    function SpellCastingData.init()
+      SpellCastingData.__timer = glTimer
+    end
+    local mainLoop
+    local destroy
+    function SpellCastingData.new(ability, caster, target, target_pos)
+      local data = {__ability = ability, __caster = caster, __target = target, __target_pos = target_pos, __elapsed_time = 0, __casting_time = 0}
+      setmetatable(data, SpellCastingData_meta)
+      local cur_data = SpellCastingData.__db:get(caster)
+      if (cur_data) then
+        cur_data:cancel()
+      end
+      SpellCastingData.__db:add(caster, data)
+      local continue = ability:runCallback("StartCasting", data)
+      if (not continue) then
+        data:cancel()
+      end
+      data:setCastingTime(ability:getCastingTime(data))
+      SpellCastingData.__timer:addAction(0, mainLoop, data)
+      return data
+    end
+    function destroy(self)
+      if (SpellCastingData.__db:get(self.__caster) == self) then
+        SpellCastingData.__db:remove(self.__caster)
+      end
+    end
+    function SpellCastingData.get(caster)
+      return SpellCastingData.__db:get(caster)
+    end
+    mainLoop = function(self)
+        if (self:isCanceled()) then
+          self.__ability:runCallback("CancelCasting", self)
+          destroy(self)
+        elseif (self:isInterrupted()) then
+          self.__ability:runCallback("InterruptCasting", self)
+          destroy(self)
+        else
+          self.__ability:runCallback("Casting", self)
+          SpellCastingData.__timer:addAction(0, mainLoop, self)
+        end
+
+    end
+    function SpellCastingData:getAbility()
+      return self.__ability
+    end
+    function SpellCastingData:getCaster()
+      return self.__caster
+    end
+    function SpellCastingData:getTarget()
+      return self.__target
+    end
+    function SpellCastingData:getTargetPos()
+      return self.__target_pos
+    end
+    function SpellCastingData:getElapsedTime()
+      return self.__elapsed_time
+    end
+    function SpellCastingData:setElapsedTime(time)
+      self.__elapsed_time = time
+    end
+    function SpellCastingData:addElapsedTime(delta)
+      self.__elapsed_time = (self.__elapsed_time+delta)
+    end
+    function SpellCastingData:getCastingTime()
+      return self.__casting_time
+    end
+    function SpellCastingData:setCastingTime(time)
+      self.__casting_time = time
+    end
+    function SpellCastingData:addCastingTime(delta)
+      self.__casting_time = (self.__casting_time+delta)
+    end
+    function SpellCastingData:getUserdata()
+      return self.__userdata
+    end
+    function SpellCastingData:setUserdata(data)
+      self.__userdata = data
+    end
+    function SpellCastingData:cancel()
+      self.__cancel = true
+    end
+    function SpellCastingData:isCanceled()
+      return self.__cancel
+    end
+    function SpellCastingData:interrupt()
+      self.__interrupt = true
+    end
+    function SpellCastingData:isInterrupted()
+      return self.__cancel
+    end
+    function SpellCastingData:finish()
+      self.__finish = true
+    end
+    function SpellCastingData:isFinished()
+      return self.__finish
+    end
+    return SpellCastingData
+end
+__require_data.module["ability.events.AbilityEvent"] = function()
+    local Ability = require("ability.Ability")
+    local UnitEvent = require("utils.trigger.events.UnitEvents")
+    local PlayerEvent = require("utils.trigger.events.PlayerEvents")
+    local SpellData = require("ability.events.SpellCastingData")
+    local Settings = require("utils.Settings")
+    local AbilityEvent = {}
+    local mainLoop
+    local cancelCasting
+    local getSpellTarget
+    local getSpellTargetPos
+    local unitIssuedAnyOrder
+    local initialized = false
+    function AbilityEvent.init()
+      if (initialized) then
+        return nil
+      end
+      UnitEvent.init()
+      UnitEvent.getTrigger("AnyUnitStartCastingAbility"):addAction(AbilityEvent.unitStartsCasting)
+      UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(unitIssuedAnyOrder)
+      AbilityEvent.__cast_timer = glTimer
+      AbilityEvent.__cast_timer_period = glTimer:getPeriod()
+      initialized = true
+    end
+    function AbilityEvent.unitStartsCasting()
+      local id = GetSpellAbilityId()
+      local ability = Ability.get(id)
+      if (not ability) then
+        return nil
+      end
+      if (id == ability:getDummyId()) then
+        return nil
+      end
+      local caster = GetSpellAbilityUnit()
+      local data = SpellData.get(caster)
+      if (data) then
+        cancelCasting(data)
+      end
+      data = SpellData.new(ability, caster, getSpellTarget, getSpellTargetPos)
+      ability:runCallback("Start", data)
+      if (not ability:getFlag("CanMoveWhileCasting")) then
+        data.__move_speed = GetUnitMoveSpeed(caster)
+        SetUnitMoveSpeed(caster, 0)
+      end
+      AbilityEvent.__cast_timer:addAction(0, mainLoop, data)
+      if (Settings.Events.VerboseAbility) then
+        Debug("Casting started.")
+      end
+    end
+    mainLoop = function(data)
+        data:addElapsedTime(AbilityEvent.__cast_timer_period)
+        if (data:getCastingTime() <= data:getElapsedTime()) then
+          data:getAbility():runCallback("Finish", data)
+          data:finish()
+          if (Settings.Events.VerboseAbility) then
+            Debug("Casting finished.")
+          end
+          return nil
+        end
+        local continue = data:getAbility():runCallback("Casting", data)
+        if (continue) then
+          AbilityEvent.__cast_timer:addAction(0, mainLoop, data)
+        else
+          data:getAbility():runCallback("Interrupt", data)
+          data:interrupt()
+          if (Settings.Events.VerboseAbility) then
+            Debug("Casting interrupted.")
+          end
+        end
+    end
+    cancelCasting = function(data)
+        data:getAbility():runCallback("Cancel", data)
+        data:cancel()
+        if (not data:getAbility():getFlag("CanMoveWhileCasting")) then
+          SetUnitMoveSpeed(data:getCaster(), data.__move_speed)
+        end
+        if (Settings.Events.VerboseAbility) then
+          Debug("Casting canceled.")
+        end
+    end
+    unitIssuedAnyOrder = function()
+        local data = SpellData.get(GetOrderedUnit())
+        if (not data) then
+          return nil
+        end
+        if (data:getAbility():getFlag("CancelWithAnyOrder")) then
+          cancelCasting(data)
+        end
+    end
+    getSpellTarget = function()
+        local target = GetSpellTargetUnit()
+        if (not target) then
+          target = GetSpellTargetItem()
+        end
+        if (not target) then
+          target = GetSpellTargetDestructable()
+        end
+        return target
+    end
+    return AbilityEvent
+end
 __require_data.module["ability.events.SpellTargetingData"] = function()
     local SpellTargetingData = {is_active = false}
     local mainLoop
@@ -886,7 +1098,7 @@ __require_data.module["ability.events.SpellTargetingData"] = function()
       SpellTargetingData.__ability = ability
       SpellTargetingData.__caster = caster
       ability:showMainButton(caster)
-      SpellTargetingData.__timer:addAction(0.05, function()
+      glTimer:addAction(0.05, function()
           ForceUIKeyBJ(GetOwningPlayer(caster), ability:getHotkey())
       end)
       ability:runCallback("StartTargeting")
@@ -1075,9 +1287,15 @@ __require_data.module["ability.AbilityCallbacks"] = function()
       return 0
     end
     function Ability:setFlag(flag, flag_name)
+      if (not self.__flag) then
+        self.__flag = {}
+      end
       self.__flag[flag_name] = flag
     end
     function Ability:getFlag(flag_name)
+      if (not self.__flag) then
+        self.__flag = {}
+      end
       return self.__flag[flag_name]
     end
 end
@@ -1147,11 +1365,11 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
         return nil
       end
       UnitEvent.init()
-      UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(DummyAbilityEvent.startTargeting)
-      UnitEvent.getTrigger("AnyUnitDeselected"):addAction(DummyAbilityEvent.deselectCaster)
+      UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(runFuncInDebug, DummyAbilityEvent.startTargeting)
+      UnitEvent.getTrigger("AnyUnitDeselected"):addAction(runFuncInDebug, DummyAbilityEvent.deselectCaster)
       PlayerEvent.init()
-      PlayerEvent.getTrigger("LocalPlayerShiftDown"):addAction(DummyAbilityEvent.blockShift)
-      PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting)
+      PlayerEvent.getTrigger("LocalPlayerShiftDown"):addAction(runFuncInDebug, DummyAbilityEvent.blockShift)
+      PlayerEvent.getTrigger("LocalPlayerEscapeDown"):addAction(runFuncInDebug, DummyAbilityEvent.cancelTargeting)
       PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
           if (BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT) then
             DummyAbilityEvent.cancelTargeting()
@@ -1202,9 +1420,11 @@ __require_data.module["ability.events.DummyAbilityEvent"] = function()
       end
     end
     function DummyAbilityEvent.cancelTargeting()
-      local_targeting_data.finish()
-      if (Settings.Events.VerboseAbility) then
-        Debug("Targeting canceled.")
+      if (local_targeting_data) then
+        if (Settings.Events.VerboseAbility and local_targeting_data.__is_active) then
+          Debug("Targeting canceled.")
+        end
+        local_targeting_data.finish()
       end
     end
     return DummyAbilityEvent
@@ -1238,7 +1458,7 @@ __require_data.module["utils.trigger.events.PlayerEvents"] = function()
     end
     local local_mouse_pos
     updateMousePos = function()
-        local_mouse_pos = Vec2(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseY())
+        local_mouse_pos = Vec2.new(BlzGetTriggerPlayerMouseX(), BlzGetTriggerPlayerMouseY())
     end
     createKeyboardTrigger = function(key)
         PlayerEvent.__triggers["LocalPlayer"..key.."Down"] = Trigger.new()
@@ -2064,7 +2284,7 @@ __require_data.module["utils.trigger.Trigger"] = function()
     local TriggerDB = DataBase.new("userdata", type(Trigger_meta))
     function Trigger_meta.__tostring(self)
       local events = " "
-      for i = 1, #self.__events do
+      for i = 1, (#self.__events+1) do
         events = events..self.__events[i].." "
       end
       return string.format("Trigger with events: %s. Has %d action(s).", events, #self.__actions)
@@ -2135,35 +2355,35 @@ __require_data.module["utils.trigger.Trigger"] = function()
     end
     function Trigger:addEvent(event_type, event_name, player_or_unit)
       TriggerEvent[event_type][event_name](self.__trigger, player_or_unit)
-      table.insert(self.__events, 1, event_type..event_name)
+      table.insert(self.__events, (#self.__events+1), event_type..event_name)
     end
     function Trigger:addEvent_Game(event)
       TriggerEvent.Game[event](self.__trigger)
-      table.insert(self.__events, 1, "Game_"..event)
+      table.insert(self.__events, (#self.__events+1), "Game_"..event)
     end
     function Trigger:addEvent_Player(event, player)
       TriggerEvent.Player[event](self.__trigger, player)
-      table.insert(self.__events, 1, "Player_"..event)
+      table.insert(self.__events, (#self.__events+1), "Player_"..event)
     end
     function Trigger:addEvent_AnyPlayer(event)
       TriggerEvent.AnyPlayer[event](self.__trigger)
-      table.insert(self.__events, 1, "AnyPlayer_"..event)
+      table.insert(self.__events, (#self.__events+1), "AnyPlayer_"..event)
     end
     function Trigger:addEvent_Unit(event, unit)
       TriggerEvent.Unit[event](self.__trigger, unit)
-      table.insert(self.__events, 1, "Unit_"..event)
+      table.insert(self.__events, (#self.__events+1), "Unit_"..event)
     end
     function Trigger:addEvent_PlayerUnit(event, player)
       TriggerEvent.PlayerUnit[event](self.__trigger, player)
-      table.insert(self.__events, 1, "PlayerUnit_"..event)
+      table.insert(self.__events, (#self.__events+1), "PlayerUnit_"..event)
     end
     function Trigger:addEvent_AnyUnit(event)
       TriggerEvent.AnyUnit[event](self.__trigger)
-      table.insert(self.__events, 1, "AnyUnit_"..event)
+      table.insert(self.__events, (#self.__events+1), "AnyUnit_"..event)
     end
     function Trigger:addEvent_Keyboard(event, player, key)
       TriggerEvent.Keyboard[event](self.__trigger, player, key)
-      table.insert(self.__events, 1, "AnyUnit_"..event)
+      table.insert(self.__events, (#self.__events+1), "AnyUnit_"..event)
     end
     return Trigger
 end

@@ -14,9 +14,10 @@ local AbilityData = FullData.SummonSpearman
 local SummonData = FullData.SpearmanUnit
 
 local targeting_ability_id = compiletime(Ability.generateDummyAbility(AbilityData))
+---@type Ability
 local SummonCrystalSpearmanAbility = Ability.new(AbilityData["Id"],
-                                                 targeting_ability_id,
                                                  AbilityData["HotkeyNormal"])
+SummonCrystalSpearmanAbility:setDummyAbility(targeting_ability_id)
     
 function SummonCrystalSpearmanAbility.init()
     UnitEvent.getTrigger("AnyUnitDie"):addAction(function()
@@ -32,11 +33,20 @@ end
 
 ---@param spell_data SpellCastingData
 local function finishCastingCallback(spell_data)
+    Debug("here")
     local caster = spell_data:getCaster()
+    Debug("here")
     local owner = GetOwningPlayer(caster)
-    local unit = Unit.new(owner, SummonData["Id"], spell_data:getX(), spell_data:getY(), GetUnitFacing(caster))
+    Debug("here")
+    local pos = spell_data:getTargetPos()
+    Debug("here")
+    local unit = runFuncInDebug(Unit.new, owner, SummonData["Id"], 0, 0, 0)
+    --local unit = Unit.new(owner, SummonData["Id"], pos.x, pos.y, GetUnitFacing(caster))
+    Debug("here")
     unit:setVertexColor(1, 1, 1, 0.35)
+    Debug("here")
     unit:applyTimedLife(10)
+    Debug("here")
 
     SummonsDB.addSlave(unit:getObj(), caster)
 
@@ -46,6 +56,6 @@ end
 ---@type Ability
 SummonCrystalSpearmanAbility:setName(AbilityData["TooltipNormal"])
 SummonCrystalSpearmanAbility:setCastingTimeFunction(function() return AbilityData["CustomCastingTime"] end)
-SummonCrystalSpearmanAbility:setCallback(finishCastingCallback, "finish")
+SummonCrystalSpearmanAbility:setCallback("Finish", finishCastingCallback)
 
 return SummonCrystalSpearmanAbility

@@ -20,14 +20,14 @@ function DummyAbilityEvent.init()
     if initialized then return nil end
 
     UnitEvent.init()
-    UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(DummyAbilityEvent.startTargeting)
-    UnitEvent.getTrigger('AnyUnitDeselected'):addAction(DummyAbilityEvent.deselectCaster)
+    UnitEvent.getTrigger("AnyUnitFinishCastingAbility"):addAction(runFuncInDebug, DummyAbilityEvent.startTargeting)
+    UnitEvent.getTrigger('AnyUnitDeselected'):addAction(runFuncInDebug, DummyAbilityEvent.deselectCaster)
 
     PlayerEvent.init()
     --- Order stack can break system so block shift.
-    PlayerEvent.getTrigger("LocalPlayerShiftDown"):addAction(DummyAbilityEvent.blockShift)
+    PlayerEvent.getTrigger("LocalPlayerShiftDown"):addAction(runFuncInDebug, DummyAbilityEvent.blockShift)
 
-    PlayerEvent.getTrigger("LocalPlayerEscDown"):addAction(DummyAbilityEvent.cancelTargeting)
+    PlayerEvent.getTrigger("LocalPlayerEscapeDown"):addAction(runFuncInDebug, DummyAbilityEvent.cancelTargeting)
     PlayerEvent.getTrigger("LocalPlayerMouseDown"):addAction(function()
         if BlzGetTriggerPlayerMouseButton() == MOUSE_BUTTON_TYPE_RIGHT then
             DummyAbilityEvent.cancelTargeting()
@@ -79,10 +79,12 @@ function DummyAbilityEvent.blockShift()
 end
 
 function DummyAbilityEvent.cancelTargeting()
-    local_targeting_data.finish()
-
-    if Settings.Events.VerboseAbility then
-        Debug("Targeting canceled.")
+    if local_targeting_data then
+        if Settings.Events.VerboseAbility and local_targeting_data.__is_active then
+            Debug("Targeting canceled.")
+        end
+        
+        local_targeting_data.finish()
     end
 end
 

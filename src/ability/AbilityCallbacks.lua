@@ -60,11 +60,13 @@ end
 ---@param flag boolean
 ---@param flag_name AbilityFlagName
 function Ability:setFlag(flag, flag_name)
+    if not self.__flag then self.__flag = {} end
     self.__flag[flag_name] = flag
 end
 
 ---@param flag_name AbilityFlagName
 ---@return boolean
 function Ability:getFlag(flag_name)
+    if not self.__flag then self.__flag = {} end
     return self.__flag[flag_name]
 end
