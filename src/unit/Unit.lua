@@ -3,7 +3,7 @@ local ParameterContainer = require('unitParameter.UnitParameterContainer')
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 
----@class Unit
+---@class UnitOld
 local Unit = {
     __type = 'ClassUnit',
     __db = DataBase.new('userdata', 'Unit')

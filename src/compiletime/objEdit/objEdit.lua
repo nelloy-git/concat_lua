@@ -22,6 +22,8 @@ function ObjEdit.init(src_path, dst_path)
     ObjEdit.Ability.BladeMasterCriticalStrike = require('compiletime.objEdit.objects.ability.weBladeMasterCriticalStrike')
     ---@type ChannelWeAbility
     ObjEdit.Ability.Channel = require('compiletime.objEdit.objects.ability.weChannel')
+    ---@type HardenedSkin
+    ObjEdit.Ability.HardenedSkin = require('compiletime.objEdit.objects.ability.weHardenedSkin')
     ---@type RunedBracersWeAbility
     ObjEdit.Ability.RunedBracers = require('compiletime.objEdit.objects.ability.weRunedBracers')
     ---@type SpellBookWeAbility

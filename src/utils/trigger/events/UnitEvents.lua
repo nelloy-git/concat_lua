@@ -16,7 +16,6 @@ function UnitEvent.init()
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitStartCastingAbility"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitStartCastingAbility"]:addEvent_AnyUnit("SpellChannel")
-    --UnitEvent.__triggers["AnyUnitStartCastingAbility"]:addAction(function() Debug('azaza') end)
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitFinishCastingAbility"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitFinishCastingAbility"]:addEvent_AnyUnit("SpellEffect")
@@ -35,6 +34,9 @@ function UnitEvent.init()
     ---@type Trigger
     UnitEvent.__triggers["AnyUnitAttacked"] = Trigger.new()
     UnitEvent.__triggers["AnyUnitAttacked"]:addEvent_AnyUnit("Attacked")
+    ---@type Trigger
+    UnitEvent.__triggers["AnyUnitDamaging"] = Trigger.new()
+    UnitEvent.__triggers["AnyUnitDamaging"]:addEvent_AnyUnit("Damaging")
 
     initialized = true
 end
@@ -47,6 +49,7 @@ end
 ---| '"AnyUnitSelected"'
 ---| '"AnyUnitDeselected"'
 ---| '"AnyUnitAttacked"'
+---| '"AnyUnitDamaging"'
 
 ---@param name UnitEventName
 function UnitEvent.getTrigger(name)

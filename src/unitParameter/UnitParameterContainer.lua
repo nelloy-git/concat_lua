@@ -75,7 +75,7 @@ function ParameterContainer:getAttack() return self.__attack:get() end
 
 ---Function sets attacks per second.
 ---@param base number
-function ParameterContainer:setAttacksPerSec(base) _, multiplicator, bonus, _ = self.__attackSpeed:get() self.__attackSpeed:set(base, multiplicator, bonus) end
+function ParameterContainer:setAttacksPerSec(base) local _, multiplicator, bonus, _ = self.__attackSpeed:get() self.__attackSpeed:set(base, multiplicator, bonus) end
 
 ---Function adds attack speed modifier. (-0.15 = -15%)
 ---@param multiplicator number
@@ -83,7 +83,7 @@ function ParameterContainer:addAttackSpeed(multiplicator) self.__attackSpeed:add
 
 ---Function returns attacks per second, attack speed modifier and result attacks per second. (modifier: -0.15 = -15%)
 ---@return number, number, number
-function ParameterContainer:getAttackSpeed() base, multiplicator, _, res = self.__attackSpeed:get() return base, multiplicator, res end
+function ParameterContainer:getAttackSpeed() local base, multiplicator, _, res = self.__attackSpeed:get() return base, multiplicator, res end
 
 ---Function adds armor to unit.
 ---@param base number
