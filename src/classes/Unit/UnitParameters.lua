@@ -38,33 +38,52 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters = {}
     unit.__parameters.AttackDamage = createValues()
     unit.__parameters.AttackSpeed = createValues()
+    unit.__parameters.AttackSpeed.attacks_per_sec = 2
+    unit.__parameters.AttackSpeed.maximum = Settings.Unit.maximum_attack_speed
     unit.__parameters.Armor = createValues()
     unit.__parameters.PhysicalDamageReduction = createValues()
     unit.__parameters.PhysicalDamageReduction.maximum = Settings.Unit.maximum_physical_damage_reduction
-
     unit.__parameters.SpellDamage = createValues()
     unit.__parameters.CastingTimeReduction = createValues()
-    unit.__parameters.CastingTimeReduction.maximum = Settings.Unit.maximum_casting_speed
+    unit.__parameters.CastingTimeReduction.maximum = Settings.Unit.maximum_casting_time_reduction
     unit.__parameters.Resistance = createValues()
     unit.__parameters.MagicalDamageReduction = createValues()
     unit.__parameters.MagicalDamageReduction.maximum = Settings.Unit.maximum_magical_damage_reduction
-
     unit.__parameters.DodgeChance = createValues()
     unit.__parameters.DodgeChance.maximum = Settings.Unit.maximum_dodge_chance
     unit.__parameters.CritChance = createValues()
     unit.__parameters.CritChance.maximum = Settings.Unit.maximum_crit_chance
     unit.__parameters.CritDamage = createValues()
+    unit.__parameters.CritDamage.base = 1.5
     unit.__parameters.CooldownReduction = createValues()
     unit.__parameters.CooldownReduction.maximum = Settings.Unit.maximum_cooldown_reduction
-
     unit.__parameters.Health = createValues()
     unit.__parameters.Regeneration = createValues()
     unit.__parameters.Mana = createValues()
     unit.__parameters.Recovery = createValues()
-
     unit.__parameters.Strength = createValues()
     unit.__parameters.Agility = createValues()
     unit.__parameters.Intelligence = createValues()
+
+    unit:addAttackDamage(1, 0, 0)
+    unit:addAttackSpeed(0, 0, 0)
+    unit:addArmor(0, 0, 0)
+    unit:addPhysicalDamageReduction(0, 0, 0)
+    unit:addSpellDamage(0, 0, 0)
+    unit:addCastingTimeReduction(0, 0, 0)
+    unit:addResistance(0, 0, 0)
+    unit:addMagicalDamageReduction(0, 0, 0)
+    unit:addDodgeChance(0, 0, 0)
+    unit:addCritChance(0, 0, 0)
+    unit:addCritDamage(0, 0, 0)
+    unit:addCooldownReduction(0, 0, 0)
+    unit:addHealth(500, 0, 0)
+    unit:addRegeneration(0, 0, 0)
+    unit:addMana(0, 0, 0)
+    unit:addRecovery(0, 0, 0)
+    unit:addStrength(0, 0, 0)
+    unit:addAgility(0, 0, 0)
+    unit:addIntelligence(0, 0, 0)
 
     return true
 end)
@@ -103,25 +122,20 @@ end
 ---Formula: (attacks per second) * (multiplicator) * (bonus)
 ---@param attacks_per_sec number
 function Unit:setAttacksPerSecond(attacks_per_sec)
-    local values = self.__parameters.AttackSpeed
-    values.base = attacks_per_sec
-    values.result = values.base * values.mult * values.bonus
-
-    -- Apply
-    BlzSetUnitAttackCooldown(self:getObj(), values.result, 0)
+    self.__parameters.AttackSpeed.attacks_per_sec = attacks_per_sec
+    self:addAttackSpeed(0, 0, 0)
 end
 
----Formula: (attacks per second) * (multiplicator) * (bonus)
+---Formula: 10 * (base_rating * mutliplicator) / (100 + (base_rating * mutliplicator) + bonus
+---@param base_rating number
 ---@param multiplicator number
 ---@param bonus number
-function Unit:addAttackSpeed(multiplicator, bonus)
-    local values = self.__parameters.AttackSpeed
-    values.mult = values.mult + multiplicator
-    values.bonus = values.bonus + bonus
-    values.result = values.base * values.mult * values.bonus
+function Unit:addAttackSpeed(base_rating, multiplicator, bonus)
+    addValues(self.__parameters.AttackSpeed, base_rating, multiplicator, bonus)
+    local value = self.__parameters.AttackSpeed.attacks_per_sec / (percentOfMaximumResult(self.__parameters.AttackSpeed) + 1)
 
     -- Apply
-    BlzSetUnitAttackCooldown(self:getObj(), values.result, 0)
+    BlzSetUnitAttackCooldown(self:getObj(), value, 0)
 end
 
 ---@return number
@@ -139,7 +153,10 @@ end
 ---@param bonus number
 function Unit:addArmor(base_armor, multiplicator, bonus)
     addValues(self.__parameters.Armor, base_armor, multiplicator, bonus)
-    linearResult(self.__parameters.Armor)
+    local val = linearResult(self.__parameters.Armor)
+
+    -- Apply
+    BlzSetUnitArmor(self:getObj(), val)
 end
 
 ---@return number
@@ -191,7 +208,7 @@ end
 ---@param base_rating number
 ---@param multiplicator number
 ---@param bonus number
-function Unit:setCastingTimeReduction(base_rating, multiplicator, bonus)
+function Unit:addCastingTimeReduction(base_rating, multiplicator, bonus)
     addValues(self.__parameters.CastingTimeReduction, base_rating, multiplicator, bonus)
     percentOfMaximumResult(self.__parameters.CastingTimeReduction)
 end
@@ -251,7 +268,7 @@ function Unit:addDodgeChance(base_rating, multiplicator, bonus)
 end
 
 function Unit:getDodgeChance()
-    percentOfMaximumResult(self.__parameters.DodgeChance)
+    return percentOfMaximumResult(self.__parameters.DodgeChance)
 end
 
 -- ============
@@ -268,7 +285,7 @@ function Unit:addCritChance(base_rating, multiplicator, bonus)
 end
 
 function Unit:getCritChance()
-    percentOfMaximumResult(self.__parameters.CritChance)
+    return percentOfMaximumResult(self.__parameters.CritChance)
 end
 
 -- ============
@@ -303,7 +320,7 @@ function Unit:addCooldownReduction(base_rating, multiplicator, bonus)
 end
 
 function Unit:getCooldownReduction()
-    percentOfMaximumResult(self.__parameters.CooldownReduction)
+    return percentOfMaximumResult(self.__parameters.CooldownReduction)
 end
 
 -- ========
@@ -319,7 +336,9 @@ function Unit:addHealth(base_health, multiplicator, bonus)
     local value = linearResult(self.__parameters.Health)
 
     -- Apply
+    local percent_hp = GetUnitLifePercent(self:getObj())
     BlzSetUnitMaxHP(self:getObj(), math.floor(value))
+    SetUnitLifePercentBJ(self:getObj(), percent_hp)
 end
 
 ---@return number
@@ -337,7 +356,7 @@ end
 ---@param bonus number
 function Unit:addRegeneration(base_regeneration, multiplicator, bonus)
     addValues(self.__parameters.Regeneration, base_regeneration, multiplicator, bonus)
-    linearResult(self.__parameters.Regeneration)
+    local value = linearResult(self.__parameters.Regeneration)
 
     -- Apply
     BlzSetUnitRealField(self:getObj(), UNIT_RF_HIT_POINTS_REGENERATION_RATE, value)
@@ -361,7 +380,9 @@ function Unit:addMana(base_mana, multiplicator, bonus)
     local value = linearResult(self.__parameters.Mana)
 
     -- Apply
+    local percent_mana = GetUnitManaPercent(self:getObj())
     BlzSetUnitMaxMana(self:getObj(), math.floor(value))
+    SetUnitManaPercentBJ(self:getObj(), percent_mana)
 end
 
 ---@return number
@@ -379,7 +400,7 @@ end
 ---@param bonus number
 function Unit:addRecovery(base_recovery, multiplicator, bonus)
     addValues(self.__parameters.Recovery, base_recovery, multiplicator, bonus)
-    linearResult(self.__parameters.Recovery)
+    local value = linearResult(self.__parameters.Recovery)
 
     -- Apply
     BlzSetUnitRealField(self:getObj(), UNIT_RF_MANA_REGENERATION, value)
@@ -395,20 +416,116 @@ end
 -- ==========
 
 --- Formula: (base_strength) * (multiplicator) + bonus
+---|Strength adds base attack damage, base health and base armor
 ---@param base_strength number
 ---@param multiplicator number
 ---@param bonus number
 function Unit:addStrength(base_strength, multiplicator, bonus)
+    -- Remove old parameters
+    local prev_val = linearResult(self.__parameters.Strength)
+    local damage = prev_val * Settings.Unit.attack_damage_per_str
+    local health = prev_val * Settings.Unit.health_per_str
+    local armor = prev_val * Settings.Unit.armor_per_str
+
+    self:addAttackDamage(-damage, 0, 0)
+    self:addHealth(-health, 0, 0)
+    self:addArmor(-armor, 0, 0)
+
     addValues(self.__parameters.Strength, base_strength, multiplicator, bonus)
-    linearResult(self.__parameters.Strength)
+    local val = linearResult(self.__parameters.Strength)
 
     -- Apply
-    SetHeroStr(self:getObj(), math.floor(value), true)
+    SetHeroStr(self:getObj(), math.floor(val), true)
+    damage = val * Settings.Unit.attack_damage_per_str
+    health = val * Settings.Unit.health_per_str
+    armor = val * Settings.Unit.armor_per_str
+
+    self:addAttackDamage(damage, 0, 0)
+    self:addHealth(health, 0, 0)
+    self:addArmor(armor, 0, 0)
 end
 
 ---@return number
 function Unit:getStrength()
     return linearResult(self.__parameters.Strength)
+end
+
+-- =========
+--  Agility
+-- =========
+
+--- Formula: (base_agility) * (multiplicator) + bonus
+---|Agility adds attack speed, casting speed and dodge chance
+---@param base_agility number
+---@param multiplicator number
+---@param bonus number
+function Unit:addAgility(base_agility, multiplicator, bonus)
+    -- Remove old parameters
+    local prev_val = linearResult(self.__parameters.Agility)
+    local attack_speed = prev_val * Settings.Unit.attack_speed_per_agi
+    local casting_time_reduction = prev_val * Settings.Unit.casting_time_reduction_per_agi
+    local dodge_chance = prev_val * Settings.Unit.dodge_chance_per_agi
+
+    self:addAttackSpeed(-attack_speed, 0, 0)
+    self:addCastingTimeReduction(-casting_time_reduction, 0, 0)
+    self:addDodgeChance(-dodge_chance, 0, 0)
+
+    addValues(self.__parameters.Agility, base_agility, multiplicator, bonus)
+    local val = linearResult(self.__parameters.Agility)
+
+    -- Apply
+    SetHeroAgi(self:getObj(), math.floor(val), true)
+    attack_speed = val * Settings.Unit.attack_speed_per_agi
+    casting_time_reduction = val * Settings.Unit.casting_time_reduction_per_agi
+    dodge_chance = val * Settings.Unit.dodge_chance_per_agi
+
+    self:addAttackDamage(attack_speed, 0, 0)
+    self:addHealth(casting_time_reduction, 0, 0)
+    self:addArmor(dodge_chance, 0, 0)
+end
+
+---@return number
+function Unit:getAgility()
+    return linearResult(self.__parameters.Agility)
+end
+
+-- ==============
+--  Intelligence
+-- ==============
+
+--- Formula: (base_intelligence) * (multiplicator) + bonus
+---|Intelligence adds base spell damage, base mana and base cooldown reduction
+---@param base_intelligence number
+---@param multiplicator number
+---@param bonus number
+function Unit:addIntelligence(base_intelligence, multiplicator, bonus)
+    -- Remove old parameters
+    local prev_val = linearResult(self.__parameters.Intelligence)
+    local spell_damage = prev_val * Settings.Unit.spell_damage_per_int
+    local mana = prev_val * Settings.Unit.mana_per_int
+    local cooldown_reduction = prev_val * Settings.Unit.cooldown_reduction_per_int
+
+    self:addSpellDamage(-spell_damage, 0, 0)
+    self:addMana(-mana, 0, 0)
+    self:addCooldownReduction(-cooldown_reduction, 0, 0)
+
+    addValues(self.__parameters.Intelligence, base_intelligence, multiplicator, bonus)
+    local val = linearResult(self.__parameters.Intelligence)
+
+    -- Apply
+    SetHeroInt(self:getObj(), math.floor(val), true)
+    spell_damage = val * Settings.Unit.spell_damage_per_int
+    mana = val * Settings.Unit.mana_per_int
+    cooldown_reduction = val * Settings.Unit.cooldown_reduction_per_int
+
+    self:addAttackDamage(spell_damage, 0, 0)
+    self:addHealth(mana, 0, 0)
+    self:addArmor(cooldown_reduction, 0, 0)
+end
+
+---@return number
+function Unit:getIntelligence()
+    return linearResult(self.__parameters.Intelligence)
 end
 
 
@@ -422,25 +539,50 @@ damageEventAction = function()
     local target = Unit.GetEventDamageTarget()
 
     if math.random() <= target:getDodgeChance() then
-        damage = 0
-        -- TODO show dodge
+        BlzSetEventDamage(0)
+
+        local text_tag = CreateTextTag()
+        SetTextTagText(text_tag, "Dodge", 0.027)
+        SetTextTagPos(text_tag, GetUnitX(target:getObj()), GetUnitY(target:getObj()), 50)
+        SetTextTagColor(text_tag, 200, 200, 200, 255)
+        SetTextTagPermanent(text_tag, false)
+        SetTextTagFadepoint(text_tag, 1)
+        SetTextTagLifespan(text_tag, 2)
+        SetTextTagVelocity(text_tag, 0., 0.027)
+
+        return nil
     end
 
+    local is_crit = false
     if damage >= 1 and math.random() <= source:getCritChance() then
-        damage = damage * source:getCritDamage()
-        -- TODO show crit
+        is_crit = true
     end
 
+    local color = {r = 250, g = 50, b = 50}
+    local damage_type = BlzGetEventDamageType()
     if damage >= 1 then
-        local damage_type = BlzGetEventDamageType()
         if damage_type == Settings.DamageType.Physic then
             damage = damage * (1 - target:getPhysicalDamageReduction()) - target:getArmor()
         elseif damage_type == Settings.DamageType.Magic then
+            color = {r = 50, g = 50, b = 250}
             damage = damage * (1 - target:getMagicalDamageReduction()) - target:getResistance()
         end
     end
-
     if damage < 1 then damage = 0 end
+
+    if is_crit then
+        damage = damage * source:getCritDamage()
+
+        local text_tag = CreateTextTag()
+        SetTextTagText(text_tag, string.format("%.0f!", damage), 0.027)
+        SetTextTagPos(text_tag, GetUnitX(source:getObj()), GetUnitY(source:getObj()), 50)
+        SetTextTagColor(text_tag, color.r, color.g, color.b, 255)
+        SetTextTagPermanent(text_tag, false)
+        SetTextTagFadepoint(text_tag, 1)
+        SetTextTagLifespan(text_tag, 2)
+        SetTextTagVelocity(text_tag, 0., 0.027)
+    end
+
     BlzSetEventDamage(damage)
 end
 
@@ -470,7 +612,7 @@ end
 ---@return number
 linearResult = function(values)
     if not values.result_ready then
-        values.result = torange(values.base * values.mult + value.bonus, values.minimum, value.maximum)
+        values.result = values.base * values.mult + values.bonus
         values.result_ready = true
     end
     return values.result

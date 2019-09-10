@@ -33,9 +33,6 @@ unitSelected = function()
     if not already_selected then
         table.insert(SelectedUnits[player], 1, unit)
     end
-
-    Debug(type(unit))
-    Debug("Selecttion added. Length", #SelectedUnits[player])
 end
 
 unitDeselected = function()
@@ -54,8 +51,6 @@ unitDeselected = function()
     if pos > 0 then
         table.remove(list, pos)
     end
-    
-    Debug("Selecttion removed. Length", #SelectedUnits[player])
 end
 
 ---@param player player
@@ -64,9 +59,7 @@ function SelectedUnits.get(player)
     local copy = {}
     for i = 1, #SelectedUnits[player] do
         table.insert(copy, 1, SelectedUnits[player][i])
-        Debug("Copied", type(SelectedUnits[player][i]))
     end
-    Debug("src:", #SelectedUnits[player], "   copy:", #copy)
     return copy
 end
 

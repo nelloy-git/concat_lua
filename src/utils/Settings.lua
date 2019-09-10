@@ -16,9 +16,10 @@ local Settings = {
         DebugRemovalFunctions = true,
 
         attack_dispersion = 0.15,
+        maximum_attack_speed = 9,
         maximum_physical_damage_reduction = 0.75,
         maximum_magical_damage_reduction = 0.75,
-        maximum_casting_speed = 0.75,
+        maximum_casting_time_reduction = 0.75,
         maximum_dodge_chance = 0.75,
         maximum_crit_chance = 0.75,
         maximum_cooldown_reduction = 0.75,
@@ -32,8 +33,8 @@ local Settings = {
         dodge_chance_per_agi = 0.25,
 
         spell_damage_per_int = 1,
+        mana_per_int = 5,
         cooldown_reduction_per_int = 0.25,
-        mana_per_int = 5
     },
     -- =============
     --  DamageTypes

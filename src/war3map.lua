@@ -30,22 +30,19 @@ function RunInitialization()
     Init.start()
 
     ---@type Unit
-    local Unit = require('unit.Unit')
+    local Unit = require('classes.Unit')
     --Debug(Player(0))
 
-    local u = Unit.new(Player(0), 'hfoo', 0, 0, 0)
-    BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_POINT, 0)
-    BlzSetUnitRealField(u:getObj(), UNIT_RF_CAST_BACK_SWING, 0)
-
-    local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
+    local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
+    local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
 
     --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
     --Debug(u)
     --Debug(Player(0))
 
     ---@type Ability
-    local summon_ability = require('heroes.warlord.summon')
-    summon_ability:giveToUnit(u:getObj())
+    --local summon_ability = require('heroes.warlord.summon')
+    --summon_ability:giveToUnit(u:getObj())
 end
 
 function InitCustomPlayerSlots()
