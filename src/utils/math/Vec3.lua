@@ -5,10 +5,12 @@ local Vec3 = {
 local Vec3_meta = {
     __type = "Vec3",
     __index = Vec3,
-    __tostring = function(self)
-                    return string.format('%s[%.2f, %.2f, %.2f]', self.__type, self.x, self.y, self.z)
-                 end
+    __call = Vec3.new
 }
+
+function Vec3_meta.__tostring(self)
+    return string.format('%s[%.2f, %.2f, %.2f]', self.__type, self.x, self.y, self.z)
+end
 
 local loc
 if not is_compiletime then

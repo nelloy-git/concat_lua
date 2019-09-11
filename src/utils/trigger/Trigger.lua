@@ -2,14 +2,11 @@
 local Settings = require('utils.Settings')
 ---@type DataBase
 local DataBase = require('utils.DataBase')
----@type TriggerAction
-local TriggerAction = require('utils.trigger.TriggerAction')
----@type TriggerEvent
-local TriggerEvent = require('utils.trigger.TriggerEvent')
 
 ---@class Trigger
 local Trigger = {
-    __type = 'TriggerClass'
+    __type = 'TriggerClass',
+    __db = DataBase.new('userdata', 'Trigger')
 }
 local Trigger_meta = {
     __type = 'Trigger',
@@ -17,48 +14,29 @@ local Trigger_meta = {
     __gc = Trigger.destroy
 }
 
---- trigger -> Trigger
-local TriggerDB = DataBase.new('userdata', type(Trigger_meta))
+-- ============
+--  Predefined
+-- ============
+---@type fun():nil
+local runTriggerActions
 
 ---@param self Trigger
 function Trigger_meta.__tostring(self)
-    local events = " "
-    for i = 1, #self.__events + 1 do
-        events = events..self.__events[i].." "
-    end
-    return string.format("Trigger with events: %s. Has %d action(s).", events, #self.__actions)
-end
-
-local function runTriggerActions()
-    local self = TriggerDB:get(GetTriggeringTrigger())
-    for i = 1, #self.__actions do
-        ---@type TriggerAction
-        local action = self.__actions[i]
-        if Settings.debug then
-            local success, result = pcall(action.run, action)
-            if not success then
-                Debug("Error in "..tostring(self))
-                Debug(result)
-            end
-        else
-            action:run()
-        end
-    end
-    return true
+    return string.format("%s", type(self))
 end
 
 ---@return Trigger
 function Trigger.new()
-    local wc3_trigger = CreateTrigger()
+    local trigger_obj = CreateTrigger()
     ---@type Trigger
     local trigger = {
-        __trigger = wc3_trigger,
-        __action_runner = TriggerAddAction(wc3_trigger, runTriggerActions),
+        __trigger_obj = trigger_obj,
+        __action_runner = TriggerAddAction(trigger_obj, runTriggerActions),
         __actions = {},
         __events = {}
     }
     setmetatable(trigger, Trigger_meta)
-    TriggerDB:add(trigger.__trigger, trigger)
+    Trigger.__db:add(trigger.__trigger_obj, trigger)
 
     return trigger
 end
@@ -66,30 +44,19 @@ end
 ---@return nil
 function Trigger:destroy()
     self:clearActions()
-    DestroyTrigger(self.__trigger)
-    self.__trigger = nil
+    DestroyTrigger(self.__trigger_obj)
+    self.__trigger_obj = nil
 end
 
----@return trigger
-function Trigger:getObj()
-    return self.__trigger
-end
-
----@return TriggerAction[]
-function Trigger:getActions()
-    return self.__actions
-end
-
----@return string[]
-function Trigger:getEvents()
-    return self.__events
-end
-
----@param callback fun(data:any)
+---@param callback fun(data:any):nil
 ---@param data any
 ---@return TriggerAction
 function Trigger:addAction(callback, data)
-    local action = TriggerAction.new(callback, data)
+    ---@class TriggerAction
+    local action = {
+        __callback = callback,
+        __data = data
+    }
     table.insert(self.__actions, #self.__actions + 1, action)
     return action
 end
@@ -116,74 +83,87 @@ end
 ---@return nil
 function Trigger:clearActions()
     while #self.__actions > 0 do
-        table.remove(self.__actions, 1)
+        table.remove(self.__actions, #self.__actions)
     end
 end
 
 ---Function executes all callbacks of function.
 ---@return nil
 function Trigger:execute()
-    TriggerExecute(self.__trigger)
+    TriggerExecute(self.__trigger_obj)
 end
 
----@param event_type TriggerEventType
----@param event_name string
----| TriggerGameEvent
----| TriggerPlayerEvent
----| TriggerAnyPlayerEvent
----| TriggerUnitEvent
----| TriggerPlayerUnitEvent
----| TriggerAnyUnitEvent
-function Trigger:addEvent(event_type, event_name, player_or_unit)
-    TriggerEvent[event_type][event_name](self.__trigger, player_or_unit)
-    table.insert(self.__events, #self.__events + 1, event_type..event_name)
-end
+---@alias TriggerEventType string
+---| '"PlayerEvent"'
 
----@param event TriggerGameEvent
-function Trigger:addEvent_Game(event)
-    TriggerEvent.Game[event](self.__trigger)
-    table.insert(self.__events, #self.__events + 1, "Game_"..event)
-end
-
----@param event TriggerPlayerEvent
 ---@param player player
-function Trigger:addEvent_Player(event, player)
-    TriggerEvent.Player[event](self.__trigger, player)
-    table.insert(self.__events, #self.__events + 1, "Player_"..event)
+---@param event_type playerevent
+---@return TriggerEvent
+function Trigger:addPlayerEvent(player, event_type)
+    ---@class TriggerEvent
+    local event = {
+        __type = "PlayerEvent",
+        __player = player,
+        __event = event_type
+    }
+    TriggerRegisterPlayerEvent(self.__trigger_obj, player, event_type)
+    table.insert(self.__events, #self.__events + 1, event)
+
+    return event
 end
 
----@param event TriggerAnyPlayerEvent
-function Trigger:addEvent_AnyPlayer(event)
-    TriggerEvent.AnyPlayer[event](self.__trigger)
-    table.insert(self.__events, #self.__events + 1, "AnyPlayer_"..event)
+function Trigger:refreshEvents()
+    DestroyTrigger(self.__trigger_obj)
+    self.__trigger_obj = CreateTrigger()
+    self.__action_runner = TriggerAddAction(self.__trigger_obj, runTriggerActions)
+    Trigger.__db:add(self.__trigger_obj, self)
+
+    for i = 1, #self.__events do
+        local event = self.__events[i]
+        if event.__type == "PlayerEvent" then
+            TriggerRegisterPlayerEvent(self.__trigger_obj, self.__player, self.__event)
+        else
+            -- TODO
+            Debug("Trigger refresh error: undeclared event type")
+        end
+    end
 end
 
----@param event TriggerUnitEvent
----@param unit unit
-function Trigger:addEvent_Unit(event, unit)
-    TriggerEvent.Unit[event](self.__trigger, unit)
-    table.insert(self.__events, #self.__events + 1, "Unit_"..event)
+---@param event TriggerEvent
+function Trigger:removeEvent(event)
+    local pos = -1
+    for i = 1, #self.__events do
+        if self.__events[i] == event then
+            pos = i
+            break
+        end
+    end
+
+    if pos > 0 then
+        table.remove(self.__events, pos)
+        self:refreshEvents()
+        return true
+    end
+    return false
 end
 
----@param event TriggerPlayerUnitEvent
----@param player player
-function Trigger:addEvent_PlayerUnit(event, player)
-    TriggerEvent.PlayerUnit[event](self.__trigger, player)
-    table.insert(self.__events, #self.__events + 1, "PlayerUnit_"..event)
-end
+runTriggerActions = function()
+    local self = Trigger.__db:get(GetTriggeringTrigger())
 
----@param event TriggerAnyUnitEvent
-function Trigger:addEvent_AnyUnit(event)
-    TriggerEvent.AnyUnit[event](self.__trigger)
-    table.insert(self.__events, #self.__events + 1, "AnyUnit_"..event)
-end
-
----@param event TriggerAnyUnitEvent
----@param player player
----@param key oskeytype
-function Trigger:addEvent_Keyboard(event, player, key)
-    TriggerEvent.Keyboard[event](self.__trigger, player, key)
-    table.insert(self.__events, #self.__events + 1, "AnyUnit_"..event)
+    for i = 1, #self.__actions do
+        ---@type TriggerAction
+        local action = self.__actions[i]
+        if Settings.debug then
+            local success, result = pcall(action.run, action)
+            if not success then
+                Debug("Error in "..tostring(self))
+                Debug(result)
+            end
+        else
+            action:run()
+        end
+    end
+    return true
 end
 
 return Trigger

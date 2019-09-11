@@ -41,7 +41,7 @@ function UnitEvent.init()
     initialized = true
 end
 
----@alias UnitEventName string
+---@alias UnitEventName2 string
 ---| '"AnyUnitDie"'
 ---| '"AnyUnitIssuedAnyOrder"'
 ---| '"AnyUnitStartCastingAbility"'

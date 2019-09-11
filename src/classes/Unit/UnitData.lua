@@ -19,8 +19,8 @@ local Unit_meta = {
 }
 
 function Unit_meta.__tostring(self)
-    return string.format('Unit %s (%s) at [%.2f, %.2f, %.2f]',
-                            self:getName(), ID2str(self:getId()), self:getX(), self:getY(), self:getZ())
+    return string.format('Unit %s (%s) at %s',
+                            self:getName(), ID2str(self:getId()), self:getPos3())
 end
 
 ---@param player player
@@ -41,7 +41,8 @@ function Unit.new(player, id, x, y, face, is_dead)
     ---@type Unit
     local unit = {
         __id = id,
-        __unit_obj = unit_obj
+        __unit_obj = unit_obj,
+        __owning_player = player
     }
     setmetatable(unit, Unit_meta)
     Unit.__db:add(unit.__unit_obj, unit)
@@ -91,6 +92,11 @@ end
 ---@return unit
 function Unit:getObj()
     return self.__unit_obj
+end
+
+---@return number
+function Unit:getId()
+    return self.__id
 end
 
 ---@return Unit

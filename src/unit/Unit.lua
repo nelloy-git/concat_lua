@@ -36,7 +36,8 @@ function Unit.new(player, id, x, y, face, is_dead)
     ---@type Unit
     local unit = {
         __id = id,
-        __unit_obj = unit_obj
+        __unit_obj = unit_obj,
+        __owning_player = player
     }
     setmetatable(unit, Unit_meta)
     Unit.__db:add(unit.__unit_obj, unit)
@@ -99,7 +100,7 @@ end
 
 ---@return integer
 function Unit:getOwningPlayer()
-    return GetOwningPlayer(self.__unit_obj)
+    return self.__owning_player
 end
 
 ---@param pos Vec2

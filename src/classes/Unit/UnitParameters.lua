@@ -61,9 +61,13 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters.Regeneration = createValues()
     unit.__parameters.Mana = createValues()
     unit.__parameters.Recovery = createValues()
-    unit.__parameters.Strength = createValues()
-    unit.__parameters.Agility = createValues()
-    unit.__parameters.Intelligence = createValues()
+
+    local char1 = string.sub(unit:getId(), 1, 1)
+    if char1 == string.upper(char1) then
+        unit.__parameters.Strength = createValues()
+        unit.__parameters.Agility = createValues()
+        unit.__parameters.Intelligence = createValues()
+    end
 
     unit:addAttackDamage(1, 0, 0)
     unit:addAttackSpeed(0, 0, 0)
@@ -421,6 +425,8 @@ end
 ---@param multiplicator number
 ---@param bonus number
 function Unit:addStrength(base_strength, multiplicator, bonus)
+    local char1 = string.sub(self:getId(), 1, 1)
+    if char1 ~= string.upper(char1) then return nil end
     -- Remove old parameters
     local prev_val = linearResult(self.__parameters.Strength)
     local damage = prev_val * Settings.Unit.attack_damage_per_str
@@ -447,6 +453,8 @@ end
 
 ---@return number
 function Unit:getStrength()
+    local char1 = string.sub(self:getId(), 1, 1)
+    if char1 ~= string.upper(char1) then return 0 end
     return linearResult(self.__parameters.Strength)
 end
 
@@ -460,6 +468,8 @@ end
 ---@param multiplicator number
 ---@param bonus number
 function Unit:addAgility(base_agility, multiplicator, bonus)
+    local char1 = string.sub(self:getId(), 1, 1)
+    if char1 ~= string.upper(char1) then return nil end
     -- Remove old parameters
     local prev_val = linearResult(self.__parameters.Agility)
     local attack_speed = prev_val * Settings.Unit.attack_speed_per_agi
@@ -486,6 +496,8 @@ end
 
 ---@return number
 function Unit:getAgility()
+    local char1 = string.sub(self:getId(), 1, 1)
+    if char1 ~= string.upper(char1) then return 0 end
     return linearResult(self.__parameters.Agility)
 end
 
@@ -499,6 +511,8 @@ end
 ---@param multiplicator number
 ---@param bonus number
 function Unit:addIntelligence(base_intelligence, multiplicator, bonus)
+    local char1 = string.sub(self:getId(), 1, 1)
+    if char1 ~= string.upper(char1) then return nil end
     -- Remove old parameters
     local prev_val = linearResult(self.__parameters.Intelligence)
     local spell_damage = prev_val * Settings.Unit.spell_damage_per_int
@@ -525,6 +539,8 @@ end
 
 ---@return number
 function Unit:getIntelligence()
+    local char1 = string.sub(self:getId(), 1, 1)
+    if char1 ~= string.upper(char1) then return 0 end
     return linearResult(self.__parameters.Intelligence)
 end
 

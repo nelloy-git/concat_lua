@@ -5,6 +5,7 @@ local Vec2 = {
 local Vec2_meta = {
     __type = 'Vec2',
     __index = Vec2,
+    __call = Vec2.new
 }
 
 ---@param self Vec2
