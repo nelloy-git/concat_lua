@@ -508,7 +508,7 @@ runTriggerActions = function()
         ---@type TriggerAction
         local action = self.__actions[i]
         if Settings.debug then
-            local success, result = pcall(action.run, action)
+            local success, result = pcall(action.__callback, action.__data)
             if not success then
                 Debug("Error in "..tostring(self))
                 Debug(result)

@@ -70,9 +70,9 @@ Unit.addCreationFunction(function(unit)
         unit.__parameters.Intelligence = createValues()
     end
 
-    unit:addAttackDamage(1, 0, 0)
+    unit:addAttackDamage(10, 0, 0)
     unit:addAttackSpeed(0, 0, 0)
-    unit:addArmor(0, 0, 0)
+    unit:addArmor(5, 0, 0)
     unit:addPhysicalDamageReduction(0, 0, 0)
     unit:addSpellDamage(0, 0, 0)
     unit:addCastingTimeReduction(0, 0, 0)
