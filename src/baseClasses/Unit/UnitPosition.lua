@@ -1,4 +1,4 @@
-local Unit = require('classes.Unit.UnitData')
+local Unit = require('baseClasses.Unit.UnitData')
 
 ---@return number
 function Unit:getX()

@@ -73,6 +73,15 @@ function Ability:getHotkey()
     return self.__hotkey
 end
 
+---@param unit unit
+function Ability:giveToUnit(unit)
+    UnitAddAbility(unit, self.__id)
+    if self.__dummy_id then
+        UnitAddAbility(unit, self.__dummy_id)
+        SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
+    end
+end
+
 ---@param id number
 ---@return Ability
 function Ability.get(id)
@@ -81,6 +90,11 @@ function Ability.get(id)
         ability = Ability.__dummy_db:get(id)
     end
     return ability
+end
+
+---@return Ability
+function Ability.GetSpellAbility()
+    return Ability.get(GetSpellAbilityId())
 end
 
 return Ability

@@ -16,6 +16,8 @@ local Settings = {
         DebugRemovalFunctions = true,
 
         attack_dispersion = 0.15,
+        base_attacks_per_sec = 2,
+        base_crit_damage = 1.5,
         maximum_attack_speed = 9,
         maximum_physical_damage_reduction = 0.75,
         maximum_magical_damage_reduction = 0.75,

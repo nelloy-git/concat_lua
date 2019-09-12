@@ -1,5 +1,5 @@
-local Ability = require('ability.AbilityData')
-local AbilityCallbacks = require('ability.AbilityCallbacks')
-local AbilityUI = require('ability.AbilityUI')
+local Ability = require('classes.Ability.AbilityData')
+require('classes.Ability.AbilityCallbacks')
+require('classes.Ability.AbilityUI')
 
 return Ability

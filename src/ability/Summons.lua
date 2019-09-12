@@ -1,4 +1,3 @@
----@type DataBase
 local DataBase = require('utils.DataBase')
 
 ---@class SummonsDB
@@ -6,9 +5,6 @@ local SummonsDB = {
     __masters = DataBase.new('userdata', 'userdata'),
     __slaves = DataBase.new('userdata', 'table')
 }
-
-local MastersDB = {}
-local SlavesDB = {}
 
 ---@param slave unit
 ---@param master unit

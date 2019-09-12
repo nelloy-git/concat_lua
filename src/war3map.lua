@@ -30,7 +30,7 @@ function RunInitialization()
     Init.start()
 
     ---@type Unit
-    local Unit = require('classes.Unit')
+    local Unit = require('baseClasses.Unit')
     --Debug(Player(0))
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)

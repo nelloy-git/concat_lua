@@ -72,15 +72,6 @@ function Ability:setPosition(x, y, player)
 end
 
 ---@param unit unit
-function Ability:giveToUnit(unit)
-    UnitAddAbility(unit, self.__id)
-    if self.__dummy_id then
-        UnitAddAbility(unit, self.__dummy_id)
-        SetPlayerAbilityAvailable(GetOwningPlayer(unit), self.__id, false)
-    end
-end
-
----@param unit unit
 function Ability:showDummyButton(unit)
     if self.__dummy_id then
         local owner = GetOwningPlayer(unit)

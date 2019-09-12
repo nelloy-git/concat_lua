@@ -1,5 +1,5 @@
-local Unit = require('classes.Unit.UnitData')
-local UnitEvent = require('utils.trigger.events.UnitEvents')
+local Unit = require('baseClasses.Unit.UnitData')
+require('baseClasses.Unit.UnitEvents')
 local Settings = require('utils.Settings')
 
 local UnitParameter = {}
@@ -22,8 +22,8 @@ local initialized = false
 function UnitParameter.init()
     if initialized then return nil end
 
-    UnitEvent.init()
-    UnitEvent.getTrigger("AnyUnitDamaging"):addAction(damageEventAction)
+    local damage_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_DAMAGING)
+    damage_trigger:addAction(damageEventAction)
 
     initialized = true
 end
@@ -38,7 +38,7 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters = {}
     unit.__parameters.AttackDamage = createValues()
     unit.__parameters.AttackSpeed = createValues()
-    unit.__parameters.AttackSpeed.attacks_per_sec = 2
+    unit.__parameters.AttackSpeed.attacks_per_sec = Settings.Unit.base_attacks_per_sec
     unit.__parameters.AttackSpeed.maximum = Settings.Unit.maximum_attack_speed
     unit.__parameters.Armor = createValues()
     unit.__parameters.PhysicalDamageReduction = createValues()
@@ -54,7 +54,7 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters.CritChance = createValues()
     unit.__parameters.CritChance.maximum = Settings.Unit.maximum_crit_chance
     unit.__parameters.CritDamage = createValues()
-    unit.__parameters.CritDamage.base = 1.5
+    unit.__parameters.CritDamage.base = Settings.Unit.base_crit_damage
     unit.__parameters.CooldownReduction = createValues()
     unit.__parameters.CooldownReduction.maximum = Settings.Unit.maximum_cooldown_reduction
     unit.__parameters.Health = createValues()
@@ -62,6 +62,7 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters.Mana = createValues()
     unit.__parameters.Recovery = createValues()
 
+    -- Non hero protection
     local char1 = string.sub(unit:getId(), 1, 1)
     if char1 == string.upper(char1) then
         unit.__parameters.Strength = createValues()
