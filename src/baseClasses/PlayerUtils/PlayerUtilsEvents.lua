@@ -1,5 +1,5 @@
 local DataBase = require('utils.DataBase')
-local Player = require('baseClasses.Player.PlayerData')
+local PlayerUtils = require('baseClasses.PlayerUtils.PlayerUtilsData')
 local Trigger = require('baseClasses.Trigger')
 
 local __db = DataBase.new("userdata", "Trigger")
@@ -7,7 +7,7 @@ local __db = DataBase.new("userdata", "Trigger")
 ---Returns trigger for any unit event.
 ---@param event playerevent
 ---@return Trigger
-function Player.getTrigger(event)
+function PlayerUtils.getTrigger(event)
     local trigger = __db:get(event)
     if not trigger then
         trigger = Trigger.new()
@@ -19,7 +19,7 @@ function Player.getTrigger(event)
     return trigger
 end
 
-function Player.getKeyTrigger(key)
+function PlayerUtils.getKeyTrigger(key)
     local trigger = __db:get(key)
     if not trigger then
         trigger = Trigger.new()
