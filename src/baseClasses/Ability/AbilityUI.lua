@@ -1,4 +1,4 @@
-local Ability = require("ability.AbilityData")
+local Ability = require('baseClasses.Ability.AbilityData')
 
 ---@param name string
 function Ability:setName(name)

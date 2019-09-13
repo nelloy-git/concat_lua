@@ -53,7 +53,7 @@ function AbilityEvent.unitStartsCasting()
 
     AbilityEvent.__cast_timer:addAction(0, mainLoop, data)
 
-    if Settings.Events.VerboseAbility then
+    if Settings.Events.VerboseAbilityTargeting then
         Debug("Casting started.")
     end
 end
@@ -67,7 +67,7 @@ mainLoop = function(data)
         data:getAbility():runCallback("Finish", data)
         data:finish()
 
-        if Settings.Events.VerboseAbility then
+        if Settings.Events.VerboseAbilityTargeting then
             Debug("Casting finished.")
         end
         return nil
@@ -81,7 +81,7 @@ mainLoop = function(data)
         data:getAbility():runCallback("Interrupt", data)
         data:interrupt()
 
-        if Settings.Events.VerboseAbility then
+        if Settings.Events.VerboseAbilityTargeting then
             Debug("Casting interrupted.")
         end
     end
@@ -96,7 +96,7 @@ cancelCasting = function(data)
         SetUnitMoveSpeed(data:getCaster(), data.__move_speed)
     end
 
-    if Settings.Events.VerboseAbility then
+    if Settings.Events.VerboseAbilityTargeting then
         Debug("Casting canceled.")
     end
 end

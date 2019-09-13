@@ -5,6 +5,7 @@ local WarlordSettings = compiletime(function()
     -- ================= --
     --  Summon spearman  --
     -- ================= --
+    ---@type ChannelCompiletimeData
     local SummonSpearmanData = Channel.new()
     SummonSpearmanData:setField("Name", "SummonSpearman")
     SummonSpearmanData:setField("TooltipNormal", "Summon spearman")

@@ -29,9 +29,8 @@ function RunInitialization()
     local Init = require('utils.Init')
     Init.start()
 
-    ---@type Unit
     local Unit = require('baseClasses.Unit')
-    --Debug(Player(0))
+    local Ability = require('baseClasses.Ability')
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
     local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)

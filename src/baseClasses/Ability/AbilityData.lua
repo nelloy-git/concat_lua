@@ -26,9 +26,7 @@ function Ability.new(id, hotkey)
     ---@type Ability
     local ability = {
         __id = ID(id),
-        __hotkey = hotkey,
-        ---@type table<AbilityEventName, AbilityCallback>
-        __callbacks = {}
+        __hotkey = hotkey
     }
     setmetatable(ability, Ability_meta)
     Ability.__db:add(ID(id), ability)

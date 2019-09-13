@@ -24,7 +24,7 @@ function SelectedUnits.init()
 end
 
 ---@param player player
----@return unit[]
+---@return Unit[]
 function Unit.getSelectedByPlayer(player)
     local copy = {}
     for i = 1, #SelectedUnits[player] do
@@ -62,7 +62,7 @@ unitSelectedFunc = function()
 end
 
 unitDeselectedFunc = function()
-    local unit = GetTriggerUnit()
+    local unit = Unit.GetTriggerUnit()
     local player = GetTriggerPlayer()
 
     local list = SelectedUnits[player]

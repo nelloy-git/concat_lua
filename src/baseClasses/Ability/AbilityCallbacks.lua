@@ -1,13 +1,16 @@
-local Ability = require('ability.AbilityData')
+local Ability = require('baseClasses.Ability.AbilityData')
 
 ---@alias AbilityCastingTimeFunc fun(data:SpellCastingData):number
 
----@alias AbilityCallback fun(data:SpellCastingData):boolean
+---@alias AbilityTargetingCallback fun(caster:Unit):nil
+---@alias AbilityCastingCallback fun(data:SpellCastingData):boolean
 
----@alias AbilityEventName string
+---@alias AbilityTargetingEventName string
 ---| '"StartTargeting"'     #Callback is called when player starts targeting ability.
----| '"Targeting"'          #Callback is called every timer period while player is targeting.
+---| '"TargetingMouseMove"' #Callback is called when local player moves mouse while targeting.
 ---| '"FinishTargeting"'    #Callback is called when player cancel targeting ability.
+
+---@alias AbilityCastingEventName string
 ---| '"Start"'              #Callback is called when unit starts casting.
 ---| '"Casting"'            #Callback is called every loop of timer while unit is casting an ability.
 ---| '"Cancel"'             #Callback is called when player cancels ability.
@@ -19,9 +22,12 @@ local Ability = require('ability.AbilityData')
 ---| '"CancelWithAnyOrder"'
 ---| '"CanMoveWhileCasting"'
 
----@param callback_type AbilityEventName
----@param callback AbilityCallback
-function Ability:setCallback(callback_type, callback)
+---@param callback_type AbilityTargetingEventName
+---@param callback AbilityTargetingCallback
+function Ability:setTargetingCallback(callback_type, callback)
+    if not self.__targeting_callbacks then
+        self.__targeting_callbacks = {}
+    end
     self.__callbacks[callback_type] = callback
 end
 

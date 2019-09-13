@@ -53,7 +53,7 @@ local Settings = {
         Unit = true,
         Player = true,
         Ability = true,
-        VerboseAbility = true
+        VerboseAbilityTargeting = true
     }
 }
 
