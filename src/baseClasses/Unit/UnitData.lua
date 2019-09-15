@@ -18,9 +18,9 @@ local Unit_meta = {
     __gc = Unit.destroy,
 }
 
+---@param self Unit
 function Unit_meta.__tostring(self)
-    return string.format('Unit %s (%s) at %s',
-                            self:getName(), ID2str(self:getId()), self:getPos3())
+    return string.format('Unit %s (%s)', "TODO", ID2str(self:getId()))
 end
 
 ---@param player player
@@ -97,6 +97,11 @@ end
 ---@return number
 function Unit:getId()
     return self.__id
+end
+
+---@return player
+function Unit:getOwner()
+    return GetOwningPlayer(self.__unit_obj)
 end
 
 ---@return Unit

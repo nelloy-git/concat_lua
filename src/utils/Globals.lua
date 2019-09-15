@@ -2,6 +2,7 @@
 local Settings = require('utils.Settings')
 
 local Globals = {}
+local original_type = _G.type
 
 local initialized = false
 compiletime(function()
@@ -43,16 +44,15 @@ function runFuncInDebug(func, ...)
     end
 end
 
-local compiletime_print = print
 ---Function prints data to local player in debug mode.
 function Debug(...)
     if is_compiletime then
-        compiletime_print(...)
+        print(...)
     elseif Settings.debug then
         local s = ''
         for i = 1, select('#', ...) do
             local v = select(i, ...)
-            local t = type(v)
+            local t = original_type(v)
             if t == 'nil' then
                 v = 'nil'
             elseif t == 'userdata' then
@@ -109,7 +109,6 @@ function torange(val, min, max)
     return val
 end
 
-local original_type = _G.type
 function type(val)
     local lua_type = original_type(val)
     if lua_type ~= 'table' then return lua_type end

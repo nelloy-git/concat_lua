@@ -40,7 +40,7 @@ end
 ---@param key any
 ---@return any
 function DataBase:get(key)
-    if type(key) ~= self.__key_type then
+    if key ~= nil and type(key) ~= self.__key_type then
         error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
     end
     return self[key]

@@ -1,7 +1,9 @@
 local Ability = require('baseClasses.Ability.AbilityData')
-require('baseClasses.Ability.AbilityCallbacks')
 require('baseClasses.Ability.AbilityUI')
 require('baseClasses.Ability.AbilitySummons')
-require('baseClasses.Ability.AbilityTargetingEvents')
+-- Not ready
+--require('baseClasses.Ability.AbilityTargetingEvents')
+require('baseClasses.Ability.AbilityCastingEvents')
+require('baseClasses.Ability.AbilityCastingBar')
 
 return Ability

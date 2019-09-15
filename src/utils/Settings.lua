@@ -50,10 +50,8 @@ local Settings = {
     --  Events  --
     -- ======== --
     Events = {
-        Unit = true,
-        Player = true,
-        Ability = true,
-        VerboseAbilityTargeting = true
+        VerboseAbilityTargeting = true,
+        VerboseAbilityCasting = true
     }
 }
 

@@ -61,6 +61,7 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters.Regeneration = createValues()
     unit.__parameters.Mana = createValues()
     unit.__parameters.Recovery = createValues()
+    unit.__parameters.MoveSpeed = createValues()
 
     -- Non hero protection
     local char1 = string.sub(unit:getId(), 1, 1)
@@ -89,6 +90,7 @@ Unit.addCreationFunction(function(unit)
     unit:addStrength(0, 0, 0)
     unit:addAgility(0, 0, 0)
     unit:addIntelligence(0, 0, 0)
+    unit:addMoveSpeed(GetUnitMoveSpeed(unit:getObj()), 0, 0)
 
     return true
 end)
@@ -138,8 +140,10 @@ end
 function Unit:addAttackSpeed(base_rating, multiplicator, bonus)
     addValues(self.__parameters.AttackSpeed, base_rating, multiplicator, bonus)
     local value = self.__parameters.AttackSpeed.attacks_per_sec / (percentOfMaximumResult(self.__parameters.AttackSpeed) + 1)
+    if value <= 0 then value = 10^6 end
 
     -- Apply
+    --Debug("Attack cooldown:", value)
     BlzSetUnitAttackCooldown(self:getObj(), value, 0)
 end
 
@@ -543,6 +547,35 @@ function Unit:getIntelligence()
     local char1 = string.sub(self:getId(), 1, 1)
     if char1 ~= string.upper(char1) then return 0 end
     return linearResult(self.__parameters.Intelligence)
+end
+
+-- ===========
+--  MoveSpeed
+-- ===========
+
+--- Formula: (base_move_speed) * (multiplicator) + bonus
+---@param base_move_speed number
+---@param multiplicator number
+---@param bonus number
+function Unit:addMoveSpeed(base_move_speed, multiplicator, bonus)
+    addValues(self.__parameters.MoveSpeed, base_move_speed, multiplicator, bonus)
+    local value = linearResult(self.__parameters.MoveSpeed)
+    value = torange(value, 0, 512)
+
+    -- Apply
+
+    Debug("Move speed:", value)
+    if value <= 0 then
+        SetUnitTurnSpeed(self:getObj(), 0)
+    else
+        SetUnitTurnSpeed(self:getObj(), GetUnitDefaultTurnSpeed(self:getObj()))
+    end
+    SetUnitMoveSpeed(self:getObj(), value)
+end
+
+---@return number
+function Unit:getMoveSpeed()
+    return linearResult(self.__parameters.MoveSpeed)
 end
 
 

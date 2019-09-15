@@ -276,10 +276,6 @@ function Unit:setTurnSpeed(speed)
     SetUnitTurnSpeed(self.__unit_obj, speed)
 end
 
----@param animation string
-function Unit:playAnimation(animation)
-    SetUnitAnimation(self.__unit_obj, animation)
-end
 
 ---@param scale number
 function Unit:setAnimationSpeed(scale)

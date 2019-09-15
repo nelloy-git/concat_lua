@@ -76,7 +76,7 @@ end
 ---@param angle number
 ---@param time number|nil
 function Unit:setFacing(angle, time)
-    SetUnitFacingTimed(self.__unit_obj, angle, time | 0)
+    SetUnitFacingTimed(self.__unit_obj, angle, time or 0)
 end
 
 ---@param target Vec2

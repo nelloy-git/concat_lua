@@ -1,9 +1,13 @@
 ---@type ItemDB
-local ItemDB = require('item.itemDB')
+local DataBase = require('utils.DataBase')
 
 ---@class Item
-local Item = {}
+local Item = {
+    __type = "ItemClass",
+    __db = DataBase.new('userdata', 'Item')
+}
 local Item_meta = {
+    __type = "Item",
     __index = Item,
     __gc = Item.destroy
 }
@@ -11,8 +15,8 @@ local Item_meta = {
 ---@param self Item
 ---@return string
 function Item_meta.__tostring(self)
-    return string.format('Item %s (%s) at [%.2f, %.2f]',
-                         self:getName(), ID2str(self:getId()), self:getX(), self:getY())
+    return string.format('Item %s (%s) at %s',
+                         self:getName(), ID2str(self:getId()), self:getPos())
 end
 
 ---@param id string|integer
@@ -23,79 +27,80 @@ function Item.new(id, x, y)
     id = ID(id)
     ---@type Item
     local item = {
-        id = id,
-        item_obj = CreateItem(id, x, y)
+        __id = id,
+        __item_obj = CreateItem(id, x, y)
     }
     setmetatable(item, Item_meta)
-    ItemDB.add(item.item_obj, item)
+    Item.__db:add(item.__item_obj, item)
+
     return item
 end
 
 ---@return nil
 function Item:destroy()
-    ItemDB.rm(self.item_obj)
-    RemoveItem(self.item_obj)
-    self.item_obj = nil
+    Item.__db:remove(self.__item_obj)
+    RemoveItem(self.__item_obj)
+    self.__item_obj = nil
 end
 
 ---@return integer
 function Item:getId()
-    return self.id
+    return self.__id
 end
 
 ---@param x number
 ---@param y number
 ---@return nil
 function Item:setPos(x, y)
-    SetItemPosition(self.item_obj, x, y)
+    SetItemPosition(self.__item_obj, x, y)
 end
 
 ---@return number, number
 function Item:getPos()
-    return GetItemX(self.item_obj), GetItemY(self.item_obj)
+    return Vec2(GetItemX(self.__item_obj), GetItemY(self.__item_obj))
 end
 
 ---@return number
 function Item:getX()
-    return GetItemX(self.item_obj)
+    return GetItemX(self.__item_obj)
 end
 
 ---@return number
 function Item:getY()
-    return GetItemY(self.item_obj)
+    return GetItemY(self.__item_obj)
 end
 
 ---@param flag boolean
 ---@return nil
 function Item:droppable(flag)
-    SetItemDroppable(self.item_obj, flag)
+    SetItemDroppable(self.__item_obj, flag)
 end
 
 ---@param flag boolean
 ---@return nil
 function Item:invulnerable(flag)
-    SetItemInvulnerable(self.item_obj, flag)
+    SetItemInvulnerable(self.__item_obj, flag)
 end
 
 ---@return boolean
 function Item:isInvulnerable()
-    return IsItemInvulnerable(self.item_obj)
+    return IsItemInvulnerable(self.__item_obj)
 end
 
 ---@param flag boolean
 ---@return nil
 function Item:visible(flag)
-    SetItemVisible(self.item_obj, flag)
+    SetItemVisible(self.__item_obj, flag)
 end
 
 ---@return boolean
 function Item:isVisible()
-    return IsItemVisible(self.item_obj)
+    return IsItemVisible(self.__item_obj)
 end
 
 ---@return integer
 function Item:getLevel()
-    return GetItemLevel(self.item_obj)
+    return GetItemLevel(self.__item_obj)
 end
 
 ---@alias ItemClass string
@@ -111,7 +116,7 @@ end
 
 ---@return ItemClass
 function Item:getClass()
-    local item_class = GetItemType(self.item_obj)
+    local item_class = GetItemType(self.__item_obj)
     if item_class == ITEM_TYPE_PERMANENT then return "permanent" end
     if item_class == ITEM_TYPE_CHARGED then return "charged" end
     if item_class == ITEM_TYPE_POWERUP then return "powerup" end
@@ -125,13 +130,13 @@ end
 
 ---@return integer
 function Item:getCharges()
-    return GetItemCharges(self.item_obj)
+    return GetItemCharges(self.__item_obj)
 end
 
 ---@param count integer
 ---@return nil
 function Item:setCharges(count)
-    SetItemCharges(self.item_obj, math.floor(count))
+    SetItemCharges(self.__item_obj, math.floor(count))
 end
 
 ---@return string|nil
@@ -143,54 +148,47 @@ end
 ---@return nil
 function Item:setTooltip(tooltip)
     self._name = tooltip
-    BlzSetItemName(self.item_obj, tooltip)
-    BlzSetItemTooltip(self.item_obj, tooltip)
+    BlzSetItemName(self.__item_obj, tooltip)
+    BlzSetItemTooltip(self.__item_obj, tooltip)
 end
 
 ---@param ext_tooltip any
 ---@return nil
 function Item:setExtendedTooltip(ext_tooltip)
-    BlzSetItemDescription(self.item_obj,ext_tooltip)
-    BlzSetItemExtendedTooltip(self.item_obj, ext_tooltip)
+    BlzSetItemDescription(self.__item_obj,ext_tooltip)
+    BlzSetItemExtendedTooltip(self.__item_obj, ext_tooltip)
 end
 
 ---@return string
 function Item:getIcon()
-    return BlzGetItemIconPath(self.item_obj)
+    return BlzGetItemIconPath(self.__item_obj)
 end
 
 ---@param icon string
 ---@return nil
 function Item:setItem(icon)
-    BlzSetItemIconPath(self.item_obj, icon)
+    BlzSetItemIconPath(self.__item_obj, icon)
 end
 
 ---@param ability Ability
 ---@return boolean
 function Item:addAbility(ability)
-    return BlzItemAddAbility(self.item_obj, ability:getId())
+    return BlzItemAddAbility(self.__item_obj, ability:getId())
 end
 
 ---@param ability Ability
 ---@return boolean
 function Item:removeAbility(ability)
-    return BlzItemRemoveAbility(self.item_obj, ability:getId())
+    return BlzItemRemoveAbility(self.__item_obj, ability:getId())
 end
 
-local __replaced_functions = {
-    GetSoldItem = GetSoldItem,
-    GetManipulatedItem = GetManipulatedItem,
-    GetOrderTargetItem = GetOrderTargetItem,
-    GetSpellTargetItem = GetSpellTargetItem
-}
-
 ---@return Item
-function GetSoldItem() return ItemDB.get(__replaced_functions.GetSoldItem) end
+function Item.GetSoldItem() return Item.__db:get(GetSoldItem()) end
 ---@return Item
-function GetManipulatedItem() return ItemDB.get(__replaced_functions.GetManipulatedItem) end
+function Item.GetManipulatedItem() return Item.__db:get(GetManipulatedItem()) end
 ---@return Item
-function GetOrderTargetItem() return ItemDB.get(__replaced_functions.GetOrderTargetItem) end
+function Item.GetOrderTargetItem() return Item.__db:get(GetOrderTargetItem()) end
 ---@return Item
-function GetSpellTargetItem() return ItemDB.get(__replaced_functions.GetSpellTargetItem) end
+function Item.GetSpellTargetItem() return Item.__db:get(GetSpellTargetItem()) end
 
 return Item

@@ -121,4 +121,21 @@ cancelTargeting = function()
     end
 end
 
+---Compiletime only
+---@param src ChannelCompiletimeData
+---@return number
+function Ability.generateDummyAbility(src)
+    local WeObjEdit = require('compiletime.objEdit.objEdit')
+    local Channel = WeObjEdit.Preset.Channel
+
+    ---@type ChannelCompiletimeData
+    local ability = Channel.new(src)
+    ability:setField('Name', src['Name'])
+    ability:setField('TooltipNormal', src['TooltipNormal'])
+    ability:setField('Options', Channel.option.is_visible)
+    ability:setField('TargetType', 'none')
+    ability:setField('Cooldown', 0.1) -- Ability event need at least 0.05 sec cooldown
+    return ability:generate()
+end
+
 return DummyAbilityEvent

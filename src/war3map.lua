@@ -40,8 +40,8 @@ function RunInitialization()
     --Debug(Player(0))
 
     ---@type Ability
-    --local summon_ability = require('heroes.warlord.summon')
-    --summon_ability:giveToUnit(u:getObj())
+    local summon_ability = require('heroes.warlord.summon')
+    u1:addAbility(summon_ability)
 end
 
 function InitCustomPlayerSlots()
