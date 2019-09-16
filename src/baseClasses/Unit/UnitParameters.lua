@@ -4,9 +4,6 @@ local Unit = require('baseClasses.Unit.UnitData')
 local Settings = require('utils.Settings')
 
 require('baseClasses.Unit.UnitEvents')
-require('baseClasses.Unit.UnitAbilities')
-
-local UnitParameter = {}
 
 -- ============
 --  Predefined
@@ -21,6 +18,65 @@ local addValues
 local linearResult
 ---@type fun(values:UnitParameterValues):number
 local percentOfMaximumResult
+---@type fun(unit:Unit):nil
+local runChangedParametersTrigger
+
+---@alias UnitParameter string
+---@type UnitParameter
+UNIT_PARAMETER_AttackDamage = 'AttackDamage'
+---@type UnitParameter
+UNIT_PARAMETER_AttackSpeed = 'AttackSpeed'
+---@type UnitParameter
+UNIT_PARAMETER_Armor = 'Armor'
+---@type UnitParameter
+UNIT_PARAMETER_PhysicalDamageReduction = 'PhysicalDamageReduction'
+---@type UnitParameter
+UNIT_PARAMETER_SpellDamage = 'SpellDamage'
+---@type UnitParameter
+UNIT_PARAMETER_CastingTimeReduction = 'CastingTimeReduction'
+---@type UnitParameter
+UNIT_PARAMETER_Resistance = 'Resistance'
+---@type UnitParameter
+UNIT_PARAMETER_MagicalDamageReduction = 'MagicalDamageReduction'
+---@type UnitParameter
+UNIT_PARAMETER_DodgeChance = 'DodgeChance'
+---@type UnitParameter
+UNIT_PARAMETER_CritChance = 'CritChance'
+---@type UnitParameter
+UNIT_PARAMETER_CritDamage = 'CritDamage'
+---@type UnitParameter
+UNIT_PARAMETER_CooldownReduction = 'CooldownReduction'
+---@type UnitParameter
+UNIT_PARAMETER_Health = 'Health'
+---@type UnitParameter
+UNIT_PARAMETER_Regeneration = 'Regeneration'
+---@type UnitParameter
+UNIT_PARAMETER_Mana = 'Mana'
+---@type UnitParameter
+UNIT_PARAMETER_Recovery = 'Recovery'
+---@type UnitParameter
+UNIT_PARAMETER_Strength = 'Strength'
+---@type UnitParameter
+UNIT_PARAMETER_Agility = 'Agility'
+---@type UnitParameter
+UNIT_PARAMETER_Intelligence = 'Intelligence'
+---@type UnitParameter
+UNIT_PARAMETER_MoveSpeed = 'MoveSpeed'
+
+---@type playerunitevent
+EVENT_PLAYER_UNIT_CHANGED_PARAMETERS = 'EVENT_PLAYER_UNIT_CHANGED_PARAMETERS'
+---@type Trigger
+local parameters_changed_trigger
+---@type Unit
+local unit_with_changed_parameters
+---@type UnitParameter
+local changed_parameter
+---@return Unit
+function GetUnitWithChangedParameters()
+    return unit_with_changed_parameters
+end
+
+--function GetUnitsChangedParameter
 
 local initialized = false
 function UnitParameter.init()
@@ -28,6 +84,8 @@ function UnitParameter.init()
 
     local damage_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_DAMAGING)
     damage_trigger:addAction(damageEventAction)
+
+    parameters_changed_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_CHANGED_PARAMETERS)
 
     initialized = true
 end
@@ -119,6 +177,9 @@ function Unit:addAttackDamage(base_damage, multiplicator, bonus)
     BlzSetUnitBaseDamage(self:getObj(), math.floor(dmg), 0)
     BlzSetUnitDiceNumber(self:getObj(), 1, 0)
     BlzSetUnitDiceSides(self:getObj(), math.floor(dice_sides + 1), 0)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -135,6 +196,9 @@ end
 function Unit:setAttacksPerSecond(attacks_per_sec)
     self.__parameters.AttackSpeed.attacks_per_sec = attacks_per_sec
     self:addAttackSpeed(0, 0, 0)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---Formula: 10 * (base_rating * mutliplicator) / (100 + (base_rating * mutliplicator) + bonus
@@ -149,6 +213,9 @@ function Unit:addAttackSpeed(base_rating, multiplicator, bonus)
     -- Apply
     --Debug("Attack cooldown:", value)
     BlzSetUnitAttackCooldown(self:getObj(), value, 0)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -170,6 +237,9 @@ function Unit:addArmor(base_armor, multiplicator, bonus)
 
     -- Apply
     BlzSetUnitArmor(self:getObj(), val)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -188,6 +258,9 @@ end
 function Unit:addPhysicalDamageReduction(base_rating, multiplicator, bonus)
     addValues(self.__parameters.PhysicalDamageReduction, base_rating, multiplicator, bonus)
     percentOfMaximumResult(self.__parameters.PhysicalDamageReduction)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -206,6 +279,9 @@ end
 function Unit:addSpellDamage(base_damage, multiplicator, bonus)
     addValues(self.__parameters.SpellDamage, base_damage, multiplicator, bonus)
     linearResult(self.__parameters.SpellDamage)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -224,6 +300,9 @@ end
 function Unit:addCastingTimeReduction(base_rating, multiplicator, bonus)
     addValues(self.__parameters.CastingTimeReduction, base_rating, multiplicator, bonus)
     percentOfMaximumResult(self.__parameters.CastingTimeReduction)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -242,6 +321,9 @@ end
 function Unit:addResistance(base_resistance, multiplicator, bonus)
     addValues(self.__parameters.Resistance, base_resistance, multiplicator, bonus)
     linearResult(self.__parameters.Resistance)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -260,6 +342,9 @@ end
 function Unit:addMagicalDamageReduction(base_rating, multiplicator, bonus)
     addValues(self.__parameters.MagicalDamageReduction, base_rating, multiplicator, bonus)
     percentOfMaximumResult(self.__parameters.MagicalDamageReduction)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -278,6 +363,9 @@ end
 function Unit:addDodgeChance(base_rating, multiplicator, bonus)
     addValues(self.__parameters.DodgeChance, base_rating, multiplicator, bonus)
     percentOfMaximumResult(self.__parameters.DodgeChance)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 function Unit:getDodgeChance()
@@ -295,6 +383,9 @@ end
 function Unit:addCritChance(base_rating, multiplicator, bonus)
     addValues(self.__parameters.CritChance, base_rating, multiplicator, bonus)
     percentOfMaximumResult(self.__parameters.CritChance)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 function Unit:getCritChance()
@@ -312,6 +403,9 @@ end
 function Unit:addCritDamage(base_crit_damage, multiplicator, bonus)
     addValues(self.__parameters.CritDamage, base_crit_damage, multiplicator, bonus)
     linearResult(self.__parameters.CritDamage)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -333,6 +427,9 @@ function Unit:addCooldownReduction(base_rating, multiplicator, bonus)
 
     -- Apply
     Unit:setCooldownReduction(value)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 function Unit:getCooldownReduction()
@@ -355,6 +452,9 @@ function Unit:addHealth(base_health, multiplicator, bonus)
     local percent_hp = GetUnitLifePercent(self:getObj())
     BlzSetUnitMaxHP(self:getObj(), math.floor(value))
     SetUnitLifePercentBJ(self:getObj(), percent_hp)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -376,6 +476,9 @@ function Unit:addRegeneration(base_regeneration, multiplicator, bonus)
 
     -- Apply
     BlzSetUnitRealField(self:getObj(), UNIT_RF_HIT_POINTS_REGENERATION_RATE, value)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -399,6 +502,9 @@ function Unit:addMana(base_mana, multiplicator, bonus)
     local percent_mana = GetUnitManaPercent(self:getObj())
     BlzSetUnitMaxMana(self:getObj(), math.floor(value))
     SetUnitManaPercentBJ(self:getObj(), percent_mana)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -420,6 +526,9 @@ function Unit:addRecovery(base_recovery, multiplicator, bonus)
 
     -- Apply
     BlzSetUnitRealField(self:getObj(), UNIT_RF_MANA_REGENERATION, value)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -461,6 +570,9 @@ function Unit:addStrength(base_strength, multiplicator, bonus)
     self:addAttackDamage(damage, 0, 0)
     self:addHealth(health, 0, 0)
     self:addArmor(armor, 0, 0)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -504,6 +616,9 @@ function Unit:addAgility(base_agility, multiplicator, bonus)
     self:addAttackDamage(attack_speed, 0, 0)
     self:addHealth(casting_time_reduction, 0, 0)
     self:addArmor(dodge_chance, 0, 0)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -547,6 +662,9 @@ function Unit:addIntelligence(base_intelligence, multiplicator, bonus)
     self:addAttackDamage(spell_damage, 0, 0)
     self:addHealth(mana, 0, 0)
     self:addArmor(cooldown_reduction, 0, 0)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -578,6 +696,9 @@ function Unit:addMoveSpeed(base_move_speed, multiplicator, bonus)
         SetUnitTurnSpeed(self:getObj(), GetUnitDefaultTurnSpeed(self:getObj()))
     end
     SetUnitMoveSpeed(self:getObj(), value)
+
+    -- Run trigger
+    runChangedParametersTrigger(self)
 end
 
 ---@return number
@@ -652,7 +773,7 @@ createValues = function()
                     bonus = 0,
                     result = 0,
                     result_ready = false,
-                    maximum = 10^10}
+                    maximum = 10^8}
     return values
 end
 
@@ -685,6 +806,11 @@ percentOfMaximumResult = function(values)
         values.result_ready = true
     end
     return values.result
+end
+
+runChangedParametersTrigger = function(unit)
+    unit_with_changed_parameters = unit
+    parameters_changed_trigger:execute()
 end
 
 return UnitParameter
