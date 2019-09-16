@@ -26,21 +26,12 @@ function Ability.new(id)
     ---@type Ability
     local ability = {
         __id = ID(id),
+        __cooldown = BlzGetAbilityCooldown(id, 1)
     }
     setmetatable(ability, Ability_meta)
     Ability.__db:add(ID(id), ability)
 
     return ability
-end
-
-
----@return number
-function Ability:getId()
-    return self.__id
-end
-
-function Ability:getHotkey()
-    return self.__hotkey
 end
 
 ---@param id number
@@ -49,14 +40,20 @@ function Ability.get(id)
     return Ability.__db:get(id)
 end
 
+---@return number
+function Ability:getId()
+    return self.__id
+end
+
+--- Returns base ability cooldown without any modifiers.
+---@return number
+function Ability:getCooldown()
+    return self.__cooldown
+end
+
 ---@return Ability
 function Ability.GetSpellAbility()
     return Ability.get(GetSpellAbilityId())
-end
-
----@parem ability Ability
-function Unit:addAbility(ability)
-    UnitAddAbility(self:getObj(), ability:getId())
 end
 
 return Ability

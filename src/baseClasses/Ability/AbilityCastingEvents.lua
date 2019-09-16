@@ -205,6 +205,8 @@ function Unit:interruptCasting()
     end
 end
 
+---@param ability Ability
+---@param target Unit|Item|Destructable|Vec2
 function Unit:startCasting(ability, target)
     local success = runFuncInDebug(ability.runStartCallback, ability, self, target)
     if success then

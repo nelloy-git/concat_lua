@@ -1,5 +1,6 @@
 ---@class WarlordAbilitiesSettings
 local WarlordSettings = compiletime(function()
+    local WeObjEdit = require('compiletime.objEdit.objEdit')
     local Channel = WeObjEdit.Preset.Channel
     local Hero = WeObjEdit.Preset.Hero
     -- ================= --
@@ -28,16 +29,17 @@ local WarlordSettings = compiletime(function()
     SummonSpearmanData:setField("FollowThroughTime", 0)
     SummonSpearmanData:generate()
 
-    local SpearmanData = Hero.new()
-    SpearmanData:setField("Name", "Spearman")
-    SpearmanData:setField("ModelFile", "war3mapImported\\units\\SwordNya.mdx")
-    SpearmanData:setField("NormalAbilities", "Avul,Aloc")
-    SpearmanData:setField("SpeedBase", 1)
-    SpearmanData:setField("CollisionSize", 0)
-    SpearmanData:setField("HideHeroDeathMsg", true)
-    SpearmanData:setField("HideHeroInterfaceIcon", true)
-    SpearmanData:setField("HideHeroMinimapDisplay", true)
-    SpearmanData:generate("Hpal")
+    ---@type HeroCompiletimeData
+    local SwordmanData = Hero.new()
+    SwordmanData:setField("Name", "Spearman")
+    SwordmanData:setField("ModelFile", "war3mapImported\\units\\SwordNya.mdx")
+    SwordmanData:setField("NormalAbilities", "Avul,Aloc")
+    SwordmanData:setField("SpeedBase", 1)
+    SwordmanData:setField("CollisionSize", 0)
+    SwordmanData:setField("HideHeroDeathMsg", true)
+    SwordmanData:setField("HideHeroInterfaceIcon", true)
+    SwordmanData:setField("HideHeroMinimapDisplay", true)
+    SwordmanData:generate("Hpal")
 
     -- ============= --
     --  Spirit rush  --
@@ -53,7 +55,7 @@ local WarlordSettings = compiletime(function()
     -- Save settings --
     local settings = {
         SummonSpearman = SummonSpearmanData,
-        SpearmanUnit = SpearmanData
+        SwordmanUnit = SwordmanData
     }
     return settings
 end)

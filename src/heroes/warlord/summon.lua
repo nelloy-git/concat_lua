@@ -11,13 +11,13 @@ local AbilityData = FullData.SummonSpearman
 local SummonData = FullData.SpearmanUnit
 
 ---@type Ability
-local SummonCrystalSpearmanAbility = Ability.new(AbilityData["Id"])
+local SummonSwordman = Ability.new(AbilityData["Id"])
 
 ---@param caster Unit
 ---@param target Vec2
 local function start(caster, target)
     caster:setFacingTo(target)
-    caster:playAnimation("Spell")
+    caster:queueAnimation("Spell")
 end
 
 ---@param caster Unit
@@ -26,12 +26,12 @@ end
 local function finish(caster, target, timeout)
     local owner = caster:getOwner()
     --- Spell is targeting point only
-    local summon = Unit.new(owner, SummonData["Id"], target.x, target.y, caster:getFacing())
+    local summon = Unit.new(owner, SummonData["Id"], target.x, target.y, 180 - caster:getFacing())
     Ability.registerSlave(summon, caster)
 end
 
 ---@type Ability
-SummonCrystalSpearmanAbility:setFinishCallback(finish)
-SummonCrystalSpearmanAbility:setStartCallback(start)
+SummonSwordman:setFinishCallback(finish)
+SummonSwordman:setStartCallback(start)
 
-return SummonCrystalSpearmanAbility
+return SummonSwordman

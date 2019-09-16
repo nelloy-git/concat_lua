@@ -1,6 +1,10 @@
+---@type Unit
 local Unit = require('baseClasses.Unit.UnitData')
-require('baseClasses.Unit.UnitEvents')
+---@type Settings
 local Settings = require('utils.Settings')
+
+require('baseClasses.Unit.UnitEvents')
+require('baseClasses.Unit.UnitAbilities')
 
 local UnitParameter = {}
 
@@ -325,7 +329,10 @@ end
 ---@param bonus number
 function Unit:addCooldownReduction(base_rating, multiplicator, bonus)
     addValues(self.__parameters.CooldownReduction, base_rating, multiplicator, bonus)
-    percentOfMaximumResult(self.__parameters.CooldownReduction)
+    local value = percentOfMaximumResult(self.__parameters.CooldownReduction)
+
+    -- Apply
+    Unit:setCooldownReduction(value)
 end
 
 function Unit:getCooldownReduction()
@@ -587,6 +594,8 @@ damageEventAction = function()
     local damage = GetEventDamage()
     local source = Unit.GetEventDamageSource()
     local target = Unit.GetEventDamageTarget()
+
+    if not source or not target then return nil end
 
     if math.random() <= target:getDodgeChance() then
         BlzSetEventDamage(0)
