@@ -16,14 +16,20 @@ local AbilityEvent = {
     __casters_db = DataBase.new('Unit', 'table')
 }
 
---- Predefined
-local mainLoop
+-- ============
+--  Predefined
+-- ============
+---@type fun():nil
 local unitStartsCasting
-local cancelCasting
-local getSpellTarget
+---@type fun():nil
+local mainLoop
+---@type fun():nil
 local unitIssuedAnyOrder
-
+---@type fun():Unit|Item|Destructable|Vec2
+local getSpellTarget
+---@type Timer
 local casting_timer
+---@type number
 local timer_period
 
 local initialized = false
@@ -44,9 +50,6 @@ function AbilityEvent.init()
 
     local any_unit_issued_unit_order = Unit.getTrigger(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
     any_unit_issued_unit_order:addAction(runFuncInDebug, unitIssuedAnyOrder)
-    --UnitEvent.init()
-    --UnitEvent.getTrigger("AnyUnitStartCastingAbility"):addAction(AbilityEvent.unitStartsCasting)
-    --UnitEvent.getTrigger("AnyUnitIssuedAnyOrder"):addAction(unitIssuedAnyOrder)
 
     casting_timer = glTimer
     timer_period = glTimer:getPeriod()
@@ -166,41 +169,91 @@ function Ability:runInterruptCallback(caster, target, elapsed_time, timeout)
     return true
 end
 
-unitStartsCasting = function()
-    local ability = Ability.GetSpellAbility()
-    if not ability then return nil end
+function Unit:cancelCasting()
+    local data = AbilityEvent.__casters_db:get(self)
+    if data then
+        AbilityEvent.__casters_db:remove(self)
 
-    local caster = Unit.GetSpellAbilityUnit()
-    local target = getSpellTarget()
-    Debug(target)
+        -- Enable moving
+        self:addMoveSpeed(0, 10^6, 0)
+        -- Enable attacks
+        UnitRemoveAbility(self:getObj(), ID('Abun'))
 
-    local prev_data = AbilityEvent.__casters_db:get(caster)
-    if prev_data then
-        AbilityEvent.__casters_db:remove(caster)
-        caster:addMoveSpeed(0, 10^6, 0)
-        UnitRemoveAbility(caster:getObj(), ID('Abun'))
-        runFuncInDebug(prev_data.ability.runCancelCallback, ability, prev_data.caster, prev_data.target)
+        runFuncInDebug(data.ability.runCancelCallback, data.ability, data.caster, data.target)
 
         if Settings.Events.VerboseAbilityCasting then
             Debug("Casting canceled.")
         end
     end
+end
 
-    ---@class CasterData
-    local data = {
-        caster = caster,
-        ability = ability,
-        elapsed_time = 0,
-        timeout = ability:getCastingTime(caster, target),
-        target = target
-    }
+function Unit:interruptCasting()
+    local data = AbilityEvent.__casters_db:get(self)
+    if data then
+        AbilityEvent.__casters_db:remove(self)
 
-    caster:addMoveSpeed(0, -10^6, 0)
-    UnitAddAbility(caster:getObj(), ID('Abun'))
-    runFuncInDebug(ability.runStartCallback, ability, caster, target)
+        -- Enable moving
+        self:addMoveSpeed(0, 10^6, 0)
+        -- Enable attacks
+        UnitRemoveAbility(data.caster:getObj(), ID('Abun'))
 
-    AbilityEvent.__casters_db:add(caster, data)
-    casting_timer:addAction(0, mainLoop, data)
+        runFuncInDebug(data.ability.runInterruptCallback, data.ability, data.caster, data.target, data.elapsed_time, data.timeout)
+
+        if Settings.Events.VerboseAbilityTargeting then
+            Debug("Casting interrupted.")
+        end
+    end
+end
+
+function Unit:startCasting(ability, target)
+    local success = runFuncInDebug(ability.runStartCallback, ability, self, target)
+    if success then
+        ---@class CasterData
+        local data = {
+            caster = self,
+            ability = ability,
+            elapsed_time = 0,
+            timeout = ability:getCastingTime(self, target),
+            target = target
+        }
+
+        -- Disable moving
+        self:addMoveSpeed(0, -10^6, 0)
+        -- Disable attacks
+        UnitAddAbility(self:getObj(), ID('Abun'))
+
+        AbilityEvent.__casters_db:add(self, data)
+        casting_timer:addAction(0, mainLoop, data)
+    end
+end
+
+function Unit:finishCasting()
+    local data = AbilityEvent.__casters_db:get(self)
+    if data then
+        AbilityEvent.__casters_db:remove(data.caster)
+
+        -- Enable moving
+        self:addMoveSpeed(0, 10^6, 0)
+        -- Enable attacks
+        UnitRemoveAbility(data.caster:getObj(), ID('Abun'))
+
+        runFuncInDebug(data.ability.runFinishCallback, data.ability, data.caster, data.target, data.timeout)
+
+        if Settings.Events.VerboseAbilityTargeting then
+            Debug("Casting finished.")
+        end
+    end
+end
+
+unitStartsCasting = function()
+    local ability = Ability.GetSpellAbility()
+    if not ability then return nil end
+    local caster = Unit.GetSpellAbilityUnit()
+
+    -- Cancel current casting.
+    caster:cancelCasting()
+    -- Start new casting.
+    caster:startCasting(ability, getSpellTarget())
 
     if Settings.Events.VerboseAbilityCasting then
         Debug("Casting started.")
@@ -215,47 +268,23 @@ mainLoop = function(data)
     --- Is casting time passed?
     data.elapsed_time = data.elapsed_time + timer_period
     if data.timeout <= data.elapsed_time then
-        AbilityEvent.__casters_db:remove(data.caster)
-        data.caster:addMoveSpeed(0, 10^6, 0)
-        UnitRemoveAbility(data.caster:getObj(), ID('Abun'))
-        runFuncInDebug(data.ability.runFinishCallback, data.ability, data.caster, data.target, data.timeout)
-
-        if Settings.Events.VerboseAbilityTargeting then
-            Debug("Casting finished.")
-        end
+        data.caster:finishCasting()
         return nil
     end
 
-    --- Should unit continue casting or it is interrupted.
-    local continue = runFuncInDebug(data.ability.runCastingCallback, data.ability, data.caster, data.target, data.elapsed_time, data.timeout)
-    if continue then
+    --- Should unit continue casting or it is interrupted by ability itself.
+    local success = runFuncInDebug(data.ability.runCastingCallback, data.ability, data.caster, data.target, data.elapsed_time, data.timeout)
+    if success then
         casting_timer:addAction(0, mainLoop, data)
     else
-        AbilityEvent.__casters_db:remove(data.caster)
-        data.caster:addMoveSpeed(0, 10^6, 0)
-        UnitRemoveAbility(data.caster:getObj(), ID('Abun'))
-        data.ability:runInterruptCallback(data.caster, data.target, data.elapsed_time, data.timeout)
-
-        if Settings.Events.VerboseAbilityTargeting then
-            Debug("Casting interrupted.")
-        end
+        data.caster:interruptCasting()
     end
 end
 
 unitIssuedAnyOrder = function()
     if GetIssuedOrderId() == 851983 then return nil end
     local caster = Unit.GetOrderedUnit()
-    local data = AbilityEvent.__casters_db:get(caster)
-    if not data then return nil end
-
-    data.ability:runCancelCallback(data.caster, data.target)
-    AbilityEvent.__casters_db:remove(caster)
-    caster:addMoveSpeed(0, 10^6, 0)
-    UnitRemoveAbility(caster:getObj(), ID('Abun'))
-
-    if Settings.Events.VerboseAbilityCasting then
-        Debug("Casting canceled.")
-    end
+    caster:cancelCasting()
 end
 
 ---@return Unit|Item|Destructable|Vec2|nil

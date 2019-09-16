@@ -5,6 +5,8 @@ local AbilityEvent = require('baseClasses.Ability.AbilityCastingEvents')
 
 local AbilityCastingBar = {}
 
+
+
 local progress_timer
 local cast_progress_bar
 local cast_progress_bar_text
