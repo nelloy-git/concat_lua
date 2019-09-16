@@ -11,10 +11,12 @@ function Unit.getTrigger(event)
     local trigger = __db:get(event)
     if not trigger then
         trigger = Trigger.new()
-        for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-            trigger:addPlayerUnitEvent(event, Player(i))
-        end
         __db:add(event, trigger)
+        if type(event) == 'userdata' then
+            for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
+                trigger:addPlayerUnitEvent(event, Player(i))
+            end
+        end
     end
     return trigger
 end
