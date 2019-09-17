@@ -181,7 +181,7 @@ end
 ---@param player_unit_event playerunitevent
 ---@param player player
 function Trigger:addPlayerUnitEvent(player_unit_event, player)
-    TriggerRegisterPlayerUnitEvent(self.__trigger_obj, player_unit_event, player)
+    TriggerRegisterPlayerUnitEvent(self.__trigger_obj, player, player_unit_event, nil)
 end
 
 ---@param player player

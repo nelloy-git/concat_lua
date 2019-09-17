@@ -48,8 +48,6 @@ function AbilityCastingBar.init()
 
     progress_timer = glTimer
     progress_timer:addAction(0, runFuncInDebug, updateProgress)
-
-    Debug('Casting bar initialized')
 end
 
 return AbilityCastingBar

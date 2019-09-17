@@ -8,7 +8,7 @@ local FullData = require('heroes.warlord.settings')
 ---@type ChannelCompiletimeData
 local AbilityData = FullData.SummonSpearman
 ---@type HeroCompiletimeData
-local SummonData = FullData.SpearmanUnit
+local SummonData = FullData.SwordmanUnit
 
 ---@type Ability
 local SummonSwordman = Ability.new(AbilityData["Id"])
@@ -18,6 +18,7 @@ local SummonSwordman = Ability.new(AbilityData["Id"])
 local function start(caster, target)
     caster:setFacingTo(target)
     caster:queueAnimation("Spell")
+    return true
 end
 
 ---@param caster Unit
@@ -33,7 +34,7 @@ local function finish(caster, target, timeout)
     summon:setAttacksPerSecond(caster:getAttacksPerSecond())
 end
 
-local format_tooltip = [[Summons invulnerable spirit warrior with %d attack damage and %.2f attacks per second.]]
+local format_tooltip = [[Summons invulnerable spirit warrior with %.0f attack damage and %.2f attacks per second.]]
 ---@param unit Unit
 ---@return string
 local function getTooltip(unit)

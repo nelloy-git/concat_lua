@@ -39,11 +39,13 @@ Test = function()
     local Ability = require('baseClasses.Ability')
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
-    local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
+    ---@type Unit
+    --local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
 
     ---@type Ability
     local summon_ability = require('heroes.warlord.summon')
     u1:addAbility(summon_ability)
+    runFuncInDebug(Unit.updateAbilitiesTooltips, u1)
 end
 
 function InitCustomPlayerSlots()

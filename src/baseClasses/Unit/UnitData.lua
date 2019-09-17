@@ -48,6 +48,7 @@ function Unit.new(player, id, x, y, face, is_dead)
     Unit.__db:add(unit.__unit_obj, unit)
 
     --- Run functions added by submodules.
+    Debug("Create unit functions count: ", #Unit.__unit_creation_funcs)
     for i = 1, #Unit.__unit_creation_funcs do
         if Settings.Unit.DebugCreationFunctions then
             runFuncInDebug(Unit.__unit_creation_funcs[i], unit)

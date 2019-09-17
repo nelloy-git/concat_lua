@@ -226,6 +226,10 @@ function Unit:startCasting(ability, target)
 
         AbilityEvent.__casters_db:add(self, data)
         casting_timer:addAction(0, mainLoop, data)
+    else
+        if Settings.Events.VerboseAbilityCasting then
+            Debug("Casting canceled.")
+        end
     end
 end
 
@@ -264,23 +268,25 @@ end
 
 ---@param data table
 mainLoop = function(data)
-    if data ~= AbilityEvent.__casters_db:get(data.caster) then
-        return nil
-    end
-    --- Is casting time passed?
-    data.elapsed_time = data.elapsed_time + timer_period
-    if data.timeout <= data.elapsed_time then
-        data.caster:finishCasting()
-        return nil
-    end
+    runFuncInDebug(function()
+        if data ~= AbilityEvent.__casters_db:get(data.caster) then
+            return nil
+        end
+        --- Is casting time passed?
+        data.elapsed_time = data.elapsed_time + timer_period
+        if data.timeout <= data.elapsed_time then
+            data.caster:finishCasting()
+            return nil
+        end
 
-    --- Should unit continue casting or it is interrupted by ability itself.
-    local success = runFuncInDebug(data.ability.runCastingCallback, data.ability, data.caster, data.target, data.elapsed_time, data.timeout)
-    if success then
-        casting_timer:addAction(0, mainLoop, data)
-    else
-        data.caster:interruptCasting()
-    end
+        --- Should unit continue casting or it is interrupted by ability itself.
+        local success = runFuncInDebug(data.ability.runCastingCallback, data.ability, data.caster, data.target, data.elapsed_time, data.timeout)
+        if success then
+            casting_timer:addAction(0, mainLoop, data)
+        else
+            data.caster:interruptCasting()
+        end
+    end)
 end
 
 unitIssuedAnyOrder = function()

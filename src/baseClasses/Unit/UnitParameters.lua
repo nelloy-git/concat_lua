@@ -154,7 +154,7 @@ Unit.addCreationFunction(function(unit)
 end)
 
 function Unit:updateParameters()
-    self:addAttackDamage(0, 0, 0)
+    self:addAttackDamage(5, 0, 0)
     self:addAttackSpeed(0, 0, 0)
     self:addArmor(0, 0, 0)
     self:addPhysicalDamageReduction(0, 0, 0)
@@ -224,6 +224,7 @@ end
 function Unit:addAttackSpeed(base_rating, multiplicator, bonus)
     addValues(self.__parameters.AttackSpeed, base_rating, multiplicator, bonus)
     local value = self.__parameters.AttackSpeed.attacks_per_sec / (percentOfMaximumResult(self.__parameters.AttackSpeed) + 1)
+    self.__parameters.AttackSpeed.result = value
     if value <= 0 then value = 10^6 end
 
     -- Apply
@@ -626,9 +627,9 @@ function Unit:addAgility(base_agility, multiplicator, bonus)
     casting_time_reduction = value * Settings.Unit.casting_time_reduction_per_agi
     dodge_chance = value * Settings.Unit.dodge_chance_per_agi
 
-    self:addAttackDamage(attack_speed, 0, 0)
-    self:addHealth(casting_time_reduction, 0, 0)
-    self:addArmor(dodge_chance, 0, 0)
+    self:addAttackSpeed(attack_speed, 0, 0)
+    self:addCastingTimeReduction(casting_time_reduction, 0, 0)
+    self:addDodgeChance(dodge_chance, 0, 0)
 
     -- Run trigger
     runChangedParametersTrigger(self, UNIT_PARAMETER_AGILITY, value)
@@ -672,9 +673,9 @@ function Unit:addIntelligence(base_intelligence, multiplicator, bonus)
     mana = value * Settings.Unit.mana_per_int
     cooldown_reduction = value * Settings.Unit.cooldown_reduction_per_int
 
-    self:addAttackDamage(spell_damage, 0, 0)
-    self:addHealth(mana, 0, 0)
-    self:addArmor(cooldown_reduction, 0, 0)
+    self:addSpellDamage(spell_damage, 0, 0)
+    self:addMana(mana, 0, 0)
+    self:addCooldownReduction(cooldown_reduction, 0, 0)
 
     -- Run trigger
     runChangedParametersTrigger(self, UNIT_PARAMETER_INTELLIGENCE, value)
@@ -702,7 +703,7 @@ function Unit:addMoveSpeed(base_move_speed, multiplicator, bonus)
 
     -- Apply
 
-    Debug("Move speed:", value)
+    --Debug("Move speed:", value)
     if value <= 1 then
         SetUnitTurnSpeed(self:getObj(), 0)
     else

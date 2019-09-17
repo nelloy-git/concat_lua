@@ -1,9 +1,9 @@
 local Unit = require('baseClasses.Unit.UnitData')
+require('baseClasses.Unit.UnitAbilities')
 require('baseClasses.Unit.UnitGraphics')
 require("baseClasses.Unit.UnitParameters")
 require("baseClasses.Unit.UnitPosition")
 require('baseClasses.Unit.UnitEvents')
 require('baseClasses.Unit.UnitSelected')
-require('baseClasses.Unit.UnitAbilities')
 
 return Unit

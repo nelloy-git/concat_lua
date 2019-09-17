@@ -30,13 +30,13 @@ function Ability:updateTooltipForOwner(unit)
     if unit:getOwner() ~= GetLocalPlayer() then return nil end
 
     local tooltip
-    if type(self.__tooltip_func) == 'function' then
+    if type(self.__tooltip_func) ~= 'function' then
         tooltip = 'No tooltip'
-        return nil
+    else
+        tooltip = self.__tooltip_func(unit)
     end
-    tooltip = self.__tooltip_func(unit)
 
-    BlzSetAbilityExtendedTooltip(self.__id, tooltip, 1)
+    BlzSetAbilityExtendedTooltip(self.__id, tooltip, 0)
 end
 
 ---Function changes ability icon for player. (nil for all players)

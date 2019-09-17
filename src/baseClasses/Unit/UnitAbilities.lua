@@ -7,15 +7,13 @@ local UnitAbilities = {}
 function UnitAbilities.init()
     ---@type Trigger
     local changed_parameters_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_CHANGED_PARAMETERS)
-    changed_parameters_trigger:addAction(runFuncInDebug, Unit.updateAbilitiesTooltips)
+    changed_parameters_trigger:addAction(runFuncInDebug, Unit.updateAbilities)
 end
 
 Unit.addCreationFunction(function(unit)
-    if unit.__abilities then
-        Debug("UnitAbilities error: Unit instance already has field __abilities.")
-        return false
+    if not unit.__abilities then
+        unit.__abilities = {}
     end
-    unit.__abilities = {}
 end)
 
 ---@param ability Ability
@@ -42,19 +40,31 @@ function Unit:removeAbility(ability)
     return true
 end
 
-function Unit.updateAbilitiesTooltips()
+function Unit:updateAbilitiesTooltips()
+    for i = 1, #self.__abilities do
+        self.__abilities[i]:updateTooltipForOwner(self)
+    end
+end
+
+function Unit.updateAbilities()
     local unit = GetUnitWithChangedParameters()
     local parameter = GetUnitChangedParameter()
+
+    if not unit.__abilities then
+        unit.__abilities = {}
+    end
+
     for i = 1, #unit.__abilities do
         unit.__abilities[i]:updateTooltipForOwner(unit)
     end
 
     if parameter == UNIT_PARAMETER_COOLDOWN_REDUCTION then
         local value = GetUnitChangedParameterValue()
-        Debug(value)
         for i = 1, #unit.__abilities do
             local abil = unit.__abilities[i]
-            BlzSetUnitAbilityCooldown(unit:getObj(), abil:getId(), 1, value * abil:getCooldown())
+            BlzSetUnitAbilityCooldown(unit:getObj(), abil:getId(), 1, (1 - value) * abil:getCooldown())
         end
     end
 end
+
+return UnitAbilities
