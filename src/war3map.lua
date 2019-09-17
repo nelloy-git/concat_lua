@@ -23,21 +23,23 @@ function InitCustomTriggers()
     InitTrig_Melee_Initialization()
 end
 
+local Test
+
 function RunInitialization()
     DestroyTimer(GetExpiredTimer())
 
     local Init = require('utils.Init')
     Init.start()
 
+    runFuncInDebug(Test)
+end
+
+Test = function()
     local Unit = require('baseClasses.Unit')
     local Ability = require('baseClasses.Ability')
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
     local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
-
-    --local u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
-    --Debug(u)
-    --Debug(Player(0))
 
     ---@type Ability
     local summon_ability = require('heroes.warlord.summon')

@@ -1,8 +1,17 @@
 local Ability = require('baseClasses.Ability.AbilityData')
 
+---Function changes ability tooltip for player. (nil for all players)
 ---@param name string
-function Ability:setName(name)
+---@param player player
+function Ability:setName(name, player)
     self.__name = name
+    if not is_compiletime then
+        if player == nil then
+            BlzSetAbilityTooltip(self.__id, name, 1)
+        elseif player == GetLocalPlayer() then
+            BlzSetAbilityTooltip(self.__id, name, 1)
+        end
+    end
 end
 
 ---@return string
@@ -10,28 +19,24 @@ function Ability:getName()
     return self.__name or "Noname"
 end
 
----Function changes ability tooltip for player. (nil for all players)
----@param tooltip string
----@param lvl integer
----@param player player
-function Ability:setTooltip(tooltip, lvl, player)
-    if player == nil then
-        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
-    elseif player == GetLocalPlayer() then
-        BlzSetAbilityTooltip(self.__id, tooltip, lvl)
-    end
+---Function changes ability extended tooltip for player. (nil for all players)
+---@param tooltip_func fun(unit:Unit):string
+function Ability:setTooltipFunc(tooltip_func)
+    self.__tooltip_func = tooltip_func
 end
 
----Function changes ability extended tooltip for player. (nil for all players)
----@param ext_tooltip string
----@param lvl integer
----@param player player
-function Ability:setExtendedTooltip(ext_tooltip, player, lvl)
-    if player == nil then
-        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
-    elseif player == GetLocalPlayer() then
-        BlzSetAbilityExtendedTooltip(self.__id, ext_tooltip, lvl)
+---@param unit Unit
+function Ability:updateTooltipForOwner(unit)
+    if unit:getOwner() ~= GetLocalPlayer() then return nil end
+
+    local tooltip
+    if type(self.__tooltip_func) == 'function' then
+        tooltip = 'No tooltip'
+        return nil
     end
+    tooltip = self.__tooltip_func(unit)
+
+    BlzSetAbilityExtendedTooltip(self.__id, tooltip, 1)
 end
 
 ---Function changes ability icon for player. (nil for all players)

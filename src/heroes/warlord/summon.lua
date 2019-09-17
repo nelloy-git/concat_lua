@@ -30,7 +30,16 @@ local function finish(caster, target, timeout)
     Ability.registerSlave(summon, caster)
 end
 
+local format_tooltip = [[Summons invulnerable spirit warrior with %d attack damage and %.2f attacks per second.]]
+---@param unit Unit
+---@return string
+local function getTooltip(unit)
+    return string.format(format_tooltip, unit:getAttackDamage(), unit:getAttacksPerSecond())
+end
+
 ---@type Ability
+SummonSwordman:setName("Summon swordman spirit")
+SummonSwordman:setTooltipFunc(getTooltip)
 SummonSwordman:setFinishCallback(finish)
 SummonSwordman:setStartCallback(start)
 
