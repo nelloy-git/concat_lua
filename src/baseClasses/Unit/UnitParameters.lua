@@ -23,7 +23,7 @@ local runChangedParametersTrigger
 
 
 ---@type playerunitevent
-UNIT_CHANGED_PARAMETERS = 'UNIT_CHANGED_PARAMETERS'
+EVENT_PLAYER_UNIT_CHANGED_PARAMETERS = 'UNIT_CHANGED_PARAMETERS'
 
 ---@class unitparameter : string
 ---@type unitparameter
@@ -99,7 +99,7 @@ function UnitParameter.init()
     local damage_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_DAMAGING)
     damage_trigger:addAction(damageEventAction)
 
-    parameters_changed_trigger = Unit.getTrigger(UNIT_CHANGED_PARAMETERS)
+    parameters_changed_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_CHANGED_PARAMETERS)
 
     initialized = true
 end
@@ -134,6 +134,7 @@ Unit.addCreationFunction(function(unit)
     unit.__parameters.CooldownReduction = createValues()
     unit.__parameters.CooldownReduction.maximum = Settings.Unit.maximum_cooldown_reduction
     unit.__parameters.Health = createValues()
+    unit.__parameters.Health.base = 100
     unit.__parameters.Regeneration = createValues()
     unit.__parameters.Mana = createValues()
     unit.__parameters.Recovery = createValues()
@@ -147,29 +148,33 @@ Unit.addCreationFunction(function(unit)
         unit.__parameters.Intelligence = createValues()
     end
 
-    unit:addAttackDamage(10, 0, 0)
-    unit:addAttackSpeed(0, 0, 0)
-    unit:addArmor(5, 0, 0)
-    unit:addPhysicalDamageReduction(0, 0, 0)
-    unit:addSpellDamage(0, 0, 0)
-    unit:addCastingTimeReduction(0, 0, 0)
-    unit:addResistance(0, 0, 0)
-    unit:addMagicalDamageReduction(0, 0, 0)
-    unit:addDodgeChance(0, 0, 0)
-    unit:addCritChance(0, 0, 0)
-    unit:addCritDamage(0, 0, 0)
-    unit:addCooldownReduction(0, 0, 0)
-    unit:addHealth(500, 0, 0)
-    unit:addRegeneration(0, 0, 0)
-    unit:addMana(0, 0, 0)
-    unit:addRecovery(0, 0, 0)
-    unit:addStrength(0, 0, 0)
-    unit:addAgility(0, 0, 0)
-    unit:addIntelligence(0, 0, 0)
-    unit:addMoveSpeed(GetUnitMoveSpeed(unit:getObj()), 0, 0)
+    unit:updateParameters()
 
     return true
 end)
+
+function Unit:updateParameters()
+    self:addAttackDamage(0, 0, 0)
+    self:addAttackSpeed(0, 0, 0)
+    self:addArmor(0, 0, 0)
+    self:addPhysicalDamageReduction(0, 0, 0)
+    self:addSpellDamage(0, 0, 0)
+    self:addCastingTimeReduction(0, 0, 0)
+    self:addResistance(0, 0, 0)
+    self:addMagicalDamageReduction(0, 0, 0)
+    self:addDodgeChance(0, 0, 0)
+    self:addCritChance(0, 0, 0)
+    self:addCritDamage(0, 0, 0)
+    self:addCooldownReduction(0, 0, 0)
+    self:addHealth(0, 0, 0)
+    self:addRegeneration(0, 0, 0)
+    self:addMana(0, 0, 0)
+    self:addRecovery(0, 0, 0)
+    self:addStrength(0, 0, 0)
+    self:addAgility(0, 0, 0)
+    self:addIntelligence(0, 0, 0)
+    self:addMoveSpeed(GetUnitMoveSpeed(self:getObj()), 0, 0)
+end
 
 -- ==============
 --  AttackDamage
@@ -820,9 +825,7 @@ runChangedParametersTrigger = function(unit, parameter, value)
     unit_with_changed_parameters = unit
     changed_parameter = parameter
     changed_parameter_value = value
-    Debug(parameter)
     parameters_changed_trigger:execute()
-    Debug(parameter..'2')
     unit_with_changed_parameters = nil
     changed_parameter = nil
     changed_parameter_value = nil

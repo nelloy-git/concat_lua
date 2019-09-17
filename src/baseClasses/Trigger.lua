@@ -1,5 +1,3 @@
----@type Settings
-local Settings = require('utils.Settings')
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 
@@ -14,13 +12,16 @@ local Trigger_meta = {
     __gc = Trigger.destroy
 }
 
+---@param self Trigger
+function Trigger_meta.__tostring(self)
+    return string.format("%s", type(self))
+end
+
 -- ============
 --  Predefined
 -- ============
 ---@type fun():nil
 local runTriggerActions
----@type table<TriggerEventType,fun>
-local registerEvent
 
 ---@param self Trigger
 function Trigger_meta.__tostring(self)
@@ -35,7 +36,6 @@ function Trigger.new()
         __trigger_obj = trigger_obj,
         __action_runner = TriggerAddAction(trigger_obj, runTriggerActions),
         __actions = {},
-        __events = {}
     }
     setmetatable(trigger, Trigger_meta)
     Trigger.__db:add(trigger.__trigger_obj, trigger)
@@ -63,6 +63,16 @@ function Trigger:addAction(callback, data)
     return action
 end
 
+---@return number
+function Trigger:countActions()
+    return #self.__actions
+end
+
+---return number
+function Trigger:isValid()
+    return self.__trigger_obj ~= nil
+end
+
 ---@param action TriggerAction
 ---@return boolean
 function Trigger:removeAction(action)
@@ -81,7 +91,7 @@ function Trigger:removeAction(action)
     return false
 end
 
----Function removes all callbacks from trigger.
+---Function removes all actions from trigger without removing trigger.
 ---@return nil
 function Trigger:clearActions()
     while #self.__actions > 0 do
@@ -90,537 +100,166 @@ function Trigger:clearActions()
 end
 
 ---Function executes all callbacks of function.
----@return nil
 function Trigger:execute()
-    TriggerExecute(self.__trigger_obj)
+    if not self.__trigger_obj then
+        Debug("Trigger error: triing execute destroyed trigger.")
+        return nil
+    end
+
+    local original = _G.GetTriggeringTrigger
+    GetTriggeringTrigger = function() return self.__trigger_obj end
+    runFuncInDebug(TriggerExecute, self.__trigger_obj)
+    GetTriggeringTrigger = original
 end
-
-
----@class TriggerEvent
----@field __type string
 
 ---@param var_name string
 ---@param opcode limitop
 ---@param limitval number
----@return TriggerEvent
 function Trigger:addVariableEvent(var_name, opcode, limitval)
-    ---@type TriggerEvent
-    local event = {
-        __type = "VariableEvent",
-        __var_name = var_name,
-        __opcode = opcode,
-        __limitval = limitval
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterVariableEvent(self.__trigger_obj, var_name, opcode, limitval)
 end
 
 ---@param timeout number
 ---@param periodic boolean
----@return TriggerEvent
 function Trigger:addTimerEvent(timeout, periodic)
-    ---@type TriggerEvent
-    local event = {
-        __type = "TimerEvent",
-        __timeout = timeout,
-        __periodic = periodic
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterTimerEvent(self.__trigger_obj, timeout, periodic)
 end
 
 ---@param timer timer
----@return TriggerEvent
 function Trigger:addTimerExpireEvent(timer)
-    ---@type TriggerEvent
-    local event = {
-        __type = "TimerExpireEvent",
-        __timer = timer
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterTimerExpireEvent(self.__trigger_obj, timer)
 end
 
 ---@param game_state gamestate
 ---@param opcode limitop
 ---@param limitval number
----@return TriggerEvent
 function Trigger:addGameStateEvent(game_state, opcode, limitval)
-    ---@type TriggerEvent
-    local event = {
-        __type = "GameStateEvent",
-        __game_state = game_state,
-        __opcode = opcode,
-        __limitval = limitval
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterGameStateEvent(self.__trigger_obj, game_state, opcode, limitval)
 end
 
 ---@param dialog dialog
----@return TriggerEvent
 function Trigger:addDialogEvent(dialog)
-    ---@type TriggerEvent
-    local event = {
-        __type = "DialogEvent",
-        __dialog = dialog
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterDialogEvent(self.__trigger_obj, dialog)
 end
 
 ---@param button button
----@return TriggerEvent
 function Trigger:addDialogButtonEvent(button)
-    ---@type TriggerEvent
-    local event = {
-        __type = "DialogButtonEvent",
-        __button = button
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterDialogButtonEvent(self.__trigger_obj, button)
 end
 
 ---@param game_event gameevent
----@return TriggerEvent
 function Trigger:addGameEvent(game_event)
-    ---@type TriggerEvent
-    local event = {
-        __type = "GameEvent",
-        __game_event = game_event
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterGameEvent(self.__trigger_obj, game_event)
 end
 
 ---@param region region
----@return TriggerEvent
 function Trigger:addEnterRegion(region)
-    ---@type TriggerEvent
-    local event = {
-        __type = "EnterRegion",
-        __region = region
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterEnterRegion(self.__trigger_obj, region)
 end
 
 ---@param region region
----@return TriggerEvent
 function Trigger:addLeaveRegion(region)
-    ---@type TriggerEvent
-    local event = {
-        __type = "LeaveRegion",
-        __region = region
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterLeaveRegion(self.__trigger_obj, region)
 end
 
 ---@param trackable trackable
----@return TriggerEvent
 function Trigger:addTrackableHitEvent(trackable)
-    ---@type TriggerEvent
-    local event = {
-        __type = "TrackableHitEvent",
-        __trackable = trackable
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterTrackableHitEvent(self.__trigger_obj, trackable)
 end
 
 ---@param trackable trackable
----@return TriggerEvent
 function Trigger:addTrackableTrackEvent(trackable)
-    ---@type TriggerEvent
-    local event = {
-        __type = "TrackableTrackEvent",
-        __trackable = trackable
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterTrackableTrackEvent(self.__trigger_obj, trackable)
 end
 
 ---@param player_event_type playerevent
 ---@param player player
----@return TriggerEvent
 function Trigger:addPlayerEvent(player_event_type, player)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerEvent",
-        __player = player,
-        __event = player_event_type
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterPlayerEvent(self.__trigger_obj, player_event_type, player)
 end
 
 ---@param player_unit_event playerunitevent
 ---@param player player
----@return TriggerEvent
 function Trigger:addPlayerUnitEvent(player_unit_event, player)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerUnitEvent",
-        __player_unit_event = player_unit_event,
-        __player = player
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterPlayerUnitEvent(self.__trigger_obj, player_unit_event, player)
 end
 
 ---@param player player
 ---@param alliancetype alliancetype
----@return TriggerEvent
 function Trigger:addPlayerAllianceChange(player, alliancetype)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerAllianceChange",
-        __player = player,
-        __alliancetype = alliancetype
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterPlayerAllianceChange(self.__trigger_obj, player, alliancetype)
 end
 
 ---@param player player
 ---@param player_state playerstate
 ---@param opcode limitop
 ---@param limitval number
----@return TriggerEvent
 function Trigger:addPlayerStateEvent(player, player_state, opcode, limitval)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerStateEvent",
-        __player = player,
-        __player_state = player_state,
-        __opcode = opcode,
-        __limitval = limitval
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterPlayerStateEvent(self.__trigger_obj, player, player_state, opcode, limitval)
 end
 
 ---@param player player
 ---@param message string
 ---@param exact_match boolean
----@return TriggerEvent
 function Trigger:addPlayerChatEvent(player, message, exact_match)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerChatEvent",
-        __player = player,
-        __message = message,
-        __exact_match = exact_match
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterPlayerChatEvent(self.__trigger_obj, player, message, exact_match)
 end
 
 ---@param widget widget
----@return TriggerEvent
 function Trigger:addDeathEvent(widget)
-    ---@type TriggerEvent
-    local event = {
-        __type = "DeathEvent",
-        __widget = widget
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterDeathEvent(self.__trigger_obj, widget)
 end
 
 ---@param unit unit
 ---@param unit_state unitstate
 ---@param opcode limitop
 ---@param limitval number
----@return TriggerEvent
 function Trigger:addUnitStateEvent(unit, unit_state, opcode, limitval)
-    ---@type TriggerEvent
-    local event = {
-        __type = "UnitStateEvent",
-        __unit = unit,
-        __unti_state = unit_state,
-        __opcode = opcode,
-        __limitval = limitval
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterUnitStateEvent(self.__trigger_obj, unit, unit_state, opcode, limitval)
 end
 
 ---@param unit_event unitevent
 ---@param unit unit
----@return TriggerEvent
 function Trigger:addUnitEvent(unit_event, unit)
-    ---@type TriggerEvent
-    local event = {
-        __type = "UnitEvent",
-        __unit = unit,
-        __unit_event = unit_event
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterUnitEvent(self.__trigger_obj, unit_event, unit)
 end
 
 ---@param unit unit
 ---@param range number
----@return TriggerEvent
 function Trigger:addUnitInRange(unit, range)
-    ---@type TriggerEvent
-    local event = {
-        __type = "UnitInRange",
-        __unit = unit,
-        __range = range
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    TriggerRegisterUnitInRange(self.__trigger_obj, unit, range)
 end
 
 ---@param frame framehandle
 ---@param frame_event frameeventtype
 function Trigger:addFrameEvent(frame, frame_event)
-    ---@type TriggerEvent
-    local event = {
-        __type = "FrameEvent",
-        __frame = frame,
-        __frame_event = frame_event
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    BlzTriggerRegisterFrameEvent(self.__trigger_obj, frame, frame_event)
 end
 
 ---@param player player
 ---@param prefix string
 ---@param from_server boolean
----@return TriggerEvent
 function Trigger:addPlayerSyncEvent(player, prefix, from_server)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerSyncEvent",
-        __player = player,
-        __prefix = prefix,
-        __from_server = from_server
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
+    BlzTriggerRegisterPlayerSyncEvent(self.__trigger_obj, player, prefix, from_server)
 end
 
 ---@param player player
 ---@param key oskeytype
 ---@param meta_key integer
 ---@param key_down boolean
----@return TriggerEvent
 function Trigger:addPlayerKeyEvent(player, key, meta_key, key_down)
-    ---@type TriggerEvent
-    local event = {
-        __type = "PlayerKeyEvent",
-        __player = player,
-        __key = key,
-        __meta_key = meta_key,
-        __key_down = key_down
-    }
-    registerEvent(self, event.__type, event)
-    table.insert(self.__events, #self.__events + 1, event)
-
-    return event
-end
-
-function Trigger:refreshEvents()
-    DestroyTrigger(self.__trigger_obj)
-    self.__trigger_obj = CreateTrigger()
-    self.__action_runner = TriggerAddAction(self.__trigger_obj, runTriggerActions)
-    Trigger.__db:add(self.__trigger_obj, self)
-
-    for i = 1, #self.__events do
-        local event = self.__events[i]
-        local result = runFuncInDebug(registerEvent, self, event.__type, event)
-        if not result then
-            Debug("Trigger error: got wrong event type")
-        end
-    end
-end
-
----@param event TriggerEvent
-function Trigger:removeEvent(event)
-    local pos = -1
-    for i = 1, #self.__events do
-        if self.__events[i] == event then
-            pos = i
-            break
-        end
-    end
-
-    if pos > 0 then
-        table.remove(self.__events, pos)
-        self:refreshEvents()
-        return true
-    end
-    return false
+    BlzTriggerRegisterPlayerKeyEvent(self.__trigger_obj, player, key, meta_key, key_down)
 end
 
 runTriggerActions = function()
-    local self = Trigger.__db:get(GetTriggeringTrigger())
+    runFuncInDebug(function()
+        local self = Trigger.__db:get(GetTriggeringTrigger())
 
-    for i = 1, #self.__actions do
-        ---@type TriggerAction
-        local action = self.__actions[i]
-        if Settings.debug then
-            local success, result = pcall(action.__callback, action.__data)
-            if not success then
-                Debug("Error in "..tostring(self))
-                Debug(result)
-            end
-        else
-            action:run()
+        for i = 1, #self.__actions do
+            local action = self.__actions[i]
+            action.__callback(action.__data)
         end
-    end
-    return true
-end
-
----@alias TriggerEventType string
----| '"VariableEvent"'
----| '"TimerEvent"'
----| '"TimerExpireEvent"'
----| '"GameStateEvent"'
----| '"DialogEvent"'
----| '"DialogButtonEvent"'
----| '"GameEvent"'
----| '"EnterRegion"'
----| '"LeaveRegion"'
----| '"TrackableHitEvent"'
----| '"TrackableTrackEvent"'
----| '"PlayerEvent"'
----| '"PlayerUnitEvent"'
----| '"PlayerAllianceChange"'
----| '"PlayerStateEvent"'
----| '"PlayerChatEvent"'
----| '"DeathEvent"'
----| '"UnitStateEvent"'
----| '"UnitEvent"'
----| '"FilterUnitEvent"'
----| '"UnitInRange"'
----| '"FrameEvent"'
----| '"PlayerSyncEvent"'
----| '"PlayerKeyEvent"'
-
----@param trigger Trigger
----@param event_type TriggerEventType
----@param event_data TriggerEvent
-registerEvent = function(trigger, event_type, event_data)
-    if event_type == "VariableEvent" then
-        TriggerRegisterVariableEvent(trigger.__trigger_obj, event_data.__var_name, event_data.__opcode, event_data.__limitval)
-        return true
-    elseif event_type == "TimerEvent" then
-        TriggerRegisterTimerEvent(trigger.__trigger_obj, event_data.__timeout, event_data.__periodic)
-        return true
-    elseif event_type == "TimerExpireEvent" then
-        TriggerRegisterTimerExpireEvent(trigger.__trigger_obj, event_data.__timer)
-        return true
-    elseif event_type == "GameStateEvent" then
-        TriggerRegisterGameStateEvent(trigger.__trigger_obj, event_data.__game_state, event_data.__opcode, event_data.__limitval)
-        return true
-    elseif event_type == "DialogEvent" then
-        TriggerRegisterDialogEvent(trigger.__trigger_obj, event_data.__dialog)
-        return true
-    elseif event_type == "DialogButtonEvent" then
-        TriggerRegisterDialogButtonEvent(trigger.__trigger_obj, event_data.__button)
-        return true
-    elseif event_type == "GameEvent" then
-        TriggerRegisterGameEvent(trigger.__trigger_obj, event_data.__game_event)
-        return true
-    elseif event_type == "EnterRegion" then
-        TriggerRegisterEnterRegion(trigger.__trigger_obj, event_data.__region, nil)
-        return true
-    elseif event_type == "LeaveRegion" then
-        TriggerRegisterLeaveRegion(trigger.__trigger_obj, event_data.__region, nil)
-        return true
-    elseif event_type == "TrackableHitEvent" then
-        TriggerRegisterTrackableHitEvent(trigger.__trigger_obj, event_data.__trackable)
-        return true
-    elseif event_type == "TrackableTrackEvent" then
-        TriggerRegisterTrackableTrackEvent(trigger.__trigger_obj, event_data.__trackable)
-        return true
-    elseif event_type == "PlayerEvent" then
-        TriggerRegisterPlayerEvent(trigger.__trigger_obj, event_data.__player, event_data.__player_event)
-        return true
-    elseif event_type == "PlayerUnitEvent" then
-        TriggerRegisterPlayerUnitEvent(trigger.__trigger_obj, event_data.__player, event_data.__player_unit_event, nil)
-        return true
-    elseif event_type == "PlayerAllianceChange" then
-        TriggerRegisterPlayerAllianceChange(trigger.__trigger_obj, event_data.__player, event_data.__alliancetype)
-        return true
-    elseif event_type == "PlayerStateEvent" then
-        TriggerRegisterPlayerStateEvent(trigger.__trigger_obj, event_data.__player, event_data.__player_state, event_data.__opcode, event_data.__limitval)
-        return true
-    elseif event_type == "PlayerChatEvent" then
-        TriggerRegisterPlayerChatEvent(trigger.__trigger_obj, event_data.__player, event_data.__message, event_data.__exact_match)
-        return true
-    elseif event_type == "DeathEvent" then
-        TriggerRegisterDeathEvent(trigger.__trigger_obj, event_data.__widget)
-        return true
-    elseif event_type == "UnitStateEvent" then
-        TriggerRegisterUnitStateEvent(trigger.__trigger_obj, event_data.__unit, event_data.__unti_state, event_data.__opcode, event_data.__limitval)
-        return true
-    elseif event_type == "UnitEvent" then
-        TriggerRegisterUnitEvent(trigger.__trigger_obj, event_data.__unit, event_data.__unit_event)
-        return true
-    elseif event_type == "UnitInRange" then
-        TriggerRegisterUnitInRange(trigger.__trigger_obj, event_data.__unit, event_data.__range, nil)
-        return true
-    elseif event_type == "FrameEvent" then
-        BlzTriggerRegisterFrameEvent(trigger.__trigger_obj, event_data.__frame, event_data.__frame_event)
-        return true
-    elseif event_type == "PlayerSyncEvent" then
-        BlzTriggerRegisterPlayerSyncEvent(trigger.__trigger_obj, event_data.__player, event_data.__prefix, event_data.__from_server)
-        return true
-    elseif event_type == "PlayerKeyEvent" then
-        BlzTriggerRegisterPlayerKeyEvent(trigger.__trigger_obj, event_data.__player, event_data.__key, event_data.__meta_key, event_data.__key_down)
-        return true
-    end
-    return false
+    end)
 end
 
 return Trigger

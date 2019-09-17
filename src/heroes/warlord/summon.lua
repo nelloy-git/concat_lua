@@ -26,8 +26,11 @@ end
 local function finish(caster, target, timeout)
     local owner = caster:getOwner()
     --- Spell is targeting point only
+    ---@type Unit
     local summon = Unit.new(owner, SummonData["Id"], target.x, target.y, 180 - caster:getFacing())
     Ability.registerSlave(summon, caster)
+    summon:addAttackDamage(-1, 0, caster:getAttackDamage())
+    summon:setAttacksPerSecond(caster:getAttacksPerSecond())
 end
 
 local format_tooltip = [[Summons invulnerable spirit warrior with %d attack damage and %.2f attacks per second.]]

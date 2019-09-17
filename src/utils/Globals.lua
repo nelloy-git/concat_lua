@@ -5,15 +5,6 @@ local Globals = {}
 local original_type = _G.type
 
 local initialized = false
-compiletime(function()
-    local requirements = {}
-    --if Settings.Events.Unit then table.insert(requirements, require('utils.trigger.events.UnitEvents')) end
-    --if Settings.Events.Player then table.insert(requirements, require('utils.trigger.events.PlayerEvents')) end
-    --if Settings.Events.Ability then table.insert(requirements, require('ability.events.DummyAbilityEvent')) end
-    --if Settings.Events.Ability then table.insert(requirements, require('ability.events.AbilityEvent')) end
-end)
-
-
 function Globals.init()
     if initialized then return nil end
 
@@ -30,6 +21,7 @@ function Globals.init()
     initialized = true
 end
 
+---@param func fun
 function runFuncInDebug(func, ...)
     if Settings.debug then 
         local success, result = pcall(func, ...)

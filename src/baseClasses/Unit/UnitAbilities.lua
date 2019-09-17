@@ -6,7 +6,7 @@ require('baseClasses.Unit.UnitParameters')
 local UnitAbilities = {}
 function UnitAbilities.init()
     ---@type Trigger
-    local changed_parameters_trigger = Unit.getTrigger(UNIT_CHANGED_PARAMETERS)
+    local changed_parameters_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_CHANGED_PARAMETERS)
     changed_parameters_trigger:addAction(runFuncInDebug, Unit.updateAbilitiesTooltips)
 end
 
@@ -43,13 +43,12 @@ function Unit:removeAbility(ability)
 end
 
 function Unit.updateAbilitiesTooltips()
-    Debug("Here")
     local unit = GetUnitWithChangedParameters()
     local parameter = GetUnitChangedParameter()
     for i = 1, #unit.__abilities do
         unit.__abilities[i]:updateTooltipForOwner(unit)
     end
-    Debug(parameter)
+
     if parameter == UNIT_PARAMETER_COOLDOWN_REDUCTION then
         local value = GetUnitChangedParameterValue()
         Debug(value)
