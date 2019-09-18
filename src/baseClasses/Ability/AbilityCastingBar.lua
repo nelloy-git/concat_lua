@@ -32,7 +32,7 @@ local function updateProgress()
 end
 
 function AbilityCastingBar.init()
-    local toc_file = "war3mapImported\\frameFiles\\MyBar.toc"
+    local toc_file = "war3mapImported\\frameFiles\\CastingBar\\CastingBar.toc"
     if not BlzLoadTOCFile(toc_file) then
         error('Error in '..toc_file)
     end

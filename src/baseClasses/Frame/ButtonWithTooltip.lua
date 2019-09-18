@@ -12,7 +12,7 @@ local initialized = false
 function ButtonWithTooltip.init()
     if initialized then return nil end
 
-    local toc_file = "war3mapImported\\frameFiles\\TooltipButton.toc"
+    local toc_file = "war3mapImported\\frameFiles\\TooltipButton\\TooltipButton.toc"
     if not BlzLoadTOCFile(toc_file) then
         error('Error while loading '..toc_file)
         return nil
@@ -36,6 +36,7 @@ function ButtonWithTooltip.new()
         [5] = BlzGetFrameByName("ItemInfoSlotIcon5", 0),
     }
 
+    BlzFrameSetTexture(btn_img, "ReplaceableTextures\\CommandButtons\\BTNBelt.blp", 0, true)
     BlzFrameSetAllPoints(btn_hover, btn_img)    -- btn_hover copies size and position of btn_img.
     BlzFrameSetTooltip(btn_hover, tooltip)  -- when btn_hover is hovered with the mouse frame tooltip becomes visible.
     BlzFrameSetPoint(tooltip, FRAMEPOINT_TOPLEFT, btn_img, FRAMEPOINT_TOPRIGHT, 0, 0)   -- set position of tooltip.
@@ -73,7 +74,8 @@ function ButtonWithTooltip:setPosition(pos)
     else
         self:moveTooltipTopRight()
     end
-    BlzFrameSetAbsPoint(self.__btn_img, FRAMEPOINT_TOPLEFT, pos.x, pos.y)
+    --BlzFrameSetAbsPoint(self.__btn_img, FRAMEPOINT_TOPLEFT, 0.4, 0.3)
+    BlzFrameSetAbsPoint(self.__btn_img, FRAMEPOINT_CENTER, pos.x, pos.y)
 end
 
 ---@param width number

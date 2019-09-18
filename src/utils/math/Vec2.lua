@@ -2,6 +2,7 @@
 local Vec2 = {
     __type = 'Vec2Class'
 }
+setmetatable(Vec2, {__call = Vec2.new})
 local Vec2_meta = {
     __type = 'Vec2',
     __index = Vec2,
