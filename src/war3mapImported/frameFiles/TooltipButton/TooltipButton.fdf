@@ -1,57 +1,124 @@
-
-String "MyBarTextTemplate" {
-   //FontColor 0.99 0.427 0.0705 1.0, //Red Green Blue Alpha 0.0 to 1.0
-   FontColor 1.0 1.0 1.0 1.0,
-   FontShadowColor 0.0 0.0 0.0 0.9,
-   FontShadowOffset 0.001 -0.001,
-   Font "MasterFont", 0.01, //MasterFont is only valid with "DecorateFileNames,"
+// -- LOCAL TEMPLATES -------------------------------------------------------
+Frame "BACKDROP" "ItemInfoBackgroundTemplate" {
+        DecorateFileNames, //Look-Up Names in some String table (for example gameinterface)
+        BackdropTileBackground, //Tile mode enabled
+        BackdropBackground  "ToolTipBackground", //BackgroundFile
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.008, //higher numbers make the corners bigger.
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022, //makes the background smaller, from the outside.
+        BackdropEdgeFile  "ToolTipBorder", //the border File
+        BackdropBlendAll,
 }
+// -- Frames -------------------------------------------------------
+Frame "BACKDROP" "ItemInfo" INHERITS "ItemInfoBackgroundTemplate" {
+    UseActiveContext,
 
-Frame "SIMPLESTATUSBAR" "MyBarEx" {
-   Width 0.07, //Default Width
-   Height 0.012, //Default Height
-   BarTexture "Replaceabletextures\Teamcolor\Teamcolor00.blp", //Default BarTexture
-   Layer "BACKGROUND" { //A simpleFrames thing, where this is placed layer wise
-       Texture "MyBarExBackground"{ //the BACKGROUND Texture named "MyBarExBackground" its also a frame and a child
-           File "Replaceabletextures\Teamcolor\Teamcolor27.blp", //Default Texture for "MyBarExBackground"
-       }
-   }
-   Frame "SIMPLEFRAME" "MyBarExFrame" { //Child of "MyBarEx"
-       DecorateFileNames, //Lookup FileNames in a StringList
-       SetAllPoints, //copy "MyBarEx"
-       Layer "ARTWORK" {
-           Texture "MyBarExBorder" {
-               File "SimpleXpBarBorder", //Default Texture for "MyBarExBorder"
-           }
-           String "MyBarExText" INHERITS "MyBarTextTemplate" {
-               Text "MyBarEx", //Default Text for "MyBarExText" which takes over Data from "MyBarTextTemplate"
-           }
-       }
-   }
-}
+    Frame "BACKDROP" "ItemInfoMainIcon" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "ItemInfo", TOPLEFT, 0.004, -0.004,
+        SetPoint BOTTOMRIGHT, "ItemInfo", TOPLEFT, 0.050, -0.050,
+    }
+ 
+    Frame "TEXT" "ItemInfoTitle" {
+        UseActiveContext,
+        DecorateFileNames,
+        SetPoint TOPLEFT, "ItemInfoMainIcon", TOPRIGHT, 0.01, 0.01,
+        SetPoint TOPRIGHT, "ItemInfo", TOPRIGHT, -0.01, -0.005,
+        FontFlags "FIXEDSIZE",
+        FrameFont "MasterFont", 0.014, "",
+        FontColor 1.0 1.0 0.5 1.0, //Red Green Blue Alpha 0.0 to 1.0
+        FontShadowColor 0.0 0.0 0.0 0.9,
+        FontShadowOffset 0.001 -0.001,
+    }
 
-Frame "SIMPLESTATUSBAR" "MyBar" {
-   Width 0.07,
-   Height 0.012,
-   BarTexture "Replaceabletextures\Teamcolor\Teamcolor00.blp",
-   Layer "BACKGROUND" {
-       Texture "MyBarBackground" {
-           File "Replaceabletextures\Teamcolor\Teamcolor27.blp",
-       }
-   }
-   Frame "SIMPLEFRAME" "MyBarFrame" {
-       SetAllPoints,
-       DecorateFileNames,
-       Layer "ARTWORK" {
-           String "MyBarText" INHERITS "MyBarTextTemplate" {
-               Text "MyBar",
-           }
-       }
-   }
-}
+    Frame "BACKDROP" "ItemInfoSlotIcon1" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "ItemInfoMainIcon", BUTTONLEFT, 0.000, -0.005,
+        SetPoint BOTTOMRIGHT, "ItemInfoMainIcon", BUTTONLEFT, 0.025, -0.030,
+    }
 
-Frame "SIMPLESTATUSBAR" "MySimpleBar" {
-   Width 0.07,
-   Height 0.012,
+    Frame "BACKDROP" "ItemInfoSlotIcon2" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "ItemInfoSlotIcon1", TOPRIGHT, 0.005, 0.000,
+        SetPoint BOTTOMLEFT, "ItemInfoSlotIcon1", TOPRIGHT, 0.030, 0.000,
+    }
+
+    Frame "BACKDROP" "ItemInfoSlotIcon3" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "ItemInfoSlotIcon2", TOPRIGHT, 0.005, 0.000,
+        SetPoint BOTTOMLEFT, "ItemInfoSlotIcon2", TOPRIGHT, 0.030, 0.000,
+    }
+
+    Frame "BACKDROP" "ItemInfoSlotIcon4" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "ItemInfoSlotIcon3", TOPRIGHT, 0.005, 0.000,
+        SetPoint BOTTOMLEFT, "ItemInfoSlotIcon3", TOPRIGHT, 0.030, 0.000,
+    }
+
+    Frame "BACKDROP" "ItemInfoSlotIcon5" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "ItemInfoSlotIcon4", TOPRIGHT, 0.005, 0.000,
+        SetPoint BOTTOMLEFT, "ItemInfoSlotIcon4", TOPRIGHT, 0.030, 0.000,
+    }
+ 
+    Frame "TEXT" "ItemInfoText" {
+        UseActiveContext,
+        DecorateFileNames,
+        SetPoint TOPLEFT, "ItemInfoSlotIcon1", TOPLEFT, 0.000, -0.005,
+        SetPoint BOTTOMRIGHT, "ItemInfo", BOTTOMRIGHT, -0.005, 0.005,
+        FontFlags "FIXEDSIZE",
+        FrameFont "MasterFont", 0.012, "",
+        FontColor 1.0 1.0 1.0 1.0,
+        FontShadowColor 0.0 0.0 0.0 0.9,
+        FontShadowOffset 0.001 -0.001,
+    }
 }
  
