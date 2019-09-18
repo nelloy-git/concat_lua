@@ -46,6 +46,11 @@ Test = function()
     local summon_ability = require('heroes.warlord.summon')
     u1:addAbility(summon_ability)
     runFuncInDebug(Unit.updateAbilitiesTooltips, u1)
+
+    ---@type FrameButtonWithTooltip
+    local TooltipButton = require('baseClasses.Frame.ButtonWithTooltip')
+    local btn = TooltipButton.new()
+    runFuncInDebug(TooltipButton.setPosition, btn, Vec2.new(0.2, 0.2))
 end
 
 function InitCustomPlayerSlots()
