@@ -13,7 +13,7 @@ Frame "BACKDROP" "InventoryBackgroundTemplate" {
 Frame "BACKDROP" "InvetoryPanel" INHERITS "InventoryBackgroundTemplate" {
     UseActiveContext,
 
-    Frame "BUTTON" "ShowButton" {
+    Frame "BACKDROP" "InventoryHead" {
         UseActiveContext,
         DecorateFileNames,
         BackdropTileBackground,
@@ -23,8 +23,22 @@ Frame "BACKDROP" "InvetoryPanel" INHERITS "InventoryBackgroundTemplate" {
         BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
         BackdropEdgeFile  "ToolTipBorder",
         BackdropBlendAll,
-        SetPoint TOPLEFT, "ItemInfo", TOPLEFT, 0.004, -0.004,
-        SetPoint BOTTOMRIGHT, "ItemInfo", TOPLEFT, 0.030, -0.030,
+        SetPoint TOPLEFT, "InvetoryPanel", TOPLEFT, 0.005, -0.005,
+        SetPoint BOTTOMRIGHT, "InvetoryPanel", TOPLEFT, 0.030, -0.030,
+    }
+
+    Frame "BACKDROP" "InventoryHead" {
+        UseActiveContext,
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.004,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+        SetPoint TOPLEFT, "InvetoryPanel", TOPLEFT, 0.005, -0.005,
+        SetPoint BOTTOMRIGHT, "InvetoryPanel", TOPLEFT, 0.030, -0.030,
     }
 
 
