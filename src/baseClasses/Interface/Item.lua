@@ -1,15 +1,15 @@
----@class FrameButtonWithTooltip
-local ButtonWithTooltip = {
+---@class FrameItem
+local FrameItem = {
     __type = "TooltipButtonClass"
 }
 
 local ButtonWithTooltip_meta = {
     __type = "TooltipButton",
-    __index = ButtonWithTooltip
+    __index = FrameItem
 }
 
 local initialized = false
-function ButtonWithTooltip.init()
+function FrameItem.init()
     if initialized then return nil end
 
     local toc_file = "war3mapImported\\frameFiles\\TooltipButton\\TooltipButton.toc"
@@ -21,7 +21,7 @@ function ButtonWithTooltip.init()
     initialized = true
 end
 
-function ButtonWithTooltip.new()
+function FrameItem.new()
     local btn_img = BlzCreateFrameByType("BACKDROP", "ButtonImage", BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), "", 0)
     local btn_hover = BlzCreateFrameByType("FRAME", "ButtonHover", btn_img, "", 0)
     local tooltip = BlzCreateFrame("ItemInfo", btn_img, 0, 0)
@@ -63,7 +63,7 @@ function ButtonWithTooltip.new()
 end
 
 ---@param pos Vec2
-function ButtonWithTooltip:setPosition(pos)
+function FrameItem:setPosition(pos)
     self.__pos = pos
     if pos.x >= 0.4 and pos.y >= 0.3 then
         self:moveTooltipBottomLeft()
@@ -80,7 +80,7 @@ end
 
 ---@param width number
 ---@param height number
-function ButtonWithTooltip:setButtonSize(width, height)
+function FrameItem:setButtonSize(width, height)
     self.__btn_width = width
     self.__btn_height = height
     BlzFrameSetSize(self.__btn_img, width, height)
@@ -88,28 +88,28 @@ end
 
 ---@param width number
 ---@param height number
-function ButtonWithTooltip:setTooltipSize(width, height)
+function FrameItem:setTooltipSize(width, height)
     BlzFrameSetSize(self.__tooltip, width, height)
 end
 
-function ButtonWithTooltip:moveTooltipTopLeft()
+function FrameItem:moveTooltipTopLeft()
     BlzFrameClearAllPoints(self.__tooltip)
     BlzFrameSetPoint(self.__tooltip, FRAMEPOINT_BOTTOMRIGHT, self.__btn_img, FRAMEPOINT_BOTTOMLEFT, 0, 0)
 end
 
-function ButtonWithTooltip:moveTooltipTopRight()
+function FrameItem:moveTooltipTopRight()
     BlzFrameClearAllPoints(self.__tooltip)
     BlzFrameSetPoint(self.__tooltip, FRAMEPOINT_BOTTOMLEFT, self.__btn_img, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
 end
 
-function ButtonWithTooltip:moveTooltipBottomLeft()
+function FrameItem:moveTooltipBottomLeft()
     BlzFrameClearAllPoints(self.__tooltip)
     BlzFrameSetPoint(self.__tooltip, FRAMEPOINT_TOPRIGHT, self.__btn_img, FRAMEPOINT_TOPLEFT, 0, 0)
 end
 
-function ButtonWithTooltip:moveTooltipBottomRight()
+function FrameItem:moveTooltipBottomRight()
     BlzFrameClearAllPoints(self.__tooltip)
     BlzFrameSetPoint(self.__tooltip, FRAMEPOINT_TOPLEFT, self.__btn_img, FRAMEPOINT_TOPRIGHT, 0, 0)
 end
 
-return ButtonWithTooltip
+return FrameItem

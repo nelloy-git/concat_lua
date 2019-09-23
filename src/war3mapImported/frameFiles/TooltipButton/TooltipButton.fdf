@@ -23,7 +23,7 @@ Frame "BACKDROP" "ItemInfo" INHERITS "ItemInfoBackgroundTemplate" {
         BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
         BackdropEdgeFile  "ToolTipBorder",
         BackdropBlendAll,
-        SetPoint TOPLEFT, "ItemInfo", TOPLEFT, 0.004, -0.004,
+        SetPoint TOPLEFT, "ItemInfo", TOPLEFT, 0.000, -0.000,
         SetPoint BOTTOMRIGHT, "ItemInfo", TOPLEFT, 0.030, -0.030,
     }
  

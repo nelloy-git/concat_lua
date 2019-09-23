@@ -36,21 +36,31 @@ end
 
 Test = function()
     local Unit = require('baseClasses.Unit')
-    local Ability = require('baseClasses.Ability')
-
+    --local Ability = require('baseClasses.Ability')
+--
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
     ---@type Unit
     --local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
 
     ---@type Ability
-    local summon_ability = require('heroes.warlord.summon')
-    u1:addAbility(summon_ability)
-    runFuncInDebug(Unit.updateAbilitiesTooltips, u1)
+    --local summon_ability = require('heroes.warlord.summon')
+    --u1:addAbility(summon_ability)
+    --runFuncInDebug(Unit.updateAbilitiesTooltips, u1)
 
-    ---@type FrameButtonWithTooltip
-    local TooltipButton = require('baseClasses.Frame.ButtonWithTooltip')
-    local btn = TooltipButton.new()
-    runFuncInDebug(TooltipButton.setPosition, btn, Vec2.new(0.2, 0.2))
+    --Debug(BlzFrameGetWidth(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)))
+
+    local interface = require('baseClasses.Interface.Interface')
+
+    ---@type FrameInventory
+    local Inventory = require('baseClasses.Interface.Inventory')
+    local inventory = Inventory.new()
+
+    local ItemFrame = require('baseClasses.Interface.Item')
+    local item = ItemFrame.new()
+
+    inventory:setBelt(item)
+    --runFuncInDebug(TooltipButton.setPosition, btn, Vec2.new(0.2, 0.2))
+
 end
 
 function InitCustomPlayerSlots()

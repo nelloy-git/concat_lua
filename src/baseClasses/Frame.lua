@@ -1,3 +1,0 @@
-local Frame
-
-return Frame
