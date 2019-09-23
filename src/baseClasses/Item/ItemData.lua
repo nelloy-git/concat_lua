@@ -1,4 +1,3 @@
----@type ItemDB
 local DataBase = require('utils.DataBase')
 
 ---@class Item
@@ -24,11 +23,10 @@ end
 ---@param y number
 ---@return Item
 function Item.new(id, x, y)
-    id = ID(id)
     ---@type Item
     local item = {
-        __id = id,
-        __item_obj = CreateItem(id, x, y)
+        __id = ID(id),
+        __item_obj = CreateItem(ID(id), x, y)
     }
     setmetatable(item, Item_meta)
     Item.__db:add(item.__item_obj, item)
