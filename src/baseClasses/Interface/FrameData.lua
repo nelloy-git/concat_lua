@@ -38,103 +38,23 @@ local Frame_meta = {
 ---| '"TEXTBUTTON"'
 ---| '"TIMERTEXT"'
 
+local game_ui_obj
+
 local initialized = false
 function Frame.init()
     if initialized then return nil end
 
-    Frame.GAME_UI = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
-    Frame.COMMAND_BUTTON = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 5),
-        [7] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 6),
-        [8] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 7),
-        [9] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 8),
-        [10] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 9),
-        [11] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 10),
-        [12] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 11),
-    }
-    Frame.HERO_BAR = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
-    Frame.HERO_BUTTON = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 5),
-        [7] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON, 6),
-    }
-    Frame.HERO_HP_BAR = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 5),
-        [7] = Frame.getOrigin(ORIGIN_FRAME_HERO_HP_BAR, 6),
-    }
-    Frame.HERO_MANA_BAR = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 5),
-        [7] = Frame.getOrigin(ORIGIN_FRAME_HERO_MANA_BAR, 6),
-    }
-    Frame.HERO_HP_BAR = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 5),
-        [7] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 6),
-    }
-    Frame.ITEM_BUTTON = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 5),
-    }
-    Frame.MINIMAP = Frame.getOrigin(ORIGIN_FRAME_MINIMAP, 0)
-    Frame.MINIMAP_BUTTON = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 3),
-        [5] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 4),
-        [6] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 5),
-    }
-    Frame.SYSTEM_BUTTON = {
-        [1] = Frame.getOrigin(ORIGIN_FRAME_SYSTEM_BUTTON, 0),
-        [2] = Frame.getOrigin(ORIGIN_FRAME_SYSTEM_BUTTON, 1),
-        [3] = Frame.getOrigin(ORIGIN_FRAME_SYSTEM_BUTTON, 2),
-        [4] = Frame.getOrigin(ORIGIN_FRAME_SYSTEM_BUTTON, 3),
-    }
-    Frame.WORLD_FRAME = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
-    
-    --Frame.TOOLTIP
-    --Frame.UBERTOOLTIP
-    --Frame.CHAT_MSG
-    --Frame.UNIT_MSG
-    --Frame.TOP_MSG
-    --Frame.PORTRAIT
+    game_ui_obj = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 
     initialized = true
 end
 
 ---@param frame_type FrameType
 ---@return Frame
-function Frame.new(frame_type)
+function Frame.new(frame_type, parent)
     local frame = {
         __frame_obj = BlzCreateFrame(frame_type, Frame.GAME_UI, 0, 0),
-        __parent_obj = Frame.GAME_UI,
+        __parent_obj = parent or Frame.GAME_UI,
         __childrens = {}
     }
     setmetatable(frame, Frame_meta)
@@ -146,19 +66,16 @@ function Frame.new(frame_type)
 ---@param frame_obj framehandle
 ---@return Frame
 function Frame.get(frame_obj)
-    return Frame.__db:get(frame_obj)
-end
+    local obj = Frame.__db:get(frame_obj)
+    if obj then return obj end
 
----@param frame_type originframetype
----@param index number
----@return Frame
-function Frame.getOrigin(frame_type, index)
-    local obj = BlzGetOriginFrame(frame_type, index)
-    local frame = Frame.get(obj)
-    if frame ~= nil then return frame end
+    -- Safety get parent.
+    local success, parent_obj = pcall(BlzFrameGetParent, obj)
+    if not success then parent_obj = nil end
 
-    frame = {
+    local frame = {
         __frame_obj = obj,
+        __parent = Frame.get(parent_obj),
         __childrens = {}
     }
     setmetatable(frame, Frame_meta)
@@ -167,45 +84,61 @@ function Frame.getOrigin(frame_type, index)
     return frame
 end
 
+---@param frame_type originframetype
+---@param index number
+---@return Frame
+function Frame.getOrigin(frame_type, index)
+    local obj = BlzGetOriginFrame(frame_type, index)
+    if not obj then return nil end
+    return Frame.get(obj)
+end
+
+---@param frame_name string
+---@param context number
+function Frame.getByName(frame_name, context)
+    local obj = BlzGetFrameByName(frame_name, context)
+    if not obj then return nil end
+    return Frame.__db:get(obj)
+end
+
+---@param parent Frame
+function Frame:setParent(parent)
+    if not parent then parent = Frame.GAME_UI end
+
+    -- Remove frome previous parent.
+    local prev_parent = self.__parent
+    prev_parent.__childrens[self] = nil
+    -- Add to current parent.
+    self.__parent = parent
+    parent.__childrens[self] = true
+end
+
 ---@return framehandle
 function Frame:getObj()
     return self.__frame_obj
 end
 
-function Frame:setSize(width, height)
-    self.__width = width
-    self.__height = height
-    BlzFrameSetSize(self.frame_obj, width, height)
+---@param point framepointtype
+---@param x number
+---@param y number
+function Frame:setAbsPoint(point, x, y)
+    BlzFrameSetPoint(self.__frame_obj, point, game_ui_obj, FRAMEPOINT_BOTTOMLEFT, x, y)
 end
 
-function Frame:getHeight()
-    return self.__height
+---@param point framepointtype
+---@param x number
+---@param y number
+function Frame:setPoint(point, relative_frame, relative_point, x, y)
+    BlzFrameSetPoint(self.__frame_obj, point, relative_frame, relative_point, x, y)
 end
 
-function Frame:getWidth()
-    return self.__width
+---@param frame Frame
+function Frame:setAllPoints(frame)
+    BlzFrameSetAllPoints(self.__frame_obj, frame.__frame_obj)
 end
 
-function Frame:setAbsPosition(x, y)
-    self.__x = x
-    self.__y = y
-    self.__is_proportional_position = false
-    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, self.__parent_obj, FRAMEPOINT_TOPLEFT, x, y)
-end
-
-function Frame:setProportionalPosition(x, y)
-    self.__x = x
-    self.__y = y
-    self.__is_proportional_position = true
-    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, self.__parent_obj, FRAMEPOINT_TOPLEFT, x, y)
-end
-
-function Frame:hide()
-    BlzFrameSetVisible(self.__frame_obj, false)
-end
-
-function Frame:show()
-    BlzFrameSetVisible(self.__frame_obj, true)
+function Frame:clearAllPoints()
+    BlzFrameClearAllPoints(self.__frame_obj)
 end
 
 return Frame
