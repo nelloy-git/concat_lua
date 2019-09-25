@@ -102,6 +102,7 @@ function torange(val, min, max)
 end
 
 function type(val)
+    --Debug("Here")
     local lua_type = original_type(val)
     if lua_type ~= 'table' then return lua_type end
     local meta = getmetatable(val)

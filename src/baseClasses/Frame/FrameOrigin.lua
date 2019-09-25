@@ -1,10 +1,13 @@
-local Frame = require('baseClasses.Interface.FrameData')
+---@type Frame
+local Frame = require('baseClasses.Frame.FrameData')
 
 local FrameOrigins = {}
 
 local initialized = false
 function FrameOrigins.init()
     if initialized then return nil end
+
+    Frame.init()
 
     Frame.GAME_UI = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
     Frame.COMMAND_BUTTON = {
@@ -82,7 +85,7 @@ function FrameOrigins.init()
         [4] = Frame.getOrigin(ORIGIN_FRAME_SYSTEM_BUTTON, 3),
     }
     Frame.WORLD_FRAME = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
-    
+
     --Frame.TOOLTIP
     --Frame.UBERTOOLTIP
     --Frame.CHAT_MSG

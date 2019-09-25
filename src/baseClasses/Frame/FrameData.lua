@@ -38,13 +38,19 @@ local Frame_meta = {
 ---| '"TEXTBUTTON"'
 ---| '"TIMERTEXT"'
 
+local x_offset
+
 local game_ui_obj
+local command_panel_obj
+local hero_panel_obj
 
 local initialized = false
 function Frame.init()
     if initialized then return nil end
 
     game_ui_obj = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+    command_panel_obj = BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 0))
+    hero_panel_obj = BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0))
 
     initialized = true
 end
@@ -66,15 +72,20 @@ function Frame.new(frame_type, parent)
 ---@param frame_obj framehandle
 ---@return Frame
 function Frame.get(frame_obj)
-    local obj = Frame.__db:get(frame_obj)
-    if obj then return obj end
+    if frame_obj == nil then return nil end
+    local frame = Frame.__db:get(frame_obj)
+    if frame ~= nil then return frame end
 
     -- Safety get parent.
-    local success, parent_obj = pcall(BlzFrameGetParent, obj)
-    if not success then parent_obj = nil end
+    local parent_obj
+    if frame_obj == game_ui_obj or frame_obj == command_panel_obj or  frame_obj == hero_panel_obj then
+        parent_obj = nil
+    else
+        parent_obj = BlzFrameGetParent(frame_obj)
+    end
 
-    local frame = {
-        __frame_obj = obj,
+    frame = {
+        __frame_obj = frame_obj,
         __parent = Frame.get(parent_obj),
         __childrens = {}
     }
@@ -98,7 +109,7 @@ end
 function Frame.getByName(frame_name, context)
     local obj = BlzGetFrameByName(frame_name, context)
     if not obj then return nil end
-    return Frame.__db:get(obj)
+    return Frame.get(obj)
 end
 
 ---@param parent Frame
@@ -122,7 +133,13 @@ end
 ---@param x number
 ---@param y number
 function Frame:setAbsPoint(point, x, y)
-    BlzFrameSetPoint(self.__frame_obj, point, game_ui_obj, FRAMEPOINT_BOTTOMLEFT, x, y)
+    local width = BlzGetLocalClientWidth()
+    local height = BlzGetLocalClientHeight()
+    x_offset = (width / (4 * height / 3) - 1) / 2
+    Debug(width, 'x', height, '   ', x_offset)
+    Debug(x_offset)
+    
+    BlzFrameSetAbsPoint(self.__frame_obj, point, x - x_offset, y)
 end
 
 ---@param point framepointtype
