@@ -1,45 +1,9 @@
-local DataBase = require('utils.DataBase')
+local Frame = require('baseClasses.Interface.FrameData')
 
----@class Frame
-local Frame = {
-    __type = "FrameClass",
-    __db = DataBase.new("userdata", "Frame")
-}
-local Frame_meta = {
-    __type = "Frame",
-    __index = Frame
-}
-
----@alias FrameType string
----| '"BACKDROP"'
----| '"BUTTON"'
----| '"CHATDISPLAY"'
----| '"CHECKBOX"'
----| '"CONTROL"'
----| '"DIALOG"'
----| '"EDITBOX"'
----| '"FRAME"'
----| '"GLUEBUTTON"'
----| '"GLUECHECKBOX"'
----| '"GLUEEDITBOX"'
----| '"GLUEPOPUPMENU"'
----| '"GLUETEXTBUTTON"'
----| '"HIGHLIGHT"'
----| '"LISTBOX"'
----| '"MENU"'
----| '"MODEL"'
----| '"POPUPMENU"'
----| '"SCROLLBAR"'
----| '"SLASHCHATBOX"'
----| '"SLIDER"'
----| '"SPRITE​"'
----| '"TEXT"'
----| '"TEXTAREA"'
----| '"TEXTBUTTON"'
----| '"TIMERTEXT"'
+local FrameOrigins = {}
 
 local initialized = false
-function Frame.init()
+function FrameOrigins.init()
     if initialized then return nil end
 
     Frame.GAME_UI = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
@@ -129,83 +93,4 @@ function Frame.init()
     initialized = true
 end
 
----@param frame_type FrameType
----@return Frame
-function Frame.new(frame_type)
-    local frame = {
-        __frame_obj = BlzCreateFrame(frame_type, Frame.GAME_UI, 0, 0),
-        __parent_obj = Frame.GAME_UI,
-        __childrens = {}
-    }
-    setmetatable(frame, Frame_meta)
-    Frame.__db:add(frame.__frame_obj, frame)
-
-    return frame
- end
-
----@param frame_obj framehandle
----@return Frame
-function Frame.get(frame_obj)
-    return Frame.__db:get(frame_obj)
-end
-
----@param frame_type originframetype
----@param index number
----@return Frame
-function Frame.getOrigin(frame_type, index)
-    local obj = BlzGetOriginFrame(frame_type, index)
-    local frame = Frame.get(obj)
-    if frame ~= nil then return frame end
-
-    frame = {
-        __frame_obj = obj,
-        __childrens = {}
-    }
-    setmetatable(frame, Frame_meta)
-    Frame.__db:add(frame.__frame_obj, frame)
-
-    return frame
-end
-
----@return framehandle
-function Frame:getObj()
-    return self.__frame_obj
-end
-
-function Frame:setSize(width, height)
-    self.__width = width
-    self.__height = height
-    BlzFrameSetSize(self.frame_obj, width, height)
-end
-
-function Frame:getHeight()
-    return self.__height
-end
-
-function Frame:getWidth()
-    return self.__width
-end
-
-function Frame:setAbsPosition(x, y)
-    self.__x = x
-    self.__y = y
-    self.__is_proportional_position = false
-    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, self.__parent_obj, FRAMEPOINT_TOPLEFT, x, y)
-end
-
-function Frame:setProportionalPosition(x, y)
-    self.__x = x
-    self.__y = y
-    self.__is_proportional_position = true
-    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, self.__parent_obj, FRAMEPOINT_TOPLEFT, x, y)
-end
-
-function Frame:hide()
-    BlzFrameSetVisible(self.__frame_obj, false)
-end
-
-function Frame:show()
-    BlzFrameSetVisible(self.__frame_obj, true)
-end
-
-return Frame
+return FrameOrigins
