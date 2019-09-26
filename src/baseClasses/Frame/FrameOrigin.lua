@@ -10,6 +10,7 @@ function FrameOrigins.init()
     Frame.init()
 
     Frame.GAME_UI = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
+    ---@type table<number,Frame>
     Frame.COMMAND_BUTTON = {
         [1] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 0),
         [2] = Frame.getOrigin(ORIGIN_FRAME_COMMAND_BUTTON, 1),
@@ -70,6 +71,7 @@ function FrameOrigins.init()
         [6] = Frame.getOrigin(ORIGIN_FRAME_ITEM_BUTTON, 5),
     }
     Frame.MINIMAP = Frame.getOrigin(ORIGIN_FRAME_MINIMAP, 0)
+    ---@type table<number,Frame>
     Frame.MINIMAP_BUTTON = {
         [1] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 0),
         [2] = Frame.getOrigin(ORIGIN_FRAME_HERO_BUTTON_INDICATOR, 1),
@@ -85,6 +87,7 @@ function FrameOrigins.init()
         [4] = Frame.getOrigin(ORIGIN_FRAME_SYSTEM_BUTTON, 3),
     }
     Frame.WORLD_FRAME = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
+    Frame.COMMAND_PANEL = Frame.get(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 0)))
 
     --Frame.TOOLTIP
     --Frame.UBERTOOLTIP

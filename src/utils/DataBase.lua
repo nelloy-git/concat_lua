@@ -11,7 +11,8 @@ function DataBase.new(key_type, value_type)
     ---@type DataBase
     local db = {
         __key_type = key_type,
-        __value_type = value_type
+        __value_type = value_type,
+        __data = {}
     }
     setmetatable(db, DataBase_meta)
     return db
@@ -26,7 +27,7 @@ function DataBase:add(key, value)
     if type(value) ~=self.__value_type then
         error("DataBase: wrong value type. Need "..self.__value_type.." got "..type(value))
     end
-    self[key] = value
+    self.__data[key] = value
 end
 
 ---@param key any
@@ -34,7 +35,7 @@ function DataBase:remove(key)
     if type(key) ~= self.__key_type then
         error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
     end
-    self[key] = nil
+    self.__data[key] = nil
 end
 
 ---@param key any
@@ -43,7 +44,14 @@ function DataBase:get(key)
     if key ~= nil and type(key) ~= self.__key_type then
         error("DataBase: wrong key type. Need "..self.__key_type.." got "..type(key))
     end
-    return self[key]
+    return self.__data[key]
+end
+
+---@param func fun(k:any,v:any):nil
+function DataBase:forEach(func)
+    for k,v in pairs(self.__data) do
+        func(k,v)
+    end
 end
 
 return DataBase
