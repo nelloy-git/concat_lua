@@ -1,5 +1,5 @@
 
-Frame "BACKDROP" "InventoryBackgroundTemplate" {
+Frame "BACKDROP" "InventoryBackground" {
         DecorateFileNames, //Look-Up Names in some String table (for example gameinterface)
         BackdropTileBackground, //Tile mode enabled
         BackdropBackground  "ToolTipBackground", //BackgroundFile
@@ -17,10 +17,10 @@ Frame "BACKDROP" "InvetorySlot" INHERITS "InventoryBackground" {
         UseActiveContext,
         BackdropBackground  "war3mapImported\Icons\Inventory\Empty.blp",
         BackdropCornerFlags "",
+        BackdropCornerSize  0.000,
         BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
-        BackdropBlendAll,
-        SetPoint TOPLEFT, "InvetoryPanel", TOPLEFT, 0.008, -0.008,
-        SetPoint BOTTOMRIGHT, "InvetoryPanel", BOTTOMRIGHT, -0.008, 0.008,
+        SetPoint TOPLEFT, "InvetorySlot", TOPLEFT, 0.002, -0.002,
+        SetPoint BOTTOMRIGHT, "InvetorySlot", BOTTOMRIGHT, -0.002, 0.002,
     }
 }
  

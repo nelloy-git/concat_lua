@@ -12,12 +12,14 @@ local FrameInventory_meta = {
     __index = FrameInventory
 }
 
-local inv_width
-local inv_height
-local inv_offset_x
-local inv_offset_y
-local slot_width
-local slot_height
+local inv_x = 0.1
+local inv_y = 0.5
+local inv_width = 0.3
+local inv_height = 0.5
+local inv_offset_x = 0.005
+local inv_offset_y = 0.005
+local slot_width = 0.025
+local slot_height = 0.025
 local inv_image = {
     bag = "war3mapImported\\Icons\\Inventory\\Bag.blp",
     belt = "war3mapImported\\Icons\\Inventory\\Belt.blp",
@@ -51,6 +53,8 @@ function FrameInventory.init()
     end
 
     local background = Frame.new("InventoryBackground", Frame.GAME_UI)
+    background:setAbsPoint(FRAMEPOINT_TOPLEFT, inv_x, inv_y)
+    background:setAbsPoint(FRAMEPOINT_BOTTOMRIGHT, inv_x + inv_width, inv_y - inv_height)
 
     -- Left side
 
@@ -102,6 +106,17 @@ function FrameInventory.init()
     weapon:setPoint(FRAMEPOINT_BOTTOMRIGHT, boots, FRAMEPOINT_BOTTOMRIGHT, 0, -slot_height)
     weapon:setImage(inv_image.weapon)
 
+    local sprite = Frame.new("MODEL", background)
+    BlzFrameSetModel(sprite.__frame_obj, "war3mapImported\\units\\SwordNya.mdx", 1)
+    sprite:setAbsPoint(FRAMEPOINT_TOPLEFT, 0.5, 0.5)
+    sprite:setAbsPoint(FRAMEPOINT_BOTTOMRIGHT, 0.6, 0.4)
+    --local portrait = Frame.PORTRAIT
+    --portrait:clearAllPoints()
+    --portrait:setParent(weapon)
+    --portrait:hide()
+    --portrait:show()
+    --portrait:setAbsPoint(FRAMEPOINT_CENTER, 0, 0)
+    --portrait:show()
 
     initialized = true
 end

@@ -57,7 +57,7 @@ function Frame.init()
     command_panel_obj = BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 0))
     hero_panel_obj = BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0))
     timer = glTimer
-    timer:addAction(1, update_resolution)
+    update_resolution()
 
     initialized = true
 end
@@ -71,10 +71,11 @@ function Frame.get(frame_obj)
 
     -- Safety get parent.
     local parent_obj
-    if frame_obj == game_ui_obj or frame_obj == command_panel_obj or  frame_obj == hero_panel_obj then
+    if frame_obj == game_ui_obj or frame_obj == command_panel_obj or frame_obj == hero_panel_obj then
         parent_obj = nil
     else
         parent_obj = BlzFrameGetParent(frame_obj)
+        if parent_obj == frame_obj then parent_obj = nil end
     end
 
     frame = {
@@ -165,6 +166,7 @@ update_resolution = function()
     local w = BlzGetLocalClientWidth()
     local h = BlzGetLocalClientHeight()
     if w ~= cur_width or h ~= cur_height then
+        x_offset = (w / (4 * h / 3) - 1) / 2
         Frame.__db:forEach(function(frame_obj, frame)
             for point,v in pairs(frame.__abs_points) do
                 BlzFrameSetAbsPoint(frame_obj, point, v.x - x_offset, v.y)

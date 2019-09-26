@@ -49,13 +49,15 @@ Test = function()
 
     --Debug(BlzFrameGetWidth(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)))
 
+    local Interface = require('baseClasses.Frame.Interface')
+
     ---@type Frame
-    local Frame = require('baseClasses.Frame')
-    
-    Frame.WORLD_FRAME:setAllPoints(Frame.GAME_UI)
-    
-    Frame.COMMAND_BUTTON[1]:clearAllPoints()
-    Frame.COMMAND_BUTTON[1]:setAbsPoint(FRAMEPOINT_BOTTOMLEFT, 0, 0)
+    --local Frame = require('baseClasses.Frame')
+    --
+    --Frame.WORLD_FRAME:setAllPoints(Frame.GAME_UI)
+    --
+    --Frame.COMMAND_BUTTON[1]:clearAllPoints()
+    --Frame.COMMAND_BUTTON[1]:setAbsPoint(FRAMEPOINT_BOTTOMLEFT, 0, 0)
 
     ---@type FrameInventory
     --local Inventory = require('baseClasses.Interface.Inventory')

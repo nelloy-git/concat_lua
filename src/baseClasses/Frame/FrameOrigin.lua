@@ -88,13 +88,13 @@ function FrameOrigins.init()
     }
     Frame.WORLD_FRAME = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
     Frame.COMMAND_PANEL = Frame.get(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 0)))
+    Frame.PORTRAIT = Frame.getOrigin(ORIGIN_FRAME_PORTRAIT, 0)
 
     --Frame.TOOLTIP
     --Frame.UBERTOOLTIP
     --Frame.CHAT_MSG
     --Frame.UNIT_MSG
     --Frame.TOP_MSG
-    --Frame.PORTRAIT
 
     initialized = true
 end

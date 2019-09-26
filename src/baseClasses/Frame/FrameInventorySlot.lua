@@ -6,7 +6,7 @@ local FrameInventorySlot = {
 }
 setmetatable(FrameInventorySlot, {__index = Frame})
 
-local FrameInventory_meta = {
+local FrameInventorySlot_meta = {
     __type = "FrameInventorySlot",
     __index = FrameInventorySlot
 }
@@ -29,8 +29,9 @@ end
 
 ---@return FrameInventorySlot
 function FrameInventorySlot.new()
-    local frame Frame.new("InvetorySlot", Frame.GAME_UI)
+    local frame = Frame.new("InvetorySlot", Frame.GAME_UI)
     frame.__image = Frame.getByName("InventoryImage", 0)
+    setmetatable(frame, FrameInventorySlot_meta)
 
     return frame
 end
