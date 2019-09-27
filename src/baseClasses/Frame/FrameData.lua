@@ -39,6 +39,8 @@ local Frame_meta = {
 ---| '"TIMERTEXT"'
 
 local x_offset
+local screen_width = 0.8
+local screen_height = 0.6
 
 -- ============
 --  Predefined
@@ -78,13 +80,18 @@ function Frame.get(frame_obj)
         if parent_obj == frame_obj then parent_obj = nil end
     end
 
+    ---@type Frame
     frame = {
         __frame_obj = frame_obj,
         __parent = Frame.get(parent_obj),
-        __abs_points = {}
+        __width = 0,
+        __height = 0
     }
     setmetatable(frame, Frame_meta)
     Frame.__db:add(frame.__frame_obj, frame)
+
+    frame:setAbsPosition(-0.05, -0.05)
+    frame:setSize(0.1, 0.1)
 
     return frame
 end
@@ -114,8 +121,19 @@ function Frame.getByName(frame_name, context)
     return Frame.get(obj)
 end
 
+---@return number
+function Frame.getScreenWidth()
+    return screen_width
+end
+
+---@return number
+function Frame.getScreenHeight()
+    return screen_height
+end
+
 ---@param parent Frame
 function Frame:setParent(parent)
+    self.__parent = parent
     BlzFrameSetParent(self.__frame_obj, parent.__frame_obj)
 end
 
@@ -124,22 +142,29 @@ function Frame:getObj()
     return self.__frame_obj
 end
 
----@param point framepointtype
 ---@param x number
 ---@param y number
-function Frame:setAbsPoint(point, x, y)
-    self.__abs_points[point] = {x = x, y = y}
-    BlzFrameSetAbsPoint(self.__frame_obj, point, x - x_offset, y)
+function Frame:setAbsPosition(x, y)
+    self.__abs_x = x
+    self.__abs_y = screen_height - y
+    BlzFrameSetAbsPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, x - x_offset, screen_height - y)
 end
 
----@param point framepointtype
 ---@param relative_frame Frame
----@param relative_point framepointtype
 ---@param x number
 ---@param y number
-function Frame:setPoint(point, relative_frame, relative_point, x, y)
-    self.__abs_points[point] = nil
-    BlzFrameSetPoint(self.__frame_obj, point, relative_frame.__frame_obj, relative_point, x, y)
+function Frame:setPosition(relative_frame, x, y)
+    self.__abs_x = nil
+    self.__abs_y = nil
+    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, relative_frame.__frame_obj, FRAMEPOINT_TOPLEFT, x, -y)
+end
+
+---@param width number
+---@param height number
+function Frame:setSize(width, height)
+    self.__width = width
+    self.__height = height
+    BlzFrameSetSize(self.__frame_obj, width, height)
 end
 
 ---@param frame Frame
@@ -150,6 +175,12 @@ end
 function Frame:clearAllPoints()
     self.__abs_points = {}
     BlzFrameClearAllPoints(self.__frame_obj)
+end
+
+--- Redefine this function if need other screen size depencies.
+function Frame:update()
+    self:setAbsPosition(self.__abs_x, self.__abs_y)
+    self:setSize(self.__width, self.__height)
 end
 
 function Frame:hide()
@@ -167,10 +198,9 @@ update_resolution = function()
     local h = BlzGetLocalClientHeight()
     if w ~= cur_width or h ~= cur_height then
         x_offset = (w / (4 * h / 3) - 1) / 2
+        screen_width = 0.8 + 2 * x_offset
         Frame.__db:forEach(function(frame_obj, frame)
-            for point,v in pairs(frame.__abs_points) do
-                BlzFrameSetAbsPoint(frame_obj, point, v.x - x_offset, v.y)
-            end
+            frame:update()
         end)
         cur_width = w
         cur_height = h

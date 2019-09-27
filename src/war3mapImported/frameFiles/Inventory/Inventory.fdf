@@ -24,3 +24,22 @@ Frame "BACKDROP" "InvetorySlot" INHERITS "InventoryBackground" {
     }
 }
  
+Frame "TEXT" "InventoryItemTooltipTitle" {
+    UseActiveContext,
+    DecorateFileNames,
+    FontFlags "FIXEDSIZE",
+    FrameFont "MasterFont", 0.014, "",
+    FontColor 1.0 1.0 0.5 1.0, //Red Green Blue Alpha 0.0 to 1.0
+    FontShadowColor 0.0 0.0 0.0 0.9,
+    FontShadowOffset 0.001 -0.001
+}
+ 
+Frame "TEXT" "InventoryItemTooltipText" {
+    UseActiveContext,
+    DecorateFileNames,
+    FontFlags "FIXEDSIZE",
+    FrameFont "MasterFont", 0.012, "",
+    FontColor 1.0 1.0 1.0 1.0,
+    FontShadowColor 0.0 0.0 0.0 0.9,
+    FontShadowOffset 0.001 -0.001,
+}
