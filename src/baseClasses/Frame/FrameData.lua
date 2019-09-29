@@ -38,6 +38,34 @@ local Frame_meta = {
 ---| '"TEXTBUTTON"'
 ---| '"TIMERTEXT"'
 
+local FrameType = {}
+FrameType.BACKDROP = true
+FrameType.BUTTON = true
+FrameType.CHATDISPLAY = true
+FrameType.CHECKBOX = true
+FrameType.CONTROL = true
+FrameType.DIALOG = true
+FrameType.EDITBOX = true
+FrameType.FRAME = true
+FrameType.GLUEBUTTON = true
+FrameType.GLUECHECKBOX = true
+FrameType.GLUEEDITBOX = true
+FrameType.GLUEPOPUPMENU = true
+FrameType.GLUETEXTBUTTON = true
+FrameType.HIGHLIGHT = true
+FrameType.LISTBOX = true
+FrameType.MENU = true
+FrameType.MODEL = true
+FrameType.POPUPMENU = true
+FrameType.SCROLLBAR = true
+FrameType.SLASHCHATBOX = true
+FrameType.SLIDER = true
+FrameType.TEXT = true
+FrameType.TEXTAREA = true
+FrameType.TEXTBUTTON = true
+FrameType.TIMERTEXT = true
+FrameType.SPRITE = true
+
 local x_offset
 local screen_width = 0.8
 local screen_height = 0.6
@@ -70,6 +98,7 @@ function Frame.get(frame_obj)
     if frame_obj == nil then return nil end
     local frame = Frame.__db:get(frame_obj)
     if frame ~= nil then return frame end
+    BlzFrameClearAllPoints(frame_obj)
 
     -- Safety get parent.
     local parent_obj
@@ -90,8 +119,12 @@ function Frame.get(frame_obj)
     setmetatable(frame, Frame_meta)
     Frame.__db:add(frame.__frame_obj, frame)
 
-    frame:setAbsPosition(-0.05, -0.05)
-    frame:setSize(0.1, 0.1)
+    if frame_obj == game_ui_obj then
+        frame.__x = -x_offset
+        frame.__y = Frame.getScreenHeight()
+        frame.__width = Frame.getScreenWidth()
+        frame.__height = Frame.getScreenHeight()
+    end
 
     return frame
 end
@@ -99,7 +132,18 @@ end
 ---@param frame_type FrameType|string
 ---@return Frame
 function Frame.new(frame_type, parent)
-    local obj = BlzCreateFrame(frame_type, parent.__frame_obj, 0, 0)
+    local parent_obj
+    if not parent then
+        parent_obj = game_ui_obj
+    else
+        parent_obj = parent:getObj()
+    end
+    local obj
+    if FrameType[frame_type] then
+        obj = BlzCreateFrameByType(frame_type, frame_type, parent_obj, "", 0)
+    else
+        obj = BlzCreateFrame(frame_type, parent_obj, 0, 0)
+    end
     if not obj then return nil end
     return Frame.get(obj)
  end
@@ -139,24 +183,15 @@ end
 
 ---@return framehandle
 function Frame:getObj()
-    return self.__frame_obj
+    return self.__frame_obj or game_ui_obj
 end
 
 ---@param x number
 ---@param y number
-function Frame:setAbsPosition(x, y)
-    self.__abs_x = x
-    self.__abs_y = screen_height - y
-    BlzFrameSetAbsPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, x - x_offset, screen_height - y)
-end
-
----@param relative_frame Frame
----@param x number
----@param y number
-function Frame:setPosition(relative_frame, x, y)
-    self.__abs_x = nil
-    self.__abs_y = nil
-    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, relative_frame.__frame_obj, FRAMEPOINT_TOPLEFT, x, -y)
+function Frame:setPosition(x, y)
+    self.__x = x or 0
+    self.__y = y or 0
+    self:update()
 end
 
 ---@param width number
@@ -164,7 +199,15 @@ end
 function Frame:setSize(width, height)
     self.__width = width
     self.__height = height
-    BlzFrameSetSize(self.__frame_obj, width, height)
+    self:update()
+end
+
+function Frame:getWidth()
+    return self.__width or 0
+end
+
+function Frame:getHeight()
+    return self.__height or 0
 end
 
 ---@param frame Frame
@@ -172,15 +215,45 @@ function Frame:setAllPoints(frame)
     BlzFrameSetAllPoints(self.__frame_obj, frame.__frame_obj)
 end
 
-function Frame:clearAllPoints()
-    self.__abs_points = {}
-    BlzFrameClearAllPoints(self.__frame_obj)
+function Frame:getX()
+    local p_x
+    if not self.__parent then
+        p_x = 0
+    else
+        p_x = self.__parent:getX()
+    end
+    local x = self.__x or 0
+    return p_x + x
+end
+
+function Frame:getY()
+    local p_y
+    if not self.__parent then
+        p_y = Frame.getScreenHeight()
+    else
+        p_y = self.__parent:getY()
+    end
+    local y = self.__y or 0
+    return p_y - y
+end
+
+function Frame:applyMainFramePos()
+    local parent_obj
+    if not self.__parent then
+        parent_obj = game_ui_obj
+    else
+        parent_obj = self.__parent:getObj()
+    end
+    local x = self.__x or 0
+    local y = self.__y or 0
+
+    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, game_ui_obj, FRAMEPOINT_TOPLEFT, self:getX(), self:getY())
+    BlzFrameSetSize(self.__frame_obj, self.__width, self.__height)
 end
 
 --- Redefine this function if need other screen size depencies.
 function Frame:update()
-    self:setAbsPosition(self.__abs_x, self.__abs_y)
-    self:setSize(self.__width, self.__height)
+    self:applyMainFramePos()
 end
 
 function Frame:hide()
@@ -199,7 +272,7 @@ update_resolution = function()
     if w ~= cur_width or h ~= cur_height then
         x_offset = (w / (4 * h / 3) - 1) / 2
         screen_width = 0.8 + 2 * x_offset
-        Frame.__db:forEach(function(frame_obj, frame)
+        Frame.__db:forEach(function(_, frame)
             frame:update()
         end)
         cur_width = w

@@ -69,7 +69,7 @@ function FrameItem.new(parent)
     img_frame.__tooltip_title:setPosition(img_frame.__tooltip, tooltip_title_x, tooltip_title_y)
     --BlzFrameSetFont(img_frame.__tooltip_title:getObj(), "war3mapImported/fonts/ParchmentMF.ttf", tooltip_title_font, 0)
     
-    img_frame.__tooltip_text = Frame.getByName("InventoryItemTooltipText", 0)
+    img_frame.__tooltip_text = Frame.new("InventoryItemTooltipText", 0)
     img_frame.__tooltip_text:setPosition(img_frame.__tooltip, tooltip_text_x, tooltip_text_y)
     img_frame.__tooltip_text:setSize(tooltip_text_width, tooltip_text_height)
 

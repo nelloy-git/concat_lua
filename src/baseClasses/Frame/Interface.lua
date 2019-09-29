@@ -8,9 +8,7 @@ local initialized = false
 function Interface.init()
     if initialized then return nil end
 
-    Frame.init()
     FrameOrigins.init()
-    Inventory.init()
 
     --BlzHideOriginFrames(true)
     Frame.WORLD_FRAME:setAllPoints(Frame.GAME_UI)

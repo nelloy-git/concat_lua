@@ -1,12 +1,11 @@
 local Frame = require('baseClasses.Frame.FrameData')
-local FrameOrigins = require('baseClasses.Frame.FrameOrigin')
 
-local FrameCommandPanel = {}
+local CommandPanelFrame = {}
 
 local button_size = 0.030
 
 local initialized = false
-function FrameCommandPanel.init()
+function CommandPanelFrame.init()
     if initialized then return nil end
 
     FrameOrigins.init()
@@ -41,4 +40,5 @@ function FrameCommandPanel.init()
     initialized = true
 end
 
-return FrameCommandPanel
+
+return CommandPanelFrame

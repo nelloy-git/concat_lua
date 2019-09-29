@@ -49,24 +49,20 @@ Test = function()
 
     --Debug(BlzFrameGetWidth(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)))
 
-    local Interface = require('baseClasses.Frame.Interface')
-
     ---@type Frame
-    --local Frame = require('baseClasses.Frame')
-    --
-    --Frame.WORLD_FRAME:setAllPoints(Frame.GAME_UI)
-    --
-    --Frame.COMMAND_BUTTON[1]:clearAllPoints()
-    --Frame.COMMAND_BUTTON[1]:setAbsPoint(FRAMEPOINT_BOTTOMLEFT, 0, 0)
+    local Frame = require('baseClasses.Frame')
+    Frame.WORLD_FRAME:setParent(Frame.GAME_UI)
+    Frame.WORLD_FRAME:setPosition(0, 0)
+    Frame.WORLD_FRAME:setSize(Frame:getScreenWidth(), Frame:getScreenHeight())
+    --BlzFrameSetAllPoints(Frame.WORLD_FRAME:getObj(), Frame.GAME_UI:getObj())
 
-    ---@type FrameInventory
-    --local Inventory = require('baseClasses.Interface.Inventory')
-    --local inventory = Inventory.new()
-    --local ItemFrame = require('baseClasses.Interface.Item')
-    --local item = ItemFrame.new()
-
-    --inventory:setBelt(item)
-    --runFuncInDebug(TooltipButton.setPosition, btn, Vec2.new(0.2, 0.2))
+    --local Tooltip = require('baseClasses.Frame.Parameter.Tooltip')
+    
+    ---@type ParametersAreaFrame
+    local Inventory = require("baseClasses.Frame.Inventory.Inventory")
+    local inv = Inventory.new()
+    inv:setPosition(0.2, 0.1)
+    inv:setSize(0.2, 0.3)
 
 end
 
