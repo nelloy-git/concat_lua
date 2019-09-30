@@ -58,55 +58,55 @@ function InventoryFrame.new(parent)
     -- Left side
     --===========
     frame.__head = InventorySlot.new(frame)
-    frame.__head:setIcon(inv_image.head)
+    frame.__head:setBackgroundIcon(inv_image.head)
 
     frame.__necklace = InventorySlot.new(frame)
-    frame.__necklace:setIcon(inv_image.necklace)
+    frame.__necklace:setBackgroundIcon(inv_image.necklace)
 
     frame.__shoulder = InventorySlot.new(frame)
-    frame.__shoulder:setIcon(inv_image.shoulder)
+    frame.__shoulder:setBackgroundIcon(inv_image.shoulder)
 
     frame.__chest = InventorySlot.new(frame)
-    frame.__chest:setIcon(inv_image.chest)
+    frame.__chest:setBackgroundIcon(inv_image.chest)
 
     frame.__belt = InventorySlot.new(frame)
-    frame.__belt:setIcon(inv_image.belt)
+    frame.__belt:setBackgroundIcon(inv_image.belt)
 
     frame.__legs = InventorySlot.new(frame)
-    frame.__legs:setIcon(inv_image.legs)
+    frame.__legs:setBackgroundIcon(inv_image.legs)
 
     frame.__boots = InventorySlot.new(frame)
-    frame.__boots:setIcon(inv_image.boots)
+    frame.__boots:setBackgroundIcon(inv_image.boots)
 
     frame.__weapon = InventorySlot.new(frame)
-    frame.__weapon:setIcon(inv_image.weapon)
+    frame.__weapon:setBackgroundIcon(inv_image.weapon)
 
     --============
     -- Right side
     --============
     frame.__earring_1 = InventorySlot.new(frame)
-    frame.__earring_1:setIcon(inv_image.earring)
+    frame.__earring_1:setBackgroundIcon(inv_image.earring)
 
     frame.__earring_2 = InventorySlot.new(frame)
-    frame.__earring_2:setIcon(inv_image.earring)
+    frame.__earring_2:setBackgroundIcon(inv_image.earring)
 
     frame.__ring_1 = InventorySlot.new(frame)
-    frame.__ring_1:setIcon(inv_image.ring)
+    frame.__ring_1:setBackgroundIcon(inv_image.ring)
 
     frame.__ring_2 = InventorySlot.new(frame)
-    frame.__ring_2:setIcon(inv_image.ring)
+    frame.__ring_2:setBackgroundIcon(inv_image.ring)
 
     frame.__bracers = InventorySlot.new(frame)
-    frame.__bracers:setIcon(inv_image.bracers)
+    frame.__bracers:setBackgroundIcon(inv_image.bracers)
 
     frame.__gloves = InventorySlot.new(frame)
-    frame.__gloves:setIcon(inv_image.gloves)
+    frame.__gloves:setBackgroundIcon(inv_image.gloves)
 
     frame.__bag = InventorySlot.new(frame)
-    frame.__bag:setIcon(inv_image.bag)
+    frame.__bag:setBackgroundIcon(inv_image.bag)
 
     frame.__offhand = InventorySlot.new(frame)
-    frame.__offhand:setIcon(inv_image.offhand)
+    frame.__offhand:setBackgroundIcon(inv_image.offhand)
 
     --=======
     -- Stats
@@ -120,7 +120,7 @@ function InventoryFrame.new(parent)
     for j = 1, 4 do
         for i = 1, 8 do
             local slot = InventorySlot.new(frame)
-            slot:setIcon(inv_image.empty)
+            slot:setBackgroundIcon(inv_image.empty)
             table.insert(frame.__bag_slots, #frame.__bag_slots + 1, slot)
         end
     end
@@ -131,7 +131,7 @@ function InventoryFrame.new(parent)
     frame.__belt_slots = {}
     for i = 1, 6 do
         local slot = InventorySlot.new(frame)
-        slot:setIcon(inv_image.empty)
+        slot:setBackgroundIcon(inv_image.empty)
         table.insert(frame.__belt_slots, #frame.__belt_slots + 1, slot)
     end
 

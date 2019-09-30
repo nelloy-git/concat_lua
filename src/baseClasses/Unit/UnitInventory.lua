@@ -24,6 +24,7 @@ end)
 
 ---@return UnitInventory
 function UnitInventory.new()
+    local inventory = {}
 end
 
 function UnitInventory.init()

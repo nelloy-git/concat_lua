@@ -33,7 +33,7 @@ function InventorySlotFrame.new(parent)
     local frame = Frame.new("InvetorySlotBackground", parent)
     setmetatable(frame, InventorySlotFrame_meta)
 
-    frame.__icon = Frame.new("BACKDROP", frame)
+    frame.__background = Frame.new("BACKDROP", frame)
 
     return frame
 end
@@ -43,8 +43,8 @@ function InventorySlotFrame:update()
     --local h = self:getHeight()
     local size = w - 2 * offset_x
 
-    self.__image:setPosition(offset_x, offset_y)
-    self.__image:setSize(size, size)
+    self.__background:setPosition(offset_x, offset_y)
+    self.__background:setSize(size, size)
 
     if self.__item ~= nil then
         self.__item:setPosition(0, 0)
@@ -54,14 +54,14 @@ end
 
 ---@param icon string
 function InventorySlotFrame:setBackgroundIcon(icon)
-    BlzFrameSetTexture(self.__image:getObj(), icon, 0, true)
+    BlzFrameSetTexture(self.__background:getObj(), icon, 0, true)
 end
 
 ---@param item_frame ItemFrame|nil
 function InventorySlotFrame:setItem(item_frame)
     self.__item = item_frame
     if item_frame then
-        item_frame:setParent(self.__image)
+        item_frame:setParent(self.__background)
     end
 end
 

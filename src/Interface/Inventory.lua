@@ -14,7 +14,12 @@ function InventoryController.new()
     local controller = {}
     setmetatable(controller, InventoryController_meta)
 
-    controller.inv_frame = InventoryFrame.new()
+    controller.__inv_frame = InventoryFrame.new()
+    
+    controller.__inv_frame:setPosition(0.2, 0.1)
+    controller.__inv_frame:setSize(0.2, 0.3)
+    
+    return controller
 end
 
 ---@param unit Unit
@@ -25,3 +30,5 @@ end
 
 function InventoryController:update()
 end
+
+return InventoryController
