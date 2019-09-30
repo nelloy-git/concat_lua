@@ -191,6 +191,7 @@ end
 function Frame:setPosition(x, y)
     self.__x = x or 0
     self.__y = y or 0
+    self:applyMainFramePos()
     self:update()
 end
 
@@ -199,6 +200,7 @@ end
 function Frame:setSize(width, height)
     self.__width = width
     self.__height = height
+    self:applyMainFramePos()
     self:update()
 end
 
@@ -253,7 +255,6 @@ end
 
 --- Redefine this function if need other screen size depencies.
 function Frame:update()
-    self:applyMainFramePos()
 end
 
 function Frame:hide()
@@ -273,6 +274,7 @@ update_resolution = function()
         x_offset = (w / (4 * h / 3) - 1) / 2
         screen_width = 0.8 + 2 * x_offset
         Frame.__db:forEach(function(_, frame)
+            frame:applyMainFramePos()
             frame:update()
         end)
         cur_width = w

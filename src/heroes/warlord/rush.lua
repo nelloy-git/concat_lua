@@ -4,7 +4,7 @@ local Ability = require('ability.ability')
 local SummonSwordman = require('ability.warlord.summon')
 ---@type Unit
 local Unit = require('unit.Unit')
----@type PlayerEvent
+----@type PlayerEvent
 local PlayerEvent = require('player.playerEvent')
 
 ---This function initialize targeting for real ability. It is needed to get ability targeting event.

@@ -21,8 +21,19 @@ Frame "BACKDROP" "InvetorySlotBackground" INHERITS "InventoryBackground" {
     BackdropEdgeFile  "ToolTipBorder",
     BackdropBlendAll,
 }
+
+Frame "BACKDROP" "ItemTooltipBackground" {
+        DecorateFileNames,
+        BackdropTileBackground,
+        BackdropBackground  "ToolTipBackground",
+        BackdropCornerFlags "UL|UR|BL|BR|T|L|B|R",
+        BackdropCornerSize  0.008,
+        BackdropBackgroundInsets 0.0022 0.0022 0.0022 0.0022,
+        BackdropEdgeFile  "ToolTipBorder",
+        BackdropBlendAll,
+}
  
-Frame "TEXT" "InventoryItemTooltipTitle" {
+Frame "TEXT" "ItemTooltipTitle" {
     UseActiveContext,
     DecorateFileNames,
     FontFlags "FIXEDSIZE",
@@ -32,7 +43,7 @@ Frame "TEXT" "InventoryItemTooltipTitle" {
     FontShadowOffset 0.001 -0.001
 }
  
-Frame "TEXT" "InventoryItemTooltipText" {
+Frame "TEXT" "ItemTooltipText" {
     UseActiveContext,
     DecorateFileNames,
     FontFlags "FIXEDSIZE",
