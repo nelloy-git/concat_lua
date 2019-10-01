@@ -114,4 +114,18 @@ function type(val)
     return lua_type
 end
 
+--- Returns class and meta tables
+---@param name string
+---@return table, table
+function newClass(name)
+    local class = {
+        __type = name.."Class"
+    }
+    local class_meta = {
+        __type = name,
+        __index = class
+    }
+    return class, class_meta
+end
+
 return Globals

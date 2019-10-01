@@ -1,15 +1,8 @@
 local DataBase = require('utils.DataBase')
 
 ---@class Item
-local Item = {
-    __type = "ItemClass",
-    __db = DataBase.new('userdata', 'Item')
-}
-local Item_meta = {
-    __type = "Item",
-    __index = Item,
-    __gc = Item.destroy
-}
+local Item, Item_meta = newClass("ItemClass")
+Item.__db = DataBase.new('userdata', 'Item')
 
 ---@param self Item
 ---@return string
@@ -25,13 +18,20 @@ end
 function Item.new(id, x, y)
     ---@type Item
     local item = {
-        __id = ID(id),
-        __item_obj = CreateItem(ID(id), x, y)
+        __item_ground = CreateItem(ID(id), x, y)
     }
     setmetatable(item, Item_meta)
     Item.__db:add(item.__item_obj, item)
 
     return item
+end
+
+---@return boolean
+function Item:isOnGround()
+    if not self.__item_ground then
+        return false
+    end
+    return true
 end
 
 ---@return nil

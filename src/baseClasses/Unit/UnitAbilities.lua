@@ -1,5 +1,7 @@
 ---@type Unit
 local Unit = require('baseClasses.Unit.UnitData')
+---@type UnitParameters
+local UnitParameters = require('baseClasses.Unit.UnitParameters')
 
 require('baseClasses.Unit.UnitParameters')
 
