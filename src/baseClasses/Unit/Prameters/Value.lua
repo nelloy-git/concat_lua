@@ -6,7 +6,7 @@ local abs_max = 10^8
 ---@param parameter_type UnitParameterType
 ---@return UnitParameterValue
 function UnitParameterValue.new(parameter_type, minimum, maximum)
-    local value = {__parameter = parameter_type,
+    local value =  {__parameter = parameter_type,
                     __base = 0,
                     __mult = 1,
                     __bonus = 0,
@@ -16,6 +16,11 @@ function UnitParameterValue.new(parameter_type, minimum, maximum)
                     __maximum = maximum or  abs_max
     }
     return value
+end
+
+---@param unit unit
+function UnitParameterValue:apply(unit)
+    self.__parameter:apply()
 end
 
 ---@param base number

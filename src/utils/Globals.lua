@@ -121,11 +121,15 @@ function newClass(name)
     local class = {
         __type = name.."Class"
     }
+    return class
+end
+
+function newMeta(class)
     local class_meta = {
-        __type = name,
+        __type = string.sub(class.__type, 1, class.__type:len() - 5),
         __index = class
     }
-    return class, class_meta
+    return class_meta
 end
 
 return Globals
