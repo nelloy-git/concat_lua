@@ -612,7 +612,7 @@ function Unit:addStrength(base_strength, multiplicator, bonus)
     if char1 ~= string.upper(char1) then return nil end
     -- Remove old parameters
     local prev_val = linearResult(self.__parameters.Strength)
-    local damage = prev_val * Settings.Unit.attack_damage_per_str
+    local damage = prev_val * Settings.Unit.p_dmg_per_str
     local health = prev_val * Settings.Unit.health_per_str
     local armor = prev_val * Settings.Unit.armor_per_str
 
@@ -625,7 +625,7 @@ function Unit:addStrength(base_strength, multiplicator, bonus)
 
     -- Apply
     SetHeroStr(self:getObj(), math.floor(value), true)
-    damage = value * Settings.Unit.attack_damage_per_str
+    damage = value * Settings.Unit.p_dmg_per_str
     health = value * Settings.Unit.health_per_str
     armor = value * Settings.Unit.armor_per_str
 
@@ -704,7 +704,7 @@ function Unit:addIntelligence(base_intelligence, multiplicator, bonus)
     if char1 ~= string.upper(char1) then return nil end
     -- Remove old parameters
     local prev_val = linearResult(self.__parameters.Intelligence)
-    local spell_damage = prev_val * Settings.Unit.spell_damage_per_int
+    local spell_damage = prev_val * Settings.Unit.m_dmg_per_int
     local mana = prev_val * Settings.Unit.mana_per_int
     local cooldown_reduction = prev_val * Settings.Unit.cooldown_reduction_per_int
 
@@ -717,7 +717,7 @@ function Unit:addIntelligence(base_intelligence, multiplicator, bonus)
 
     -- Apply
     SetHeroInt(self:getObj(), math.floor(value), true)
-    spell_damage = value * Settings.Unit.spell_damage_per_int
+    spell_damage = value * Settings.Unit.m_dmg_per_int
     mana = value * Settings.Unit.mana_per_int
     cooldown_reduction = value * Settings.Unit.cooldown_reduction_per_int
 

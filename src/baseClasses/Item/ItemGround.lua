@@ -1,7 +1,8 @@
 local DataBase = require('utils.DataBase')
 
 ---@class ItemGround
-local ItemGround, ItemGround_meta = newClass("ItemGround")
+local ItemGround = newClass("ItemGround")
+local ItemGround_meta = newMeta(ItemGround)
 ItemGround.__db = DataBase.new('userdata', 'ItemGround')
 
 ---@param id string|number

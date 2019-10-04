@@ -1,5 +1,0 @@
-local UnitParameterTypeNames = {}
-
-
-
-return UnitParameterTypeNames

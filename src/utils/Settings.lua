@@ -26,15 +26,15 @@ local Settings = {
         maximum_crit_chance = 0.75,
         maximum_cooldown_reduction = 0.75,
 
-        attack_damage_per_str = 1,
+        p_dmg_per_str = 1,
         health_per_str = 5,
         armor_per_str = 0.25,
 
-        attack_speed_per_agi = 0.25,
+        attack_speed_per_agi = 0.01,
         casting_time_reduction_per_agi = 0.25,
         dodge_chance_per_agi = 0.25,
 
-        spell_damage_per_int = 1,
+        m_dmg_per_int = 1,
         mana_per_int = 5,
         cooldown_reduction_per_int = 0.25,
     },
