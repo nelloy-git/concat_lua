@@ -11,7 +11,8 @@ local __db = {
 }
 
 ---@class UnitEvent
-local UnitEvent, UnitEvent_meta = newClass("UnitEvent")
+local UnitEvent = newClass("UnitEvent")
+local UnitEvent_meta = newMeta(UnitEvent)
 UnitEvent.__triggers_db = DataBase.new('UnitEvent', 'Trigger')
 
 function UnitEvent.init()

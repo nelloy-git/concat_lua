@@ -1,6 +1,7 @@
 local Frame = require('baseClasses.Frame.FrameData')
-local FrameOrigins = require('baseClasses.Frame.FrameOrigin')
-local Inventory = require('baseClasses.Frame.Inventory')
+local FrameOrigins = require('baseClasses.Frame.Origin')
+local Inventory = require('baseClasses.Frame.Inventory.Inventory')
+local InventoryEvent = require('baseClasses.Frame.Inventory.InventoryEvent')
 
 local Interface = {}
 
@@ -10,8 +11,13 @@ function Interface.init()
 
     FrameOrigins.init()
 
-    --BlzHideOriginFrames(true)
-    Frame.WORLD_FRAME:setAllPoints(Frame.GAME_UI)
+    BlzHideOriginFrames(true)
+    FrameOrigins.WORLD_FRAME:setPosition(0, 0)
+    FrameOrigins.WORLD_FRAME:setSize(Frame:getScreenWidth(), Frame:getScreenHeight())
+
+    Frame.INVENTORY = Inventory.new()
+    Frame.INVENTORY:setPosition(0.2, 0.1)
+    Frame.INVENTORY:setSize(0.2, 0.3)
 
     initialized = true
 end

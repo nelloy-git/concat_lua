@@ -11,6 +11,7 @@ local UnitAbilities = {}
 function UnitAbilities.init()
     ---@type Trigger
     UnitParameterContainer.init()
+    Debug(type(UnitEvent.UNIT_CHANGED_PARAMETERS))
     UnitEvent.UNIT_CHANGED_PARAMETERS:addAction(runFuncInDebug, Unit.updateAbilities)
 end
 

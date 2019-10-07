@@ -57,21 +57,21 @@ function UnitParameterApplyFunction.setStrength(unit, value)
     local armor = prev_value * Settings.Unit.armor_per_str
     local health = prev_value * Settings.Unit.health_per_str
 
-    unit:addPhysicalDamage(-p_dmg, 0, 0)
-    unit:addArmor(-armor, 0, 0)
-    unit:addHealth(-health, 0, 0)
+    unit:addPhysicalDamageBase(-p_dmg)
+    unit:addArmorBase(-armor)
+    unit:addMoveSpeedBase(-health)
 
     SetHeroStr(unit:getObj(), math.floor(value), true)
 
     -- Add new bonuses
-    local value = GetHeroStr(unit:getObj(), true)
-    local p_dmg = value * Settings.Unit.p_dmg_per_str
-    local armor = value * Settings.Unit.armor_per_str
-    local health = value * Settings.Unit.health_per_str
+    local new_value = GetHeroStr(unit:getObj(), true)
+    p_dmg = new_value * Settings.Unit.p_dmg_per_str
+    armor = new_value * Settings.Unit.armor_per_str
+    health = new_value * Settings.Unit.health_per_str
 
-    unit:addPhysicalDamage(p_dmg, 0, 0)
-    unit:addArmor(armor, 0, 0)
-    unit:addHealth(health, 0, 0)
+    unit:addPhysicalDamageBase(p_dmg)
+    unit:addArmorBase(armor)
+    unit:addMoveSpeedBase(health)
 end
 
 ---@param unit Unit
@@ -83,21 +83,21 @@ function UnitParameterApplyFunction.setAgility(unit, value)
     local ct_reduc = prev_value * Settings.Unit.casting_time_reduction_per_agi
     local dodge = prev_value * Settings.Unit.dodge_chance_per_agi
 
-    unit:addMagicalDamage(-aspd, 0, 0)
-    unit:addCooldownReduction(-ct_reduc, 0, 0)
-    unit:addMana(-dodge, 0, 0)
+    unit:addAttackSpeed(-aspd)
+    unit:addCastingTimeReductionBase(-ct_reduc)
+    unit:addDodgeChanceBase(-dodge)
 
     SetHeroAgi(unit:getObj(), math.floor(value), true)
 
     -- Add new bonuses
-    local value = GetHeroAgi(unit:getObj(), true)
-    local aspd = value * Settings.Unit.attack_speed_per_agi
-    local ct_reduc = value * Settings.Unit.casting_time_reduction_per_agi
-    local dodge = value * Settings.Unit.dodge_chance_per_agi
+    local new_value = GetHeroAgi(unit:getObj(), true)
+    aspd = new_value * Settings.Unit.attack_speed_per_agi
+    ct_reduc = new_value * Settings.Unit.casting_time_reduction_per_agi
+    dodge = new_value * Settings.Unit.dodge_chance_per_agi
 
-    unit:addMagicalDamage(aspd, 0, 0)
-    unit:addCooldownReduction(ct_reduc, 0, 0)
-    unit:addMana(dodge, 0, 0)
+    unit:addAttackSpeed(aspd)
+    unit:addCastingTimeReductionBase(ct_reduc)
+    unit:addDodgeChanceBase(dodge)
 end
 
 ---@param unit Unit
@@ -109,21 +109,21 @@ function UnitParameterApplyFunction.setIntelligence(unit, value)
     local cd_reduc = prev_value * Settings.Unit.cooldown_reduction_per_int
     local mana = prev_value * Settings.Unit.mana_per_int
 
-    unit:addMagicalDamage(-m_dmg, 0, 0)
-    unit:addCooldownReduction(-cd_reduc, 0, 0)
-    unit:addMana(-mana, 0, 0)
+    unit:addMagicalDamageBase(-m_dmg)
+    unit:addCooldownReductionBase(-cd_reduc)
+    unit:addManaBase(-mana)
 
     SetHeroInt(unit:getObj(), math.floor(value), true)
 
     -- Add new bonuses
-    local value = GetHeroInt(unit:getObj(), true)
-    local m_dmg = value * Settings.Unit.m_dmg_per_int
-    local cd_reduc = value * Settings.Unit.cooldown_reduction_per_int
-    local mana = value * Settings.Unit.mana_per_int
+    local new_value = GetHeroInt(unit:getObj(), true)
+    m_dmg = new_value * Settings.Unit.m_dmg_per_int
+    cd_reduc = new_value * Settings.Unit.cooldown_reduction_per_int
+    mana = new_value * Settings.Unit.mana_per_int
 
-    unit:addMagicalDamage(m_dmg, 0, 0)
-    unit:addCooldownReduction(cd_reduc, 0, 0)
-    unit:addMana(mana, 0, 0)
+    unit:addMagicalDamageBase(m_dmg)
+    unit:addCooldownReductionBase(cd_reduc)
+    unit:addManaBase(mana)
 end
 
 ---@param unit Unit
@@ -132,7 +132,7 @@ function UnitParameterApplyFunction.setMoveSpeed(unit, value)
     if value <= 1 then
         SetUnitTurnSpeed(unit:getObj(), 0)
     else
-        SetUnitTurnSpeed(unit:getObj(), GetUnitDefaultTurnSpeed(unit))
+        SetUnitTurnSpeed(unit:getObj(), GetUnitDefaultTurnSpeed(unit:getObj()))
     end
     SetUnitMoveSpeed(unit:getObj(), value)
 end

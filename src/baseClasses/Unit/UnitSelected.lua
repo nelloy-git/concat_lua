@@ -1,5 +1,7 @@
+---@type Unit
 local Unit = require('baseClasses.Unit.UnitData')
-require('baseClasses.Unit.UnitEvent')
+---@type UnitEvent
+local UnitEvent = require('baseClasses.Unit.UnitEvent')
 
 local SelectedUnits = {}
 
@@ -11,14 +13,14 @@ local initialized = false
 function SelectedUnits.init()
     if initialized then return nil end
 
+    UnitEvent.init()
+
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         SelectedUnits[Player(i)] = {}
     end
-    local selection_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_SELECTED)
-    local deselection_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_DESELECTED)
 
-    selection_trigger:addAction(unitSelectedFunc)
-    deselection_trigger:addAction(unitDeselectedFunc)
+    UnitEvent.UNIT_SELECTED:addAction(unitSelectedFunc)
+    UnitEvent.UNIT_DESELECTED:addAction(unitDeselectedFunc)
 
     initialized = true
 end

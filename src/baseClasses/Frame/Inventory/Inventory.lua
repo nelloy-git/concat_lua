@@ -140,6 +140,21 @@ function InventoryFrame.new(parent)
     return frame
 end
 
+---@return ParametersAreaFrame
+function InventoryFrame:getParametersArea()
+    return self.__parameters
+end
+
+---@param unit Unit
+function InventoryFrame:setUnit(unit)
+    self.__unit = unit
+end
+
+---@return Unit
+function InventoryFrame:getUnit()
+    return self.__unit
+end
+
 function InventoryFrame:update()
     local w = self:getWidth()
     local h = self:getHeight()

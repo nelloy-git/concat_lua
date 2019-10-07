@@ -2,8 +2,8 @@
 local Frame = require('baseClasses.Frame.FrameData')
 ---@type ParameterFrame
 local Parameter = require('baseClasses.Frame.Inventory.Parameter.Parameter')
-
-local Info = require('baseClasses.Frame.Inventory.Parameter.Info')
+---@type UnitParameterType
+local UnitParameterType = require('baseClasses.Unit.Parameters.Type')
 
 ---@class ParametersAreaFrame
 local ParametersAreaFrame = {
@@ -37,30 +37,29 @@ function ParametersAreaFrame.new(parent)
     setmetatable(frame, ParametersAreaFrame_meta)
 
     frame.__field = {}
-    frame.__field[UNIT_PARAMETER_ATTACK_DAMAGE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_ATTACK_SPEED] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_ARMOR] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_PHYSICAL_DAMAGE_REDUCTION] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_SPELL_DAMAGE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_CASTING_TIME_REDUCTION] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_RESISTANCE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_MAGICAL_DAMAGE_REDUCTION] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_DODGE_CHANCE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_CRIT_CHANCE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_CRIT_DAMAGE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_COOLDOWN_REDUCTION] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_HEALTH] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_REGENERATION] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_MANA] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_RECOVERY] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_STRENGTH] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_AGILITY] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_INTELLIGENCE] = Parameter.new(frame)
-    frame.__field[UNIT_PARAMETER_MOVE_SPEED] = Parameter.new(frame)
+    frame.__field[UnitParameterType.P_DMG] = Parameter.new(frame)
+    frame.__field[UnitParameterType.ATKS_PER_SEC] = Parameter.new(frame)
+    frame.__field[UnitParameterType.ARMOR] = Parameter.new(frame)
+    frame.__field[UnitParameterType.P_DMG_REDUC] = Parameter.new(frame)
+    frame.__field[UnitParameterType.M_DMG] = Parameter.new(frame)
+    frame.__field[UnitParameterType.CAST_TIME_REDUC] = Parameter.new(frame)
+    frame.__field[UnitParameterType.RESIST] = Parameter.new(frame)
+    frame.__field[UnitParameterType.M_DMG_REDUC] = Parameter.new(frame)
+    frame.__field[UnitParameterType.DODGE_CH] = Parameter.new(frame)
+    frame.__field[UnitParameterType.CRIT_CH] = Parameter.new(frame)
+    frame.__field[UnitParameterType.CRIT_DMG] = Parameter.new(frame)
+    frame.__field[UnitParameterType.CD_REDUC] = Parameter.new(frame)
+    frame.__field[UnitParameterType.HP] = Parameter.new(frame)
+    frame.__field[UnitParameterType.REGEN] = Parameter.new(frame)
+    frame.__field[UnitParameterType.MP] = Parameter.new(frame)
+    frame.__field[UnitParameterType.RECOV] = Parameter.new(frame)
+    frame.__field[UnitParameterType.STR] = Parameter.new(frame)
+    frame.__field[UnitParameterType.AGI] = Parameter.new(frame)
+    frame.__field[UnitParameterType.INT] = Parameter.new(frame)
+    frame.__field[UnitParameterType.MS] = Parameter.new(frame)
 
-    Debug(frame.__field[UNIT_PARAMETER_ATTACK_DAMAGE])
-    for param, _ in pairs(Info.Icons) do
-        frame.__field[param]:set(Info.Icons[param], "0", Info.Title[param], Info.Text[param], 0.07)
+    for param, _ in pairs(frame.__field) do
+        frame.__field[param]:set(param:getIcon(), "0", param:getName(), param:getDescription(), 0.07)
     end
 
     frame:update()
@@ -74,43 +73,92 @@ function ParametersAreaFrame:update()
 
     self:applyMainFramePos()
 
-    local count = Info.count
+    local rows = 10
     local field_width = (w - 2 * offset_x) / 2
-    local field_height = 2 * (h - 2 * offset_x) / Info.count
+    local field_height = (h - 2 * offset_x) / rows
     
     --============
     -- Left side
     --============
-    self.__field[UNIT_PARAMETER_ATTACK_DAMAGE]:setPosition(offset_x, offset_y + 0 * field_height)
-    self.__field[UNIT_PARAMETER_ATTACK_SPEED]:setPosition(offset_x, offset_y + 1 * field_height)
-    self.__field[UNIT_PARAMETER_ARMOR]:setPosition(offset_x, offset_y + 2 * field_height)
-    self.__field[UNIT_PARAMETER_PHYSICAL_DAMAGE_REDUCTION]:setPosition(offset_x, offset_y + 3 * field_height)
-    self.__field[UNIT_PARAMETER_CRIT_CHANCE]:setPosition(offset_x, offset_y + 4 * field_height)
-    self.__field[UNIT_PARAMETER_DODGE_CHANCE]:setPosition(offset_x, offset_y + 5 * field_height)
-    self.__field[UNIT_PARAMETER_HEALTH]:setPosition(offset_x, offset_y + 6 * field_height)
-    self.__field[UNIT_PARAMETER_REGENERATION]:setPosition(offset_x, offset_y + 7 * field_height)
-    self.__field[UNIT_PARAMETER_STRENGTH]:setPosition(offset_x, offset_y + 8 * field_height)
-    self.__field[UNIT_PARAMETER_AGILITY]:setPosition(offset_x, offset_y + 9 * field_height)
+    self.__field[UnitParameterType.P_DMG]:setPosition(offset_x, offset_y + 0 * field_height)
+    self.__field[UnitParameterType.ATKS_PER_SEC]:setPosition(offset_x, offset_y + 1 * field_height)
+    self.__field[UnitParameterType.ARMOR]:setPosition(offset_x, offset_y + 2 * field_height)
+    self.__field[UnitParameterType.P_DMG_REDUC]:setPosition(offset_x, offset_y + 3 * field_height)
+    self.__field[UnitParameterType.CRIT_CH]:setPosition(offset_x, offset_y + 4 * field_height)
+    self.__field[UnitParameterType.DODGE_CH]:setPosition(offset_x, offset_y + 5 * field_height)
+    self.__field[UnitParameterType.HP]:setPosition(offset_x, offset_y + 6 * field_height)
+    self.__field[UnitParameterType.REGEN]:setPosition(offset_x, offset_y + 7 * field_height)
+    self.__field[UnitParameterType.STR]:setPosition(offset_x, offset_y + 8 * field_height)
+    self.__field[UnitParameterType.AGI]:setPosition(offset_x, offset_y + 9 * field_height)
 
     --============
     -- Right side
     --============
-    self.__field[UNIT_PARAMETER_SPELL_DAMAGE]:setPosition(offset_x + field_width, offset_y + 0 * field_height)
-    self.__field[UNIT_PARAMETER_CASTING_TIME_REDUCTION]:setPosition(offset_x + field_width, offset_y + 1 * field_height)
-    self.__field[UNIT_PARAMETER_RESISTANCE]:setPosition(offset_x + field_width, offset_y + 2 * field_height)
-    self.__field[UNIT_PARAMETER_MAGICAL_DAMAGE_REDUCTION]:setPosition(offset_x + field_width, offset_y + 3 * field_height)
-    self.__field[UNIT_PARAMETER_CRIT_DAMAGE]:setPosition(offset_x + field_width, offset_y + 4 * field_height)
-    self.__field[UNIT_PARAMETER_COOLDOWN_REDUCTION]:setPosition(offset_x + field_width, offset_y + 5 * field_height)
-    self.__field[UNIT_PARAMETER_MANA]:setPosition(offset_x + field_width, offset_y + 6 * field_height)
-    self.__field[UNIT_PARAMETER_RECOVERY]:setPosition(offset_x + field_width, offset_y + 7 * field_height)
-    self.__field[UNIT_PARAMETER_INTELLIGENCE]:setPosition(offset_x + field_width, offset_y + 8 * field_height)
-    self.__field[UNIT_PARAMETER_MOVE_SPEED]:setPosition(offset_x + field_width, offset_y + 9 * field_height)
+    self.__field[UnitParameterType.M_DMG]:setPosition(offset_x + field_width, offset_y + 0 * field_height)
+    self.__field[UnitParameterType.CAST_TIME_REDUC]:setPosition(offset_x + field_width, offset_y + 1 * field_height)
+    self.__field[UnitParameterType.RESIST]:setPosition(offset_x + field_width, offset_y + 2 * field_height)
+    self.__field[UnitParameterType.M_DMG_REDUC]:setPosition(offset_x + field_width, offset_y + 3 * field_height)
+    self.__field[UnitParameterType.CRIT_DMG]:setPosition(offset_x + field_width, offset_y + 4 * field_height)
+    self.__field[UnitParameterType.CD_REDUC]:setPosition(offset_x + field_width, offset_y + 5 * field_height)
+    self.__field[UnitParameterType.MP]:setPosition(offset_x + field_width, offset_y + 6 * field_height)
+    self.__field[UnitParameterType.RECOV]:setPosition(offset_x + field_width, offset_y + 7 * field_height)
+    self.__field[UnitParameterType.INT]:setPosition(offset_x + field_width, offset_y + 8 * field_height)
+    self.__field[UnitParameterType.MS]:setPosition(offset_x + field_width, offset_y + 9 * field_height)
 
-    for param, _ in pairs(Info.Icons) do
-        self.__field[param]:setSize(field_width, field_height)
-    end
+    --===========
+    -- Set size.
+    --===========
+    self.__field[UnitParameterType.P_DMG]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.ATKS_PER_SEC]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.ARMOR]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.P_DMG_REDUC]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.M_DMG]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.CAST_TIME_REDUC]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.RESIST]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.M_DMG_REDUC]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.DODGE_CH]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.CRIT_CH]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.CRIT_DMG]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.CD_REDUC]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.HP]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.REGEN]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.MP]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.RECOV]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.STR]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.AGI]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.INT]:setSize(field_width, field_height)
+    self.__field[UnitParameterType.MS]:setSize(field_width, field_height)
 end
 
+---@param unit Unit
+function ParametersAreaFrame:setUnit(unit)
+    self.__unit = unit
+    self:setAttack(unit:getPhysicalDamage())
+    self:setAttacksPerSec(unit:getAttacksPerSec())
+    self:setArmor(unit:getArmor())
+    self:setPhysicalDamageReduction(unit:getPhysicalDamageReduction())
+    self:setCritChance(unit:getCriticalStrikeChance())
+    self:setDodgeChance(unit:getDodgeChance())
+    self:setHealth(unit:getHealth())
+    self:setRegeneration(unit:getHealth())
+    self:setStrength(unit:getStrength())
+    self:setAgility(unit:getAgility())
+    self:setSpellDamage(unit:getMagicalDamage())
+    self:setCastingTimeReduction(unit:getCastingTimeReduction())
+    self:setResistance(unit:getRecovery())
+    self:setMagicalDamageReduction(unit:getMagicalRamageReduction())
+    self:setCritDamage(unit:getCriticalStrikeDamage())
+    self:setCooldownReduction(unit:getCooldownReduction())
+    self:setMana(unit:getMana())
+    self:setRecovery(unit:getRecovery())
+    self:setIntelligence(unit:getIntelligence())
+    self:setMoveSpeed(unit:getMoveSpeed())
+end
+
+---@return Unit
+function ParametersAreaFrame:getUnit()
+    return self.__unit
+end
 
 --============
 -- Left side
@@ -118,52 +166,52 @@ end
 
 ---@param value number
 function ParametersAreaFrame:setAttack(value)
-    self.__field[UNIT_PARAMETER_ATTACK_DAMAGE]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.P_DMG]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
-function ParametersAreaFrame:setAttacksCooldown(value)
-    self.__field[UNIT_PARAMETER_ATTACK_SPEED]:setValue(string.format("%0.3f sec", value))
+function ParametersAreaFrame:setAttacksPerSec(value)
+    self.__field[UnitParameterType.ATKS_PER_SEC]:setValue(string.format("%0.3f sec", value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setArmor(value)
-    self.__field[UNIT_PARAMETER_ARMOR]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.ARMOR]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
 function ParametersAreaFrame:setPhysicalDamageReduction(value)
-    self.__field[UNIT_PARAMETER_PHYSICAL_DAMAGE_REDUCTION]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.P_DMG_REDUC]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setCritChance(value)
-    self.__field[UNIT_PARAMETER_CRIT_CHANCE]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.CRIT_CH]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setDodgeChance(value)
-    self.__field[UNIT_PARAMETER_DODGE_CHANCE]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.DODGE_CH]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setHealth(value)
-    self.__field[UNIT_PARAMETER_HEALTH]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.HP]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
 function ParametersAreaFrame:setRegeneration(value)
-    self.__field[UNIT_PARAMETER_REGENERATION]:setValue(string.format("%0.2f", value))
+    self.__field[UnitParameterType.REGEN]:setValue(string.format("%0.2f", value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setStrength(value)
-    self.__field[UNIT_PARAMETER_STRENGTH]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.STR]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
 function ParametersAreaFrame:setAgility(value)
-    self.__field[UNIT_PARAMETER_AGILITY]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.AGI]:setValue(tostring(math.floor(value)))
 end
 
 --============
@@ -172,52 +220,52 @@ end
 
 ---@param value number
 function ParametersAreaFrame:setSpellDamage(value)
-    self.__field[UNIT_PARAMETER_SPELL_DAMAGE]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.M_DMG]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
 function ParametersAreaFrame:setCastingTimeReduction(value)
-    self.__field[UNIT_PARAMETER_CASTING_TIME_REDUCTION]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.CAST_TIME_REDUC]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setResistance(value)
-    self.__field[UNIT_PARAMETER_RESISTANCE]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.RESIST]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setMagicalDamageReduction(value)
-    self.__field[UNIT_PARAMETER_MAGICAL_DAMAGE_REDUCTION]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.M_DMG_REDUC]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setCritDamage(value)
-    self.__field[UNIT_PARAMETER_CRIT_DAMAGE]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.CRIT_DMG]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setCooldownReduction(value)
-    self.__field[UNIT_PARAMETER_COOLDOWN_REDUCTION]:setValue(string.format("%0.2f%%", 100 * value))
+    self.__field[UnitParameterType.CD_REDUC]:setValue(string.format("%0.2f%%", 100 * value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setMana(value)
-    self.__field[UNIT_PARAMETER_MANA]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.MP]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
 function ParametersAreaFrame:setRecovery(value)
-    self.__field[UNIT_PARAMETER_RECOVERY]:setValue(string.format("%0.2f", value))
+    self.__field[UnitParameterType.RECOV]:setValue(string.format("%0.2f", value))
 end
 
 ---@param value number
 function ParametersAreaFrame:setIntelligence(value)
-    self.__field[UNIT_PARAMETER_INTELLIGENCE]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.INT]:setValue(tostring(math.floor(value)))
 end
 
 ---@param value number
 function ParametersAreaFrame:setMoveSpeed(value)
-    self.__field[UNIT_PARAMETER_MOVE_SPEED]:setValue(tostring(math.floor(value)))
+    self.__field[UnitParameterType.MS]:setValue(tostring(math.floor(value)))
 end
 
 

@@ -49,19 +49,13 @@ Test = function()
 
     --Debug(BlzFrameGetWidth(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)))
 
-    ---@type Frame
-    local Frame = require('baseClasses.Frame')
-    local FrameOrigin = require('baseClasses.Frame.Origin')
-    --FrameOrigin.WORLD_FRAME:setParent(FrameOrigin.GAME_UI)
-    FrameOrigin.WORLD_FRAME:setPosition(0, 0)
-    FrameOrigin.WORLD_FRAME:setSize(Frame:getScreenWidth(), Frame:getScreenHeight())
     --BlzFrameSetAllPoints(Frame.WORLD_FRAME:getObj(), Frame.GAME_UI:getObj())
 
     --local Tooltip = require('baseClasses.Frame.Parameter.Tooltip')
     
     ---@type ParametersAreaFrame
-    local Inventory = require("Interface.Inventory")
-    local inv = Inventory.new()
+    local Interface = require("baseClasses.Frame.Interface")
+    --local inv = Inventory.new()
     --inv:setPosition(0.2, 0.1)
     --inv:setSize(0.2, 0.3)
 

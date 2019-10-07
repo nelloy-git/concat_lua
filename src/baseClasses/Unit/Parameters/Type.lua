@@ -73,4 +73,19 @@ function UnitParameterType:apply(unit, value)
     self.__apply_func(unit, value)
 end
 
+---@type string
+function UnitParameterType:getName()
+    return self.__name
+end
+
+---@return string
+function UnitParameterType:getIcon()
+    return self.__icon
+end
+
+---@return string
+function UnitParameterType:getDescription()
+    return self.__description
+end
+
 return UnitParameterType

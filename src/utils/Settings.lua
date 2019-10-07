@@ -55,7 +55,7 @@ local Settings = {
         health_per_str = 5,
         armor_per_str = 0.25,
 
-        attack_speed_per_agi = 0.01,
+        attack_speed_per_agi = 1,
         casting_time_reduction_per_agi = 0.25,
         dodge_chance_per_agi = 0.25,
 

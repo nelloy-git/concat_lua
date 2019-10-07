@@ -38,18 +38,18 @@ end
 ---@return UnitParameterContainer
 function UnitParameterContainer.new(owner)
     local container = {
-        P_DMG = UnitParameterValue.new(owner, UnitParameterType.P_DMG),
+        P_DMG = UnitParameterValue.new(owner, UnitParameterType.P_DMG, 1),
         ATKS_PER_SEC = UnitParameterValue.new(owner, UnitParameterType.ATKS_PER_SEC),
         ARMOR = UnitParameterValue.new(owner, UnitParameterType.ARMOR),
-        P_DMG_REDUC = UnitParameterValue.new(owner, UnitParameterType.P_DMG_REDUC),
+        P_DMG_REDUC = UnitParameterValue.new(owner, UnitParameterType.P_DMG_REDUC, -Settings.Unit.maximum_physical_damage_reduction, Settings.Unit.maximum_physical_damage_reduction),
         M_DMG = UnitParameterValue.new(owner, UnitParameterType.M_DMG),
-        CAST_TIME_REDUC = UnitParameterValue.new(owner, UnitParameterType.CAST_TIME_REDUC),
+        CAST_TIME_REDUC = UnitParameterValue.new(owner, UnitParameterType.CAST_TIME_REDUC, -Settings.Unit.maximum_casting_time_reduction, Settings.Unit.maximum_casting_time_reduction),
         RESIST = UnitParameterValue.new(owner, UnitParameterType.RESIST),
-        M_DMG_REDUC = UnitParameterValue.new(owner, UnitParameterType.M_DMG_REDUC),
-        DODGE_CH = UnitParameterValue.new(owner, UnitParameterType.DODGE_CH),
-        CRIT_CH = UnitParameterValue.new(owner, UnitParameterType.CRIT_CH),
-        CRIT_DMG = UnitParameterValue.new(owner, UnitParameterType.CRIT_DMG),
-        CD_REDUC = UnitParameterValue.new(owner, UnitParameterType.CD_REDUC),
+        M_DMG_REDUC = UnitParameterValue.new(owner, UnitParameterType.M_DMG_REDUC, -Settings.Unit.maximum_magical_damage_reduction, Settings.Unit.maximum_magical_damage_reduction),
+        DODGE_CH = UnitParameterValue.new(owner, UnitParameterType.DODGE_CH, 0, Settings.Unit.maximum_dodge_chance),
+        CRIT_CH = UnitParameterValue.new(owner, UnitParameterType.CRIT_CH, 0, Settings.Unit.maximum_crit_chance),
+        CRIT_DMG = UnitParameterValue.new(owner, UnitParameterType.CRIT_DMG, 1, nil),
+        CD_REDUC = UnitParameterValue.new(owner, UnitParameterType.CD_REDUC, -Settings.Unit.maximum_cooldown_reduction, Settings.Unit.maximum_cooldown_reduction),
         HP = UnitParameterValue.new(owner, UnitParameterType.HP),
         REGEN = UnitParameterValue.new(owner, UnitParameterType.REGEN),
         MP = UnitParameterValue.new(owner, UnitParameterType.MP),
@@ -57,7 +57,7 @@ function UnitParameterContainer.new(owner)
         STR = UnitParameterValue.new(owner, UnitParameterType.STR),
         AGI = UnitParameterValue.new(owner, UnitParameterType.AGI),
         INT = UnitParameterValue.new(owner, UnitParameterType.INT),
-        MS = UnitParameterValue.new(owner, UnitParameterType.MS)
+        MS = UnitParameterValue.new(owner, UnitParameterType.MS, 1, 512)
     }
     setmetatable(container, UnitParameterContainer_meta)
     UnitParameterContainer.__db:add(owner, container)
@@ -425,7 +425,7 @@ end
 --===========================
 
 ---@param value number
-function Unit:addMagicalRamageRductionBase(value)
+function Unit:addMagicalRamageReductionBase(value)
     local param = getParam(self, 'M_DMG_REDUC')
     local old = param:get()
     param:add(value, 0, 0)
@@ -434,7 +434,7 @@ function Unit:addMagicalRamageRductionBase(value)
 end
 
 ---@param percent number
-function Unit:addMagicalRamageRductionPercent(percent)
+function Unit:addMagicalRamageReductionPercent(percent)
     local param = getParam(self, 'M_DMG_REDUC')
     local old = param:get()
     param:add(0, percent/100, 0)
@@ -443,7 +443,7 @@ function Unit:addMagicalRamageRductionPercent(percent)
 end
 
 ---@param value number
-function Unit:addMagicalRamageRductionBonus(value)
+function Unit:addMagicalRamageReductionBonus(value)
     local param = getParam(self, 'M_DMG_REDUC')
     local old = param:get()
     param:add(0, 0, value)
@@ -452,13 +452,13 @@ function Unit:addMagicalRamageRductionBonus(value)
 end
 
 ---@return number
-function Unit:getMagicalRamageRduction()
+function Unit:getMagicalRamageReduction()
     local param = getParam(self, 'M_DMG_REDUC')
     return param:get()
 end
 
 ---@return number
-function Unit:getMagicalRamageRductionPercent()
+function Unit:getMagicalRamageReductionPercent()
     local param = getParam(self, 'M_DMG_REDUC')
     return 100 * param:getMult()
 end
@@ -941,7 +941,7 @@ end
 --=============
 
 ---@param value number
-function Unit:addHealthBase(value)
+function Unit:addMoveSpeedBase(value)
     local param = getParam(self, 'MS')
     local old = param:get()
     param:add(value, 0, 0)
@@ -950,7 +950,7 @@ function Unit:addHealthBase(value)
 end
 
 ---@param percent number
-function Unit:addHealthPercent(percent)
+function Unit:addMoveSpeedPercent(percent)
     local param = getParam(self, 'MS')
     local old = param:get()
     param:add(0, percent/100, 0)
@@ -959,7 +959,7 @@ function Unit:addHealthPercent(percent)
 end
 
 ---@param value number
-function Unit:addHealthBonus(value)
+function Unit:addMoveSpeedBonus(value)
     local param = getParam(self, 'MS')
     local old = param:get()
     param:add(0, 0, value)
@@ -968,13 +968,13 @@ function Unit:addHealthBonus(value)
 end
 
 ---@return number
-function Unit:getHealth()
+function Unit:getMoveSpeed()
     local param = getParam(self, 'MS')
     return param:get()
 end
 
 ---@return number
-function Unit:getHealthPercent()
+function Unit:getMoveSpeedPercent()
     local param = getParam(self, 'MS')
     return 100 * param:getMult()
 end
