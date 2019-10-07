@@ -1,5 +1,5 @@
 local Unit = require('baseClasses.Unit.UnitData')
-require('baseClasses.Unit.UnitEvents')
+require('baseClasses.Unit.UnitEvent')
 
 local SelectedUnits = {}
 

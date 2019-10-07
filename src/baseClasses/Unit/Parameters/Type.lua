@@ -2,8 +2,8 @@ local Name = require('Data.UnitParameter.Names')
 local ShortName = require('Data.UnitParameter.ShortNames')
 local Description = require('Data.UnitParameter.Description')
 local Icon = require('Data.UnitParameter.Icon')
-local Math = require('baseClasses.Unit.Prameters.MathFunctions')
-local Apply = require('baseClasses.Unit.Prameters.ApplyFunctions')
+local Math = require('baseClasses.Unit.Parameters.MathFunctions')
+local Apply = require('baseClasses.Unit.Parameters.ApplyFunctions')
 
 ---@class UnitParameterType
 local UnitParameterType = newClass("UnitParameterType")
@@ -64,7 +64,7 @@ function UnitParameterType:math(base, mult, bonus, min, max)
     return self.__math_func(base, mult, bonus, min, max)
 end
 
----@param unit unit
+---@param unit Unit
 ---@param value number
 function UnitParameterType:apply(unit, value)
     if not self.__apply_func then

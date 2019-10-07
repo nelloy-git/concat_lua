@@ -29,6 +29,26 @@ end
 ---@param base number
 ---@param mult number
 ---@param bonus number
+function UnitParameterValue:set(base, mult, bonus)
+    if base ~= nil then
+        self.__base = base
+    end
+
+    if mult ~= nil then
+        self.__mult = mult
+    end
+
+    if bonus ~= nil then
+        self.__bonus = bonus
+    end
+
+    self.__result = self.__parameter:math(self.__base, self.__mult, self.__bonus, self.__minimum, self.__maximum)
+    self.__parameter:apply(self.__owner, self.__result)
+end
+
+---@param base number
+---@param mult number
+---@param bonus number
 function UnitParameterValue:add(base, mult, bonus)
     self.__base = self.__base + base
     self.__mult = self.__mult + mult
@@ -37,9 +57,29 @@ function UnitParameterValue:add(base, mult, bonus)
     self.__parameter:apply(self.__owner, self.__result)
 end
 
+---@return UnitParameterType
+function UnitParameterValue:getType()
+    return self.__parameter
+end
+
 ---@return number
 function UnitParameterValue:get()
     return self.__result
+end
+
+---@return number
+function UnitParameterValue:getBase()
+    return self.__base
+end
+
+---@return number
+function UnitParameterValue:getMult()
+    return self.__mult
+end
+
+---@return number
+function UnitParameterValue:getBonus()
+    return self.__bonus
 end
 
 

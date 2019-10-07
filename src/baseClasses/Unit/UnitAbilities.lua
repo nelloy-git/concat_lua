@@ -1,15 +1,17 @@
 ---@type Unit
 local Unit = require('baseClasses.Unit.UnitData')
----@type UnitParameters
-local UnitParameters = require('baseClasses.Unit.UnitParameters')
-
-require('baseClasses.Unit.UnitParameters')
+---@type UnitEvent
+local UnitEvent = require('baseClasses.Unit.UnitEvent')
+---@type UnitParameterContainer
+local UnitParameterContainer = require('baseClasses.Unit.Parameters.Container')
+---@type UnitParameterType
+local UnitParameterType = require('baseClasses.Unit.Parameters.Type')
 
 local UnitAbilities = {}
 function UnitAbilities.init()
     ---@type Trigger
-    local changed_parameters_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_CHANGED_PARAMETERS)
-    changed_parameters_trigger:addAction(runFuncInDebug, Unit.updateAbilities)
+    UnitParameterContainer.init()
+    UnitEvent.UNIT_CHANGED_PARAMETERS:addAction(runFuncInDebug, Unit.updateAbilities)
 end
 
 Unit.addCreationFunction(function(unit)
@@ -49,8 +51,8 @@ function Unit:updateAbilitiesTooltips()
 end
 
 function Unit.updateAbilities()
-    local unit = GetUnitWithChangedParameters()
-    local parameter = GetUnitChangedParameter()
+    local unit = UnitEvent.GetUnitWithChangedParameters()
+    local param_type = UnitEvent.GetChangedParameterType()
 
     if not unit.__abilities then
         unit.__abilities = {}
@@ -60,8 +62,8 @@ function Unit.updateAbilities()
         unit.__abilities[i]:updateTooltipForOwner(unit)
     end
 
-    if parameter == UNIT_PARAMETER_COOLDOWN_REDUCTION then
-        local value = GetUnitChangedParameterValue()
+    if param_type == UnitParameterType.CD_REDUC then
+        local value = UnitEvent.GetChangedParameterNewValue()
         for i = 1, #unit.__abilities do
             local abil = unit.__abilities[i]
             BlzSetUnitAbilityCooldown(unit:getObj(), abil:getId(), 1, (1 - value) * abil:getCooldown())
