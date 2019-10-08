@@ -1,42 +1,32 @@
+--=========
+-- Include
+--=========
+
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 ---@type Unit
-local Unit = require('baseClasses.Unit.UnitData')
----@type UnitEvent
-local UnitEvent = require('baseClasses.Unit.UnitEvent')
+local Unit = require('Class.Unit.Main')
 ---@type UnitParameterType
-local UnitParameterType = require('baseClasses.Unit.Parameters.Type')
+local UnitParameterType = require('Class.Unit.Parameter.Type')
 ---@type UnitParameterValue
-local UnitParameterValue = require('baseClasses.Unit.Parameters.Value')
+local UnitParameterValue = require('Class.Unit.Parameter.Value')
 ---@type Settings
 local Settings = require('utils.Settings')
 
----@class UnitParameterContainer
-local UnitParameterContainer  = newClass("UnitParameterContainer")
-UnitParameterContainer_meta = newMeta(UnitParameterContainer)
-UnitParameterContainer.__db = DataBase.new('Unit', 'UnitParameterContainer')
+local UnitParameterEvent = require('Class.Unit.Parameter.Event')
 
-local initialized = false
-function UnitParameterContainer.init()
-    if initialized then return nil end
-    --================
-    -- Register event
-    --================
-    UnitEvent.UNIT_CHANGED_PARAMETERS = UnitEvent.new('UNIT_CHANGED_PARAMETERS')
-    ---@return Unit
-    function UnitEvent.GetUnitWithChangedParameters() return nil end
-    ---@return UnitParameterType
-    function UnitEvent.GetChangedParameterType() return nil end
-    ---@return number
-    function UnitEvent.GetChangedParameterOldValue() return nil end
-    ---@return number
-    function UnitEvent.GetChangedParameterNewValue() return nil end
-    initialized = true
-end
+--=======
+-- Class
+--=======
+
+---@class UnitParameterContainer
+local UnitParametersContainer  = newClass("UnitParameterContainer")
+UnitParametersContainer_meta = newMeta(UnitParametersContainer)
+UnitParametersContainer.__db = DataBase.new('Unit', 'UnitParameterContainer')
 
 ---@param owner Unit
 ---@return UnitParameterContainer
-function UnitParameterContainer.new(owner)
+function UnitParametersContainer.new(owner)
     local container = {
         P_DMG = UnitParameterValue.new(owner, UnitParameterType.P_DMG, 1),
         ATKS_PER_SEC = UnitParameterValue.new(owner, UnitParameterType.ATKS_PER_SEC),
@@ -59,8 +49,8 @@ function UnitParameterContainer.new(owner)
         INT = UnitParameterValue.new(owner, UnitParameterType.INT),
         MS = UnitParameterValue.new(owner, UnitParameterType.MS, 1, 512)
     }
-    setmetatable(container, UnitParameterContainer_meta)
-    UnitParameterContainer.__db:add(owner, container)
+    setmetatable(container, UnitParametersContainer_meta)
+    UnitParametersContainer.__db:add(owner, container)
 
     -- Initialize start parameters.
     local base = Settings.Unit.StartingParameter
@@ -88,43 +78,18 @@ function UnitParameterContainer.new(owner)
     return container
 end
 
-function UnitParameterContainer:destroy()
-    UnitParameterContainer.__db:remove(self.__owner)
+function UnitParametersContainer:destroy()
+    UnitParametersContainer.__db:remove(self.__owner)
 end
 
-Unit.addCreationFunction(function(owner) UnitParameterContainer.new(owner) end)
-Unit.addRemovalFunction(function(owner) UnitParameterContainer.__db:remove(owner) end)
+Unit.addCreationFunction(function(owner) UnitParametersContainer.new(owner) end)
+Unit.addRemovalFunction(function(owner) UnitParametersContainer.__db:remove(owner) end)
 
 ---@param owner Unit
 ---@param param string
 ---@return UnitParameterValue
 local function getParam(owner, param)
-    return UnitParameterContainer.__db:get(owner)[param]
-end
-
----@param unit Unit
----@param param_type UnitParameterType
----@param old_value number
----@param new_value number
-local function runEvent(unit, param_type, old_value, new_value)
-    -- Save previous variables.
-    local prev_get_unit = UnitEvent.GetUnitWithChangedParameters
-    local prev_get_name = UnitEvent.GetChangedParameterType
-    local prev_get_old_val = UnitEvent.GetChangedParameterOldVaue
-    local prev_get_new_val = UnitEvent.GetChangedParameterewValue
-    -- Set new variables.
-    UnitEvent.GetUnitWithChangedParameters = function() return unit end 
-    UnitEvent.GetChangedParameterType = function() return param_type end
-    UnitEvent.GetChangedParameterOldValue = function() return old_value end
-    UnitEvent.GetChangedParameterNewValue = function() return new_value end
-
-    UnitEvent.UNIT_CHANGED_PARAMETERS:run()
-
-    -- Restore variables.
-    UnitEvent.GetUnitWithChangedParameters = prev_get_unit
-    UnitEvent.GetChangedParameterType = prev_get_name
-    UnitEvent.GetChangedParameterOldValue = prev_get_old_val
-    UnitEvent.GetChangedParameterNewValue = prev_get_new_val
+    return UnitParametersContainer.__db:get(owner)[param]
 end
 
 --==================
@@ -137,7 +102,7 @@ function Unit:addPhysicalDamageBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -146,7 +111,7 @@ function Unit:addPhysicalDamagePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -155,7 +120,7 @@ function Unit:addPhysicalDamageBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -180,7 +145,7 @@ function Unit:setAttacksPerSecBase(value)
     local old = param:get()
     param:set(value, nil, nil)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -189,7 +154,7 @@ function Unit:addAttackSpeed(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -214,7 +179,7 @@ function Unit:addArmorBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -223,7 +188,7 @@ function Unit:addArmorPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -232,7 +197,7 @@ function Unit:addArmorBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -257,7 +222,7 @@ function Unit:addPhysicalDamageReductionBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -266,7 +231,7 @@ function Unit:addPhysicalDamageReductionPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -275,7 +240,7 @@ function Unit:addPhysicalDamageReductionBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -300,7 +265,7 @@ function Unit:addMagicalDamageBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -309,7 +274,7 @@ function Unit:addMagicalDamagePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -318,7 +283,7 @@ function Unit:addMagicalDamageBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -343,7 +308,7 @@ function Unit:addCastingTimeReductionBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -352,7 +317,7 @@ function Unit:addCastingTimeReductionPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -361,7 +326,7 @@ function Unit:addCastingTimeReductionBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -386,7 +351,7 @@ function Unit:addResistanceBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -395,7 +360,7 @@ function Unit:addResistancePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -404,7 +369,7 @@ function Unit:addResistanceBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -430,7 +395,7 @@ function Unit:addMagicalRamageReductionBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -439,7 +404,7 @@ function Unit:addMagicalRamageReductionPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -448,7 +413,7 @@ function Unit:addMagicalRamageReductionBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -473,7 +438,7 @@ function Unit:addDodgeChanceBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -482,7 +447,7 @@ function Unit:addDodgeChancePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -491,7 +456,7 @@ function Unit:addDodgeChanceBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -516,7 +481,7 @@ function Unit:addCriticalStrikeChanceBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -525,7 +490,7 @@ function Unit:addCriticalStrikeChancePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -534,7 +499,7 @@ function Unit:addCriticalStrikeChanceBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -559,7 +524,7 @@ function Unit:addCriticalStrikeDamageBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -568,7 +533,7 @@ function Unit:addCriticalStrikeDamagePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -577,7 +542,7 @@ function Unit:addCriticalStrikeDamageBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -602,7 +567,7 @@ function Unit:addCooldownReductionBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -611,7 +576,7 @@ function Unit:addCooldownReductionPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -620,7 +585,7 @@ function Unit:addCooldownReductionBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -645,7 +610,7 @@ function Unit:addHealthBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -654,7 +619,7 @@ function Unit:addHealthPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -663,7 +628,7 @@ function Unit:addHealthBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -688,7 +653,7 @@ function Unit:addRegenerationBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -697,7 +662,7 @@ function Unit:addRegenerationPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -706,7 +671,7 @@ function Unit:addRegenerationBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -731,7 +696,7 @@ function Unit:addManaBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -740,7 +705,7 @@ function Unit:addManaPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -749,7 +714,7 @@ function Unit:addManaBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -774,7 +739,7 @@ function Unit:addRecoveryBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -783,7 +748,7 @@ function Unit:addRecoveryPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -792,7 +757,7 @@ function Unit:addRecoveryBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -817,7 +782,7 @@ function Unit:addStrengthBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -826,7 +791,7 @@ function Unit:addStrengthPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -835,7 +800,7 @@ function Unit:addStrengthBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -860,7 +825,7 @@ function Unit:addAgilityBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -869,7 +834,7 @@ function Unit:addAgilityPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -878,7 +843,7 @@ function Unit:addAgilityBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -903,7 +868,7 @@ function Unit:addIntelligenceBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -912,7 +877,7 @@ function Unit:addIntelligencePercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -921,7 +886,7 @@ function Unit:addIntelligenceBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -946,7 +911,7 @@ function Unit:addMoveSpeedBase(value)
     local old = param:get()
     param:add(value, 0, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param percent number
@@ -955,7 +920,7 @@ function Unit:addMoveSpeedPercent(percent)
     local old = param:get()
     param:add(0, percent/100, 0)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@param value number
@@ -964,7 +929,7 @@ function Unit:addMoveSpeedBonus(value)
     local old = param:get()
     param:add(0, 0, value)
     local new = param:get()
-    runEvent(self, param:getType(), old, new)
+    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
 end
 
 ---@return number
@@ -979,4 +944,4 @@ function Unit:getMoveSpeedPercent()
     return 100 * param:getMult()
 end
 
-return UnitParameterContainer
+return UnitParametersContainer

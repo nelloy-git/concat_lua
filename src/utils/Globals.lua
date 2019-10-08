@@ -127,7 +127,9 @@ end
 function newMeta(class)
     local class_meta = {
         __type = string.sub(class.__type, 1, class.__type:len() - 5),
-        __index = class
+        __index = class,
+        __tostring = function(self) return 'Instance of type '..string.sub(class.__type, 1, class.__type:len() - 5) end,
+        __gc = function(self) if class.destroy ~= nil then self:destroy() end end
     }
     return class_meta
 end

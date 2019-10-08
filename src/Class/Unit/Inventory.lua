@@ -1,5 +1,5 @@
 ---@type Unit
-local Unit = require('baseClasses.Unit.UnitData')
+local Unit = require('baseClasses.Unit.Main')
 
 ---@class UnitInventory
 local UnitInventory = {

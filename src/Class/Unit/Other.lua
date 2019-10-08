@@ -1,4 +1,4 @@
-local Unit = require('baseClasses.Unit.UnitData')
+local Unit = require('baseClasses.Unit.Main')
 
 function Unit:setLifetime(time)
     UnitApplyTimedLife(self:getObj(), nil, time)

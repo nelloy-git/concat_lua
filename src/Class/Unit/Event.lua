@@ -1,5 +1,5 @@
 local DataBase = require('utils.DataBase')
-local Unit = require('baseClasses.Unit.UnitData')
+local Unit = require('baseClasses.Unit.Main')
 local Trigger = require('baseClasses.Trigger')
 
 local __db = DataBase.new("userdata", "Trigger")

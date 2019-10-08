@@ -1,17 +1,16 @@
 ---@type Unit
-local Unit = require('baseClasses.Unit.UnitData')
+local Unit = require('Class.Unit.Main')
 ---@type UnitEvent
-local UnitEvent = require('baseClasses.Unit.UnitEvent')
+local UnitEvent = require('Class.Unit.Event')
 ---@type UnitParameterContainer
-local UnitParameterContainer = require('baseClasses.Unit.Parameters.Container')
+local UnitParameterContainer = require('Class.Unit.Parameters.Container')
 ---@type UnitParameterType
-local UnitParameterType = require('baseClasses.Unit.Parameters.Type')
+local UnitParameterType = require('Class.Unit.Parameters.Type')
 
 local UnitAbilities = {}
 function UnitAbilities.init()
     ---@type Trigger
     UnitParameterContainer.init()
-    Debug(type(UnitEvent.UNIT_CHANGED_PARAMETERS))
     UnitEvent.UNIT_CHANGED_PARAMETERS:addAction(runFuncInDebug, Unit.updateAbilities)
 end
 
