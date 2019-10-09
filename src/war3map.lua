@@ -35,10 +35,12 @@ function RunInitialization()
 end
 
 Test = function()
-    local Unit = require('baseClasses.Unit')
+    require('Include.ParameterType')
+
+    --local Unit = require('baseClasses.Unit')
     --local Ability = require('baseClasses.Ability')
 --
-    local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
+    --local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
     ---@type Unit
     --local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
 
@@ -54,7 +56,7 @@ Test = function()
     --local Tooltip = require('baseClasses.Frame.Parameter.Tooltip')
     
     ---@type ParametersAreaFrame
-    local Interface = require("baseClasses.Frame.Interface")
+    --local Interface = require("baseClasses.Frame.Interface")
     --local inv = Inventory.new()
     --inv:setPosition(0.2, 0.1)
     --inv:setSize(0.2, 0.3)

@@ -4,24 +4,8 @@ local DataBase = require('utils.DataBase')
 local Settings = require('utils.Settings')
 
 ---@class Unit
-local Unit = {
-    __type = 'UnitClass',
-    __db = DataBase.new('userdata', 'Unit'),
-    __unit_creation_funcs = {},
-    __unit_removal_funcs = {}
-}
-
-local Unit_meta = {
-    __type = 'Unit',
-    __index = Unit,
-    __call = Unit.new,
-    __gc = Unit.destroy,
-}
-
----@param self Unit
-function Unit_meta.__tostring(self)
-    return string.format('Unit %s (%s)', "TODO", ID2str(self:getId()))
-end
+local Unit = newClass('Unit')
+local Unit_meta = newMeta(Unit)
 
 ---@param player player
 ---@param id string | integer

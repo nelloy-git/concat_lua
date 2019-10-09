@@ -1,26 +1,29 @@
-local Id = require('Data.UnitParameter.Id')
+local ParameterType = require('Class.ParameterType.Main')
 
-UnitParameterIcon = {}
+local Icon = {}
 
-UnitParameterIcon[Id.P_DMG] = "ReplaceableTextures\\CommandButtons\\BTNSteelMelee.blp"
-UnitParameterIcon[Id.ATKS_PER_SEC] = "ReplaceableTextures\\CommandButtons\\BTNCommand.blp"
-UnitParameterIcon[Id.ARMOR] = "ReplaceableTextures\\CommandButtons\\BTNDefend.blp"
-UnitParameterIcon[Id.P_DMG_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNHumanArmorUpThree.blp"
-UnitParameterIcon[Id.M_DMG] = "ReplaceableTextures\\CommandButtons\\BTNAdvancedStrengthOfTheMoon.blp"
-UnitParameterIcon[Id.CAST_TIME_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNBansheeMaster.blp"
-UnitParameterIcon[Id.RESIST] = "ReplaceableTextures\\CommandButtons\\BTNResistantSkin.blp"
-UnitParameterIcon[Id.M_DMG_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNLightningShield.blp"
-UnitParameterIcon[Id.DODGE_CH] = "ReplaceableTextures\\CommandButtons\\BTNEvasion.blp"
-UnitParameterIcon[Id.CRIT_CH] = "ReplaceableTextures\\CommandButtons\\BTNCriticalStrike.blp"
-UnitParameterIcon[Id.CRIT_DMG] = "ReplaceableTextures\\CommandButtons\\BTNDeathPact.blp"
-UnitParameterIcon[Id.CD_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNDispelMagic.blp"
-UnitParameterIcon[Id.HP] = "ReplaceableTextures\\CommandButtons\\BTNHealthStone.blp"
-UnitParameterIcon[Id.REGEN] = "ReplaceableTextures\\CommandButtons\\BTNRegenerate.blp"
-UnitParameterIcon[Id.MP] = "ReplaceableTextures\\CommandButtons\\BTNManaStone.blp"
-UnitParameterIcon[Id.RECOV] = "ReplaceableTextures\\CommandButtons\\BTNBrilliance.blp"
-UnitParameterIcon[Id.STR] = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-str.blp"
-UnitParameterIcon[Id.AGI] = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-agi.blp"
-UnitParameterIcon[Id.INT] = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-int.blp"
-UnitParameterIcon[Id.MS] = "ReplaceableTextures\\CommandButtons\\BTNBootsOfSpeed.blp"
+Icon[ParameterType.Id.P_DMG] = "ReplaceableTextures\\CommandButtons\\BTNSteelMelee.blp"
+Icon[ParameterType.Id.ATKS_PER_SEC] = "ReplaceableTextures\\CommandButtons\\BTNCommand.blp"
+Icon[ParameterType.Id.ARMOR] = "ReplaceableTextures\\CommandButtons\\BTNDefend.blp"
+Icon[ParameterType.Id.P_DMG_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNHumanArmorUpThree.blp"
+Icon[ParameterType.Id.M_DMG] = "ReplaceableTextures\\CommandButtons\\BTNAdvancedStrengthOfTheMoon.blp"
+Icon[ParameterType.Id.CAST_TIME_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNBansheeMaster.blp"
+Icon[ParameterType.Id.RESIST] = "ReplaceableTextures\\CommandButtons\\BTNResistantSkin.blp"
+Icon[ParameterType.Id.M_DMG_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNLightningShield.blp"
+Icon[ParameterType.Id.DODGE_CH] = "ReplaceableTextures\\CommandButtons\\BTNEvasion.blp"
+Icon[ParameterType.Id.CRIT_CH] = "ReplaceableTextures\\CommandButtons\\BTNCriticalStrike.blp"
+Icon[ParameterType.Id.CRIT_DMG] = "ReplaceableTextures\\CommandButtons\\BTNDeathPact.blp"
+Icon[ParameterType.Id.CD_REDUC] = "ReplaceableTextures\\CommandButtons\\BTNDispelMagic.blp"
+Icon[ParameterType.Id.HP] = "ReplaceableTextures\\CommandButtons\\BTNHealthStone.blp"
+Icon[ParameterType.Id.REGEN] = "ReplaceableTextures\\CommandButtons\\BTNRegenerate.blp"
+Icon[ParameterType.Id.MP] = "ReplaceableTextures\\CommandButtons\\BTNManaStone.blp"
+Icon[ParameterType.Id.RECOV] = "ReplaceableTextures\\CommandButtons\\BTNBrilliance.blp"
+Icon[ParameterType.Id.STR] = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-str.blp"
+Icon[ParameterType.Id.AGI] = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-agi.blp"
+Icon[ParameterType.Id.INT] = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-int.blp"
+Icon[ParameterType.Id.MS] = "ReplaceableTextures\\CommandButtons\\BTNBootsOfSpeed.blp"
 
-return UnitParameterIcon
+---@return string
+function ParameterType:getIcon()
+    return Icon[self.__id]
+end

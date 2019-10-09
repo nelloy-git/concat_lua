@@ -1,32 +1,13 @@
 ---@type Settings
 local Settings = require('utils.Settings')
----@type UnitParameterEvent
-local UnitParameterEvent = require('Class.Unit.ParametersContainer.Event')
----@type UnitParameterType
-local UnitParameterType = require('Class.Unit.ParametersContainer.Type')
 
-local UnitParameterContainer = require('Class.Unit.Main')
+local ParameterType = require('Class.ParameterType.Id')
 
-local UnitParameterApplyFunction = {}
-
-local initialized = false
-function UnitParameterApplyFunction.init()
-    if initialized then return nil end
-
-    UnitParameterEvent.init()
-    UnitParameterEvent.UNIT_CHANGED_PARAMETER:addAction(runFuncInDebug, UnitParameterApplyFunction.addParametersByStrAgiInt)
-
-    initialized = true
-end
-
-function UnitParameterApplyFunction.addParametersByStrAgiInt()
-    local param = UnitParameterEvent.GetChangedParameterType()
-    if 
-end
+local ParameterTypeApplyFunction = {}
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setAttackDamage(unit, value)
+local function setAttackDamage(unit, value)
     local dmg = (1 - Settings.Unit.attack_dispersion) * value
     local dice_sides = 2 * Settings.Unit.attack_dispersion * value
 
@@ -37,13 +18,13 @@ end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setAttacksPerSecond(unit, value)
+local function setAttacksPerSecond(unit, value)
     BlzSetUnitAttackCooldown(unit:getObj(), 1 / value, 0)
 end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setHealth(unit, value)
+local function setHealth(unit, value)
     local percent_hp = GetUnitLifePercent(unit:getObj())
     BlzSetUnitMaxHP(unit:getObj(), math.floor(value))
     SetUnitLifePercentBJ(unit:getObj(), percent_hp)
@@ -51,13 +32,13 @@ end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setRegeneration(unit, value)
+local function setRegeneration(unit, value)
     BlzSetUnitRealField(unit:getObj(), UNIT_RF_HIT_POINTS_REGENERATION_RATE, value)
 end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setMana(unit, value)
+local function setMana(unit, value)
     local percent_mana = GetUnitManaPercent(unit:getObj())
     BlzSetUnitMaxMana(unit:getObj(), math.floor(value))
     SetUnitManaPercentBJ(unit:getObj(), percent_mana)
@@ -65,13 +46,13 @@ end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setRecovery(unit, value)
+local function setRecovery(unit, value)
     BlzSetUnitRealField(unit:getObj(), UNIT_RF_MANA_REGENERATION, value)
 end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setStrength(unit, value)
+local function setStrength(unit, value)
     -- Remove previous bonuses
     local prev_value = GetHeroStr(unit:getObj(), true)
     local p_dmg = prev_value * Settings.Unit.p_dmg_per_str
@@ -97,7 +78,7 @@ end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setAgility(unit, value)
+local function setAgility(unit, value)
     -- Remove previous bonuses
     local prev_value = GetHeroAgi(unit:getObj(), true)
     local aspd = prev_value * Settings.Unit.attack_speed_per_agi
@@ -123,7 +104,7 @@ end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setIntelligence(unit, value)
+local function setIntelligence(unit, value)
     -- Remove previous bonuses
     local prev_value = GetHeroInt(unit:getObj(), true)
     local m_dmg = prev_value * Settings.Unit.m_dmg_per_int
@@ -149,7 +130,7 @@ end
 
 ---@param unit Unit
 ---@param value number
-function UnitParameterApplyFunction.setMoveSpeed(unit, value)
+local function setMoveSpeed(unit, value)
     if value <= 1 then
         SetUnitTurnSpeed(unit:getObj(), 0)
     else
@@ -158,4 +139,25 @@ function UnitParameterApplyFunction.setMoveSpeed(unit, value)
     SetUnitMoveSpeed(unit:getObj(), value)
 end
 
-return UnitParameterApplyFunction
+ParameterTypeApplyFunction[ParameterType.P_DMG] = setAttackDamage
+ParameterTypeApplyFunction[ParameterType.ATKS_PER_SEC] = setAttacksPerSecond
+ParameterTypeApplyFunction[ParameterType.ARMOR] = nil
+ParameterTypeApplyFunction[ParameterType.P_DMG_REDUC] = nil
+ParameterTypeApplyFunction[ParameterType.M_DMG] = nil
+ParameterTypeApplyFunction[ParameterType.CAST_TIME_REDUC] = nil
+ParameterTypeApplyFunction[ParameterType.RESIST] = nil
+ParameterTypeApplyFunction[ParameterType.M_DMG_REDUC] = nil
+ParameterTypeApplyFunction[ParameterType.DODGE_CH] = nil
+ParameterTypeApplyFunction[ParameterType.CRIT_CH] = nil
+ParameterTypeApplyFunction[ParameterType.CRIT_DMG] = nil
+ParameterTypeApplyFunction[ParameterType.CD_REDUC] = nil
+ParameterTypeApplyFunction[ParameterType.HP] = setHealth
+ParameterTypeApplyFunction[ParameterType.REGEN] = setRegeneration
+ParameterTypeApplyFunction[ParameterType.MP] = setMana
+ParameterTypeApplyFunction[ParameterType.RECOV] = setRecovery
+ParameterTypeApplyFunction[ParameterType.STR] = setStrength
+ParameterTypeApplyFunction[ParameterType.AGI] = setAgility
+ParameterTypeApplyFunction[ParameterType.INT] = setIntelligence
+ParameterTypeApplyFunction[ParameterType.MS] = setMoveSpeed
+
+return ParameterTypeApplyFunction

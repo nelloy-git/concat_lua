@@ -6,14 +6,12 @@
 local DataBase = require('utils.DataBase')
 ---@type Unit
 local Unit = require('Class.Unit.Main')
----@type UnitParameterType
-local UnitParameterType = require('Class.Unit.Parameter.Type')
----@type UnitParameterValue
-local UnitParameterValue = require('Class.Unit.Parameter.Value')
+---@type ParameterType
+local ParameterType = require('Class.ParameterType')
 ---@type Settings
 local Settings = require('utils.Settings')
-
-local UnitParameterEvent = require('Class.Unit.Parameter.Event')
+---@type UnitEvent
+local UnitEvent = require('Class.Unit.Event')
 
 --=======
 -- Class
@@ -28,26 +26,26 @@ UnitParametersContainer.__db = DataBase.new('Unit', 'UnitParameterContainer')
 ---@return UnitParameterContainer
 function UnitParametersContainer.new(owner)
     local container = {
-        P_DMG = UnitParameterValue.new(owner, UnitParameterType.P_DMG, 1),
-        ATKS_PER_SEC = UnitParameterValue.new(owner, UnitParameterType.ATKS_PER_SEC),
-        ARMOR = UnitParameterValue.new(owner, UnitParameterType.ARMOR),
-        P_DMG_REDUC = UnitParameterValue.new(owner, UnitParameterType.P_DMG_REDUC, -Settings.Unit.maximum_physical_damage_reduction, Settings.Unit.maximum_physical_damage_reduction),
-        M_DMG = UnitParameterValue.new(owner, UnitParameterType.M_DMG),
-        CAST_TIME_REDUC = UnitParameterValue.new(owner, UnitParameterType.CAST_TIME_REDUC, -Settings.Unit.maximum_casting_time_reduction, Settings.Unit.maximum_casting_time_reduction),
-        RESIST = UnitParameterValue.new(owner, UnitParameterType.RESIST),
-        M_DMG_REDUC = UnitParameterValue.new(owner, UnitParameterType.M_DMG_REDUC, -Settings.Unit.maximum_magical_damage_reduction, Settings.Unit.maximum_magical_damage_reduction),
-        DODGE_CH = UnitParameterValue.new(owner, UnitParameterType.DODGE_CH, 0, Settings.Unit.maximum_dodge_chance),
-        CRIT_CH = UnitParameterValue.new(owner, UnitParameterType.CRIT_CH, 0, Settings.Unit.maximum_crit_chance),
-        CRIT_DMG = UnitParameterValue.new(owner, UnitParameterType.CRIT_DMG, 1, nil),
-        CD_REDUC = UnitParameterValue.new(owner, UnitParameterType.CD_REDUC, -Settings.Unit.maximum_cooldown_reduction, Settings.Unit.maximum_cooldown_reduction),
-        HP = UnitParameterValue.new(owner, UnitParameterType.HP),
-        REGEN = UnitParameterValue.new(owner, UnitParameterType.REGEN),
-        MP = UnitParameterValue.new(owner, UnitParameterType.MP),
-        RECOV = UnitParameterValue.new(owner, UnitParameterType.RECOV),
-        STR = UnitParameterValue.new(owner, UnitParameterType.STR),
-        AGI = UnitParameterValue.new(owner, UnitParameterType.AGI),
-        INT = UnitParameterValue.new(owner, UnitParameterType.INT),
-        MS = UnitParameterValue.new(owner, UnitParameterType.MS, 1, 512)
+        [ParameterType.P_DMG]           = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.ATKS_PER_SEC]    = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.ARMOR]           = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.P_DMG_REDUC]     = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.M_DMG]           = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.CAST_TIME_REDUC] = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.RESIST]          = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.M_DMG_REDUC]     = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.DODGE_CH]        = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.CRIT_CH]         = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.CRIT_DMG]        = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.CD_REDUC]        = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.HP]              = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.REGEN]           = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.MP]              = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.RECOV]           = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.STR]             = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.AGI]             = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.INT]             = {base = 0, mult = 0, bonus = 0},
+        [ParameterType.MS]              = {base = 0, mult = 0, bonus = 0},
     }
     setmetatable(container, UnitParametersContainer_meta)
     UnitParametersContainer.__db:add(owner, container)
@@ -86,87 +84,155 @@ Unit.addCreationFunction(function(owner) UnitParametersContainer.new(owner) end)
 Unit.addRemovalFunction(function(owner) UnitParametersContainer.__db:remove(owner) end)
 
 ---@param owner Unit
----@param param string
----@return UnitParameterValue
-local function getParam(owner, param)
-    return UnitParametersContainer.__db:get(owner)[param]
+---@return UnitParameterContainer
+function UnitParametersContainer.get(owner)
+    return UnitParametersContainer.__db:get(owner)
+end
+
+--================
+-- Register event
+--================
+
+UnitEvent.UNIT_CHANGED_PARAMETER = UnitEvent.new('UNIT_CHANGED_PARAMETER')
+---@return Unit
+function UnitEvent.GetUnitWithChangedParameters() return nil end
+---@return ParameterType
+function UnitEvent.GetChangedParameterType() return nil end
+---@return number
+function UnitEvent.GetChangedParameterOldValue() return nil end
+---@return number
+function UnitEvent.GetChangedParameterNewValue() return nil end
+
+---@param unit Unit
+---@param param_type ParameterType
+---@param old_value number
+---@param new_value number
+local function runUnitChangedParameterEvent(unit, param_type, old_value, new_value)
+    -- Save previous variables.
+    local prev_get_unit = UnitEvent.GetUnitWithChangedParameters
+    local prev_get_name = UnitEvent.GetChangedParameterType
+    local prev_get_old_val = UnitEvent.GetChangedParameterOldVaue
+    local prev_get_new_val = UnitEvent.GetChangedParameterewValue
+    -- Set new variables.
+    UnitEvent.GetUnitWithChangedParameters = function() return unit end
+    UnitEvent.GetChangedParameterType = function() return param_type end
+    UnitEvent.GetChangedParameterOldValue = function() return old_value end
+    UnitEvent.GetChangedParameterNewValue = function() return new_value end
+
+    UnitEvent.UNIT_CHANGED_PARAMETERS:run()
+
+    -- Restore variables.
+    UnitEvent.GetUnitWithChangedParameters = prev_get_unit
+    UnitEvent.GetChangedParameterType = prev_get_name
+    UnitEvent.GetChangedParameterOldValue = prev_get_old_val
+    UnitEvent.GetChangedParameterNewValue = prev_get_new_val
+end
+
+local function addParameterValue(param, unit, base, mult, bonus)
+    local data = UnitParametersContainer.get(unit)[param]
+
+    data.base = data.base + base
+    data.mult = data.mult + mult
+    data.bonus = data.bonus + bonus
+
+    local old_res = data.res
+    data.res = param:math(data.base, data.mult, data.bonus)
+
+    if old_res ~= nil then
+        runUnitChangedParameterEvent(unit, param, old_res, data.res)
+    end
+
+    return data.res
 end
 
 --==================
 -- Physical damage.
 --==================
 
+local function applyAttackDmg(unit, value)
+    local dmg = (1 - Settings.Unit.attack_dispersion) * value
+    local dice_sides = 2 * Settings.Unit.attack_dispersion * value
+
+    BlzSetUnitBaseDamage(unit:getObj(), math.floor(dmg), 0)
+    BlzSetUnitDiceNumber(unit:getObj(), 1, 0)
+    BlzSetUnitDiceSides(unit:getObj(), math.floor(dice_sides + 1), 0)
+end
+
 ---@param value number
 function Unit:addPhysicalDamageBase(value)
-    local param = getParam(self, 'P_DMG')
-    local old = param:get()
-    param:add(value, 0, 0)
-    local new = param:get()
-    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
+    local res = addParameterValue(ParameterType.P_DMG, self, value, 0, 0)
+    applyAttackDmg(self, res)
 end
 
 ---@param percent number
 function Unit:addPhysicalDamagePercent(percent)
-    local param = getParam(self, 'P_DMG')
-    local old = param:get()
-    param:add(0, percent/100, 0)
-    local new = param:get()
-    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
+    local res = addParameterValue(ParameterType.P_DMG, self, 0, percent/100, 0)
+    applyAttackDmg(self, res)
 end
 
 ---@param value number
 function Unit:addPhysicalDamageBonus(value)
-    local param = getParam(self, 'P_DMG')
-    local old = param:get()
-    param:add(0, 0, value)
-    local new = param:get()
-    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
+    local res = addParameterValue(ParameterType.P_DMG, self, 0, 0, value)
+    applyAttackDmg(self, res)
 end
 
 ---@return number
 function Unit:getPhysicalDamage()
-    local param = getParam(self, 'P_DMG')
-    return param:get()
+    local param = ParameterType.P_DMG
+    local data = UnitParametersContainer.get(self)[param]
+    return data.res
 end
 
 ---@return number
 function Unit:getPhysicalDamagePercent()
-    local param = getParam(self, 'P_DMG')
-    return 100 * param:getMult()
+    local param = ParameterType.P_DMG
+    local data = UnitParametersContainer.get(self)[param]
+    return 100 * data.mult
 end
 
 --===============
 -- Attack speed.
 --===============
 
+---@param unit Unit
+---@param value number
+local function applyAttacksPerSecond(unit, value)
+    BlzSetUnitAttackCooldown(unit:getObj(), 1 / value, 0)
+end
+
 ---@param value number
 function Unit:setAttacksPerSecBase(value)
-    local param = getParam(self, 'ATKS_PER_SEC')
-    local old = param:get()
-    param:set(value, nil, nil)
-    local new = param:get()
-    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
+    local param = ParameterType.ATKS_PER_SEC
+    local data = UnitParametersContainer.get(self)[param]
+
+    data.base = value
+    local old_res = data.res
+    data.res = param:math(data.base, data.mult, data.bonus)
+
+    if old_res ~= nil then
+        runUnitChangedParameterEvent(self, param, old_res, data.res)
+    end
+    applyAttacksPerSecond(self, data.res)
 end
 
 ---@param percent number
 function Unit:addAttackSpeed(percent)
-    local param = getParam(self, 'ATKS_PER_SEC')
-    local old = param:get()
-    param:add(0, percent/100, 0)
-    local new = param:get()
-    UnitParameterEvent.runUnitChangedParameterEvent(self, param:getType(), old, new)
+    local res = addParameterValue(ParameterType.ATKS_PER_SEC, self, 0, percent, 0)
+    applyAttacksPerSecond(self, res)
 end
 
 ---@return number
 function Unit:getAttacksPerSec()
-    local param = getParam(self, 'ATKS_PER_SEC')
-    param:get()
+    local param = ParameterType.ATKS_PER_SEC
+    local data = UnitParametersContainer.get(self)[param]
+    return data.res
 end
 
 ---@return number
 function Unit:getAttackSpeedPercent()
-    local param = getParam(self, 'ATKS_PER_SEC')
-    return 100 * param:getMult()
+    local param = ParameterType.ATKS_PER_SEC
+    local data = UnitParametersContainer.get(self)[param]
+    return 100 * data.mult
 end
 
 --========

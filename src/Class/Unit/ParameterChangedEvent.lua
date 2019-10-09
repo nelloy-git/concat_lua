@@ -9,29 +9,20 @@ local UnitEvent = require('Class.Unit.Event')
 -- Module
 --========
 
----@class UnitParameterEvent
 local UnitParameterEvent = {}
 
-local initialized = false
-function UnitParameterEvent.init()
-    if initialized then return nil end
-    --================
-    -- Register event
-    --================
-    UnitParameterEvent.UNIT_CHANGED_PARAMETER = UnitEvent.new('UNIT_CHANGED_PARAMETER')
-    ---@return Unit
-    function UnitParameterEvent.GetUnitWithChangedParameters() return nil end
-    ---@return UnitParameterType
-    function UnitParameterEvent.GetChangedParameterType() return nil end
-    ---@return number
-    function UnitParameterEvent.GetChangedParameterOldValue() return nil end
-    ---@return number
-    function UnitParameterEvent.GetChangedParameterNewValue() return nil end
-    initialized = true
-end
+UnitParameterEvent.UNIT_CHANGED_PARAMETER = UnitEvent.new('UNIT_CHANGED_PARAMETER')
+---@return Unit
+function UnitParameterEvent.GetUnitWithChangedParameters() return nil end
+---@return ParameterType
+function UnitParameterEvent.GetChangedParameterType() return nil end
+---@return number
+function UnitParameterEvent.GetChangedParameterOldValue() return nil end
+---@return number
+function UnitParameterEvent.GetChangedParameterNewValue() return nil end
 
 ---@param unit Unit
----@param param_type UnitParameterType
+---@param param_type ParameterType
 ---@param old_value number
 ---@param new_value number
 function UnitParameterEvent.runUnitChangedParameterEvent(unit, param_type, old_value, new_value)
