@@ -19,7 +19,7 @@ ParameterType.Id = {
     CAST_TIME_REDUC = 6,
     RESIST = 7,
     M_DMG_REDUC = 8,
-    DODGE_CH = 9,
+    DODGE = 9,
     CRIT_CH = 10,
     CRIT_DMG = 11,
     CD_REDUC = 12,
@@ -53,7 +53,7 @@ function ParameterType.init()
     ParameterType.CAST_TIME_REDUC = newParameter(ParameterType.Id.CAST_TIME_REDUC)
     ParameterType.RESIST = newParameter(ParameterType.Id.RESIST)
     ParameterType.M_DMG_REDUC = newParameter(ParameterType.Id.M_DMG_REDUC)
-    ParameterType.DODGE_CH = newParameter(ParameterType.Id.DODGE_CH)
+    ParameterType.DODGE = newParameter(ParameterType.Id.DODGE)
     ParameterType.CRIT_CH = newParameter(ParameterType.Id.CRIT_CH)
     ParameterType.CRIT_DMG = newParameter(ParameterType.Id.CRIT_DMG)
     ParameterType.CD_REDUC = newParameter(ParameterType.Id.CD_REDUC)

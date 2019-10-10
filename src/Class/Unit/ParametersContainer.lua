@@ -15,6 +15,12 @@ local Settings = require('utils.Settings')
 ---@type UnitEvent
 local UnitEvent = require('Class.Unit.Event')
 
+--============
+-- Predefined
+--============
+
+local addParameterValue
+
 --=======
 -- Class
 --=======
@@ -29,30 +35,50 @@ UnitParametersContainer.__db = DataBase.new('Unit', 'UnitParameterContainer')
 function UnitParametersContainer.new(owner)
     -- Initialize start parameters.
     local base = Settings.Unit.StartingParameter
-    local container = {
-        [ParameterType.P_DMG]           = ParameterValues.new(ParameterType.P_DMG,           base.P_DMG,           1, 0),
-        [ParameterType.ATKS_PER_SEC]    = ParameterValues.new(ParameterType.ATKS_PER_SEC,    base.ATKS_PER_SEC,    1, 0),
-        [ParameterType.ARMOR]           = ParameterValues.new(ParameterType.ARMOR,           base.ARMOR,           1, 0),
-        [ParameterType.P_DMG_REDUC]     = ParameterValues.new(ParameterType.P_DMG_REDUC,     base.P_DMG_REDUC,     1, 0),
-        [ParameterType.M_DMG]           = ParameterValues.new(ParameterType.M_DMG,           base.M_DMG,           1, 0),
-        [ParameterType.CAST_TIME_REDUC] = ParameterValues.new(ParameterType.CAST_TIME_REDUC, base.CAST_TIME_REDUC, 1, 0),
-        [ParameterType.RESIST]          = ParameterValues.new(ParameterType.RESIST,          base.RESIST,          1, 0),
-        [ParameterType.M_DMG_REDUC]     = ParameterValues.new(ParameterType.M_DMG_REDUC,     base.M_DMG_REDUC,     1, 0),
-        [ParameterType.DODGE]           = ParameterValues.new(ParameterType.DODGE,           base.DODGE_CH,        1, 0),
-        [ParameterType.CRIT_CH]         = ParameterValues.new(ParameterType.CRIT_CH,         base.CRIT_CH,         1, 0),
-        [ParameterType.CRIT_DMG]        = ParameterValues.new(ParameterType.CRIT_DMG,        base.CRIT_DMG,        1, 0),
-        [ParameterType.CD_REDUC]        = ParameterValues.new(ParameterType.CD_REDUC,        base.CD_REDUC,        1, 0),
-        [ParameterType.HP]              = ParameterValues.new(ParameterType.HP,              base.HP,              1, 0),
-        [ParameterType.REGEN]           = ParameterValues.new(ParameterType.REGEN,           base.REGEN,           1, 0),
-        [ParameterType.MP]              = ParameterValues.new(ParameterType.MP,              base.MP,              1, 0),
-        [ParameterType.RECOV]           = ParameterValues.new(ParameterType.RECOV,           base.RECOV,           1, 0),
-        [ParameterType.STR]             = ParameterValues.new(ParameterType.STR,             base.STR,             1, 0),
-        [ParameterType.AGI]             = ParameterValues.new(ParameterType.AGI,             base.AGI,             1, 0),
-        [ParameterType.INT]             = ParameterValues.new(ParameterType.INT,             base.INT,             1, 0),
-        [ParameterType.MS]              = ParameterValues.new(ParameterType.MS,              base.MS,              1, 0),
-    }
+    local container = {}
+    container[ParameterType.P_DMG]           = ParameterValues.new(ParameterType.P_DMG,           base.P_DMG,           1, 0)
+    container[ParameterType.ATKS_PER_SEC]    = ParameterValues.new(ParameterType.ATKS_PER_SEC,    base.ATKS_PER_SEC,    1, 0)
+    container[ParameterType.ARMOR]           = ParameterValues.new(ParameterType.ARMOR,           base.ARMOR,           1, 0)
+    container[ParameterType.P_DMG_REDUC]     = ParameterValues.new(ParameterType.P_DMG_REDUC,     base.P_DMG_REDUC,     1, 0)
+    container[ParameterType.M_DMG]           = ParameterValues.new(ParameterType.M_DMG,           base.M_DMG,           1, 0)
+    container[ParameterType.CAST_TIME_REDUC] = ParameterValues.new(ParameterType.CAST_TIME_REDUC, base.CAST_TIME_REDUC, 1, 0)
+    container[ParameterType.RESIST]          = ParameterValues.new(ParameterType.RESIST,          base.RESIST,          1, 0)
+    container[ParameterType.M_DMG_REDUC]     = ParameterValues.new(ParameterType.M_DMG_REDUC,     base.M_DMG_REDUC,     1, 0)
+    container[ParameterType.DODGE]           = ParameterValues.new(ParameterType.DODGE,           base.DODGE_CH,        1, 0)
+    container[ParameterType.CRIT_CH]         = ParameterValues.new(ParameterType.CRIT_CH,         base.CRIT_CH,         1, 0)
+    container[ParameterType.CRIT_DMG]        = ParameterValues.new(ParameterType.CRIT_DMG,        base.CRIT_DMG,        1, 0)
+    container[ParameterType.CD_REDUC]        = ParameterValues.new(ParameterType.CD_REDUC,        base.CD_REDUC,        1, 0)
+    container[ParameterType.HP]              = ParameterValues.new(ParameterType.HP,              base.HP,              1, 0)
+    container[ParameterType.REGEN]           = ParameterValues.new(ParameterType.REGEN,           base.REGEN,           1, 0)
+    container[ParameterType.MP]              = ParameterValues.new(ParameterType.MP,              base.MP,              1, 0)
+    container[ParameterType.RECOV]           = ParameterValues.new(ParameterType.RECOV,           base.RECOV,           1, 0)
+    container[ParameterType.STR]             = ParameterValues.new(ParameterType.STR,             base.STR,             1, 0)
+    container[ParameterType.AGI]             = ParameterValues.new(ParameterType.AGI,             base.AGI,             1, 0)
+    container[ParameterType.INT]             = ParameterValues.new(ParameterType.INT,             base.INT,             1, 0)
+    container[ParameterType.MS]              = ParameterValues.new(ParameterType.MS,              base.MS,              1, 0)
+    
     setmetatable(container, UnitParametersContainer_meta)
     UnitParametersContainer.__db:add(owner, container)
+
+    owner:addPhysicalDamageBase(0)
+    owner:addAttackSpeed(0)
+    owner:addArmorBase(0)
+    owner:addPhysicalDamageReductionRatingBase(0)
+    owner:addMagicalDamageBase(0)
+    owner:addCastingTimeReductionRatingBase(0)
+    owner:addResistanceBase(0)
+    owner:addMagicalDamageReductionRatingBase(0)
+    owner:addDodgeChanceRatingBase(0)
+    owner:addCriticalChanceRatingBase(0)
+    owner:addCooldownReductionRatingBase(0)
+    owner:addHealthBase(0)
+    owner:addRegenerationBase(0)
+    owner:addManaBase(0)
+    owner:addRecoveryBase(0)
+    owner:addStrengthBase(20)
+    owner:addAgilityBase(0)
+    owner:addIntelligenceBase(0)
+    owner:addMoveSpeedBase(0)
 
     return container
 end
@@ -100,7 +126,7 @@ local function runUnitChangedParameterEvent(unit, param_type, old_value, new_val
     UnitEvent.GetChangedParameterOldValue = function() return old_value end
     UnitEvent.GetChangedParameterNewValue = function() return new_value end
 
-    UnitEvent.UNIT_CHANGED_PARAMETERS:run()
+    runFuncInDebug(UnitEvent.run, UnitEvent.UNIT_CHANGED_PARAMETER)
 
     -- Restore variables.
     UnitEvent.GetUnitWithChangedParameters = prev_get_unit
@@ -114,7 +140,7 @@ end
 ---@param base number
 ---@param mult number
 ---@param bonus number
-local function addParameterValue(param, unit, base, mult, bonus)
+addParameterValue = function (param, unit, base, mult, bonus)
     ---@type ParameterValues
     local values = UnitParametersContainer.get(unit)[param]
     local old = values:getResult()
@@ -426,17 +452,17 @@ end
 --====================
 
 ---@param value number
-function Unit:addCooldownReductionBase(value)
+function Unit:addCooldownReductionRatingBase(value)
     addParameterValue(ParameterType.CD_REDUC, self, value, 0, 0)
 end
 
 ---@param percent number
-function Unit:addCooldownReductionPercent(percent)
+function Unit:addCooldownReductionRatingPercent(percent)
     addParameterValue(ParameterType.CD_REDUC, self, 0, percent/100, 0)
 end
 
 ---@param value number
-function Unit:addCooldownReductionBonus(value)
+function Unit:addCooldownReductionOvercapBonus(value)
     addParameterValue(ParameterType.CD_REDUC, self, 0, 0, value)
 end
 
@@ -594,9 +620,9 @@ local function applyStrength(unit, old, new)
     local health = diff * Settings.Unit.health_per_str
 
     SetHeroStr(unit:getObj(), math.floor(new), true)
-    unit:addPhysicalDamage(p_dmg, 0, 0)
-    unit:addArmor(armor, 0, 0)
-    unit:addHealth(health, 0, 0)
+    unit:addPhysicalDamageBase(p_dmg)
+    unit:addArmorBase(armor)
+    unit:addHealthBase(health)
 end
 
 ---@param value number
@@ -640,28 +666,28 @@ local function applyAgility(unit, old, new)
     local dodge = diff * Settings.Unit.dodge_chance_per_agi
 
     SetHeroAgi(unit:getObj(), math.floor(new), true)
-    unit:addMagicalDamage(aspd, 0, 0)
-    unit:addCooldownReduction(ct_reduc, 0, 0)
-    unit:addMana(dodge, 0, 0)
+    unit:addAttackSpeed(aspd)
+    unit:addCastingTimeReductionRatingBase(ct_reduc)
+    unit:addDodgeChanceRatingBase(dodge)
 end
 
 ---@param value number
 function Unit:addAgilityBase(value)
-    local old = getResult(ParameterType.AGI)
+    local old = getResult(ParameterType.AGI, self)
     local new = addParameterValue(ParameterType.AGI, self, value, 0, 0)
     applyAgility(self, old, new)
 end
 
 ---@param percent number
 function Unit:addAgilityPercent(percent)
-    local old = getResult(ParameterType.AGI)
+    local old = getResult(ParameterType.AGI, self)
     local new = addParameterValue(ParameterType.AGI, self, 0, percent/100, 0)
     applyAgility(self, old, new)
 end
 
 ---@param value number
 function Unit:addAgilityBonus(value)
-    local old = getResult(ParameterType.AGI)
+    local old = getResult(ParameterType.AGI, self)
     local new = addParameterValue(ParameterType.AGI, self, 0, 0, value)
     applyAgility(self, old, new)
 end
@@ -685,28 +711,28 @@ local function applyIntelligence(unit, old, new)
     local mana = diff * Settings.Unit.mana_per_int
 
     SetHeroInt(unit:getObj(), math.floor(new), true)
-    unit:addMagicalDamage(m_dmg, 0, 0)
-    unit:addCooldownReduction(cd_reduc, 0, 0)
-    unit:addMana(mana, 0, 0)
+    unit:addMagicalDamageBase(m_dmg)
+    unit:addCooldownReductionRatingBase(cd_reduc)
+    unit:addManaBase(mana)
 end
 
 ---@param value number
 function Unit:addIntelligenceBase(value)
-    local old = getResult(ParameterType.INT)
+    local old = getResult(ParameterType.INT, self)
     local new = addParameterValue(ParameterType.INT, self, value, 0, 0)
     applyIntelligence(self, old, new)
 end
 
 ---@param percent number
 function Unit:addIntelligencePercent(percent)
-    local old = getResult(ParameterType.INT)
+    local old = getResult(ParameterType.INT, self)
     local new = addParameterValue(ParameterType.INT, self, 0, percent/100, 0)
     applyIntelligence(self, old, new)
 end
 
 ---@param value number
 function Unit:addIntelligenceBonus(value)
-    local old = getResult(ParameterType.INT)
+    local old = getResult(ParameterType.INT, self)
     local new = addParameterValue(ParameterType.INT, self, 0, 0, value)
     applyIntelligence(self, old, new)
 end
@@ -726,7 +752,7 @@ local function applyMoveSpeed(unit, value)
     if value <= 1 then
         SetUnitTurnSpeed(unit:getObj(), 0)
     else
-        SetUnitTurnSpeed(unit:getObj(), GetUnitDefaultTurnSpeed(unit))
+        SetUnitTurnSpeed(unit:getObj(), GetUnitDefaultTurnSpeed(unit:getObj()))
     end
     SetUnitMoveSpeed(unit:getObj(), value)
 end

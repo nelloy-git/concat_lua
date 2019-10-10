@@ -5,6 +5,8 @@ local UnitEvent = require('Class.Unit.Event')
 ---@type ParameterType
 local ParameterType = require('Include.ParameterType')
 
+require('Class.Unit.ParametersContainer')
+
 local UnitAbilities = {}
 function UnitAbilities.init()
     UnitEvent.UNIT_CHANGED_PARAMETER:addAction(runFuncInDebug, Unit.updateAbilities)

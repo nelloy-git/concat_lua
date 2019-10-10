@@ -11,7 +11,7 @@ Range[ParameterType.Id.M_DMG] = {min = 0, max = abs_max}
 Range[ParameterType.Id.CAST_TIME_REDUC] = {min = -0.75, max = 0.75}
 Range[ParameterType.Id.RESIST] = {min = -abs_max, max = abs_max}
 Range[ParameterType.Id.M_DMG_REDUC] = {min = -0.75, max = 0.75}
-Range[ParameterType.Id.DODGE_CH] = {min = 0, max = 0.75}
+Range[ParameterType.Id.DODGE] = {min = 0, max = 0.75}
 Range[ParameterType.Id.CRIT_CH] = {min = 0, max = 0.75}
 Range[ParameterType.Id.CRIT_DMG] = {min = 1.2, max = abs_max}
 Range[ParameterType.Id.CD_REDUC] = {min = -0.75, max = 0.75}

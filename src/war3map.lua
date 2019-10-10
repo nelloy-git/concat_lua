@@ -4,6 +4,9 @@ compiletime(
         WeObjEdit = require('compiletime.objEdit.objEdit')
         WeObjEdit.init(src_dir, dst_dir)
         addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
+
+        local weItem = WeObjEdit.Item.Item
+        local i = weItem.new()
     end)
 
 
@@ -35,31 +38,9 @@ function RunInitialization()
 end
 
 Test = function()
-    require('Include.Unit')
+    local Unit = require('Include.Unit')
 
-    --local Unit = require('baseClasses.Unit')
-    --local Ability = require('baseClasses.Ability')
---
-    --local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
-    ---@type Unit
-    --local u2 = Unit.new(Player(1), 'Hpal', 0, 0, 0)
-
-    ---@type Ability
-    --local summon_ability = require('heroes.warlord.summon')
-    --u1:addAbility(summon_ability)
-    --runFuncInDebug(Unit.updateAbilitiesTooltips, u1)
-
-    --Debug(BlzFrameGetWidth(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)))
-
-    --BlzFrameSetAllPoints(Frame.WORLD_FRAME:getObj(), Frame.GAME_UI:getObj())
-
-    --local Tooltip = require('baseClasses.Frame.Parameter.Tooltip')
-    
-    ---@type ParametersAreaFrame
-    --local Interface = require("baseClasses.Frame.Interface")
-    --local inv = Inventory.new()
-    --inv:setPosition(0.2, 0.1)
-    --inv:setSize(0.2, 0.3)
+    local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
 
 end
 
