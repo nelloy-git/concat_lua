@@ -1,6 +1,6 @@
 local DataBase = require('utils.DataBase')
 
----@class Item
+---@class Item2
 local Item = newClass("ItemClass")
 local Item_meta = newMeta(Item)
 Item.__db = DataBase.new('userdata', 'Item')

@@ -33,7 +33,6 @@ ParameterType.Id = {
     MS = 20,
 }
 
---- Creates new unit parameter. apply_func:function(unit:unit, value:number). math_func:function(base:number, mult:number, bonus:number, min:number, max:number):number.
 ---@param id number
 ---@return ParameterType
 local function newParameter(id)

@@ -2,20 +2,9 @@
 local DataBase = require('utils.DataBase')
 
 ---@class Trigger
-local Trigger = {
-    __type = 'TriggerClass',
-    __db = DataBase.new('userdata', 'Trigger')
-}
-local Trigger_meta = {
-    __type = 'Trigger',
-    __index = Trigger,
-    __gc = Trigger.destroy
-}
-
----@param self Trigger
-function Trigger_meta.__tostring(self)
-    return string.format("%s", type(self))
-end
+local Trigger = newClass('Trigger')
+local Trigger_meta = newMeta(Trigger)
+Trigger.__db = DataBase.new('userdata', 'Trigger')
 
 -- ============
 --  Predefined

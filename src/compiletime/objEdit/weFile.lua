@@ -10,6 +10,7 @@ local function weType2file(we_type)
     if we_type == 'ability' then return 'war3map.w3a' end
     if we_type == 'buff' then return 'war3map.w3h'end
     if we_type == 'unit' then return 'war3map.w3u' end
+    if we_type == 'item' then return 'war3map.w3t' end
 end
 
 ---@param path string
@@ -30,7 +31,7 @@ local function readFile(path)
     return t
 end
 
----@param we_type string|'ability'|'buff'|'unit'
+---@param we_type string|''ability''|''buff''|''unit''|''item''
 ---@return WeFile
 function WeFile.readFromSrc(we_type)
     local separator = package.config:sub(1,1)
@@ -100,12 +101,14 @@ function WeFile.init(src_dir, dst_dir)
     WeFile.abilities = WeFile.readFromSrc('ability')
     WeFile.buffs = WeFile.readFromSrc('buff')
     WeFile.units = WeFile.readFromSrc('unit')
+    WeFile.items = WeFile.readFromSrc('item')
 end
 
 function WeFile.close()
     WeFile.abilities:applyChanges()
     WeFile.units:applyChanges()
     WeFile.buffs:applyChanges()
+    WeFile.items:applyChanges()
 end
 
 return WeFile

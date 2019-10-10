@@ -2,16 +2,12 @@
 local Unit = require('Class.Unit.Main')
 ---@type UnitEvent
 local UnitEvent = require('Class.Unit.Event')
----@type UnitParameterContainer
-local UnitParameterContainer = require('Class.Unit.Parameters.Container')
----@type UnitParameterType
-local UnitParameterType = require('Class.Unit.Parameters.Type')
+---@type ParameterType
+local ParameterType = require('Include.ParameterType')
 
 local UnitAbilities = {}
 function UnitAbilities.init()
-    ---@type Trigger
-    UnitParameterContainer.init()
-    UnitEvent.UNIT_CHANGED_PARAMETERS:addAction(runFuncInDebug, Unit.updateAbilities)
+    UnitEvent.UNIT_CHANGED_PARAMETER:addAction(runFuncInDebug, Unit.updateAbilities)
 end
 
 Unit.addCreationFunction(function(unit)
@@ -62,7 +58,7 @@ function Unit.updateAbilities()
         unit.__abilities[i]:updateTooltipForOwner(unit)
     end
 
-    if param_type == UnitParameterType.CD_REDUC then
+    if param_type == ParameterType.CD_REDUC then
         local value = UnitEvent.GetChangedParameterNewValue()
         for i = 1, #unit.__abilities do
             local abil = unit.__abilities[i]

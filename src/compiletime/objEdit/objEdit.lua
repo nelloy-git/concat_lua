@@ -43,6 +43,11 @@ function ObjEdit.init(src_path, dst_path)
     ---@type WeUnit
     ObjEdit.Unit.Unit = require('compiletime.objEdit.objects.unit.weUnit')
 
+    -- Items
+    ObjEdit.Item = {}
+    ---@type WeItem
+    ObjEdit.Item.Item = require('compiletime.objEdit.objects.item.weItem')
+
     -- Presets
     ObjEdit.Preset = {}
     ---@type ChannelCompiletimeData

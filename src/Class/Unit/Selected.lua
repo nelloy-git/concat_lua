@@ -1,13 +1,9 @@
 ---@type Unit
-local Unit = require('baseClasses.Unit.Main')
+local Unit = require('Class.Unit.Main')
 ---@type UnitEvent
-local UnitEvent = require('baseClasses.Unit.Event')
+local UnitEvent = require('Class.Unit.Event')
 
 local SelectedUnits = {}
-
---- Predefined
-local unitSelectedFunc
-local unitDeselectedFunc
 
 local initialized = false
 function SelectedUnits.init()
@@ -27,7 +23,7 @@ end
 
 ---@param player player
 ---@return Unit[]
-function SelectedUnits.getSelectedByPlayer(player)
+function Unit.getSelectedByPlayer(player)
     local copy = {}
     for i = 1, #SelectedUnits[player] do
         table.insert(copy, 1, SelectedUnits[player][i])
@@ -37,7 +33,7 @@ end
 
 ---@param player player
 ---@return number
-function SelectedUnits.countSelectedByPlayer(player)
+function Unit.countSelectedByPlayer(player)
     return #SelectedUnits[player]
 end
 

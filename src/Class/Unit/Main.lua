@@ -1,11 +1,22 @@
+--=========
+-- Include
+--=========
+
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 ---@type Settings
 local Settings = require('utils.Settings')
 
+--=======
+-- Class
+--=======
+
 ---@class Unit
 local Unit = newClass('Unit')
 local Unit_meta = newMeta(Unit)
+Unit.__db = DataBase.new('userdata', 'Unit')
+Unit.__unit_creation_funcs = {}
+Unit.__unit_removal_funcs = {}
 
 ---@param player player
 ---@param id string | integer
@@ -32,7 +43,6 @@ function Unit.new(player, id, x, y, face, is_dead)
     Unit.__db:add(unit.__unit_obj, unit)
 
     --- Run functions added by submodules.
-    Debug("Create unit functions count: ", #Unit.__unit_creation_funcs)
     for i = 1, #Unit.__unit_creation_funcs do
         if Settings.Unit.DebugCreationFunctions then
             runFuncInDebug(Unit.__unit_creation_funcs[i], unit)

@@ -1,6 +1,6 @@
 ---@type DataBase
 local DataBase = require('utils.DataBase')
----@type Item
+---@type Item2
 local Item = require('baseClasses.Item.ItemData')
 ---@type Trigger
 local Trigger = require('baseClasses.Trigger')

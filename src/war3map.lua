@@ -35,7 +35,7 @@ function RunInitialization()
 end
 
 Test = function()
-    require('Include.ParameterType')
+    require('Include.Unit')
 
     --local Unit = require('baseClasses.Unit')
     --local Ability = require('baseClasses.Ability')

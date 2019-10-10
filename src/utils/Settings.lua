@@ -19,7 +19,7 @@ local Settings = {
 
         StartingParameter = {
             P_DMG = 1,
-            ATKS_PER_SEC = 2,
+            ATKS_PER_SEC = 0.5,
             ARMOR = 0,
             P_DMG_REDUC = 0,
             M_DMG = 0,

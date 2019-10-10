@@ -1,14 +1,17 @@
+--=========
+-- Include
+--=========
+
+---@type DataBase
 local DataBase = require('utils.DataBase')
-local Unit = require('baseClasses.Unit.Main')
-local Trigger = require('baseClasses.Trigger')
+---@type Unit
+local Unit = require('Class.Unit.Main')
+---@type Trigger
+local Trigger = require('Include.Trigger')
 
-local __db = DataBase.new("userdata", "Trigger")
-local __custom_db = DataBase.new("string", "Trigger")
-
-local __db = {
-    origin = DataBase.new('userdata', 'boolean'),
-    custom = DataBase.new('string', 'boolean')
-}
+--=======
+-- Class
+--=======
 
 ---@class UnitEvent
 local UnitEvent = newClass("UnitEvent")
