@@ -77,6 +77,12 @@ local Settings = {
     Events = {
         VerboseAbilityTargeting = true,
         VerboseAbilityCasting = true
+    },
+    -- =======
+    --  Items
+    -- =======
+    Item = {
+        CompiletimeBaseId = 'hfoo'
     }
 }
 

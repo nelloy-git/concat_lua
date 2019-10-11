@@ -5,8 +5,8 @@ compiletime(
         WeObjEdit.init(src_dir, dst_dir)
         addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
 
-        local weItem = WeObjEdit.Item.Item
-        local i = weItem.new()
+        --local weItem = WeObjEdit.Item.Item
+        --local i = weItem.new()
     end)
 
 
@@ -39,6 +39,7 @@ end
 
 Test = function()
     local Unit = require('Include.Unit')
+    require('Class.Item.ObjectPool')
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
 

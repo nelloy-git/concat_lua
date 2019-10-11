@@ -59,9 +59,9 @@ function AnyWeItem:setTintingColor1Red(data) self:addField(WeField.new("iclr", "
 ---@param data string
 function AnyWeItem:setCooldownGroup(data) self:addField(WeField.new("icid", "string", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setDroppedWhenCarrierDies(data) self:addField(WeField.new("idrp", "boolean", nil, nil, data)) end
+function AnyWeItem:setDroppedWhenCarrierDies(data) self:addField(WeField.new("idrp", "bool", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setCanBeDropped(data) self:addField(WeField.new("idro", "boolean", nil, nil, data)) end
+function AnyWeItem:setCanBeDropped(data) self:addField(WeField.new("idro", "bool", nil, nil, data)) end
 ---@param data string
 function AnyWeItem:setModelUsed(data) self:addField(WeField.new("ifil", "string", nil, nil, data)) end
 ---@param data integer
@@ -69,29 +69,29 @@ function AnyWeItem:setGoldCost(data) self:addField(WeField.new("igol", "int", ni
 ---@param data integer
 function AnyWeItem:setHitPoints(data) self:addField(WeField.new("ihtp", "int", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setIgnoreCooldown(data) self:addField(WeField.new("iicd", "boolean", nil, nil, data)) end
+function AnyWeItem:setIgnoreCooldown(data) self:addField(WeField.new("iicd", "bool", nil, nil, data)) end
 ---@param data integer
 function AnyWeItem:setLevel(data) self:addField(WeField.new("ilev", "int", nil, nil, data)) end
 ---@param data integer
 function AnyWeItem:setLumberCost(data) self:addField(WeField.new("ilum", "int", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setValidTargetForTransformation(data) self:addField(WeField.new("imor", "boolean", nil, nil, data)) end
+function AnyWeItem:setValidTargetForTransformation(data) self:addField(WeField.new("imor", "bool", nil, nil, data)) end
 ---@param data integer
 function AnyWeItem:setLevelUnclassified(data) self:addField(WeField.new("ilvo", "int", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setPerishable(data) self:addField(WeField.new("iper", "boolean", nil, nil, data)) end
+function AnyWeItem:setPerishable(data) self:addField(WeField.new("iper", "bool", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setIncludeAsRandomChoice(data) self:addField(WeField.new("iprn", "boolean", nil, nil, data)) end
+function AnyWeItem:setIncludeAsRandomChoice(data) self:addField(WeField.new("iprn", "bool", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setUseAutomaticallyWhenAcquired(data) self:addField(WeField.new("ipow", "boolean", nil, nil, data)) end
+function AnyWeItem:setUseAutomaticallyWhenAcquired(data) self:addField(WeField.new("ipow", "bool", nil, nil, data)) end
 ---@param data integer
 function AnyWeItem:setPriority(data) self:addField(WeField.new("ipri", "int", nil, nil, data)) end
 ---@param data number
 function AnyWeItem:setScalingValue(data) self:addField(WeField.new("isca", "real", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setCanBeSoldByMerchants(data) self:addField(WeField.new("isel", "boolean", nil, nil, data)) end
+function AnyWeItem:setCanBeSoldByMerchants(data) self:addField(WeField.new("isel", "bool", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setCanBeSoldToMerchants(data) self:addField(WeField.new("ipaw", "boolean", nil, nil, data)) end
+function AnyWeItem:setCanBeSoldToMerchants(data) self:addField(WeField.new("ipaw", "bool", nil, nil, data)) end
 ---@param data integer
 function AnyWeItem:setStockMaximum(data) self:addField(WeField.new("isto", "int", nil, nil, data)) end
 ---@param data integer
@@ -99,7 +99,7 @@ function AnyWeItem:setStockReplenishInterval(data) self:addField(WeField.new("is
 ---@param data integer
 function AnyWeItem:setStockStartDelay(data) self:addField(WeField.new("isst", "int", nil, nil, data)) end
 ---@param data boolean
-function AnyWeItem:setActivelyUsed(data) self:addField(WeField.new("iusa", "boolean", nil, nil, data)) end
+function AnyWeItem:setActivelyUsed(data) self:addField(WeField.new("iusa", "bool", nil, nil, data)) end
 ---@param data integer
 function AnyWeItem:setNumberofCharges(data) self:addField(WeField.new("iuse", "int", nil, nil, data)) end
 ---@param data string

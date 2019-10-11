@@ -74,7 +74,9 @@ function WeFile:applyChanges()
         if type(we_obj.getName) == 'function' then
             name = we_obj:getName() or ''
         end
-        print(string.format('Created %s %s with id: \'%s\' based on \'%s\'', we_obj.we_type, name, we_obj.id, we_obj.base_id))
+        if we_obj.verbouse then
+            print(string.format('Created %s %s with id: \'%s\' based on \'%s\'', we_obj.we_type, name, we_obj.id, we_obj.base_id))
+        end
     end
     self:writeToDst()
 end

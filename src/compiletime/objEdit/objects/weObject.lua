@@ -12,10 +12,16 @@ function WeObject.new(id, base_id, we_type)
         id = id,
         base_id = base_id,
         we_type = we_type,
-        changes = {}
+        changes = {},
+        verbouse = true,
     }
     setmetatable(obj, {__index = WeObject})
     return obj
+end
+
+---@param flag boolean
+function WeObject:showCompiletimeMsg(flag)
+    self.verbouse = flag
 end
 
 ---@param we_field WeField
