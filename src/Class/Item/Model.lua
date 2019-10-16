@@ -25,20 +25,22 @@ local __Item_to_wc3 = DataBase.new('Item', 'userdata')
 ---@param item Item
 ---@param x number
 ---@param y number
-function Item:createModel(item, x, y)
+function Item:createObject(item, x, y)
     local model = CreateItem(Settings.Item.CompiletimeBaseId, x, y)
 
     __wc3_to_Item:add(model, self)
     __Item_to_wc3:add(self, model)
 end
 
-function Item:destroyModel()
+function Item:destroyObject()
     local model = __Item_to_wc3:get(self)
     if not model then return nil end
     __wc3_to_Item:remove(model)
     __Item_to_wc3:remove(self)
     RemoveItem(model)
 end
+
+Item.addRemovalFunction(Item.destroyObject)
 
 function Item:setModel(path)
     local model = __Item_to_wc3:get(self)

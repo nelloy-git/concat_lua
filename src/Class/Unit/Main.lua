@@ -44,11 +44,7 @@ function Unit.new(player, id, x, y, face, is_dead)
 
     --- Run functions added by submodules.
     for i = 1, #Unit.__unit_creation_funcs do
-        if Settings.Unit.DebugCreationFunctions then
-            runFuncInDebug(Unit.__unit_creation_funcs[i], unit)
-        else
-            Unit.__unit_creation_funcs[i](unit)
-        end
+        runFuncInDebug(Unit.__unit_creation_funcs[i], unit)
     end
 
     return unit

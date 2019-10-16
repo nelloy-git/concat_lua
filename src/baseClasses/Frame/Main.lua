@@ -1,6 +1,6 @@
 local DataBase = require('utils.DataBase')
 
----@class Frame
+---@class Frame1
 local Frame = {
     __type = "FrameClass",
     __db = DataBase.new("userdata", "Frame")
