@@ -32,6 +32,8 @@ function Frame.init()
     initialized = true
 end
 
+---@param obj framehandle
+---@param parent Frame
 local function newFrame(obj, parent)
     frame = {
         __x = 0,
@@ -63,7 +65,9 @@ function Frame.get(frame_obj)
     local parent_obj
     if frame_obj == game_ui_obj then
         parent_obj = nil
-    elseif 
+    elseif frame_obj == command_panel_obj or frame_obj == hero_panel_obj then
+        BlzFrameSetParent(frame_obj, game_ui_obj)
+        parent_obj = game_ui_obj
     else
         parent_obj = BlzFrameGetParent(frame_obj)
         if parent_obj == frame_obj then parent_obj = nil end
@@ -146,47 +150,5 @@ end
 function Frame:getChildrens()
     return self.__childrens
 end
-
-function Frame:getX()
-    local p_x
-    if not self.__parent then
-        p_x = 0
-    else
-        p_x = self.__parent:getX()
-    end
-    local x = self.__x or 0
-    return p_x + x
-end
-
-function Frame:getY()
-    local p_y
-    if not self.__parent then
-        p_y = Frame.getScreenHeight()
-    else
-        p_y = self.__parent:getY()
-    end
-    local y = self.__y or 0
-    return p_y - y
-end
-
-function Frame:applyMainFramePos()
-    local parent_obj
-    if not self.__parent then
-        parent_obj = game_ui_obj
-    else
-        parent_obj = self.__parent:getObj()
-    end
-    local x = self.__x or 0
-    local y = self.__y or 0
-
-    BlzFrameSetPoint(self.__frame_obj, FRAMEPOINT_TOPLEFT, game_ui_obj, FRAMEPOINT_TOPLEFT, self:getX(), self:getY())
-    BlzFrameSetSize(self.__frame_obj, self.__width, self.__height)
-end
-
---- Redefine this function if need other screen size depencies.
-function Frame:update()
-    local x = self:getX()
-end
-
 
 return Frame

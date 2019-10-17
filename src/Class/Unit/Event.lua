@@ -73,7 +73,7 @@ function UnitEvent.new(event)
 end
 
 ---@return boolean
-function UnitEvent:isOrigin()
+function UnitEvent:isDefault()
     return self.__event_obj == 'userdata'
 end
 
@@ -100,7 +100,7 @@ function UnitEvent.getTrigger(event)
         UnitEvent.__triggers_db:add(event, trigger)
     end
 
-    if event:isOrigin() then
+    if event:isDefault() then
         for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
             trigger:addPlayerUnitEvent(event.__event_obj, Player(i))
         end
