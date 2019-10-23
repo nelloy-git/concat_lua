@@ -18,5 +18,6 @@
     ],
     "Lua.workspace.library": {
         "./lib" : true
-    }
+    },
+    "python.pythonPath": "/usr/bin/python3"
 }

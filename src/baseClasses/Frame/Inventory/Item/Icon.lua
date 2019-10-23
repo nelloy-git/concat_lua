@@ -3,7 +3,7 @@ local Frame = require('baseClasses.Frame.FrameData')
 ---@type Frame
 local ItemTooltip = require('baseClasses.Frame.Inventory.Item.Tooltip')
 
----@class ItemFrame
+---@class ItemFrame2
 local ItemFrame = {
     __type = "ItemFrameClass"
 }

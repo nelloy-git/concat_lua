@@ -24,10 +24,17 @@ function Frame.init()
     if initialized then return nil end
 
     game_ui_obj = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-    Frame.GAME_UI = Frame.get(game_ui_obj)
-
     command_panel_obj = BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, 0))
     hero_panel_obj = BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_HERO_BAR, 0))
+
+    Frame.GAME_UI = Frame.get(game_ui_obj)
+    Frame.GAME_UI:setWidth(1)
+    Frame.GAME_UI:setHeight(1)
+
+    Frame.WORLD = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
+    Frame.WORLD:setParent(Frame.GAME_UI)
+    Frame.WORLD:setWidth(1)
+    Frame.WORLD:setHeight(1)
 
     initialized = true
 end
@@ -42,7 +49,6 @@ local function newFrame(obj, parent)
         __height = 0,
         __frame_obj = obj,
         __parent = parent,
-        __childrens = {}
     }
     setmetatable(frame, Frame_meta)
     Frame.__db:add(frame.__frame_obj, frame)
@@ -125,30 +131,6 @@ end
 ---@return framehandle
 function Frame:getObj()
     return self.__frame_obj or game_ui_obj
-end
-
----@param parent Frame
-function Frame:setParent(parent)
-    -- Remove child from previous parent.
-    for i = 1, #self.__parent.__childrens do
-        if self.__parent.__childrens[i] == self then
-            table.remove(self.__parent.__childrens, i)
-            break
-        end
-    end
-
-    self.__parent = parent
-    table.insert(parent.__childrens, 1, self)
-end
-
----@return Frame
-function Frame:getParent()
-    return self.__parent
-end
-
----@return Frame[]
-function Frame:getChildrens()
-    return self.__childrens
 end
 
 return Frame
