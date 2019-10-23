@@ -39,10 +39,22 @@ end
 
 Test = function()
     local Unit = require('Include.Unit')
-    require('Class.Item.ObjectPool')
+    ---@type Frame
+    local Frame = require('Include.Frame')
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
 
+    local f1 = Frame.newDefault("BACKDROP", Frame.WORLD)
+    f1:setX(0.5)
+    f1:setY(0.5)
+    f1:setWidth(0.2)
+    f1:setHeight(0.2)
+
+    f1 = Frame.WORLD
+    --Debug(Frame:getParent())
+    --Debug(Frame.getScreenWidth(), Frame.getScreenHeight())
+    --Debug(Frame.GAME_UI:getAbsWidth(), Frame.GAME_UI:getAbsHeight())
+    Debug(f1:getAbsX(), f1:getAbsY(), f1:getAbsWidth(), f1:getAbsHeight())
 end
 
 function InitCustomPlayerSlots()

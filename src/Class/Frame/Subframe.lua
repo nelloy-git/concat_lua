@@ -39,9 +39,7 @@ function Frame:removeSubframe(key)
     return sub
 end
 
---- Returns pos
 ---@param parent Frame
----@return number
 function Frame:setParent(parent)
     -- Remove child from previous parent.
     if self.__parent ~= nil then
@@ -58,15 +56,18 @@ function Frame:setParent(parent)
         table.insert(parent.__childrens, #parent.__childrens + 1, self)
     end
 
-    return #parent.__childrens
+    self:update()
 end
 
 ---@return Frame
 function Frame:getParent()
-    return self.__parent
+    return nil
 end
 
 ---@return Frame[]
 function Frame:getChildrens()
+    if not self.__childrens then
+        self.__childrens = {}
+    end
     return self.__childrens
 end

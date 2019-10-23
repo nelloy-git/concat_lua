@@ -33,8 +33,12 @@ function Frame.init()
 
     Frame.WORLD = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
     Frame.WORLD:setParent(Frame.GAME_UI)
-    Frame.WORLD:setWidth(1)
-    Frame.WORLD:setHeight(1)
+    Frame.WORLD:setX(0.25)
+    Frame.WORLD:setY(0.25)
+    Frame.WORLD:setWidth(0.5)
+    Frame.WORLD:setHeight(0.5)
+
+    Debug()
 
     initialized = true
 end
@@ -58,6 +62,8 @@ local function newFrame(obj, parent)
     if parent ~= nil then
         BlzFrameSetParent(frame.__frame_obj, parent:getObj())
     end
+
+    return frame
 end
 
 ---@param frame_obj framehandle

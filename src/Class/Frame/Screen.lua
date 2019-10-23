@@ -16,8 +16,12 @@ local FrameScreenModule = {}
 local update_period = 1
 local update_resolution
 
+local initialized = false
 function FrameScreenModule.init()
+    if initialized then return nil end
+    Frame.init()
     update_resolution()
+    initialized = true
 end
 
 local x_offset = 0
@@ -37,6 +41,10 @@ end
 ---@return number
 function Frame.getScreenRatio()
     return screen_width / screen_height
+end
+
+function Frame.getScreenXOffset()
+    return x_offset
 end
 
 local cur_width = 0

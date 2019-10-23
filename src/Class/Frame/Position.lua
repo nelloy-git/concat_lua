@@ -2,18 +2,29 @@
 -- Includes
 --==========
 
----@type DataBase
+---@type Frame
 local Frame = require('Class.Frame.Main')
+
+require('Class.Frame.Subframe')
 
 --========
 -- Module
 --========
 
 function Frame:update()
-    BlzFrameSetPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
-                     self.__parent:getObj(), FRAMEPOINT_TOPLEFT,
-                     self.__x * self.__parent:getAbsWidth(), self.__y * self.__parent:getAbsHeight())
-    BlzFrameSetSize(self:getObj(), self:getAbsWidth(), self:getAbsWidth())
+    local parent = self:getParent()
+    
+    --if parent then
+    --    BlzFrameSetPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
+    --                     parent:getObj(), FRAMEPOINT_TOPLEFT,
+    --                     self:getX() * parent:getAbsWidth(), -self:getY() * parent:getAbsHeight())
+    --else
+        Debug(self:getX(), Frame.getScreenWidth(), Frame.getScreenXOffset())
+        BlzFrameSetAbsPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
+                            self:getAbsX(),
+                            self:getAbsY())
+    --end
+    BlzFrameSetSize(self:getObj(), self:getAbsWidth(), self:getAbsHeight())
 
     local childrens = self:getChildrens()
     for i = 1, #childrens do
@@ -51,9 +62,9 @@ end
 function Frame:getAbsX()
     local p_x
     local p_w
-    if not self.__parent then
-        p_x = 0
-        p_w = Frame:getScreenWidth()
+    if not self:getParent() then
+        p_x = -Frame:getScreenXOffset()
+        p_w = Frame.getScreenWidth()
     else
         p_x = self.__parent:getAbsX()
         p_w = self.__parent:getAbsWidth()
@@ -65,13 +76,16 @@ end
 ---@return number
 function Frame:getAbsY()
     local p_y
-    if not self.__parent then
+    local p_h
+    if not self:getParent() then
         p_y = Frame.getScreenHeight()
+        p_h = Frame.getScreenHeight()
     else
         p_y = self.__parent:getAbsY()
+        p_h = self.__parent:getAbsHeight()
     end
     local y = self.__y
-    return p_y - y
+    return p_y - self.__y * p_h
 end
 
 ---Relative to parent's height
@@ -103,21 +117,25 @@ end
 ---@return number
 function Frame:getAbsWidth()
     local p_w
-    if not self._parent then
+    local parent = self:getParent()
+
+    if not parent then
         p_w = Frame.getScreenWidth()
     else
-        p_w = self.__parent:getAbsWidth()
+        p_w = parent:getAbsWidth()
     end
-    return self.__x * p_w
+    return self:getWidth() * p_w
 end
 
 ---@return number
 function Frame:getAbsHeight()
     local p_h
-    if not self._parent then
+    local parent = self:getParent()
+
+    if not parent then
         p_h = Frame.getScreenHeight()
     else
-        p_h = self.__parent:getAbsHeight()
+        p_h = parent:getAbsHeight()
     end
-    return self.__y * p_h
+    return self:getHeight() * p_h
 end
