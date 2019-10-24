@@ -58,7 +58,19 @@ update_resolution = function()
         cur_width = w
         cur_height = h
 
-        Frame.GAME_UI:update()
+        Frame.GAME_UI:setX(-x_offset)
+        Frame.GAME_UI:setY(0)
+        Frame.GAME_UI:setWidth(cur_width)
+        Frame.GAME_UI:setHeight(cur_height)
+        BlzFrameSetAbsPoint(Frame.GAME_UI:getObj(), FRAMEPOINT_TOPLEFT, -x_offset, cur_height)
+        BlzFrameSetSize(Frame.GAME_UI:getObj(), cur_width, cur_height)
+
+        local world = Frame.getOrigin()
+        BlzFrameSetAllPoints()
+        --local childrens = Frame.GAME_UI:getChildrens()
+        --for i = 1, #childrens do
+        --    childrens[i]:update()
+        --end
     end
     glTimer:addAction(update_period, update_resolution)
 end

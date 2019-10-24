@@ -39,12 +39,22 @@ function Frame:removeSubframe(key)
     return sub
 end
 
+---@param frame Frame
+---@param child Frame
+local function addChild(frame, child)
+    local childrens = frame:getChildrens()
+    table.insert(childrens, #childrens + 1, child)
+    BlzFrameSetParent(child:getObj(), frame:getObj())
+end
+
 ---@param parent Frame
 function Frame:setParent(parent)
     -- Remove child from previous parent.
-    if self.__parent ~= nil then
-        for i = 1, #self.__parent.__childrens do
-            if self.__parent.__childrens[i] == self then
+    local prev_parent = self:getParent()
+    if prev_parent ~= nil then
+        local parents_chilrens = prev_parent:getChildrens()
+        for i = 1, #parents_chilrens do
+            if parents_chilrens[i] == self then
                 table.remove(self.__parent.__childrens, i)
                 break
             end
@@ -52,16 +62,14 @@ function Frame:setParent(parent)
     end
 
     self.__parent = parent
-    if parent ~= nil then
-        table.insert(parent.__childrens, #parent.__childrens + 1, self)
-    end
+    addChild(parent, self)
 
     self:update()
 end
 
 ---@return Frame
 function Frame:getParent()
-    return nil
+    return self.__parent
 end
 
 ---@return Frame[]

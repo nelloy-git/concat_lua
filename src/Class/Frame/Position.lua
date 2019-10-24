@@ -13,16 +13,13 @@ require('Class.Frame.Subframe')
 
 function Frame:update()
     local parent = self:getParent()
-    
-    --if parent then
-    --    BlzFrameSetPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
-    --                     parent:getObj(), FRAMEPOINT_TOPLEFT,
-    --                     self:getX() * parent:getAbsWidth(), -self:getY() * parent:getAbsHeight())
-    --else
-        Debug(self:getX(), Frame.getScreenWidth(), Frame.getScreenXOffset())
-        BlzFrameSetAbsPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
-                            self:getAbsX(),
-                            self:getAbsY())
+    if not parent then
+        parent = Frame.GAME_UI
+    end
+
+    BlzFrameSetPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
+                     parent:getObj(), FRAMEPOINT_TOPLEFT,
+                     self:getX() * parent:getAbsWidth(), self:getAbsY() * parent:getAbsHeight())
     --end
     BlzFrameSetSize(self:getObj(), self:getAbsWidth(), self:getAbsHeight())
 
@@ -49,13 +46,13 @@ end
 ---Relative to parent's width
 ---@return number
 function Frame:getX()
-    return self.__x
+    return self.__x or 0
 end
 
 ---Relative to parent's height
 ---@return number
 function Frame:getY()
-    return self.__y
+    return self.__y or 0
 end
 
 ---@return number
@@ -70,7 +67,7 @@ function Frame:getAbsX()
         p_w = self.__parent:getAbsWidth()
     end
 
-    return p_x + self.__x * p_w
+    return p_x + self:getX() * p_w
 end
 
 ---@return number
@@ -84,8 +81,7 @@ function Frame:getAbsY()
         p_y = self.__parent:getAbsY()
         p_h = self.__parent:getAbsHeight()
     end
-    local y = self.__y
-    return p_y - self.__y * p_h
+    return p_y - self:getY() * p_h
 end
 
 ---Relative to parent's height
@@ -105,13 +101,13 @@ end
 ---Relative to parent's width
 ---@return number
 function Frame:getWidth()
-    return self.__width
+    return self.__width or 0
 end
 
 ---Relative to parent's height
 ---@return number
 function Frame:getHeight()
-    return self.__height
+    return self.__height or 0
 end
 
 ---@return number

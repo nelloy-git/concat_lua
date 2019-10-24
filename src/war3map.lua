@@ -44,17 +44,23 @@ Test = function()
 
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
 
-    local f1 = Frame.newDefault("BACKDROP", Frame.WORLD)
-    f1:setX(0.5)
-    f1:setY(0.5)
-    f1:setWidth(0.2)
-    f1:setHeight(0.2)
+    local world = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
+    world:setX(0.25)
+    world:setY(0.25)
+    world:setWidth(0.5)
+    world:setHeight(0.5)
 
-    f1 = Frame.WORLD
+    --local f1 = Frame.newDefaultType("BACKDROP", world)
+    --f1:setX(0.5)
+    --f1:setY(0.5)
+    --f1:setWidth(0.2)
+    --f1:setHeight(0.2)
+
+    --f1 = Frame.WORLD
     --Debug(Frame:getParent())
     --Debug(Frame.getScreenWidth(), Frame.getScreenHeight())
     --Debug(Frame.GAME_UI:getAbsWidth(), Frame.GAME_UI:getAbsHeight())
-    Debug(f1:getAbsX(), f1:getAbsY(), f1:getAbsWidth(), f1:getAbsHeight())
+    Debug(world:getAbsX(), world:getAbsY(), world:getAbsWidth(), world:getAbsHeight())
 end
 
 function InitCustomPlayerSlots()

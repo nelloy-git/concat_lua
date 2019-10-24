@@ -24,6 +24,8 @@ function Frame.init()
     BlzHideOriginFrames(true)
     game_ui_obj = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 
+    Frame.GAME_UI = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
+
     initialized = true
 end
 
