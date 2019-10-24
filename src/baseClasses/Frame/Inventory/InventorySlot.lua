@@ -1,6 +1,5 @@
 local Frame = require('baseClasses.Frame.FrameData')
 
----@class InventorySlotFrame:Frame
 local InventorySlotFrame = {
     __type = "InventorySlotClassFrame"
 }
