@@ -14,21 +14,18 @@ local Frame = newClass('Frame')
 local Frame_meta = newMeta(Frame)
 Frame.__db = DataBase.new("userdata", "Frame")
 
----Default parent for all frames.
-local game_ui_obj
-
 local initialized = false
 function Frame.init()
     if initialized then return nil end
 
     BlzHideOriginFrames(true)
     game_ui_obj = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-
     Frame.GAME_UI = Frame.getOrigin(ORIGIN_FRAME_GAME_UI, 0)
 
     initialized = true
 end
 
+local game_ui_obj
 ---@param obj framehandle
 ---@return Frame
 local function newFrame(obj)

@@ -47,28 +47,38 @@ local function addChild(frame, child)
     BlzFrameSetParent(child:getObj(), frame:getObj())
 end
 
+---Frame:update should be called to apply changes.
 ---@param parent Frame
 function Frame:setParent(parent)
-    -- Remove child from previous parent.
     local prev_parent = self:getParent()
-    if prev_parent ~= nil then
-        local parents_chilrens = prev_parent:getChildrens()
-        for i = 1, #parents_chilrens do
-            if parents_chilrens[i] == self then
-                table.remove(self.__parent.__childrens, i)
-                break
-            end
+
+    if not prev_parent then
+        Debug("Frame error: Frame.GAME_UI's parent can not be changed.")
+        return nil
+    end
+
+    -- Remove child from previous parent.
+    local parents_chilrens = prev_parent:getChildrens()
+    for i = 1, #parents_chilrens do
+        if parents_chilrens[i] == self then
+            table.remove(self.__parent.__childrens, i)
+            break
         end
     end
 
-    self.__parent = parent
-    addChild(parent, self)
-
-    self:update()
+    if not parent then
+        self.__parent = Frame.GAME_UI
+    else
+        self.__parent = parent
+    end
+    addChild(self.__parent, self)
 end
 
 ---@return Frame
 function Frame:getParent()
+    if not self.__parent and self ~= Frame.GAME_UI then
+        self.__parent = Frame.GAME_UI
+    end
     return self.__parent
 end
 
