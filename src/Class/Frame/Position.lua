@@ -12,6 +12,7 @@ require('Class.Frame.Screen')
 -- Module
 --========
 
+
 ---Frame:update should be called to apply changes.
 ---Input: function(self:Frame):number
 ---@param x number | function

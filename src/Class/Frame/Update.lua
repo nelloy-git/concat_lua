@@ -20,6 +20,10 @@ function FrameUpdateModule.init()
 
     Frame.init()
     Frame.GAME_UI.update = function() Debug("Frame.GAME_UI can not be updated.") end
+    Frame.GAME_UI.getX = function() return 0 end --Frame.getScreenXOffset() end
+    Frame.GAME_UI.getY = function() return 0.6 end --Frame.getScreenYOffset() end
+    Frame.GAME_UI.getWidth = function() return 0.8 end --Frame.getScreenWidth() end
+    Frame.GAME_UI.getHeight = function() return 0.6 end --Frame.getScreenHeight() end
 
     update_ui()
 
@@ -28,10 +32,14 @@ end
 
 function Frame:update()
     local parent = self:getParent()
+    local offset = 0
+    if parent == Frame.GAME_UI then offset = Frame.getScreenXOffset() end
     BlzFrameSetPoint(self:getObj(), FRAMEPOINT_TOPLEFT,
                      parent:getObj(), FRAMEPOINT_TOPLEFT,
-                     self:getX(), self:getY())
+                     self:getX() + offset, -self:getY())
     BlzFrameSetSize(self:getObj(), self:getWidth(), self:getHeight())
+
+    Debug(self:getX(), self:getY(), self:getWidth(), self:getHeight())
 
     local childrens = self:getChildrens()
     for i = 1, #childrens do
@@ -44,6 +52,7 @@ local update_period = 3
 update_ui = function()
     local changed = Frame.updateScreen()
     if changed then
+        Debug("Global update", Frame.getScreenWidth(), Frame.getScreenHeight())
         local childrens = Frame.GAME_UI:getChildrens()
         for i = 1, #childrens do
             childrens[i]:update()

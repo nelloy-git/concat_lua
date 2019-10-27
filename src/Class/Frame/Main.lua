@@ -40,6 +40,10 @@ local function newFrame(obj)
         BlzFrameSetParent(frame.__frame_obj, game_ui_obj)
     end
 
+    if Frame.GAME_UI ~= nil then
+        frame:setParent(Frame.GAME_UI)
+    end
+
     return frame
 end
 

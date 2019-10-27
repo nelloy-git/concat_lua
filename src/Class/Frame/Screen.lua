@@ -11,6 +11,7 @@ local Frame = require('Class.Frame.Main')
 
 
 local x_offset = 0
+local y_offset = 0.6
 local screen_width = 0.8
 local screen_height = 0.6
 
@@ -32,6 +33,11 @@ function Frame.getScreenXOffset()
     return x_offset
 end
 
+---@return number
+function Frame.getScreenYOffset()
+    return y_offset
+end
+
 --- Returns true if resolution has been changed.
 ---@return boolean
 function Frame.updateScreen()
@@ -39,7 +45,7 @@ function Frame.updateScreen()
     local h = BlzGetLocalClientHeight()
     if w ~= resolution_width or h ~= resolution_height then
         x_offset = -(w / (4 * h / 3) - 1) / 2
-        screen_width = 0.8 + 2 * x_offset
+        screen_width = 0.8 - 2 * x_offset
         resolution_width = w
         resolution_height = h
         return true
