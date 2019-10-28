@@ -92,4 +92,14 @@ function Frame.getByName(frame_name, context)
     return Frame.get(obj)
 end
 
+---@param toc_path string
+---@return boolean
+function Frame.loadToc(toc_path)
+    if not BlzLoadTOCFile(toc_path) then
+        error('Error while loading '..toc_path)
+        return false
+    end
+    return true
+end
+
 return Frame
