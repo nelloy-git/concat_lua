@@ -4,6 +4,8 @@
 
 ---@type Frame
 local Frame = require('Include.Frame')
+---@type ItemFrame
+local ItemFrame = require('Include.ItemFrame')
 
 --=======
 -- Class
@@ -20,6 +22,10 @@ local TEXT_KEY = 'Text'
 local TYPE_ICON_KEY = 'TypeIcon'
 local SLOT_KEY = 'Slot'
 
+local function getSlotKey(pos)
+    return SLOT_KEY..tostring(pos)
+end
+
 
 local initialized = false
 function ItemFrameTooltip.init()
@@ -28,10 +34,6 @@ function ItemFrameTooltip.init()
     Frame.loadToc("war3mapImported\\Frame\\Item\\Tooltip.toc")
 
     initialized = true
-end
-
-local function getSlotKey(pos)
-    return SLOT_KEY..tostring(pos)
 end
 
 ---@param slots number

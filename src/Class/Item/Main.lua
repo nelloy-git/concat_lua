@@ -2,6 +2,9 @@
 -- Includes
 --==========
 
+---@type ItemFrame
+local ItemFrame = require('Include.ItemFrame')
+
 --=======
 -- Class
 --=======

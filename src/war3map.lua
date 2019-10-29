@@ -42,6 +42,8 @@ Test = function()
     ---@type Frame
     local Frame = require('Include.Frame')
 
+    local Item = require('Class.Item.Main')
+
     local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
 
     local world = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
