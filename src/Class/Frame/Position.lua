@@ -14,17 +14,19 @@ require('Class.Frame.Screen')
 
 
 ---Frame:update should be called to apply changes.
----Input: function(self:Frame):number
+---Input: function(self:Frame, data:any):number
 ---@param x number | function
-function Frame:setX(x)
+function Frame:setX(x, data)
     self.__x = x
+    self.__x_data = data
 end
 
 ---Frame:update should be called to apply changes.
----Input: function(self:Frame):number
+---Input: function(self:Frame, data:any):number
 ---@param y number | function
-function Frame:setY(y)
+function Frame:setY(y, data)
     self.__y = y
+    self.__y_data = data
 end
 
 ---@return number
@@ -33,7 +35,7 @@ function Frame:getX()
     if t == 'number' then
         return self.__x
     elseif t == 'function' then
-        return self.__x(self)
+        return self.__x(self, self.__x_data)
     else
         return 0
     end
@@ -45,7 +47,7 @@ function Frame:getY()
     if t == 'number' then
         return self.__y
     elseif t == 'function' then
-        return self.__y(self)
+        return self.__y(self, self.__y_data)
     else
         return 0
     end
@@ -74,17 +76,19 @@ function Frame:getAbsY()
 end
 
 ---Frame:update should be called to apply changes.
----Input: function(self:Frame):number
+---Input: function(self:Frame, data:any):number
 ---@param width number | function
-function Frame:setWidth(width)
+function Frame:setWidth(width, data)
     self.__width = width
+    self.__width_data = data
 end
 
 ---Frame:update should be called to apply changes.
----Input: function(self:Frame):number
+---Input: function(self:Frame, data:any):number
 ---@param height number | function
-function Frame:setHeight(height)
+function Frame:setHeight(height, data)
     self.__height = height
+    self.__height_data = data
 end
 
 ---@return number
@@ -93,7 +97,7 @@ function Frame:getWidth()
     if t == 'number' then
         return self.__width
     elseif t == 'function' then
-        return self.__width(self)
+        return self.__width(self, self.__width_data)
     else
         return 0
     end
@@ -105,7 +109,7 @@ function Frame:getHeight()
     if t == 'number' then
         return self.__height
     elseif t == 'function' then
-        return self.__height(self)
+        return self.__height(self. self.__height_data)
     else
         return 0
     end

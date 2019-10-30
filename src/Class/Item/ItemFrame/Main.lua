@@ -20,28 +20,68 @@ local ItemFrame_meta = newMeta(ItemFrame)
 --  \---> Icon : Frame(BACKDROP)
 --   \--> Area : Frame(FRAME)
 --    \-> Tooltip : Frame(ItemTooltipBackground)
---        \------> Title : Frame(ItemTooltipTitle)
---         \-----> Text : Frame(ItemTooltipText)
---          \----> TypeIcon : Frame(BACKDROP)
---           \---> Slot1 : Frame(BACKDROP)
---            \     \--> SlotContent : IconFrame
---             \-> ...
---              \> SlotN : Frame(BACKDROP)
---                  \--> SlotContent : IconFrame
+--         \-------> TypeIcon : Frame(BACKDROP)
+--          \------> Title : Frame(ItemTooltipTitle)
+--           \-----> Text : Frame(ItemTooltipText)
+--            \----> Slot1 : Frame(BACKDROP)
+--             \     \--> SlotContent : IconFrame
+--              \--> ...
+--               \-> SlotN : Frame(BACKDROP)
+--                    \--> SlotContent : IconFrame
 
 -- IconFrame
 local Icon_key = 'Icon'
+
+--================
+-- Icon subframes
+--================
 local Area_key = 'Area'
+local getAreaX = 0
+local getAreaY = 0
+local getAreaW -- Predefined
+local getAreaH -- Predefined
+
 local Tooltip_key = 'Tooltip'
+local getTooltipX -- Predefined
+local getTooltipY -- Predefined
+local getTooltipW -- Predefined
+local getTooltipH -- Predefined
 
--- Tooltip
-local Title_key = 'Title'
-local Text_key = 'Text'
-local TypeIcon_key = 'TypeIcon'
-local function Slot_key(pos) return 'Slot'..tostring(pos) end
+    --===================
+    -- Tooltip subframes
+    --===================
+    local TypeIcon_key = 'TypeIcon'
+    local getTypeIconX -- Predefined
+    local getTypeIconY -- Predefined
+    local getTypeIconW -- Predefined
+    local getTypeIconH -- Predefined
 
---Slot
-local SlotContent_key = 'SlotContent'
+    local Title_key = 'Title'
+    local getTitleX -- Predefined
+    local getTitleY -- Predefined
+    local getTitleW -- Predefined
+    local getTitleH -- Predefined
+
+    local Text_key = 'Text'
+    local getTextX -- Predefined
+    local getTextY -- Predefined
+    local getTextW -- Predefined
+    local getTextH -- Predefined
+
+    local Slot_key = function(pos) return 'Slot'..tostring(pos) end
+    local getSlotX -- Predefined
+    local getSlotY -- Predefined
+    local getSlotW -- Predefined
+    local getSlotH -- Predefined
+
+        --================
+        -- Slot subframes
+        --================
+        local SlotContent_key = 'Content'
+        local getSlotContentX -- Predefined
+        local getSlotContentY -- Predefined
+        local getSlotContentW -- Predefined
+        local getSlotContentH -- Predefined
 
 
 local initialized = false
@@ -61,35 +101,50 @@ function ItemFrame.new()
     local text = Frame.newCustomType('ItemTooltipText')
     local type_icon = Frame.newCustomType('BACKDROP')
 
-
     -- Area
     local area = Frame.newDefaultType('FRAME')
     icon:setSubframe(Area_key, area)
     area:setX(0)
     area:setY(0)
-    area:setWidth(function(self) return self:getParent():getWidth() end)
-    area:setHeight(function(self) return self:getParent():getHeight() end)
+    area:setWidth(getAreaW)
+    area:setHeight(getAreaH)
 
     -- Tooltip
     local tooltip = Frame.newCustomType('ItemTooltipBackground')
     icon:setSubframe(Tooltip_key, tooltip)
-    tooltip:setX(function(self)  end)
-
-        -- Title
-        tooltip:setSubframe(Title_key, title)
-
-        -- Text
-        tooltip:setSubframe(Text_key, text)
+    tooltip:setX(getTooltipX)
+    tooltip:setY(getTooltipY)
+    tooltip:setWidth(getTooltipW)
+    tooltip:setHeight(getTooltipH)
 
         -- TypeIcon
         tooltip:setSubframe(TypeIcon_key, type_icon)
+
+        -- Title
+        tooltip:setSubframe(Title_key, title)
+        title:setX(getTitleX)
+
+        -- Text
+        tooltip:setSubframe(Text_key, text)
 
     return icon
 end
 
 ---@param self Frame
 ---@return number
-local function getTooltipX(self)
+getAreaW = function(self)
+    return self:getParent():getWidth()
+end
+
+---@param self Frame
+---@return number
+getAreaH = function(self)
+    return self:getParent():getHeight()
+end
+
+---@param self Frame
+---@return number
+getTooltipX = function(self)
     local parent = self:getParent()
     if parent:getAbsX() > Frame.getScreenWidth() / 2 then
         return -self:getWidth()
@@ -97,15 +152,24 @@ local function getTooltipX(self)
         return parent:getWidth()
     end
 end
+
 ---@param self Frame
 ---@return number
-local function getTooltipY(self)
+getTooltipY = function(self)
     local parent = self:getParent()
     if parent:getAbsY() > Frame.getScreenHeight() / 2 then
         return 0
     else
         return self:getHeight() - parent:getHeight()
     end
+end
+
+getTooltipW = function(self)
+    return 0.2
+end
+
+getTooltipH = function(self)
+    return 0.3
 end
 
 
