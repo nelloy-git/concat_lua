@@ -1,5 +1,7 @@
 ---@type Settings
 local Settings = require('utils.Settings')
+---@class Class
+Class = require('utils.middleclass')
 
 local Globals = {}
 local original_type = _G.type
@@ -12,7 +14,6 @@ function Globals.init()
     Vec2 = require('utils.math.Vec2')
     ---@type Vec3
     Vec3 = require('utils.math.Vec3')
-
 
     local Timer = require('utils.timer.Timer')
     ---@type Timer
@@ -101,37 +102,18 @@ function torange(val, min, max)
     return val
 end
 
+---@return string
 function type(val)
-    --Debug("Here")
+    -- Default type()
     local lua_type = original_type(val)
-    if lua_type ~= 'table' then return lua_type end
-    local meta = getmetatable(val)
-    if meta and meta.__type then
-        return meta.__type
-    elseif not meta and val.__type then
-        return val.__type
-    end
-    return lua_type
+    if lua_type ~= 'table' or not val.class then return lua_type end
+    -- Class type
+    return tostring(val)
 end
 
---- Returns class and meta tables
----@param name string
----@return table, table
-function newClass(name)
-    local class = {
-        __type = name.."Class"
-    }
-    return class
-end
+local cl = Class('class')
+local ins = cl()
 
-function newMeta(class)
-    local class_meta = {
-        __type = string.sub(class.__type, 1, class.__type:len() - 5),
-        __index = class,
-        __tostring = function(self) return 'Instance of type '..string.sub(class.__type, 1, class.__type:len() - 5) end,
-        __gc = function(self) if class.destroy ~= nil then self:destroy() end end
-    }
-    return class_meta
-end
+print(ins)
 
 return Globals

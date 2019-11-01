@@ -38,22 +38,22 @@ function RunInitialization()
 end
 
 Test = function()
-    local Unit = require('Include.Unit')
-    ---@type Frame
-    local Frame = require('Include.Frame')
+    --local Unit = require('Include.Unit')
+    ---@type Widget
+    --local Frame = require('Include.Frame')
 
-    local Item = require('Class.Item.Main')
+    --local Item = require('Class.Item.Main')
 
-    local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
+    --local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
 
-    local world = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
+    --local world = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
     --world:setX(function(self) return 0.0 * self:getParent():getWidth() end)
     --world:setY(function(self) return 0.25 * self:getParent():getHeight() end)
-    world:setX(function(self) return -Frame.getScreenXOffset() end)
-    world:setY(0)
-    world:setWidth(function(self) return self:getParent():getWidth() end)
-    world:setHeight(function(self) return self:getParent():getHeight() end)
-    world:update()
+    --world:setX(function(self) return -Frame.getScreenXOffset() end)
+    --world:setY(0)
+    --world:setWidth(function(self) return self:getParent():getWidth() end)
+    --world:setHeight(function(self) return self:getParent():getHeight() end)
+    --world:update()
 
     --local f1 = Frame.newDefaultType("BACKDROP", world)
     --f1:setX(function(self) return 0.5 * self:getParent():getWidth() end)

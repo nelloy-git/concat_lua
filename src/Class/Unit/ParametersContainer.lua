@@ -26,6 +26,7 @@ local addParameterValue
 --=======
 
 ---@class UnitParameterContainer
+---@type UnitParameterContainer
 local UnitParametersContainer  = newClass("UnitParameterContainer")
 UnitParametersContainer_meta = newMeta(UnitParametersContainer)
 UnitParametersContainer.__db = DataBase.new('Unit', 'UnitParameterContainer')

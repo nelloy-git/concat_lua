@@ -31,6 +31,7 @@ local ItemFrame_meta = newMeta(ItemFrame)
 
 -- IconFrame
 local Icon_key = 'Icon'
+local Tooltip_border = 0.04
 
 --================
 -- Icon subframes
@@ -42,6 +43,7 @@ local getAreaW -- Predefined
 local getAreaH -- Predefined
 
 local Tooltip_key = 'Tooltip'
+local Tooltip_border = 0.04
 local getTooltipX -- Predefined
 local getTooltipY -- Predefined
 local getTooltipW -- Predefined
@@ -164,13 +166,128 @@ getTooltipY = function(self)
     end
 end
 
+---@param self Frame
+---@return number
 getTooltipW = function(self)
     return 0.2
 end
 
+---@param self Frame
+---@return number
 getTooltipH = function(self)
     return 0.3
 end
+
+---@param self Frame
+---@return number
+getTypeIconX = function(self)
+    return Tooltip_border
+end
+
+---@param self Frame
+---@return number
+getTypeIconY = function(self)
+    return Tooltip_border
+end
+
+local type_icon_width_part = 0.2
+---@param self Frame
+---@return number
+getTypeIconW = function(self)
+    return type_icon_width_part * self:getParent():getWidth()
+end
+
+---@param self Frame
+---@return number
+getTypeIconH = function(self)
+    return self:getWidth()
+end
+
+---@param self Frame
+---@return number
+getTitleX = function(self)
+    return type_icon_width_part * self:getParent():getWidth() + Tooltip_border
+end
+
+local title_font_height = 0.014
+---@param self Frame
+---@return number
+getTitleY = function(self)
+    return type_icon_width_part * self:getParent():getWidth() / 2 - title_font_height / 2
+end
+
+---@param self Frame
+---@return number
+getTitleW = function(self)
+    return self:getParent() - self:getX() - Tooltip_border
+end
+
+---@param self Frame
+---@return number
+getTitleH = function(self)
+    return title_font_height * 2
+end
+
+---@param self Frame
+---@return number
+getTextX = function(self)
+end
+
+---@param self Frame
+---@return number
+getTextY = function(self)
+end
+
+---@param self Frame
+---@return number
+getTextW = function(self)
+end
+
+---@param self Frame
+---@return number
+getTextH = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotX = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotY = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotW = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotH = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotContentX = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotContentY = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotContentW = function(self)
+end
+
+---@param self Frame
+---@return number
+getSlotContentH = function(self)
+end
+
 
 
 return ItemFrame

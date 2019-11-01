@@ -11,7 +11,7 @@ local ItemFrame = require('Include.ItemFrame')
 -- Class
 --=======
 
----@class ItemFrameTooltip:Frame
+---@class ItemFrameTooltip2:Frame
 local ItemFrameTooltip = newClass('ItemFrameTooltip')
 setmetatable(ItemFrameTooltip, Frame)
 local ItemFrameTooltip_meta = newMeta(ItemFrameTooltip)

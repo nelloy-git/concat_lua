@@ -1,8 +1,8 @@
-local Frame = require('Class.Frame.Main')
-require('Class.Frame.Position')
-require('Class.Frame.Screen')
-require('Class.Frame.Event')
-require('Class.Frame.Subframe')
-require('Class.Frame.Update')
+local Widget = require('Class.Widget.Main')
+require('Class.Widget.Position')
+require('Class.Widget.Screen')
+require('Class.Widget.Event')
+require('Class.Widget.Subframe')
+require('Class.Widget.Update')
 
 return Frame

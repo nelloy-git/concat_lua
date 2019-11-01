@@ -12,6 +12,7 @@ local Settings = require('utils.Settings')
 --=======
 
 ---@class Unit
+---@type Unit
 local Unit = newClass('Unit')
 local Unit_meta = newMeta(Unit)
 Unit.__db = DataBase.new('userdata', 'Unit')

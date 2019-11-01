@@ -2,8 +2,8 @@
 -- Includes
 --==========
 
----@type DataBase
-local Frame = require('Class.Frame.Main')
+---@type Widget
+local Widget = require('Class.Widget.Main')
 
 --========
 -- Module
@@ -19,28 +19,28 @@ local resolution_width = 0
 local resolution_height = 0
 
 ---@return number
-function Frame.getScreenWidth()
+function Widget.getScreenWidth()
     return screen_width
 end
 
 ---@return number
-function Frame.getScreenHeight()
+function Widget.getScreenHeight()
     return screen_height
 end
 
 ---@return number
-function Frame.getScreenXOffset()
+function Widget.getScreenXOffset()
     return x_offset
 end
 
 ---@return number
-function Frame.getScreenYOffset()
+function Widget.getScreenYOffset()
     return y_offset
 end
 
 --- Returns true if resolution has been changed.
 ---@return boolean
-function Frame.updateScreen()
+function Widget.updateScreen()
     local w = BlzGetLocalClientWidth()
     local h = BlzGetLocalClientHeight()
     if w ~= resolution_width or h ~= resolution_height then
