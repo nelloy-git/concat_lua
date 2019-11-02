@@ -1,7 +1,8 @@
 {
     "Lua.workspace.ignoreDir": [
         "dst/*",
-        "lib/*"
+        "lib/*",
+        "old/*"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global",

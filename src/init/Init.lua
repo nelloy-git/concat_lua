@@ -28,21 +28,6 @@ function Init.start()
         end
     end
     Debug('Initialisation finished')
-
-    -- Tests
-
-    ---@type Settings
-    local Settings = require('utils.Settings')
-
-    if Settings.Timer.run_test then
-        ---@type Timer
-        local Timer = require("utils.timer.Timer")
-        Debug("Timer test.")
-        local success, result = pcall(Timer.test)
-        if not success then
-            Debug(result)
-        end
-    end
 end
 
 return Init

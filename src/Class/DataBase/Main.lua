@@ -1,8 +1,16 @@
+--=======
+-- Class
+--=======
+
 ---@class DataBase
-local DataBase = {}
+local DataBase = Class('DataBase')
 local DataBase_meta = {
     __index = DataBase
 }
+
+--=========
+-- Methods
+--=========
 
 ---@param key_type string
 ---@param value_type string

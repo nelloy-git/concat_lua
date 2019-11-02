@@ -24,8 +24,6 @@ function TriggerAction:initialize(callback, data)
     self._data = data
 end
 
-local a = TriggerAction:new()
-
 ---@param callback fun(data:any):nil
 ---@param data any
 ---@return TriggerAction
