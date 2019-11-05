@@ -3,13 +3,17 @@
 --=========
 
 ---@type DataBase
-local DataBase = require('utils.DataBase')
+local DataBase = require('include.DataBase')
+
+---@type Trigger
+local Trigger = require()
 
 --=======
 -- Class
 --=======
 
 ---@class TriggerAction
+---@type TriggerAction
 local TriggerAction = Class('TriggerAction')
 ---@type fun(callback:function, data:any):TriggerAction
 TriggerAction.new = TriggerAction.new

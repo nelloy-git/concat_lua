@@ -3,13 +3,14 @@
 --=========
 
 ---@type DataBase
-local DataBase = require('utils.DataBase')
+local DataBase = require('Class.DataBase.Main')
 
 --=======
 -- Class
 --=======
 
 ---@class Trigger
+---@type Trigger
 local Trigger = Class('Trigger')
 ---@type fun():Trigger
 Trigger.new = Trigger.new-- Function override for emmy annotation.
@@ -18,7 +19,7 @@ Trigger.new = Trigger.new-- Function override for emmy annotation.
 -- Static
 --========
 
-local db = DataBase.new('userdata', 'instance of '..tostring(Trigger))
+local db = DataBase:new('userdata', 'instance of '..tostring(Trigger))
 
 --=========
 -- Methods
@@ -31,7 +32,7 @@ local runTriggerActions -- Predefined
 --- Hiden constructor. Do not use this function manually.
 function Trigger:initialize()
     self._obj = CreateTrigger()
-    db:add(self._obj, self)
+    db:set(self._obj, self)
 end
 
 ---@param callback fun(data:any):nil

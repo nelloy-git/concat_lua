@@ -1,13 +1,13 @@
-compiletime(
-    function ()
-        ---@type ObjEdit
-        WeObjEdit = require('compiletime.objEdit.objEdit')
-        WeObjEdit.init(src_dir, dst_dir)
-        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
-
-        --local weItem = WeObjEdit.Item.Item
-        --local i = weItem.new()
-    end)
+--compiletime(
+--    function ()
+--        ---@type ObjEdit
+--        WeObjEdit = require('compiletime.objEdit.objEdit')
+--        WeObjEdit.init(src_dir, dst_dir)
+--        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
+--
+--        --local weItem = WeObjEdit.Item.Item
+--        --local i = weItem.new()
+--    end)
 
 
 GG_trg_Melee_Initialization = nil
@@ -31,42 +31,14 @@ local Test
 function RunInitialization()
     DestroyTimer(GetExpiredTimer())
 
-    local Init = require('utils.Init')
-    Init.start()
+    require('init.Init')
 
     runFuncInDebug(Test)
 end
 
 Test = function()
-    --local Unit = require('Include.Unit')
-    ---@type Widget
-    --local Frame = require('Include.Frame')
-
-    --local Item = require('Class.Item.Main')
-
-    --local u1 = Unit.new(Player(0), 'Hpal', 0, 0, 0)
-
-    --local world = Frame.getOrigin(ORIGIN_FRAME_WORLD_FRAME, 0)
-    --world:setX(function(self) return 0.0 * self:getParent():getWidth() end)
-    --world:setY(function(self) return 0.25 * self:getParent():getHeight() end)
-    --world:setX(function(self) return -Frame.getScreenXOffset() end)
-    --world:setY(0)
-    --world:setWidth(function(self) return self:getParent():getWidth() end)
-    --world:setHeight(function(self) return self:getParent():getHeight() end)
-    --world:update()
-
-    --local f1 = Frame.newDefaultType("BACKDROP", world)
-    --f1:setX(function(self) return 0.5 * self:getParent():getWidth() end)
-    --f1:setY(function(self) return 0.5 * self:getParent():getHeight() end)
-    --f1:setWidth(function(self) return 0.25 * self:getParent():getWidth() end)
-    --f1:setHeight(function(self) return 0.25 * self:getParent():getWidth() end)
-    --f1:update()
-
-    --f1 = Frame.WORLD
-    --Debug(Frame:getParent())
-    --Debug(Frame.getScreenWidth(), Frame.getScreenHeight())
-    --Debug(Frame.GAME_UI:getAbsWidth(), Frame.GAME_UI:getAbsHeight())
-    --Debug(world:getAbsX(), world:getAbsY(), world:getAbsWidth(), world:getAbsHeight())
+    CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
+    local Timer = require('class.Timer.BetterTimer')
 end
 
 function InitCustomPlayerSlots()
@@ -91,7 +63,7 @@ function main()
     InitBlizzard()
     InitGlobals()
     InitCustomTriggers()
-    ---@type Trigger
+
     TimerStart(CreateTimer(), 0.1, false, RunInitialization)
 end
 

@@ -1,24 +1,16 @@
 {
+    "Lua.completion.callSnippet": "Both",
+    "Lua.completion.keywordSnippet": "Both",
     "Lua.workspace.ignoreDir": [
-        "dst/*",
-        "lib/*",
-        "old/*"
-    ],
-    "Lua.diagnostics.disable": [
-        "lowercase-global",
-        "redundant-parameter"
-    ],
-    "Lua.workspace.maxPreload": 1000,
-    "Lua.diagnostics.globals": [
-        "compiletime",
-        "is_compiletime",
-        "__require_data",
-        "addCompiletimeFinalize",
-        "src_dir",
-        "dst_dir"
+        ".vscode",
+        "dst/**"
     ],
     "Lua.workspace.library": {
-        "./lib" : true
+        "./lib": true
     },
-    "python.pythonPath": "/usr/bin/python3"
+    "Lua.workspace.maxPreload": 3000,
+    "Lua.workspace.preloadFileSize": 500,
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
+    ]
 }

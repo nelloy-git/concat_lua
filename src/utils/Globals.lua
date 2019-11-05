@@ -1,23 +1,25 @@
 ---@type Settings
 local Settings = require('utils.Settings')
----@class Class
+
+---@type Class
 Class = require('utils.middleclass')
 
 local Globals = {}
-local original_type = _G.type
+---@alias callback fun(data:any):nil
 
 local initialized = false
 function Globals.init()
     if initialized then return nil end
 
     ---@type Vec2
-    Vec2 = require('utils.math.Vec2')
+    --Vec2 = require('utils.math.Vec2')
     ---@type Vec3
-    Vec3 = require('utils.math.Vec3')
+    --Vec3 = require('utils.math.Vec3')
 
-    local Timer = require('utils.timer.Timer')
-    ---@type Timer
-    glTimer = Timer.new(Settings.Timer.glTimer_period)
+    ---@type BetterTimer
+    local Timer = require('class.Timer.BetterTimer')
+    
+    glTimer = Timer:new()
 
     initialized = true
 end
@@ -36,37 +38,6 @@ function runFuncInDebug(func, ...)
         return func(...)
     end
 end
-
----Function prints data to local player in debug mode.
-function Debug(...)
-    if is_compiletime then
-        print(...)
-    elseif Settings.debug then
-        local s = ''
-        for i = 1, select('#', ...) do
-            local v = select(i, ...)
-            local t = original_type(v)
-            if t == 'nil' then
-                v = 'nil'
-            elseif t == 'userdata' then
-                v = 'userdata'
-            elseif t == 'string' then
-                v = v
-            elseif t == 'integer' or t == 'number' then
-                v = tostring(v)
-            elseif t == 'table' or t == 'function' then
-                v = tostring(v)
-            else
-                v = ''
-            end
-
-            s = s..' '..v
-        end
-
-        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
-    end
-end
-
 
 ---Converts integer or string id to integer.
 ---@param id integer|string
@@ -102,18 +73,34 @@ function torange(val, min, max)
     return val
 end
 
----@return string
-function type(val)
-    -- Default type()
-    local lua_type = original_type(val)
-    if lua_type ~= 'table' or not val.class then return lua_type end
-    -- Class type
-    return tostring(val)
+---Function prints data to local player in debug mode.
+function Debug(...)
+    if is_compiletime then
+        print(...)
+    elseif Settings.debug then
+        local s = ''
+        for i = 1, select('#', ...) do
+            local v = select(i, ...)
+            local t = type(v)
+            if t == 'nil' then
+                v = 'nil'
+            elseif t == 'userdata' then
+                v = 'userdata'
+            elseif t == 'string' then
+                v = v
+            elseif t == 'integer' or t == 'number' then
+                v = tostring(v)
+            elseif t == 'table' or t == 'function' then
+                v = tostring(v)
+            else
+                v = ''
+            end
+
+            s = s..' '..v
+        end
+
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
+    end
 end
-
-local cl = Class('class')
-local ins = cl()
-
-print(ins)
 
 return Globals
