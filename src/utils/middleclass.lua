@@ -151,9 +151,9 @@ local DefaultMixin = {
 
 ---@param name string
 ---@param super Class
----@return Class
+---@return Class2
 function middleclass.class(name, super)
-  ---@class Class
+  ---@class Class2
   assert(type(name) == 'string', "A name (string) is needed for the new class")
   return super and super:subclass(name) or _includeMixin(_createClass(name), DefaultMixin)
 end

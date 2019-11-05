@@ -29,16 +29,18 @@ end
 local Test
 
 function RunInitialization()
-    DestroyTimer(GetExpiredTimer())
-
-    require('init.Init')
-
-    runFuncInDebug(Test)
+    --DestroyTimer(GetExpiredTimer())
+--
+    --require('init.Init')
+--
+    --runFuncInDebug(Test)
 end
 
 Test = function()
-    CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
-    local Timer = require('class.Timer.BetterTimer')
+    --CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
+    --local Timer = require('class.Timer.BetterTimer')
+
+    local Class = require('utils.Class')
 end
 
 function InitCustomPlayerSlots()
