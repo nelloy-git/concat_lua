@@ -151,7 +151,7 @@ local DefaultMixin = {
 
 ---@param name string
 ---@param super Class
----@return Class2
+---@return Class
 function middleclass.class(name, super)
   ---@class Class2
   assert(type(name) == 'string', "A name (string) is needed for the new class")

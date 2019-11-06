@@ -31,7 +31,7 @@ local Test
 function RunInitialization()
     --DestroyTimer(GetExpiredTimer())
 --
-    --require('init.Init')
+    require('init.Init')
 --
     --runFuncInDebug(Test)
 end

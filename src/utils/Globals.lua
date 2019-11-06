@@ -17,9 +17,9 @@ function Globals.init()
     --Vec3 = require('utils.math.Vec3')
 
     ---@type BetterTimer
-    local Timer = require('class.Timer.BetterTimer')
+    --local Timer = require('class.Timer.BetterTimer')
     
-    glTimer = Timer:new()
+    --glTimer = Timer:new()
 
     initialized = true
 end
@@ -101,6 +101,30 @@ function Debug(...)
 
         DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
     end
+end
+
+---@param orig any
+---@param copies any
+---@return any
+function deepcopy(orig, copies)
+    copies = copies or {}
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        if copies[orig] then
+            copy = copies[orig]
+        else
+            copy = {}
+            copies[orig] = copy
+            setmetatable(copy, deepcopy(getmetatable(orig), copies))
+            for orig_key, orig_value in next, orig, nil do
+                copy[deepcopy(orig_key, copies)] = deepcopy(orig_value, copies)
+            end
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
 end
 
 return Globals
