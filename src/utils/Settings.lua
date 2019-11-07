@@ -1,6 +1,6 @@
----@class Settings
 local Settings = {
     debug = true,
+    --[[
     -- ======= --
     --  Timer  --
     -- ======= --
@@ -84,6 +84,7 @@ local Settings = {
     Item = {
         CompiletimeBaseId = 'hfoo'
     }
+    ]]
 }
 
 return Settings

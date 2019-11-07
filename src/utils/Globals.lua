@@ -1,8 +1,6 @@
----@type Settings
 local Settings = require('utils.Settings')
 
----@type Class
-Class = require('utils.middleclass')
+require('utils.Class')
 
 local Globals = {}
 ---@alias callback fun(data:any):nil

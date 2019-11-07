@@ -2,53 +2,59 @@
 -- Include
 --=========
 
----@type DataBase
+---@type DataBaseClass
 local DataBase = require('class.DataBase')
+---@type ActionClass
+local Action = require('class.Action')
 
 --=======
 -- Class
 --=======
 
+---@type TimerClass
+local Timer = newClass('Timer')
+
+---@class TimerClass
+local static = Timer.static
+---@type table
+local override = Timer.override
 ---@class Timer
-local Timer = Class('Timer')
----@type fun():Timer
-Timer.new = Timer.new
-
---========
--- Static
---========
-
----@type DataBase
-local db = DataBase:new('userdata', 'instance of '..tostring(Timer))
+local public = Timer.public
+---@type table(Timer, table)
+local private = {}
 
 --=========
 -- Methods
 --=========
 
---- Hiden constructor. Do not use this function manually.
-function Timer:initialize()
-    self._obj = CreateTimer()
-    db:set(self._obj, self)
-end
+---@param instance_data table | nil
+---@return Timer
+function static.new(instance_data)
+    local instance = instance_data or newInstanceData(Timer)
+    local priv = {
+        wc3_timer = CreateTimer()
+    }
+    private[instance] = priv
 
----@return timer
-function Timer:getObj()
-    return self._obj
+    return instance
 end
 
 ---@param timeout number
 ---@param periodic boolean
----@param func function
-function Timer:start(timeout, periodic, func)
-    TimerStart(self:getObj(), timeout, periodic, func)
+---@param action Action
+function public:start(timeout, periodic, action)
+    local priv = private[self]
+    TimerStart(priv.wc3_timer, timeout, periodic, function() action:run() end)
 end
 
-function Timer:pause()
-    PauseTimer(self:getObj())
+function public:pause()
+    local priv = private[self]
+    PauseTimer(priv.wc3_timer)
 end
 
-function Timer:resume()
-    ResumeTimer(self:getObj())
+function public:resume()
+    local priv = private[self]
+    ResumeTimer(priv.wc3_timer)
 end
 
 return Timer

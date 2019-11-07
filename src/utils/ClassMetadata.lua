@@ -3,13 +3,70 @@ local Metadata = {}
 local rawget = rawget
 local rawset = rawset
 
-local Metadata_name = {}
+-- Data
+local Metadata_class2name = {}
+local Metadata_name2class = {}
 local Metadata_static = {}
 local Metadata_static_override = {}
 local Metadata_public = {}
 local Metadata_subclass = {}
-
 local Metadata_instance_class = {}
+
+---@param class table
+---@return string
+function Metadata.getClassName(class)
+    return Metadata_class2name[class]
+end
+
+---@param name string
+---@return table
+function Metadata.getClassByName(name)
+    return Metadata_name2class[name]
+end
+
+---@param class table
+---@return table
+function Metadata.getStaticTable(class)
+	return Metadata_static[class]
+end
+
+---@param class table
+---@return table
+function Metadata.getOverrideTable(class)
+    return Metadata_static_override[class]
+end
+
+---@param class table
+---@return table
+function Metadata.getPublicTable(class)
+    return Metadata_public[class]
+end
+
+---@param class table
+---@return Class[]
+function Metadata.getSubClasses(class)
+    return Metadata_subclass[class]
+end
+
+---@param class table
+---@return boolean
+function Metadata.isClass(class)
+    return not (Metadata_class2name[class] == nil)
+end
+
+function Metadata.getClass(instance)
+    return Metadata_instance_class[instance]
+end
+
+function Metadata.isSubclass(class1, class2)
+    local subs = Metadata.getSubClasses(class1)
+    for i = 1, #subs do
+        if class2 == subs[i] then
+            return true
+        end
+    end
+    return false
+end
 
 local function static_newindex(self, key, value, class)
     local subclasses = Metadata_subclass[class]
@@ -41,8 +98,9 @@ local function static_override_value(self, key, value, class)
     rawset(static, key, value)
 end
 
-function Metadata.new(name, class, ...)
-    Metadata_name[class] = name
+function Metadata.newClass(name, class, ...)
+    Metadata_class2name[class] = name
+    Metadata_name2class[name] = class
 
     local static = {}
     local static_meta = {
@@ -82,27 +140,9 @@ function Metadata.new(name, class, ...)
     Metadata_subclass[class] = list
 end
 
-function Metadata.getName(class)
-    return Metadata_name[class]
-end
-
-function Metadata.getStaticTable(class)
-	return Metadata_static[class]
-end
-
-function Metadata.getOverrideTable(class)
-    return Metadata_static_override[class]
-end
-
-function Metadata.getPublicTable(class)
-    return Metadata_public[class]
-end
-
-function Metadata.getSubClasses(class)
-    return Metadata_subclass[class]
-end
-
-function Metadata.createInstance(class)
+---@param class table
+---@return any
+function Metadata.allocate(class)
     local instance = {}
     local sub_classes = Metadata_subclass[class]
     local i = #sub_classes
@@ -117,14 +157,5 @@ function Metadata.createInstance(class)
 
     return instance
 end
-
-function Metadata.isClass(class)
-    return not (Metadata_name == nil)
-end
-
-function Metadata.getClass(instance)
-    return Metadata_instance_class[instance]
-end
-
 
 return Metadata

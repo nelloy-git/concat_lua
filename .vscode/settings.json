@@ -3,7 +3,8 @@
     "Lua.completion.keywordSnippet": "Both",
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "dst/**"
+        "dst/**",
+        "old/**"
     ],
     "Lua.workspace.library": {
         "./lib": true

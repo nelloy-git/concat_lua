@@ -2,93 +2,80 @@
 -- Class
 --=======
 
+---@type DataBaseClass
+local DataBase = newClass('DataBase')
+
 ---@class DataBase
-local DataBase = Class('DataBase')
----@type fun(key_type:string|Class, value_type:string|Class):DataBase
-DataBase.new = DataBase.new
+local public = DataBase.public
+---@class DataBaseClass
+local static = DataBase.static
+---@type table
+local override = DataBase.override
+---@type table(DataBase, table)
+local private = {}
+
+local wrong_key_type_error_fmt = "%s error: wrong key type.\nNeed: %s Got: %s"
+local wrong_value_type_error_fmt = "%s error: wrong value type.\nNeed: %s Got: %s"
 
 --=========
 -- Methods
 --=========
 
---- Hiden constructor. Do not use this function manually.
-function DataBase:initialize(key_type, value_type)
-    self._key_type = key_type
-    self._value_type = value_type
-    self._data = {}
+---@param key_type string
+---@param val_type string
+---@param instance_data table | nil
+---@return DataBase
+function static.new(key_type, val_type, instance_data)
+    ---@type DataBase
+    local instance = instance_data or newInstanceData(DataBase)
+    local priv = {
+        data = {},
+        key_type = key_type,
+        value_type = val_type
+    }
+    private[instance] = priv
+
+    return instance
 end
 
----@param value string|Class
----@param key_type string|Class
-local function isValid(value, key_type)
-    local val_t = type(value)
-
-    if val_t == key_type then
-        return true
-    end
-
-    local val_cl = value.class
-    if val_cl == nil then
+local function isValidKeyType(self, key)
+    local priv = private[self]
+    if not isType(key, priv.key_type) then
+        Debug(string.format(wrong_key_type_error_fmt, getClassName(DataBase), priv.key_type, type(key)))
         return false
     end
-
-    return val_cl:isSubclass(key_type)
+    return true
 end
 
----Returns avaliable value type for this DataBase.
----@return string
-function DataBase:getKeyType()
-    return self._key_type
+local function isValidValueType(self, value)
+    local priv = private[self]
+    print(type(value))
+    print(priv.value_type)
+    if not isType(value, priv.value_type) then
+        Debug(string.format(wrong_value_type_error_fmt, getClassName(DataBase), priv.value_type, type(value)))
+        return false
+    end
+    return true
 end
 
----Returns avaliable value type for this DataBase.
----@return string
-function DataBase:getValueType()
-    return self._value_type
-end
-
----@param key any
----@return any
-function DataBase:get(key)
-    if key ~= nil then
+function public:set(key, value)
+    local priv = private[self]
+    if not isValidKeyType(self, key) then
+        return nil
+    end
+    if not isValidValueType(self, value) then
         return nil
     end
 
-    if isValid(key, self:getKeyType()) then
-        Debug("DataBase: wrong key type. Need "..self._key_type.." got "..key)
-        return nil
-    end
-
-    return self._data[key]
+    priv.data[key] = value
 end
 
----@param key any
----@param value any
-function DataBase:set(key, value)
-    if isValid(key, self:getKeyType()) then
-        Debug("DataBase: wrong key type. Need "..self:getKeyType().." got "..key)
+function public:get(key)
+    local priv = private[self]
+    if not isValidKeyType(self, key) then
         return nil
     end
-    if isValid(value, self:getValueType()) then
-        Debug("DataBase: wrong value type. Need "..self:getValueType().." got "..value)
-        return nil
-    end
-    self._data[key] = value
-end
-
----@param key any
-function DataBase:remove(key)
-    local value = self:get(key)
-    self:set(key, nil)
-    return value
-end
-
----Run function(key, value) for every DataBase member.
----@param func fun(k:any,v:any):nil
-function DataBase:forEach(func)
-    for k,v in pairs(self._data) do
-        func(k,v)
-    end
+    return priv.data[key]
 end
 
 return DataBase

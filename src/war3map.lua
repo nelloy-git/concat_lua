@@ -40,7 +40,8 @@ Test = function()
     --CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
     --local Timer = require('class.Timer.BetterTimer')
 
-    local Class = require('utils.Class')
+    local Database = require('Class.DataBase')
+    require('Class.Timer.TimerAction')
 end
 
 function InitCustomPlayerSlots()
