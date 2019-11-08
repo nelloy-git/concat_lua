@@ -26,8 +26,6 @@ function static.new(callback, instance_data)
     local priv = {
         ---@type fun(userdata:any):nil
         callback = callback,
-        ---@type any
-        userdata = userdata
     }
     private[instance] = priv
 
@@ -36,11 +34,12 @@ end
 
 function public:free()
     private[self] = nil
+    freeInstanceData(self)
 end
 
 function public:run()
     local priv = private[self]
-    priv.callback(priv.userdata)
+    runFuncInDebug(priv.callback)
 end
 
 return Action

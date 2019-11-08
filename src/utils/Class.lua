@@ -44,7 +44,9 @@ local instance_metatable = {
         local res = Metadata.getClassName(Metadata.getClass(self)) .. string.sub(def, 6, #def)
         setmetatable(self, temp)
         return res
-    end
+    end,
+
+    __gc = freeInstanceData
 }
 
 function newClass(name, ...)
@@ -62,6 +64,11 @@ function newInstanceData(class)
     setmetatable(instance, instance_metatable)
 
     return instance
+end
+
+---@param instance table
+function freeInstanceData(instance)
+    Metadata.free(instance)
 end
 
 function getInstanceClass(instance)

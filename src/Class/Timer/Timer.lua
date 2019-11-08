@@ -3,9 +3,9 @@
 --=========
 
 ---@type DataBaseClass
-local DataBase = require('class.DataBase')
+local DataBase = require('Class.DataBase')
 ---@type ActionClass
-local Action = require('class.Action')
+local Action = require('Class.Action')
 
 --=======
 -- Class
@@ -23,6 +23,8 @@ local public = Timer.public
 ---@type table(Timer, table)
 local private = {}
 
+local db = DataBase.new('userdata', getClassName(Timer))
+
 --=========
 -- Methods
 --=========
@@ -36,7 +38,21 @@ function static.new(instance_data)
     }
     private[instance] = priv
 
+    db:add(priv.wc3_timer, instance)
+
     return instance
+end
+
+function public:free()
+    DestroyTimer(private[self].wc3_timer)
+    private[self] = nil
+    freeInstanceData(self)
+end
+
+---@return Timer
+function static.getExpired()
+    local wc3_timer = GetExpiredTimer()
+    return db:get(wc3_timer)
 end
 
 ---@param timeout number

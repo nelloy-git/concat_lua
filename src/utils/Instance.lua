@@ -1,3 +1,0 @@
-local Instance = {}
-
-return Instance

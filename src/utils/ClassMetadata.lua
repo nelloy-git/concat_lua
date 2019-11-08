@@ -158,4 +158,10 @@ function Metadata.allocate(class)
     return instance
 end
 
+---@param instance table
+---@return any
+function Metadata.free(instance)
+    Metadata_instance_class[instance] = nil
+end
+
 return Metadata

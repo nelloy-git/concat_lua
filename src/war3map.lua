@@ -41,7 +41,7 @@ Test = function()
     --local Timer = require('class.Timer.BetterTimer')
 
     local Database = require('Class.DataBase')
-    require('Class.Timer.TimerAction')
+    require('Class.Timer.BetterTimer')
 end
 
 function InitCustomPlayerSlots()

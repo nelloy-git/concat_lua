@@ -13,5 +13,9 @@
     "Lua.workspace.preloadFileSize": 500,
     "Lua.diagnostics.disable": [
         "lowercase-global"
+    ],
+    "Lua.diagnostics.globals": [
+        "__require_data",
+        "is_compiletime"
     ]
 }

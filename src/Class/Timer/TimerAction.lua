@@ -40,6 +40,11 @@ function override.new(timeout, callback, instance_data)
     return instance
 end
 
+function public:free()
+    private[self] = nil
+    Action.public.free(self)
+end
+
 ---@return number
 function public:getTime()
     local priv = private[self]
