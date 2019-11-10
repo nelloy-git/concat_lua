@@ -38,7 +38,7 @@ function static.new(instance_data)
     }
     private[instance] = priv
 
-    db:add(priv.wc3_timer, instance)
+    db:set(priv.wc3_timer, instance)
 
     return instance
 end

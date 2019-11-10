@@ -2,10 +2,11 @@
 -- Include
 --=========
 
----@type Timer
+---@type ActionClass
+local Action = require('Class.Action')
+---@type TimerClass
 local Timer = require('Class.Timer.Timer')
-
----@type TimerAction
+---@type TimerActionClass
 local TimerAction = require('Class.Timer.TimerAction')
 
 --=======
@@ -64,7 +65,7 @@ function override.new(period, instance_data)
     }
     private[instance] = priv
 
-    Timer.public.start(instance, period, true, function() runActions(instance) end)
+    Timer.public.start(instance, period, true, Action.new(function() runActions(instance) end))
 
     return instance
 end

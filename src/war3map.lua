@@ -33,15 +33,18 @@ function RunInitialization()
 --
     require('init.Init')
 --
-    --runFuncInDebug(Test)
+    runFuncInDebug(Test)
 end
 
 Test = function()
     --CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
     --local Timer = require('class.Timer.BetterTimer')
 
-    local Database = require('Class.DataBase')
-    require('Class.Timer.BetterTimer')
+    --local Database = require('Class.DataBase')
+    Timer = require('Class.Timer.BetterTimer')
+
+    local t = Timer.new(0.03125)
+    t:addAction(3, function() print('Done') end)
 end
 
 function InitCustomPlayerSlots()

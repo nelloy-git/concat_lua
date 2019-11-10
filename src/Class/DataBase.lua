@@ -35,6 +35,8 @@ function static.new(key_type, val_type, instance_data)
     }
     private[instance] = priv
 
+    --Debug(key_type, val_type)
+
     return instance
 end
 
@@ -49,10 +51,8 @@ end
 
 local function isValidValueType(self, value)
     local priv = private[self]
-    print(type(value))
-    print(priv.value_type)
     if not isType(value, priv.value_type) then
-        Debug(string.format(wrong_value_type_error_fmt, getClassName(DataBase), priv.value_type, type(value)))
+        Debug(string.format(wrong_value_type_error_fmt, getClassName(DataBase), priv.value_type, getClassName(getInstanceClass(value)) or type(value)))
         return false
     end
     return true
@@ -60,6 +60,7 @@ end
 
 function public:set(key, value)
     local priv = private[self]
+
     if not isValidKeyType(self, key) then
         return nil
     end

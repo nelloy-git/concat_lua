@@ -51,7 +51,8 @@ end
 ---@param class table
 ---@return boolean
 function Metadata.isClass(class)
-    return not (Metadata_class2name[class] == nil)
+    local res = Metadata_class2name[class] == nil
+    return not res
 end
 
 function Metadata.getClass(instance)

@@ -6,7 +6,7 @@
 -- Class
 --=======
 
----@class ParameterType
+---@class ParameterType2
 local ParameterType = newClass("ParameterType")
 local ParameterType_meta = newMeta(ParameterType)
 

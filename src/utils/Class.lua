@@ -21,7 +21,7 @@ local class_metatable = {
         local static = Metadata.getStaticTable(class)
         local val = static[key]
         if val == nil then
-            Debug(string.format('Class error: static variable with name \"%s\" is not found.', key))
+            Debug(string.format('Class error: static variable with name %s is not found.', key))
             return nil
         end
         return val
