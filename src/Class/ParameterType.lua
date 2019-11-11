@@ -1,3 +1,9 @@
+--=========
+-- Include
+--=========
+
+local Icon = require('assets.Icon')
+
 --=======
 -- Class
 --=======
@@ -14,42 +20,22 @@ local override = ParameterType.override
 ---@type table(ParameterType, table)
 local private = {}
 
-local min_attack_dmg = tostring(100*(1 - Settings.Unit.attack_dispersion))
-local max_attack_dmg = tostring(100*(1 + Settings.Unit.attack_dispersion))
+static.min_attack = 0.85
+static.max_attack = 1.15
+static.attack_dispertion = (static.max_attack + static.min_attack) / 2
 
-local atk_per_str = tostring(Settings.Unit.p_dmg_per_str)
-local armor_per_str = tostring(Settings.Unit.armor_per_str)
-local hp_per_str = tostring(Settings.Unit.health_per_str)
+static.pdmg_per_str = 0.50
+static.armor_per_str = 0.25
+static.hp_per_str = 5
 
-local aspd_per_agi = tostring(Settings.Unit.attack_speed_per_agi)
-local ctr_per_agi = tostring(Settings.Unit.casting_time_reduction_per_agi)
-local dodge_per_agi = tostring(Settings.Unit.dodge_chance_per_agi)
+static.aspd_per_agi = 1
+static.cspd_per_agi = 1
+static.dodge_per_agi = 1
 
-local mdmg_per_int = tostring(Settings.Unit.m_dmg_per_int)
-local cdr_per_int = tostring(Settings.Unit.cooldown_reduction_per_int)
-local mp_per_int = tostring(Settings.Unit.mana_per_int)
+static.mdmg_per_int = 1
+static.mp_per_int = 5
+static.cdr_per_int = 1
 
-local Description = {}
-Description[ParameterType.Id.P_DMG] = 
-Description[ParameterType.Id.ATKS_PER_SEC] = 
-Description[ParameterType.Id.ARMOR] = 
-Description[ParameterType.Id.P_DMG_REDUC] = 
-Description[ParameterType.Id.M_DMG] = 
-Description[ParameterType.Id.CAST_TIME_REDUC] = 
-Description[ParameterType.Id.RESIST] = 
-Description[ParameterType.Id.M_DMG_REDUC] = 
-Description[ParameterType.Id.DODGE] = 
-Description[ParameterType.Id.CRIT_CH] = 
-Description[ParameterType.Id.CRIT_DMG] = 
-Description[ParameterType.Id.CD_REDUC] = 
-Description[ParameterType.Id.HP] = 
-Description[ParameterType.Id.REGEN] = 
-Description[ParameterType.Id.MP] = 
-Description[ParameterType.Id.RECOV] = 
-Description[ParameterType.Id.STR] = 
-Description[ParameterType.Id.AGI] = 
-Description[ParameterType.Id.INT] = 
-Description[ParameterType.Id.MS] = 
 --=========
 -- Methods
 --=========
@@ -79,37 +65,38 @@ function public:free()
 end
 
 function static.init()
-    static.P_DMG = static.new('PDmg', 'Attack damage', "ReplaceableTextures\\CommandButtons\\BTNSteelMelee.blp",
-                              'Physical damage of unit with attacks and some physical damage spells. Attacks randomly deals'..min_attack_dmg..'-'..max_attack_dmg..'% of this value.')
-    static.ATKS_PER_SEC = static.new('ASpd', 'Attacks per second', "ReplaceableTextures\\CommandButtons\\BTNCommand.blp",
-                              'Number of attacks dealing by unit per second.')
-    static.ARMOR = static.new('PDef', 'Armor', "ReplaceableTextures\\CommandButtons\\BTNDefend.blp",
+    static.PDMG = static.new('PDmg', 'Physical damage', Icon.BTNSteelMelee,
+                              string.format('Physical damage of unit attacks and some physical abilities. Attacks randomly deals %d-%d%% of this value.',
+                                             static.min_attack, static.max_attack))
+    static.ATKS_PER_SEC = static.new('ASpd', 'Attacks per second', Icon.BTNCommand,
+                              'The frequency with which units attack is measured in attack speed.')
+    static.ARMOR = static.new('PDef', 'Armor', Icon.BTNDefend,
                               'Physical damage is reduced by this value. Works after physical damage reduction.')
-    static.P_DMG_REDUC = static.new('PRed', 'Physical damage reduction', "ReplaceableTextures\\CommandButtons\\BTNHumanArmorUpThree.blp",
+    static.PDMG_REDUC = static.new('PRed', 'Physical damage reduction', Icon.BTNHumanArmorUpThree,
                               'Physical damage is reduced by this value. Works before armor. Maximum: '..tostring(100 * Settings.Unit.maximum_physical_damage_reduction)..'%.')
-    static.M_DMG = static.new('MDmg', 'Spell damage', "ReplaceableTextures\\CommandButtons\\BTNAdvancedStrengthOfTheMoon.blp",
+    static.MDMG = static.new('MDmg', 'Spell damage', Icon.BTNAdvancedStrengthOfTheMoon,
                               'Magic power of unit. Icreases damage dealt by magic abilities.')
-    static.CAST_TIME_REDUC = static.new('CSpd', 'Casting time reduction', "ReplaceableTextures\\CommandButtons\\BTNBansheeMaster.blp",
+    static.CAST_TIME_REDUC = static.new('CSpd', 'Casting time reduction', Icon.BTNBansheeMaster,
                               'Casting time of abilities is reduced by this value. Maximum: '..tostring(100 * Settings.Unit.maximum_casting_time_reduction)..'%.')
-    static.RESIST = static.new('MDef', 'Reisistance', "ReplaceableTextures\\CommandButtons\\BTNResistantSkin.blp",
+    static.RESIST = static.new('MDef', 'Reisistance', Icon.BTNResistantSkin,
                               'Magical damage is reduced by this value. Works after magical damage reduction.')
-    static.M_DMG_REDUC = static.new('MRed', 'Magical damage reduction', "ReplaceableTextures\\CommandButtons\\BTNLightningShield.blp",
+    static.MDMG_REDUC = static.new('MRed', 'Magical damage reduction', Icon.BTNLightningShield,
                               'Magical damage is reduced by this value. Works before resistance. Maximum: '..tostring(100 * Settings.Unit.maximum_magical_damage_reduction)..'%.')
-    static.DODGE = static.new('Dodge', 'Dodge chance', "ReplaceableTextures\\CommandButtons\\BTNEvasion.blp",
+    static.DODGE = static.new('Dodge', 'Dodge chance', Icon.BTNEvasion,
                               'Chance to avoid incoming damage. Maximum: '..tostring(100 * Settings.Unit.maximum_dodge_chance)..'%.')
-    static.CRIT_CH = static.new('CritCh', 'Critical strike chance', "ReplaceableTextures\\CommandButtons\\BTNCriticalStrike.blp",
+    static.CRIT_CH = static.new('CritCh', 'Critical strike chance', Icon.BTNCriticalStrike,
                               'Chance to increase damage by critical damage value. Maximum: '..tostring(100 * Settings.Unit.maximum_crit_chance)..'%.')
-    static.CRIT_DMG = static.new('CritDmg', 'Critical strike damage', "ReplaceableTextures\\CommandButtons\\BTNDeathPact.blp",
+    static.CRIT_DMG = static.new('CritDmg', 'Critical strike damage', Icon.BTNDeathPact,
                               'Critical attack or spell deals this value damage.')
-    static.CD_REDUC = static.new('CDRed', 'Cooldown reduction', "ReplaceableTextures\\CommandButtons\\BTNDispelMagic.blp",
+    static.CD_REDUC = static.new('CDRed', 'Cooldown reduction', Icon.BTNDispelMagic,
                               'Abilities cooldown reduced by this value. Maximum: '..tostring(100 * Settings.Unit.maximum_cooldown_reduction)..'%.')
-    static.HP = static.new('HP', 'Health', "ReplaceableTextures\\CommandButtons\\BTNHealthStone.blp",
+    static.HP = static.new('HP', 'Health', Icon.BTNHealthStone,
                               'Maximum health.')
-    static.REGEN = static.new('Regen', 'Regeneration', "ReplaceableTextures\\CommandButtons\\BTNRegenerate.blp",
+    static.REGEN = static.new('Regen', 'Regeneration', Icon.BTNRegenerate,
                               'Health restoration per second.')
-    static.MP = static.new('MP', 'Mana', "ReplaceableTextures\\CommandButtons\\BTNManaStone.blp",
+    static.MP = static.new('MP', 'Mana', Icon.BTNManaStone,
                               'Maximum mana.')
-    static.RECOV = static.new('Recov', 'Recovery', "ReplaceableTextures\\CommandButtons\\BTNBrilliance.blp",
+    static.RECOV = static.new('Recov', 'Recovery', Icon.BTNBrilliance,
                               'Mana restoration per second')
     static.STR = static.new('Str', 'Strength', "UI\\Widgets\\Console\\Human\\infocard-heroattributes-str.blp",
                               'Some spell effects depends on this value. Every point of strength increases attack damage by '..atk_per_str..', armor by '..armor_per_str..' and health by '..hp_per_str..'.')
