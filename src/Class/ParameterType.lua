@@ -20,9 +20,19 @@ local override = ParameterType.override
 ---@type table(ParameterType, table)
 local private = {}
 
-static.min_attack = 0.85
-static.max_attack = 1.15
+static.min_pdmg_attack = 0.85
+static.max_pdmg_attack = 1.15
 static.attack_dispertion = (static.max_attack + static.min_attack) / 2
+static.max_pdmg_reduc = 0.75
+
+static.min_mdmg_attack = 0.85
+static.max_mdmg_attack = 1.15
+static.max_ctime_reduc = 0.75
+static.max_mdmg_reduc = 0.75
+
+static.max_dodge_ch = 0.50
+static.max_crit_ch = 0.75
+static.max_cd_reduc = 0.75
 
 static.pdmg_per_str = 0.50
 static.armor_per_str = 0.25
@@ -66,44 +76,73 @@ end
 
 function static.init()
     static.PDMG = static.new('PDmg', 'Physical damage', Icon.BTNSteelMelee,
-                              string.format('Physical damage of unit attacks and some physical abilities. Attacks randomly deals %d-%d%% of this value.',
-                                             static.min_attack, static.max_attack))
+                              string.format('Physical damage of unit attacks and most of physical abilities. Attacks randomly deals %d-%d%% of this value as physical damage.',
+                                             100 * static.min_pdmg_attack, 100 * static.max_pdmg_attack))
+
     static.ATKS_PER_SEC = static.new('ASpd', 'Attacks per second', Icon.BTNCommand,
-                              'The frequency with which units attack is measured in attack speed.')
+                                     'The frequency with which units attack is measured in attack speed. Base attacks per second multiplied by attack speed.')
+
     static.ARMOR = static.new('PDef', 'Armor', Icon.BTNDefend,
                               'Physical damage is reduced by this value. Works after physical damage reduction.')
-    static.PDMG_REDUC = static.new('PRed', 'Physical damage reduction', Icon.BTNHumanArmorUpThree,
-                              'Physical damage is reduced by this value. Works before armor. Maximum: '..tostring(100 * Settings.Unit.maximum_physical_damage_reduction)..'%.')
-    static.MDMG = static.new('MDmg', 'Spell damage', Icon.BTNAdvancedStrengthOfTheMoon,
-                              'Magic power of unit. Icreases damage dealt by magic abilities.')
+
+    static.PDMG_REDUC = static.new('PReduc', 'Physical damage reduction', Icon.BTNHumanArmorUpThree,
+                                   string.format('Physical damage is reduced by this value. Works before armor. Formula: %d * (rating / (100 + rating)).',
+                                                  100 * static.max_pdmg_reduc))
+
+    static.MDMG = static.new('MDmg', 'Magical damage', Icon.BTNAdvancedStrengthOfTheMoon,
+                             string.format('Physical damage of unit attacks and most of physical abilities. Attacks randomly deals %d-%d%% of this value as physical damage.',
+                                            100 * static.min_mdmg_attack, 100 * static.max_mdmg_attack))
+
     static.CAST_TIME_REDUC = static.new('CSpd', 'Casting time reduction', Icon.BTNBansheeMaster,
-                              'Casting time of abilities is reduced by this value. Maximum: '..tostring(100 * Settings.Unit.maximum_casting_time_reduction)..'%.')
+                                        string.format('Casting time of abilities is reduced by this value. Formula: %d * (rating / (100 + rating)).',
+                                                       100 * static.max_ctime_reduc))
+
     static.RESIST = static.new('MDef', 'Reisistance', Icon.BTNResistantSkin,
-                              'Magical damage is reduced by this value. Works after magical damage reduction.')
-    static.MDMG_REDUC = static.new('MRed', 'Magical damage reduction', Icon.BTNLightningShield,
-                              'Magical damage is reduced by this value. Works before resistance. Maximum: '..tostring(100 * Settings.Unit.maximum_magical_damage_reduction)..'%.')
+                               'Magical damage is reduced by this value. Works after magical damage reduction.')
+
+    static.MDMG_REDUC = static.new('MReduc', 'Magical damage reduction', Icon.BTNLightningShield,
+                                   string.format('Magical damage is reduced by this value. Works before resist. Formula: %d * (rating / (100 + rating)).',
+                                                  100 * static.max_pdmg_reduc))
+
     static.DODGE = static.new('Dodge', 'Dodge chance', Icon.BTNEvasion,
-                              'Chance to avoid incoming damage. Maximum: '..tostring(100 * Settings.Unit.maximum_dodge_chance)..'%.')
+                              string.format('Chance to avoid incoming damage. Formula: %d * (rating / (100 + rating)',
+                                             100 * static.max_dodge_ch))
+
     static.CRIT_CH = static.new('CritCh', 'Critical strike chance', Icon.BTNCriticalStrike,
-                              'Chance to increase damage by critical damage value. Maximum: '..tostring(100 * Settings.Unit.maximum_crit_chance)..'%.')
+                                string.format('Chance to increase damage by critical damage value. Formula: %d * (rating / (100 + rating)',
+                                               100 * static.max_crit_ch))
+
     static.CRIT_DMG = static.new('CritDmg', 'Critical strike damage', Icon.BTNDeathPact,
-                              'Critical attack or spell deals this value damage.')
-    static.CD_REDUC = static.new('CDRed', 'Cooldown reduction', Icon.BTNDispelMagic,
-                              'Abilities cooldown reduced by this value. Maximum: '..tostring(100 * Settings.Unit.maximum_cooldown_reduction)..'%.')
+                                 'Critical attacks and spells deals this value damage.')
+
+    static.CD_REDUC = static.new('CDReduc', 'Cooldown reduction', Icon.BTNDispelMagic,
+                                 string.format('Abilities cooldown reduced by this value. Formula: %d * (rating / (100 + rating)',
+                                                100 * static.max_cd_reduc))
+
     static.HP = static.new('HP', 'Health', Icon.BTNHealthStone,
-                              'Maximum health.')
+                           'Maximum health.')
+
     static.REGEN = static.new('Regen', 'Regeneration', Icon.BTNRegenerate,
                               'Health restoration per second.')
+
     static.MP = static.new('MP', 'Mana', Icon.BTNManaStone,
-                              'Maximum mana.')
+                           'Maximum mana.')
+
     static.RECOV = static.new('Recov', 'Recovery', Icon.BTNBrilliance,
                               'Mana restoration per second')
+
     static.STR = static.new('Str', 'Strength', "UI\\Widgets\\Console\\Human\\infocard-heroattributes-str.blp",
-                              'Some spell effects depends on this value. Every point of strength increases attack damage by '..atk_per_str..', armor by '..armor_per_str..' and health by '..hp_per_str..'.')
+                             string.format('Some spell effects depends on this value. Every point of strength increases attack damage by %.2f, armor by %.2f and health by %.2f.',
+                                            static.pdmg_per_str, static.armor_per_str, static.hp_per_str))
+
     static.AGI = static.new('Agi', 'Agility', "UI\\Widgets\\Console\\Human\\infocard-heroattributes-agi.blp",
-                              'Some spell effects depends on this value. Every point of agility increases attack speed by '..aspd_per_agi..', casting time reduction by '..ctr_per_agi..' and dodge chance by '..dodge_per_agi..'.')
+                            string.format('Some spell effects depends on this value. Every point of agility increases attack speed by %.2f, casting time reduction by %.2f and dodge chance by %.2f.',
+                                           static.aspd_per_agi, static.cspd_per_agi, static.dodge_per_agi))
+
     static.INT = static.new('Int', 'Intelligence', "UI\\Widgets\\Console\\Human\\infocard-heroattributes-int.blp",
-                              'Some spell effects depends on this value. Every point of intelligence increases spell damage by '..mdmg_per_int..', cooldown reduction by '..cdr_per_int..' and mana by '..mp_per_int..'.')
+                            string.format('Some spell effects depends on this value. Every point of intelligence increases spell damage by %.2f, cooldown reduction by %.2f and mana by %.2f.',
+                                           static.mdmg_per_int, static.mp_per_int, static.cdr_per_int))
+
     static.MS = static.new('MS', 'Move speed', "ReplaceableTextures\\CommandButtons\\BTNBootsOfSpeed.blp",
                               'Move speed')
 end
