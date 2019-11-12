@@ -74,7 +74,13 @@ function public:free()
     freeInstanceData(self)
 end
 
+local initialized = false
 function static.init()
+    if initialized then
+        return nil
+    end
+    initialized = true
+
     static.PDMG = static.new('PDmg', 'Physical damage', Icon.BTNSteelMelee,
                               string.format('Physical damage of unit attacks and most of physical abilities. Attacks randomly deals %d-%d%% of this value as physical damage.',
                                              100 * static.min_pdmg_attack, 100 * static.max_pdmg_attack))

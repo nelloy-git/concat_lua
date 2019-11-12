@@ -1,0 +1,77 @@
+{
+    "NewClass":{
+        "prefix": "createClass",
+        "body": [
+            "--=========",
+            "-- Include",
+            "--=========",
+            "",
+            "--=======",
+            "-- Class",
+            "--=======",
+            "",
+            "---@type ${1:className}Class",
+            "local ${1:className} = newClass('${1:className}')",
+            "",
+            "---@class ${1:className}",
+            "local public = ${1:className}.public",
+            "---@class ${1:className}Class",
+            "local static = ${1:className}.static",
+            "---@type table",
+            "local override = ${1:className}.override",
+            "---@type table(${1:className}, table)",
+            "local private = {}",
+            "",
+            "--=========",
+            "-- Methods",
+            "--=========",
+            "",
+            "---@param instance_data table | nil",
+            "---@return ${1:className}",
+            "function static.new(instance_data)",
+            "    local instance = instance_data or newInstanceData(${1:className})",
+            "    local priv = {",
+            "    }",
+            "    private[instance] = priv",
+            "",
+            "    return instance",
+            "end",
+            "",
+            "return ${1:className}"
+        ]
+    },
+
+    "Static function": {
+        "prefix": "function static",
+        "body": [
+            "function static.${1:funcName}(${2:parameters})",
+            "",
+            "end"
+        ]
+    },
+
+    "Public function": {
+        "prefix": "function public",
+        "body": [
+            "function public:${1:funcName}(${2:parameters})",
+            "",
+            "end"
+        ]
+    },
+
+    "Private function": {
+        "prefix": "function private",
+        "body": [
+            "function private.${1:funcName}(${2:parameters})",
+            "",
+            "end"
+        ]
+    },
+
+    "Private field": {
+        "prefix": ["priv", "local priv"],
+        "body": [
+            "local priv = private[self]"
+        ]
+    }
+}
