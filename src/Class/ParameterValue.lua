@@ -2,9 +2,6 @@
 -- Include
 --=========
 
----@type ParameterType
-local ParaameterType = require('ParameterType')
-
 --=======
 -- Class
 --=======
@@ -26,16 +23,14 @@ local private = {}
 -- Methods
 --=========
 
----@param parameter_type ParameterType
 ---@param instance_data table | nil
 ---@return ParameterValue
-function static.new(parameter_type, instance_data)
+function static.new(instance_data)
     local instance = instance_data or newInstanceData(ParameterValue)
     local priv = {
-        param_type = parameter_type,
         base = 0,
         mult = 0,
-        additive = 0
+        additive = 0,
     }
     private[instance] = priv
 
@@ -48,16 +43,34 @@ function public:getBase()
     return priv.base
 end
 
+---@param value number
+function public:setBase(value)
+    local priv = private[self]
+    priv.base = value
+end
+
 ---@return number
 function public:getMult()
     local priv = private[self]
     return priv.mult
 end
 
+---@param value number
+function public:setMult(value)
+    local priv = private[self]
+    priv.mult = value
+end
+
 ---@return number
 function public:getAdditive()
     local priv = private[self]
     return priv.additive
+end
+
+---@param value number
+function public:setAdditive(value)
+    local priv = private[self]
+    priv.additive = value
 end
 
 return ParameterValue

@@ -39,7 +39,7 @@ function UnitParametersContainer.new(owner)
     local container = {}
     container[ParameterType.P_DMG]           = ParameterValues.new(ParameterType.P_DMG,           base.P_DMG,           1, 0)
     container[ParameterType.ATKS_PER_SEC]    = ParameterValues.new(ParameterType.ATKS_PER_SEC,    base.ATKS_PER_SEC,    1, 0)
-    container[ParameterType.ARMOR]           = ParameterValues.new(ParameterType.ARMOR,           base.ARMOR,           1, 0)
+    container[ParameterType.Armor]           = ParameterValues.new(ParameterType.Armor,           base.ARMOR,           1, 0)
     container[ParameterType.P_DMG_REDUC]     = ParameterValues.new(ParameterType.P_DMG_REDUC,     base.P_DMG_REDUC,     1, 0)
     container[ParameterType.M_DMG]           = ParameterValues.new(ParameterType.M_DMG,           base.M_DMG,           1, 0)
     container[ParameterType.CAST_TIME_REDUC] = ParameterValues.new(ParameterType.CAST_TIME_REDUC, base.CAST_TIME_REDUC, 1, 0)

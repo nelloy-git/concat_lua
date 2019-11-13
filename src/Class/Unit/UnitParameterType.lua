@@ -30,12 +30,13 @@ local db = DataBase.new(getClassName(ParameterType), getClassName(UnitParameterT
 --=========
 
 ---@param parameter_type ParameterType
----@param math_func fun(base:number, mult:number, additive:number):number
----@param apply_func fun(base:number, mult:number, additive:number):number
+---@param math_func fun(values:ParameterValue):number
+---@param apply_func fun(value:number, target:Unit):nil
 ---@param instance_data table | nil
 function static.new(parameter_type, math_func, apply_func, instance_data)
     local instance = instance_data or newInstanceData(UnitParameterType)
     local priv = {
+        parameter_type = parameter_type,
         math = math_func,
         apply = apply_func
     }
@@ -63,8 +64,8 @@ function static.init()
 
     static.PDMG = static.new(ParameterType.PDMG, nil, nil)
     static.ATKS_PER_SEC = static.new(ParameterType.ATKS_PER_SEC, nil, nil)
-    static.ARMOR = static.new(ParameterType.ARMOR, nil, nil)
-    static.PDMG_REDUC = static.new(ParameterType.PDMG_REDUC, nil, nil)
+    static.Armor = static.new(ParameterType.Armor, nil, nil)
+    static.PDmgReduc = static.new(ParameterType.PDmgReduc, nil, nil)
     static.MDMG = static.new(ParameterType.MDMG, nil, nil)
     static.CAST_TIME_REDUC = static.new(ParameterType.CAST_TIME_REDUC, nil, nil)
     static.RESIST = static.new(ParameterType.RESIST, nil, nil)
@@ -81,6 +82,31 @@ function static.init()
     static.AGI = static.new(ParameterType.AGI, nil, nil)
     static.INT = static.new(ParameterType.INT, nil, nil)
     static.MS = static.new(ParameterType.MS, nil, nil)
+end
+
+---@param values UnitParameterValue
+---@return number
+function public:math(values)
+    local priv = private[self]
+    return priv.math(values)
+end
+
+---@param value number
+---@param target Unit
+function public:apply(value, target)
+    local priv = private[self]
+    priv.apply(value, target)
+end
+
+---@param values UnitParameterValue
+---@return number
+function private.mathLinear(self, values)
+    local res = values:getBase() * values:getMult() + values:getAdditive()
+    local max = ParameterType.cap[private[self].parameter_type]
+    if res > max then
+        return max
+    end
+    return res
 end
 
 return UnitParameterType
