@@ -22,34 +22,6 @@ local override = ParameterType.override
 ---@type table(ParameterType, table)
 local private = {}
 
-private.default_max = 10^10
-
-private.min_pdmg_attack = 0.85
-private.max_pdmg_attack = 1.15
-private.max_pdmg_reduc = 0.75
-private.attack_index = 1
-
-private.min_mdmg_attack = 0.85
-private.max_mdmg_attack = 1.15
-private.max_ctime_reduc = 0.75
-private.max_mdmg_reduc = 0.75
-
-private.max_dodge_ch = 0.50
-private.max_crit_ch = 0.75
-private.max_cd_reduc = 0.75
-
-private.pdmg_per_str = 0.50
-private.armor_per_str = 0.25
-private.hp_per_str = 5
-
-private.aspd_per_agi = 1
-private.cspd_per_agi = 1
-private.dodge_per_agi = 1
-
-private.mdmg_per_int = 1
-private.mp_per_int = 5
-private.cdr_per_int = 1
-
 --=========
 -- Methods
 --=========
@@ -57,36 +29,6 @@ private.cdr_per_int = 1
 ---@return Trigger
 function static.getUnitParameterChangedTrigger()
     return private.UnitParameterChangedTrigger
-end
-
----@param base number
----@param mult number
----@param additive number
----@return number
-function public:math(base, mult, additive)
-    local priv = private[self]
-    return priv.math(base, mult, additive, priv.min, priv.max)
-end
-
----@param target unit
----@param old_value number
----@param new_value number
-function public:apply(target, old_value, new_value)
-    local priv = private[self]
-
-    priv.apply(target, new_value)
-
-    local prev_unit = GetUnitWithChangedParameters
-    local prev_param = GetChangedParameterType
-    local prev_old = GetChangedParameterOldValue
-    local prev_new = GetChangedParameterNewValue
-
-    GetUnitWithChangedParameters = function() return target end
-    GetChangedParameterType = function() return self end
-    GetChangedParameterOldValue = function() return old_value end
-    GetChangedParameterNewValue = function() return new_value end
-
-    private.UnitParameterChangedTrigger:execute()
 end
 
 ---@return number
@@ -154,37 +96,39 @@ function static.getCooldownReductionPerInt()
     return private.cdr_per_int
 end
 
----@return ParameterType
-function private.new()
-    local instance = newInstanceData(ParameterType)
-    local priv = {
-        short = "Empty",
-        full = "Empty",
-        icon = "Empty",
-        tooltip = "Empty",
-        min_value = 0,
-        max_value = 0,
-        ---@type fun(base:number, mult:number, additive:number, min:number, max:number):number
-        math = function() return 0 end,
-        ---@type fun(target:unit, value:number)
-        apply = function() return end,
-    }
-    private[instance] = priv
-
-    return instance
+---@param base number
+---@param mult number
+---@param additive number
+---@return number
+function public:math(base, mult, additive)
+    local priv = private[self]
+    return priv.math(base, mult, additive, priv.min, priv.max)
 end
 
--- Initialize parameter changed event.
-if not is_compiletime then
-    private.UnitParameterChangedTrigger = Trigger.new()
-    ---@return Unit
-    function GetUnitWithChangedParameters() return nil end
-    ---@return ParameterType
-    function GetChangedParameterType() return nil end
-    ---@return number
-    function GetChangedParameterOldValue() return nil end
-    ---@return number
-    function GetChangedParameterNewValue() return nil end
+---@param target unit
+---@param old_value number
+---@param new_value number
+function public:apply(target, old_value, new_value)
+    local priv = private[self]
+
+    priv.apply(target, new_value)
+
+    local prev_unit = GetUnitWithChangedParameters
+    local prev_param = GetChangedParameterType
+    local prev_old = GetChangedParameterOldValue
+    local prev_new = GetChangedParameterNewValue
+
+    GetUnitWithChangedParameters = function() return target end
+    GetChangedParameterType = function() return self end
+    GetChangedParameterOldValue = function() return old_value end
+    GetChangedParameterNewValue = function() return new_value end
+
+    private.UnitParameterChangedTrigger:execute()
+
+    GetUnitWithChangedParameters = prev_unit
+    GetChangedParameterType = prev_param
+    GetChangedParameterOldValue = prev_old
+    GetChangedParameterNewValue = prev_new
 end
 
 ---@return string
@@ -222,6 +166,67 @@ function public:getMax()
     local priv = private[self]
     return  priv.max_value
 end
+
+---@return ParameterType
+function private.new()
+    local instance = newInstanceData(ParameterType)
+    local priv = {
+        short = "Empty",
+        full = "Empty",
+        icon = "Empty",
+        tooltip = "Empty",
+        min_value = 0,
+        max_value = 0,
+        ---@type fun(base:number, mult:number, additive:number, min:number, max:number):number
+        math = function() return 0 end,
+        ---@type fun(target:unit, value:number)
+        apply = function() return nil end,
+    }
+    private[instance] = priv
+
+    return instance
+end
+
+-- Initialize parameter changed event.
+if not is_compiletime then
+    private.UnitParameterChangedTrigger = Trigger.new()
+    ---@return Unit
+    function GetUnitWithChangedParameters() return nil end
+    ---@return ParameterType
+    function GetChangedParameterType() return nil end
+    ---@return number
+    function GetChangedParameterOldValue() return nil end
+    ---@return number
+    function GetChangedParameterNewValue() return nil end
+end
+
+private.default_max = 10^10
+
+private.min_pdmg_attack = 0.85
+private.max_pdmg_attack = 1.15
+private.max_pdmg_reduc = 0.75
+private.attack_index = 1
+
+private.min_mdmg_attack = 0.85
+private.max_mdmg_attack = 1.15
+private.max_ctime_reduc = 0.75
+private.max_mdmg_reduc = 0.75
+
+private.max_dodge_ch = 0.50
+private.max_crit_ch = 0.75
+private.max_cd_reduc = 0.75
+
+private.pdmg_per_str = 0.50
+private.armor_per_str = 0.25
+private.hp_per_str = 5
+
+private.aspd_per_agi = 1
+private.cspd_per_agi = 1
+private.dodge_per_agi = 1
+
+private.mdmg_per_int = 1
+private.mp_per_int = 5
+private.cdr_per_int = 1
 
 ---@param base number
 ---@param mult number
@@ -308,16 +313,10 @@ function private.applyStrength(target, value)
     SetHeroStr(target, value // 1, true)
 end
 
-function private.applyStrenghtBonuses()
-end
-
 ---@param target unit
 ---@param value number
 function private.applyAgility(target, value)
     SetHeroAgi(target, value // 1, true)
-end
-
-function private.applyAgilityBonuses()
 end
 
 ---@param target unit
@@ -326,12 +325,9 @@ function private.applyIntelligence(target, value)
     SetHeroInt(target, value // 1, true)
 end
 
-function private.applyIntelligenceBonuses()
-end
-
 ---@param target unit
 ---@param value number
-function applyMoveSpeed(target, value)
+function private.applyMoveSpeed(target, value)
     if value <= 1 then
         SetUnitTurnSpeed(target, 0)
     else
@@ -422,31 +418,31 @@ private[static.Resist].math = private.mathLinear
 private[static.Resist].apply = private.applyNothing
 
 -- Magical damage reduction.
-static.MDmgReduc = static.new()
+static.MDmgReduc = private.new()
 private[static.MDmgReduc].short = 'MReduc'
 private[static.MDmgReduc].full = 'Magical damage reduction'
 private[static.MDmgReduc].icon = Icon.BTNLightningShield
 private[static.MDmgReduc].tooltip = string.format('Magical damage is reduced by this value. Works before resist. Formula: %.0f * (rating / (100 + rating)) %%.',
-                                                   100 * static.max_mdmg_reduc)
+                                                   100 * private.max_mdmg_reduc)
 private[static.MDmgReduc].min = -private.max_mdmg_reduc
 private[static.MDmgReduc].max = private.max_mdmg_reduc
 private[static.MDmgReduc].math = private.mathRating
 private[static.MDmgReduc].apply = private.applyNothing
 
 -- Dodge chance.
-static.Dodge = static.new()
+static.Dodge = private.new()
 private[static.Dodge].short = 'Dodge'
 private[static.Dodge].full = 'Dodge chance'
 private[static.Dodge].icon = Icon.BTNEvasion
 private[static.Dodge].tooltip = string.format('Chance to avoid incoming damage. Formula: %.0f * (rating / (100 + rating) %%.',
-                                                100 * static.max_dodge_ch)
+                                                100 * private.max_dodge_ch)
 private[static.Dodge].min = 0
 private[static.Dodge].max = private.max_dodge_ch
 private[static.Dodge].math = private.mathRating
 private[static.Dodge].apply = private.applyNothing
 
 -- Critical strike chance
-static.CritCh = static.new()
+static.CritCh = private.new()
 private[static.CritCh].short = 'CritCh'
 private[static.CritCh].full = 'Critical strike chance'
 private[static.CritCh].icon = Icon.BTNCriticalStrike
@@ -458,7 +454,7 @@ private[static.CritCh].math = private.mathRating
 private[static.CritCh].apply = private.applyNothing
 
 -- Critical strike damage
-static.CritDmg = static.new()
+static.CritDmg = private.new()
 private[static.CritDmg].short = 'CritDmg'
 private[static.CritDmg].full = 'Critical strike damage'
 private[static.CritDmg].icon = Icon.BTNDeathPact
@@ -469,7 +465,7 @@ private[static.CritDmg].math = private.mathLinear
 private[static.CritDmg].apply = private.applyNothing
 
 -- Cooldown reduction
-static.CdReduc = static.new()
+static.CdReduc = private.new()
 private[static.CdReduc].short = 'CDReduc'
 private[static.CdReduc].full = 'Cooldown reduction'
 private[static.CdReduc].icon = Icon.BTNDispelMagic
@@ -481,43 +477,51 @@ private[static.CdReduc].math = private.mathRating
 private[static.CdReduc].apply = private.applyNothing
 
 -- Health
-static.Health = static.new()
+static.Health = private.new()
 private[static.Health].short = 'HP'
 private[static.Health].full = 'Health'
 private[static.Health].icon = Icon.BTNHealthStone
 private[static.Health].tooltip = 'Maximum health.'
 private[static.Health].min = 5
 private[static.Health].max = private.default_max
+private[static.Health].math = private.mathLinear
+private[static.Health].apply = private.applyHealth
 
 -- Regeneration
-static.Regen = static.new()
+static.Regen = private.new()
 private[static.Regen].short = 'Regen'
 private[static.Regen].full = 'Regeneration'
 private[static.Regen].icon = Icon.BTNRegenerate
 private[static.Regen].tooltip = 'Health restoration per second.'
 private[static.Regen].min = -private.default_max
 private[static.Regen].max = private.default_max
+private[static.Regen].math = private.mathLinear
+private[static.Regen].apply = private.applyRegeneration
 
 -- Mana
-static.Mana = static.new()
+static.Mana = private.new()
 private[static.Mana].short = 'MP'
 private[static.Mana].full = 'Mana'
 private[static.Mana].icon = Icon.BTNManaStone
 private[static.Mana].tooltip = 'Maximum mana.'
 private[static.Mana].min = 5
 private[static.Mana].max = private.default_max
+private[static.Mana].math = private.mathLinear
+private[static.Mana].apply = private.applyMana
 
 -- Recovery
-static.Recov = static.new()
+static.Recov = private.new()
 private[static.Recov].short = 'Recov'
 private[static.Recov].full = 'Recovery'
 private[static.Recov].icon = Icon.BTNBrilliance
 private[static.Recov].tooltip = 'Mana restoration per second'
 private[static.Recov].min = -private.default_max
 private[static.Recov].max = private.default_max
+private[static.Recov].math = private.mathLinear
+private[static.Recov].apply = private.applyRecovery
 
 -- Strenght
-static.Str = static.new()
+static.Str = private.new()
 private[static.Str].short = 'Str'
 private[static.Str].full = 'Strength'
 private[static.Str].icon = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-str.blp"
@@ -525,9 +529,11 @@ private[static.Str].tooltip = string.format('Some spell effects depends on this 
                                              private.pdmg_per_str, private.armor_per_str, private.hp_per_str)
 private[static.Str].min = -private.default_max
 private[static.Str].max = private.default_max
+private[static.Str].math = private.mathLinear
+private[static.Str].apply = private.applyStrength
 
 -- Agility
-static.Agi = static.new()
+static.Agi = private.new()
 private[static.Agi].short = 'Agi'
 private[static.Agi].full = 'Agility'
 private[static.Agi].icon = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-agi.blp"
@@ -535,9 +541,11 @@ private[static.Agi].tooltip = string.format('Some spell effects depends on this 
                                              private.aspd_per_agi, private.cspd_per_agi, private.dodge_per_agi)
 private[static.Agi].min = -private.default_max
 private[static.Agi].max = private.default_max
+private[static.Agi].math = private.mathLinear
+private[static.Agi].apply = private.applyAgility
 
 -- Intelligence
-static.Int = static.new()
+static.Int = private.new()
 private[static.Int].short = 'Int'
 private[static.Int].full = 'Intelligence'
 private[static.Int].icon = "UI\\Widgets\\Console\\Human\\infocard-heroattributes-int.blp"
@@ -545,14 +553,18 @@ private[static.Int].tooltip = string.format('Some spell effects depends on this 
                                              private.mdmg_per_int, private.mp_per_int, private.cdr_per_int)
 private[static.Int].min = -private.default_max
 private[static.Int].max = private.default_max
+private[static.Int].math = private.mathLinear
+private[static.Int].apply = private.applyIntelligence
 
 -- Move speed
-static.MS = static.new()
+static.MS = private.new()
 private[static.MS].short = 'MS'
 private[static.MS].full = 'Move speed'
 private[static.MS].icon = "ReplaceableTextures\\CommandButtons\\BTNBootsOfSpeed.blp"
 private[static.MS].tooltip = 'Move speed'
 private[static.MS].min = 1
 private[static.MS].max = 512
+private[static.MS].math = private.mathLinear
+private[static.MS].apply = private.applyMoveSpeed
 
 return ParameterType
