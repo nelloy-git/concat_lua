@@ -1,3 +1,60 @@
+--[[
+    class ParameterType
+    
+    globals:
+        GetUnitWithChangedParameters()
+        GetChangedParameterType()
+        GetChangedParameterOldValue()
+        GetChangedParameterNewValue()
+
+    static:
+        PDmg
+        ASpd
+        Armor
+        PDmgReduc
+        MDmg
+        CSpd
+        Resist
+        MDmgReduc
+        Dodge
+        CritCh
+        CritDmg
+        CdReduc
+        Health
+        Regen
+        Mana
+        Recov
+        Str
+        Agi
+        Int
+        MS
+
+        getUnitParameterChangedTrigger()
+        getMinAttackPDmg()
+        getMaxAttackPDmg()
+        getMinAttackMDmg()
+        getMaxAttackMDmg()
+        getPDmgPerStr()
+        getArmorPerStr()
+        getHealthPerStr()
+        getASpdPerAgi()
+        getCSpdPerAgi()
+        getDodgePerAgi()
+        getMDmgPerInt()
+        getManaPerInt()
+        getCooldownReductionPerInt()
+
+    public:
+        math(base, mult, additive)
+        apply(target, old_value, new_value)
+        getShortName()
+        getFullName()
+        getIcon()
+        getTooltip()
+        getMin()
+        getMax()
+]]
+
 --=========
 -- Include
 --=========
