@@ -116,16 +116,9 @@ function private.update(self, param)
     local values = priv.values[param]
     local old_val = priv.results[param]
     local new_val = param:math(values:getBase(), values:getMult(), values:getAdditive())
-    print(values:getBase(), values:getMult(), values:getAdditive(), new_val)
 
     priv.results[param] = new_val
-    --param:apply(priv.owner, old_val, new_val)
+    param:apply(priv.owner, old_val, new_val)
 end
-
-local c = static.new('aaa')
-print(c:getResult(ParameterType.PDmg))
-print(ParameterType.PDmg)
-c:addBase(ParameterType.PDmg, 10)
-print(c:getResult(ParameterType.PDmg))
 
 return UnitParametersContainer

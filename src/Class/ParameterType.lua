@@ -304,13 +304,11 @@ private.cdr_per_int = 1
 ---@param max number
 ---@param min number
 ---@return number
-function private.mathLinear(base, mult, additive, max, min)
+function private.mathLinear(base, mult, additive, min, max)
     local res = base * mult + additive
-    print("Math", base, mult, additive, res)
+    
     if res > max then return max end
-    print("Math", base, mult, additive, res)
     if res < min then return min end
-    print("Math", base, mult, additive, res)
     return res
 end
 
@@ -320,7 +318,7 @@ end
 ---@param max number
 ---@param min number
 ---@return number
-function private.mathRating(base, mult, additive, max, min)
+function private.mathRating(base, mult, additive, min, max)
     local res = base * mult
     if res >= 0 then
         res = res / (100 + res)

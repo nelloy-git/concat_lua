@@ -32,7 +32,7 @@ function static.new(instance_data)
     local instance = instance_data or newInstanceData(ParameterValue)
     local priv = {
         base = 0,
-        mult = 0,
+        mult = 1,
         additive = 0,
     }
     private[instance] = priv

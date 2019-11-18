@@ -48,7 +48,7 @@ function static.new(instance_data)
     }
     private[instance] = priv
 
-    db:add(priv.wc3_trigger, instance)
+    db:set(priv.wc3_trigger, instance)
     TriggerAddAction(priv.wc3_trigger, function() runActions(instance) end)
 
     return instance

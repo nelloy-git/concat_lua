@@ -41,7 +41,11 @@ Test = function()
     --local Timer = require('class.Timer.BetterTimer')
 
     --local Database = require('Class.DataBase')
-    ParameterType = require('Class.Unit.UnitParametersContainer')
+    local Unit = require('Class.Unit.Unit')
+    local ParameterType = require('Class.ParameterType')
+
+    local foo = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    foo.parameters:setBase(ParameterType.PDmg, 5)
 end
 
 function InitCustomPlayerSlots()
