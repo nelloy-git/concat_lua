@@ -2,6 +2,9 @@
 -- Include
 --=========
 
+---@type ParameterTypeClass
+local ParameterType = require('Class.ParameterType')
+
 --=======
 -- Class
 --=======
@@ -46,6 +49,7 @@ end
 ---@param value number
 function public:setBase(value)
     local priv = private[self]
+    priv.result_ready = false
     priv.base = value
 end
 
@@ -58,6 +62,7 @@ end
 ---@param value number
 function public:setMult(value)
     local priv = private[self]
+    priv.result_ready = false
     priv.mult = value
 end
 
@@ -70,6 +75,7 @@ end
 ---@param value number
 function public:setAdditive(value)
     local priv = private[self]
+    priv.result_ready = false
     priv.additive = value
 end
 

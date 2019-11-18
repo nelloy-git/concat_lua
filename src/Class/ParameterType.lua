@@ -153,6 +153,15 @@ function static.getCooldownReductionPerInt()
     return private.cdr_per_int
 end
 
+---@return ParameterType[]
+function static.getList()
+    local copy = {}
+    for i = 1, #private.list do
+        table.insert(copy, #copy + 1, private.list[i])
+    end
+    return copy
+end
+
 ---@param base number
 ---@param mult number
 ---@param additive number
@@ -241,6 +250,8 @@ function private.new()
     }
     private[instance] = priv
 
+    table.insert(private.list, #private.list + 1, instance)
+
     return instance
 end
 
@@ -256,6 +267,8 @@ if not is_compiletime then
     ---@return number
     function GetChangedParameterNewValue() return nil end
 end
+
+private.list = {}
 
 private.default_max = 10^10
 
@@ -293,8 +306,11 @@ private.cdr_per_int = 1
 ---@return number
 function private.mathLinear(base, mult, additive, max, min)
     local res = base * mult + additive
+    print("Math", base, mult, additive, res)
     if res > max then return max end
+    print("Math", base, mult, additive, res)
     if res < min then return min end
+    print("Math", base, mult, additive, res)
     return res
 end
 
