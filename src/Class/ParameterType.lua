@@ -1,60 +1,3 @@
---[[
-    class ParameterType
-    
-    globals:
-        GetUnitWithChangedParameters()
-        GetChangedParameterType()
-        GetChangedParameterOldValue()
-        GetChangedParameterNewValue()
-
-    static:
-        PDmg
-        ASpd
-        Armor
-        PDmgReduc
-        MDmg
-        CSpd
-        Resist
-        MDmgReduc
-        Dodge
-        CritCh
-        CritDmg
-        CdReduc
-        Health
-        Regen
-        Mana
-        Recov
-        Str
-        Agi
-        Int
-        MS
-
-        getUnitParameterChangedTrigger()
-        getMinAttackPDmg()
-        getMaxAttackPDmg()
-        getMinAttackMDmg()
-        getMaxAttackMDmg()
-        getPDmgPerStr()
-        getArmorPerStr()
-        getHealthPerStr()
-        getASpdPerAgi()
-        getCSpdPerAgi()
-        getDodgePerAgi()
-        getMDmgPerInt()
-        getManaPerInt()
-        getCooldownReductionPerInt()
-
-    public:
-        math(base, mult, additive)
-        apply(target, old_value, new_value)
-        getShortName()
-        getFullName()
-        getIcon()
-        getTooltip()
-        getMin()
-        getMax()
-]]
-
 --=========
 -- Include
 --=========
@@ -70,14 +13,48 @@ local Trigger = require('Class.Trigger')
 ---@type ParameterTypeClass
 local ParameterType = newClass('ParameterType')
 
----@class ParameterType
-local public = ParameterType.public
+-- Globals
+---@return Unit
+function GetUnitWithChangedParameters() return nil end
+---@return ParameterType
+function GetChangedParameterType() return nil end
+---@return number
+function GetChangedParameterOldValue() return nil end
+---@return number
+function GetChangedParameterNewValue() return nil end
+
 ---@class ParameterTypeClass
 local static = ParameterType.static
+---@class ParameterType
+local public = ParameterType.public
 ---@type table
 local override = ParameterType.override
 ---@type table(ParameterType, table)
 local private = {}
+
+private.UnitParameterChangedTrigger = nil
+private.list = {}
+private.default_max = 10^10
+private.min_pdmg_attack = 0.85
+private.max_pdmg_attack = 1.15
+private.max_pdmg_reduc = 0.75
+private.attack_index = 1
+private.min_mdmg_attack = 0.85
+private.max_mdmg_attack = 1.15
+private.max_ctime_reduc = 0.75
+private.max_mdmg_reduc = 0.75
+private.max_dodge_ch = 0.50
+private.max_crit_ch = 0.75
+private.max_cd_reduc = 0.75
+private.pdmg_per_str = 0.50
+private.armor_per_str = 0.25
+private.hp_per_str = 5
+private.aspd_per_agi = 1
+private.cspd_per_agi = 1
+private.dodge_per_agi = 1
+private.mdmg_per_int = 1
+private.mp_per_int = 5
+private.cdr_per_int = 1
 
 --=========
 -- Methods
@@ -85,6 +62,9 @@ local private = {}
 
 ---@return Trigger
 function static.getUnitParameterChangedTrigger()
+    if not private.UnitParameterChangedTrigger then
+        private.UnitParameterChangedTrigger = Trigger.new()
+    end
     return private.UnitParameterChangedTrigger
 end
 
@@ -189,7 +169,9 @@ function public:apply(target, old_value, new_value)
     GetChangedParameterOldValue = function() return old_value end
     GetChangedParameterNewValue = function() return new_value end
 
-    private.UnitParameterChangedTrigger:execute()
+    if private.UnitParameterChangedTrigger then
+        private.UnitParameterChangedTrigger:execute()
+    end
 
     GetUnitWithChangedParameters = prev_unit
     GetChangedParameterType = prev_param
@@ -254,49 +236,6 @@ function private.new()
 
     return instance
 end
-
--- Initialize parameter changed event.
-if not is_compiletime then
-    private.UnitParameterChangedTrigger = Trigger.new()
-    ---@return Unit
-    function GetUnitWithChangedParameters() return nil end
-    ---@return ParameterType
-    function GetChangedParameterType() return nil end
-    ---@return number
-    function GetChangedParameterOldValue() return nil end
-    ---@return number
-    function GetChangedParameterNewValue() return nil end
-end
-
-private.list = {}
-
-private.default_max = 10^10
-
-private.min_pdmg_attack = 0.85
-private.max_pdmg_attack = 1.15
-private.max_pdmg_reduc = 0.75
-private.attack_index = 1
-
-private.min_mdmg_attack = 0.85
-private.max_mdmg_attack = 1.15
-private.max_ctime_reduc = 0.75
-private.max_mdmg_reduc = 0.75
-
-private.max_dodge_ch = 0.50
-private.max_crit_ch = 0.75
-private.max_cd_reduc = 0.75
-
-private.pdmg_per_str = 0.50
-private.armor_per_str = 0.25
-private.hp_per_str = 5
-
-private.aspd_per_agi = 1
-private.cspd_per_agi = 1
-private.dodge_per_agi = 1
-
-private.mdmg_per_int = 1
-private.mp_per_int = 5
-private.cdr_per_int = 1
 
 ---@param base number
 ---@param mult number

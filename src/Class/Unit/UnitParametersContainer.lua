@@ -14,10 +14,11 @@ local ParameterValue = require('Class.ParameterValue')
 ---@type UnitParametersContainerClass
 local UnitParametersContainer = newClass('UnitParametersContainer')
 
----@class UnitParametersContainer
-local public = UnitParametersContainer.public
 ---@class UnitParametersContainerClass
 local static = UnitParametersContainer.static
+    static.new = 'function'
+---@class UnitParametersContainer
+local public = UnitParametersContainer.public
 ---@type table
 local override = UnitParametersContainer.override
 ---@type table(UnitParametersContainer, table)

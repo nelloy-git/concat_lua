@@ -23,7 +23,7 @@ local public = Unit.public
 ---@type table(Unit, table)
 local private = {}
 
-local db = DataBase.new('userdata', getClassName(Unit))
+private.db = DataBase.new('userdata', getClassName(Unit))
 
 --=========
 -- Methods
@@ -45,12 +45,17 @@ function static.new(player, id, x, y, face, instance_data)
         wc3_unit = CreateUnit(player, id, x, y, face)
     }
     private[instance] = priv
-
-    db:set(priv.wc3_unit, instance)
+    private.db:set(priv.wc3_unit, instance)
 
     private.initComponents(instance)
 
     return instance
+end
+
+---@param wc3_unit unit
+---@return Unit
+function static.get(wc3_unit)
+    return private.db:get(wc3_unit)
 end
 
 public.parameters = 0

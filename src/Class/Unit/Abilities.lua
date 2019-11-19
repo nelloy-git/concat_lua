@@ -1,11 +1,40 @@
----@type Unit
-local Unit = require('Class.Unit.Main')
----@type UnitEvent
-local UnitEvent = require('Class.Unit.Event')
----@type ParameterType
-local ParameterType = require('Include.ParameterType')
+--=========
+-- Include
+--=========
 
-require('Class.Unit.ParametersContainer')
+---@type ParameterTypeClass
+local ParameterType = require('Class.ParameterType')
+
+--=======
+-- Class
+--=======
+
+---@type UnitAbilitiesContainerClass
+local UnitAbilitiesContainer = newClass('UnitAbilitiesContainer')
+
+---@class UnitAbilitiesContainer
+local public = UnitAbilitiesContainer.public
+---@class UnitAbilitiesContainerClass
+local static = UnitAbilitiesContainer.static
+---@type table
+local override = UnitAbilitiesContainer.override
+---@type table(UnitAbilitiesContainer, table)
+local private = {}
+
+--=========
+-- Methods
+--=========
+
+---@param instance_data table | nil
+---@return UnitAbilitiesContainer
+function static.new(instance_data)
+    local instance = instance_data or newInstanceData(UnitAbilitiesContainer)
+    local priv = {
+    }
+    private[instance] = priv
+
+    return instance
+end
 
 local UnitAbilities = {}
 function UnitAbilities.init()
@@ -69,4 +98,4 @@ function Unit.updateAbilities()
     end
 end
 
-return UnitAbilities
+return UnitAbilitiesContainer
