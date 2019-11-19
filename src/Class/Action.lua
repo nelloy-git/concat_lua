@@ -18,13 +18,12 @@ local private = {}
 -- Methods
 --=========
 
----@param callback fun(userdata:any):nil
+---@param callback fun():any
 ---@param instance_data table|nil
 ---@return Action
 function static.new(callback, instance_data)
     local instance = instance_data or newInstanceData(Action)
     local priv = {
-        ---@type fun(userdata:any):nil
         callback = callback,
     }
     private[instance] = priv
@@ -37,9 +36,10 @@ function public:free()
     freeInstanceData(self)
 end
 
+---@return any
 function public:run()
     local priv = private[self]
-    runFuncInDebug(priv.callback)
+    return runFuncInDebug(priv.callback)
 end
 
 return Action

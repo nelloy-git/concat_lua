@@ -25,7 +25,11 @@ local public = BetterTimer.public
 ---@type table(BetterTimer, table)
 local private = {}
 
-local minimum_period = 0.03125
+private.minimum_period = 0.03125
+
+if not is_compiletime then
+    private.glTimer = static.new(private.minimum_period)
+end
 
 --=========
 -- Methods
@@ -37,8 +41,8 @@ local minimum_period = 0.03125
 function override.new(period, instance_data)
     local instance = instance_data or newInstanceData(BetterTimer)
     instance = Timer.new(instance)
-    if period < minimum_period then
-        period = minimum_period
+    if period < private.minimum_period then
+        period = private.minimum_period
     end
     local priv = {
         cur_time = 0,
@@ -52,6 +56,11 @@ function override.new(period, instance_data)
     return instance
 end
 
+---@return BetterTimer
+function static.getGlobalTimer()
+    return private.glTimer
+end
+
 --- Removed function
 function public:start()
     Debug(string.format("This function can not be used from %s.", getClassName(BetterTimer)))
@@ -61,6 +70,12 @@ end
 function public:getTime()
     local priv = private[self]
     return priv.cur_time
+end
+
+---@return number
+function public:getPeriod()
+    local priv = private[self]
+    return priv.period
 end
 
 ---@param delay number

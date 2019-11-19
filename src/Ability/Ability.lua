@@ -2,8 +2,14 @@
 -- Include
 --=========
 
+---@type ActionClass
+local Action = require('Class.Action')
+---@type BetterTimerClass
+local BetterTimer = require('Class.BetterTimer')
 ---@type DataBaseClass
 local DataBase = require('utils.DataBase')
+---@type TriggerClass
+local Trigger = require('Class.Trigger')
 
 --=======
 -- Class
@@ -22,13 +28,24 @@ local override = Ability.override
 local private = {}
 
 private.db = DataBase.new('number', getClassName(Ability))
+private.timer = BetterTimer.getGlobalTimer()
+private.period = private.glTimer:getPeriod()
+
 if not is_compiletime then
-    private.
---EVENT_PLAYER_UNIT_SPELL_EFFECT
---EVENT_PLAYER_UNIT_ISSUED_ORDER
---EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER
---EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER
---EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER
+    private.wc3_spell_effect_trigger = Trigger.new()
+    private.wc3_unit_issued_order_trigger = Trigger.new()
+    private.wc3_unit_issued_point_order_trigger = Trigger.new()
+    private.wc3_unit_issued_target_order_trigger = Trigger.new()
+    private.wc3_unit_issued_unit_order_trigger = Trigger.new()
+    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
+        local pl = Player(i)
+        private.wc3_spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, pl)
+        private.wc3_unit_issued_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_ORDER, pl)
+        private.wc3_unit_issued_point_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, pl)
+        private.wc3_unit_issued_target_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
+        private.wc3_unit_issued_unit_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
+    end
+end
 
 --=========
 -- Methods
@@ -39,7 +56,18 @@ if not is_compiletime then
 function static.new(id, instance_data)
     local instance = instance_data or newInstanceData(Ability)
     local priv = {
-        id = ID(id)
+        id = ID(id),
+
+        can_move = false,
+        can_attack = false,
+
+        casting_time = nil,
+
+        start_action = nil,
+        cancel_action = nil,
+        casting_action = nil,
+        finish_action = nil,
+        interrupt_action = nil,
     }
     private[instance] = priv
     private.db:set(ID(id), instance)
@@ -58,175 +86,122 @@ function public:getId()
     return priv.id
 end
 
----@type Ability
-local Ability = require('baseClasses.Ability.AbilityData')
----@type DataBase
-local DataBase = require('utils.DataBase')
----@type Unit
-local Unit = require('baseClasses.Unit')
----@type Item
-local Item = require('baseClasses.Item')
----@type Destructable
-local Destructable = require('baseClasses.Destructable')
----@type Settings
-local Settings = require('utils.Settings')
-
----@class AbilityEvent
-local AbilityEvent = {
-    __casters_db = DataBase.new('Unit', 'table')
-}
-
--- ============
---  Predefined
--- ============
----@type fun():nil
-local unitStartsCasting
----@type fun():nil
-local mainLoop
----@type fun():nil
-local unitIssuedAnyOrder
----@type fun():Unit|Item|Destructable|Vec2
-local getSpellTarget
----@type Timer
-local casting_timer
----@type number
-local timer_period
-
-local initialized = false
-function AbilityEvent.init()
-    if initialized then return nil end
-
-    local any_unti_finish_casting_trigger = Unit.getTrigger(EVENT_PLAYER_UNIT_SPELL_EFFECT)
-    any_unti_finish_casting_trigger:addAction(runFuncInDebug, unitStartsCasting)
-
-    local any_unit_issued_notarget_order = Unit.getTrigger(EVENT_PLAYER_UNIT_ISSUED_ORDER)
-    any_unit_issued_notarget_order:addAction(runFuncInDebug, unitIssuedAnyOrder)
-
-    local any_unit_issued_point_order = Unit.getTrigger(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER)
-    any_unit_issued_point_order:addAction(runFuncInDebug, unitIssuedAnyOrder)
-
-    local any_unit_issued_target_order = Unit.getTrigger(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER)
-    any_unit_issued_target_order:addAction(runFuncInDebug, unitIssuedAnyOrder)
-
-    local any_unit_issued_unit_order = Unit.getTrigger(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER)
-    any_unit_issued_unit_order:addAction(runFuncInDebug, unitIssuedAnyOrder)
-
-    casting_timer = glTimer
-    timer_period = glTimer:getPeriod()
-
-    initialized = true
+---@param func fun(caster:unit):number | number
+function public:setCastingTime(func)
+    local priv = private[self]
+    priv.casting_time = func
 end
 
---- Parameter function should return full casting time of ability. Default: 3.
----@param func fun(caster:Unit, target:Unit|Item|Destructable|Vec2):number
-function Ability:setCastingTimeFunction(func)
-    if not self.__casting_callbacks then
-        self.__casting_callbacks = {}
-    end
-    self.__casting_callbacks.getTimeout = func
-end
-
----@param caster Unit
----@param target Unit|Item|Destructable|Vec2
+---@param caster unit
 ---@return number
-function Ability:getCastingTime(caster, target)
-    if type(self.__casting_callbacks.getTimeout) == 'function' then
-        return self.__casting_callbacks.getTimeout(caster, target)
+function public:getCastingTime(caster)
+    local priv = private[self]
+
+    if type(priv.casting_time) == 'function' then
+        return priv.casting_time(caster)
+    elseif type(priv.casting_time) == 'number' then
+        return priv.casting_time
     end
-    return 3
+    return 0
 end
 
---- Callback should return true if casting started successfully. Default: true.
----@param callback fun(caster:Unit, target:Unit|Item|Destructable|Vec2):boolean
-function Ability:setStartCallback(callback)
-    if not self.__casting_callbacks then
-        self.__casting_callbacks = {}
-    end
-    self.__casting_callbacks.start = callback
+---@param action Action
+function public:setStartAction(action)
+    local priv = private[self]
+    priv.start_action = action
 end
 
----@param caster Unit
----@param target Unit|Item|Destructable|Vec2
+--- Default returns true
 ---@return boolean
-function Ability:runStartCallback(caster, target)
-    if type(self.__casting_callbacks.start) == 'function' then
-        return self.__casting_callbacks.start(caster, target)
+function public:runStartAction()
+    local priv = private[self]
+    return private.runActionSavety(priv.start_action)
+end
+
+---@param action Action
+function public:setCancelAction(action)
+    local priv = private[self]
+    priv.cancel_action = action
+end
+
+--- Default returns true
+---@return boolean
+function public:runCancelAction()
+    local priv = private[self]
+    return private.runActionSavety(priv.cancel_action)
+end
+
+---@param action Action
+function public:setCastingAction(action)
+    local priv = private[self]
+    priv.casting_action = action
+end
+
+--- Default returns true
+---@return boolean
+function public:runCastingAction()
+    local priv = private[self]
+    return private.runActionSavety(priv.casting_action)
+end
+
+---@param action Action
+function public:setFinishAction(action)
+    local priv = private[self]
+    priv.finish_action = action
+end
+
+---@return boolean
+function public:runFinishAction()
+    local priv = private[self]
+    return private.runActionSavety(priv.finish_action)
+end
+
+---@param action Action
+function public:setInterruptAction(action)
+    local priv = private[self]
+    priv.interrupt_action = action
+end
+
+---@return boolean
+function public:runInterruptAction()
+    local priv = private[self]
+    return private.runActionSavety(priv.interrupt_action)
+end
+
+---@return boolean
+function private.runActionSavety(action)
+    if not action then
+        return true
     end
+
+    local success = action:run()
+    if type(success) == 'boolean' then
+        return success
+    end
+
     return true
 end
 
----@param callback fun(caster:Unit, target:Unit|Item|Destructable|Vec2, elapsed_time:number, timeout:number):nil
-function Ability:setCancelCallback(callback)
-    if not self.__casting_callbacks then
-        self.__casting_callbacks = {}
-    end
-    self.__casting_callbacks.cancel = callback
-end
+function private.onSpellEffect()
+    local id = GetSpellAbilityId()
+    local ability = static.get(id)
+    -- If is not in DB then do nothing
+    if not ability then return nil end
+    
+    local caster = GetSpellAbilityUnit()
 
----@param caster Unit
----@param target Unit|Item|Destructable|Vec2
----@param elapsed_time number
----@param timeout number
-function Ability:runCancelCallback(caster, target, elapsed_time, timeout)
-    if type(self.__casting_callbacks.cancel) == 'function' then
-        self.__casting_callbacks.finish(caster, target, elapsed_time, timeout)
-    end
-end
+    -- Cancel current casting.
+    caster:cancelCasting()
+    -- Start new casting.
+    caster:startCasting(ability, getSpellTarget())
 
----@param callback fun(caster:Unit, target:Unit|Item|Destructable|Vec2, timeout:number):nil
-function Ability:setFinishCallback(callback)
-    if not self.__casting_callbacks then
-        self.__casting_callbacks = {}
-    end
-    self.__casting_callbacks.finish = callback
-end
-
----@param caster Unit
----@param target Unit|Item|Destructable|Vec2
----@param timeout number
-function Ability:runFinishCallback(caster, target, timeout)
-    if type(self.__casting_callbacks.finish) == 'function' then
-        self.__casting_callbacks.finish(caster, target, timeout)
+    if Settings.Events.VerboseAbilityCasting then
+        Debug("Casting started.")
     end
 end
 
---- Callback should return false if casting interrupted. Default: true.
----@param callback fun(caster:Unit, target:Unit|Item|Destructable|Vec2, elapsed_time:number, timeout:number):nil
-function Ability:setCastingCallback(callback)
-    if not self.__casting_callbacks then
-        self.__casting_callbacks = {}
-    end
-    self.__casting_callbacks.casting = callback
-end
+function private.cancelCurrentAbility(caster)
 
----@param caster Unit
----@param target Unit|Item|Destructable|Vec2
----@param elapsed_time number
----@param timeout number
-function Ability:runCastingCallback(caster, target, elapsed_time, timeout)
-    if type(self.__casting_callbacks.casting) == 'function' then
-        return self.__casting_callbacks.casting(caster, target, elapsed_time, timeout)
-    end
-    return true
-end
-
----@param callback fun(caster:Unit, target:Unit|Item|Destructable|Vec2, elapsed_time:number, timeout:number):nil
-function Ability:setInterruptCallback(callback)
-    if not self.__casting_callbacks then
-        self.__casting_callbacks = {}
-    end
-    self.__casting_callbacks.interrupt = callback
-end
-
----@param caster Unit
----@param target Unit|Item|Destructable|Vec2
----@param elapsed_time number
----@param timeout number
-function Ability:runInterruptCallback(caster, target, elapsed_time, timeout)
-    if type(self.__casting_callbacks.interrupt) == 'function' then
-        return self.__casting_callbacks.interrupt(caster, target, elapsed_time, timeout)
-    end
-    return true
 end
 
 function Unit:cancelCasting()

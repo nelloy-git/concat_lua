@@ -13,16 +13,6 @@ local Trigger = require('Class.Trigger')
 ---@type ParameterTypeClass
 local ParameterType = newClass('ParameterType')
 
--- Globals
----@return Unit
-function GetUnitWithChangedParameters() return nil end
----@return ParameterType
-function GetChangedParameterType() return nil end
----@return number
-function GetChangedParameterOldValue() return nil end
----@return number
-function GetChangedParameterNewValue() return nil end
-
 ---@class ParameterTypeClass
 local static = ParameterType.static
 ---@class ParameterType
@@ -66,6 +56,26 @@ function static.getUnitParameterChangedTrigger()
         private.UnitParameterChangedTrigger = Trigger.new()
     end
     return private.UnitParameterChangedTrigger
+end
+
+---@return Unit
+function static.GetUnitWithChangedParameters()
+    return nil
+end
+
+---@return ParameterType
+function static.GetChangedParameterType()
+    return nil
+end
+
+---@return number
+function static.GetChangedParameterOldValue()
+    return nil
+end
+
+---@return number
+function static.GetChangedParameterNewValue()
+    return nil
 end
 
 ---@return number
@@ -159,24 +169,24 @@ function public:apply(target, old_value, new_value)
 
     priv.apply(target, new_value)
 
-    local prev_unit = GetUnitWithChangedParameters
-    local prev_param = GetChangedParameterType
-    local prev_old = GetChangedParameterOldValue
-    local prev_new = GetChangedParameterNewValue
+    local prev_unit = static.GetUnitWithChangedParameters
+    local prev_param = static.GetChangedParameterType
+    local prev_old = static.GetChangedParameterOldValue
+    local prev_new = static.GetChangedParameterNewValue
 
-    GetUnitWithChangedParameters = function() return target end
-    GetChangedParameterType = function() return self end
-    GetChangedParameterOldValue = function() return old_value end
-    GetChangedParameterNewValue = function() return new_value end
+    static.GetUnitWithChangedParameters = function() return target end
+    static.GetChangedParameterType = function() return self end
+    static.GetChangedParameterOldValue = function() return old_value end
+    static.GetChangedParameterNewValue = function() return new_value end
 
     if private.UnitParameterChangedTrigger then
         private.UnitParameterChangedTrigger:execute()
     end
 
-    GetUnitWithChangedParameters = prev_unit
-    GetChangedParameterType = prev_param
-    GetChangedParameterOldValue = prev_old
-    GetChangedParameterNewValue = prev_new
+    static.GetUnitWithChangedParameters = prev_unit
+    static.GetChangedParameterType = prev_param
+    static.GetChangedParameterOldValue = prev_old
+    static.GetChangedParameterNewValue = prev_new
 end
 
 ---@return string
