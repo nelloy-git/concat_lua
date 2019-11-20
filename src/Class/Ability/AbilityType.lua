@@ -47,6 +47,8 @@ if not is_compiletime then
         private.wc3_unit_issued_target_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
         private.wc3_unit_issued_unit_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
     end
+
+    private.wc3_spell_effect_trigger:addAction(Action.new(private.onSpellEffect))
 end
 
 --=========
@@ -137,80 +139,15 @@ function public:setInterruptAction(action)
     priv.interrupt_action = action
 end
 
---- Default returns true
----@param self AbilityType
----@return boolean
-function private.runStartAction(self)
-    local priv = private[self]
-    return private.runActionSavety(priv.start_action)
-end
-
---- Default returns true
----@param self AbilityType
----@return boolean
-function private.runCancelAction(self)
-    local priv = private[self]
-    return private.runActionSavety(priv.cancel_action)
-end
-
---- Default returns true
----@param self AbilityType
----@return boolean
-function private.runCastingAction(self)
-    local priv = private[self]
-    return private.runActionSavety(priv.casting_action)
-end
-
---- Default returns true
----@param self AbilityType
----@return boolean
-function private.runFinishAction(self)
-    local priv = private[self]
-    return private.runActionSavety(priv.finish_action)
-end
-
---- Default returns true
----@param self AbilityType
----@return boolean
-function private.runInterruptAction(self)
-    local priv = private[self]
-    return private.runActionSavety(priv.interrupt_action)
-end
-
----@return boolean
-function private.runActionSavety(action)
-    if not action then
-        return true
-    end
-
-    local success = action:run()
-    if type(success) == 'boolean' then
-        return success
-    end
-
-    return true
-end
-
 function private.onSpellEffect()
     local id = GetSpellAbilityId()
-    local abil_type = private.DB:get(id)
-    
-    -- If is not in DB then do nothing
-    if not abil_type then return nil end
-    
+    local self = private.DB:get(id)
+    if not self then return nil end
+    local priv = private[self]
     local caster = GetSpellAbilityUnit()
 
-    private.cancelCastingAbility(abil_type, caster)
-
-
-    -- Cancel current casting.
-    caster:cancelCasting()
-    -- Start new casting.
-    caster:startCasting(abil_type, getSpellTarget())
-
-    if Settings.Events.VerboseAbilityCasting then
-        Debug("Casting started.")
-    end
+    private.cancelCastingAbility(self, caster)
+    private.startCastingAbility(self, caster)
 end
 
 ---@param self AbilityType
@@ -220,6 +157,66 @@ function private.cancelCastingAbility(self, caster)
     if abil_instance ~= nil then
         private.runCancelAction(self)
         abil_instance:free()
+    end
+end
+
+---@param self AbilityType
+---@param caster unit
+---@return boolean
+function private.startCastingAbility(self, caster)
+    local priv = private[self]
+    local cast_time = self:getCastingTime(caster)
+    
+    local success = private.runStartAction(self)
+    if success then
+        local abil_instance = AbilityInstance.new(self:getId(), cast_time)
+        abil_instance:start(caster, priv.can_move, priv.can_attack)
+
+        local action = Action.new(
+            function()
+
+            end
+        )
+    end
+end
+
+    local success =  runFuncInDebug(ability.runStartCallback, ability, self, target)
+    if success then
+        ---@class CasterData
+        local data = {
+            caster = self,
+            ability = ability,
+            elapsed_time = 0,
+            timeout = ability:getCastingTime(self, target),
+            target = target
+        }
+
+        -- Disable moving
+        self:addMoveSpeed(0, -10^6, 0)
+        -- Disable attacks
+        UnitAddAbility(self:getObj(), ID('Abun'))
+
+        AbilityEvent.__casters_db:add(self, data)
+        casting_timer:addAction(0, mainLoop, data)
+    else
+        if Settings.Events.VerboseAbilityCasting then
+            Debug("Casting canceled.")
+        end
+    end
+end
+
+unitStartsCasting = function()
+    local ability = AbilityType.GetSpellAbility()
+    if not ability then return nil end
+    local caster = Unit.GetSpellAbilityUnit()
+
+    -- Cancel current casting.
+    caster:cancelCasting()
+    -- Start new casting.
+    caster:startCasting(ability, getSpellTarget())
+
+    if Settings.Events.VerboseAbilityCasting then
+        Debug("Casting started.")
     end
 end
 
@@ -305,23 +302,11 @@ function Unit:finishCasting()
     end
 end
 
-unitStartsCasting = function()
-    local ability = AbilityType.GetSpellAbility()
-    if not ability then return nil end
-    local caster = Unit.GetSpellAbilityUnit()
+function private.timerLoop(ability_instance)
+    if ability_instance.time_left <= 0 then
 
-    -- Cancel current casting.
-    caster:cancelCasting()
-    -- Start new casting.
-    caster:startCasting(ability, getSpellTarget())
+    ability_instance.time_left = ability_instance.time_left - private.timer_period
 
-    if Settings.Events.VerboseAbilityCasting then
-        Debug("Casting started.")
-    end
-end
-
----@param data table
-mainLoop = function(data)
     runFuncInDebug(function()
         if data ~= AbilityEvent.__casters_db:get(data.caster) then
             return nil
@@ -361,8 +346,58 @@ getSpellTarget = function()
     return target
 end
 
-return AbilityEvent
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runStartAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.start_action)
+end
 
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runCancelAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.cancel_action)
+end
 
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runCastingAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.casting_action)
+end
+
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runFinishAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.finish_action)
+end
+
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runInterruptAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.interrupt_action)
+end
+
+---@return boolean
+function private.runActionSavety(action)
+    if not action then
+        return true
+    end
+
+    local success = action:run()
+    if type(success) == 'boolean' then
+        return success
+    end
+
+    return true
+end
 
 return AbilityType

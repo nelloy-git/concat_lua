@@ -48,7 +48,8 @@ function static.new(ability_id, cast_time, instance_data)
 
         caster = nil,
         ability_id = ID(ability_id),
-        
+        cast_time = cast_time,
+
         can_move = true,
         can_attack = true
     }
@@ -100,6 +101,11 @@ end
 function public:getId()
     local priv = private[self]
     return priv.ability_id
+end
+
+function public:getCaster()
+    local priv = private[self]
+    return priv.caster
 end
 
 ---@param self AbilityInstance
