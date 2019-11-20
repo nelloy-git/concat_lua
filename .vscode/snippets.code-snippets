@@ -37,6 +37,10 @@
             "    return instance",
             "end",
             "",
+            "function public:free()",
+            "   private[self] = nil",
+            "   freeInstanceData(self)",
+            "end",
             "return ${1:className}"
         ]
     },

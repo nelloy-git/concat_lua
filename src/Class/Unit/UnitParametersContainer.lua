@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+---@type DataBaseClass
+local DataBase = require('Class.DataBase')
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
 ---@type ParameterValueClass
@@ -24,6 +26,8 @@ local override = UnitParametersContainer.override
 ---@type table(UnitParametersContainer, table)
 local private = {}
 
+private.DB = DataBase.new('userdata', getClassName(UnitParametersContainer))
+
 --=========
 -- Methods
 --=========
@@ -35,8 +39,21 @@ function static.new(owner, instance_data)
     local instance = instance_data or newInstanceData(UnitParametersContainer)
     local priv = private.createPriv(owner)
     private[instance] = priv
+    private.DB:set(owner, instance)
 
     return instance
+end
+
+---@param owner unit
+---@return UnitParametersContainer
+function static.get(owner)
+    return private.DB:get(owner)
+end
+
+function public:free()
+    private.DB:remove(private[self].owner)
+    private[self] = nil
+    freeInstanceData(self)
 end
 
 ---@param param ParameterType

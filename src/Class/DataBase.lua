@@ -79,4 +79,13 @@ function public:get(key)
     return priv.data[key]
 end
 
+---@return boolean
+function public:remove(key)
+    local priv = private[self]
+    if not isValidKeyType(self, key) then
+        return false
+    end
+    priv.data[key] = nil
+end
+
 return DataBase

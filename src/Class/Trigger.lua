@@ -23,7 +23,7 @@ local public = Trigger.public
 ---@type table(Trigger, table)
 local private = {}
 
-local db = DataBase.new('userdata', getClassName(Trigger))
+private.DB = DataBase.new('userdata', getClassName(Trigger))
 
 --=========
 -- Methods
@@ -48,22 +48,22 @@ function static.new(instance_data)
     }
     private[instance] = priv
 
-    db:set(priv.wc3_trigger, instance)
+    private.DB:set(priv.wc3_trigger, instance)
     TriggerAddAction(priv.wc3_trigger, function() runActions(instance) end)
 
     return instance
+end
+
+---@return Trigger
+function static.getTriggering()
+    local wc3_trigger = GetTriggeringTrigger()
+    return private.DB:get(wc3_trigger)
 end
 
 function public:free()
     DestroyTrigger(private[self].wc3_trigger)
     private[self] = nil
     freeInstanceData(self)
-end
-
----@return Trigger
-function static.getTriggering()
-    local wc3_trigger = GetTriggeringTrigger()
-    return db:get(wc3_trigger)
 end
 
 ---@param callback fun(data:any):nil

@@ -4,6 +4,8 @@
 
 ---@type ActionClass
 local Action = require('Class.Action')
+---@type AbilityInstanceClass
+local AbilityInstance = require('Class.Ability.AbilityInstance')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.BetterTimer')
 ---@type DataBaseClass
@@ -15,19 +17,19 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
----@type AbilityClass
-local Ability = newClass('Ability')
+---@type AbilityTypeClass
+local AbilityType = newClass('AbilityType')
 
----@class Ability
-local public = Ability.public
----@class AbilityClass
-local static = Ability.static
+---@class AbilityType
+local public = AbilityType.public
+---@class AbilityTypeClass
+local static = AbilityType.static
 ---@type table
-local override = Ability.override
+local override = AbilityType.override
 ---@type table(Ability, table)
 local private = {}
 
-private.db = DataBase.new('number', getClassName(Ability))
+private.DB = DataBase.new('number', getClassName(AbilityType))
 private.timer = BetterTimer.getGlobalTimer()
 private.period = private.glTimer:getPeriod()
 
@@ -52,9 +54,9 @@ end
 --=========
 
 ---@param instance_data table | nil
----@return Ability
+---@return AbilityType
 function static.new(id, instance_data)
-    local instance = instance_data or newInstanceData(Ability)
+    local instance = instance_data or newInstanceData(AbilityType)
     local priv = {
         id = ID(id),
 
@@ -70,14 +72,14 @@ function static.new(id, instance_data)
         interrupt_action = nil,
     }
     private[instance] = priv
-    private.db:set(ID(id), instance)
+    private.DB:set(ID(id), instance)
 
     return instance
 end
 
----@return Ability
+---@return AbilityType
 function static.get(id)
-    return private.db:get(id)
+    return private.DB:get(id)
 end
 
 ---@return number
@@ -111,24 +113,10 @@ function public:setStartAction(action)
     priv.start_action = action
 end
 
---- Default returns true
----@return boolean
-function public:runStartAction()
-    local priv = private[self]
-    return private.runActionSavety(priv.start_action)
-end
-
 ---@param action Action
 function public:setCancelAction(action)
     local priv = private[self]
     priv.cancel_action = action
-end
-
---- Default returns true
----@return boolean
-function public:runCancelAction()
-    local priv = private[self]
-    return private.runActionSavety(priv.cancel_action)
 end
 
 ---@param action Action
@@ -137,23 +125,10 @@ function public:setCastingAction(action)
     priv.casting_action = action
 end
 
---- Default returns true
----@return boolean
-function public:runCastingAction()
-    local priv = private[self]
-    return private.runActionSavety(priv.casting_action)
-end
-
 ---@param action Action
 function public:setFinishAction(action)
     local priv = private[self]
     priv.finish_action = action
-end
-
----@return boolean
-function public:runFinishAction()
-    local priv = private[self]
-    return private.runActionSavety(priv.finish_action)
 end
 
 ---@param action Action
@@ -162,8 +137,42 @@ function public:setInterruptAction(action)
     priv.interrupt_action = action
 end
 
+--- Default returns true
+---@param self AbilityType
 ---@return boolean
-function public:runInterruptAction()
+function private.runStartAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.start_action)
+end
+
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runCancelAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.cancel_action)
+end
+
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runCastingAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.casting_action)
+end
+
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runFinishAction(self)
+    local priv = private[self]
+    return private.runActionSavety(priv.finish_action)
+end
+
+--- Default returns true
+---@param self AbilityType
+---@return boolean
+function private.runInterruptAction(self)
     local priv = private[self]
     return private.runActionSavety(priv.interrupt_action)
 end
@@ -184,24 +193,34 @@ end
 
 function private.onSpellEffect()
     local id = GetSpellAbilityId()
-    local ability = static.get(id)
+    local abil_type = private.DB:get(id)
+    
     -- If is not in DB then do nothing
-    if not ability then return nil end
+    if not abil_type then return nil end
     
     local caster = GetSpellAbilityUnit()
+
+    private.cancelCastingAbility(abil_type, caster)
+
 
     -- Cancel current casting.
     caster:cancelCasting()
     -- Start new casting.
-    caster:startCasting(ability, getSpellTarget())
+    caster:startCasting(abil_type, getSpellTarget())
 
     if Settings.Events.VerboseAbilityCasting then
         Debug("Casting started.")
     end
 end
 
-function private.cancelCurrentAbility(caster)
-
+---@param self AbilityType
+---@param caster unit
+function private.cancelCastingAbility(self, caster)
+    local abil_instance = AbilityInstance.getCurrent(caster)
+    if abil_instance ~= nil then
+        private.runCancelAction(self)
+        abil_instance:free()
+    end
 end
 
 function Unit:cancelCasting()
@@ -287,7 +306,7 @@ function Unit:finishCasting()
 end
 
 unitStartsCasting = function()
-    local ability = Ability.GetSpellAbility()
+    local ability = AbilityType.GetSpellAbility()
     if not ability then return nil end
     local caster = Unit.GetSpellAbilityUnit()
 
@@ -346,4 +365,4 @@ return AbilityEvent
 
 
 
-return Ability
+return AbilityType
