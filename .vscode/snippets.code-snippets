@@ -41,6 +41,7 @@
             "   private[self] = nil",
             "   freeInstanceData(self)",
             "end",
+            "",
             "return ${1:className}"
         ]
     },

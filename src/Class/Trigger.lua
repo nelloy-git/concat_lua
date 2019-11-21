@@ -29,15 +29,6 @@ private.DB = DataBase.new('userdata', getClassName(Trigger))
 -- Methods
 --=========
 
----@param self Trigger
- function runActions(self)
-    local priv = private[self]
-
-    for i = 1, #priv.actions do
-        priv.actions[i]:run()
-    end
-end
-
 ---@param instance_data table | nil
 ---@return Trigger
 function static.new(instance_data)
@@ -49,7 +40,7 @@ function static.new(instance_data)
     private[instance] = priv
 
     private.DB:set(priv.wc3_trigger, instance)
-    TriggerAddAction(priv.wc3_trigger, function() runActions(instance) end)
+    TriggerAddAction(priv.wc3_trigger, function() private.runActions(instance) end)
 
     return instance
 end
@@ -274,6 +265,15 @@ end
 function public:addPlayerKeyEvent(player, key, meta_key, key_down)
     local priv = private[self]
     BlzTriggerRegisterPlayerKeyEvent(priv.wc3_trigger, player, key, meta_key, key_down)
+end
+
+---@param self Trigger
+function private.runActions(self)
+    local priv = private[self]
+
+    for i = 1, #priv.actions do
+        priv.actions[i]:run()
+    end
 end
 
 return Trigger

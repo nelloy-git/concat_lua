@@ -3,7 +3,7 @@ local Settings = require('utils.Settings')
 require('utils.Class')
 
 local Globals = {}
----@alias callback fun(data:any):nil
+---@alias callback fun():any
 
 local initialized = false
 function Globals.init()
