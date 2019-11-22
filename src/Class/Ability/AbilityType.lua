@@ -7,7 +7,7 @@ local AbilityTypeCallbacksContainer = require('Class.Ability.AbilityTypeCallback
 ---@type AbilityTypeFlagsClass
 local AbilityTypeFlagsContainer = require('Class.Ability.AbilityTypeFlagsContainer')
 ---@type DataBaseClass
-local DataBase = require('utils.DataBase')
+local DataBase = require('Class.DataBase')
 
 --=======
 -- Class
@@ -32,7 +32,6 @@ public.callbacks = "AbilityTypeCallbacksContainer"
 public.flags = "AbilityTypeFlags"
 
 private.DB = DataBase.new('number', getClassName(AbilityType))
-
 --=========
 -- Methods
 --=========

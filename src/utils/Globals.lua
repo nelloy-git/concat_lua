@@ -56,8 +56,11 @@ end
 function ID2str(id)
     if type(id) == 'number' or type(id) == 'integer' then
         return string.pack(">I4", id)
+    elseif type(id) == 'string' and string.len(id) == 4 then
+        return id
     end
-    return id
+    Debug("ID2str error: got wrong format. Var:", id)
+    return nil
 end
 
 ---If val < min returns min. If val > max returns max.

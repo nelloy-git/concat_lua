@@ -1,13 +1,13 @@
---compiletime(
---    function ()
---        ---@type ObjEdit
---        WeObjEdit = require('compiletime.objEdit.objEdit')
---        WeObjEdit.init(src_dir, dst_dir)
---        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
---
---        --local weItem = WeObjEdit.Item.Item
---        --local i = weItem.new()
---    end)
+compiletime(
+    function ()
+        ---@type ObjEdit
+        WeObjEdit = require('compiletime.objEdit.objEdit')
+        WeObjEdit.init(src_dir, dst_dir)
+        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
+
+        --local weItem = WeObjEdit.Item.Item
+        --local i = weItem.new()
+    end)
 
 
 GG_trg_Melee_Initialization = nil

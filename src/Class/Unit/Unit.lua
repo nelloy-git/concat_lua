@@ -6,6 +6,8 @@
 local DataBase = require('Class.DataBase')
 ---@type UnitParametersContainerClass
 local UnitParametersContainer = require('Class.Unit.UnitParametersContainer')
+---@type UnitAbilitiesContainerClass
+local UnitAbilitiesContainer = require('Class.Unit.UnitAbilitiesContainer')
 
 --=======
 -- Class

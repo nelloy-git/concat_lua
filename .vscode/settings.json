@@ -16,6 +16,7 @@
     ],
     "Lua.diagnostics.globals": [
         "__require_data",
-        "is_compiletime"
+        "is_compiletime",
+        "compiletime"
     ]
 }

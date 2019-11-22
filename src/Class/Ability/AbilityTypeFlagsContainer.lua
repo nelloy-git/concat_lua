@@ -3,9 +3,9 @@
 --=========
 
 ---@type ParameterTypeClass
-local ParameterType = require('ParameterType')
+local ParameterType = require('Class.ParameterType')
 ---@type UnitParametersContainerClass
-local UnitParametersContainer = require('UnitParametersContainer')
+local UnitParametersContainer = require('Class.Unit.UnitParametersContainer')
 
 --=======
 -- Class
@@ -49,19 +49,30 @@ end
 function public:applyFlagsToCaster(caster)
     local priv = private[self]
 
-    if not private.getFlag(priv.caster_can_move) then
+    if not priv.caster_can_move then
         local params = UnitParametersContainer.get(caster)
         params:addMult(ParameterType.MS, -private.ms_const)
-        priv.can_move = false
     end
 
-    if not private.getFlag(priv.caster_can_attack) then
+    if not priv.caster_can_attack then
         UnitAddAbility(caster, private.disable_attack_id)
-        priv.can_attack = false
+    end
+end
+---@param caster unit
+function public:removeFlagsFromCaster(caster)
+    local priv = private[self]
+
+    if not priv.caster_can_move then
+        local params = UnitParametersContainer.get(caster)
+        params:addMult(ParameterType.MS, private.ms_const)
+    end
+
+    if not priv.caster_can_attack then
+        UnitRemoveAbility(caster, private.disable_attack_id)
     end
 end
 
----@param flag callback | boolean
+---@param flag boolean
 function public:setCasterCanMove(flag)
     local priv = private[self]
     priv.caster_can_move = flag
@@ -70,10 +81,10 @@ end
 ---@return boolean
 function public:getCasterCanMove()
     local priv = private[self]
-    return private.getFlag(priv.caster_can_move)
+    return priv.caster_can_move
 end
 
----@param flag callback | boolean
+---@param flag boolean
 function public:setCasterCanAttack(flag)
     local priv = private[self]
     priv.caster_can_attack = flag
@@ -82,18 +93,7 @@ end
 ---@return boolean
 function public:getCasterCanAttack()
     local priv = private[self]
-    return private.getFlag(priv.caster_can_attack)
-end
-
----@return boolean
-function private.getFlag(flag)
-    if type(flag) == 'function' then
-        return flag()
-    elseif type(flag) == 'boolean' then
-        return flag
-    else
-        return true
-    end
+    return priv.caster_can_attack
 end
 
 return AbilityTypeFlags
