@@ -17,6 +17,7 @@
     "Lua.diagnostics.globals": [
         "__require_data",
         "is_compiletime",
-        "compiletime"
+        "compiletime",
+        "addCompiletimeFinalize"
     ]
 }

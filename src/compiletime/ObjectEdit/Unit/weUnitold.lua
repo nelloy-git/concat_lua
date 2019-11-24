@@ -3,8 +3,8 @@ local WeField = require('compiletime.objEdit.weField')
 ---@type AnyWeUnit
 local AnyWeUnit = require('compiletime.objEdit.objects.unit.anyWeUnit')
 
----@class WeUnit : AnyWeUnit
----@type WeUnit
+---@class WeUnit2 : AnyWeUnit
+---@type WeUnit2
 local WeUnit = {}
 setmetatable(WeUnit, {__index = AnyWeUnit})
 

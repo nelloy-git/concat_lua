@@ -1,87 +1,78 @@
+--=========
+-- Include
+--=========
+
+require('utils.Globals')
 ---@type WeUtils
-local utils = require('compiletime.objEdit.weUtils')
+local WeUtils = require('compiletime.ObjectEdit.WeUtils')
 
----Object modification container
----@class WeField2
-local WeField = {}
+--=======
+-- Class
+--=======
 
----@class bytes : string
+---@type WeFieldClass
+local WeField = newClass('WeField')
 
----data_type = 'bool'|'int'|'real'|'unreal'|'string'
----@param data boolean|integer|number|string
----@param data_type string
----@return bytes|nil
-local function data2byte(data, data_type)
-	if data_type == 'bool' then
-		if data == true then
-			return utils.int2byte(1)
-		else
-			return utils.int2byte(0)
-		end
-	elseif data_type == 'int' then
-		return utils.int2byte(data)
-	elseif data_type == 'real' or data_type == 'unreal' then
-		return utils.float2byte(data)
-	elseif data_type == 'string' then
-		return utils.str2byte(data)
-	else
-		print('Wrong data type')
-		print(utils.getErrorPos())
-		return nil
-	end
-end
+---@class WeField
+local public = WeField.public
+---@class WeFieldClass
+local static = WeField.static
+---@type table
+local override = WeField.override
+---@type table(WeField, table)
+local private = {}
 
----data type = 'bool'|'int'|'real'|'unreal'|'string'
----@param data_type string
----@return bytes
-local function type2bytes(data_type)
-	if data_type == 'bool' then return utils.int2byte(0) end
-	if data_type == 'int' then return utils.int2byte(0) end
-	if data_type == 'real' then return utils.int2byte(1) end
-	if data_type == 'unreal' then return utils.int2byte(2) end
-	if data_type == 'string' then return utils.int2byte(3) end
-end
+--=========
+-- Methods
+--=========
 
----@param var bytes
----@return bytes
-local function getBytes(var)
-    if var == nil then
-        return ''
-    end
-    return var
-end
-
----data type = 'bool'|'int'|'real'|'unreal'|'string'
----@param id string
----@param data_type string
----@param lvl_or_variation integer|nil
----@param abil_data_id integer|nil
----@param data string|boolean|integer|number
+---@param change_id string | number
+---@param data_type string|"'bool'"|"'int'"|"'real'"|"'unreal'"|"'string'"
+---@param instance_data table | nil
 ---@return WeField
-function WeField.new(id, data_type, lvl_or_variation, abil_data_id, data)
-	if lvl_or_variation ~= nil then
-		lvl_or_variation = utils.int2byte(lvl_or_variation)
-	end
+function static.new(change_id, data_type, name, instance_data)
 
-	if abil_data_id ~= nil then
-		abil_data_id = utils.int2byte(abil_data_id)
-	end
+    if not WeUtils.isDataType(data_type) then
+        Debug("%s error: wrong data type. Got: %s", getClassName(WeField), data_type)
+        Debug(WeUtils.getErrorPos())
+        return nil
+    end
 
-    local field_table = {
-        id = id,
-		data_type = type2bytes(data_type),
-		lvl = getBytes(lvl_or_variation),
-		abil_data_id = getBytes(abil_data_id),
-		data = getBytes(data2byte(data, data_type)),
-	}
-	setmetatable(field_table, {__index = WeField})
-    return field_table
+    local instance = instance_data or newInstanceData(WeField)
+    local priv = {
+        change_id = ID2str(change_id),
+        data_type = data_type,
+        name = name
+    }
+    private[instance] = priv
+
+    return instance
 end
 
----@return bytes
-function WeField:serialize()
-	local str = self.id .. self.data_type .. self.lvl .. self.abil_data_id .. self.data
-	return str
+function public:free()
+   private[self] = nil
+   freeInstanceData(self)
+end
+
+---@return string|"'bool'"|"'int'"|"'real'"|"'unreal'"|"'string'"
+function public:getDataType()
+    local priv = private[self]
+    return priv.data_type
+end
+
+function public:getName()
+    local priv = private[self]
+    return priv.name
+end
+
+---@return string
+function public:serialize()
+    local priv = private[self]
+
+    local change_id_bytes = priv.change_id
+    local data_type_bytes = WeUtils.type2bytes(priv.data_type)
+
+    return change_id_bytes..data_type_bytes
 end
 
 return WeField

@@ -1,12 +1,15 @@
-compiletime(
+local foo_type = compiletime(
     function ()
         ---@type ObjEdit
-        WeObjEdit = require('compiletime.objEdit.objEdit')
-        WeObjEdit.init(src_dir, dst_dir)
-        addCompiletimeFinalize(function() WeObjEdit.close() WeObjEdit = nil end)
+        WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
+        addCompiletimeFinalize(WeObjEdit.finish)
 
-        --local weItem = WeObjEdit.Item.Item
-        --local i = weItem.new()
+
+        WeUnit = WeObjEdit.Unit
+        local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
+        u:setField(WeUnit.Name, 'Footman')
+
+        return u:toRuntime()
     end)
 
 
@@ -44,7 +47,7 @@ Test = function()
     local Unit = require('Class.Unit.Unit')
     local ParameterType = require('Class.ParameterType')
 
-    local foo = Unit.new(Player(0), 'hfoo', 0, 0, 0)
+    local foo = Unit.new(Player(0), foo_type.id, 0, 0, 0)
     foo.parameters:setBase(ParameterType.PDmg, 5)
 end
 

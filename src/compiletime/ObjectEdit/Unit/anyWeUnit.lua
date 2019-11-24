@@ -180,7 +180,7 @@ function AnyWeUnit:setModelFile(data)
     local sep = package.config:sub(1,1)
     if sep == '/' then data = data:gsub('\\', package.config:sub(1,1)) 
     elseif sep == '\\' then data = data:gsub('/', package.config:sub(1,1)) end
-    
+
     local f = io.open(data, "r")
     if f ~= nil then 
         f:close()

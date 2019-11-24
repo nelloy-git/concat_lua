@@ -26,10 +26,7 @@ local public = BetterTimer.public
 local private = {}
 
 private.minimum_period = 0.03125
-
-if not is_compiletime then
-    private.glTimer = static.new(private.minimum_period)
-end
+private.glTimer = nil
 
 --=========
 -- Methods
@@ -140,6 +137,10 @@ function private.findPos(actions, time, first, len)
     else
         return private.findPos(actions, time, first + half_len + 2 * d, half_len)
     end
+end
+
+if not is_compiletime then
+    private.glTimer = static.new(private.minimum_period)
 end
 
 return BetterTimer

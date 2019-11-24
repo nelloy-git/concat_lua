@@ -1,22 +1,22 @@
 ---@class WeUtils
 local WeUtils = {}
 
-WeUtils.TartgetType = require('compiletime.objEdit.weTargetType')
+WeUtils.TartgetType = require('compiletime.ObjectEdit.WeTargetType')
 
 ---@param data string
----@return bytes
+---@return string
 function WeUtils.str2byte(data)
     return data .. '\0'
 end
 
----@param data bytes
+---@param data string
 ---@return string
 function WeUtils.byte2str(data)
     return data:sub(1, #data - 1)
 end
 
 ---@param data integer
----@return bytes
+---@return string
 function WeUtils.int2byte(data)
     local bytes = ''
     for i = 0, 3 do
@@ -25,7 +25,7 @@ function WeUtils.int2byte(data)
     return bytes
 end
 
----@param data bytes
+---@param data string
 ---@return integer
 function WeUtils.byte2int(data)
     local res = 0
@@ -36,7 +36,7 @@ function WeUtils.byte2int(data)
     return res
 end
 
----@param data bytes
+---@param data string
 ---@param bytes_per_line integer
 ---@return string
 function WeUtils.byte2hex(data, bytes_per_line)
@@ -56,7 +56,7 @@ function WeUtils.byte2hex(data, bytes_per_line)
     return res:sub(2, #res)
 end
 
----@param data bytes
+---@param data string
 ---@return number
 function WeUtils.byte2float(data)
     data = WeUtils.byte2int(data)
@@ -86,7 +86,7 @@ local frexp = math.frexp or function(x)
 end
 
 ---@param data number
----@return bytes
+---@return string
 function WeUtils.float2byte(data)
     local sign = 0
     if data < 0 then
@@ -113,9 +113,22 @@ function WeUtils.float2byte(data)
     return v
 end
 
+---@param we_type string
+---@return boolean
+function WeUtils.isDataType(we_type)
+    if we_type == 'bool' or
+       we_type == 'int' or
+       we_type == 'real' or
+       we_type == 'unreal' or
+       we_type == 'string' then
+        return true
+    end
+    return false
+end
+
 ---data type = 'bool'|'int'|'real'|'unreal'|'string'
 ---@param data_type string
----@return bytes
+---@return string
 function WeUtils.type2bytes(data_type)
 	if data_type == 'bool' then return WeUtils.int2byte(0) end
 	if data_type == 'int' then return WeUtils.int2byte(0) end
@@ -127,7 +140,7 @@ end
 ---data_type = 'bool'|'int'|'real'|'unreal'|'string'
 ---@param data boolean|number|string
 ---@param data_type string
----@return bytes|nil
+---@return string|nil
 function WeUtils.data2byte(data, data_type)
 	if data_type == 'bool' then
 		if data == true then

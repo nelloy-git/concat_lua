@@ -38,6 +38,7 @@ private.disable_attack_id = ID('Abun')
 private.attack_order = 851983
 if not is_compiletime then
     private.timer = BetterTimer.getGlobalTimer()
+    Debug(private.timer)
     private.period = private.timer:getPeriod()
 
     private.wc3_spell_effect_trigger = Trigger.new()
@@ -53,12 +54,6 @@ if not is_compiletime then
         private.wc3_unit_issued_target_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
         private.wc3_unit_issued_unit_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
     end
-
-    private.wc3_spell_effect_trigger:addAction(private.onSpellEffect)
-    private.wc3_unit_issued_order_trigger:addAction(private.onAnyOrder)
-    private.wc3_unit_issued_point_order_trigger:addAction(private.onAnyOrder)
-    private.wc3_unit_issued_target_order_trigger:addAction(private.onAnyOrder)
-    private.wc3_unit_issued_unit_order_trigger:addAction(private.onAnyOrder)
 end
 --=========
 -- Methods
@@ -228,6 +223,14 @@ function private.getAnyTarget()
     if target then return target end
     target = {x = GetSpellTargetX(), y = GetSpellTargetY()}
     return target
+end
+
+if not is_compiletime then
+    private.wc3_spell_effect_trigger:addAction(private.onSpellEffect)
+    private.wc3_unit_issued_order_trigger:addAction(private.onAnyOrder)
+    private.wc3_unit_issued_point_order_trigger:addAction(private.onAnyOrder)
+    private.wc3_unit_issued_target_order_trigger:addAction(private.onAnyOrder)
+    private.wc3_unit_issued_unit_order_trigger:addAction(private.onAnyOrder)
 end
 
 return AbilityCasting
