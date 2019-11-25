@@ -20,4 +20,6 @@ function ObjEdit.finish()
     ObjEdit.Ability.save()
 end
 
+addCompiletimeFinalize(ObjEdit.finish)
+
 return ObjEdit

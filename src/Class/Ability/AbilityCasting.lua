@@ -38,14 +38,14 @@ private.disable_attack_id = ID('Abun')
 private.attack_order = 851983
 if not is_compiletime then
     private.timer = BetterTimer.getGlobalTimer()
-    Debug(private.timer)
-    private.period = private.timer:getPeriod()
+    private.timer_period = private.timer:getPeriod()
 
     private.wc3_spell_effect_trigger = Trigger.new()
     private.wc3_unit_issued_order_trigger = Trigger.new()
     private.wc3_unit_issued_point_order_trigger = Trigger.new()
     private.wc3_unit_issued_target_order_trigger = Trigger.new()
     private.wc3_unit_issued_unit_order_trigger = Trigger.new()
+    Debug("Spell trigger:", private.wc3_spell_effect_trigger)
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
         private.wc3_spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, pl)
@@ -85,6 +85,15 @@ function static.start(caster, target, abil_type)
     static.getTarget = prev_getTarget
 
     return success
+end
+
+---@param caster unit
+function static.getCastingTimeLeft(caster)
+    local abil_instance = private.DB:get(caster)
+    if abil_instance ~= nil then
+        return abil_instance.time_left
+    end
+    return -1
 end
 
 ---@param caster unit
@@ -226,11 +235,11 @@ function private.getAnyTarget()
 end
 
 if not is_compiletime then
-    private.wc3_spell_effect_trigger:addAction(private.onSpellEffect)
-    private.wc3_unit_issued_order_trigger:addAction(private.onAnyOrder)
-    private.wc3_unit_issued_point_order_trigger:addAction(private.onAnyOrder)
-    private.wc3_unit_issued_target_order_trigger:addAction(private.onAnyOrder)
-    private.wc3_unit_issued_unit_order_trigger:addAction(private.onAnyOrder)
+    private.wc3_spell_effect_trigger:addAction(function() runFuncInDebug(private.onSpellEffect) end)
+    private.wc3_unit_issued_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
+    private.wc3_unit_issued_point_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
+    private.wc3_unit_issued_target_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
+    private.wc3_unit_issued_unit_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
 end
 
 return AbilityCasting

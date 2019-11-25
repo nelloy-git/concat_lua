@@ -54,7 +54,7 @@ end
 ---@return boolean
 function public:runStart()
     local priv = private[self]
-    return private.runcallbackSavety(priv.start)
+    return private.runCallbackSavety(priv.start)
 end
 
 ---@param callback callback
@@ -67,7 +67,7 @@ end
 ---@return boolean
 function public:runCancel()
     local priv = private[self]
-    return private.runcallbackSavety(priv.cancel)
+    return private.runCallbackSavety(priv.cancel)
 end
 
 --- Callback have to return true if casting period was successfull
@@ -81,7 +81,7 @@ end
 ---@return boolean
 function public:runCasting()
     local priv = private[self]
-    return private.runcallbackSavety(priv.casting)
+    return private.runCallbackSavety(priv.casting)
 end
 
 ---@param callback callback
@@ -94,7 +94,7 @@ end
 ---@return boolean
 function public:runFinish()
     local priv = private[self]
-    return private.runcallbackSavety(priv.finish)
+    return private.runCallbackSavety(priv.finish)
 end
 
 ---@param callback callback
@@ -107,7 +107,7 @@ end
 ---@return boolean
 function public:runInterrupt()
     local priv = private[self]
-    return private.runcallbackSavety(priv.interrupt)
+    return private.runCallbackSavety(priv.interrupt)
 end
 
 --- Returns true by default.

@@ -104,8 +104,8 @@ function public:toRuntime()
     for k,v in pairs(priv.fields) do
         copy[k:getName()] = deepcopy(v)
     end
-    copy.id = priv.id
-    copy.base_id = priv.base_id
+    copy.id = WeObject.public.getId(self)
+    copy.base_id = WeObject.public.getBaseId(self)
     return copy
 end
 
@@ -128,6 +128,9 @@ function public:serialize()
     return res
 end
 
+--====================
+-- Any ability fields
+--====================
 static.AnimationNames = WeAbilityField.new("aani", 'string', 0, "AnimationNames")
 static.AreaEffect = WeAbilityField.new("aaea", 'string', 0, "AreaEffect")
 static.AreaOfEffect = WeAbilityField.new("aare", 'unreal', 0, "AreaOfEffect")
@@ -196,5 +199,28 @@ static.TooltipNormal = WeAbilityField.new("atp1", 'string', 0, "TooltipNormal")
 static.TooltipNormalExtended = WeAbilityField.new("aub1", 'string', 0, "TooltipNormalExtended")
 static.TooltipTurnOff = WeAbilityField.new("aut1", 'string', 0, "TooltipTurnOff")
 static.TooltipTurnOffExtended = WeAbilityField.new("auu1", 'string', 0, "TooltipTurnOffExtended")
+
+--================
+-- Channel fields
+--================
+static.ANcl_ArtDuration = WeAbilityField.new("Ncl4", 'unreal', 4, "ArtDuration")
+static.ANcl_BaseOrderID = WeAbilityField.new("Ncl6", 'string', 6, "BaseOrderID")
+static.ANcl_DisableOtherAbilities = WeAbilityField.new("Ncl5", 'bool', 5, "DisableOtherAbilities")
+static.ANcl_FollowThroughTime = WeAbilityField.new("Ncl1", 'unreal', 1, "FollowThroughTime")
+
+static.ANcl_TargetType_None = 0
+static.ANcl_TargetType_Unit = 1
+static.ANcl_TargetType_Point = 2
+static.ANcl_TargetType_UnitOrPoint = 3
+--- 0 - none; 1 - unit; 2 - point; 3 - point or unit
+static.ANcl_TargetType = WeAbilityField.new("Ncl2", 'int', 2, "TargetType")
+
+static.ANcl_Options_Visible = 1
+static.ANcl_Options_AreaTarget = 2
+static.ANcl_Options_Material = 4
+static.ANcl_Options_Universal = 8
+static.ANcl_Options_Group = 16
+--- Summ of flags: visible - 1, area target - 2, material - 4, universal - 8, group - 16
+static.ANcl_Options = WeAbilityField.new("Ncl3", 'int', 3, "Options")
 
 return WeAbilityObject

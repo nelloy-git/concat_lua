@@ -1,22 +1,3 @@
-local foo_type = compiletime(
-    function ()
-        ---@type ObjEdit
-        WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-        addCompiletimeFinalize(WeObjEdit.finish)
-
-
-        WeUnit = WeObjEdit.Unit
-        local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
-        u:setField(WeUnit.Name, 'Footman')
-
-        WeAbility = WeObjEdit.Ability
-        local a = WeAbility.new(WeObjEdit.getAbilityId(), 'ANcl', 'Test Ability')
-        a:setField(WeAbility.TooltipNormal, 1, 'Test Ability')
-
-        --return u:toRuntime()
-    end)
-
-
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
@@ -43,6 +24,14 @@ function RunInitialization()
     runFuncInDebug(Test)
 end
 
+local unit_type = compiletime(function()
+    local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
+    WeUnit = WeObjEdit.Unit
+    local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
+    u:setField(WeUnit.Name, 'Footman')
+    return u:toRuntime()
+end)
+
 Test = function()
     --CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
     --local Timer = require('class.Timer.BetterTimer')
@@ -50,9 +39,10 @@ Test = function()
     --local Database = require('Class.DataBase')
     local Unit = require('Class.Unit.Unit')
     local ParameterType = require('Class.ParameterType')
+    local AbilityTest = require('Class.Ability.AbilityTest')
 
-    local foo = Unit.new(Player(0), foo_type.id, 0, 0, 0)
-    foo.parameters:setBase(ParameterType.PDmg, 5)
+    local foo = Unit.new(Player(0), unit_type.id, 0, 0, 0)
+    UnitAddAbility(foo:getWc3Unit(), AbilityTest:getId())
 end
 
 function InitCustomPlayerSlots()
