@@ -74,7 +74,7 @@ function public:setField(field, data)
 end
 
 ---@param field WeField
----@return WeField
+---@return any
 function public:getField(field)
     local priv = private[self]
     return priv.fields[field]
@@ -110,9 +110,8 @@ function public:serialize()
 
     local fields_serial = {}
     for field, data in pairs(priv.fields) do
-        local field_bytes = field:serialize()
-        local data_bytes = data and WeUtils.data2byte(data, field:getDataType()) or ''
-        table.insert(fields_serial, 1, field_bytes..data_bytes..private.field_serial_end)
+        local field_bytes = field:serialize(data)
+        table.insert(fields_serial, 1, field_bytes..private.field_serial_end)
     end
 
     local res = priv.base_id .. priv.id .. WeUtils.int2byte(#fields_serial)

@@ -109,7 +109,7 @@ end
 ---@return any
 function deepcopy(orig, copies)
     copies = copies or {}
-    local orig_type = type(orig)
+    local orig_type = _G.type(orig)
     local copy
     if orig_type == 'table' then
         if copies[orig] then

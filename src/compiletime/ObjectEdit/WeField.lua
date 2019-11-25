@@ -28,6 +28,7 @@ local private = {}
 
 ---@param change_id string | number
 ---@param data_type string|"'bool'"|"'int'"|"'real'"|"'unreal'"|"'string'"
+---@param name string
 ---@param instance_data table | nil
 ---@return WeField
 function static.new(change_id, data_type, name, instance_data)
@@ -54,6 +55,12 @@ function public:free()
    freeInstanceData(self)
 end
 
+---@return string
+function public:getChangeId()
+    local priv = private[self]
+    return priv.change_id
+end
+
 ---@return string|"'bool'"|"'int'"|"'real'"|"'unreal'"|"'string'"
 function public:getDataType()
     local priv = private[self]
@@ -66,13 +73,14 @@ function public:getName()
 end
 
 ---@return string
-function public:serialize()
+function public:serialize(data)
     local priv = private[self]
 
     local change_id_bytes = priv.change_id
     local data_type_bytes = WeUtils.type2bytes(priv.data_type)
+    local data_bytes = WeUtils.data2byte(data, priv.data_type)
 
-    return change_id_bytes..data_type_bytes
+    return change_id_bytes..data_type_bytes..data_bytes
 end
 
 return WeField

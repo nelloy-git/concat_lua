@@ -9,7 +9,11 @@ local foo_type = compiletime(
         local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
         u:setField(WeUnit.Name, 'Footman')
 
-        return u:toRuntime()
+        WeAbility = WeObjEdit.Ability
+        local a = WeAbility.new(WeObjEdit.getAbilityId(), 'ANcl', 'Test Ability')
+        a:setField(WeAbility.TooltipNormal, 1, 'Test Ability')
+
+        --return u:toRuntime()
     end)
 
 

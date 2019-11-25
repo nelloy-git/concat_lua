@@ -91,7 +91,7 @@ function isInstanceOfClass(instance, class)
     return Metadata.isSubclass(inst_class, class)
 end
 
-local original_type = type
+local original_type = _G.type
 
 ---Verify values types. For classes check is val2 class parent of val1 class.
 ---@param value any
