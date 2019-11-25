@@ -14,12 +14,12 @@ local TestAbilityType = compiletime(
         local abil = WeAbility.new(WeObjEdit.getAbilityId(), 'ANcl', 'Test ability')
 
         abil:setField(WeAbility.TooltipNormal, 1, 'Test Ability')
-        abil:setField(WeAbility.CastingTime, 1, 0.01)
+        abil:setField(WeAbility.CastingTime, 1, 0)
         abil:setField(WeAbility.Cooldown, 1, 2)
-        abil:setField(WeAbility.DurationNormal, 0, 0.01)
 
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+        abil:setField(WeAbility.ANcl_FollowThroughTime, 1, 0)
 
         return abil:toRuntime()
     end
@@ -27,7 +27,7 @@ local TestAbilityType = compiletime(
 local TestAbility = AbilityType.new(TestAbilityType.id)
 
 TestAbility:setCastingTime(function()
-    return 3
+    return 1
 end)
 
 local callbacks = TestAbility.callbacks

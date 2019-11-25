@@ -42,6 +42,7 @@ Test = function()
     local AbilityTest = require('Class.Ability.AbilityTest')
 
     local foo = Unit.new(Player(0), unit_type.id, 0, 0, 0)
+    Debug(ID2str(AbilityTest:getId()))
     UnitAddAbility(foo:getWc3Unit(), AbilityTest:getId())
 end
 
