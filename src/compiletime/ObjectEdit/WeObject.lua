@@ -70,7 +70,9 @@ end
 ---@param data any
 function public:setField(field, data)
     local priv = private[self]
-    priv.fields[field] = data
+    if field:checkData(data) then
+        priv.fields[field] = data
+    end
 end
 
 ---@param field WeField

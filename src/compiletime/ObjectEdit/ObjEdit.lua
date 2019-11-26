@@ -3,10 +3,14 @@ local ObjEdit = {}
 
 local WeUtils = require('compiletime.ObjectEdit.WeUtils')
 
-ObjEdit.Unit = require('compiletime.ObjectEdit.Unit.WeUnit')
-ObjEdit.Ability = require('compiletime.ObjectEdit.Ability.WeAbility')
+ObjEdit.Ability = require('compiletime.ObjectEdit.Object.WeAbility')
+ObjEdit.Buff = require('compiletime.ObjectEdit.Object.WeBuff')
+ObjEdit.Item = require('compiletime.ObjectEdit.Object.WeItem')
+ObjEdit.Unit = require('compiletime.ObjectEdit.Object.WeUnit')
 
--- Free id getter
+ObjEdit.Utils = require('compiletime.ObjectEdit.WeUtils')
+
+-- Free id getters
 ObjEdit.getUnitId = WeUtils.nextUnitId
 ObjEdit.getHeroId = WeUtils.nextHeroId
 ObjEdit.getAbilityId = WeUtils.nextAbilityId
@@ -16,8 +20,10 @@ ObjEdit.getUpgradeId = WeUtils.nextUpgradeId
 
 ---Function finish object editing.
 function ObjEdit.finish()
-    ObjEdit.Unit.save()
     ObjEdit.Ability.save()
+    ObjEdit.Buff.save()
+    ObjEdit.Item.save()
+    ObjEdit.Unit.save()
 end
 
 addCompiletimeFinalize(ObjEdit.finish)

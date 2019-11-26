@@ -61,7 +61,9 @@ function public:update()
         local bytes = obj:serialize()
 
         content = content..bytes
-        Debug(string.format('Created object %s with id: \'%s\' based on \'%s\'', obj:getName(), obj:getId(), obj:getBaseId()))
+        local obj_type = getClassName(getInstanceClass(obj))
+        Debug(string.format('Created %s \"%s\" with id \'%s\' based on \'%s\'',
+                             obj_type, obj:getName(), obj:getId(), obj:getBaseId()))
     end
 
     local f = assert(io.open(priv.dst_path, "w"))

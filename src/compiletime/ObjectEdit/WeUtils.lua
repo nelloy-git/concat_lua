@@ -1,8 +1,6 @@
 ---@class WeUtils
 local WeUtils = {}
 
-WeUtils.TartgetType = require('compiletime.ObjectEdit.WeTargetType')
-
 ---@param data string
 ---@return string
 function WeUtils.str2byte(data)

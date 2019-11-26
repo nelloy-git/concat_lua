@@ -29,12 +29,13 @@ local private = {}
 ---@param change_id string | number
 ---@param data_type string|"'bool'"|"'int'"|"'real'"|"'unreal'"|"'string'"
 ---@param name string
+---@param check_data_func fun(self:WeField, vararg:any):boolean
 ---@param instance_data table | nil
 ---@return WeField
-function static.new(change_id, data_type, name, instance_data)
+function static.new(change_id, data_type, name, check_data_func, instance_data)
 
     if not WeUtils.isDataType(data_type) then
-        Debug("%s error: wrong data type. Got: %s", getClassName(WeField), data_type)
+        Debug(string.format("%s error: wrong data type. Got: %s", getClassName(WeField), data_type))
         Debug(WeUtils.getErrorPos())
         return nil
     end
@@ -43,7 +44,8 @@ function static.new(change_id, data_type, name, instance_data)
     local priv = {
         change_id = ID2str(change_id),
         data_type = data_type,
-        name = name
+        name = name,
+        check_data_func = check_data_func
     }
     private[instance] = priv
 
@@ -82,5 +84,12 @@ function public:serialize(data)
 
     return change_id_bytes..data_type_bytes..data_bytes
 end
+
+---@return boolean
+function public:checkData(...)
+    local priv = private[self]
+    return priv.check_data_func(self, ...)
+end
+
 
 return WeField

@@ -17,21 +17,21 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
----@type AbilityCastingClass
-local AbilityCasting = newClass('AbilityCasting')
+---@type AbilityInstanceClass
+local AbilityInstance = newClass('AbilityInstance')
 
----@class AbilityCasting
-local public = AbilityCasting.public
----@class AbilityCastingClass
-local static = AbilityCasting.static
+---@class AbilityInstance
+local public = AbilityInstance.public
+---@class AbilityInstanceClass
+local static = AbilityInstance.static
 ---@type table
-local override = AbilityCasting.override
----@type table(AbilityCasting, table)
+local override = AbilityInstance.override
+---@type table(AbilityInstance, table)
 local private = {}
 
 public.time_left = 0
 
-private.DB = DataBase.new('userdata', getClassName(AbilityCasting))
+private.DB = DataBase.new('userdata', getClassName(AbilityInstance))
 private.ms_const = 10^10
 private.disable_attack_id = ID('Abun')
 
@@ -87,6 +87,11 @@ function static.start(caster, target, abil_type)
     return success
 end
 
+---@return AbilityInstance
+function static.get(caster)
+    return private.DB:get(caster)
+end
+
 ---@param caster unit
 function static.getCastingTimeLeft(caster)
     local abil_instance = private.DB:get(caster)
@@ -97,12 +102,22 @@ function static.getCastingTimeLeft(caster)
 end
 
 ---@param caster unit
+function static.getFullCastingTime(caster)
+    local abil_instance = private.DB:get(caster)
+    if abil_instance ~= nil then
+        local priv = private[abil_instance]
+        return priv.full_time
+    end
+    return -1
+end
+
+---@param caster unit
 function static.cancelCurrent(caster)
     local abil_instance = private.DB:get(caster)
     if abil_instance ~= nil then
         local priv = private[abil_instance]
         priv.abil_type.callbacks:runCancel()
-        abil_instance:free()
+        private.free(abil_instance)
     end
 end
 
@@ -112,7 +127,7 @@ function static.interruptCurrent(caster)
     if abil_instance ~= nil then
         local priv = private[abil_instance]
         priv.abil_type.callbacks:runInterrupt()
-        abil_instance:free()
+        private.free(abil_instance)
     end
 end
 
@@ -122,11 +137,27 @@ function static.finishCurrent(caster)
     if abil_instance ~= nil then
         local priv = private[abil_instance]
         priv.abil_type.callbacks:runFinish()
-        abil_instance:free()
+        private.free(abil_instance)
     end
 end
 
-function public:free()
+---@return unit | nil
+function static.getCaster()
+    return nil
+end
+
+--- If target is point then returns table - {x = a, y = b}
+---@return unit|item|destructable|table|nil
+function static.getTarget()
+    return nil
+end
+
+function static.getTimerPeriod()
+    return private.timer_period
+end
+
+---@param self AbilityInstance
+function private.free(self)
     local priv = private[self]
 
     private.timer:removeAction(priv.timer_action)
@@ -141,9 +172,10 @@ end
 ---@param target unit|item|destructable|table|nil
 ---@param abil_type AbilityType
 ---@param instance_data table | nil
+---@return AbilityInstance
 function private.new(caster, target, abil_type, instance_data)
-    ---@type AbilityCasting
-    local instance = instance_data or newInstanceData(AbilityCasting)
+    ---@type AbilityInstance
+    local instance = instance_data or newInstanceData(AbilityInstance)
 
     instance.time_left = abil_type:getCastingTime(caster)
     local priv = {
@@ -179,29 +211,17 @@ function private.timerLoop(abil_instance)
         -- Interrupt
         if not success then
             priv.abil_type.callbacks:runInterrupt()
-            abil_instance:free()
+            private.free(abil_instance)
         end
     else
         -- Finished
         priv.abil_type.callbacks:runFinish()
-        abil_instance:free()
+        private.free(abil_instance)
     end
 
     -- Return old getters
     static.getCaster = prev_getCaster
     static.getTarget = prev_getTarget
-end
-
-function static.getCaster()
-    return nil
-end
-
-function static.getTarget()
-    return nil
-end
-
-function static.getTimerPeriod()
-    return private.timer_period
 end
 
 function private.onSpellEffect()
@@ -242,4 +262,4 @@ if not is_compiletime then
     private.wc3_unit_issued_unit_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
 end
 
-return AbilityCasting
+return AbilityInstance

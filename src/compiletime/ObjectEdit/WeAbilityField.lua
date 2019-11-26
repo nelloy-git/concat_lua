@@ -34,9 +34,9 @@ local private = {}
 ---@param name string
 ---@param instance_data table | nil
 ---@return WeField
-function override.new(change_id, data_type, abil_data_id, name, instance_data)
+function override.new(change_id, data_type, abil_data_id, name, check_data_func, instance_data)
     local instance = instance_data or newInstanceData(WeAbilityField)
-    instance = WeField.new(change_id, data_type, name, instance)
+    instance = WeField.new(change_id, data_type, name, check_data_func, instance)
 
     local priv = {
         abil_data_id = abil_data_id

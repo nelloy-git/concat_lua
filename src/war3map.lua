@@ -26,7 +26,8 @@ end
 
 local unit_type = compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-    WeUnit = WeObjEdit.Unit
+    ---@type WeUnitClass
+    local WeUnit = WeObjEdit.Unit
     local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
     u:setField(WeUnit.Name, 'Footman')
     return u:toRuntime()
@@ -39,11 +40,11 @@ Test = function()
     --local Database = require('Class.DataBase')
     local Unit = require('Class.Unit.Unit')
     local ParameterType = require('Class.ParameterType')
-    local AbilityTest = require('Class.Ability.AbilityTest')
+    local AbilityExample = require('Class.Ability.AbilityExample')
 
     local foo = Unit.new(Player(0), unit_type.id, 0, 0, 0)
-    Debug(ID2str(AbilityTest:getId()))
-    UnitAddAbility(foo:getWc3Unit(), AbilityTest:getId())
+    Debug(ID2str(AbilityExample:getId()))
+    UnitAddAbility(foo:getWc3Unit(), AbilityExample:getId())
 end
 
 function InitCustomPlayerSlots()
