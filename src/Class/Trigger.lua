@@ -270,7 +270,6 @@ end
 ---@param self Trigger
 function private.runActions(self)
     local priv = private[self]
-    Debug(string.format("Run %s actions", self))
 
     for i = 1, #priv.actions do
         priv.actions[i]:run()

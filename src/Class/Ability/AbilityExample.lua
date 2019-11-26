@@ -43,6 +43,7 @@ callbacks:setStart(function()
     Debug(fmt('%s message: got casting started event. Use more times for different tests.', abil_name))
 
     local caster = AbilityInstance.getCaster()
+    Debug(fmt('%s message: caster %s', abil_name, caster))
     if state == 'normal' then
         Debug(fmt('%s message: casting have to start nolmally.', abil_name))
         state = 'failed'
@@ -52,24 +53,24 @@ callbacks:setStart(function()
         state = 'interrupt'
         return false
     elseif state == 'interrupt' then
-        local interrupt_time = AbilityInstance.getCastingTimeLeft(caster) / 2
+        local interrupt_time = AbilityInstance.getFullCastingTime(caster) / 2
         Debug(fmt('%s message: casting have to be interrupted at %.2f.', abil_name, interrupt_time))
         --- Save current ability instance to make sure we are interrupting right one.
         local cur_instance = AbilityInstance.get(caster)
         BetterTimer.getGlobalTimer():addAction(interrupt_time, function()
-            if cur_instance == AbilityInstance.get(AbilityInstance.getCaster()) then
+            if cur_instance == AbilityInstance.get(caster) then
                 AbilityInstance.interruptCurrent(caster)
             end
         end)
         state = 'cancel'
         return true
     else
-        local cancel_time = AbilityInstance.getCastingTimeLeft(caster) / 2
+        local cancel_time = AbilityInstance.getFullCastingTime(caster) / 2
         Debug(fmt('%s message: casting have to be canceled at %.2f.', abil_name, cancel_time))
         --- Save current ability instance to make sure we are canceling right one.
         local cur_instance = AbilityInstance.get(caster)
         BetterTimer.getGlobalTimer():addAction(cancel_time, function()
-            if cur_instance == AbilityInstance.get(AbilityInstance.getCaster()) then
+            if cur_instance == AbilityInstance.get(caster) then
                 AbilityInstance.cancelCurrent(caster)
             end
         end)
@@ -78,9 +79,14 @@ callbacks:setStart(function()
     end
 end)
 
+local prev = -1
 callbacks:setCasting(function()
     local caster = AbilityInstance.getCaster()
-    Debug(string.format("Casting time: %0.2f", AbilityInstance.getCastingTimeLeft(caster)))
+    local cur = AbilityInstance.getCastingTimeLeft(caster)
+    if math.floor(cur) ~= prev then
+        Debug(string.format("Casting time: %0.2f", cur))
+        prev = math.floor(cur)
+    end
 end)
 
 callbacks:setFinish(function()

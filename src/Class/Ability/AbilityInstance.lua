@@ -75,9 +75,10 @@ function static.start(caster, target, abil_type)
     static.cancelCurrent(caster)
 
     -- Check if ability started
+    local abil_instance = private.new(caster, target, abil_type)
     local success = abil_type.callbacks:runStart()
-    if success then
-        abil_instance = private.new(caster, target, abil_type)
+    if not success then
+        private.free(abil_instance)
     end
 
     -- Return old getters
