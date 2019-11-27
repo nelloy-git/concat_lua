@@ -256,11 +256,11 @@ function private.getAnyTarget()
 end
 
 if not is_compiletime then
-    private.wc3_spell_effect_trigger:addAction(function() runFuncInDebug(private.onSpellEffect) end)
-    private.wc3_unit_issued_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
-    private.wc3_unit_issued_point_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
-    private.wc3_unit_issued_target_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
-    private.wc3_unit_issued_unit_order_trigger:addAction(function() runFuncInDebug(private.onAnyOrder) end)
+    private.wc3_spell_effect_trigger:addAction(function() savetyRun(private.onSpellEffect) end)
+    private.wc3_unit_issued_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
+    private.wc3_unit_issued_point_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
+    private.wc3_unit_issued_target_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
+    private.wc3_unit_issued_unit_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
 end
 
 return AbilityInstance

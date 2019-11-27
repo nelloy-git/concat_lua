@@ -8,13 +8,19 @@ local show_runtime_warnings = true
 local show_runtime_messages = true
 local log_file_compiletime = true
 local log_file_compiletime_name = 'log.txt'
-local log_file_runtime = false
+local log_file_runtime = true
+local log_file_runtime_autosave = true
+local log_file_runtime_name = 'log.txt'
+local log_file_runtime_buffer = {}
 
 local fmt = string.format
 
+local timer
 local start_time
+local cur_time
 local file_path
 local log_file
+local loop
 
 if is_compiletime then
     start_time = os.clock()
@@ -25,6 +31,30 @@ if is_compiletime then
         log_file:write(fmt("[%0.3f] %s\n", os.clock() - start_time, "Logging finished"))
         log_file:close()
     end)
+else
+    timer = CreateTimer()
+    cur_time = 0
+    loop = function ()
+        cur_time = cur_time + 0.03125
+        TimerStart(timer, 0.03125, false, loop)
+    end
+    loop()
+    start_time = 0
+end
+
+local function getLineFileRuntime(str)
+    return fmt("\")\r\n\techo [%.3f] %s >> %s \r\n\t(\"", cur_time, str, log_file_runtime_name)
+end
+
+local function saveFileRuntime()
+    PreloadGenClear()
+    PreloadGenStart()
+    Preload("\")\r\n\tDEL "..log_file_runtime_name.."\r\n\t(\"")
+    for i = 1, #log_file_runtime_buffer do
+        Preload(getLineFileRuntime(log_file_runtime_buffer[i]))
+    end
+    Preload("\")\r\n\tstart "..log_file_runtime_name.."\r\n\t(\"")
+    PreloadGenEnd(log_file_runtime_name)
 end
 
 ---@param log_level LogLevel
@@ -43,28 +73,9 @@ local function getFullStr(log_level, header, str)
     end
 end
 
-local function runtime_print(time, ...)
-    local s = ''
-    for i = 1, select('#', ...) do
-        local v = select(i, ...)
-        local t = type(v)
-        if t == 'nil' then
-            v = 'nil'
-        elseif t == 'userdata' then
-            v = 'userdata'
-        elseif t == 'string' then
-            v = v
-        elseif t == 'integer' or t == 'number' then
-            v = tostring(v)
-        elseif t == 'table' or t == 'function' then
-            v = tostring(v)
-        else
-            v = ''
-        end
-        s = string.format(s..' '..v)
-    end
-
-    DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, s)
+local function runtime_print(full_str)
+    local msg = fmt("[%0.3f] %s\n", cur_time, full_str)
+    DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, msg)
 end
 
 local function log_compiletime(log_level, full_str)
@@ -89,16 +100,23 @@ end
 
 local function log_runtime(log_level, full_str)
     if log_level == Log.Err then
-        if show_compiletime_errors then
+        if show_runtime_errors then
             runtime_print(full_str)
         end
     elseif log_level == Log.Warn then
-        if show_compiletime_warnings then
+        if show_runtime_warnings then
             runtime_print(full_str)
         end
     elseif log_level == Log.Msg then
-        if show_compiletime_messages then
+        if show_runtime_messages then
             runtime_print(full_str)
+        end
+    end
+
+    if log_file_runtime then
+        table.insert(log_file_runtime_buffer, #log_file_runtime_buffer + 1, getLineFileRuntime(full_str))
+        if log_file_runtime_autosave then
+            saveFileRuntime()
         end
     end
 end
@@ -113,6 +131,10 @@ function Log.write(log_level, header, str)
     else
         log_runtime(log_level, full_str)
     end
+end
+
+function Log.manualRuntimeSave()
+    saveFileRuntime()
 end
 
 ---@alias LogLevel string

@@ -1,8 +1,10 @@
+local Log = require('utils.Log')
 local Metadata = require('utils.ClassMetadata')
 
 local class_metatable = {
     __newindex = function(class, key, value)
-	    Debug('You must use static or public subtable for new values.')
+        local msg = "have to use static or public subtable for new values."
+        Log(Log.Warn, getClassName(class), msg)
 	end,
 
 	__index = function(class, key)
@@ -21,7 +23,8 @@ local class_metatable = {
         local static = Metadata.getStaticTable(class)
         local val = static[key]
         if val == nil then
-            Debug(string.format('Class error: static variable with name %s is not found.', key))
+            local msg = string.format('static variable with name \"%s\" is not found.', key)
+            Log(Log.Warn, getClassName(class), msg)
             return nil
         end
         return val
@@ -34,7 +37,7 @@ local class_metatable = {
 
 local instance_metatable = {
     __newindex = function(self, key, value)
-        Debug("Class error: new fields can not be added to class instance after creation.")
+        Log(Log.Warn, self, "new fields can not be added to class instance after creation.")
     end,
     
     __tostring = function(self)  

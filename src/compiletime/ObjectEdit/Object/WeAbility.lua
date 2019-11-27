@@ -4,7 +4,6 @@
 
 require('utils.Globals')
 local Log = require('utils.Log')
-
 ---@type WeAbilityFieldClass
 local WeAbilityField = require('compiletime.ObjectEdit.WeAbilityField')
 ---@type WeObjectClass
@@ -155,8 +154,9 @@ function private.checkType(field, data)
     end
 
     if not res then
-        Debug(fmt('Field %s error: got %s data type when %s needed.', field:getName(), type(data), data_type))
-        Debug(WeUtils.getErrorPos())
+        local msg = fmt('wrong data type. Got %s. Need %s.',
+                         type(data), data_type)
+        Log(Log.Warn, field:getName(), msg)
     end
     return res
 end
@@ -171,9 +171,9 @@ function private.requireLevel(field, lvl, data)
         return false
     end
 
-    if lvl == 0 then
-        Debug(fmt('Field %s error: this field requires level.', field:getName()))
-        Debug(WeUtils.getErrorPos())
+    if lvl == 0 then        
+        msg = fmt('requires level.')
+        Log(Log.Warn, field:getName(), msg)
         return false
     end
 
@@ -186,8 +186,8 @@ function private.noLevel(field, lvl, data)
     end
 
     if lvl ~= 0 then
-        Debug(fmt('Field %s error: this field does not require level.', field:getName()))
-        Debug(WeUtils.getErrorPos())
+        msg = fmt('does not require level. Use 0')
+        Log(Log.Warn, field:getName(), msg)
         return false
     end
 
@@ -205,9 +205,9 @@ function private.checkPossibleValues(field, data, tbl)
         end
     end
 
-    Debug(fmt('Field %s error: wrong sound type. Possible values: %s',
-               field:getName(), private.getPossibleValues(tbl)))
-    Debug(WeUtils.getErrorPos())
+    msg = fmt('wrong data. Got: \"%s\"". Available: %s.',
+               data, private.getPossibleValues(tbl))
+    Log(Log.Warn, field:getName(), msg)
     return false
 end
 

@@ -39,7 +39,7 @@ end
 ---@return any
 function public:run()
     local priv = private[self]
-    return runFuncInDebug(priv.callback)
+    return savetyRun(priv.callback)
 end
 
 return Action

@@ -21,7 +21,7 @@ function RunInitialization()
 --
     require('init.Init')
 --
-    runFuncInDebug(Test)
+    savetyRun(Test)
 end
 
 local unit_type = compiletime(function()

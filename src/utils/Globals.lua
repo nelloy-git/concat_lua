@@ -1,24 +1,18 @@
---local Settings = require('utils.Settings')
-
 require('utils.Class')
+local Log = require('utils.Log')
 
 local Globals = {}
 ---@alias callback fun():any
 
-local initialized = false
-function Globals.init()
-    if initialized then return nil end
-    initialized = true
-end
-
+local savety_run_enable = true
 ---@param func fun
-function runFuncInDebug(func, ...)
-    if true then 
+function savetyRun(func, ...)
+    if savety_run_enable then
         local success, result = pcall(func, ...)
         if success then
             return result
         else
-            Debug(result)
+            Log(Log.Err, 'pcall', result)
             return nil
         end
     else
@@ -35,7 +29,7 @@ function ID(id)
     elseif type(id) == 'number' and math.fmod(id, 1) == 0 then
         return id
     end
-    print('Wrong id format')
+    Log(Log.Err, "ID function", string.format("got %s", id))
     return nil
 end
 
@@ -48,38 +42,8 @@ function ID2str(id)
     elseif type(id) == 'string' and string.len(id) == 4 then
         return id
     end
-    Debug("ID2str error: got wrong format. Var:", id)
+    Log(Log.Err, "ID2str function", string.format("got %s", id))
     return nil
-end
-
----Function prints data to local player in debug mode.
-function Debug(...)
-    if is_compiletime then
-        print(...)
-    elseif true then
-        local s = ''
-        for i = 1, select('#', ...) do
-            local v = select(i, ...)
-            local t = type(v)
-            if t == 'nil' then
-                v = 'nil'
-            elseif t == 'userdata' then
-                v = 'userdata'
-            elseif t == 'string' then
-                v = v
-            elseif t == 'integer' or t == 'number' then
-                v = tostring(v)
-            elseif t == 'table' or t == 'function' then
-                v = tostring(v)
-            else
-                v = ''
-            end
-
-            s = s..' '..v
-        end
-
-        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[D]: '..s)
-    end
 end
 
 ---@param orig any

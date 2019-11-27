@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeObjectClass
@@ -78,8 +79,9 @@ function private.checkType(field, data)
     end
 
     if not res then
-        Debug(fmt('Field %s error: got %s data type when %s needed.', field:getName(), type(data), data_type))
-        Debug(WeUtils.getErrorPos())
+        local msg = fmt('wrong data type. Got %s. Need %s.',
+                         type(data), data_type)
+        Log(Log.Warn, field:getName(), msg)
     end
     return res
 end
