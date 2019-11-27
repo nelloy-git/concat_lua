@@ -3,6 +3,8 @@
 --=========
 
 require('utils.Globals')
+local Log = require('utils.Log')
+
 ---@type WeAbilityFieldClass
 local WeAbilityField = require('compiletime.ObjectEdit.WeAbilityField')
 ---@type WeObjectClass

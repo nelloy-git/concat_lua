@@ -3,6 +3,7 @@
 --=========
 
 require('utils.Globals')
+local Log = require('utils.Log')
 ---@type WeUtils
 local WeUtils = require('compiletime.ObjectEdit.WeUtils')
 
@@ -35,8 +36,9 @@ local private = {}
 function static.new(change_id, data_type, name, check_data_func, instance_data)
 
     if not WeUtils.isDataType(data_type) then
-        Debug(string.format("%s error: wrong data type. Got: %s", getClassName(WeField), data_type))
-        Debug(WeUtils.getErrorPos())
+        local err = string.format("wrong data type. Got: %s. Available: bool, int, real, unreal, string\n%s",
+                                   data_type, WeUtils.getErrorPos())
+        Log(Log.Err, getClassName(WeField), err)
         return nil
     end
 

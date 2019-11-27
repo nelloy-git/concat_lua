@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeObjectClass
@@ -77,8 +78,9 @@ function private.checkType(field, data)
     end
 
     if not res then
-        Debug(fmt('Field %s error: got %s data type when %s needed.', field:getName(), type(data), data_type))
-        Debug(WeUtils.getErrorPos())
+        local msg = fmt('wrong data type. Got %s. Need %s.',
+                         type(data), data_type)
+        Log(Log.Warn, field:getName(), msg)
     end
     return res
 end
@@ -97,8 +99,9 @@ function private.checkPath(field, data)
     if f ~= nil then 
         f:close()
     else
-        Debug(fmt('Field %s error: can not find file.', field:getName()))
-        Debug(WeUtils.getErrorPos())
+        msg = fmt('can not find file %s.',
+                   field:getName(), data)
+        Log(Log.Warn, field:getName(), msg)
         return false
     end
     return true
@@ -125,9 +128,9 @@ function private.checkPossibleValues(field, data, tbl)
         end
     end
 
-    Debug(fmt('Field %s error: wrong sound type. Possible values: %s',
-               field:getName(), private.getPossibleValues(tbl)))
-    Debug(WeUtils.getErrorPos())
+    msg = fmt('wrong data. Got: \"%s\"". Available: %s.',
+               data, private.getPossibleValues(tbl))
+    Log(Log.Warn, field:getName(), msg)
     return false
 end
 

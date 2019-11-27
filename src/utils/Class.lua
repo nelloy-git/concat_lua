@@ -41,7 +41,7 @@ local instance_metatable = {
         local temp = getmetatable(self)
         setmetatable(self, nil)
         local def = tostring(self)
-        local res = Metadata.getClassName(Metadata.getClass(self)) .. string.sub(def, 6, #def)
+        local res = Metadata.getClassName(Metadata.getClass(self)) .. string.sub(def, 7, #def)
         setmetatable(self, temp)
         return res
     end,

@@ -1,4 +1,4 @@
-local Settings = require('utils.Settings')
+--local Settings = require('utils.Settings')
 
 require('utils.Class')
 
@@ -8,23 +8,12 @@ local Globals = {}
 local initialized = false
 function Globals.init()
     if initialized then return nil end
-
-    ---@type Vec2
-    --Vec2 = require('utils.math.Vec2')
-    ---@type Vec3
-    --Vec3 = require('utils.math.Vec3')
-
-    ---@type BetterTimer
-    --local Timer = require('class.Timer.BetterTimer')
-    
-    --glTimer = Timer:new()
-
     initialized = true
 end
 
 ---@param func fun
 function runFuncInDebug(func, ...)
-    if Settings.debug then 
+    if true then 
         local success, result = pcall(func, ...)
         if success then
             return result
@@ -63,22 +52,11 @@ function ID2str(id)
     return nil
 end
 
----If val < min returns min. If val > max returns max.
----@param val number
----@param min number
----@param max number
----@return number
-function torange(val, min, max)
-    if val < min then return min end
-    if val > max then return max end
-    return val
-end
-
 ---Function prints data to local player in debug mode.
 function Debug(...)
     if is_compiletime then
         print(...)
-    elseif Settings.debug then
+    elseif true then
         local s = ''
         for i = 1, select('#', ...) do
             local v = select(i, ...)
@@ -100,7 +78,7 @@ function Debug(...)
             s = s..' '..v
         end
 
-        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[Debug]: '..s)
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 30, '[D]: '..s)
     end
 end
 

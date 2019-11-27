@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 ---@type WeUtils
 local WeUtils = require('compiletime.ObjectEdit.WeUtils')
 
@@ -62,8 +63,10 @@ function public:update()
 
         content = content..bytes
         local obj_type = getClassName(getInstanceClass(obj))
-        Debug(string.format('Created %s \"%s\" with id \'%s\' based on \'%s\'',
-                             obj_type, obj:getName(), obj:getId(), obj:getBaseId()))
+
+        local msg = string.format('Created %s \"%s\" with id \'%s\' based on \'%s\'',
+                                   obj_type, obj:getName(), obj:getId(), obj:getBaseId())
+        Log(Log.Msg, getClassName(WeObjectFile), msg)
     end
 
     local f = assert(io.open(priv.dst_path, "w"))

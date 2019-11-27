@@ -1,10 +1,8 @@
 ---Globals have to be loaded and initialized first.
 local Globals = require('utils.Globals')
---local Settings = require('utils.Settings')
+local Settings = require('utils.Settings')
 
 if not is_compiletime then
-
-    Debug('Initialisation started')
 
     local success, result = pcall(Globals.init)
     if not success then

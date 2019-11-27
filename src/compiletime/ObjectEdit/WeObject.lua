@@ -3,6 +3,7 @@
 --=========
 
 require('utils.Globals')
+local Log = require('utils.Log')
 ---@type WeUtils
 local WeUtils = require('compiletime.ObjectEdit.WeUtils')
 
@@ -72,6 +73,9 @@ function public:setField(field, data)
     local priv = private[self]
     if field:checkData(data) then
         priv.fields[field] = data
+    else
+        local msg = string.format("check data failed. Field change ignored.\n%s", WeUtils.getErrorPos())
+        Log(Log.Warn, getClassName(WeObject), msg)
     end
 end
 

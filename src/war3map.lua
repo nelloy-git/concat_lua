@@ -30,6 +30,7 @@ local unit_type = compiletime(function()
     local WeUnit = WeObjEdit.Unit
     local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
     u:setField(WeUnit.Name, 'Footman')
+    --u:setField(WeUnit.ArmorType, 'aza')
     return u:toRuntime()
 end)
 
@@ -43,7 +44,7 @@ Test = function()
     local AbilityExample = require('Class.Ability.AbilityExample')
 
     local foo = Unit.new(Player(0), unit_type.id, 0, 0, 0)
-    Debug(ID2str(AbilityExample:getId()))
+    --Debug(ID2str(AbilityExample:getId()))
     UnitAddAbility(foo:getWc3Unit(), AbilityExample:getId())
 end
 
