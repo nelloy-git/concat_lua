@@ -1,8 +1,8 @@
-require('utils.Class')
-local Log = require('utils.Log')
-
 local Globals = {}
 ---@alias callback fun():any
+
+Log = require('utils.Log')
+require('utils.Class')
 
 local savety_run_enable = true
 ---@param func fun
@@ -69,5 +69,3 @@ function deepcopy(orig, copies)
     end
     return copy
 end
-
-return Globals

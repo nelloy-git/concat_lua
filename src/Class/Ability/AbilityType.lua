@@ -109,8 +109,8 @@ function static.createDummy(target, log_name)
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     else
-        Debug(string.format("%s warning: wrong target type."))
-        Debug(WeObjEdit.Utils.getErrorPos())
+        local msg = string.format("wrong target type.\n%s", WeObjEdit.Utils.getErrorPos())
+        Log(Log.Err, getClassName(AbilityType), msg)
         return nil
     end
 

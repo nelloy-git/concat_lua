@@ -100,7 +100,7 @@ function private.onUnitDeselect()
     end
 
     if pos < 0 then
-        Debug(string.format('%s error: trying deselect unselected unit.', getClassName(UnitSelection)))
+        Log(Log.Err, getClassName(UnitSelection), "deselecting unselected unit.")
     else
         table.remove(list, pos)
     end

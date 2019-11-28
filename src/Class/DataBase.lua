@@ -14,9 +14,6 @@ local override = DataBase.override
 ---@type table(DataBase, table)
 local private = {}
 
-local wrong_key_type_error_fmt = "%s error: wrong key type.\nNeed: %s Got: %s"
-local wrong_value_type_error_fmt = "%s error: wrong value type.\nNeed: %s Got: %s"
-
 --=========
 -- Methods
 --=========
@@ -35,15 +32,13 @@ function static.new(key_type, val_type, instance_data)
     }
     private[instance] = priv
 
-    --Debug(key_type, val_type)
-
     return instance
 end
 
 local function isValidKeyType(self, key)
     local priv = private[self]
     if not isType(key, priv.key_type) then
-        Debug(string.format(wrong_key_type_error_fmt, getClassName(DataBase), priv.key_type, type(key)))
+        Log(Log.Err, getClassName(DataBase), "wrong key type. Got: %s Avaliable: %s", type(key), priv.key_type)
         return false
     end
     return true
@@ -52,7 +47,7 @@ end
 local function isValidValueType(self, value)
     local priv = private[self]
     if not isType(value, priv.value_type) then
-        Debug(string.format(wrong_value_type_error_fmt, getClassName(DataBase), priv.value_type, getClassName(getInstanceClass(value)) or type(value)))
+        Log(Log.Err, getClassName(DataBase), "wrong value type. Got: %s Avaliable: %s", type(value), priv.key_type)
         return false
     end
     return true

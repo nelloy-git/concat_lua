@@ -62,10 +62,4 @@ function public:tryRun(cur_time)
     return false
 end
 
---[[
-local test = TimerAction.new(1, function() print('Azaza') end)
-print(test:tryRun(0))
-print(test:tryRun(2))
-]]
-
 return TimerAction

@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 ---@type ActionClass
 local Action = require('Class.Action')
 ---@type TimerClass
@@ -60,7 +61,7 @@ end
 
 --- Removed function
 function public:start()
-    Debug(string.format("This function can not be used from %s.", getClassName(BetterTimer)))
+    Log(Log.Warn, getClassName(BetterTimer), 'function \"start\" is deprecated.' )
 end
 
 ---@return number

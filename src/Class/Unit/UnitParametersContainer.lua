@@ -41,6 +41,12 @@ function static.new(owner, instance_data)
     private[instance] = priv
     private.DB:set(owner, instance)
 
+    local params = ParameterType.getList()
+    for i = 1, #params do
+        private.update(instance, params[i])
+    end
+    instance:setBase(ParameterType.MS, 250)
+
     return instance
 end
 

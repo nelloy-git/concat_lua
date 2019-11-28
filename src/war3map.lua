@@ -17,35 +17,32 @@ end
 local Test
 
 function RunInitialization()
-    --DestroyTimer(GetExpiredTimer())
---
     require('init.Init')
---
     savetyRun(Test)
 end
 
 local unit_type = compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-    ---@type WeUnitClass
     local WeUnit = WeObjEdit.Unit
-    local u = WeUnit.new(WeObjEdit.getUnitId(), 'hfoo', 'Footman')
+    local u = WeUnit.new(WeObjEdit.getHeroId(), 'Hpal', 'Footman')
     u:setField(WeUnit.Name, 'Footman')
-    --u:setField(WeUnit.ArmorType, 'aza')
     return u:toRuntime()
 end)
 
 Test = function()
-    --CreateUnit(Player(0), FourCC('hfoo'), 0, 0, 0)
-    --local Timer = require('class.Timer.BetterTimer')
-
-    --local Database = require('Class.DataBase')
     local Unit = require('Class.Unit.Unit')
-    local ParameterType = require('Class.ParameterType')
+    --local ParameterType = require('Class.ParameterType')
     local AbilityExample = require('Class.Ability.AbilityExample')
 
     local foo = Unit.new(Player(0), unit_type.id, 0, 0, 0)
     --Debug(ID2str(AbilityExample:getId()))
     UnitAddAbility(foo:getWc3Unit(), AbilityExample:getId())
+
+    ---@type GroundItemClass
+    local GroundItem = require('Class.Item.GroundItem')
+    local it = GroundItem.new(0, 0)
+    it:setName('Test')
+    it:setDescription('Test')
 end
 
 function InitCustomPlayerSlots()
