@@ -78,7 +78,7 @@ function private.checkType(field, data)
     end
 
     if not res then
-        local msg = fmt('wrong data type. Got %s. Need %s.',
+        local msg = fmt('Wrong data type. Got %s. Need %s.',
                          type(data), data_type)
         Log(Log.Warn, field:getName(), msg)
     end
@@ -99,7 +99,7 @@ function private.checkPath(field, data)
     if f ~= nil then 
         f:close()
     else
-        msg = fmt('can not find file %s.',
+        msg = fmt('Wan not find file %s.',
                    field:getName(), data)
         Log(Log.Warn, field:getName(), msg)
         return false

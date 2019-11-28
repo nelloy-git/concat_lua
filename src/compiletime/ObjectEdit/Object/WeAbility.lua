@@ -117,6 +117,26 @@ function public:toRuntime()
 end
 
 ---@return string
+function public:printChanges()
+    local priv = private[self]
+
+    local str_changes = ''
+    for field, list in pairs(priv.fields) do
+        local str_lvls = ''
+        for lvl, data in pairs(list) do
+            local q = ''
+            if type(data) == 'string' then
+                q = '\"'
+            end
+            str_lvls = str_lvls..string.format('\t\t%d - %s%s%s\n', lvl, q, tostring(data), q)
+        end
+        str_changes = str_changes..string.format('\t%s:\n%s', field:getName(), str_lvls)
+    end
+
+    return str_changes
+end
+
+---@return string
 function public:serialize()
     local priv = private[self]
 

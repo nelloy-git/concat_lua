@@ -45,7 +45,7 @@ if not is_compiletime then
     private.wc3_unit_issued_point_order_trigger = Trigger.new()
     private.wc3_unit_issued_target_order_trigger = Trigger.new()
     private.wc3_unit_issued_unit_order_trigger = Trigger.new()
-    Debug("Spell trigger:", private.wc3_spell_effect_trigger)
+    
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
         private.wc3_spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, pl)

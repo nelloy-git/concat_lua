@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 ---@type AbilityTypeCallbacksContainerClass
 local AbilityTypeCallbacksContainer = require('Class.Ability.AbilityTypeCallbacksContainer')
 ---@type AbilityTypeFlagsClass
@@ -65,7 +66,7 @@ end
 ---@return table(string, any)
 function static.createDummy(target, log_name)
     if not is_compiletime then
-        Debug(string.format("%s error: dummy ability can be created in compiletime only", getClassName(AbilityType)))
+        Log(Log.Warn, getClassName(AbilityType), 'dummy ability can be created in compiletime only.')
         return nil
     end
 
@@ -78,6 +79,7 @@ function static.createDummy(target, log_name)
     abil:setField(WeAbility.TooltipNormalExtended, 1, 'No description.')
     abil:setField(WeAbility.CastingTime, 1, 0)
     abil:setField(WeAbility.Cooldown, 1, 1)
+    abil:setField(WeAbility.Cooldown, 2, 1)
     abil:setField(WeAbility.ArtCaster, 0, "")
     abil:setField(WeAbility.ArtEffect, 0, "")
     abil:setField(WeAbility.ArtSpecial, 0, "")
@@ -109,6 +111,7 @@ function static.createDummy(target, log_name)
     else
         Debug(string.format("%s warning: wrong target type."))
         Debug(WeObjEdit.Utils.getErrorPos())
+        return nil
     end
 
     abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)

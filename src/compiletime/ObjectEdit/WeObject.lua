@@ -111,6 +111,21 @@ function public:toRuntime()
 end
 
 ---@return string
+function public:printChanges()
+    local priv = private[self]
+
+    local str_changes = ''
+    for field, data in pairs(priv.fields) do
+        local q = ''
+        if type(data) == 'string' then
+            q = '\"'
+        end
+        str_changes = str_changes..string.format('\t%s = %s%s%s\n', field:getName(), q, tostring(data), q)
+    end
+    return str_changes
+end
+
+---@return string
 function public:serialize()
     local priv = private[self]
 

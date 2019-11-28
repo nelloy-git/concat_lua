@@ -1,3 +1,5 @@
+local log_changes = false
+
 --=========
 -- Include
 --=========
@@ -63,9 +65,13 @@ function public:update()
 
         content = content..bytes
         local obj_type = getClassName(getInstanceClass(obj))
+        local str_changes = ''
+        if log_changes then
+            str_changes = '\n'..obj:printChanges()
+        end
 
-        local msg = string.format('Created %s \"%s\" with id \'%s\' based on \'%s\'',
-                                   obj_type, obj:getName(), obj:getId(), obj:getBaseId())
+        local msg = string.format('сreated %s \"%s\" with id \'%s\' based on \'%s\'%s',
+                                   obj_type, obj:getName(), obj:getId(), obj:getBaseId(), str_changes)
         Log(Log.Msg, getClassName(WeObjectFile), msg)
     end
 
