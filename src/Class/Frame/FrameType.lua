@@ -44,13 +44,18 @@ end
 
 ---@param parent framehandle
 ---@return framehandle
-function public:createInstance(parent)
+function public:createFrame(parent)
     local priv = private[self]
     if priv.use_create_by_type then
         return BlzCreateFrameByType(priv.name, priv.name, parent, '', 0)
     else
         return BlzCreateFrame(priv.name, parent, 0, 0)
     end
+end
+
+function public:freeInstance()
+    local priv = private[self]
+    BlzDestroyFrame(priv.wc3)
 end
 
 ---@param name string

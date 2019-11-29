@@ -2,9 +2,12 @@
 -- Include
 --=========
 
---=======
--- Class
---=======
+---@type DataBaseClass
+local DataBase = require('Class.DataBase')
+
+--================
+-- Abstract Class
+--================
 
 ---@type FrameClass
 local Frame = newClass('Frame')
@@ -18,27 +21,102 @@ local override = Frame.override
 ---@type table(Frame, table)
 local private = {}
 
+private.DB = DataBase.new('userdata', getClassName(Frame))
+
 --=========
 -- Methods
 --=========
 
+---@oaram framehandle FrameType
 ---@param instance_data table | nil
 ---@return Frame
-function static.new(instance_data)
-    local instance = instance_data or newInstanceData(Frame)
+function static.new(framehandle, instance_data)
+    if not instance_data then
+        Log(Log.Err, getClassName('Frame'), 'can not create instance of abstract class')
+        return nil
+    end
+    local instance = instance_data
     local priv = {
+        wc3_frame = framehandle,
+        x = 0,
+        y = 0,
+        width,
+        height
     }
     private[instance] = priv
+    private.DB:set(framehandle, instance)
 
     return instance
 end
 
-function public:free()
-   private[self] = nil
-   freeInstanceData(self)
+---@param framehandle framehandle
+---@return Frame
+function static.get(framehandle)
+    return private.DB:get(framehandle)
 end
 
-return Frame
+function public:free()
+    local priv = private[self]
+    private.DB:remove(priv.wc3_frame)
+
+    private[self] = nil
+    freeInstanceData(self)
+end
+
+---@param x number
+function public:setX(x)
+    local priv = private[self]
+    priv.x = x
+    BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                     BlzFrameGetParent(priv.wc3_frame), FRAMEPOINT_BOTTOMLEFT,
+                     priv.x, priv.y)
+end
+
+---@return number
+function public:getX()
+    local priv = private[self]
+    return priv.x
+end
+
+---@param y number
+function public:setY(y)
+    local priv = private[self]
+    priv.y = y
+    BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                     BlzFrameGetParent(priv.wc3_frame), FRAMEPOINT_BOTTOMLEFT,
+                     priv.x, priv.y)
+end
+
+---@return number
+function public:getY()
+    local priv = private[self]
+    return priv.y
+end
+
+---@param width number
+function public:setWidth(width)
+    local priv = private[self]
+    priv.width = width
+    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
+end
+
+---@return number
+function public:getWidth()
+    local priv = private[self]
+    return priv.width
+end
+
+---@
+function public:setHeight(height)
+    local priv = private[self]
+    priv.height = height
+    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
+end
+
+
+
+
+--return Frame
 
 local DataBase = require('utils.DataBase')
 
