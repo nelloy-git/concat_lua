@@ -3,14 +3,14 @@
 --=========
 
 ---@type Frame
-local Frame = require('Class.Frame.Frame')
+local FrameObject = require('Class.Frame.FrameObject')
 
 --=======
 -- Class
 --=======
 
 ---@type FrameBackdropClass
-local FrameBackdrop = newClass('FrameBackdrop', Frame)
+local FrameBackdrop = newClass('FrameBackdrop', FrameObject)
 
 ---@class FrameBackdrop
 local public = FrameBackdrop.public
@@ -27,30 +27,27 @@ local private = {}
 
 ---@param instance_data table | nil
 ---@return FrameBackdrop
-function override.new(parent, instance_data)
+function override.new(instance_data)
     local instance = instance_data or newInstanceData(FrameBackdrop)
+    local wc3_frame = BlzCreateFrameByType("BACKDROP", "BACKDROP", nil, "", 0)
+    instance = FrameObject.new(wc3_frame, instance)
+
     local priv = {
-        parent = parent,
-        wc3_frame = BlzCreateFrameByType("BACKDROP", "BACKDROP", parent, "", 0)
+        texture = nil
     }
     private[instance] = priv
-
-    instance = Frame.new(instance)
 
     return instance
 end
 
 function public:free()
-    local priv = private[self]
-    BlzDestroyFrame(priv.wc3_frame)
-
     private[self] = nil
-    Frame.public.free(self)
+    FrameObject.public.free(self)
 end
 
-function public:setTexture()
-    local priv = private[self]
-    BlzFrameSetTexture(frame: framehandle, texFile: string, flag: integer, blend: boolean)
+function public:setTexture(texture)
+    private[self].texture = texture
+    BlzFrameSetTexture(FrameObject.getWc3Frame(self), texture, 0, true)
 end
 
 return FrameBackdrop
