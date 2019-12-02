@@ -39,7 +39,8 @@ function static.new(framehandle, instance_data)
         x = 0,
         y = 0,
         width,
-        height
+        height,
+        level = 0
     }
     private[instance] = priv
     private.DB:set(framehandle, instance)
@@ -136,6 +137,17 @@ end
 ---@reutrn number
 function public:getHeight()
     return private[self].height
+end
+
+---@param lvl number
+function public:setLevel(lvl)
+    private[self].level = lvl
+    BlzFrameSetLevel(private[self].wc3_frame, lvl)
+end
+
+---@return number
+function public:setLevel(lvl)
+    return private[self].level
 end
 
 return FrameObject
