@@ -25,26 +25,71 @@ local private = {}
 -- Methods
 --=========
 
-function public:update() Log(Log.Err, getClassName(Frame), 'function \"update\" is not redeclared in child.') end
----@param parent Frame
-function public:setParent(parent) Log(Log.Err, getClassName(Frame), 'function \"setParent\" is not redeclared in child.') end
+function public:update() Log(Log.Err, getClassName(Frame), 'function \"update\" is not redeclared in child.') end---@param parent Frame
+
+function public:setParent(parent)
+    private[self].parent = parent
+    self:update()
+end
+
 ---@return Frame
-function public:getParent() Log(Log.Err, getClassName(Frame), 'function \"getParent\" is not redeclared in child.') end
+function public:getParent()
+    return private[self].parent
+end
+
 ---@param x number
-function public:setX(x) Log(Log.Err, getClassName(Frame), 'function \"setX\" is not redeclared in child.') end
+function public:setX(x)
+    private[self].x = x
+    self:update()
+end
+
 ---@return number
-function public:getX() Log(Log.Err, getClassName(Frame), 'function \"getX\" is not redeclared in child.') end
+function public:getX()
+    return private[self].x
+end
+
 ---@param y number
-function public:setY(y) Log(Log.Err, getClassName(Frame), 'function \"setY\" is not redeclared in child.') end
+function public:setY(y)
+    private[self].y = y
+    self:update()
+end
+
 ---@return number
-function public:getY() Log(Log.Err, getClassName(Frame), 'function \"getY\" is not redeclared in child.') end
+function public:getY()
+    return private[self].y
+end
+
 ---@param width number
-function public:setWidth(width) Log(Log.Err, getClassName(Frame), 'function \"setWidth\" is not redeclared in child.') end
+function public:setWidth(width)
+    private[self].width = width
+    self:update()
+end
+
 ---@return number
-function public:getWidth() Log(Log.Err, getClassName(Frame), 'function \"getWidth\" is not redeclared in child.') end
+function public:getWidth()
+    return private[self].width
+end
+
 ---@param height number
-function public:setHeight(height) Log(Log.Err, getClassName(Frame), 'function \"setHeight\" is not redeclared in child.') end
+function public:setHeight(height)
+    private[self].height = height
+    self:update()
+end
+
+---@reutrn number
+function public:getHeight()
+    return private[self].height
+end
+
+---@param lvl number
+function public:setLevel(lvl)
+    private[self].level = lvl
+    self:update()
+end
+
 ---@return number
-function public:getHeight() Log(Log.Err, getClassName(Frame), 'function \"getHeight\" is not redeclared in child.') end
+function public:getLevel()
+    return private[self].level
+end
 
 return Frame

@@ -54,7 +54,7 @@ function public:setTooltip(framehandle)
 end
 
 ---@return framehandle
-function public:setTooltip(framehandle)
+function public:getTooltip()
     return private[self].tooltip
 end
 
