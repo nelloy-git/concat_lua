@@ -2,15 +2,15 @@
 -- Include
 --=========
 
----@type FrameObjectClass
-local FrameObject = require('Class.Frame.FrameObject')
+---@type FrameClass
+local Frame = require('Class.Frame.Frame')
 
 --=======
 -- Class
 --=======
 
 ---@type FrameTextClass
-local FrameText = newClass('FrameText', FrameObject)
+local FrameText = newClass('FrameText', Frame)
 
 ---@class FrameText
 local public = FrameText.public
@@ -32,7 +32,7 @@ private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 function override.new(instance_data)
     local instance = instance_data or newInstanceData(FrameText)
     local wc3_frame = BlzCreateFrameByType("TEXT", "TEXT", private.game_ui_frame, "", 0)
-    instance = FrameObject.new(wc3_frame, instance)
+    instance = Frame.new(wc3_frame, instance)
 
     local priv = {
         text = "",
@@ -44,7 +44,7 @@ end
 
 function public:free()
     private[self] = nil
-    FrameObject.public.free(self)
+    Frame.public.free(self)
 end
 
 ---@param text string

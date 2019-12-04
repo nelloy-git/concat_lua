@@ -3,7 +3,7 @@
 --=========
 
 ---@type Frame
-local FrameObject = require('Class.Frame.FrameObject')
+local Frame = require('Class.Frame.Frame')
 ---@type TriggerClass
 local Trigger = require('Class.Trigger')
 
@@ -12,7 +12,7 @@ local Trigger = require('Class.Trigger')
 --=======
 
 ---@type FrameButtonClass
-local FrameButton = newClass('FrameButton', FrameObject)
+local FrameButton = newClass('FrameButton', Frame)
 
 ---@class FrameButton
 local public = FrameButton.public
@@ -34,7 +34,7 @@ private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 function override.new(instance_data)
     local instance = instance_data or newInstanceData(FrameButton)
     local wc3_frame = BlzCreateFrameByType("BUTTON", "BUTTON", private.game_ui_frame, "", 0)
-    instance = FrameObject.new(wc3_frame, instance)
+    instance = Frame.new(wc3_frame, instance)
 
     local priv = {
         texture = nil,
@@ -73,13 +73,13 @@ function public:free()
     if priv.on_mouse_wheel_action then priv.on_mouse_wheel_action:free() end
 
     private[self] = nil
-    FrameObject.public.free(self)
+    Frame.public.free(self)
 end
 
 ---@param texture string
 function public:setTexture(texture)
     private[self].texture = texture
-    BlzFrameSetTexture(FrameObject.getWc3Frame(self), texture, 0, true)
+    BlzFrameSetTexture(self:getWc3Frame(self), texture, 0, true)
 end
 
 ---@return string

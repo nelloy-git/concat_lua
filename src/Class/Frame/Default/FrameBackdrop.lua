@@ -2,15 +2,15 @@
 -- Include
 --=========
 
----@type FrameObjectClass
-local FrameObject = require('Class.Frame.FrameObject')
+---@type FrameClass
+local Frame = require('Class.Frame.Frame')
 
 --=======
 -- Class
 --=======
 
 ---@type FrameBackdropClass
-local FrameBackdrop = newClass('FrameBackdrop', FrameObject)
+local FrameBackdrop = newClass('FrameBackdrop', Frame)
 
 ---@class FrameBackdrop
 local public = FrameBackdrop.public
@@ -32,7 +32,7 @@ private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 function override.new(instance_data)
     local instance = instance_data or newInstanceData(FrameBackdrop)
     local wc3_frame = BlzCreateFrameByType("BACKDROP", "BACKDROP", private.game_ui_frame, "", 0)
-    instance = FrameObject.new(wc3_frame, instance)
+    instance = Frame.new(wc3_frame, instance)
 
     local priv = {
         texture = nil,
@@ -44,13 +44,18 @@ end
 
 function public:free()
     private[self] = nil
-    FrameObject.public.free(self)
+    Frame.public.free(self)
+end
+
+function public:onTextureChange()
+    local priv = private[self]
+    BlzFrameSetTexture(self:getWc3Frame(self), priv.texture, 0, true)
 end
 
 ---@param texture string
 function public:setTexture(texture)
     private[self].texture = texture
-    BlzFrameSetTexture(FrameObject.getWc3Frame(self), texture, 0, true)
+    self:onTextureChange()
 end
 
 ---@return string
