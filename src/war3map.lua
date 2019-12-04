@@ -29,6 +29,7 @@ local unit_type = compiletime(function()
     return u:toRuntime()
 end)
 
+local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
 Test = function()
     local Unit = require('Class.Unit.Unit')
     --local ParameterType = require('Class.ParameterType')
@@ -43,6 +44,21 @@ Test = function()
     local it = GroundItem.new(0, 0)
     it:setName('Test')
     it:setDescription('Test')
+
+    local FrameTable = require('Class.Frame.Container.FrameTable')
+    local t = FrameTable.new()
+    t:setColumns(3)
+    t:setRows(2)
+    t:setTexture(texture)
+    t:setX(0.4)
+    t:setY(0.3)
+    t:setWidth(0.2)
+    t:setHeight(0.2)
+
+    local t1 = FrameTable.new()
+    t1:setTexture(texture)
+    t:setCell(t1, 2, 2)
+
 end
 
 function InitCustomPlayerSlots()

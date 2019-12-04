@@ -51,8 +51,6 @@ function static.new(framehandle, instance_data)
     private[instance] = priv
     private.DB:set(framehandle, instance)
 
-    instance:update()
-
     return instance
 end
 
@@ -100,7 +98,7 @@ end
 
 function public:onSizeChange()
     local priv = private[self]
-    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.heigth)
+    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
 end
 
 function public:onLevelChange()

@@ -23,7 +23,9 @@ local override = FrameButton.override
 ---@type table(FrameButton, table)
 local private = {}
 
-private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+if not is_compiletime then
+    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+end
 
 --=========
 -- Methods

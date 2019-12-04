@@ -3,6 +3,8 @@
 --=========
 
 ---@type FrameClass
+local Frame = require('Class.Frame.Frame')
+---@type FrameBackdropClass
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 
 --=======
@@ -29,7 +31,7 @@ private.index_offset = 100000
 
 ---@param instance_data table | nil
 ---@return FrameTable
-function override.new(cols, rows, instance_data)
+function override.new(instance_data)
     local instance = instance_data or newInstanceData(FrameTable)
     instance = FrameBackdrop.new(instance)
 
@@ -39,8 +41,8 @@ function override.new(cols, rows, instance_data)
         top_offset = 0,
         bottom_offset = 0,
 
-        cols = cols,
-        rows = rows,
+        cols = 1,
+        rows = 1,
 
         elements = {}
     }
@@ -54,22 +56,36 @@ function public:free()
     FrameBackdrop.public.free(self)
 end
 
+function public:onColumnsChange()
+    self:onSizeChange()
+end
+
+function public:onRowsChange()
+    self:onSizeChange()
+end
+
+function public:onOffsetsChange()
+    self:onSizeChange()
+end
+
 function public:onSizeChange()
     local priv = private[self]
 
     -- Change background size
-    FrameBackdrop.public.onSizeChange(self)
+    Frame.public.onSizeChange(self)
 
     -- Change all elements position and size
     local col_width = self:getWidth() / priv.cols
     local row_height = self:getHeight() / priv.rows
+    local elem_width = col_width - (priv.left_offset + priv.right_offset)
+    local elem_height = row_height - (priv.top_offset + priv.bottom_offset)
     for index, frame in pairs(priv.elements) do
         local col, row = private.getColAndRow(index)
         if col <= priv.cols or row <= priv.rows then
-            frame:setX(private.getColumnX(self, col))
-            frame:setY(private.getRowY(self, row))
-            frame:setWidth(col_width)
-            frame:setHeight(row_height)
+            frame:setX(private.getColumnX(priv, col, col_width))
+            frame:setY(private.getRowY(priv, row, row_height))
+            frame:setWidth(elem_width)
+            frame:setHeight(elem_height)
         end
     end
 end
@@ -82,11 +98,38 @@ end
 function public:setCell(frame, col, row)
     local priv = private[self]
 
-    private.updateElement(self, frame, col, row, true, true, true, true, true)
+    local col_width = self:getWidth() / priv.cols
+    local row_height = self:getHeight() / priv.rows
+    local elem_width = col_width - (priv.left_offset + priv.right_offset)
+    local elem_height = row_height - (priv.top_offset + priv.bottom_offset)
+    frame:setParent(self:getWc3Frame())
+    frame:setX(private.getColumnX(priv, col, col_width))
+    frame:setY(private.getRowY(priv, row, row_height))
+    frame:setWidth(elem_width)
+    frame:setHeight(elem_height)
+
     return private.setElement(self, frame, col, row)
 end
 
+function public:setColumns(cols)
+    private[self].cols = cols
+    self:onColumnsChange()
+end
+
+function public:setRows(rows)
+    private[self].rows = rows
+    self:onRowsChange()
+end
+
 function public:setOffsets(left, right, top, bottom)
+    local priv = private[self]
+
+    priv.left_offset = left
+    priv.right_offset = right
+    priv.top_offset = top
+    priv.bottom_offset = bottom
+
+    self:onOffsetsChange()
 end
 
 function private.setElement(self, frame, col, row)
@@ -106,15 +149,15 @@ end
 ---@param priv table
 ---@param col number
 ---@return number
-function private.getColumnX(priv, col)
-    return priv.left_offset + (col - 1) * priv.col_width
+function private.getColumnX(priv, col, col_width)
+    return priv.left_offset + (col - 1) * col_width
 end
 
 ---@param priv table
 ---@param row number
 ---@return number
-function private.getRowY(priv, row)
-    return priv.botton_offset + (row - 1) * priv.row_height
+function private.getRowY(priv, row, row_height)
+    return priv.bottom_offset + (row - 1) * row_height
 end
 
 function private.getColAndRow(index)
@@ -124,7 +167,7 @@ function private.getColAndRow(index)
 end
 
 function private.getIndex(col, row)
-    return col * private.index + row
+    return col * private.index_offset + row
 end
 
 return FrameTable

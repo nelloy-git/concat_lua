@@ -21,7 +21,9 @@ local override = FrameHover.override
 ---@type table(FrameHover, table)
 local private = {}
 
-private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+if not is_compiletime then
+    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+end
 
 --=========
 -- Methods
