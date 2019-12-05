@@ -11,28 +11,26 @@ local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 -- Class
 --=======
 
----@type FrameTableClass
-local FrameTable = newClass('FrameTable', FrameBackdrop)
+---@type FrameSpringRowClass
+local FrameSpringRow = newClass('FrameSpringRow', FrameBackdrop)
 
----@class FrameTable
-local public = FrameTable.public
----@class FrameTableClass
-local static = FrameTable.static
+---@class FrameSpringRow
+local public = FrameSpringRow.public
+---@class FrameSpringRowClass
+local static = FrameSpringRow.static
 ---@type table
-local override = FrameTable.override
----@type table(FrameTable, table)
+local override = FrameSpringRow.override
+---@type table(FrameSpringRow, table)
 local private = {}
-
-private.index_offset = 100000
 
 --=========
 -- Methods
 --=========
 
 ---@param instance_data table | nil
----@return FrameTable
+---@return FrameSpringRow
 function override.new(instance_data)
-    local instance = instance_data or newInstanceData(FrameTable)
+    local instance = instance_data or newInstanceData(FrameSpringRow)
     instance = FrameBackdrop.new(instance)
 
     local priv = {
@@ -42,8 +40,7 @@ function override.new(instance_data)
         bottom_offset = 0,
 
         cols = 1,
-        rows = 1,
-
+        col_width = {},
         elements = {}
     }
     private[instance] = priv
@@ -68,10 +65,6 @@ function public:free()
 end
 
 function public:onColumnsChange()
-    self:onSizeChange()
-end
-
-function public:onRowsChange()
     self:onSizeChange()
 end
 
@@ -104,9 +97,8 @@ end
 --- Function returns previous element from table.
 ---@param frame Frame
 ---@param col number
----@param row number
 ---@return Frame | nil
-function public:setCell(frame, col, row)
+function public:setCell(frame, col)
     local priv = private[self]
 
     local col_width = self:getWidth() / priv.cols
@@ -119,22 +111,16 @@ function public:setCell(frame, col, row)
     frame:setWidth(elem_width)
     frame:setHeight(elem_height)
 
-    return private.setElement(self, frame, col, row)
+    return private.setElement(self, frame, col)
 end
 
-function public:getCell(col, row)
-    local index = private.getIndex(col, row)
-    return private[self].elements[index]
+function public:getCell(col)
+    return private[self].elements[col]
 end
 
 function public:setColumns(cols)
     private[self].cols = cols
     self:onColumnsChange()
-end
-
-function public:setRows(rows)
-    private[self].rows = rows
-    self:onRowsChange()
 end
 
 function public:setOffsets(left, right, top, bottom)
@@ -148,24 +134,28 @@ function public:setOffsets(left, right, top, bottom)
     self:onOffsetsChange()
 end
 
-function private.setElement(self, frame, col, row)
+function private.setElement(self, frame, col)
     local priv = private[self]
 
-    if col < 1 or row < 1 or col % 1 ~= 0 or row % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameTable), "column and row numbers must be integers more or equal 1.")
+    if col < 1 or col % 1 ~= 0 then
+        Log(Log.Err, getClassName(FrameSpringRow), "column and row numbers must be integers more or equal 1.")
         return nil
     end
 
-    local index = private.getIndex(col, row)
-    local prev = priv.elements[index]
-    priv.elements[index] = frame
+    local prev = priv.elements[col]
+    priv.elements[col] = frame
     return prev
 end
 
 ---@param priv table
 ---@param col number
 ---@return number
-function private.getColumnX(priv, col, col_width)
+function private.getColumnX(priv, col)
+    local x = priv.left_offset
+    for i = 1, col - 1 do
+        
+    end
+
     return priv.left_offset + (col - 1) * col_width
 end
 
@@ -173,17 +163,7 @@ end
 ---@param row number
 ---@return number
 function private.getRowY(priv, row, row_height)
-    return priv.bottom_offset + (row - 1) * row_height
+    return priv.bottom_offset
 end
 
-function private.getColAndRow(index)
-    local row = index % private.index_offset
-    local col = (index - row) // private.index_offset
-    return col, row
-end
-
-function private.getIndex(col, row)
-    return col * private.index_offset + row
-end
-
-return FrameTable
+return FrameSpringRow
