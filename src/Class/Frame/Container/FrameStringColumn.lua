@@ -11,16 +11,16 @@ local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 -- Class
 --=======
 
----@type FrameSpringColumnClass
-local FrameSpringColumn = newClass('FrameSpringColumn', FrameBackdrop)
+---@type FrameSpringRowClass
+local FrameSpringRow = newClass('FrameSpringRow', FrameBackdrop)
 
----@class FrameSpringColumn : FrameBackdrop
-local public = FrameSpringColumn.public
----@class FrameSpringColumnClass : FrameBackdropClass
-local static = FrameSpringColumn.static
+---@class FrameSpringRow : FrameBackdrop
+local public = FrameSpringRow.public
+---@class FrameSpringRowClass : FrameBackdropClass
+local static = FrameSpringRow.static
 ---@type table
-local override = FrameSpringColumn.override
----@type table(FrameSpringColumn, table)
+local override = FrameSpringRow.override
+---@type table(FrameSpringRow, table)
 local private = {}
 
 --=========
@@ -28,9 +28,9 @@ local private = {}
 --=========
 
 ---@param instance_data table | nil
----@return FrameSpringColumn
+---@return FrameSpringRow
 function override.new(instance_data)
-    local instance = instance_data or newInstanceData(FrameSpringColumn)
+    local instance = instance_data or newInstanceData(FrameSpringRow)
     instance = FrameBackdrop.new(instance)
 
     local priv = {
@@ -39,14 +39,16 @@ function override.new(instance_data)
         top_offset = 0,
         bottom_offset = 0,
 
-        rows = 1,
-        is_row_fixed = {},
-        row_part = {},
-        row_height = {},
+        columns = 1,
+        is_column_fixed = {},
+        column_part = {},
+        column_width = {},
 
         elements = {}
     }
     private[instance] = priv
+
+    private.updateColumnsWidth(instance)
 
     return instance
 end
@@ -74,7 +76,7 @@ function public:onSizeChange()
     private.applyAllElementsPos(self)
 end
 
-function public:onRowsChange()
+function public:onColumnsChange()
     private.applyAllElementsPos(self)
 end
 
@@ -85,70 +87,70 @@ function public:onOffsetsChange()
     private.applyAllElementsPos(self)
 end
 
-function public:onRowHeightPartChange()
+function public:onColumnWidthPartChange()
     private.applyAllElementsPos(self)
 end
 
----@param rows number
+---@param columns number
 ---@return Frame[]
-function public:setRows(rows)
+function public:setColumns(columns)
     local priv = private[self]
 
     local free_frames = {}
-    if rows < priv.rows then
-        for i = rows + 1, priv.rows do
+    if columns < priv.columns then
+        for i = columns + 1, priv.columns do
             table.insert(free_frames, #free_frames + 1, priv.elements[i])
-            priv.row_part[i] = nil
-            priv.row_height[i] = nil
-            priv.is_row_fixed[i] = nil
+            priv.column_part[i] = nil
+            priv.column_width[i] = nil
+            priv.is_column_fixed[i] = nil
             priv.elements[i] = nil
         end
     end
-    priv.rows = rows
+    priv.columns = columns
 
-    self:onRowsChange()
+    self:onColumnsChange()
 
     return free_frames
 end
 
 ---@return number
-function public:getRows()
-    return private[self].rows
+function public:getColumns()
+    return private[self].columns
 end
 
 --- Function returns previous element from table.
 ---@param frame Frame
----@param row number
+---@param column number
 ---@return Frame | nil
-function public:setCell(frame, row)
+function public:setCell(frame, column)
     local priv = private[self]
 
-    if row < 1 or row % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameSpringColumn),
-            "row must be integer more or equal 1.")
+    if column < 1 or column % 1 ~= 0 then
+        Log(Log.Err, getClassName(FrameSpringRow),
+            "column must be integer more or equal 1.")
         return nil
     end
 
-    if row > priv.rows then
-        Log(Log.Err, getClassName(FrameSpringColumn),
-            "row for element adding can not be greater than size.")
+    if column > priv.columns then
+        Log(Log.Err, getClassName(FrameSpringRow),
+            "column for element adding can not be greater than size.")
         return nil
     end
 
-    local prev = priv.elements[row]
-    priv.elements[row] = frame
+    local prev = priv.elements[column]
+    priv.elements[column] = frame
 
     frame:setParent(self:getWc3Frame())
-    private.applyElementPos(self, row)
+    private.applyElementPos(self, column)
     self:onCellChange()
 
     return prev
 end
 
----@param row number
+---@param column number
 ---@return Frame | nil
-function public:getCell(row)
-    return private[self].elements[row]
+function public:getCell(column)
+    return private[self].elements[column]
 end
 
 ---@param left number
@@ -175,42 +177,42 @@ end
 
 --- Set part < 0 for auto size.
 ---@param part number
----@param row number
-function public:setRowHeightPart(part, row)
+---@param column number
+function public:setColumnWidthPart(part, column)
     local priv = private[self]
 
     if part >= 0 then
-        priv.is_row_fixed = true
+        priv.is_column_fixed = true
     else
-        priv.is_row_fixed = false
+        priv.is_column_fixed = false
     end
-    priv.row_part[row] = part
-    self:onRowHeightPartChange()
+    priv.column_part[column] = part
+    self:onColumnWidthPartChange()
 end
 
 function private.applyAllElementsPos(self)
-    private.updateRowHeight(self)
+    private.updateColumnsWidth(self)
 
     for i = 1, #private[self].elements do
         private.applyElementPos(self, i)
     end
 end
 
----@param self FrameSpringColumn
----@param row number
-function private.applyElementPos(self, row)
+---@param self FrameSpringRow
+---@param column number
+function private.applyElementPos(self, column)
     local priv = private[self]
 
     local element = priv.elements[i]
     --if not element then return nil end
 
     local x = priv.left_offset
-    local y = priv.bottom_offset
-    for i = 1, row - 1 do
-        y = y + priv.row_height[i]
+    for i = 1, column - 1 do
+        x = x + priv.column_width[i]
     end
-    local w = self:getWidth() - (priv.left_offset + priv.right_offset)
-    local h = priv.row_height[row]
+    local y = priv.bottom_offset
+    local w = priv.column_width[column]
+    local h = self:getHeight() - (priv.bottom_offset + priv.top_offset)
 
     element:setX(x)
     element:setY(y)
@@ -218,32 +220,32 @@ function private.applyElementPos(self, row)
     element:setHeight(h)
 end
 
----@param self FrameSpringColumn
-function private.updateRowHeight(self)
+---@param self FrameSpringRow
+function private.updateColumnsWidth(self)
     local priv = private[self]
 
-    local fixed_rows = 0
-    local fixed_height_part = 0
-    for i = 1, priv.rows do
-        if priv.is_row_fixed[i] then
-            fixed_rows = fixed_rows + 1
-            fixed_height_part = fixed_height_part + priv.row_part[i]
+    local fixed_columns = 0
+    local fixed_width_part = 0
+    for i = 1, priv.columns do
+        if priv.is_column_fixed[i] then
+            fixed_columns = fixed_columns + 1
+            fixed_width_part = fixed_width_part + priv.column_part[i]
         end
     end
 
-    local free_part = 1 - fixed_height_part
+    local free_part = 1 - fixed_width_part
     if free_part < 0 then free_part = 0 end
 
-    local free_rows = priv.rows - fixed_rows
-    local free_row_part = free_part / free_rows
-    local height = self:getHeight()
-    for i = 1, priv.rows do
-        if priv.is_row_fixed then
-            priv.row_height[i] = priv.row_part[i] * height
+    local free_columns = priv.columns - fixed_columns
+    local free_column_part = free_part / free_columns
+    local width = self:getWidth()
+    for i = 1, priv.columns do
+        if priv.is_column_fixed then
+            priv.column_width[i] = priv.column_part * width
         else
-            priv.row_height[i] = free_row_part * height
+            priv.column_width[i] = free_column_part * width
         end
     end
 end
 
-return FrameSpringColumn
+return FrameSpringRow

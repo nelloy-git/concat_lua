@@ -12,9 +12,9 @@ local Frame = require('Class.Frame.Frame')
 ---@type FrameBackdropClass
 local FrameBackdrop = newClass('FrameBackdrop', Frame)
 
----@class FrameBackdrop
+---@class FrameBackdrop : Frame
 local public = FrameBackdrop.public
----@class FrameBackdropClass
+---@class FrameBackdropClass : FrameClass
 local static = FrameBackdrop.static
 ---@type table
 local override = FrameBackdrop.override

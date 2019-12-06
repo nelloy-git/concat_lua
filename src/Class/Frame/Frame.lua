@@ -22,6 +22,9 @@ local override = Frame.override
 local private = {}
 
 private.DB = DataBase.new('userdata', getClassName(Frame))
+if not is_compiletime then
+    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+end
 
 --=========
 -- Methods
@@ -73,12 +76,9 @@ function public:onParentChange()
     local priv = private[self]
 
     if priv.parent then
-        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
-                         priv.x, priv.y)
+        BlzFrameSetParent(priv.wc3_frame, priv.parent)
     else
-        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                            priv.x, priv.y)
+        BlzFrameSetParent(priv.wc3_frame, private.game_ui_frame)
     end
     self:onPositionChange()
 end
