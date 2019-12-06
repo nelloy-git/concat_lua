@@ -182,9 +182,9 @@ function public:setColumnWidthPart(part, column)
     local priv = private[self]
 
     if part >= 0 then
-        priv.is_column_fixed = true
+        priv.is_column_fixed[column] = true
     else
-        priv.is_column_fixed = false
+        priv.is_column_fixed[column] = false
     end
     priv.column_part[column] = part
     self:onColumnWidthPartChange()
@@ -203,7 +203,7 @@ end
 function private.applyElementPos(self, column)
     local priv = private[self]
 
-    local element = priv.elements[i]
+    local element = priv.elements[column]
     --if not element then return nil end
 
     local x = priv.left_offset
@@ -238,10 +238,10 @@ function private.updateColumnsWidth(self)
 
     local free_columns = priv.columns - fixed_columns
     local free_column_part = free_part / free_columns
-    local width = self:getWidth()
+    local width = self:getWidth() - (priv.left_offset + priv.right_offset)
     for i = 1, priv.columns do
-        if priv.is_column_fixed then
-            priv.column_width[i] = priv.column_part * width
+        if priv.is_column_fixed[i] then
+            priv.column_width[i] = priv.column_part[i] * width
         else
             priv.column_width[i] = free_column_part * width
         end

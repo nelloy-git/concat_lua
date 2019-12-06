@@ -48,6 +48,8 @@ function override.new(instance_data)
     }
     private[instance] = priv
 
+    private.updateRowHeight(instance)
+
     return instance
 end
 
@@ -180,9 +182,9 @@ function public:setRowHeightPart(part, row)
     local priv = private[self]
 
     if part >= 0 then
-        priv.is_row_fixed = true
+        priv.is_row_fixed[row] = true
     else
-        priv.is_row_fixed = false
+        priv.is_row_fixed[row] = false
     end
     priv.row_part[row] = part
     self:onRowHeightPartChange()
@@ -201,8 +203,8 @@ end
 function private.applyElementPos(self, row)
     local priv = private[self]
 
-    local element = priv.elements[i]
-    --if not element then return nil end
+    local element = priv.elements[row]
+    if not element then return nil end
 
     local x = priv.left_offset
     local y = priv.bottom_offset
@@ -236,9 +238,9 @@ function private.updateRowHeight(self)
 
     local free_rows = priv.rows - fixed_rows
     local free_row_part = free_part / free_rows
-    local height = self:getHeight()
+    local height = self:getHeight() - (priv.bottom_offset + priv.top_offset)
     for i = 1, priv.rows do
-        if priv.is_row_fixed then
+        if priv.is_row_fixed[i] then
             priv.row_height[i] = priv.row_part[i] * height
         else
             priv.row_height[i] = free_row_part * height
