@@ -190,6 +190,12 @@ function public:setColumnWidthPart(part, column)
     self:onColumnWidthPartChange()
 end
 
+---@param column number
+---@return number
+function public:getColumnWidthPart(column)
+    return private[self].column_width[column]
+end
+
 function private.applyAllElementsPos(self)
     private.updateColumnsWidth(self)
 

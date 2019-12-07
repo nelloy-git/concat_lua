@@ -71,9 +71,9 @@ Test = function()
     t4:setTexture(texture)
 
     t:setCell(t1, 1, 1)
-    t:setCell(t2, 1, 4)
-    t:setCell(t3, 4, 4)
-    t:setCell(t4, 4, 1)
+    t:setCell(t2, 2, 2)
+    t:setCell(t3, 3, 4)
+    t:setCell(t4, 4, 3)
 end
 
 function InitCustomPlayerSlots()

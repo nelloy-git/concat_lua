@@ -38,6 +38,8 @@ function override.new(instance_data)
 
     local priv = {
         text = "",
+        font = "MasterFont",
+        font_height = 0.012
     }
     private[instance] = priv
 
@@ -59,6 +61,33 @@ end
 function public:getText()
     return private[self].text
 end
+
+---@param path string
+function public:setFont(path)
+    local priv = private[self]
+
+    priv.font = path
+    BlzFrameSetFont(self:getWc3Frame(), priv.font, priv.font_height, 0)
+end
+
+---@return string
+function public:getFont()
+    return private[self].font
+end
+
+---@param height number
+function public:setFontHeight(height)
+    local priv = private[self]
+
+    priv.font_height = height
+    BlzFrameSetFont(self:getWc3Frame(), priv.font, priv.font_height, 0)
+end
+
+---@return number
+function public:getFontHeight()
+    return private[self].font_height
+end
+
 
 
 return FrameText

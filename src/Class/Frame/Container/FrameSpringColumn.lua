@@ -190,6 +190,12 @@ function public:setRowHeightPart(part, row)
     self:onRowHeightPartChange()
 end
 
+---@param row number
+---@return number
+function public:getRowHeightPart(row)
+    return private[self].row_height[row]
+end
+
 function private.applyAllElementsPos(self)
     private.updateRowHeight(self)
 

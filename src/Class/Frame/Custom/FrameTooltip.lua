@@ -11,16 +11,16 @@ local FrameSpringRow = require('Class.Frame.Container.FrameSpringRow')
 -- Class
 --=======
 
----@type FrameSpringTableClass
-local FrameSpringTable = newClass('FrameSpringTable', FrameSpringColumn)
+---@type FrameTooltipClass
+local FrameTooltip = newClass('FrameTooltip', FrameSpringColumn)
 
----@class FrameSpringTable : FrameSpringColumn
-local public = FrameSpringTable.public
----@class FrameSpringTableClass : FrameSpringColumnClass
-local static = FrameSpringTable.static
+---@class FrameTooltip : FrameSpringColumn
+local public = FrameTooltip.public
+---@class FrameTooltipClass : FrameSpringColumnClass
+local static = FrameTooltip.static
 ---@type table
-local override = FrameSpringTable.override
----@type table(FrameSpringTable, table)
+local override = FrameTooltip.override
+---@type table(FrameTooltip, table)
 local private = {}
 
 --=========
@@ -28,10 +28,19 @@ local private = {}
 --=========
 
 ---@param instance_data table | nil
----@return FrameSpringTable
+---@return FrameTooltip
 function override.new(instance_data)
-    local instance = instance_data or newInstanceData(FrameSpringTable)
+    local instance = instance_data or newInstanceData(FrameTooltip)
     instance = FrameSpringColumn.new(instance)
+
+    local priv = {
+        first = 
+
+    }
+    private[instance] = priv
+
+    FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
+    FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
     FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
 
     return instance
@@ -104,4 +113,4 @@ function public:setCell(frame, column, row)
     row_frame:setCell(frame, column)
 end
 
-return FrameSpringTable
+return FrameTooltip

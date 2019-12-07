@@ -653,7 +653,7 @@ bj_lastInstObjFuncSuccessful      = true ---@type boolean
 ---@param msg string
 function BJDebugMsg(msg)
 	---@type integer
-	i = 0
+	local i = 0
 	while true do
 		DisplayTimedTextToPlayer(Player(i), 0, 0, 60, msg)
 		i = i + 1
@@ -1036,9 +1036,7 @@ function QueuedTriggerCheck()
 	---@type string
 	s = "TrigQueue Check "
 	---@type integer
-	i = nil
-	
-	i = 0
+	local i = 0
 	while true do
 		if i >= bj_queuedExecTotal then break end
 		s = s.."q["..I2S(i).."]="
