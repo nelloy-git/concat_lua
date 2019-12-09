@@ -26,6 +26,17 @@ if not is_compiletime then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 end
 
+--===========
+-- Callbacks
+--===========
+
+function public:onParentChange() end
+function public:onPositionChange() end
+function public:onSizeChange() end
+function public:onLevelChange() end
+function public:onAlphaChange() end
+function public:onVisionChange() end
+
 --=========
 -- Methods
 --=========
@@ -72,59 +83,24 @@ function public:free()
     freeInstanceData(self)
 end
 
-function public:onParentChange()
-    local priv = private[self]
-
-    if priv.parent then
-        BlzFrameSetParent(priv.wc3_frame, priv.parent)
-    else
-        BlzFrameSetParent(priv.wc3_frame, private.game_ui_frame)
-    end
-    self:onPositionChange()
-end
-
-function public:onPositionChange()
-    local priv = private[self]
-
-    if priv.parent then
-        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
-                         priv.x, priv.y)
-    else
-        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                            priv.x, priv.y)
-    end
-end
-
-function public:onSizeChange()
-    local priv = private[self]
-    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
-end
-
-function public:onLevelChange()
-    local priv = private[self]
-    BlzFrameSetLevel(priv.wc3_frame, priv.level)
-end
-
-function public:onAlphaChange()
-    local priv = private[self]
-    BlzFrameSetAlpha(priv.wc3_frame, priv.alpha)
-end
-
-function public:onVisionChange()
-    local priv = private[self]
-    BlzFrameSetVisible(priv.wc3_frame, priv.visible)
-end
-
 ---@return framehandle
 function public:getWc3Frame()
     return private[self].wc3_frame
 end
 
+--- Runs onParentChange and onPositionChange callbacks.
 ---@param parent framehandle
 function public:setParent(parent)
-    private[self].parent = parent
+    local priv = private[self]
+
+    priv.parent = parent
+    if priv.parent then
+        BlzFrameSetParent(priv.wc3_frame, priv.parent)
+    else
+        BlzFrameSetParent(priv.wc3_frame, private.game_ui_frame)
+    end
     self:onParentChange()
+    self:onPositionChange()
 end
 
 ---@return Frame
@@ -134,7 +110,17 @@ end
 
 ---@param x number
 function public:setX(x)
-    private[self].x = x
+    local priv = private[self]
+
+    priv.x = x
+    if priv.parent then
+        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
+                         priv.x, priv.y)
+    else
+        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                            priv.x, priv.y)
+    end
     self:onPositionChange()
 end
 
@@ -145,7 +131,17 @@ end
 
 ---@param y number
 function public:setY(y)
-    private[self].y = y
+    local priv = private[self]
+
+    priv.y = y
+    if priv.parent then
+        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
+                         priv.x, priv.y)
+    else
+        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                            priv.x, priv.y)
+    end
     self:onPositionChange()
 end
 
@@ -156,7 +152,10 @@ end
 
 ---@param width number
 function public:setWidth(width)
-    private[self].width = width
+    local priv = private[self]
+
+    priv.width = width
+    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
     self:onSizeChange()
 end
 
@@ -167,18 +166,24 @@ end
 
 ---@param height number
 function public:setHeight(height)
-    private[self].height = height
+    local priv = private[self]
+
+    priv.height = height
+    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
     self:onSizeChange()
 end
 
----@reutrn number
+---@return number
 function public:getHeight()
     return private[self].height
 end
 
 ---@param level number
 function public:setLevel(level)
-    private[self].level = level
+    local priv = private[self]
+
+    priv.level = level
+    BlzFrameSetLevel(priv.wc3_frame, priv.level)
     self:onLevelChange()
 end
 
@@ -189,7 +194,10 @@ end
 
 ---@param alpha number
 function public:setAlpha(alpha)
-    private[self].alpha = alpha
+    local priv = private[self]
+
+    priv.alpha = alpha
+    BlzFrameSetAlpha(priv.wc3_frame, priv.alpha)
     self:onAlphaChange()
 end
 
@@ -200,7 +208,10 @@ end
 
 ---@param flag boolean
 function public:setVisible(flag)
-    private[self].visible = flag
+    local priv = private[self]
+
+    priv.visible = flag
+    BlzFrameSetVisible(priv.wc3_frame, priv.visible)
     self:onVisionChange()
 end
 

@@ -27,21 +27,25 @@ local private = {}
 -- Methods
 --=========
 
+---@param background Frame
 ---@param instance_data table | nil
 ---@return FrameSpringRow
-function override.new(instance_data)
+function override.new(background, instance_data)
     local instance = instance_data or newInstanceData(FrameSpringRow)
-    instance = FrameBackdrop.new(instance)
+    
 
     local priv = {
+        backgroud = background,
+
         left_offset = 0,
         right_offset = 0,
         top_offset = 0,
         bottom_offset = 0,
 
         columns = 1,
-        is_column_fixed = {},
-        column_part = {},
+        is_column_ratio = {},
+        is_column_abs = {},
+        column_ratio = {},
         column_width = {},
 
         elements = {}
@@ -77,37 +81,57 @@ function public:onSizeChange()
 end
 
 function public:onColumnsChange()
-    private.applyAllElementsPos(self)
 end
 
 function public:onCellChange()
 end
 
 function public:onOffsetsChange()
-    private.applyAllElementsPos(self)
 end
 
-function public:onColumnWidthPartChange()
-    private.applyAllElementsPos(self)
+function public:onColumnRatioWidthChange()
 end
 
----@param columns number
+function public:onColumnAbsWidthChange()
+end
+
+---@param column number
+---@return boolean
+function public:isColumnWidthRatio(column)
+    return private[self].is_column_ratio[column]
+end
+
+---@param column number
+---@return boolean
+function public:isColumnWidthAbs(column)
+    return private[self].is_column_abs[column]
+end
+
+---@param count number
 ---@return Frame[]
-function public:setColumns(columns)
+function public:setColumns(count)
     local priv = private[self]
 
+    if count < 1 or count % 1 ~= 0 then
+        Log(Log.Err, getClassName(FrameSpringRow),
+            "columns count must be integer more or equal 1.")
+        return nil
+    end
+
     local free_frames = {}
-    if columns < priv.columns then
-        for i = columns + 1, priv.columns do
-            table.insert(free_frames, #free_frames + 1, priv.elements[i])
-            priv.column_part[i] = nil
+    if count < priv.columns then
+        for i = priv.columns, count + 1 do
+            table.insert(free_frames, 1, priv.elements[i])
+            priv.column_ratio[i] = nil
             priv.column_width[i] = nil
-            priv.is_column_fixed[i] = nil
+            priv.is_column_ratio[i] = nil
+            priv.is_column_abs[i] = nil
             priv.elements[i] = nil
         end
     end
-    priv.columns = columns
+    priv.columns = count
 
+    private.applyAllElementsPos(self)
     self:onColumnsChange()
 
     return free_frames
@@ -116,6 +140,66 @@ end
 ---@return number
 function public:getColumns()
     return private[self].columns
+end
+
+--- Set part < 0 for auto size.
+---@param ratio number
+---@param column number
+function public:setColumnRatioWidth(ratio, column)
+    local priv = private[self]
+
+    if ratio >= 0 then
+        priv.is_column_ratio[column] = true
+        priv.is_column_abs[column] = false
+        priv.column_ratio[column] = ratio
+    else
+        priv.is_column_ratio[column] = false
+        priv.is_column_abs[column] = false
+        priv.column_ratio[column] = nil
+    end
+    private.applyAllElementsPos(self)
+    self:onColumnRatioWidthChange()
+end
+
+---@param column number
+---@return number
+function public:getColumnRatioWidth(column)
+    local priv = private[self]
+
+    if priv.is_column_ratio[column] then
+        return priv.column_ratio[column]
+    end
+    return -1
+end
+
+--- Set width < 0 for auto size.
+---@param width number
+---@param column number
+function public:setColumnAbsWidth(width, column)
+    local priv = private[self]
+
+    if width >= 0 then
+        priv.is_column_ratio[column] = false
+        priv.is_column_abs[column] = true
+        priv.column_width[column] = width
+    else
+        priv.is_column_ratio[column] = false
+        priv.is_column_abs[column] = false
+        priv.column_ratio[column] = nil
+    end
+    private.applyAllElementsPos(self)
+    self:onColumnAbsWidthChange()
+end
+
+---@param column number
+---@return number
+function public:getColumnAbsWidth(column)
+    local priv = private[self]
+
+    if priv.is_column_abs[column] then
+        return priv.column_width[column]
+    end
+    return -1
 end
 
 --- Function returns previous element from table.
@@ -165,6 +249,7 @@ function public:setOffsets(left, right, top, bottom)
     priv.top_offset = top
     priv.bottom_offset = bottom
 
+    private.applyElementPos(self, column)
     self:onOffsetsChange()
 end
 
@@ -173,27 +258,6 @@ end
 function public:getOffsets()
     local priv = private[self]
     return priv.left_offset, priv.right_offset, priv.top_offset, priv.bottom_offset
-end
-
---- Set part < 0 for auto size.
----@param part number
----@param column number
-function public:setColumnWidthPart(part, column)
-    local priv = private[self]
-
-    if part >= 0 then
-        priv.is_column_fixed[column] = true
-    else
-        priv.is_column_fixed[column] = false
-    end
-    priv.column_part[column] = part
-    self:onColumnWidthPartChange()
-end
-
----@param column number
----@return number
-function public:getColumnWidthPart(column)
-    return private[self].column_width[column]
 end
 
 function private.applyAllElementsPos(self)
@@ -230,26 +294,27 @@ end
 function private.updateColumnsWidth(self)
     local priv = private[self]
 
-    local fixed_columns = 0
-    local fixed_width_part = 0
+    local width = self:getWidth()
+    local free_columns = priv.columns
+    local free_width = width
     for i = 1, priv.columns do
-        if priv.is_column_fixed[i] then
-            fixed_columns = fixed_columns + 1
-            fixed_width_part = fixed_width_part + priv.column_part[i]
+        if priv.is_column_ratio[i] then
+            free_columns = free_columns - 1
+            priv.column_width[i] = priv.column_ratio[i] * width
+            free_width = free_width - priv.column_width[i]
+        elseif priv.is_column_abs[i] then
+            free_columns = free_columns - 1
+            free_width = free_width - priv.column_width[i]
         end
     end
 
-    local free_part = 1 - fixed_width_part
-    if free_part < 0 then free_part = 0 end
+    if free_columns == 0 then return nil end
+    if free_width < 0 then free_width = 0 end
 
-    local free_columns = priv.columns - fixed_columns
-    local free_column_part = free_part / free_columns
-    local width = self:getWidth() - (priv.left_offset + priv.right_offset)
+    local free_column_width = free_width / free_columns
     for i = 1, priv.columns do
-        if priv.is_column_fixed[i] then
-            priv.column_width[i] = priv.column_part[i] * width
-        else
-            priv.column_width[i] = free_column_part * width
+        if not priv.is_column_ratio[i] and not priv.is_column_abs[i] then
+            priv.column_width[i] = free_column_width
         end
     end
 end

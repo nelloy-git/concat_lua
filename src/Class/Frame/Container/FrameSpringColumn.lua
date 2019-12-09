@@ -40,7 +40,8 @@ function override.new(instance_data)
         bottom_offset = 0,
 
         rows = 1,
-        is_row_fixed = {},
+        is_row_ratio = {},
+        is_row_abs = {},
         row_part = {},
         row_height = {},
 
@@ -77,18 +78,15 @@ function public:onSizeChange()
 end
 
 function public:onRowsChange()
-    private.applyAllElementsPos(self)
 end
 
 function public:onCellChange()
 end
 
 function public:onOffsetsChange()
-    private.applyAllElementsPos(self)
 end
 
 function public:onRowHeightPartChange()
-    private.applyAllElementsPos(self)
 end
 
 ---@param rows number
@@ -102,7 +100,7 @@ function public:setRows(rows)
             table.insert(free_frames, #free_frames + 1, priv.elements[i])
             priv.row_part[i] = nil
             priv.row_height[i] = nil
-            priv.is_row_fixed[i] = nil
+            priv.is_row_ratio[i] = nil
             priv.elements[i] = nil
         end
     end
@@ -182,9 +180,9 @@ function public:setRowHeightPart(part, row)
     local priv = private[self]
 
     if part >= 0 then
-        priv.is_row_fixed[row] = true
+        priv.is_row_ratio[row] = true
     else
-        priv.is_row_fixed[row] = false
+        priv.is_row_ratio[row] = false
     end
     priv.row_part[row] = part
     self:onRowHeightPartChange()
@@ -193,7 +191,12 @@ end
 ---@param row number
 ---@return number
 function public:getRowHeightPart(row)
-    return private[self].row_height[row]
+    local val = private[self].row_height[row]
+    if val and val > 0 then
+        return val
+    else
+        return -1
+    end
 end
 
 function private.applyAllElementsPos(self)
@@ -233,7 +236,7 @@ function private.updateRowHeight(self)
     local fixed_rows = 0
     local fixed_height_part = 0
     for i = 1, priv.rows do
-        if priv.is_row_fixed[i] then
+        if priv.is_row_ratio[i] then
             fixed_rows = fixed_rows + 1
             fixed_height_part = fixed_height_part + priv.row_part[i]
         end
@@ -246,7 +249,7 @@ function private.updateRowHeight(self)
     local free_row_part = free_part / free_rows
     local height = self:getHeight() - (priv.bottom_offset + priv.top_offset)
     for i = 1, priv.rows do
-        if priv.is_row_fixed[i] then
+        if priv.is_row_ratio[i] then
             priv.row_height[i] = priv.row_part[i] * height
         else
             priv.row_height[i] = free_row_part * height
