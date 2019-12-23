@@ -14,9 +14,9 @@ local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 ---@type FrameTableClass
 local FrameTable = newClass('FrameTable', FrameBackdrop)
 
----@class FrameTable
+---@class FrameTable : FrameBackdrop
 local public = FrameTable.public
----@class FrameTableClass
+---@class FrameTableClass : FrameBackdropClass
 local static = FrameTable.static
 ---@type table
 local override = FrameTable.override

@@ -27,11 +27,12 @@ local private = {}
 -- Methods
 --=========
 
+---@param custom_backdrop_frame framehandle | nil
 ---@param instance_data table | nil
 ---@return FrameSpringTable
-function override.new(instance_data)
+function override.new(custom_backdrop_frame, instance_data)
     local instance = instance_data or newInstanceData(FrameSpringTable)
-    instance = FrameSpringColumn.new(instance)
+    instance = FrameSpringColumn.new(custom_backdrop_frame, instance)
     FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
 
     return instance
@@ -63,12 +64,19 @@ function public:setRows(rows)
     end
 
     local main_row = self:getCell(1)
+    local columns = main_row:getColumns()
     for i = cur_rows + 1, rows  do
         local row_frame = FrameSpringRow.new()
         FrameSpringColumn.public.setCell(self, row_frame, i)
-        row_frame:setColumns(main_row:getColumns())
+        row_frame:setColumns(columns)
         for j = 1, main_row:getColumns() do
-            row_frame:setColumnWidthPart(main_row:getColumnWidthPart(j), j)
+            if main_row:isColumnWidthAbs(j) then
+                local w = main_row:getColumnAbsWidth(j)
+                row_frame:setColumnAbsWidth(w, j)
+            elseif main_row:isColumnWidthRatio(j) then
+                local r = main_row:getColumnRatioWidth(j)
+                row_frame:setColumnRatioWidth(r, j)
+            end
         end
     end
 
@@ -88,14 +96,17 @@ function public:setColumns(columns)
     return free_frames
 end
 
-function public:setRowHeightPart(part, row)
-    FrameSpringColumn.public.setRowHeightPart(self, part, row)
-end
-
-function public:setColumnWidthPart(part, column)
+function public:setColumnRatioWidth(ratio, column)
     for i = 1, self:getRows() do
         local row_frame = self:getCell(i)
-        row_frame:setColumnWidthPart(part, column)
+        row_frame:setColumnRatioWidth(ratio, column)
+    end
+end
+
+function public:setColumnAbsWidth(width, column)
+    for i = 1, self:getRows() do
+        local row_frame = self:getCell(i)
+        row_frame:setColumnAbsWidth(width, column)
     end
 end
 

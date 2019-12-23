@@ -23,34 +23,48 @@ local override = FrameSpringRow.override
 ---@type table(FrameSpringRow, table)
 local private = {}
 
+--===========
+-- Callbacks
+--===========
+
+--- Overrides Frame.public.onSizeChange
+function public:onSizeChange()
+    Frame.public.onSizeChange(self)
+    private.applyAllElementsPos(self)
+end
+
+function public:onColumnsChange()
+    private.applyAllElementsPos(self)
+end
+
+---@param column number
+function public:onCellChange(element, column)
+    private.applyElementPos(self, element, column)
+end
+
+function public:onOffsetsChange()
+    private.applyAllElementsPos(self)
+end
+
+function public:onColumnRatioWidthChange()
+    private.applyAllElementsPos(self)
+end
+
+function public:onColumnAbsWidthChange()
+    private.applyAllElementsPos(self)
+end
+
 --=========
 -- Methods
 --=========
 
----@param background Frame
+---@param custom_backdrop_frame framehandle | nil
 ---@param instance_data table | nil
 ---@return FrameSpringRow
-function override.new(background, instance_data)
+function override.new(custom_backdrop_frame, instance_data)
     local instance = instance_data or newInstanceData(FrameSpringRow)
-    
-
-    local priv = {
-        backgroud = background,
-
-        left_offset = 0,
-        right_offset = 0,
-        top_offset = 0,
-        bottom_offset = 0,
-
-        columns = 1,
-        is_column_ratio = {},
-        is_column_abs = {},
-        column_ratio = {},
-        column_width = {},
-
-        elements = {}
-    }
-    private[instance] = priv
+    instance = FrameBackdrop.new(custom_backdrop_frame, instance)
+    private.new(instance)
 
     private.updateColumnsWidth(instance)
 
@@ -60,7 +74,7 @@ end
 --- Function returns removed frames.
 ---@return Frame[]
 function public:free()
-    local priv = private[self]
+    local priv = private.get(self)
 
     local free_frames = {}
     for i = 1, #priv.elements do
@@ -68,49 +82,36 @@ function public:free()
         table.insert(free_frames, #free_frames + 1, free_frames[i])
     end
 
-    private[self] = nil
+    private.free(self)
     FrameBackdrop.public.free(self)
 
     return free_frames
 end
 
---- Overrides Frame.public.onSizeChange
-function public:onSizeChange()
-    Frame.public.onSizeChange(self)
-    private.applyAllElementsPos(self)
-end
-
-function public:onColumnsChange()
-end
-
-function public:onCellChange()
-end
-
-function public:onOffsetsChange()
-end
-
-function public:onColumnRatioWidthChange()
-end
-
-function public:onColumnAbsWidthChange()
+---@param column number
+---@return boolean
+function public:isColumnWidthFree(column)
+    local priv = private.get(self)
+    local b = priv.is_column_ratio[column] or priv.is_column_abs[column]
+    return not b
 end
 
 ---@param column number
 ---@return boolean
 function public:isColumnWidthRatio(column)
-    return private[self].is_column_ratio[column]
+    return private.get(self).is_column_ratio[column]
 end
 
 ---@param column number
 ---@return boolean
 function public:isColumnWidthAbs(column)
-    return private[self].is_column_abs[column]
+    return private.get(self).is_column_abs[column]
 end
 
 ---@param count number
 ---@return Frame[]
 function public:setColumns(count)
-    local priv = private[self]
+    local priv = private.get(self)
 
     if count < 1 or count % 1 ~= 0 then
         Log(Log.Err, getClassName(FrameSpringRow),
@@ -131,7 +132,6 @@ function public:setColumns(count)
     end
     priv.columns = count
 
-    private.applyAllElementsPos(self)
     self:onColumnsChange()
 
     return free_frames
@@ -139,14 +139,14 @@ end
 
 ---@return number
 function public:getColumns()
-    return private[self].columns
+    return private.get(self).columns
 end
 
 --- Set part < 0 for auto size.
 ---@param ratio number
 ---@param column number
 function public:setColumnRatioWidth(ratio, column)
-    local priv = private[self]
+    local priv = private.get(self)
 
     if ratio >= 0 then
         priv.is_column_ratio[column] = true
@@ -157,14 +157,14 @@ function public:setColumnRatioWidth(ratio, column)
         priv.is_column_abs[column] = false
         priv.column_ratio[column] = nil
     end
-    private.applyAllElementsPos(self)
+
     self:onColumnRatioWidthChange()
 end
 
 ---@param column number
 ---@return number
 function public:getColumnRatioWidth(column)
-    local priv = private[self]
+    local priv = private.get(self)
 
     if priv.is_column_ratio[column] then
         return priv.column_ratio[column]
@@ -176,7 +176,7 @@ end
 ---@param width number
 ---@param column number
 function public:setColumnAbsWidth(width, column)
-    local priv = private[self]
+    local priv = private.get(self)
 
     if width >= 0 then
         priv.is_column_ratio[column] = false
@@ -187,14 +187,14 @@ function public:setColumnAbsWidth(width, column)
         priv.is_column_abs[column] = false
         priv.column_ratio[column] = nil
     end
-    private.applyAllElementsPos(self)
+    
     self:onColumnAbsWidthChange()
 end
 
 ---@param column number
 ---@return number
 function public:getColumnAbsWidth(column)
-    local priv = private[self]
+    local priv = private.get(self)
 
     if priv.is_column_abs[column] then
         return priv.column_width[column]
@@ -207,7 +207,7 @@ end
 ---@param column number
 ---@return Frame | nil
 function public:setCell(frame, column)
-    local priv = private[self]
+    local priv = private.get(self)
 
     if column < 1 or column % 1 ~= 0 then
         Log(Log.Err, getClassName(FrameSpringRow),
@@ -225,8 +225,7 @@ function public:setCell(frame, column)
     priv.elements[column] = frame
 
     frame:setParent(self:getWc3Frame())
-    private.applyElementPos(self, column)
-    self:onCellChange()
+    self:onCellChange(frame, column)
 
     return prev
 end
@@ -234,7 +233,7 @@ end
 ---@param column number
 ---@return Frame | nil
 function public:getCell(column)
-    return private[self].elements[column]
+    return private.get(self).elements[column]
 end
 
 ---@param left number
@@ -242,39 +241,72 @@ end
 ---@param top number
 ---@param bottom number
 function public:setOffsets(left, right, top, bottom)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.left_offset = left
     priv.right_offset = right
     priv.top_offset = top
     priv.bottom_offset = bottom
 
-    private.applyElementPos(self, column)
     self:onOffsetsChange()
 end
 
 --- Returns left, right, top and bottom offsets
 ---@return number, number, number, number
 function public:getOffsets()
-    local priv = private[self]
+    local priv = private.get(self)
     return priv.left_offset, priv.right_offset, priv.top_offset, priv.bottom_offset
 end
 
+--=========
+-- Private
+--=========
+
+local class_privates = {}
+---@param self FrameSpringRow
+function private.new(self)
+    ---@class FrameSpringRowPrivate
+    local priv = {
+        left_offset = 0,
+        right_offset = 0,
+        top_offset = 0,
+        bottom_offset = 0,
+
+        columns = 1,
+        is_column_ratio = {},
+        is_column_abs = {},
+        column_ratio = {},
+        column_width = {},
+
+        elements = {}
+    }
+    class_privates[self] = priv
+end
+
+---@param self FrameSpringRow
+---@return FrameSpringRowPrivate
+function private.get(self)
+    return class_privates[self]
+end
+
+---@param self FrameSpringRow
+function private.free(self)
+    class_privates[self] = nil
+end
+
+---@param self FrameSpringRow
 function private.applyAllElementsPos(self)
     private.updateColumnsWidth(self)
 
-    for i = 1, #private[self].elements do
-        private.applyElementPos(self, i)
+    for column, element in pairs(private.get(self).elements) do
+        private.applyElementPos(self, element, column)
     end
 end
 
 ---@param self FrameSpringRow
 ---@param column number
-function private.applyElementPos(self, column)
-    local priv = private[self]
-
-    local element = priv.elements[column]
-    --if not element then return nil end
+function private.applyElementPos(self, element, column)
+    local priv = private.get(self)
 
     local x = priv.left_offset
     for i = 1, column - 1 do
@@ -292,11 +324,11 @@ end
 
 ---@param self FrameSpringRow
 function private.updateColumnsWidth(self)
-    local priv = private[self]
+    local priv = private.get(self)
 
     local width = self:getWidth()
     local free_columns = priv.columns
-    local free_width = width
+    local free_width = width - (priv.left_offset + priv.right_offset)
     for i = 1, priv.columns do
         if priv.is_column_ratio[i] then
             free_columns = free_columns - 1

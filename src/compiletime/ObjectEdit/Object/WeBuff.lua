@@ -10,7 +10,7 @@ local WeObject = require('compiletime.ObjectEdit.WeObject')
 ---@type WeObjectFileClass
 local WeObjectFile = require('compiletime.ObjectEdit.WeObjectFile')
 ---@type WeUtils
-local WeUtils = require('compiletime.ObjectEdit.WeUtils')
+local WeUtils = require('compiletime.Utils')
 
 --=======
 -- Class

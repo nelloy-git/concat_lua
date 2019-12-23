@@ -2,6 +2,10 @@
 -- Include
 --=========
 
+---@type FrameBackdropClass
+local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
+---@type FrameTextClass
+local FrameText = require('Class.Frame.Default.FrameText')
 ---@type FrameSpringColumnClass
 local FrameSpringColumn = require('Class.Frame.Container.FrameSpringColumn')
 ---@type FrameSpringRowClass
@@ -24,93 +28,149 @@ local override = FrameTooltip.override
 local private = {}
 
 --=========
--- Methods
+-- Static
 --=========
 
 ---@param instance_data table | nil
 ---@return FrameTooltip
 function override.new(instance_data)
     local instance = instance_data or newInstanceData(FrameTooltip)
-    instance = FrameSpringColumn.new(instance)
-
-    local priv = {
-        first = 
-
-    }
-    private[instance] = priv
-
-    FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
-    FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
-    FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
+    instance = FrameSpringColumn.new(private.createHandle(), instance)
+    local priv = private.new(instance)
 
     return instance
 end
 
+static.title_height = 0.04
+static.space = 0.003
+
+--========
+-- Public
+--========
+
 function public:free()
-    local free_frames = {}
-    local free_rows = FrameSpringColumn.public.free(self)
-    for i = 1, #free_rows do
-        local row_free_frames = free_rows:free()
-        for j = 1, #row_free_frames do
-            table.insert(free_frames, #free_frames + 1, row_free_frames[j])
-        end
-    end
-
-    return free_frames
+    private.free(self)
+    freeInstanceData(self)
 end
 
-function public:setRows(rows)
-    local free_frames = {}
-    local cur_rows = self:getRows()
-    local free_rows = FrameSpringColumn.public.setRows(self, rows)
+---@param path string
+function public:setIcon(path)
+    local priv = private.get(self)
 
-    for i = 1, #free_rows do
-        local row_free_frames = free_rows:free()
-        for j = 1, #row_free_frames do
-            table.insert(free_frames, #free_frames + 1, row_free_frames[j])
-        end
-    end
-
-    local main_row = self:getCell(1)
-    for i = cur_rows + 1, rows  do
-        local row_frame = FrameSpringRow.new()
-        FrameSpringColumn.public.setCell(self, row_frame, i)
-        row_frame:setColumns(main_row:getColumns())
-        for j = 1, main_row:getColumns() do
-            row_frame:setColumnWidthPart(main_row:getColumnWidthPart(j), j)
-        end
-    end
-
-    return free_frames
-end
-
-function public:setColumns(columns)
-    local free_frames = {}
-    for i = 1, self:getRows() do
-        local row_frame = self:getCell(i)
-        local free_row_frames = row_frame:setColumns(columns)
-        for j = 1, #free_row_frames do
-            table.insert(free_frames, #free_frames + 1, free_row_frames[j])
-        end
-    end
-
-    return free_frames
-end
-
-function public:setRowHeightPart(part, row)
-    FrameSpringColumn.public.setRowHeightPart(self, part, row)
-end
-
-function public:setColumnWidthPart(part, column)
-    for i = 1, self:getRows() do
-        local row_frame = self:getCell(i)
-        row_frame:setColumnWidthPart(part, column)
+    priv.icon:setTexture(path)
+    if path then
+        priv.first:setColumnAbsWidth(priv.first:getHeight() - 2 * static.space, 1)
+        priv.first:setColumnAbsWidth(static.space, 2)
+    else
+        priv.first:setColumnAbsWidth(0, 1)
+        priv.first:setColumnAbsWidth(0, 2)
     end
 end
 
-function public:setCell(frame, column, row)
-    local row_frame = self:getCell(row)
-    row_frame:setCell(frame, column)
+---@param text string
+function public:setTitle(text)
+    local priv = private.get(self)
+
+    priv.title:setText(text)
 end
+
+function public:addTooltipLine(line)
+    local priv = private.get(self)
+
+    priv.lines = priv.lines + 1
+    priv.tooltip:addText(line..'\n')
+    self:setHeight(priv.first:getHeight() + priv.second:getHeight() + priv.lines * 0.0093 + 4 * static.space)
+end
+
+--=========
+-- Private
+--=========
+
+local private_data = {}
+---@param self FrameTooltip
+---@return FrameTooltipPrivate
+function private.new(self)
+    ---@class FrameTooltipPrivate
+    local priv = {
+        first = FrameSpringRow.new(private.createHandle()),
+        second = FrameSpringRow.new(nil),
+        third = FrameSpringRow.new(nil),
+
+        icon = FrameBackdrop.new(),
+        title = FrameText.new(0.012),
+        slots = {},
+
+        lines = 0,
+        tooltip = FrameText.new(0.010)
+    }
+    private_data[self] = priv
+
+    self:setRows(3)
+    self:setCell(priv.third, 1)
+    self:setCell(priv.second, 2)
+    self:setRowAbsHeight(0, 2)
+    self:setCell(priv.first, 3)
+    self:setRowAbsHeight(static.title_height, 3)
+
+    priv.first:setColumns(3)
+    priv.first:setColumnAbsWidth(0, 1)
+    priv.first:setOffsets(static.space, static.space, static.space, static.space)
+    priv.first:setCell(priv.icon, 1)
+    priv.first:setColumnAbsWidth(static.space, 2)
+    priv.first:setCell(priv.title, 3)
+
+    priv.third:setOffsets(3 * static.space, 3 * static.space, static.space, 3 * static.space)
+    priv.third:setCell(priv.tooltip, 1)
+
+    return priv
+end
+
+---@param self FrameTooltip
+---@return FrameTooltipPrivate
+function private.get(self)
+    return private_data[self]
+end
+
+---@param self FrameTooltip
+function private.free(self)
+    private_data[self] = nil
+end
+
+---@return framehandle
+function private.createHandle()
+    return BlzCreateFrame(private.fdf_data[private.fdf_background_name],
+                          private.game_ui_handle,
+                          0, 0)
+end
+
+private.fdf_background_name = 'FrameTooltipBackground'
+private.fdf_data = compiletime(function()
+    local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
+    local File = WeObjEdit.Fdf.File
+    local Backdrop = WeObjEdit.Fdf.Backdrop
+
+    local background = Backdrop.new(private.fdf_background_name)
+    background:setField(Backdrop.DecorateFileNames)
+    background:setField(Backdrop.TileBackground)
+    background:setField(Backdrop.Background, "ToolTipBackground")
+    background:setField(Backdrop.CornerFlags, "UL|UR|BL|BR|T|L|B|R")
+    background:setField(Backdrop.CornerSize, 0.008)
+    background:setField(Backdrop.BackgroundInsets, {0.0022, 0.0022, 0.0022, 0.0022})
+    background:setField(Backdrop.EdgeFile, "ToolTipBorder")
+    background:setField(Backdrop.BlendAll)
+
+    local out = File.new(getClassName(FrameTooltip))
+    out:addObject(background)
+    return out:toRuntime()
+end)
+
+if not is_compiletime then
+    private.game_ui_handle = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+    if not BlzLoadTOCFile(private.fdf_data.toc) then
+        Log(Log.Err, getClassName(FrameTooltip), "can not load toc file.")
+    end
+end
+
+
 
 return FrameTooltip

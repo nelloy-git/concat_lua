@@ -29,11 +29,18 @@ end
 -- Methods
 --=========
 
+---@param custom_backdrop_handle framehandle | nil
 ---@param instance_data table | nil
 ---@return FrameBackdrop
-function override.new(instance_data)
+function override.new(custom_backdrop_handle, instance_data)
     local instance = instance_data or newInstanceData(FrameBackdrop)
-    local wc3_frame = BlzCreateFrameByType("BACKDROP", "BACKDROP", private.game_ui_frame, "", 0)
+    local wc3_frame
+    if custom_backdrop_handle then
+        wc3_frame = custom_backdrop_handle
+    else
+        wc3_frame = BlzCreateFrameByType("BACKDROP", "BACKDROP", private.game_ui_frame, "", 0)
+        BlzFrameSetTexture(wc3_frame, 'war3mapImported\\frameFiles\\Transparent32x32.tga', 0, true)
+    end
     instance = Frame.new(wc3_frame, instance)
 
     local priv = {
@@ -51,7 +58,11 @@ end
 
 function public:onTextureChange()
     local priv = private[self]
-    BlzFrameSetTexture(self:getWc3Frame(self), priv.texture, 0, true)
+    if priv.texture then
+        BlzFrameSetTexture(self:getWc3Frame(self), priv.texture, 0, true)
+    else
+        BlzFrameSetTexture(self:getWc3Frame(self), 'war3mapImported\\frameFiles\\Transparent32x32.tga', 0, true)
+    end
 end
 
 ---@param texture string

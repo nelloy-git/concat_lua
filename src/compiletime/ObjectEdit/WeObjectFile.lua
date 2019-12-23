@@ -6,7 +6,7 @@ local log_changes = false
 
 local Log = require('utils.Log')
 ---@type WeUtils
-local WeUtils = require('compiletime.ObjectEdit.WeUtils')
+local WeUtils = require('compiletime.Utils')
 
 --=======
 -- Class

@@ -88,6 +88,15 @@ function public:getWc3Frame()
     return private[self].wc3_frame
 end
 
+---Unsavety !!!
+---@param handle framehandle
+---@return framehandle
+function public:changeWc3Frame(handle)
+    local cur = private[self].wc3_frame
+    private[self].wc3_frame = handle
+    return cur
+end
+
 --- Runs onParentChange and onPositionChange callbacks.
 ---@param parent framehandle
 function public:setParent(parent)

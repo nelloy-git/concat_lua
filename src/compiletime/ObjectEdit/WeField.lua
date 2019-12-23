@@ -5,7 +5,7 @@
 require('utils.Globals')
 local Log = require('utils.Log')
 ---@type WeUtils
-local WeUtils = require('compiletime.ObjectEdit.WeUtils')
+local WeUtils = require('compiletime.Utils')
 
 --=======
 -- Class

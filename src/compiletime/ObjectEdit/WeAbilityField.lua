@@ -5,7 +5,7 @@
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeUtils
-local WeUtils = require('compiletime.ObjectEdit.WeUtils')
+local WeUtils = require('compiletime.Utils')
 
 --=======
 -- Class

@@ -29,14 +29,12 @@ local unit_type = compiletime(function()
     return u:toRuntime()
 end)
 
-local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
-Test = function()
+--[[
+local function testAbility()
     local Unit = require('Class.Unit.Unit')
-    --local ParameterType = require('Class.ParameterType')
     local AbilityExample = require('Class.Ability.AbilityExample')
 
     local foo = Unit.new(Player(0), unit_type.id, 0, 0, 0)
-    --Debug(ID2str(AbilityExample:getId()))
     UnitAddAbility(foo:getWc3Unit(), AbilityExample:getId())
 
     ---@type GroundItemClass
@@ -44,24 +42,26 @@ Test = function()
     local it = GroundItem.new(0, 0)
     it:setName('Test')
     it:setDescription('Test')
+end
+--]]
 
-    --local FrameSpringTable = require('Class.Frame.Container.FrameSpringTable')
-    --local t = FrameSpringTable.new()
-    local FrameSpringRow = require('Class.Frame.Container.FrameSpringRow')
-    local t = FrameSpringRow.new()
+--[[
+local function testFrames()
+    local FrameSpringTable = require('Class.Frame.Container.FrameSpringTable')
+    local t = FrameSpringTable.new()
     
-    t:setTexture(texture)
+    t:setRows(4)
     t:setColumns(4)
-    --t:setRows(4)
+    t:setRowRatioHeight(0.1, 4)
     t:setColumnRatioWidth(0.1, 4)
-    --t:setRowHeightPart(0.1, 1)
     --t:setRowHeightPart(0.1, 4)
 
     t:setX(0.4)
     t:setY(0.2)
     t:setWidth(0.25)
-    t:setHeight(0.05)
-    t:setColumnAbsWidth(t:getHeight(), 1)
+    t:setHeight(0.25)
+    t:setRowAbsHeight(0.05, 1)
+    t:setColumnAbsWidth(0.025, 1)
 
     local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
     local t1 = FrameBackdrop.new()
@@ -77,6 +77,28 @@ Test = function()
     t:setCell(t2, 2, 2)
     t:setCell(t3, 3, 3)
     t:setCell(t4, 4, 4)
+end
+--]]
+
+local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
+Test = function()
+    local FrameTooltip = require('Class.Frame.Custom.FrameTooltip')
+    local f = FrameTooltip.new()
+    f:setX(0.4)
+    f:setY(0.1)
+    f:setWidth(0.2)
+    f:setHeight(0.2)
+
+    f:setIcon(texture)
+    f:setTitle("Some title")
+    s = 'Some text here.'
+    for i = 1, 40 do
+        f:addTooltipLine(tostring(i))
+    end
+    --local FrameText = require('Class.Frame.Default.FrameText')
+    --local t = FrameText.new(0.011)
+    --t:setText('A\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\n')
+    --f:setCell(t, 1)
 end
 
 function InitCustomPlayerSlots()
