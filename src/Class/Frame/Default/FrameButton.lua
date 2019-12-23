@@ -81,7 +81,7 @@ end
 ---@param texture string
 function public:setTexture(texture)
     private[self].texture = texture
-    BlzFrameSetTexture(self:getWc3Frame(self), texture, 0, true)
+    BlzFrameSetTexture(self:getFramehandle(self), texture, 0, true)
 end
 
 ---@return string
@@ -95,7 +95,7 @@ function public:setPressCallback(callback)
 
     if not priv.on_press_trigger then
         priv.on_press_trigger = Trigger.new()
-        priv.on_press_trigger:addFrameEvent(self:getWc3Frame(), FRAMEEVENT_CONTROL_CLICK)
+        priv.on_press_trigger:addFrameEvent(self:getFramehandle(), FRAMEEVENT_CONTROL_CLICK)
     end
 
     if priv.on_press_action then
@@ -110,7 +110,7 @@ function public:setMouseEnterCallback(callback)
 
     if not priv.on_mouse_enter_trigger then
         priv.on_mouse_enter_trigger = Trigger.new()
-        priv.on_mouse_enter_trigger:addFrameEvent(self:getWc3Frame(), FRAMEEVENT_MOUSE_ENTER)
+        priv.on_mouse_enter_trigger:addFrameEvent(self:getFramehandle(), FRAMEEVENT_MOUSE_ENTER)
     end
 
     if priv.on_mouse_enter_action then
@@ -125,7 +125,7 @@ function public:setMouseLeaveCallback(callback)
 
     if not priv.on_mouse_leave_trigger then
         priv.on_mouse_leave_trigger = Trigger.new()
-        priv.on_mouse_leave_trigger:addFrameEvent(self:getWc3Frame(), FRAMEEVENT_MOUSE_LEAVE)
+        priv.on_mouse_leave_trigger:addFrameEvent(self:getFramehandle(), FRAMEEVENT_MOUSE_LEAVE)
     end
 
     if priv.on_mouse_leave_action then
@@ -140,7 +140,7 @@ function public:setMouseReleaseCallback(callback)
 
     if not priv.on_mouse_release_trigger then
         priv.on_mouse_release_trigger = Trigger.new()
-        priv.on_mouse_release_trigger:addFrameEvent(self:getWc3Frame(), FRAMEEVENT_MOUSE_UP)
+        priv.on_mouse_release_trigger:addFrameEvent(self:getFramehandle(), FRAMEEVENT_MOUSE_UP)
     end
 
     if priv.on_mouse_release_action then
@@ -155,7 +155,7 @@ function public:setMouseWheelCallback(callback)
 
     if not priv.on_mouse_wheel_trigger then
         priv.on_mouse_wheel_trigger = Trigger.new()
-        priv.on_mouse_wheel_trigger:addFrameEvent(self:getWc3Frame(), FRAMEEVENT_MOUSE_UP)
+        priv.on_mouse_wheel_trigger:addFrameEvent(self:getFramehandle(), FRAMEEVENT_MOUSE_UP)
     end
 
     if priv.on_mouse_wheel_action then

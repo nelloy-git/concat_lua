@@ -55,13 +55,13 @@ end
 ---@param text string
 function public:setText(text)
     private[self].text = text
-    BlzFrameSetText(self:getWc3Frame(), text)
+    BlzFrameSetText(self:getFramehandle(), text)
 end
 
 ---@param text string
 function public:addText(text)
     private[self].text = private[self].text..text
-    BlzFrameSetText(self:getWc3Frame(), private[self].text)
+    BlzFrameSetText(self:getFramehandle(), private[self].text)
 end
 
 ---@return string
@@ -74,7 +74,7 @@ function public:setFont(path)
     local priv = private[self]
 
     priv.font = path
-    BlzFrameSetFont(self:getWc3Frame(), priv.font, priv.font_height, 0)
+    BlzFrameSetFont(self:getFramehandle(), priv.font, priv.font_height, 0)
 end
 
 ---@return string

@@ -36,11 +36,12 @@ function override.new(name, instance_data)
     return instance
 end
 
-static.FontFlags = FdfField.new('FontFlags', 'string')
-static.FrameFont = FdfField.new('FrameFont', 'table')
-static.FontColor = FdfField.new('FontColor', 'table')
-static.FontShadowColor = FdfField.new('FontShadowColor', 'table')
-static.FontShadowOffset = FdfField.new('FontShadowOffset', 'table')
+static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.serialize_NoArgs)
+static.FontFlags = FdfField.new('FontFlags', 'string', FdfField.serialize_String)
+static.FrameFont = FdfField.new('FrameFont', 'table', FdfField.serialize_ListWithQuotes)
+static.FontColor = FdfField.new('FontColor', 'table', FdfField.serialize_List)
+static.FontShadowColor = FdfField.new('FontShadowColor', 'table', FdfField.serialize_List)
+static.FontShadowOffset = FdfField.new('FontShadowOffset', 'table', FdfField.serialize_List)
 
 --========
 -- Public

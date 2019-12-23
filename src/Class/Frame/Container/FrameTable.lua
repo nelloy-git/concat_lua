@@ -113,7 +113,7 @@ function public:setCell(frame, col, row)
     local row_height = self:getHeight() / priv.rows
     local elem_width = col_width - (priv.left_offset + priv.right_offset)
     local elem_height = row_height - (priv.top_offset + priv.bottom_offset)
-    frame:setParent(self:getWc3Frame())
+    frame:setParent(self:getFramehandle())
     frame:setX(private.getColumnX(priv, col, col_width))
     frame:setY(private.getRowY(priv, row, row_height))
     frame:setWidth(elem_width)

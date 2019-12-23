@@ -224,7 +224,7 @@ function public:setCell(frame, column)
     local prev = priv.elements[column]
     priv.elements[column] = frame
 
-    frame:setParent(self:getWc3Frame())
+    frame:setParent(self:getFramehandle())
     self:onCellChange(frame, column)
 
     return prev

@@ -21,11 +21,6 @@ local override = Frame.override
 ---@type table(Frame, table)
 local private = {}
 
-private.DB = DataBase.new('userdata', getClassName(Frame))
-if not is_compiletime then
-    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-end
-
 --===========
 -- Callbacks
 --===========
@@ -37,9 +32,9 @@ function public:onLevelChange() end
 function public:onAlphaChange() end
 function public:onVisionChange() end
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@oaram framehandle FrameType
 ---@param instance_data table | nil
@@ -51,18 +46,7 @@ function static.new(framehandle, instance_data)
     end
 
     local instance = instance_data
-    local priv = {
-        wc3_frame = framehandle,
-        parent = nil,
-        x = 0,
-        y = 0,
-        width = 0,
-        height = 0,
-        level = 0,
-        alpha = 255,
-        visible = true
-    }
-    private[instance] = priv
+    private.new(instance, framehandle)
     private.DB:set(framehandle, instance)
 
     return instance
@@ -74,52 +58,49 @@ function static.get(framehandle)
     return private.DB:get(framehandle)
 end
 
-function public:free()
-    local priv = private[self]
-    private.DB:remove(priv.wc3_frame)
-    BlzDestroyFrame(priv.wc3_frame)
+--========
+-- Public
+--========
 
-    private[self] = nil
+function public:free()
+    private.free(self)
     freeInstanceData(self)
 end
 
 ---@return framehandle
-function public:getWc3Frame()
-    return private[self].wc3_frame
-end
-
----Unsavety !!!
----@param handle framehandle
----@return framehandle
-function public:changeWc3Frame(handle)
-    local cur = private[self].wc3_frame
-    private[self].wc3_frame = handle
-    return cur
+function public:getFramehandle()
+    return private.get(self).wc3_frame
 end
 
 --- Runs onParentChange and onPositionChange callbacks.
 ---@param parent framehandle
 function public:setParent(parent)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.parent = parent
     if priv.parent then
         BlzFrameSetParent(priv.wc3_frame, priv.parent)
+        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
+                         priv.x, priv.y)
     else
         BlzFrameSetParent(priv.wc3_frame, private.game_ui_frame)
+        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                            priv.x, priv.y)
     end
+
     self:onParentChange()
     self:onPositionChange()
 end
 
 ---@return Frame
 function public:getParent()
-    return private[self].parent
+    return private.get(self).parent
 end
 
 ---@param x number
 function public:setX(x)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.x = x
     if priv.parent then
@@ -130,17 +111,18 @@ function public:setX(x)
         BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
                             priv.x, priv.y)
     end
+
     self:onPositionChange()
 end
 
 ---@return number
 function public:getX()
-    return private[self].x
+    return private.get(self).x
 end
 
 ---@param y number
 function public:setY(y)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.y = y
     if priv.parent then
@@ -156,40 +138,50 @@ end
 
 ---@return number
 function public:getY()
-    return private[self].y
+    return private.get(self).y
 end
 
 ---@param width number
 function public:setWidth(width)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.width = width
     BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
+
+    if priv.follower then
+        priv.follower:setWidth(width)
+    end
+
     self:onSizeChange()
 end
 
 ---@return number
 function public:getWidth()
-    return private[self].width
+    return private.get(self).width
 end
 
 ---@param height number
 function public:setHeight(height)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.height = height
     BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
+
+    if priv.follower then
+        priv.follower:setHeight(height)
+    end
+
     self:onSizeChange()
 end
 
 ---@return number
 function public:getHeight()
-    return private[self].height
+    return private.get(self).height
 end
 
 ---@param level number
 function public:setLevel(level)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.level = level
     BlzFrameSetLevel(priv.wc3_frame, priv.level)
@@ -198,12 +190,12 @@ end
 
 ---@return number
 function public:getLevel()
-    return private[self].level
+    return private.get(self).level
 end
 
 ---@param alpha number
 function public:setAlpha(alpha)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.alpha = alpha
     BlzFrameSetAlpha(priv.wc3_frame, priv.alpha)
@@ -212,12 +204,12 @@ end
 
 ---@return number
 function public:getAlpha()
-    return private[self].alpha
+    return private.get(self).alpha
 end
 
 ---@param flag boolean
 function public:setVisible(flag)
-    local priv = private[self]
+    local priv = private.get(self)
 
     priv.visible = flag
     BlzFrameSetVisible(priv.wc3_frame, priv.visible)
@@ -226,7 +218,75 @@ end
 
 ---@return boolean
 function public:isVisible()
-    return private[self].visible
+    return private.get(self).visible
+end
+
+---@return Frame
+function public:getFollower()
+    return private.get(self).follower
+end
+
+---@param frame Frame
+---@return Frame
+function public:setFollower(frame)
+    local priv = private.get(self)
+
+    local cur = priv.follower
+    cur:setParent(nil)
+
+    priv.follower = frame
+    frame:setParent(self)
+    frame:setX(0)
+    frame:setY(0)
+    frame:setWidth(priv.width)
+    frame:setHeight(priv.height)
+
+    return cur
+end
+
+--=========
+-- Private
+--=========
+
+---@type DataBase
+private.DB = DataBase.new('userdata', getClassName(Frame))
+if not is_compiletime then
+    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+end
+
+local private_data = {}
+---@param self Frame
+---@param framehandle framehandle
+---@return FramePrivate
+function private.new(self, framehandle)
+    ---@class FramePrivate
+    local priv = {
+        wc3_frame = framehandle,
+        parent = nil,
+        x = 0,
+        y = 0,
+        width = 0,
+        height = 0,
+        level = 0,
+        alpha = 255,
+        visible = true,
+        follower = nil
+    }
+    private_data[self] = priv
+
+    return priv
+end
+
+function private.get(self)
+    return private_data[self]
+end
+
+function private.free(self)
+    local priv = private_data[self]
+    private.DB:remove(priv.wc3_frame)
+    BlzDestroyFrame(priv.wc3_frame)
+
+    private_data[self] = nil
 end
 
 return Frame

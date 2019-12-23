@@ -59,9 +59,9 @@ end
 function public:onTextureChange()
     local priv = private[self]
     if priv.texture then
-        BlzFrameSetTexture(self:getWc3Frame(self), priv.texture, 0, true)
+        BlzFrameSetTexture(self:getFramehandle(self), priv.texture, 0, true)
     else
-        BlzFrameSetTexture(self:getWc3Frame(self), 'war3mapImported\\frameFiles\\Transparent32x32.tga', 0, true)
+        BlzFrameSetTexture(self:getFramehandle(self), 'war3mapImported\\frameFiles\\Transparent32x32.tga', 0, true)
     end
 end
 

@@ -225,7 +225,7 @@ function public:setCell(frame, row)
     priv.elements[row] = frame
 
     if frame then
-        frame:setParent(self:getWc3Frame())
+        frame:setParent(self:getFramehandle())
     end
     self:onCellChange(frame, row)
 

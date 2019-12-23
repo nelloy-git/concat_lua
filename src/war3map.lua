@@ -82,23 +82,6 @@ end
 
 local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
 Test = function()
-    local FrameTooltip = require('Class.Frame.Custom.FrameTooltip')
-    local f = FrameTooltip.new()
-    f:setX(0.4)
-    f:setY(0.1)
-    f:setWidth(0.2)
-    f:setHeight(0.2)
-
-    f:setIcon(texture)
-    f:setTitle("Some title")
-    s = 'Some text here.'
-    for i = 1, 40 do
-        f:addTooltipLine(tostring(i))
-    end
-    --local FrameText = require('Class.Frame.Default.FrameText')
-    --local t = FrameText.new(0.011)
-    --t:setText('A\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\nA\n')
-    --f:setCell(t, 1)
 end
 
 function InitCustomPlayerSlots()

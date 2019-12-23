@@ -11,16 +11,16 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type FdfObjectClass
-local FdfObject = newClass('FdfObject')
+---@type FdfSubobjectClass
+local FdfSubobject = newClass('FdfSubobject')
 
----@class FdfObject
-local public = FdfObject.public
----@class FdfObjectClass
-local static = FdfObject.static
+---@class FdfSubobject
+local public = FdfSubobject.public
+---@class FdfSubobjectClass
+local static = FdfSubobject.static
 ---@type table
-local override = FdfObject.override
----@type table(FdfObject, table)
+local override = FdfSubobject.override
+---@type table(FdfSubobject, table)
 local private = {}
 
 --=========
@@ -28,9 +28,9 @@ local private = {}
 --=========
 
 ---@param instance_data table | nil
----@return FdfObject
+---@return FdfSubobject
 function static.new(base_name, name, instance_data)
-    local instance = instance_data or newInstanceData(FdfObject)
+    local instance = instance_data or newInstanceData(FdfSubobject)
     local priv = private.new(instance, base_name, name)
 
     return instance
@@ -60,16 +60,16 @@ function public:setField(field, value)
     else
         local msg = string.format("check data failed. Field change ignored.\n%s",
                                   WeUtils.getErrorPos())
-        Log(Log.Warn, getClassName(FdfObject), msg)
+        Log(Log.Warn, getClassName(FdfSubobject), msg)
     end
 end
 
 function public:serialize()
     local priv = private.get(self)
 
-    local res = string.format("Frame \"%s\" \"%s\" {\n", priv.base_name, priv.name)
+    local res = string.format("    %s \"%s\" {\n", priv.base_name, priv.name)
     for i = 1, #priv.fields do
-        res = res.."    "..priv.fields[i]:serialize(priv.values[i])..'\n'
+        res = res.."        "..priv.fields[i]:serialize(priv.values[i])..'\n'
     end
     return res.."}\n"
 end
@@ -79,10 +79,10 @@ end
 --=========
 
 local private_data = {}
----@param self FdfObject
----@return FdfObjectPrivate
+---@param self FdfSubobject
+---@return FdfSubobjectPrivate
 function private.new(self, base_name, name)
-    ---@class FdfObjectPrivate
+    ---@class FdfSubobjectPrivate
     local priv = {
         base_name = base_name,
         name = name,
@@ -93,15 +93,15 @@ function private.new(self, base_name, name)
     return priv
 end
 
----@param self FdfObject
----@return FdfObjectPrivate
+---@param self FdfSubobject
+---@return FdfSubobjectPrivate
 function private.get(self)
     return private_data[self]
 end
 
----@param self FdfObject
+---@param self FdfSubobject
 function private.free(self)
     private_data[self] = nil
 end
 
-return FdfObject
+return FdfSubobject

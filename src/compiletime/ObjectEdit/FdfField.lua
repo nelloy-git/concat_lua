@@ -2,6 +2,11 @@
 -- Include
 --=========
 
+local fmt = string.format
+
+---@type WeUtils
+local WeUtils = require('compiletime.Utils')
+
 --=======
 -- Class
 --=======
@@ -24,11 +29,48 @@ local private = {}
 
 ---@param instance_data table | nil
 ---@return FdfField
-function static.new(name, val_type, instance_data)
+function static.new(name, val_type, serialize_func, instance_data)
     local instance = instance_data or newInstanceData(FdfField)
-    local priv = private.new(instance, name, val_type)
+    local priv = private.new(instance, name, val_type, serialize_func)
 
     return instance
+end
+
+function static.serialize_NoArgs(self, _)
+    return private.get(self).name..','
+end
+
+function static.serialize_String(self, str)
+    return fmt('%s \"%s\",', private.get(self).name, str)
+end
+
+function static.serialize_Number(self, value)
+    return fmt('%s \"%f\",', private.get(self).name, value)
+end
+
+function static.serialize_List(self, list_table)
+    local list = private.get(self).name
+    for i = 1, #list_table do
+        list = list..' '..tostring(list_table[i])
+    end
+    return list..','
+end
+
+function static.serialize_ListWithQuotes(self, list_table)
+    local list = private.get(self).name
+    for i = 1, #list_table do
+        if type(list_table[i]) == 'string' then
+            list = list..' \"'..tostring(list_table[i])..'\"'
+        else
+            list = list..' '..tostring(list_table[i])
+        end
+        list = list..','
+    end
+    return list
+end
+
+function static.serialize_Subobject(self, subobject)
+    return subobject:serialize()
 end
 
 --========
@@ -51,18 +93,42 @@ function public:checkType(value)
     return type(value) == private.get(self).val_type
 end
 
+---@param value any
+---@return string
+function public:serialize(value)
+    if type(value) == private.get(self).val_type then
+        return private.get(self).serialize_func(self, value)
+    else
+        local msg = string.format('wrong value type for field %s.', private.get(self).name)
+        Log(Log.Err, getClassName(FdfField), msg)
+        return nil
+    end
+end
+
 --=========
 -- Private
 --=========
 
 local private_data = {}
 ---@param self FdfField
+---@param name string
+---@param val_type string
+---@param serialize_func fun
 ---@return FdfFieldPrivate
-function private.new(self, name, val_type)
+function private.new(self, name, val_type, serialize_func)
+
+    if not serialize_func then
+        local msg = string.format('serialize function can not be \"nil\"\n%s',
+                                   WeUtils.getErrorPos())
+        Log(Log.Err, getClassName(FdfField), msg)
+        return nil
+    end
+
     ---@class FdfFieldPrivate
     local priv = {
         name = name,
-        val_type = val_type
+        val_type = val_type,
+        serialize_func = serialize_func
     }
     private_data[self] = priv
     return priv

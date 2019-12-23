@@ -67,11 +67,20 @@ function public:setIcon(path)
     end
 end
 
----@param text string
-function public:setTitle(text)
+---@param title string
+function public:setTitle(title)
     local priv = private.get(self)
 
-    priv.title:setText(text)
+    priv.title:setText(title)
+end
+
+--- Do not use "\n" in text string.
+---@param text string
+function public:setText(text)
+    local lines = private.split(text, private.getLineLength(self))
+    for i = 1, #lines do
+        self:addTooltipLine(lines[i])
+    end
 end
 
 function public:addTooltipLine(line)
@@ -142,6 +151,32 @@ function private.createHandle()
                           private.game_ui_handle,
                           0, 0)
 end
+
+local font10_size_per_char = 0.0005
+---@param self FrameTooltip
+function private.getLineLength(self)
+    return self:getWidth() / font10_size_per_char
+end
+
+---@param str string
+---@param max_line_length number
+---@return string[]
+function private.split(str, max_line_length)
+    local lines = {}
+    local line
+    str:gsub('(%s*)(%S+)', 
+       function(spc, word) 
+          if not line or #line + #spc + #word > max_line_length then
+             table.insert(lines, line)
+             line = word
+          else
+             line = line..spc..word
+          end
+       end
+    )
+    table.insert(lines, line)
+    return lines
+ end
 
 private.fdf_background_name = 'FrameTooltipBackground'
 private.fdf_data = compiletime(function()

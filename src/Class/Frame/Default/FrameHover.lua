@@ -49,13 +49,13 @@ function public:free()
     Frame.public.free(self)
 end
 
----@param framehandle framehandle
-function public:setTooltip(framehandle)
-    private[self].tooltip = framehandle
-    BlzFrameSetTooltip(self:getWc3Frame(), framehandle)
+---@param frame Frame
+function public:setTooltip(frame)
+    private[self].tooltip = frame
+    BlzFrameSetTooltip(self:getFramehandle(), frame:getFramehandle())
 end
 
----@return framehandle
+---@return Frame
 function public:getTooltip()
     return private[self].tooltip
 end

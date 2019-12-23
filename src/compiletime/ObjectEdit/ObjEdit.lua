@@ -10,6 +10,9 @@ ObjEdit.Fdf = {}
 ObjEdit.Fdf.File = require('compiletime.ObjectEdit.FdfFile')
 ObjEdit.Fdf.Backdrop = require('compiletime.ObjectEdit.Object.Fdf.FdfBackdrop')
 ObjEdit.Fdf.Text = require('compiletime.ObjectEdit.Object.Fdf.FdfText')
+ObjEdit.Fdf.SimpleString = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleString')
+ObjEdit.Fdf.SimpleTexture = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleTexture')
+ObjEdit.Fdf.SimpleFrame = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleFrame')
 
 ObjEdit.Utils = require('compiletime.Utils')
 

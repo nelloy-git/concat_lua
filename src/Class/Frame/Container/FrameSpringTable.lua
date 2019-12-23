@@ -51,6 +51,7 @@ function public:free()
     return free_frames
 end
 
+---@param rows number
 function public:setRows(rows)
     local free_frames = {}
     local cur_rows = self:getRows()
@@ -83,6 +84,7 @@ function public:setRows(rows)
     return free_frames
 end
 
+---@param columns number
 function public:setColumns(columns)
     local free_frames = {}
     for i = 1, self:getRows() do
@@ -96,6 +98,8 @@ function public:setColumns(columns)
     return free_frames
 end
 
+---@param ratio number
+---@param column number
 function public:setColumnRatioWidth(ratio, column)
     for i = 1, self:getRows() do
         local row_frame = self:getCell(i)
@@ -103,6 +107,8 @@ function public:setColumnRatioWidth(ratio, column)
     end
 end
 
+---@param width number
+---@param column number
 function public:setColumnAbsWidth(width, column)
     for i = 1, self:getRows() do
         local row_frame = self:getCell(i)
@@ -110,6 +116,9 @@ function public:setColumnAbsWidth(width, column)
     end
 end
 
+---@param frame Frame
+---@param column number
+---@param row number
 function public:setCell(frame, column, row)
     local row_frame = self:getCell(row)
     row_frame:setCell(frame, column)
