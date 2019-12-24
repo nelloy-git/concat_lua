@@ -58,12 +58,16 @@ end
 -- Methods
 --=========
 
----@param custom_backdrop_frame framehandle | nil
+---@overload fun(background_framehandle:framehandle | nil)
+---@param background_framehandle framehandle | nil
 ---@param instance_data table | nil
 ---@return FrameSpringRow
-function override.new(custom_backdrop_frame, instance_data)
+function override.new(background_framehandle, is_simpleframe, instance_data)
     local instance = instance_data or newInstanceData(FrameSpringRow)
-    instance = FrameBackdrop.new(custom_backdrop_frame, instance)
+    if is_simpleframe then
+    else
+    end
+    instance = FrameBackdrop.new(custom_framehandle, instance)
     private.new(instance)
 
     private.updateColumnsWidth(instance)

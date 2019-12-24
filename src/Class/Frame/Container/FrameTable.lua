@@ -3,7 +3,7 @@
 --=========
 
 ---@type FrameClass
-local Frame = require('Class.Frame.Frame')
+local Fzrame = require('Class.Frame.Frame')
 ---@type FrameBackdropClass
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 

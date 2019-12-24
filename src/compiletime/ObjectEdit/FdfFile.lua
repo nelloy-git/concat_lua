@@ -48,14 +48,16 @@ function public:addObject(obj)
     table.insert(priv.objects, #priv.objects + 1, obj)
 end
 
+---@return FdfFileRuntime
 function public:toRuntime()
     local priv = private.get(self)
 
+    ---@class FdfFileRuntime
     local res = {}
     res.fdf = string.gsub(private.dst_path..priv.name..'.fdf', '\\', '\\\\')
     res.toc = string.gsub(private.dst_path..priv.name..'.toc', '\\', '\\\\')
     for i = 1, #priv.objects do
-        res[priv.objects[i]:getName()] = priv.objects[i]:getName()
+        res[priv.objects[i]:getName()] = priv.objects[i]:getBaseName()
     end
     return res
 end

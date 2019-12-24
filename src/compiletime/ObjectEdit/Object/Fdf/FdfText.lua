@@ -31,7 +31,7 @@ local private = {}
 ---@return FdfText
 function override.new(name, instance_data)
     local instance = instance_data or newInstanceData(FdfText)
-    instance = FdfObject.new('TEXT', name, nil)
+    instance = FdfObject.new('TEXT', name, instance)
 
     return instance
 end

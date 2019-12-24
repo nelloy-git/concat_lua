@@ -29,10 +29,10 @@ end
 -- Methods
 --=========
 
----@param custom_backdrop_handle framehandle | nil
+---@param fdf_object FdfObjectRuntime | nil
 ---@param instance_data table | nil
 ---@return FrameBackdrop
-function override.new(custom_backdrop_handle, instance_data)
+function override.new(fdf_object, instance_data)
     local instance = instance_data or newInstanceData(FrameBackdrop)
     local wc3_frame
     if custom_backdrop_handle then
@@ -75,5 +75,11 @@ end
 function public:getTexture()
     return private[self].texture
 end
+
+--=========
+-- Private
+--=========
+
+function private.e() end
 
 return FrameBackdrop

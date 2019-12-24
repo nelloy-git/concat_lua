@@ -23,7 +23,7 @@ local class_metatable = {
         local static = Metadata.getStaticTable(class)
         local val = static[key]
         if val == nil then
-            local msg = string.format('static variable with name \"%s\" is not found.', key)
+            local msg = string.format('static field with name \"%s\" is not found.', key)
             Log(Log.Warn, getClassName(class), msg)
             return nil
         end
@@ -110,6 +110,11 @@ function isType(value, _type)
 end
 
 function type(val)
+    local class = getInstanceClass(val)
+    if class then
+        val = class
+    end
+
     if Metadata.isClass(val) then
         return Metadata.getClassName(val)
     end

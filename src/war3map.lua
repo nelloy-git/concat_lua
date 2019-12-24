@@ -29,6 +29,30 @@ local unit_type = compiletime(function()
     return u:toRuntime()
 end)
 
+local frame_type = compiletime(function()
+    local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
+    local FdfFile = WeObjEdit.Fdf.File
+    local SimpleFrame = WeObjEdit.Fdf.SimpleFrame
+    local SimpleString = WeObjEdit.Fdf.SimpleString
+    local SimpleTexture = WeObjEdit.Fdf.SimpleTexture
+
+    local sub_string = SimpleString.new('TestSimpleString')
+    sub_string:setField(SimpleString.Font, {"InfoPanelTextFont", 0.009})
+
+    local sub_texture = SimpleTexture.new('TestSimpleTexture')
+    sub_texture:setField(SimpleTexture.File, "ReplaceableTextures\\CommandButtons\\BTNHeroBloodElfPrince")
+
+    local frame = SimpleFrame.new('TestSimpleFrame')
+    frame:setField(SimpleFrame.Width, 0.05)
+    frame:setField(SimpleFrame.Height, 0.05)
+    frame:setField(SimpleFrame.String, {sub_string, sub_string, sub_string})
+    frame:setField(SimpleFrame.Texture, {sub_texture, sub_texture, sub_texture})
+
+    local file = FdfFile.new('TestSimple')
+    file:addObject(frame)
+    return file:toRuntime()
+end)
+
 --[[
 local function testAbility()
     local Unit = require('Class.Unit.Unit')

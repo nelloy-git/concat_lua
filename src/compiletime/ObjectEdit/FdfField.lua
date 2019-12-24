@@ -45,7 +45,7 @@ function static.serialize_String(self, str)
 end
 
 function static.serialize_Number(self, value)
-    return fmt('%s \"%f\",', private.get(self).name, value)
+    return fmt('%s %f,', private.get(self).name, value)
 end
 
 function static.serialize_List(self, list_table)
@@ -73,6 +73,14 @@ function static.serialize_Subobject(self, subobject)
     return subobject:serialize()
 end
 
+function static.serialize_SubobjectList(self, subobjects)
+    local res = subobjects[1]:serialize()..',\n'
+    for i = 2, #subobjects do
+        res = res..'    '..subobjects[i]:serialize()..',\n'
+    end
+    return res
+end
+
 --========
 -- Public
 --========
@@ -87,10 +95,15 @@ function public:getName()
     return private.get(self).name
 end
 
+---@return string
+function public:getType()
+    return private.get(self).val_type
+end
+
 ---@param value string
 ---@return boolean
 function public:checkType(value)
-    return type(value) == private.get(self).val_type
+    return isType(value, private.get(self).val_type)
 end
 
 ---@param value any

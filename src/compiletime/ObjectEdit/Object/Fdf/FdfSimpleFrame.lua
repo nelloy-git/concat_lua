@@ -6,10 +6,6 @@
 local FdfField = require('compiletime.ObjectEdit.FdfField')
 ---@type FdfObjectClass
 local FdfObject = require('compiletime.ObjectEdit.FdfObject')
----@type FdfSimpleStringClass
-local FdfSimpleString = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleString')
----@type FdfSimpleTextureClass
-local FdfSimpleTexture = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleTexture')
 
 --=======
 -- Class
@@ -35,7 +31,7 @@ local private = {}
 ---@return FdfSimpleFrame
 function override.new(name, instance_data)
     local instance = instance_data or newInstanceData(FdfSimpleFrame)
-    instance = FdfObject.new('BACKDROP', name, nil)
+    instance = FdfObject.new('SIMPLEFRAME', name, instance)
 
     return instance
 end
@@ -43,8 +39,8 @@ end
 static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.serialize_NoArgs)
 static.Width = FdfField.new('Width', 'number', FdfField.serialize_Number)
 static.Height = FdfField.new('Height', 'number', FdfField.serialize_Number)
-static.String = FdfField.new('', getClassName(FdfSimpleString), FdfField.serialize_Subobject)
-static.Texture = FdfField.new('', getClassName(FdfSimpleTexture), FdfField.serialize_Subobject)
+static.String = FdfField.new('', 'table', FdfField.serialize_SubobjectList)
+static.Texture = FdfField.new('', 'table', FdfField.serialize_SubobjectList)
 
 --========
 -- Public

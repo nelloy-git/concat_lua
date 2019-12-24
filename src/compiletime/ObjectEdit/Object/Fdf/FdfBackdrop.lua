@@ -31,7 +31,7 @@ local private = {}
 ---@return FdfBackdrop
 function override.new(name, instance_data)
     local instance = instance_data or newInstanceData(FdfBackdrop)
-    instance = FdfObject.new('BACKDROP', name, nil)
+    instance = FdfObject.new('BACKDROP', name, instance)
 
     return instance
 end

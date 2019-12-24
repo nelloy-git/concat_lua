@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Utils = require('Class.Frame.FrameUtils')
+
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 
@@ -36,17 +38,27 @@ function public:onVisionChange() end
 -- Static
 --========
 
----@oaram framehandle FrameType
+---@param fdf_object FdfObjectRuntime
 ---@param instance_data table | nil
 ---@return Frame
-function static.new(framehandle, instance_data)
+function static.new(fdf_object, instance_data)
     if not instance_data then
         Log(Log.Err, getClassName(Frame), 'can not create instance of abstract class')
         return nil
     end
 
     local instance = instance_data
-    private.new(instance, framehandle)
+
+    local is_simpleframe = Utils.isSimpleFdf(fdf_object)
+
+    local framehandle
+    if is_simpleframe then
+        framehandle = BlzCreateSimpleFrame(fdf_object.name, private.game_ui_frame, 0)
+    else
+        framehandle = BlzCreateFrameByType(fdf_object.name, fdf_object.name, private.game_ui_frame, '', 0)
+    end
+
+    private.new(instance, framehandle, is_simpleframe)
     private.DB:set(framehandle, instance)
 
     return instance
@@ -72,21 +84,36 @@ function public:getFramehandle()
     return private.get(self).wc3_frame
 end
 
+---@return boolean
+function public:isSimpleframe()
+    return private.get(self).is_simpleframe
+end
+
 --- Runs onParentChange and onPositionChange callbacks.
----@param parent framehandle
+---@param parent Frame
 function public:setParent(parent)
     local priv = private.get(self)
 
+    if priv.is_simpleframe ~= parent:isSimpleframe() then
+        local msg = ('simple and normal frames can not be parents for each other. \"setParent\" ignored.')
+        Log(Log.Err, getClassName(Frame), msg)
+        return nil
+    end
+
     priv.parent = parent
     if priv.parent then
-        BlzFrameSetParent(priv.wc3_frame, priv.parent)
-        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
-                         priv.x, priv.y)
+        BlzFrameSetParent(priv.wc3_frame, parent:getFramehandle())
+        if not priv.follow then
+            BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                             parent:getFramehandle(), FRAMEPOINT_BOTTOMLEFT,
+                             priv.x, priv.y)
+        end
     else
         BlzFrameSetParent(priv.wc3_frame, private.game_ui_frame)
-        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                            priv.x, priv.y)
+        if not priv.follow then
+            BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                                priv.x, priv.y)
+        end
     end
 
     self:onParentChange()
@@ -103,13 +130,15 @@ function public:setX(x)
     local priv = private.get(self)
 
     priv.x = x
-    if priv.parent then
-        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
-                         priv.x, priv.y)
-    else
-        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                            priv.x, priv.y)
+    if not priv.follow then
+        if priv.parent then
+            BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                             priv.parent, FRAMEPOINT_BOTTOMLEFT,
+                             priv.x, priv.y)
+        else
+            BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                                priv.x, priv.y)
+        end
     end
 
     self:onPositionChange()
@@ -125,14 +154,17 @@ function public:setY(y)
     local priv = private.get(self)
 
     priv.y = y
-    if priv.parent then
-        BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
-                         priv.x, priv.y)
-    else
-        BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
-                            priv.x, priv.y)
+    if not priv.follow then
+        if priv.parent then
+            BlzFrameSetPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                             priv.parent, FRAMEPOINT_BOTTOMLEFT,
+                             priv.x, priv.y)
+        else
+            BlzFrameSetAbsPoint(priv.wc3_frame, FRAMEPOINT_BOTTOMLEFT,
+                                priv.x, priv.y)
+        end
     end
+
     self:onPositionChange()
 end
 
@@ -146,10 +178,8 @@ function public:setWidth(width)
     local priv = private.get(self)
 
     priv.width = width
-    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
-
-    if priv.follower then
-        priv.follower:setWidth(width)
+    if not priv.follow then
+        BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
     end
 
     self:onSizeChange()
@@ -165,10 +195,8 @@ function public:setHeight(height)
     local priv = private.get(self)
 
     priv.height = height
-    BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
-
-    if priv.follower then
-        priv.follower:setHeight(height)
+    if not priv.follow then
+        BlzFrameSetSize(priv.wc3_frame, priv.width, priv.height)
     end
 
     self:onSizeChange()
@@ -221,27 +249,52 @@ function public:isVisible()
     return private.get(self).visible
 end
 
----@return Frame
-function public:getFollower()
-    return private.get(self).follower
-end
-
 ---@param frame Frame
 ---@return Frame
-function public:setFollower(frame)
+function public:setFollowTarget(frame)
     local priv = private.get(self)
 
-    local cur = priv.follower
-    cur:setParent(nil)
+    local cur = priv.follow
+    BlzFrameClearAllPoints(self:getFramehandle())
 
-    priv.follower = frame
-    frame:setParent(self)
-    frame:setX(0)
-    frame:setY(0)
-    frame:setWidth(priv.width)
-    frame:setHeight(priv.height)
+    priv.follow = frame
+    if frame then
+        BlzFrameSetPoint(self:getFramehandle(), FRAMEPOINT_BOTTOMLEFT,
+                         frame:getFramehandle(), FRAMEPOINT_BOTTOMLEFT,
+                         priv.follow_left_offset, priv.follow_bottom_offset)
+        BlzFrameSetPoint(self:getFramehandle(), FRAMEPOINT_TOPLEFT,
+                         frame:getFramehandle(), FRAMEPOINT_TOPLEFT,
+                         priv.follow_left_offset, priv.follow_top_offset)
+        BlzFrameSetPoint(self:getFramehandle(), FRAMEPOINT_TOPRIGHT,
+                         frame:getFramehandle(), FRAMEPOINT_TOPRIGHT,
+                         priv.follow_right_offset, priv.follow_top_offset)
+        BlzFrameSetPoint(self:getFramehandle(), FRAMEPOINT_BOTTOMRIGHT,
+                         frame:getFramehandle(), FRAMEPOINT_BOTTOMRIGHT,
+                         priv.follow_right_offset, priv.follow_bottom_offset)
+
+        priv.width = frame:getWidth() - (priv.follow_left_offset + priv.follow_right_offset)
+        priv.height = frame:getHeight() - (priv.follow_bottom_offset + priv.follow_top_offset)
+    else
+        self:setParent(priv.parent)
+    end
 
     return cur
+end
+
+---@return Frame
+function public:getFollowTarget()
+    return private.get(self).follow
+end
+
+function public:setFollowOffsets(left, right, top, bottom)
+    local priv = private.get(self)
+
+    priv.follow_left_offset = left
+    priv.follow_right_offset = right
+    priv.follow_top_offset = top
+    priv.follow_bottom_offset = bottom
+
+    self:setFollower(self:getFollower())
 end
 
 --=========
@@ -258,10 +311,12 @@ local private_data = {}
 ---@param self Frame
 ---@param framehandle framehandle
 ---@return FramePrivate
-function private.new(self, framehandle)
+function private.new(self, framehandle, is_simpleframe)
     ---@class FramePrivate
     local priv = {
         wc3_frame = framehandle,
+        is_simpleframe = is_simpleframe,
+
         parent = nil,
         x = 0,
         y = 0,
@@ -270,7 +325,12 @@ function private.new(self, framehandle)
         level = 0,
         alpha = 255,
         visible = true,
-        follower = nil
+
+        follow = nil,
+        follow_left_offset = 0,
+        follow_right_offset = 0,
+        follow_top_offset = 0,
+        follow_bottom_offset = 0,
     }
     private_data[self] = priv
 
@@ -284,7 +344,6 @@ end
 function private.free(self)
     local priv = private_data[self]
     private.DB:remove(priv.wc3_frame)
-    BlzDestroyFrame(priv.wc3_frame)
 
     private_data[self] = nil
 end

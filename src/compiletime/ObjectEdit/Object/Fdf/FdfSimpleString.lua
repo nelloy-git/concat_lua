@@ -31,12 +31,15 @@ local private = {}
 ---@return FdfSimpleString
 function override.new(name, instance_data)
     local instance = instance_data or newInstanceData(FdfSimpleString)
-    instance = FdfSubobject.new('String', name, nil)
+    instance = FdfSubobject.new('String', name, instance)
 
     return instance
 end
 
 static.Anchor = FdfField.new('Anchor', 'table', FdfField.serialize_List)
+static.Height = FdfField.new('Height', 'number', FdfField.serialize_Number)
+static.Width = FdfField.new('Width', 'number', FdfField.serialize_Number)
+--- Example simple_string:setField(FdfSimpleString.Font, {"InfoPanelTextFont", 0.009})
 static.Font = FdfField.new('Font', 'table', FdfField.serialize_ListWithQuotes)
 
 --========

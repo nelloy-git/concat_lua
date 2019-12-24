@@ -27,6 +27,8 @@ local private = {}
 -- Static
 --=========
 
+---@param base_name string
+---@param name string
 ---@param instance_data table | nil
 ---@return FdfObject
 function static.new(base_name, name, instance_data)
@@ -50,6 +52,11 @@ function public:getName()
     return private.get(self).name
 end
 
+---@return string
+function public:getBaseName()
+    return private.get(self).base_name
+end
+
 function public:setField(field, value)
     local priv = private.get(self)
 
@@ -58,8 +65,8 @@ function public:setField(field, value)
         table.insert(priv.fields, #priv.fields + 1, field)
         priv.values[pos] = value
     else
-        local msg = string.format("check data failed. Field change ignored.\n%s",
-                                  WeUtils.getErrorPos())
+        local msg = string.format("check data failed. Field change ignored. Got: %s need: %s.\n%s",
+                                  type(value), field:getType(), WeUtils.getErrorPos())
         Log(Log.Warn, getClassName(FdfObject), msg)
     end
 end
@@ -72,6 +79,19 @@ function public:serialize()
         res = res.."    "..priv.fields[i]:serialize(priv.values[i])..'\n'
     end
     return res.."}\n"
+end
+
+---@return FdfObjectRuntime
+function public:toRuntime()
+    local priv = private.get(self)
+
+    ---@class FdfObjectRuntime
+    local res = {
+        name = priv.name,
+        base_name = priv.base_name
+    }
+
+    return res
 end
 
 --=========

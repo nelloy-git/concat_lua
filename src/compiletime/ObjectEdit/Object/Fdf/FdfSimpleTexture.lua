@@ -31,15 +31,17 @@ local private = {}
 ---@return FdfSimpleTexture
 function override.new(name, instance_data)
     local instance = instance_data or newInstanceData(FdfSimpleTexture)
-    instance = FdfSubobject.new('String', name, nil)
+    instance = FdfSubobject.new('Texture', name, instance)
 
     return instance
 end
 
-static.Width = FdfField.new('Width', 'number', FdfField.serialize_Number)
-static.Height = FdfField.new('Height', 'number', FdfField.serialize_Number)
+static.Alpha = FdfField.new('Alpha', 'string', FdfField.serialize_String)
 static.Anchor = FdfField.new('Anchor', 'table', FdfField.serialize_List)
 static.File = FdfField.new('File', 'string', FdfField.serialize_String)
+static.Height = FdfField.new('Height', 'number', FdfField.serialize_Number)
+static.Width = FdfField.new('Width', 'number', FdfField.serialize_Number)
+static.TexCoord = FdfField.new('TexCoord', 'table', FdfField.serialize_List)
 
 --========
 -- Public

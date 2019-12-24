@@ -67,11 +67,11 @@ end
 function public:serialize()
     local priv = private.get(self)
 
-    local res = string.format("    %s \"%s\" {\n", priv.base_name, priv.name)
+    local res = string.format("%s \"%s\" {\n", priv.base_name, priv.name)
     for i = 1, #priv.fields do
         res = res.."        "..priv.fields[i]:serialize(priv.values[i])..'\n'
     end
-    return res.."}\n"
+    return res.."    }"
 end
 
 --=========
