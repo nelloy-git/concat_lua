@@ -4,6 +4,8 @@
 
 ---@type FrameClass
 local Frame = require('Class.Frame.Frame')
+---@type FrameTypeClass
+local FrameType = require('Class.Frame.FrameType')
 
 --=======
 -- Class
@@ -25,27 +27,35 @@ if not is_compiletime then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 end
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
----@param font_size number
+---@param frame_type number
 ---@param instance_data table | nil
 ---@return FrameText
-function override.new(font_size, instance_data)
+function override.new(frame_type, instance_data)
+
     local instance = instance_data or newInstanceData(FrameText)
-    local wc3_frame = BlzCreateFrame(private.fdf_size_names[(font_size * 1000) // 1], private.game_ui_frame, 0, 0)
-    instance = Frame.new(wc3_frame, instance)
+    if frame_type then
+        instance = Frame.new(frame_type, instance)
+    else
+        instance = Frame.new(private.default_frame_type, instance)
+    end
 
     local priv = {
         text = "",
-        font = "MasterFont",
-        font_height = font_size,
+        font = private.default_font,
+        font_height = private.default_font_size,
     }
     private[instance] = priv
 
     return instance
 end
+
+--========
+-- Public
+--========
 
 function public:free()
     private[self] = nil
@@ -82,34 +92,43 @@ function public:getFont()
     return private[self].font
 end
 
-private.fdf_size_names = {'font_1','font_2','font_3','font_4','font_5','font_6','font_7','font_8','font_9','font_10','font_11','font_12','font_13','font_14','font_15','font_16','font_17','font_18','font_19','font_20','font_21','font_22','font_23','font_24','font_25','font_26','font_27','font_28','font_29','font_30'}
-private.fdf_data = compiletime(function()
+--=========
+-- Private
+--=========
+
+private.default_font = 'MasterFont'
+private.default_font_size = 0.012
+compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-    local File = WeObjEdit.Fdf.File
-    local Text = WeObjEdit.Fdf.Text
+    local FdfFile = WeObjEdit.Fdf.File
+    local SimpleButton = WeObjEdit.Fdf.SimpleButton
+    local SimpleString = WeObjEdit.Fdf.SimpleString
 
-    local out = File.new(getClassName(FrameText))
-    for i = 1, 30 do
-        local size = Text.new(private.fdf_size_names[i])
-        size:setField(Text.DecorateFileNames)
-        size:setField(Text.FontFlags, "FIXEDSIZE")
-        size:setField(Text.FrameFont, {"MasterFont", 0.001 * i, ""})
-        size:setField(Text.FontColor, {1.0, 1.0, 1.0, 1.0})
-        size:setField(Text.FontShadowColor, {0.0, 0.0, 0.0, 0.9})
-        size:setField(Text.FontShadowOffset, {0.001, -0.001})
+    local str = SimpleString.new('FrameTextDefaultString')
+    str:setField(SimpleString.Font, {private.default_font, private.default_font_size})
 
-        out:addObject(size)
-    end
+    local frame = SimpleButton.new('FrameTextDefault')
+    frame:setField(SimpleButton.Width, 0.05)
+    frame:setField(SimpleButton.Height, 0.05)
+    frame:setField(SimpleButton.String, {str})
 
-    return out:toRuntime()
+    local file = FdfFile.new('FrameTextDefault')
+    file:addObject(frame)
+
+    private.default_frame_fdf_object = frame
+    private.default_frame_fdf_file = file
+
+    return 0
 end)
 
+private.default_frame_type_data = compiletime(function() return private.default_frame_fdf_object:toRuntime() end)
+private.default_frame_file_data = compiletime(function() return private.default_frame_fdf_file:toRuntime() end)
+private.default_frame_type = FrameType.new(private.default_frame_type_data, true)
+
 if not is_compiletime then
-    private.game_ui_handle = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-    if not BlzLoadTOCFile(private.fdf_data.toc) then
-        Log(Log.Err, getClassName(FrameText), "can not load toc file.")
+    if not BlzLoadTOCFile(private.default_frame_file.toc) then
+        Log(Log.Err, getClassName(FrameText), "can not load default toc file.")
     end
 end
-
 
 return FrameText

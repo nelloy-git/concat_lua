@@ -4,6 +4,8 @@
 
 ---@type FrameClass
 local Frame = require('Class.Frame.Frame')
+---@type FrameTypeClass
+local FrameType = require('Class.Frame.FrameType')
 ---@type FrameBackdropClass
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 
@@ -23,53 +25,31 @@ local override = FrameSpringColumn.override
 ---@type table(FrameSpringColumn, table)
 local private = {}
 
---===========
--- Callbacks
---===========
+--========
+-- Static
+--========
 
---- Overrides Frame.public.onSizeChange
-function public:onSizeChange()
-    Frame.public.onSizeChange(self)
-    private.applyAllElementsPos(self)
-end
-
-function public:onRowsChange()
-    private.applyAllElementsPos(self)
-end
-
----@param row number
-function public:onCellChange(element, row)
-    private.applyElementPos(self, element, row)
-end
-
-function public:onOffsetsChange()
-    private.applyAllElementsPos(self)
-end
-
-function public:onRowRatioHeightChange()
-    private.applyAllElementsPos(self)
-end
-
-function public:onRowAbsHeightChange()
-    private.applyAllElementsPos(self)
-end
-
---=========
--- Methods
---=========
-
----@param custom_backdrop_frame framehandle | nil
+---@param frame_type FrameType | nil
 ---@param instance_data table | nil
 ---@return FrameSpringColumn
-function override.new(custom_backdrop_frame, instance_data)
+function override.new(frame_type, instance_data)
     local instance = instance_data or newInstanceData(FrameSpringColumn)
-    instance = FrameBackdrop.new(custom_backdrop_frame, instance)
+
+    if frame_type then
+        instance = Frame.new(frame_type, instance)
+    else
+        instance = Frame.new(private.default_frame_type, instance)
+    end
     private.new(instance)
 
     private.updateRowHeight(instance)
 
     return instance
 end
+
+--========
+-- Public
+--========
 
 --- Function returns removed frames.
 ---@return Frame[]
@@ -131,8 +111,6 @@ function public:setRows(count)
     end
     priv.rows = count
 
-    self:onRowsChange()
-
     return free_frames
 end
 
@@ -156,8 +134,6 @@ function public:setRowRatioHeight(ratio, row)
         priv.is_row_abs[row] = false
         priv.row_ratio[row] = nil
     end
-
-    self:onRowRatioHeightChange()
 end
 
 ---@param row number
@@ -187,8 +163,6 @@ function public:setRowAbsHeight(height, row)
         priv.is_row_abs[row] = false
         priv.row_ratio[row] = nil
     end
-
-    self:onRowAbsHeightChange()
 end
 
 ---@param row number
@@ -227,7 +201,6 @@ function public:setCell(frame, row)
     if frame then
         frame:setParent(self:getFramehandle())
     end
-    self:onCellChange(frame, row)
 
     return prev
 end
@@ -249,8 +222,6 @@ function public:setOffsets(left, right, top, bottom)
     priv.right_offset = right
     priv.top_offset = top
     priv.bottom_offset = bottom
-
-    self:onOffsetsChange()
 end
 
 --- Returns left, right, top and bottom offsets
@@ -279,6 +250,8 @@ function private.new(self)
         is_row_abs = {},
         row_ratio = {},
         row_height = {},
+        row_center_x = 0,
+        row_center_y = {},
 
         elements = {}
     }
@@ -353,6 +326,13 @@ function private.updateRowHeight(self)
         if not priv.is_row_abs[i] and not priv.is_row_ratio[i] then
             priv.row_height[i] = free_row_height
         end
+    end
+
+    priv.row_center_x = self:getWidth() - (priv.left_offset + priv.right_offset)
+    local prev_row_end = priv.bottom_offset
+    for i = 1, priv.rows do
+        priv.row_center_y = prev_row_end + priv.row_height / 2
+        prev_row_end = prev_row_end + priv.row_height
     end
 end
 

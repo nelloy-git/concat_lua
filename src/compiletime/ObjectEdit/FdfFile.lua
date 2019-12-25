@@ -97,7 +97,7 @@ end
 function private.save(self)
     local priv = private.get(self)
 
-    local log_msg = string.format("created new %sfdf file.", priv.name)
+    local log_msg = string.format("created new %s fdf file.", priv.name)
     local content = ""
 
     for i = 1, #priv.objects do

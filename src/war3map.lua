@@ -28,7 +28,7 @@ local unit_type = compiletime(function()
     u:setField(WeUnit.Name, 'Footman')
     return u:toRuntime()
 end)
-
+--[[
 local frame_type = compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
     local FdfFile = WeObjEdit.Fdf.File
@@ -52,7 +52,7 @@ local frame_type = compiletime(function()
     file:addObject(frame)
     return file:toRuntime()
 end)
-
+]]--
 --[[
 local function testAbility()
     local Unit = require('Class.Unit.Unit')
@@ -106,6 +106,8 @@ end
 
 local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
 Test = function()
+    local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
+    local FrameButton = require('Class.Frame.Default.FrameButton')
 end
 
 function InitCustomPlayerSlots()

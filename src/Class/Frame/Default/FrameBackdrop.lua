@@ -4,6 +4,8 @@
 
 ---@type FrameClass
 local Frame = require('Class.Frame.Frame')
+---@type FrameTypeClass
+local FrameType = require('Class.Frame.FrameType')
 
 --=======
 -- Class
@@ -21,27 +23,22 @@ local override = FrameBackdrop.override
 ---@type table(FrameBackdrop, table)
 local private = {}
 
-if not is_compiletime then
-    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-end
+--========
+-- Static
+--========
 
---=========
--- Methods
---=========
-
----@param fdf_object FdfObjectRuntime | nil
+--- SimpleFrame by default
+---@param frame_type FrameType | nil
 ---@param instance_data table | nil
 ---@return FrameBackdrop
-function override.new(fdf_object, instance_data)
+function override.new(frame_type, instance_data)
     local instance = instance_data or newInstanceData(FrameBackdrop)
-    local wc3_frame
-    if custom_backdrop_handle then
-        wc3_frame = custom_backdrop_handle
+
+    if frame_type then
+        instance = Frame.new(frame_type, instance)
     else
-        wc3_frame = BlzCreateFrameByType("BACKDROP", "BACKDROP", private.game_ui_frame, "", 0)
-        BlzFrameSetTexture(wc3_frame, 'war3mapImported\\frameFiles\\Transparent32x32.tga', 0, true)
+        instance = Frame.new(private.default_frame_type, instance)
     end
-    instance = Frame.new(wc3_frame, instance)
 
     local priv = {
         texture = nil,
@@ -50,6 +47,10 @@ function override.new(fdf_object, instance_data)
 
     return instance
 end
+
+--========
+-- Public
+--========
 
 function public:free()
     private[self] = nil
@@ -80,6 +81,38 @@ end
 -- Private
 --=========
 
-function private.e() end
+private.default_texture = 'war3mapImported\\frameFiles\\Transparent32x32.tga'
+compiletime(function()
+    local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
+    local FdfFile = WeObjEdit.Fdf.File
+    local SimpleFrame = WeObjEdit.Fdf.SimpleFrame
+    local SimpleTexture = WeObjEdit.Fdf.SimpleTexture
+
+    local texture = SimpleTexture.new('FrameBackdropDefaultTexture')
+    texture:setField(SimpleTexture.File, private.default_texture)
+
+    local frame = SimpleFrame.new('FrameBackdropDefault')
+    frame:setField(SimpleFrame.Width, 0.05)
+    frame:setField(SimpleFrame.Height, 0.05)
+    frame:setField(SimpleFrame.Texture, {texture})
+
+    local file = FdfFile.new('FrameBackdropDefault')
+    file:addObject(frame)
+
+    private.default_frame_fdf_object = frame
+    private.default_frame_fdf_file = file
+
+    return 0
+end)
+
+private.default_frame_type_data = compiletime(function() return private.default_frame_fdf_object:toRuntime() end)
+private.default_frame_file_data = compiletime(function() return private.default_frame_fdf_file:toRuntime() end)
+private.default_frame_type = FrameType.new(private.default_frame_type_data, true)
+
+if not is_compiletime then
+    if not BlzLoadTOCFile(private.default_frame_file.toc) then
+        Log(Log.Err, getClassName(FrameBackdrop), "can not load default toc file.")
+    end
+end
 
 return FrameBackdrop
