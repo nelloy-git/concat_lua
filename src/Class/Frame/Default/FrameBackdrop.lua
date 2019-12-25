@@ -107,10 +107,10 @@ end)
 
 private.default_frame_type_data = compiletime(function() return private.default_frame_fdf_object:toRuntime() end)
 private.default_frame_file_data = compiletime(function() return private.default_frame_fdf_file:toRuntime() end)
-private.default_frame_type = FrameType.new(private.default_frame_type_data, true)
+private.default_frame_type = FrameType.load(private.default_frame_type_data, true)
 
 if not is_compiletime then
-    if not BlzLoadTOCFile(private.default_frame_file.toc) then
+    if not BlzLoadTOCFile(private.default_frame_file_data.toc) then
         Log(Log.Err, getClassName(FrameBackdrop), "can not load default toc file.")
     end
 end
