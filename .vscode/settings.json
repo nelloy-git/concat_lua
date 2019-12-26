@@ -9,7 +9,7 @@
         "./lib": true
     },
     "Lua.workspace.maxPreload": 100,
-    "Lua.workspace.preloadFileSize": 500,
+    "Lua.workspace.preloadFileSize": 5000,
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ],
@@ -19,5 +19,5 @@
         "compiletime",
         "addCompiletimeFinalize"
     ],
-    "Lua.workspace.ignoreSubmodules": false
+    "Lua.workspace.ignoreSubmodules": true
 }

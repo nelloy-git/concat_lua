@@ -21,7 +21,7 @@ local public = FrameButton.public
 local static = FrameButton.static
 ---@type FrameButtonClass
 local override = FrameButton.override
----@type table(FrameButton, table)
+
 local private = {}
 
 --========
@@ -131,7 +131,6 @@ local private_data = {}
 ---@param frame_type FrameType
 ---@return FrameTypePrivate
 function private.new(self, frame_type)
-    ---@type FrameTypePrivate
     local priv = {
         texture_framehandle = BlzGetFrameByName(frame_type:getTextureFramehandleName(), 0)
     }

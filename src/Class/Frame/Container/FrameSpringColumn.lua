@@ -21,7 +21,7 @@ local public = FrameSpringColumn.public
 local static = FrameSpringColumn.static
 ---@type FrameSpringColumnClass
 local override = FrameSpringColumn.override
----@type table(FrameSpringColumn, table)
+
 local private = {}
 
 --========

@@ -18,9 +18,9 @@ local FrameText = Class.newClass('FrameText', Frame)
 local public = FrameText.public
 ---@type FrameTextClass
 local static = FrameText.static
----@type table
+---@type FrameTextClass
 local override = FrameText.override
----@type table(FrameText, table)
+
 local private = {}
 
 if not is_compiletime then

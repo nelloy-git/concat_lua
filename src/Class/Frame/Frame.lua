@@ -18,9 +18,9 @@ local Frame = Class.newClass('Frame')
 local public = Frame.public
 ---@type FrameClass
 local static = Frame.static
----@type table
+---@type FrameClass
 local override = Frame.override
----@type table(Frame, table)
+
 local private = {}
 
 --========
@@ -254,7 +254,9 @@ if not is_compiletime then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 end
 
+---@type table<Frame,FramePrivate>
 local private_data = {}
+
 ---@param self Frame
 ---@param frame_type FrameType
 ---@return FramePrivate

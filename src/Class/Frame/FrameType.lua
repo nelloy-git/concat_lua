@@ -15,9 +15,9 @@ local FrameType = Class.newClass('FrameType')
 local public = FrameType.public
 ---@type FrameTypeClass
 local static = FrameType.static
----@type table
+---@type FrameTypeClass
 local override = FrameType.override
----@type table(FrameType, table)
+
 local private = {}
 
 --=========
@@ -88,14 +88,16 @@ end
 -- Private
 --=========
 
+---@type table<FrameType,FrameTypePrivate>
 local private_data = {}
+
 ---@param self FrameType
 ---@param name string
 ---@param base_name string
 ---@param is_simpleframe boolean
 ---@return FrameTypePrivate
 function private.new(self, name, base_name, is_simpleframe)
-    ---@type FrameTypePrivate
+    ---@class FrameTypePrivate
     local priv = {
         name = name,
         base_name = base_name,
@@ -110,7 +112,7 @@ end
 ---@param data FdfObjectRuntime
 ---@return FrameTypePrivate
 function private.load(self, data, is_simpleframe)
-    ---@class FrameTypePrivate
+    ---@type FrameTypePrivate
     local priv = data
     priv.is_simpleframe = is_simpleframe
 

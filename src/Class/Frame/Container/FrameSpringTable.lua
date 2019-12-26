@@ -18,9 +18,9 @@ local FrameSpringTable = Class.newClass('FrameSpringTable', FrameSpringColumn)
 local public = FrameSpringTable.public
 ---@type FrameSpringTableClass
 local static = FrameSpringTable.static
----@type table
+---@type FrameSpringTableClass
 local override = FrameSpringTable.override
----@type table(FrameSpringTable, table)
+
 local private = {}
 
 --=========

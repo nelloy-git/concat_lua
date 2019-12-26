@@ -20,9 +20,9 @@ local FrameTooltip = Class.newClass('FrameTooltip', FrameSpringColumn)
 local public = FrameTooltip.public
 ---@type FrameTooltipClass
 local static = FrameTooltip.static
----@type table
+---@type FrameTooltipClass
 local override = FrameTooltip.override
----@type table(FrameTooltip, table)
+
 local private = {}
 
 --=========

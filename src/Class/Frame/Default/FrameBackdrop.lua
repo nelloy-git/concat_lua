@@ -18,9 +18,9 @@ local FrameBackdrop = Class.newClass('FrameBackdrop', Frame)
 local public = FrameBackdrop.public
 ---@type FrameBackdropClass
 local static = FrameBackdrop.static
----@type table
+---@type FrameBackdropClass
 local override = FrameBackdrop.override
----@type table(FrameBackdrop, table)
+
 local private = {}
 
 --========
@@ -75,7 +75,6 @@ local private_data = {}
 ---@param frame_type FrameType
 ---@return FrameTypePrivate
 function private.new(self, frame_type)
-    ---@type FrameTypePrivate
     local priv = {
         texture = nil,
         texture_framehandle = BlzGetFrameByName(frame_type:getTextureFramehandleName(), 0)

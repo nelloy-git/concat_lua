@@ -22,9 +22,9 @@ local FrameStatsTable = Class.newClass('FrameStatsTable', FrameSpringTable)
 local public = FrameStatsTable.public
 ---@type FrameStatsTableClass
 local static = FrameStatsTable.static
----@type table
+---@type FrameStatsTableClass
 local override = FrameStatsTable.override
----@type table(FrameStatsTable, table)
+
 local private = {}
 
 --=========

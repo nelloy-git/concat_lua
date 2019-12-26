@@ -18,9 +18,9 @@ local FrameTable = Class.newClass('FrameTable', FrameBackdrop)
 local public = FrameTable.public
 ---@type FrameTableClass
 local static = FrameTable.static
----@type table
+---@type FrameTableClass
 local override = FrameTable.override
----@type table(FrameTable, table)
+
 local private = {}
 
 private.index_offset = 100000
