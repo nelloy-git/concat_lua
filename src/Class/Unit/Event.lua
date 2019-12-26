@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type DataBase
 local DataBase = require('utils.DataBase')
 ---@type Unit
@@ -13,8 +15,7 @@ local Trigger = require('Include.Trigger')
 -- Class
 --=======
 
----@class UnitEvent
-local UnitEvent = newClass("UnitEvent")
+local UnitEvent-- = Class.newClass("UnitEvent")
 local UnitEvent_meta = newMeta(UnitEvent)
 UnitEvent.__triggers_db = DataBase.new('UnitEvent', 'Trigger')
 

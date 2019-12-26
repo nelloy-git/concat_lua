@@ -2,12 +2,13 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 --=======
 -- Class
 --=======
 
----@type AbilityTypeCallbacksContainerClass
-local AbilityTypeCallbacksContainer = newClass('AbilityTypeCallbacksContainer')
+local AbilityTypeCallbacksContainer = Class.newClass('AbilityTypeCallbacksContainer')
 
 ---@class AbilityTypeCallbacksContainer
 local public = AbilityTypeCallbacksContainer.public
@@ -25,7 +26,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return AbilityTypeCallbacksContainer
 function static.new(instance_data)
-    local instance = instance_data or newInstanceData(AbilityTypeCallbacksContainer)
+    local instance = instance_data or Class.newInstanceData(AbilityTypeCallbacksContainer)
     local priv = {
         start = nil,
         cancel = nil,

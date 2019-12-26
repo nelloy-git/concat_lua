@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 require('utils.Globals')
 local Log = require('utils.Log')
 ---@type WeAbilityFieldClass
@@ -17,10 +19,12 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeAbilityClass : WeObjectClass
-local WeAbility = newClass('WeAbility', WeObject)
+---@overload fun(name:string, vararg:any[]):WeAbilityClass
+local Class.newClass = Class.newClass
+---@type WeAbilityClass
+local WeAbility = Class.newClass('WeAbility', WeObject)
 
----@class WeAbility : WeObject
+---@class WeAbility
 local public = WeAbility.public
 ---@class WeAbilityClass
 local static = WeAbility.static
@@ -45,7 +49,7 @@ private.field_serial_end = '\0\0\0\0'
 ---@param instance_data table | nil
 ---@return WeAbility
 function override.new(id, base_id, name, instance_data)
-    local instance = instance_data or newInstanceData(WeAbility)
+    local instance = instance_data or Class.newInstanceData(WeAbility)
     instance = WeObject.new(id, base_id, name, instance)
 
     local priv = {
@@ -87,7 +91,7 @@ function public:getField(field)
     return priv.fields[field]
 end
 
----@return table(WeAbilityField, table(number, any))
+---@return table<WeAbilityField, table<number, any>>
 function public:getAllChanges()
     local priv = private[self]
 
@@ -99,7 +103,7 @@ function public:getAllChanges()
     return copy
 end
 
----@return table(string, table(number, data))
+---@return table<string, table<number, any>>
 function public:toRuntime()
     local priv = private[self]
 

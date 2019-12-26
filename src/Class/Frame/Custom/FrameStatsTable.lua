@@ -2,31 +2,25 @@
 -- Include
 --=========
 
----@type FrameBackdropClass
+local Class = require('Utils.Class')
+
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
----@type FrameHoverClass
-local FrameHover = require('Class.Frame.Default.FrameHover')
----@type FrameSpringRowClass
 local FrameSpringRow = require('Class.Frame.Container.FrameSpringRow')
----@type FrameSpringTableClass
 local FrameSpringTable = require('Class.Frame.Container.FrameSpringTable')
----@type FrameTextClass
 local FrameText = require('Class.Frame.Default.FrameText')
----@type FrameTooltipClass
 local FrameTooltip = require('Class.Frame.Custom.FrameTooltip')
----@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
 
 --=======
 -- Class
 --=======
 
----@type FrameStatsTableClass
-local FrameStatsTable = newClass('FrameStatsTable', FrameSpringTable)
+---@class FrameStatsTableClass : FrameSpringTableClass
+local FrameStatsTable = Class.newClass('FrameStatsTable', FrameSpringTable)
 
 ---@class FrameStatsTable : FrameSpringTable
 local public = FrameStatsTable.public
----@class FrameStatsTableClass : FrameSpringTableClass
+---@type FrameStatsTableClass
 local static = FrameStatsTable.static
 ---@type table
 local override = FrameStatsTable.override
@@ -40,7 +34,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameStatsTable
 function override.new(instance_data)
-    local instance = instance_data or newInstanceData(FrameStatsTable)
+    local instance = instance_data or Class.newInstanceData(FrameStatsTable)
     instance = FrameSpringTable(nil, instance)
     local priv = private.new(instance)
 
@@ -53,7 +47,7 @@ end
 
 function public:free()
     private.free(self)
-    freeInstanceData(self)
+    FrameSpringTable.public.free(self)
 end
 
 ---@param param ParameterType
@@ -148,7 +142,6 @@ function private.newParameterFrame(self, param, column, row)
     hover.onSizeChange = function(hover) private.onHoverPositionChange(hover, tooltip) end
 end
 
----@param hover FrameHover
 ---@param tooltip Frame
 function private.onHoverPositionChange(hover, tooltip)
     local x = hover:getX()

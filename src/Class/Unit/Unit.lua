@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 ---@type UnitParametersContainerClass
@@ -13,8 +15,8 @@ local UnitAbilitiesContainer = require('Class.Unit.UnitAbilitiesContainer')
 -- Class
 --=======
 
----@type UnitClass
-local Unit = newClass('Unit')
+---@type any
+local Unit = Class.newClass('Unit')
 
 ---@class UnitClass
 local static = Unit.static
@@ -37,10 +39,10 @@ private.db = DataBase.new('userdata', getClassName(Unit))
 ---@param y number
 ---@param face number
 ---@param instance_data table | nil
-function static.new(player, id, x, y, face, instance_data)
+function Unit.static.new(player, id, x, y, face, instance_data)
     id = ID(id)
 
-    local instance = instance_data or newInstanceData(Unit)
+    local instance = instance_data or Class.newInstanceData(Unit)
     local priv = {
         id = id,
         owner = player,
@@ -56,7 +58,7 @@ end
 
 ---@param wc3_unit unit
 ---@return Unit
-function static.get(wc3_unit)
+function Unit.static.get(wc3_unit)
     return private.db:get(wc3_unit)
 end
 

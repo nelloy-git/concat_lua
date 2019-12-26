@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeUtils
@@ -11,12 +13,11 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeAbilityFieldClass
-local WeAbilityField = newClass('WeAbilityField', WeField)
+local WeAbilityField = Class.newClass('WeAbilityField', WeField)
 
----@class WeAbilityField : WeField
+---@class WeAbilityField
 local public = WeAbilityField.public
----@class WeAbilityFieldClass : WeFieldClass
+---@class WeAbilityFieldClass
 local static = WeAbilityField.static
 ---@type table
 local override = WeAbilityField.override
@@ -35,7 +36,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return WeField
 function override.new(change_id, data_type, abil_data_id, name, check_data_func, instance_data)
-    local instance = instance_data or newInstanceData(WeAbilityField)
+    local instance = instance_data or Class.newInstanceData(WeAbilityField)
     instance = WeField.new(change_id, data_type, name, check_data_func, instance)
 
     local priv = {

@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local Log = require('utils.Log')
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.AbilityType')

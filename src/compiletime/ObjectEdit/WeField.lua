@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 require('utils.Globals')
 local Log = require('utils.Log')
 ---@type WeUtils
@@ -11,8 +13,7 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeFieldClass
-local WeField = newClass('WeField')
+local WeField = Class.newClass('WeField')
 
 ---@class WeField
 local public = WeField.public
@@ -42,7 +43,7 @@ function static.new(change_id, data_type, name, check_data_func, instance_data)
         return nil
     end
 
-    local instance = instance_data or newInstanceData(WeField)
+    local instance = instance_data or Class.newInstanceData(WeField)
     local priv = {
         change_id = ID2str(change_id),
         data_type = data_type,

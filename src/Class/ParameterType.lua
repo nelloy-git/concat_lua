@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type IconAssetClass
 local Icon
 compiletime(function()
@@ -14,8 +16,8 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
----@type ParameterTypeClass
-local ParameterType = newClass('ParameterType')
+---@type any
+local ParameterType = Class.newClass('ParameterType')
 
 ---@class ParameterTypeClass
 local static = ParameterType.static
@@ -231,7 +233,7 @@ end
 
 ---@return ParameterType
 function private.new()
-    local instance = newInstanceData(ParameterType)
+    local instance = Class.newInstanceData(ParameterType)
     local priv = {
         short = "Empty",
         full = "Empty",

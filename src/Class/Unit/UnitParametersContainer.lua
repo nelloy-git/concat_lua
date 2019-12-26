@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 ---@type ParameterTypeClass
@@ -13,8 +15,8 @@ local ParameterValue = require('Class.ParameterValue')
 -- Class
 --=======
 
----@type UnitParametersContainerClass
-local UnitParametersContainer = newClass('UnitParametersContainer')
+---@type any
+local UnitParametersContainer = Class.newClass('UnitParametersContainer')
 
 ---@class UnitParametersContainerClass
 local static = UnitParametersContainer.static
@@ -36,7 +38,7 @@ private.DB = DataBase.new('userdata', getClassName(UnitParametersContainer))
 ---@param instance_data table | nil
 ---@return UnitParametersContainer
 function static.new(owner, instance_data)
-    local instance = instance_data or newInstanceData(UnitParametersContainer)
+    local instance = instance_data or Class.newInstanceData(UnitParametersContainer)
     local priv = private.createPriv(owner)
     private[instance] = priv
     private.DB:set(owner, instance)
@@ -120,6 +122,7 @@ function public:addAdditive(param, value)
     self:setAdditive(param, self:getAdditive(param) + value)
 end
 
+---@param owner unit
 ---@return table
 function private.createPriv(owner)
     local params = ParameterType.getList()

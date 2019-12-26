@@ -2,21 +2,21 @@
 -- Include
 --=========
 
----@type FrameClass
+local Class = require('Utils.Class')
+
 local Frame = require('Class.Frame.Frame')
----@type FrameTypeClass
 local FrameType = require('Class.Frame.FrameType')
 
 --=======
 -- Class
 --=======
 
----@type FrameTextClass
-local FrameText = newClass('FrameText', Frame)
+---@class FrameTextClass : FrameClass
+local FrameText = Class.newClass('FrameText', Frame)
 
----@class FrameText
+---@class FrameText : Frame
 local public = FrameText.public
----@class FrameTextClass
+---@type FrameTextClass
 local static = FrameText.static
 ---@type table
 local override = FrameText.override
@@ -36,7 +36,7 @@ end
 ---@return FrameText
 function override.new(frame_type, instance_data)
 
-    local instance = instance_data or newInstanceData(FrameText)
+    local instance = instance_data or Class.newInstanceData(FrameText)
     if frame_type then
         instance = Frame.new(frame_type, instance)
     else
@@ -127,7 +127,7 @@ private.default_frame_type = FrameType.load(private.default_frame_type_data, tru
 
 if not is_compiletime then
     if not BlzLoadTOCFile(private.default_frame_file_data.toc) then
-        Log(Log.Err, getClassName(FrameText), "can not load default toc file.")
+        Log(Log.Err, FrameText, "can not load default toc file.")
     end
 end
 

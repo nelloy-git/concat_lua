@@ -2,7 +2,7 @@ local Globals = {}
 ---@alias callback fun():any
 
 Log = require('utils.Log')
-require('utils.Class')
+--require('utils.Class')
 
 local savety_run_enable = true
 ---@param func fun

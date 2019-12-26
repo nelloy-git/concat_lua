@@ -2,21 +2,21 @@
 -- Include
 --=========
 
----@type FrameSpringColumnClass
+local Class = require('Utils.Class')
+
 local FrameSpringColumn = require('Class.Frame.Container.FrameSpringColumn')
----@type FrameSpringRowClass
 local FrameSpringRow = require('Class.Frame.Container.FrameSpringRow')
 
 --=======
 -- Class
 --=======
 
----@type FrameSpringTableClass
-local FrameSpringTable = newClass('FrameSpringTable', FrameSpringColumn)
+---@class FrameSpringTableClass : FrameSpringColumnClass
+local FrameSpringTable = Class.newClass('FrameSpringTable', FrameSpringColumn)
 
 ---@class FrameSpringTable : FrameSpringColumn
 local public = FrameSpringTable.public
----@class FrameSpringTableClass : FrameSpringColumnClass
+---@type FrameSpringTableClass
 local static = FrameSpringTable.static
 ---@type table
 local override = FrameSpringTable.override
@@ -31,7 +31,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameSpringTable
 function override.new(custom_backdrop_frame, instance_data)
-    local instance = instance_data or newInstanceData(FrameSpringTable)
+    local instance = instance_data or Class.newInstanceData(FrameSpringTable)
     instance = FrameSpringColumn.new(custom_backdrop_frame, instance)
     FrameSpringColumn.public.setCell(instance, FrameSpringRow.new(), 1)
 

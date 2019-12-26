@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.AbilityType')
 ---@type ActionClass
@@ -17,8 +19,7 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
----@type AbilityInstanceClass
-local AbilityInstance = newClass('AbilityInstance')
+local AbilityInstance = Class.newClass('AbilityInstance')
 
 ---@class AbilityInstance
 local public = AbilityInstance.public
@@ -176,7 +177,7 @@ end
 ---@return AbilityInstance
 function private.new(caster, target, abil_type, instance_data)
     ---@type AbilityInstance
-    local instance = instance_data or newInstanceData(AbilityInstance)
+    local instance = instance_data or Class.newInstanceData(AbilityInstance)
 
     instance.time_left = abil_type:getCastingTime(caster)
     local priv = {

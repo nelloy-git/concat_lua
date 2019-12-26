@@ -2,8 +2,8 @@
 -- Class
 --=======
 
----@type DataBaseClass
-local DataBase = newClass('DataBase')
+---@type any
+local DataBase = Class.newClass('DataBase')
 
 ---@class DataBase
 local public = DataBase.public
@@ -24,7 +24,7 @@ local private = {}
 ---@return DataBase
 function static.new(key_type, val_type, instance_data)
     ---@type DataBase
-    local instance = instance_data or newInstanceData(DataBase)
+    local instance = instance_data or Class.newInstanceData(DataBase)
     local priv = {
         data = {},
         key_type = key_type,

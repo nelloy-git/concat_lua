@@ -4,6 +4,8 @@ local log_changes = false
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local Log = require('utils.Log')
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
@@ -12,8 +14,8 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeObjectFileClass
-local WeObjectFile = newClass('WeObjectFile')
+---@type any
+local WeObjectFile = Class.newClass('WeObjectFile')
 
 ---@class WeObjectFile
 local public = WeObjectFile.public
@@ -31,7 +33,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return WeObjectFile
 function static.new(src_path, dst_path, instance_data)
-    local instance = instance_data or newInstanceData(WeObjectFile)
+    local instance = instance_data or Class.newInstanceData(WeObjectFile)
     local priv = {
         src_path = src_path,
         dst_path = dst_path,

@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local Log = require('utils.Log')
 ---@type AbilityTypeCallbacksContainerClass
 local AbilityTypeCallbacksContainer = require('Class.Ability.AbilityTypeCallbacksContainer')
@@ -14,8 +16,7 @@ local DataBase = require('Class.DataBase')
 -- Class
 --=======
 
----@type AbilityTypeClass
-local AbilityType = newClass('AbilityType')
+local AbilityType = Class.newClass('AbilityType')
 
 ---@class AbilityType
 local public = AbilityType.public
@@ -40,7 +41,7 @@ private.DB = DataBase.new('number', getClassName(AbilityType))
 ---@param instance_data table | nil
 ---@return AbilityType
 function static.new(id, instance_data)
-    local instance = instance_data or newInstanceData(AbilityType)
+    local instance = instance_data or Class.newInstanceData(AbilityType)
 
     instance.callbacks = AbilityTypeCallbacksContainer.new()
     instance.flags = AbilityTypeFlagsContainer.new()

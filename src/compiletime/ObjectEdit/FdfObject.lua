@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type FdfFieldClass
 local FdfField = require('compiletime.ObjectEdit.FdfField')
 ---@type WeUtils
@@ -11,8 +13,7 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type FdfObjectClass
-local FdfObject = newClass('FdfObject')
+local FdfObject = Class.newClass('FdfObject')
 
 ---@class FdfObject
 local public = FdfObject.public
@@ -32,7 +33,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FdfObject
 function static.new(base_name, name, instance_data)
-    local instance = instance_data or newInstanceData(FdfObject)
+    local instance = instance_data or Class.newInstanceData(FdfObject)
     local priv = private.new(instance, base_name, name)
 
     return instance
@@ -71,6 +72,11 @@ function public:setField(field, value)
     end
 end
 
+function public:getFields()
+    local priv = private.get(self)
+    return priv.fields, priv.values
+end
+
 function public:serialize()
     local priv = private.get(self)
 
@@ -88,8 +94,19 @@ function public:toRuntime()
     ---@class FdfObjectRuntime
     local res = {
         name = priv.name,
-        base_name = priv.base_name
+        base_name = priv.base_name,
+        fields = {},
     }
+
+    for i = 1, #priv.fields do
+        if priv.values[i] == nil then
+            res.fields[priv.fields[i]:getName()] = 'nil'
+        elseif isType(priv.values[i], FdfObject) then
+            res.fields[priv.fields[i]:getName()] = priv.values[i]:toRuntime()
+        else
+            res.fields[priv.fields[i]:getName()] = priv.values[i]
+        end
+    end
 
     return res
 end

@@ -2,25 +2,23 @@
 -- Include
 --=========
 
----@type FrameBackdropClass
+local Class = require('Utils.Class')
+
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
----@type FrameTextClass
 local FrameText = require('Class.Frame.Default.FrameText')
----@type FrameSpringColumnClass
 local FrameSpringColumn = require('Class.Frame.Container.FrameSpringColumn')
----@type FrameSpringRowClass
 local FrameSpringRow = require('Class.Frame.Container.FrameSpringRow')
 
 --=======
 -- Class
 --=======
 
----@type FrameTooltipClass
-local FrameTooltip = newClass('FrameTooltip', FrameSpringColumn)
+---@class FrameTooltipClass : FrameSpringColumnClass
+local FrameTooltip = Class.newClass('FrameTooltip', FrameSpringColumn)
 
 ---@class FrameTooltip : FrameSpringColumn
 local public = FrameTooltip.public
----@class FrameTooltipClass : FrameSpringColumnClass
+---@type FrameTooltipClass
 local static = FrameTooltip.static
 ---@type table
 local override = FrameTooltip.override
@@ -34,7 +32,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameTooltip
 function override.new(instance_data)
-    local instance = instance_data or newInstanceData(FrameTooltip)
+    local instance = instance_data or Class.newInstanceData(FrameTooltip)
     instance = FrameSpringColumn.new(private.createHandle(), instance)
     local priv = private.new(instance)
 
@@ -50,7 +48,7 @@ static.space = 0.003
 
 function public:free()
     private.free(self)
-    freeInstanceData(self)
+    FrameSpringColumn.public.free(self)
 end
 
 ---@param path string
@@ -194,7 +192,7 @@ private.fdf_data = compiletime(function()
     background:setField(Backdrop.EdgeFile, "ToolTipBorder")
     background:setField(Backdrop.BlendAll)
 
-    local out = File.new(getClassName(FrameTooltip))
+    local out = File.new(FrameTooltip)
     out:addObject(background)
     return out:toRuntime()
 end)
@@ -202,7 +200,7 @@ end)
 if not is_compiletime then
     private.game_ui_handle = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
     if not BlzLoadTOCFile(private.fdf_data.toc) then
-        Log(Log.Err, getClassName(FrameTooltip), "can not load toc file.")
+        Log(Log.Err, FrameTooltip, "can not load toc file.")
     end
 end
 

@@ -2,12 +2,13 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 --=======
 -- Class
 --=======
 
----@type FdfFileClass
-local FdfFile = newClass('FdfFile')
+local FdfFile = Class.newClass('FdfFile')
 
 ---@class FdfFile
 local public = FdfFile.public
@@ -26,7 +27,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FdfFile
 function static.new(name, instance_data)
-    local instance = instance_data or newInstanceData(FdfFile)
+    local instance = instance_data or Class.newInstanceData(FdfFile)
     local priv = private.new(instance, name)
 
     addCompiletimeFinalize(function() private.save(instance) end)

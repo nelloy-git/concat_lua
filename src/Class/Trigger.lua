@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type ActionClass
 local Action = require('Class.Action')
 ---@type DataBaseClass
@@ -11,8 +13,8 @@ local DataBase = require('Class.DataBase')
 -- Class
 --=======
 
----@type TriggerClass
-local Trigger = newClass('Trigger')
+---@type any
+local Trigger = Class.newClass('Trigger')
 
 ---@class TriggerClass
 local static = Trigger.static
@@ -32,7 +34,7 @@ private.DB = DataBase.new('userdata', getClassName(Trigger))
 ---@param instance_data table | nil
 ---@return Trigger
 function static.new(instance_data)
-    local instance = instance_data or newInstanceData(Trigger)
+    local instance = instance_data or Class.newInstanceData(Trigger)
     local priv = {
         wc3_trigger = CreateTrigger(),
         actions = {}

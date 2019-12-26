@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local Log = require('utils.Log')
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
@@ -16,12 +18,11 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeItemClass
-local WeItem = newClass('WeItem', WeObject)
+local WeItem = Class.newClass('WeItem', WeObject)
 
----@class WeItem : WeObject
+---@class WeItem
 local public = WeItem.public
----@class WeItemClass : WeObjectClass
+---@class WeItemClass
 local static = WeItem.static
 ---@type table
 local override = WeItem.override
@@ -39,7 +40,7 @@ private.file_dst = _G._dst_dir..private.path_sep..'war3map.w3t'
 ---@param instance_data table | nil
 ---@return WeItem
 function override.new(id, base_id, name, instance_data)
-    local instance = instance_data or newInstanceData(WeItem)
+    local instance = instance_data or Class.newInstanceData(WeItem)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then

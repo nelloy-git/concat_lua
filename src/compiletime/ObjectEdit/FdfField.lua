@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local fmt = string.format
 
 ---@type WeUtils
@@ -11,8 +13,7 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type FdfFieldClass
-local FdfField = newClass('FdfField')
+local FdfField = Class.newClass('FdfField')
 
 ---@class FdfField
 local public = FdfField.public
@@ -30,7 +31,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FdfField
 function static.new(name, val_type, serialize_func, instance_data)
-    local instance = instance_data or newInstanceData(FdfField)
+    local instance = instance_data or Class.newInstanceData(FdfField)
     local priv = private.new(instance, name, val_type, serialize_func)
 
     return instance
@@ -109,7 +110,7 @@ end
 ---@param value any
 ---@return string
 function public:serialize(value)
-    if type(value) == private.get(self).val_type then
+    if isType(value, private.get(self).val_type) then
         return private.get(self).serialize_func(self, value)
     else
         local msg = string.format('wrong value type for field %s.', private.get(self).name)
@@ -144,6 +145,7 @@ function private.new(self, name, val_type, serialize_func)
         serialize_func = serialize_func
     }
     private_data[self] = priv
+
     return priv
 end
 

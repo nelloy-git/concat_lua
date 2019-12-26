@@ -2,12 +2,13 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 --=======
 -- Class
 --=======
 
----@type FileClass
-local File = newClass('File')
+local File = Class.newClass('File')
 
 ---@class File
 local public = File.public
@@ -26,7 +27,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return File
 function static.new(filename, instance_data)
-    local instance = instance_data or newInstanceData(File)
+    local instance = instance_data or Class.newInstanceData(File)
     local priv = private.new(instance, filename)
     
     return instance

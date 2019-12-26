@@ -106,7 +106,7 @@ end
 
 local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
 Test = function()
-    local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
+    --local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
     local FrameButton = require('Class.Frame.Default.FrameButton')
 
     local btn = FrameButton.new()
@@ -115,8 +115,6 @@ Test = function()
     btn:setWidth(0.1)
     btn:setHeight(0.1)
     btn:setTexture(texture)
-
-    Log(Log.Msg, '', 'Here')
 end
 
 function InitCustomPlayerSlots()

@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type FdfFieldClass
 local FdfField = require('compiletime.ObjectEdit.FdfField')
 ---@type FdfObjectClass
@@ -11,8 +13,8 @@ local FdfObject = require('compiletime.ObjectEdit.FdfObject')
 -- Class
 --=======
 
----@type FdfBackdropClass
-local FdfBackdrop = newClass('FdfBackdrop', FdfObject)
+---@overload FdfBackdropClass
+local FdfBackdrop = Class.newClass('FdfBackdrop', FdfObject)
 
 ---@class FdfBackdrop
 local public = FdfBackdrop.public
@@ -30,7 +32,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FdfBackdrop
 function override.new(name, instance_data)
-    local instance = instance_data or newInstanceData(FdfBackdrop)
+    local instance = instance_data or Class.newInstanceData(FdfBackdrop)
     instance = FdfObject.new('BACKDROP', name, instance)
 
     return instance

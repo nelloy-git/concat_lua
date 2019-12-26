@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local Log = require('utils.Log')
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
@@ -16,12 +18,11 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeBuffClass
-local WeBuff = newClass('WeBuff', WeObject)
+local WeBuff = Class.newClass('WeBuff', WeObject)
 
----@class WeBuff : WeObject
+---@class WeBuff
 local public = WeBuff.public
----@class WeBuffClass : WeObjectClass
+---@class WeBuffClass
 local static = WeBuff.static
 ---@type table
 local override = WeBuff.override
@@ -39,7 +40,7 @@ private.file_dst = _G._dst_dir..private.path_sep..'war3map.w3h'
 ---@param instance_data table | nil
 ---@return WeBuff
 function override.new(id, base_id, name, instance_data)
-    local instance = instance_data or newInstanceData(WeBuff)
+    local instance = instance_data or Class.newInstanceData(WeBuff)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then

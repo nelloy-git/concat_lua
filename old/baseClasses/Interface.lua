@@ -1,3 +1,0 @@
-local Interface
-
-return Interface

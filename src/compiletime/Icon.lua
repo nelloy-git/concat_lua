@@ -2,12 +2,13 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 --=======
 -- Class
 --=======
 
----@type IconAssetClass
-local IconAsset = newClass('IconAsset')
+local IconAsset = Class.newClass('IconAsset')
 
 ---@class IconAssetClass
 local static = IconAsset.static

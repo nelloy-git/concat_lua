@@ -2,8 +2,12 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type FdfFieldClass
 local FdfField = require('compiletime.ObjectEdit.FdfField')
+---@type FdfFieldClass
+local FdfObject = require('compiletime.ObjectEdit.FdfObject')
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
 
@@ -11,8 +15,7 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type FdfSubobjectClass
-local FdfSubobject = newClass('FdfSubobject')
+local FdfSubobject = Class.newClass('FdfSubobject', FdfObject)
 
 ---@class FdfSubobject
 local public = FdfSubobject.public
@@ -29,9 +32,10 @@ local private = {}
 
 ---@param instance_data table | nil
 ---@return FdfSubobject
-function static.new(base_name, name, instance_data)
-    local instance = instance_data or newInstanceData(FdfSubobject)
-    local priv = private.new(instance, base_name, name)
+function override.new(base_name, name, instance_data)
+    local instance = instance_data or Class.newInstanceData(FdfSubobject)
+    instance = FdfObject.new(base_name, name, instance)
+    private.new(instance, base_name, name)
 
     return instance
 end
@@ -42,36 +46,26 @@ end
 
 function public:free()
     private.free(self)
-    freeInstanceData(self)
-end
-
----@return string
-function public:getName()
-    return private.get(self).name
-end
-
-function public:setField(field, value)
-    local priv = private.get(self)
-
-    if field:checkType(value) then
-        local pos = #priv.fields + 1
-        table.insert(priv.fields, #priv.fields + 1, field)
-        priv.values[pos] = value
-    else
-        local msg = string.format("check data failed. Field change ignored.\n%s",
-                                  WeUtils.getErrorPos())
-        Log(Log.Warn, getClassName(FdfSubobject), msg)
-    end
+    FdfObject.public.free(self)
 end
 
 function public:serialize()
     local priv = private.get(self)
 
-    local res = string.format("%s \"%s\" {\n", priv.base_name, priv.name)
-    for i = 1, #priv.fields do
-        res = res.."        "..priv.fields[i]:serialize(priv.values[i])..'\n'
+    local res = string.format("%s \"%s\" {\n", self:getBaseName(), self:getName())
+    local fields, values = self:getFields()
+    for i = 1, #fields do
+        res = res.."        "..fields[i]:serialize(values[i])..'\n'
     end
     return res.."    }"
+end
+
+---@return FdfObjectRuntime
+function public:toRuntime()
+    return {
+        name = self:getName(),
+        base_name = self:getBaseName()
+    }
 end
 
 --=========

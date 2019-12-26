@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 local Log = require('utils.Log')
 ---@type ActionClass
 local Action = require('Class.Action')
@@ -14,8 +16,8 @@ local TimerAction = require('Class.Timer.TimerAction')
 -- Class
 --=======
 
----@type BetterTimerClass
-local BetterTimer = newClass('BetterTimer', Timer)
+---@type any
+local BetterTimer = Class.newClass('BetterTimer', Timer)
 
 ---@class BetterTimerClass
 local static = BetterTimer.static
@@ -37,7 +39,7 @@ private.glTimer = nil
 ---@param instance_data table | nil
 ---@return BetterTimer
 function override.new(period, instance_data)
-    local instance = instance_data or newInstanceData(BetterTimer)
+    local instance = instance_data or Class.newInstanceData(BetterTimer)
     instance = Timer.new(instance)
     if period < private.minimum_period then
         period = private.minimum_period

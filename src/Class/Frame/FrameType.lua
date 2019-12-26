@@ -2,16 +2,18 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 --=======
 -- Class
 --=======
 
----@type FrameTypeClass
-local FrameType = newClass('FrameType')
+---@class FrameTypeClass
+local FrameType = Class.newClass('FrameType')
 
 ---@class FrameType
 local public = FrameType.public
----@class FrameTypeClass
+---@type FrameTypeClass
 local static = FrameType.static
 ---@type table
 local override = FrameType.override
@@ -28,7 +30,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameType
 function static.new(name, base_name, is_simpleframe, instance_data)
-    local instance = instance_data or newInstanceData(FrameType)
+    local instance = instance_data or Class.newInstanceData(FrameType)
     local priv = private.new(instance, name, base_name, is_simpleframe)
 
     return instance
@@ -39,7 +41,7 @@ end
 ---@param instance_data table | nil
 ---@return FrameType
 function static.load(data, is_simpleframe, instance_data)
-    local instance = instance_data or newInstanceData(FrameType)
+    local instance = instance_data or Class.newInstanceData(FrameType)
     local priv = private.load(instance, data, is_simpleframe)
 
     return instance
@@ -51,7 +53,7 @@ end
 
 function public:free()
     private.free(self)
-    freeInstanceData(self)
+    Class.freeInstanceData(self)
 end
 
 ---@return string
@@ -62,6 +64,24 @@ end
 ---@return boolean
 function public:isSimple()
     return private.get(self).is_simpleframe
+end
+
+---@return string
+function public:getTextureFramehandleName()
+    local priv = private.get(self)
+    if not priv.is_simpleframe then
+        return priv.name
+    end
+    return priv.fields.Texture.name
+end
+
+---@return string
+function public:getStringFramehandleName()
+    local priv = private.get(self)
+    if not priv.is_simpleframe then
+        return priv.name
+    end
+    return priv.fields.String.name
 end
 
 --=========

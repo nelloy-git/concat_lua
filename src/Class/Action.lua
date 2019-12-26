@@ -2,8 +2,8 @@
 -- Class
 --=======
 
----@type ActionClass
-local Action = newClass('Action')
+---@type any
+local Action = Class.newClass('Action')
 
 ---@class Action
 local public = Action.public
@@ -22,7 +22,7 @@ local private = {}
 ---@param instance_data table|nil
 ---@return Action
 function static.new(callback, instance_data)
-    local instance = instance_data or newInstanceData(Action)
+    local instance = instance_data or Class.newInstanceData(Action)
     local priv = {
         callback = callback,
     }

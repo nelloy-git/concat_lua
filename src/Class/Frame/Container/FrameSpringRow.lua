@@ -2,21 +2,21 @@
 -- Include
 --=========
 
----@type FrameClass
+local Class = require('Utils.Class')
+
 local Frame = require('Class.Frame.Frame')
----@type FrameBackdropClass
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 
 --=======
 -- Class
 --=======
 
----@type FrameSpringRowClass
-local FrameSpringRow = newClass('FrameSpringRow', FrameBackdrop)
+---@class FrameSpringRowClass : FrameBackdropClass
+local FrameSpringRow = Class.newClass('FrameSpringRow', FrameBackdrop)
 
 ---@class FrameSpringRow : FrameBackdrop
 local public = FrameSpringRow.public
----@class FrameSpringRowClass : FrameBackdropClass
+---@type FrameSpringRowClass
 local static = FrameSpringRow.static
 ---@type table
 local override = FrameSpringRow.override
@@ -63,11 +63,11 @@ end
 ---@param instance_data table | nil
 ---@return FrameSpringRow
 function override.new(background_framehandle, is_simpleframe, instance_data)
-    local instance = instance_data or newInstanceData(FrameSpringRow)
+    local instance = instance_data or Class.newInstanceData(FrameSpringRow)
     if is_simpleframe then
     else
     end
-    instance = FrameBackdrop.new(custom_framehandle, instance)
+    instance = FrameBackdrop.new(background_framehandle, instance)
     private.new(instance)
 
     private.updateColumnsWidth(instance)
@@ -118,7 +118,7 @@ function public:setColumns(count)
     local priv = private.get(self)
 
     if count < 1 or count % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameSpringRow),
+        Log(Log.Err, FrameSpringRow,
             "columns count must be integer more or equal 1.")
         return nil
     end
@@ -214,13 +214,13 @@ function public:setCell(frame, column)
     local priv = private.get(self)
 
     if column < 1 or column % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameSpringRow),
+        Log(Log.Err, FrameSpringRow,
             "column must be integer more or equal 1.")
         return nil
     end
 
     if column > priv.columns then
-        Log(Log.Err, getClassName(FrameSpringRow),
+        Log(Log.Err, FrameSpringRow,
             "column for element adding can not be greater than size.")
         return nil
     end

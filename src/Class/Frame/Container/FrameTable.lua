@@ -2,21 +2,21 @@
 -- Include
 --=========
 
----@type FrameClass
-local Fzrame = require('Class.Frame.Frame')
----@type FrameBackdropClass
+local Class = require('Utils.Class')
+
+local Frame = require('Class.Frame.Frame')
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 
 --=======
 -- Class
 --=======
 
----@type FrameTableClass
-local FrameTable = newClass('FrameTable', FrameBackdrop)
+---@class FrameTableClass : FrameBackdropClass
+local FrameTable = Class.newClass('FrameTable', FrameBackdrop)
 
 ---@class FrameTable : FrameBackdrop
 local public = FrameTable.public
----@class FrameTableClass : FrameBackdropClass
+---@type FrameTableClass
 local static = FrameTable.static
 ---@type table
 local override = FrameTable.override
@@ -32,7 +32,7 @@ private.index_offset = 100000
 ---@param instance_data table | nil
 ---@return FrameTable
 function override.new(instance_data)
-    local instance = instance_data or newInstanceData(FrameTable)
+    local instance = instance_data or Class.newInstanceData(FrameTable)
     instance = FrameBackdrop.new(instance)
 
     local priv = {
@@ -152,7 +152,7 @@ function private.setElement(self, frame, col, row)
     local priv = private[self]
 
     if col < 1 or row < 1 or col % 1 ~= 0 or row % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameTable), "column and row numbers must be integers more or equal 1.")
+        Log(Log.Err, FrameTable, "column and row numbers must be integers more or equal 1.")
         return nil
     end
 

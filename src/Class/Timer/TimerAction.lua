@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type ActionClass
 local Action = require('Class.Action')
 
@@ -9,8 +11,8 @@ local Action = require('Class.Action')
 -- Class
 --=======
 
----@type TimerActionClass
-local TimerAction = newClass('TimerAction', Action)
+---@type any
+local TimerAction = Class.newClass('TimerAction', Action)
 
 ---@class TimerActionClass
 local static = TimerAction.static
@@ -30,7 +32,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return TimerAction
 function override.new(timeout, callback, instance_data)
-    local instance = instance_data or newInstanceData(TimerAction)
+    local instance = instance_data or Class.newInstanceData(TimerAction)
     instance = Action.new(callback, instance)
     local priv = {
         timeout = timeout

@@ -2,25 +2,24 @@
 -- Include
 --=========
 
----@type Frame
+local Class = require('Utils.Class')
+
 local Frame = require('Class.Frame.Frame')
----@type FrameTypeClass
 local FrameType = require('Class.Frame.FrameType')
----@type TriggerClass
 local Trigger = require('Class.Trigger')
 
 --=======
 -- Class
 --=======
 
----@type FrameButtonClass
-local FrameButton = newClass('FrameButton', Frame)
+---@class FrameButtonClass : FrameClass
+local FrameButton = Class.newClass('FrameButton', Frame)
 
----@class FrameButton
+---@class FrameButton : Frame
 local public = FrameButton.public
----@class FrameButtonClass
+---@type FrameButtonClass
 local static = FrameButton.static
----@type table
+---@type FrameButtonClass
 local override = FrameButton.override
 ---@type table(FrameButton, table)
 local private = {}
@@ -34,7 +33,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameButton
 function override.new(frame_type, instance_data)
-    local instance = instance_data or newInstanceData(FrameButton)
+    local instance = instance_data or Class.newInstanceData(FrameButton)
 
     if frame_type then
         instance = Frame.new(frame_type, instance)
@@ -70,7 +69,7 @@ end
 ---@param texture string
 function public:setTexture(texture)
     private[self].texture = texture
-    BlzFrameSetTexture(self:getFramehandle(), texture, 0, true)
+    BlzFrameSetTexture(private.get(self).texture_framehandle, texture, 0, true)
 end
 
 ---@return string
@@ -85,7 +84,7 @@ function public:setTooltip(frame)
 
     if self:isSimpleframe() ~= frame:isSimpleframe() then
         local msg = ('simple and normal frames can not be tooltips for each other. \"setTooltip\" ignored.')
-        Log(Log.Err, getClassName(Frame), msg)
+        Log(Log.Err, Frame, msg)
         return nil
     end
 
@@ -127,7 +126,41 @@ end
 -- Private
 --=========
 
-private.default_texture = ''--1 'war3mapImported\\frameFiles\\Transparent32x32.tga'
+local private_data = {}
+---@param self FrameType
+---@param frame_type FrameType
+---@return FrameTypePrivate
+function private.new(self, frame_type)
+    ---@type FrameTypePrivate
+    local priv = {
+        texture_framehandle = BlzGetFrameByName(frame_type:getTextureFramehandleName(), 0)
+    }
+
+    if not priv.texture_framehandle then
+        Log(Log.Err, FrameButton, 'used FrameType does not have \"Texture\" field.')
+        return nil
+    end
+
+    private_data[self] = priv
+    return priv
+end
+
+---@param self FrameType
+---@return FrameTypePrivate
+function private.get(self)
+    return private_data[self]
+end
+
+---@param self FrameType
+function private.free(self)
+    private_data[self] = nil
+end
+
+--=============
+-- Compiletime
+--=============
+
+private.default_texture = 'war3mapImported\\frameFiles\\Transparent32x32.tga'
 compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
     local FdfFile = WeObjEdit.Fdf.File
@@ -140,7 +173,7 @@ compiletime(function()
     local frame = SimpleButton.new('FrameButtonDefault')
     frame:setField(SimpleButton.Width, 0.05)
     frame:setField(SimpleButton.Height, 0.05)
-    frame:setField(SimpleButton.Texture, {texture})
+    frame:setField(SimpleButton.Texture, texture)
 
     local file = FdfFile.new('FrameButtonDefault')
     file:addObject(frame)
@@ -157,7 +190,7 @@ private.default_frame_type = FrameType.load(private.default_frame_type_data, tru
 
 if not is_compiletime then
     if not BlzLoadTOCFile(private.default_frame_file_data.toc) then
-        Log(Log.Err, getClassName(FrameButton), "can not load default toc file.")
+        Log(Log.Err, FrameButton, "can not load default toc file.")
     end
 end
 

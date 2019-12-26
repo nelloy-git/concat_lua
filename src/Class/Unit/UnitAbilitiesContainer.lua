@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.AbilityType')
 
@@ -10,7 +12,7 @@ local AbilityType = require('Class.Ability.AbilityType')
 --=======
 
 ---@type UnitAbilitiesContainerClass
-local UnitAbilitiesContainer = newClass('UnitAbilitiesContainer')
+local UnitAbilitiesContainer = Class.newClass('UnitAbilitiesContainer')
 
 ---@class UnitAbilitiesContainer
 local public = UnitAbilitiesContainer.public
@@ -28,7 +30,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return UnitAbilitiesContainer
 function static.new(instance_data)
-    local instance = instance_data or newInstanceData(UnitAbilitiesContainer)
+    local instance = instance_data or Class.newInstanceData(UnitAbilitiesContainer)
     local priv = {
     }
     private[instance] = priv

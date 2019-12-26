@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 ---@type ActionClass
@@ -11,8 +13,8 @@ local Action = require('Class.Action')
 -- Class
 --=======
 
----@type TimerClass
-local Timer = newClass('Timer')
+---@type any
+local Timer = Class.newClass('Timer')
 
 ---@class TimerClass
 local static = Timer.static
@@ -32,7 +34,7 @@ local db = DataBase.new('userdata', getClassName(Timer))
 ---@param instance_data table | nil
 ---@return Timer
 function static.new(instance_data)
-    local instance = instance_data or newInstanceData(Timer)
+    local instance = instance_data or Class.newInstanceData(Timer)
     local priv = {
         wc3_timer = CreateTimer()
     }

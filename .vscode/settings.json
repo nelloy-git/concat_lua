@@ -3,13 +3,12 @@
     "Lua.completion.keywordSnippet": "Both",
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "dst/**",
-        "old/**"
+        "dst/**"
     ],
     "Lua.workspace.library": {
         "./lib": true
     },
-    "Lua.workspace.maxPreload": 3000,
+    "Lua.workspace.maxPreload": 100,
     "Lua.workspace.preloadFileSize": 500,
     "Lua.diagnostics.disable": [
         "lowercase-global"
@@ -19,5 +18,6 @@
         "is_compiletime",
         "compiletime",
         "addCompiletimeFinalize"
-    ]
+    ],
+    "Lua.workspace.ignoreSubmodules": false
 }

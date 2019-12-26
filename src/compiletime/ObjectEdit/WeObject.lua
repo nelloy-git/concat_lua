@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 require('utils.Globals')
 local Log = require('utils.Log')
 ---@type WeUtils
@@ -11,8 +13,8 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type WeObjectClass
-local WeObject = newClass('WeObject')
+---@type any
+local WeObject = Class.newClass('WeObject')
 
 ---@class WeObject
 local public = WeObject.public
@@ -35,7 +37,7 @@ private.field_serial_end = '\0\0\0\0'
 ---@param instance_data table | nil
 ---@return WeObject
 function static.new(id, base_id, name, instance_data)
-    local instance = instance_data or newInstanceData(WeObject)
+    local instance = instance_data or Class.newInstanceData(WeObject)
     local priv = {
         id = ID2str(id),
         base_id = ID2str(base_id),
@@ -86,7 +88,7 @@ function public:getField(field)
     return priv.fields[field]
 end
 
----@return table(WeField,any)
+---@return table<WeField,any>
 function public:getAllChanges()
     local priv = private[self]
 

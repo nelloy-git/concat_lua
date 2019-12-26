@@ -1,10 +1,12 @@
 local Log = require('utils.Log')
 local Metadata = require('utils.ClassMetadata')
 
+local Class = {}
+
 local class_metatable = {
     __newindex = function(class, key, value)
         local msg = "have to use static or public subtable for new values."
-        Log(Log.Warn, getClassName(class), msg)
+        Log(Log.Warn, Class.getClassName(class), msg)
 	end,
 
 	__index = function(class, key)
@@ -24,7 +26,7 @@ local class_metatable = {
         local val = static[key]
         if val == nil then
             local msg = string.format('static field with name \"%s\" is not found.', key)
-            Log(Log.Warn, getClassName(class), msg)
+            Log(Log.Warn, Class.getClassName(class), msg)
             return nil
         end
         return val
@@ -49,20 +51,19 @@ local instance_metatable = {
         return res
     end,
 
-    __gc = freeInstanceData
+    __gc = Class.freeInstanceData
 }
 
-function newClass(name, ...)
+---@return any
+function Class.Class.newClass(name, ...)
     local class = {}
     setmetatable(class, class_metatable)
-    Metadata.newClass(name, class, ...)
+    Metadata.Class.newClass(name, class, ...)
 
     return class
 end
 
----@param class table
----@return table
-function newInstanceData(class)
+function Class.newInstanceData(class)
     local instance = Metadata.allocate(class)
     setmetatable(instance, instance_metatable)
 
@@ -70,22 +71,22 @@ function newInstanceData(class)
 end
 
 ---@param instance table
-function freeInstanceData(instance)
+function Class.freeInstanceData(instance)
     Metadata.free(instance)
 end
 
-function getInstanceClass(instance)
+function Class.getInstanceClass(instance)
     return Metadata.getClass(instance)
 end
 
-function getClassName(class)
+function Class.getClassName(class)
     if Metadata.isClass(class) then
         return Metadata.getClassName(class)
     end
     return nil
 end
 
-function isInstanceOfClass(instance, class)
+function Class.isInstanceOfClass(instance, class)
     local inst_class = Metadata.getClass(instance)
     if inst_class == nil then
         return false
@@ -101,7 +102,13 @@ local original_type = _G.type
 ---@param _type string
 ---@return boolean
 function isType(value, _type)
-    local class = Metadata.getClassByName(_type)
+    local class
+    if not Metadata.isClass(_type) then
+        class = Metadata.getClassByName(_type)
+    else
+        class = _type
+    end
+
     if not Metadata.getClass(value) or not class then
         return type(value) == _type
     end
@@ -110,7 +117,7 @@ function isType(value, _type)
 end
 
 function type(val)
-    local class = getInstanceClass(val)
+    local class = Class.getInstanceClass(val)
     if class then
         val = class
     end
@@ -120,3 +127,5 @@ function type(val)
     end
     return original_type(val)
 end
+
+return Class

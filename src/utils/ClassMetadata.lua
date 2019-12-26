@@ -99,7 +99,7 @@ local function static_override_value(self, key, value, class)
     rawset(static, key, value)
 end
 
-function Metadata.newClass(name, class, ...)
+function Metadata.Class.newClass(name, class, ...)
     Metadata_class2name[class] = name
     Metadata_name2class[name] = class
 

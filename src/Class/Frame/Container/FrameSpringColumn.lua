@@ -2,25 +2,24 @@
 -- Include
 --=========
 
----@type FrameClass
+local Class = require('Utils.Class')
+
 local Frame = require('Class.Frame.Frame')
----@type FrameTypeClass
 local FrameType = require('Class.Frame.FrameType')
----@type FrameBackdropClass
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 
 --=======
 -- Class
 --=======
 
----@type FrameSpringColumnClass
-local FrameSpringColumn = newClass('FrameSpringColumn', FrameBackdrop)
+---@class FrameSpringColumnClass : FrameBackdropClass
+local FrameSpringColumn = Class.newClass('FrameSpringColumn', FrameBackdrop)
 
 ---@class FrameSpringColumn : FrameBackdrop
 local public = FrameSpringColumn.public
----@class FrameSpringColumnClass : FrameBackdropClass
+---@type FrameSpringColumnClass
 local static = FrameSpringColumn.static
----@type table
+---@type FrameSpringColumnClass
 local override = FrameSpringColumn.override
 ---@type table(FrameSpringColumn, table)
 local private = {}
@@ -33,7 +32,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameSpringColumn
 function override.new(frame_type, instance_data)
-    local instance = instance_data or newInstanceData(FrameSpringColumn)
+    local instance = instance_data or Class.newInstanceData(FrameSpringColumn)
 
     if frame_type then
         instance = Frame.new(frame_type, instance)
@@ -94,7 +93,7 @@ function public:setRows(count)
     local priv = private.get(self)
 
     if count < 1 or count % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameSpringColumn),
+        Log(Log.Err, FrameSpringColumn,
             "rows count must be integer more or equal 1.")
         return nil
     end
@@ -184,13 +183,13 @@ function public:setCell(frame, row)
     local priv = private.get(self)
 
     if row < 1 or row % 1 ~= 0 then
-        Log(Log.Err, getClassName(FrameSpringColumn),
+        Log(Log.Err, FrameSpringColumn,
             "row must be integer more or equal 1.")
         return nil
     end
 
     if row > priv.rows then
-        Log(Log.Err, getClassName(FrameSpringColumn),
+        Log(Log.Err, FrameSpringColumn,
             "row for element adding can not be greater than size.")
         return nil
     end

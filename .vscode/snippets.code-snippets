@@ -1,5 +1,5 @@
 {
-    "NewClass":{
+    "Class.newClass":{
         "prefix": "createClass",
         "body": [
             "--=========",
@@ -11,7 +11,7 @@
             "--=======",
             "",
             "---@type ${1:className}Class",
-            "local ${1:className} = newClass('${1:className}')",
+            "local ${1:className} = Class.newClass('${1:className}')",
             "",
             "---@class ${1:className}",
             "local public = ${1:className}.public",
@@ -29,7 +29,7 @@
             "---@param instance_data table | nil",
             "---@return ${1:className}",
             "function static.new(instance_data)",
-            "    local instance = instance_data or newInstanceData(${1:className})",
+            "    local instance = instance_data or Class.newInstanceData(${1:className})",
             "    local priv = private.new(instance)",
             "",
             "    return instance",

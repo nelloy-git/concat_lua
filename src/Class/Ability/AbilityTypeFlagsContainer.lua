@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+local Class = require('Utils.Class')
+
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
 ---@type UnitParametersContainerClass
@@ -11,8 +13,7 @@ local UnitParametersContainer = require('Class.Unit.UnitParametersContainer')
 -- Class
 --=======
 
----@type AbilityTypeFlagsClass
-local AbilityTypeFlags = newClass('AbilityTypeFlags')
+local AbilityTypeFlags = Class.newClass('AbilityTypeFlags')
 
 ---@class AbilityTypeFlags
 local public = AbilityTypeFlags.public
@@ -30,7 +31,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return AbilityTypeFlags
 function static.new(instance_data)
-    local instance = instance_data or newInstanceData(AbilityTypeFlags)
+    local instance = instance_data or Class.newInstanceData(AbilityTypeFlags)
     local priv = {
         caster_can_move = true,
         caster_can_attack = true,
