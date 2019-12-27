@@ -12,14 +12,11 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
----@class FrameButtonClass : FrameClass
 local FrameButton = Class.newClass('FrameButton', Frame)
-
 ---@class FrameButton : Frame
 local public = FrameButton.public
----@type FrameButtonClass
+---@class FrameButtonClass : FrameClass
 local static = FrameButton.static
----@type FrameButtonClass
 local override = FrameButton.override
 
 local private = {}
@@ -127,9 +124,9 @@ end
 --=========
 
 local private_data = {}
----@param self FrameType
+---@param self FrameButton
 ---@param frame_type FrameType
----@return FrameTypePrivate
+---@return table
 function private.new(self, frame_type)
     local priv = {
         texture_framehandle = BlzGetFrameByName(frame_type:getTextureFramehandleName(), 0)
@@ -144,13 +141,13 @@ function private.new(self, frame_type)
     return priv
 end
 
----@param self FrameType
----@return FrameTypePrivate
+---@param self FrameButton
+---@return table
 function private.get(self)
     return private_data[self]
 end
 
----@param self FrameType
+---@param self FrameButton
 function private.free(self)
     private_data[self] = nil
 end

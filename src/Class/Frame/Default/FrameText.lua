@@ -4,6 +4,7 @@
 
 local Class = require('Utils.Class')
 
+---@type any
 local Frame = require('Class.Frame.Frame')
 local FrameType = require('Class.Frame.FrameType')
 
@@ -11,21 +12,13 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
----@class FrameTextClass : FrameClass
 local FrameText = Class.newClass('FrameText', Frame)
-
 ---@class FrameText : Frame
 local public = FrameText.public
----@type FrameTextClass
+---@class FrameTextClass : FrameClass
 local static = FrameText.static
----@type FrameTextClass
 local override = FrameText.override
-
 local private = {}
-
-if not is_compiletime then
-    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-end
 
 --========
 -- Static
@@ -95,6 +88,10 @@ end
 --=========
 -- Private
 --=========
+
+if not is_compiletime then
+    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+end
 
 private.default_font = 'MasterFont'
 private.default_font_size = 0.012

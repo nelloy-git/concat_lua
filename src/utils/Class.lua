@@ -63,7 +63,10 @@ function Class.Class.newClass(name, ...)
     return class
 end
 
-function Class.newInstanceData(class)
+function Class.newInstanceData(class, child_data)
+    if child_data then
+        return child_data
+    end
     local instance = Metadata.allocate(class)
     setmetatable(instance, instance_metatable)
 

@@ -8,16 +8,12 @@ local Class = require('Utils.Class')
 -- Class
 --=======
 
----@class FrameTypeClass
 local FrameType = Class.newClass('FrameType')
-
 ---@class FrameType
 local public = FrameType.public
----@type FrameTypeClass
+---@class FrameTypeClass
 local static = FrameType.static
----@type FrameTypeClass
 local override = FrameType.override
-
 local private = {}
 
 --=========
@@ -27,22 +23,23 @@ local private = {}
 ---@param name string
 ---@param base_name string
 ---@param is_simpleframe boolean
----@param instance_data table | nil
+---@param child_data any
 ---@return FrameType
-function static.new(name, base_name, is_simpleframe, instance_data)
-    local instance = instance_data or Class.newInstanceData(FrameType)
-    local priv = private.new(instance, name, base_name, is_simpleframe)
+function static.new(name, base_name, is_simpleframe, child_data)
+    ---@type FrameType
+    local instance = Class.newInstanceData(FrameType, child_data)
+    private.new(instance, name, base_name, is_simpleframe)
 
     return instance
 end
 
 ---@param data FdfObjectRuntime
 ---@param is_simpleframe boolean
----@param instance_data table | nil
 ---@return FrameType
-function static.load(data, is_simpleframe, instance_data)
-    local instance = instance_data or Class.newInstanceData(FrameType)
-    local priv = private.load(instance, data, is_simpleframe)
+function static.load(data, is_simpleframe, child_data)
+    ---@type FrameType
+    local instance = Class.newInstanceData(FrameType, child_data)
+    private.load(instance, data, is_simpleframe)
 
     return instance
 end
@@ -88,16 +85,14 @@ end
 -- Private
 --=========
 
----@type table<FrameType,FrameTypePrivate>
 local private_data = {}
 
 ---@param self FrameType
 ---@param name string
 ---@param base_name string
 ---@param is_simpleframe boolean
----@return FrameTypePrivate
+---@return table
 function private.new(self, name, base_name, is_simpleframe)
-    ---@class FrameTypePrivate
     local priv = {
         name = name,
         base_name = base_name,
@@ -109,10 +104,10 @@ function private.new(self, name, base_name, is_simpleframe)
 end
 
 ---@param self FrameType
----@param data FdfObjectRuntime
----@return FrameTypePrivate
+---@param data any
+---@param is_simpleframe boolean
+---@return table
 function private.load(self, data, is_simpleframe)
-    ---@type FrameTypePrivate
     local priv = data
     priv.is_simpleframe = is_simpleframe
 
@@ -121,7 +116,6 @@ function private.load(self, data, is_simpleframe)
 end
 
 ---@param self FrameType
----@return FrameTypePrivate
 function private.get(self)
     return private_data[self]
 end

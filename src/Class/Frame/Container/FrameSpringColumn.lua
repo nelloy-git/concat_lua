@@ -3,45 +3,41 @@
 --=========
 
 local Class = require('Utils.Class')
-
-local Frame = require('Class.Frame.Frame')
-local FrameType = require('Class.Frame.FrameType')
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
+
+---@type FrameCellClass
+local FrameCell = require('Class.Frame.Container.FrameCell')
+---@type FrameTypeClass
+local FrameType = require('Class.Frame.FrameType')
 
 --=======
 -- Class
 --=======
 
----@class FrameSpringColumnClass : FrameBackdropClass
 local FrameSpringColumn = Class.newClass('FrameSpringColumn', FrameBackdrop)
-
 ---@class FrameSpringColumn : FrameBackdrop
 local public = FrameSpringColumn.public
----@type FrameSpringColumnClass
+---@class FrameSpringColumnClass : FrameBackdropClass
 local static = FrameSpringColumn.static
----@type FrameSpringColumnClass
 local override = FrameSpringColumn.override
-
 local private = {}
 
 --========
 -- Static
 --========
 
+--- SimpleFrame by default.
 ---@param frame_type FrameType | nil
----@param instance_data table | nil
+---@param child_data any
 ---@return FrameSpringColumn
-function override.new(frame_type, instance_data)
-    local instance = instance_data or Class.newInstanceData(FrameSpringColumn)
-
-    if frame_type then
-        instance = Frame.new(frame_type, instance)
-    else
-        instance = Frame.new(private.default_frame_type, instance)
+function override.new(frame_type, child_data)
+    if not frame_type then
+        frame_type = private.default_frame_type
     end
+    ---@type FrameSpringColumn
+    local instance = Class.newInstanceData(FrameSpringColumn, child_data)
+    instance = FrameBackdrop.new(frame_type, instance)
     private.new(instance)
-
-    private.updateRowHeight(instance)
 
     return instance
 end
@@ -57,7 +53,7 @@ function public:free()
 
     local free_frames = {}
     for i = 1, #priv.elements do
-        free_frames[i]:setParent(nil)
+        --free_frames[i]:setParent(nil)
         table.insert(free_frames, #free_frames + 1, free_frames[i])
     end
 
@@ -198,7 +194,7 @@ function public:setCell(frame, row)
     priv.elements[row] = frame
 
     if frame then
-        frame:setParent(self:getFramehandle())
+        --frame:setParent(self:getFramehandle())
     end
 
     return prev
@@ -234,38 +230,60 @@ end
 -- Private
 --=========
 
-local class_privates = {}
+private.SIZE_TYPE = {
+    RATIO = 0,
+    ABS = 1,
+    FREE = 2
+}
+
+local private_data = {}
+
 ---@param self FrameSpringColumn
 function private.new(self)
-    ---@class FrameSpringColumnPrivate
     local priv = {
-        left_offset = 0,
-        right_offset = 0,
-        top_offset = 0,
-        bottom_offset = 0,
+        border_left = 0,
+        border_right = 0,
+        border_top = 0,
+        border_bottom = 0,
 
-        rows = 1,
-        is_row_ratio = {},
-        is_row_abs = {},
-        row_ratio = {},
-        row_height = {},
-        row_center_x = 0,
-        row_center_y = {},
+        cell_border_left = 0,
+        cell_border_right = 0,
+        cell_border_top = 0,
+        cell_border_bottom = 0,
 
-        elements = {}
+        cells_count = 1,
+        cells = {[1] = FrameCell.new(self)},
+        cells_type = {[1] = private.SIZE_TYPE.FREE},
+        cells_size = {
+            [private.SIZE_TYPE.RATIO] = {[1] = -1},
+            [private.SIZE_TYPE.ABS] = {[1] = -1},
+            RESULT = {[1] = 0}
+        },
+        cells_center = {[1] = 0},
     }
-    class_privates[self] = priv
+    private_data[self] = priv
 end
 
 ---@param self FrameSpringColumn
----@return FrameSpringColumnPrivate
+---@return table
 function private.get(self)
-    return class_privates[self]
+    return private_data[self]
 end
 
 ---@param self FrameSpringColumn
+---@return Frame[]
 function private.free(self)
-    class_privates[self] = nil
+    local priv = private.get(self)
+
+    local items = {}
+    for i = 1, priv.cells_count do
+        local it = priv.cells[i]:free()
+        if it then items:insert(it) end
+    end
+
+    private_data[self] = nil
+
+    return items
 end
 
 ---@param self FrameSpringColumn
@@ -300,38 +318,60 @@ function private.applyElementPos(self, element, row)
 end
 
 ---@param self FrameSpringColumn
-function private.updateRowHeight(self)
+function private.updateCells(self)
     local priv = private.get(self)
 
-    local height = self:getHeight()
-    local free_rows = priv.rows
-    local free_height = height - (priv.top_offset + priv.bottom_offset)
-    for i = 1, priv.rows do
-        if priv.is_row_ratio[i] then
-            free_rows = free_rows - 1
-            priv.row_height[i] = priv.row_ratio[i] * height
-            free_height = free_height - priv.row_height[i]
-        elseif priv.is_row_abs[i] then
-            free_rows = free_rows - 1
-            free_height = free_height - priv.row_height[i]
-        end
-    end
+    private.updateResultSize(self)
 
-    if free_rows == 0 then return nil end
-    if free_height < 0 then free_height = 0 end
-
-    local free_row_height = free_height / free_rows
-    for i = 1, priv.rows do
-        if not priv.is_row_abs[i] and not priv.is_row_ratio[i] then
-            priv.row_height[i] = free_row_height
-        end
-    end
 
     priv.row_center_x = self:getWidth() - (priv.left_offset + priv.right_offset)
     local prev_row_end = priv.bottom_offset
     for i = 1, priv.rows do
         priv.row_center_y = prev_row_end + priv.row_height / 2
         prev_row_end = prev_row_end + priv.row_height
+    end
+end
+
+---@param self FrameSpringColumn
+---@return number
+function private.updateResultSize(self)
+    local priv = private.get(self)
+
+    local height = self:getHeight() - (priv.border_top + priv.border_bottom)
+    local free_cells = 0
+    local free_size = height
+
+    for i = 1, priv.cells_count do
+        if priv.cells_type[i] == private.SIZE_TYPE.RATIO then
+            local cur_size = priv.cells_size[private.SIZE_TYPE.RATIO] * height
+            free_size = free_size - cur_size
+            priv.cells_size.RESULT[i] = cur_size
+        elseif priv.cells_type == private.SIZE_TYPE.ABS then
+            free_size = free_size - priv.cells_size[private.SIZE_TYPE.ABS]
+            priv.cells_size.RESULT[i] = priv.cells_size[private.SIZE_TYPE.ABS]
+        else
+            free_cells = free_cells + 1
+        end
+    end
+
+    if free_size < 0 then
+        free_size = 0
+    end
+
+    local free_cell_size = free_size / free_cells
+    for i = 1, priv.cells_count do
+        if priv.cells_type[i] == private.SIZE_TYPE.FREE then
+            priv.cells_size.RESULT[i] = free_cell_size
+        end
+    end
+end
+
+function private.updateCenters(self)
+    local priv = private.get(self)
+
+    local cell_left = priv.border_left
+    for i = 1, #priv.cells_count do
+        priv.cells_center[i] = cell_left + cell_border_left
     end
 end
 
