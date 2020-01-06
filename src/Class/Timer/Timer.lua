@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
@@ -51,7 +51,7 @@ end
 ---@param timeout number
 ---@param periodic boolean
 ---@param action Action
-function public:start(timeout, periodic, action)
+function public:new(timeout, periodic, action)
     TimerStart(private[self].wc3_timer, timeout, periodic, function() action:run() end)
 end
 

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 
 --=======
 -- Class

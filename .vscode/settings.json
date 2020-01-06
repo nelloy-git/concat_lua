@@ -19,5 +19,5 @@
         "compiletime",
         "addCompiletimeFinalize"
     ],
-    "Lua.workspace.ignoreSubmodules": false
+    "Lua.workspace.ignoreSubmodules": true,
 }

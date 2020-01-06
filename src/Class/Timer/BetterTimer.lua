@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 
 local Log = require('utils.Log')
 ---@type ActionClass
@@ -51,7 +51,7 @@ function override.new(period, instance_data)
     }
     private[instance] = priv
 
-    Timer.public.start(instance, period, true, Action.new(function() private.runActions(instance) end))
+    Timer.public.new(instance, period, true, Action.new(function() private.runActions(instance) end))
 
     return instance
 end
@@ -62,7 +62,7 @@ function static.getGlobalTimer()
 end
 
 --- Removed function
-function public:start()
+function public:new()
     Log(Log.Warn, getClassName(BetterTimer), 'function \"start\" is deprecated.' )
 end
 

@@ -11,6 +11,7 @@ local Metadata_static_override = {}
 local Metadata_public = {}
 local Metadata_subclass = {}
 local Metadata_instance_class = {}
+local Metadata_class_file = {}
 
 ---@param class table
 ---@return string
@@ -139,6 +140,10 @@ function Metadata.newClass(name, class, ...)
     end
 
     Metadata_subclass[class] = list
+
+    local sep = package.config:sub(1,1)
+    local info = debug.getinfo(3, 'S')
+    Metadata_class_file[name] = info.source:sub(4, #info.source - 4):gsub(sep, '.')
 end
 
 ---@param class table
@@ -188,6 +193,10 @@ function deepcopy(orig, copies)
         copy = orig
     end
     return copy
+end
+
+function Metadata.getPath(class_name)
+    return Metadata_class_file[class_name]
 end
 
 return Metadata

@@ -2,11 +2,12 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 local Log = require('utils.Log')
 local WeObject = require('compiletime.ObjectEdit.WeObject')
 
-local WeField = require('compiletime.ObjectEdit.WeField')
+local WeField = require(Class.getPath('WeField'))
+--local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeFileClass
 local WeObjectFile = require('compiletime.ObjectEdit.WeFile')
 ---@type WeUtils

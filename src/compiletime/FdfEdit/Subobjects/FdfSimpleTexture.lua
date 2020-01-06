@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 local FdfSubobject = require('compiletime.FdfEdit.FdfSubobject')
 
 ---@type FdfFieldClass

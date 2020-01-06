@@ -4,7 +4,7 @@ local log_all_changes = false
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 local Log = require('utils.Log')
 
 ---@type WeUtils

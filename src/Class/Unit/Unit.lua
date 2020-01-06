@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 local Log = require('utils.Log')
 
 ---@type DataBaseClass
@@ -53,7 +53,7 @@ end
 -- Public
 --========
 
-public.parameters = 0
+public.parameters = 'UnitParametersContainer'
 
 function public:free()
     private.freeComponents(self)

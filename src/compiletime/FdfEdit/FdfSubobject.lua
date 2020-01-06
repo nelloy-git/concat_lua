@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 local Log = require('utils.Log')
 local FdfObject = require('compiletime.FdfEdit.FdfObject')
 

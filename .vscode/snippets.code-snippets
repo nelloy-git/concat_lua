@@ -6,7 +6,8 @@
             "-- Include",
             "--=========",
             "",
-            "local Class = require('Utils.Class')",
+            "local Class = require('utils.Class')",
+            "local Log = require('utils.Log')",
             "",
             "--=======",
             "-- Class",
@@ -18,19 +19,17 @@
             "---@class ${1:className}Class",
             "local static = ${1:className}.static",
             "local override = ${1:className}.override",
-            "",
-            "",
             "local private = {}",
             "",
             "--=========",
             "-- Static",
             "--=========",
             "",
-            "---@param child_data any",
+            "---@param child_data ${1:className} | nil",
             "---@return ${1:className}",
             "function static.new(child_data)",
             "    local instance = Class.newInstanceData(${1:className}, child_data)",
-            "    local priv = private.new(instance)",
+            "    local priv = private.newData(instance)",
             "",
             "    return instance",
             "end",
@@ -40,7 +39,7 @@
             "--========",
             "",
             "function public:free()",
-            "    private.free(self)",
+            "    private.freeData(self)",
             "    Class.freeInstanceData(self)",
             "end",
             "",
@@ -48,63 +47,21 @@
             "-- Private",
             "--=========",
             "",
-            "local private_data = {}",
-            "",
             "---@param self ${1:className}",
             "---@return table",
             "function private.new(self)",
             "    local priv = {",
             "    }",
-            "    private_data[self] = priv",
+            "    private[self] = priv",
             "    return priv",
             "end",
             "",
             "---@param self ${1:className}",
-            "---@return table",
-            "function private.get(self)",
-            "    return private_data[self]",
-            "end",
-            "",
-            "---@param self ${1:className}",
-            "function private.free(self)",
-            "    private_data[self] = nil",
+            "function private.freeData(self)",
+            "    private[self] = nil",
             "end",
             "",
             "return ${1:className}"
         ]
     },
-
-    "Static function": {
-        "prefix": "function static",
-        "body": [
-            "function static.${1:funcName}(${2:parameters})",
-            "",
-            "end"
-        ]
-    },
-
-    "Public function": {
-        "prefix": "function public",
-        "body": [
-            "function public:${1:funcName}(${2:parameters})",
-            "",
-            "end"
-        ]
-    },
-
-    "Private function": {
-        "prefix": "function private",
-        "body": [
-            "function private.${1:funcName}(${2:parameters})",
-            "",
-            "end"
-        ]
-    },
-
-    "Private field": {
-        "prefix": ["priv", "local priv"],
-        "body": [
-            "local priv = private[self]"
-        ]
-    }
 }

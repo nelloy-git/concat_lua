@@ -44,7 +44,7 @@ if is_runtime then
 else
     start_time = os.clock()
     if ctime.use_log_file then
-        local path = _G._dst_dir..package.config:sub(1,1)..ctime.file_name
+        local path = GetSource()..package.config:sub(1,1)..ctime.file_name
         ctime.file_link = assert(io.open(path, "w"))
         ctime.file_link:write(fmt("[%0.3f] %s\n", os.clock() - start_time, "Logging started"))
         addCompiletimeFinalize(function()

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class')
+local Class = require('utils.Class')
 
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
@@ -35,6 +35,7 @@ function static.new(instance_data)
     local priv = {
         caster_can_move = true,
         caster_can_attack = true,
+        caster_can_cast = false
     }
     private[instance] = priv
 

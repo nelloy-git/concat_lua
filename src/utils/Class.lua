@@ -89,6 +89,12 @@ function Class.getClassName(class)
     return nil
 end
 
+---@param class_name string
+---@return string
+function Class.getPath(class_name)
+    return Metadata.getPath(class_name)
+end
+
 function Class.isInstanceOfClass(instance, class)
     local inst_class = Metadata.getClass(instance)
     if inst_class == nil then

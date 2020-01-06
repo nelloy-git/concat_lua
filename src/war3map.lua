@@ -60,6 +60,7 @@ local frame_type = compiletime(function()
     return file:toRuntime()
 end)
 --]]
+--[[
 local function testAbility()
     local Unit = require('Class.Unit.Unit')
     local AbilityExample = require('Class.Ability.AbilityExample')
@@ -73,7 +74,7 @@ local function testAbility()
     it:setName('Test')
     it:setDescription('Test')
 end
-
+--]]
 --[[
 local function testFrames()
     local FrameSpringTable = require('Class.Frame.Container.FrameSpringTable')
