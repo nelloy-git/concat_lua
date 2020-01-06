@@ -13,38 +13,31 @@ local DataBase = require('Class.DataBase')
 -- Class
 --=======
 
----@type any
 local Trigger = Class.newClass('Trigger')
-
----@class TriggerClass
-local static = Trigger.static
----@type table
-local override = Trigger.override
 ---@class Trigger
 local public = Trigger.public
----@type table(Trigger, table)
+---@class TriggerClass
+local static = Trigger.static
+local override = Trigger.override
 local private = {}
 
-private.DB = DataBase.new('userdata', getClassName(Trigger))
+--========
+-- Static
+--========
 
---=========
--- Methods
---=========
-
----@param instance_data table | nil
+---@param child_data Trigger
 ---@return Trigger
-function static.new(instance_data)
-    local instance = instance_data or Class.newInstanceData(Trigger)
-    local priv = {
-        wc3_trigger = CreateTrigger(),
-        actions = {}
-    }
-    private[instance] = priv
-
-    private.DB:set(priv.wc3_trigger, instance)
-    TriggerAddAction(priv.wc3_trigger, function() private.runActions(instance) end)
+function static.new(child_data)
+    local instance = Class.newInstanceData(Trigger, child_data)
+    private.newData(instance)
 
     return instance
+end
+
+---@param wc3_trigger trigger
+---@return Trigger
+function static.get(wc3_trigger)
+    return private.DB:get(wc3_trigger)
 end
 
 ---@return Trigger
@@ -53,13 +46,11 @@ function static.getTriggering()
     return private.DB:get(wc3_trigger)
 end
 
-function public:free()
-    DestroyTrigger(private[self].wc3_trigger)
-    private[self] = nil
-    freeInstanceData(self)
-end
+--========
+-- Public
+--========
 
----@param callback fun(data:any):nil
+---@param callback Callback
 ---@return Action
 function public:addAction(callback)
     local priv = private[self]
@@ -99,7 +90,7 @@ function public:execute()
     local priv = private[self]
 
     -- Set active trigger
-    local original = GetTriggeringTrigger
+    local original = _G.GetTriggeringTrigger
     GetTriggeringTrigger = function() return priv.wc3_trigger end
     -- Run trigger
     TriggerExecute(priv.wc3_trigger)
@@ -267,6 +258,35 @@ end
 function public:addPlayerKeyEvent(player, key, meta_key, key_down)
     local priv = private[self]
     BlzTriggerRegisterPlayerKeyEvent(priv.wc3_trigger, player, key, meta_key, key_down)
+end
+
+function public:free()
+    private.freeData(self)
+    Class.freeInstanceData(self)
+end
+
+--=========
+-- Private
+--=========
+
+private.DB = DataBase.new('userdata', Trigger)
+
+---@param instance Trigger
+function private.newData(instance)
+    local priv = {
+        wc3_trigger = CreateTrigger(),
+        actions = {}
+    }
+    private[instance] = priv
+    private.DB:set(priv.wc3_trigger, instance)
+
+    TriggerAddAction(priv.wc3_trigger, function() private.runActions(instance) end)
+end
+
+---@param self Trigger
+function private.freeData(self)
+    DestroyTrigger(private[self].wc3_trigger)
+    private[self] = nil
 end
 
 ---@param self Trigger

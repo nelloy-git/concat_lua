@@ -25,11 +25,11 @@ local private = {}
 --========
 
 ---@param frame_type number
----@param instance_data table | nil
+---@param child_data table | nil
 ---@return FrameText
-function override.new(frame_type, instance_data)
+function override.new(frame_type, child_data)
 
-    local instance = instance_data or Class.newInstanceData(FrameText)
+    local instance = Class.newInstanceData(FrameText, child_data)
     if frame_type then
         instance = Frame.new(frame_type, instance)
     else
@@ -49,11 +49,6 @@ end
 --========
 -- Public
 --========
-
-function public:free()
-    private[self] = nil
-    Frame.public.free(self)
-end
 
 ---@param text string
 function public:setText(text)
@@ -83,6 +78,11 @@ end
 ---@return string
 function public:getFont()
     return private[self].font
+end
+
+function public:free()
+    private[self] = nil
+    Frame.public.free(self)
 end
 
 --=========

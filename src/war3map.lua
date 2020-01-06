@@ -23,37 +23,43 @@ end
 
 local unit_type = compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
+    ---@type WeUnitClass
     local WeUnit = WeObjEdit.Unit
     local u = WeUnit.new(WeObjEdit.getHeroId(), 'Hpal', 'Footman')
     u:setField(WeUnit.Name, 'Footman')
+    u:setField(WeUnit.ArmorSoundType, 'Flesh')
     return u:toRuntime()
 end)
+
 --[[
 local frame_type = compiletime(function()
-    local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-    local FdfFile = WeObjEdit.Fdf.File
-    local SimpleFrame = WeObjEdit.Fdf.SimpleFrame
-    local SimpleString = WeObjEdit.Fdf.SimpleString
-    local SimpleTexture = WeObjEdit.Fdf.SimpleTexture
+    local FdfEdit = require('compiletime.FdfEdit.FdfEdit')
+    local FdfFile = FdfEdit.File
+    local SimpleFrame = FdfEdit.SimpleFrame
+    local SimpleString = FdfEdit.SimpleString
+    local SimpleTexture = FdfEdit.SimpleTexture
+
+    local sub_texture = SimpleTexture.new('TestSimpleTexture')
+    sub_texture:setField(SimpleTexture.File, "ReplaceableTextures\\CommandButtons\\BTNHeroBloodElfPrince")
+    local sub_texture1 = SimpleTexture.new('TestSimpleTexture1')
+    sub_texture:setField(SimpleTexture.File, "ReplaceableTextures\\CommandButtons\\BTNHeroBloodElfPrince")
+    local sub_texture2 = SimpleTexture.new('TestSimpleTexture2')
+    sub_texture:setField(SimpleTexture.File, "ReplaceableTextures\\CommandButtons\\BTNHeroBloodElfPrince")
 
     local sub_string = SimpleString.new('TestSimpleString')
     sub_string:setField(SimpleString.Font, {"InfoPanelTextFont", 0.009})
 
-    local sub_texture = SimpleTexture.new('TestSimpleTexture')
-    sub_texture:setField(SimpleTexture.File, "ReplaceableTextures\\CommandButtons\\BTNHeroBloodElfPrince")
-
     local frame = SimpleFrame.new('TestSimpleFrame')
     frame:setField(SimpleFrame.Width, 0.05)
     frame:setField(SimpleFrame.Height, 0.05)
-    frame:setField(SimpleFrame.String, {sub_string, sub_string, sub_string})
-    frame:setField(SimpleFrame.Texture, {sub_texture, sub_texture, sub_texture})
+    frame:setField(SimpleFrame.String, {sub_string})
+    frame:setField(SimpleFrame.Texture, {sub_texture, sub_texture1, sub_texture2})
 
     local file = FdfFile.new('TestSimple')
     file:addObject(frame)
     return file:toRuntime()
 end)
-]]--
---[[
+--]]
 local function testAbility()
     local Unit = require('Class.Unit.Unit')
     local AbilityExample = require('Class.Ability.AbilityExample')
@@ -67,7 +73,6 @@ local function testAbility()
     it:setName('Test')
     it:setDescription('Test')
 end
---]]
 
 --[[
 local function testFrames()
@@ -106,7 +111,9 @@ end
 
 local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
 Test = function()
+    CreateUnit(Player(0), ID(unit_type.id), 0, 0, 0)
     --local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
+    --[[
     local FrameButton = require('Class.Frame.Default.FrameButton')
 
     local btn = FrameButton.new()
@@ -115,6 +122,7 @@ Test = function()
     btn:setWidth(0.1)
     btn:setHeight(0.1)
     btn:setTexture(texture)
+    --]]
 end
 
 function InitCustomPlayerSlots()

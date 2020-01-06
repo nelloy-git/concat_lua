@@ -55,10 +55,10 @@ local instance_metatable = {
 }
 
 ---@return any
-function Class.Class.newClass(name, ...)
+function Class.newClass(name, ...)
     local class = {}
     setmetatable(class, class_metatable)
-    Metadata.Class.newClass(name, class, ...)
+    Metadata.newClass(name, class, ...)
 
     return class
 end

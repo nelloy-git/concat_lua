@@ -3,9 +3,10 @@
 --=========
 
 local Class = require('Utils.Class')
+local Log = require('utils.Log')
 
 ---@type FdfFieldClass
-local FdfField = require('compiletime.ObjectEdit.FdfField')
+local FdfField = require('compiletime.FdfEdit.FdfField')
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
 
@@ -14,27 +15,24 @@ local WeUtils = require('compiletime.Utils')
 --=======
 
 local FdfObject = Class.newClass('FdfObject')
-
 ---@class FdfObject
 local public = FdfObject.public
 ---@class FdfObjectClass
 local static = FdfObject.static
----@type table
 local override = FdfObject.override
----@type table(FdfObject, table)
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param base_name string
 ---@param name string
----@param instance_data table | nil
+---@param base_name string
+---@param child_data FdfObject | nil
 ---@return FdfObject
-function static.new(base_name, name, instance_data)
-    local instance = instance_data or Class.newInstanceData(FdfObject)
-    local priv = private.new(instance, base_name, name)
+function static.new(name, base_name, child_data)
+    local instance = Class.newInstanceData(FdfObject, child_data)
+    private.newData(instance, name, base_name)
 
     return instance
 end
@@ -43,23 +41,18 @@ end
 -- Public
 --========
 
-function public:free()
-    private.free(self)
-    freeInstanceData(self)
-end
-
 ---@return string
 function public:getName()
-    return private.get(self).name
+    return private[self].name
 end
 
 ---@return string
 function public:getBaseName()
-    return private.get(self).base_name
+    return private[self].base_name
 end
 
 function public:setField(field, value)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if field:checkType(value) then
         local pos = #priv.fields + 1
@@ -68,17 +61,17 @@ function public:setField(field, value)
     else
         local msg = string.format("check data failed. Field change ignored. Got: %s need: %s.\n%s",
                                   type(value), field:getType(), WeUtils.getErrorPos())
-        Log(Log.Warn, getClassName(FdfObject), msg)
+        Log(Log.Warn, FdfObject, msg)
     end
 end
 
 function public:getFields()
-    local priv = private.get(self)
+    local priv = private[self]
     return priv.fields, priv.values
 end
 
 function public:serialize()
-    local priv = private.get(self)
+    local priv = private[self]
 
     local res = string.format("Frame \"%s\" \"%s\" {\n", priv.base_name, priv.name)
     for i = 1, #priv.fields do
@@ -87,11 +80,10 @@ function public:serialize()
     return res.."}\n"
 end
 
----@return FdfObjectRuntime
+---@return table
 function public:toRuntime()
-    local priv = private.get(self)
+    local priv = private[self]
 
-    ---@class FdfObjectRuntime
     local res = {
         name = priv.name,
         base_name = priv.base_name,
@@ -103,6 +95,12 @@ function public:toRuntime()
             res.fields[priv.fields[i]:getName()] = 'nil'
         elseif isType(priv.values[i], FdfObject) then
             res.fields[priv.fields[i]:getName()] = priv.values[i]:toRuntime()
+        elseif type(priv.values[i]) == 'table' then
+            local list = {}
+            res.fields[priv.fields[i]:getName()] = list
+            for j = 1, #priv.values[i] do
+                list[priv.values[i][j]:getName()] = priv.values[i][j]:toRuntime()
+            end
         else
             res.fields[priv.fields[i]:getName()] = priv.values[i]
         end
@@ -111,14 +109,18 @@ function public:toRuntime()
     return res
 end
 
+function public:free()
+    private.freeData(self)
+    Class.freeInstanceData(self)
+end
+
 --=========
 -- Private
 --=========
 
-local private_data = {}
 ---@param self FdfObject
 ---@return FdfObjectPrivate
-function private.new(self, base_name, name)
+function private.newData(self, name, base_name)
     ---@class FdfObjectPrivate
     local priv = {
         base_name = base_name,
@@ -126,19 +128,13 @@ function private.new(self, base_name, name)
         fields = {},
         values = {}
     }
-    private_data[self] = priv
+    private[self] = priv
     return priv
 end
 
 ---@param self FdfObject
----@return FdfObjectPrivate
-function private.get(self)
-    return private_data[self]
-end
-
----@param self FdfObject
-function private.free(self)
-    private_data[self] = nil
+function private.freeData(self)
+    private[self] = nil
 end
 
 return FdfObject

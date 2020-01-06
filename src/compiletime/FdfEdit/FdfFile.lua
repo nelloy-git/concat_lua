@@ -3,20 +3,21 @@
 --=========
 
 local Class = require('Utils.Class')
+local Log = require('utils.Log')
+
+---@type FdfObjectClass
+local FdfObject = require('compiletime.FdfEdit.FdfObject')
 
 --=======
 -- Class
 --=======
 
 local FdfFile = Class.newClass('FdfFile')
-
 ---@class FdfFile
 local public = FdfFile.public
 ---@class FdfFileClass
 local static = FdfFile.static
----@type table
 local override = FdfFile.override
----@type table(FdfFile, table)
 local private = {}
 
 --=========
@@ -24,13 +25,13 @@ local private = {}
 --=========
 
 ---@param name string
----@param instance_data table | nil
+---@param child_data FdfFile | nil
 ---@return FdfFile
-function static.new(name, instance_data)
-    local instance = instance_data or Class.newInstanceData(FdfFile)
-    local priv = private.new(instance, name)
+function static.new(name, child_data)
+    local instance = Class.newInstanceData(FdfFile, child_data)
+    private.newData(instance, name)
 
-    addCompiletimeFinalize(function() private.save(instance) end)
+    addCompiletimeFinalize(function() private.free(instance) end)
 
     return instance
 end
@@ -39,28 +40,29 @@ end
 -- Public
 --========
 
-function public:free()
-    private.free(self)
-    freeInstanceData(self)
-end
-
+---@param obj FdfObject
 function public:addObject(obj)
-    local priv = private.get(self)
+    local priv = private[self]
     table.insert(priv.objects, #priv.objects + 1, obj)
 end
 
----@return FdfFileRuntime
+---@return table
 function public:toRuntime()
-    local priv = private.get(self)
+    local priv = private[self]
 
-    ---@class FdfFileRuntime
     local res = {}
     res.fdf = string.gsub(private.dst_path..priv.name..'.fdf', '\\', '\\\\')
     res.toc = string.gsub(private.dst_path..priv.name..'.toc', '\\', '\\\\')
     for i = 1, #priv.objects do
-        res[priv.objects[i]:getName()] = priv.objects[i]:getBaseName()
+        res[priv.objects[i]:getName()] = priv.objects[i]:toRuntime()
     end
     return res
+end
+
+function public:free()
+    private.save(self)
+    private.free(self)
+    Class.freeInstanceData(self)
 end
 
 --=========
@@ -71,32 +73,25 @@ local sep = package.config:sub(1,1)
 private.dst_path = 'war3mapImported'..sep..'GeneratedFdfFiles'..sep
 private.full_dst_path = _G._dst_dir..sep..private.dst_path
 
-local private_data = {}
----@param self FdfFile
----@return FdfFilePrivate
-function private.new(self, name)
+---@param instance FdfFile
+---@param name string
+function private.newData(instance, name)
     ---@class FdfFilePrivate
     local priv = {
         name = name,
         objects = {}
     }
-    private_data[self] = priv
-    return priv
-end
-
----@param self FdfFile
----@return FdfFilePrivate
-function private.get(self)
-    return private_data[self]
+    private[instance] = priv
 end
 
 ---@param self FdfFile
 function private.free(self)
-    private_data[self] = nil
+    private[self] = nil
 end
 
+---@param self FdfFile
 function private.save(self)
-    local priv = private.get(self)
+    local priv = private[self]
 
     local log_msg = string.format("created new %s fdf file.", priv.name)
     local content = ""
@@ -108,7 +103,7 @@ function private.save(self)
 
         log_msg = log_msg..string.format('\n\tadded %s object.', obj:getName())
     end
-    Log(Log.Msg, getClassName(FdfFile), log_msg)
+    Log(Log.Msg, FdfFile, log_msg)
 
     local dir = private.full_dst_path
     if not private.isFileExists(dir) then
@@ -124,6 +119,7 @@ function private.save(self)
     toc.close()
 end
 
+---@param path string
 function private.isFileExists(path)
     local ok, _, code = os.rename(path, path)
     if not ok then
@@ -135,6 +131,7 @@ function private.isFileExists(path)
     return ok
 end
 
+-- Clear previous files
 if private.isFileExists(private.full_dst_path) then
     local home = os.getenv('HOME')
     if not home then --Windows

@@ -838,9 +838,9 @@ end
 ---@return location
 function PolarProjectionBJ(source, dist, angle)
 	---@type number
-	x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
+	local x = GetLocationX(source) + dist * Cos(angle * bj_DEGTORAD)
 	---@type number
-	y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
+	local y = GetLocationY(source) + dist * Sin(angle * bj_DEGTORAD)
 	return Location(x, y)
 end
 
@@ -930,9 +930,9 @@ end
 ---@return rect
 function RectFromCenterSizeBJ(center, width, height)
 	---@type number
-	x = GetLocationX(center)
+	local x = GetLocationX(center)
 	---@type number
-	y = GetLocationY(center)
+	local y = GetLocationY(center)
 	return Rect(x - width * 0.5, y - height * 0.5, x + width * 0.5, y + height * 0.5)
 end
 
@@ -5328,9 +5328,9 @@ end
 ---@param d destructable
 function ChangeElevatorWalls(open, walls, d)
 	---@type number
-	x              = GetDestructableX(d)
+	local x = GetDestructableX(d)
 	---@type number
-	y              = GetDestructableY(d)
+	local y = GetDestructableY(d)
 	---@type number
 	distToBlocker  = 192
 	---@type number
@@ -12893,9 +12893,9 @@ end
 ---@return item
 function UnitDropItem(inUnit, inItemID)
 	---@type number
-	x           = nil
+	local x = nil
 	---@type number
-	y           = nil
+	local y = nil
 	---@type number
 	radius      = 32
 	---@type number
@@ -12912,8 +12912,8 @@ function UnitDropItem(inUnit, inItemID)
 	unitX       = GetUnitX(inUnit)
 	unitY       = GetUnitY(inUnit)
 	
-	x           = GetRandomReal(unitX - radius, unitX + radius)
-	y           = GetRandomReal(unitY - radius, unitY + radius)
+	local x = GetRandomReal(unitX - radius, unitX + radius)
+	local y = GetRandomReal(unitY - radius, unitY + radius)
 	
 	droppedItem = CreateItem(inItemID, x, y)
 	
@@ -12929,9 +12929,9 @@ end
 ---@return item
 function WidgetDropItem(inWidget, inItemID)
 	---@type number
-	x       = nil
+	local x       = nil
 	---@type number
-	y       = nil
+	local y       = nil
 	---@type number
 	radius  = 32
 	---@type number
@@ -12946,8 +12946,8 @@ function WidgetDropItem(inWidget, inItemID)
 	widgetX = GetWidgetX(inWidget)
 	widgetY = GetWidgetY(inWidget)
 	
-	x       = GetRandomReal(widgetX - radius, widgetX + radius)
-	y       = GetRandomReal(widgetY - radius, widgetY + radius)
+	local x       = GetRandomReal(widgetX - radius, widgetX + radius)
+	local y       = GetRandomReal(widgetY - radius, widgetY + radius)
 	
 	return CreateItem(inItemID, x, y)
 end

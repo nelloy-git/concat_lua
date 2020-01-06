@@ -111,54 +111,6 @@ function WeUtils.float2byte(data)
     return v
 end
 
----@param we_type string
----@return boolean
-function WeUtils.isDataType(we_type)
-    if we_type == 'bool' or
-       we_type == 'int' or
-       we_type == 'real' or
-       we_type == 'unreal' or
-       we_type == 'string' then
-        return true
-    end
-    return false
-end
-
----data type = 'bool'|'int'|'real'|'unreal'|'string'
----@param data_type string
----@return string
-function WeUtils.type2bytes(data_type)
-	if data_type == 'bool' then return WeUtils.int2byte(0) end
-	if data_type == 'int' then return WeUtils.int2byte(0) end
-	if data_type == 'real' then return WeUtils.int2byte(1) end
-	if data_type == 'unreal' then return WeUtils.int2byte(2) end
-	if data_type == 'string' then return WeUtils.int2byte(3) end
-end
-
----data_type = 'bool'|'int'|'real'|'unreal'|'string'
----@param data boolean|number|string
----@param data_type string
----@return string|nil
-function WeUtils.data2byte(data, data_type)
-	if data_type == 'bool' then
-		if data == true then
-			return WeUtils.int2byte(1)
-		else
-			return WeUtils.int2byte(0)
-		end
-	elseif data_type == 'int' then
-		return WeUtils.int2byte(data)
-	elseif data_type == 'real' or data_type == 'unreal' then
-		return WeUtils.float2byte(data)
-	elseif data_type == 'string' then
-		return WeUtils.str2byte(data)
-	else
-		print('Wrong data type')
-		print(WeUtils.getErrorPos())
-		return nil
-	end
-end
-
 ---@return string
 function  WeUtils.getErrorPos()
     local str = ''
@@ -272,6 +224,20 @@ function WeUtils.nextOrderId()
         return nil
     end
     return orders[current_pos]
+end
+
+
+---Converts integer id to string id.
+---@param id integer
+---@return string
+function WeUtils.ID2str(id)
+    if type(id) == 'number' or type(id) == 'integer' then
+        return string.pack(">I4", id)
+    elseif type(id) == 'string' and string.len(id) == 4 then
+        return id
+    end
+    Log(Log.Err, "ID2str function", string.format("got %s", id))
+    return nil
 end
 
 return WeUtils

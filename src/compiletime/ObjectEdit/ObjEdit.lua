@@ -6,14 +6,6 @@ ObjEdit.Buff = require('compiletime.ObjectEdit.Object.WeBuff')
 ObjEdit.Item = require('compiletime.ObjectEdit.Object.WeItem')
 ObjEdit.Unit = require('compiletime.ObjectEdit.Object.WeUnit')
 
-ObjEdit.Fdf = {}
-ObjEdit.Fdf.File = require('compiletime.ObjectEdit.FdfFile')
-ObjEdit.Fdf.Backdrop = require('compiletime.ObjectEdit.Object.Fdf.FdfBackdrop')
-ObjEdit.Fdf.Text = require('compiletime.ObjectEdit.Object.Fdf.FdfText')
-ObjEdit.Fdf.SimpleString = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleString')
-ObjEdit.Fdf.SimpleTexture = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleTexture')
-ObjEdit.Fdf.SimpleFrame = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleFrame')
-ObjEdit.Fdf.SimpleButton = require('compiletime.ObjectEdit.Object.Fdf.FdfSimpleButton')
 
 ObjEdit.Utils = require('compiletime.Utils')
 

@@ -99,7 +99,7 @@ local function static_override_value(self, key, value, class)
     rawset(static, key, value)
 end
 
-function Metadata.Class.newClass(name, class, ...)
+function Metadata.newClass(name, class, ...)
     Metadata_class2name[class] = name
     Metadata_name2class[name] = class
 
@@ -163,6 +163,31 @@ end
 ---@return any
 function Metadata.free(instance)
     Metadata_instance_class[instance] = nil
+end
+
+
+---@param orig any
+---@param copies any
+---@return any
+function deepcopy(orig, copies)
+    copies = copies or {}
+    local orig_type = _G.type(orig)
+    local copy
+    if orig_type == 'table' then
+        if copies[orig] then
+            copy = copies[orig]
+        else
+            copy = {}
+            copies[orig] = copy
+            setmetatable(copy, deepcopy(getmetatable(orig), copies))
+            for orig_key, orig_value in next, orig, nil do
+                copy[deepcopy(orig_key, copies)] = deepcopy(orig_value, copies)
+            end
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
 end
 
 return Metadata

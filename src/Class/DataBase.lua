@@ -1,74 +1,60 @@
+--=========
+-- Include
+--=========
+
+local Class = require('Utils.Class')
+local Log = require('Utils.Log')
+
 --=======
 -- Class
 --=======
 
----@type any
 local DataBase = Class.newClass('DataBase')
-
 ---@class DataBase
 local public = DataBase.public
 ---@class DataBaseClass
 local static = DataBase.static
----@type table
 local override = DataBase.override
----@type table(DataBase, table)
 local private = {}
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@param key_type string
----@param val_type string
----@param instance_data table | nil
+---@param value_type string
+---@param child_data DataBase | nil
 ---@return DataBase
-function static.new(key_type, val_type, instance_data)
-    ---@type DataBase
-    local instance = instance_data or Class.newInstanceData(DataBase)
-    local priv = {
-        data = {},
-        key_type = key_type,
-        value_type = val_type
-    }
-    private[instance] = priv
+function static.new(key_type, value_type, child_data)
+    local instance = Class.newInstanceData(DataBase, child_data)
+    private.newData(instance, key_type, value_type)
 
     return instance
 end
 
-local function isValidKeyType(self, key)
-    local priv = private[self]
-    if not isType(key, priv.key_type) then
-        Log(Log.Err, getClassName(DataBase), string.format("wrong key type. Got: %s Avaliable: %s", type(key), priv.key_type))
-        return false
-    end
-    return true
-end
+--========
+-- Public
+--========
 
-local function isValidValueType(self, value)
-    local priv = private[self]
-    if not isType(value, priv.value_type) then
-        Log(Log.Err, getClassName(DataBase), string.format("wrong value type. Got: %s Avaliable: %s", type(value), priv.key_type))
-        return false
-    end
-    return true
-end
-
+---@param key any
+---@param value any
 function public:set(key, value)
     local priv = private[self]
 
-    if not isValidKeyType(self, key) then
+    if not private.isValidKeyType(self, key) then
         return nil
     end
-    if not isValidValueType(self, value) then
+    if not private.isValidValueType(self, value) then
         return nil
     end
 
     priv.data[key] = value
 end
 
+---@return any
 function public:get(key)
     local priv = private[self]
-    if not isValidKeyType(self, key) then
+    if not private.isValidKeyType(self, key) then
         return nil
     end
     return priv.data[key]
@@ -77,10 +63,62 @@ end
 ---@return boolean
 function public:remove(key)
     local priv = private[self]
-    if not isValidKeyType(self, key) then
+    if not private.isValidKeyType(self, key) then
         return false
     end
     priv.data[key] = nil
+end
+
+function public:free()
+    private.freeData(self)
+    Class.freeInstanceData(self)
+end
+
+--=========
+-- Private
+--=========
+
+---@param self DataBase
+---@param key any
+---@return boolean
+function private.isValidKeyType(self, key)
+    local priv = private[self]
+    if not isType(key, priv.key_type) then
+        local msg = string.format("wrong key type. Got: %s Avaliable: %s", type(key), priv.key_type)
+        Log(Log.Err, DataBase, msg)
+        return false
+    end
+    return true
+end
+
+---@param self DataBase
+---@param value any
+---@return boolean
+function private.isValidValueType(self, value)
+    local priv = private[self]
+    if not isType(value, priv.value_type) then
+        local msg = string.format("wrong value type. Got: %s Avaliable: %s", type(value), priv.value_type)
+        Log(Log.Err, DataBase, msg)
+        return false
+    end
+    return true
+end
+
+---@param instance DataBase
+---@param key_type string
+---@param value_type string
+function private.newData(instance, key_type, value_type)
+    local priv = {
+        data = {},
+        key_type = Class.getClassName() or key_type,
+        value_type = Class.getClassName() or value_type
+    }
+    private[instance] = priv
+end
+
+---@param self DataBase
+function private.freeData(self)
+    private[self] = nil
 end
 
 return DataBase

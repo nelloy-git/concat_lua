@@ -3,8 +3,8 @@
 --=========
 
 local Class = require('Utils.Class')
-
 local Log = require('utils.Log')
+
 ---@type AbilityTypeCallbacksContainerClass
 local AbilityTypeCallbacksContainer = require('Class.Ability.AbilityTypeCallbacksContainer')
 ---@type AbilityTypeFlagsClass
@@ -17,41 +17,25 @@ local DataBase = require('Class.DataBase')
 --=======
 
 local AbilityType = Class.newClass('AbilityType')
-
 ---@class AbilityType
 local public = AbilityType.public
 ---@class AbilityTypeClass
 local static = AbilityType.static
----@type table
 local override = AbilityType.override
----@type table(Ability, table)
 local private = {}
 
+--========
+-- Static
+--========
 
----@type AbilityTypeCallbacksContainer
-public.callbacks = "AbilityTypeCallbacksContainer"
----@type AbilityTypeFlagsClass
-public.flags = "AbilityTypeFlags"
-
-private.DB = DataBase.new('number', getClassName(AbilityType))
---=========
--- Methods
---=========
-
----@param instance_data table | nil
+---@param child_data table | nil
 ---@return AbilityType
-function static.new(id, instance_data)
-    local instance = instance_data or Class.newInstanceData(AbilityType)
+function static.new(id, child_data)
+    local instance = Class.newInstanceData(AbilityType, child_data)
+    private.newData(instance, id)
 
     instance.callbacks = AbilityTypeCallbacksContainer.new()
     instance.flags = AbilityTypeFlagsContainer.new()
-
-    local priv = {
-        id = ID(id),
-        casting_time = nil,
-    }
-    private[instance] = priv
-    private.DB:set(ID(id), instance)
 
     return instance
 end
@@ -61,20 +45,21 @@ function static.get(id)
     return private.DB:get(id)
 end
 
+---@alias AbilityTypeDummyTarget string | "'none'" | "'point'" | "'unit'" | "'unitPoint'" | "'pointArea'" | '"unitArea"' | "'pointUnitArea'"
+
 -- Compiletime only.
----@param target string | "'none'" | "'point'" | "'unit'" | "'both'" | "'pointArea'" | '"unitArea"' | "'bothArea'"
----@param log_name string | nil
+---@param target AbilityTypeDummyTarget
+---@param name string | nil
 ---@return table(string, any)
-function static.createDummy(target, log_name)
+function static.createDummy(target, name)
     if not is_compiletime then
-        Log(Log.Warn, getClassName(AbilityType), 'dummy ability can be created in compiletime only.')
+        Log(Log.Warn, AbilityType, 'dummy ability can be created in compiletime only.')
         return nil
     end
 
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-    ---@type WeAbilityClass
     local WeAbility = WeObjEdit.Ability
-    local abil = WeAbility.new(WeObjEdit.getAbilityId(), 'ANcl', log_name or 'Dummy ability')
+    local abil = WeAbility.new(WeObjEdit.getAbilityId(), 'ANcl', name or 'Dummy ability')
 
     abil:setField(WeAbility.TooltipNormal, 1, 'Dummy Ability')
     abil:setField(WeAbility.TooltipNormalExtended, 1, 'No description.')
@@ -91,13 +76,13 @@ function static.createDummy(target, log_name)
     if target == 'none' then
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_None)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
-    elseif target == 'unit' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
     elseif target == 'point' then
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
-    elseif target == 'both' then
+    elseif target == 'unit' then
+        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
+        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+    elseif target == 'unitPoint' then
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
     elseif target == 'pointArea' then
@@ -106,12 +91,12 @@ function static.createDummy(target, log_name)
     elseif target == 'unitArea' then
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
-    elseif target == 'bothArea' then
+    elseif target == 'pointUnitArea' then
         abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
         abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     else
         local msg = string.format("wrong target type.\n%s", WeObjEdit.Utils.getErrorPos())
-        Log(Log.Err, getClassName(AbilityType), msg)
+        Log(Log.Err, AbilityType, msg)
         return nil
     end
 
@@ -119,6 +104,15 @@ function static.createDummy(target, log_name)
 
     return abil:toRuntime()
 end
+
+--========
+-- Public
+--========
+
+---@type AbilityTypeCallbacksContainer
+public.callbacks = "AbilityTypeCallbacksContainer"
+---@type AbilityTypeFlagsClass
+public.flags = "AbilityTypeFlags"
 
 ---@return number
 function public:getId()
@@ -143,6 +137,23 @@ end
 function public:setCastingTime(func)
     local priv = private[self]
     priv.casting_time = func
+end
+
+--=========
+-- Private
+--=========
+
+private.DB = DataBase.new('number', AbilityType)
+
+---@param instance AbilityType
+---@param id string | number
+function private.newData(instance, id)
+    local priv = {
+        id = ID(id),
+        casting_time = nil,
+    }
+    private[instance] = priv
+    private.DB:set(ID(id), instance)
 end
 
 return AbilityType

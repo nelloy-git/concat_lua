@@ -13,66 +13,77 @@ local Action = require('Class.Action')
 -- Class
 --=======
 
----@type any
 local Timer = Class.newClass('Timer')
-
----@class TimerClass
-local static = Timer.static
----@type table
-local override = Timer.override
 ---@class Timer
 local public = Timer.public
----@type table(Timer, table)
+---@class TimerClass
+local static = Timer.static
+local override = Timer.override
 local private = {}
 
-local db = DataBase.new('userdata', getClassName(Timer))
+--========
+-- Static
+--========
 
---=========
--- Methods
---=========
-
----@param instance_data table | nil
+---@param child_data table | nil
 ---@return Timer
-function static.new(instance_data)
-    local instance = instance_data or Class.newInstanceData(Timer)
-    local priv = {
-        wc3_timer = CreateTimer()
-    }
-    private[instance] = priv
-
-    db:set(priv.wc3_timer, instance)
+function static.new(child_data)
+    local instance =  Class.newInstanceData(Timer, child_data)
+    private.newData(instance)
 
     return instance
 end
 
+--========
+-- Public
+--========
+
 function public:free()
-    DestroyTimer(private[self].wc3_timer)
-    private[self] = nil
-    freeInstanceData(self)
+    private.freeData(self)
+    Class.freeInstanceData(self)
 end
 
 ---@return Timer
 function static.getExpired()
-    local wc3_timer = GetExpiredTimer()
-    return db:get(wc3_timer)
+    return private.DB:get(GetExpiredTimer())
 end
 
 ---@param timeout number
 ---@param periodic boolean
 ---@param action Action
 function public:start(timeout, periodic, action)
-    local priv = private[self]
-    TimerStart(priv.wc3_timer, timeout, periodic, function() action:run() end)
+    TimerStart(private[self].wc3_timer, timeout, periodic, function() action:run() end)
 end
 
 function public:pause()
-    local priv = private[self]
-    PauseTimer(priv.wc3_timer)
+    PauseTimer(private[self].wc3_timer)
 end
 
 function public:resume()
+    ResumeTimer(private[self].wc3_timer)
+end
+
+--=========
+-- Private
+--=========
+
+private.DB = DataBase.new('userdata', Timer)
+
+---@param self Timer
+function private.newData(self)
+    local priv = {
+        wc3_timer = CreateTimer()
+    }
+    private[self] = priv
+    private.DB:set(priv.wc3_timer, self)
+end
+
+---@param self Timer
+function private.freeData(self)
     local priv = private[self]
-    ResumeTimer(priv.wc3_timer)
+    private.DB:remove(priv.wc3_timer)
+    DestroyTimer(priv.wc3_timer)
+    private[self] = nil
 end
 
 return Timer

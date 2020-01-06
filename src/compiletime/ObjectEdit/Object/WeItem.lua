@@ -3,14 +3,13 @@
 --=========
 
 local Class = require('Utils.Class')
+local WeObject = require('compiletime.ObjectEdit.WeObject')
 
 local Log = require('utils.Log')
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
----@type WeObjectClass
-local WeObject = require('compiletime.ObjectEdit.WeObject')
----@type WeObjectFileClass
-local WeObjectFile = require('compiletime.ObjectEdit.WeObjectFile')
+---@type WeFileClass
+local WeObjectFile = require('compiletime.ObjectEdit.WeFile')
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
 
@@ -19,23 +18,16 @@ local WeUtils = require('compiletime.Utils')
 --=======
 
 local WeItem = Class.newClass('WeItem', WeObject)
-
 ---@class WeItem
 local public = WeItem.public
 ---@class WeItemClass
 local static = WeItem.static
----@type table
 local override = WeItem.override
----@type table(WeItem, table)
 local private = {}
 
-private.path_sep = package.config:sub(1,1)
-private.file_src = _G._src_dir..private.path_sep..'war3map.w3t'
-private.file_dst = _G._dst_dir..private.path_sep..'war3map.w3t'
-
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@param instance_data table | nil
 ---@return WeItem
@@ -57,77 +49,52 @@ function static.save()
     end
 end
 
-function public:free()
-    WeObject.free(self)
-end
+static.Abilities = WeField.new("iabi", "string", "Abilities")
+static.ActivelyUsed = WeField.new("iusa", "bool", "ActivelyUsed")
+static.ArmorType = WeField.new("iarm", "string", "ArmorType")
+static.ButtonPositionX = WeField.new("ubpx", "int", "ButtonPositionX")
+static.ButtonPositionY = WeField.new("ubpy", "int", "ButtonPositionY")
+static.CanBeDropped = WeField.new("idro", "bool", "CanBeDropped")
+static.CanBeSoldByMerchants = WeField.new("isel", "bool", "CanBeSoldByMerchants")
+static.CanBeSoldToMerchants = WeField.new("ipaw", "bool", "CanBeSoldToMerchants")
+static.Classification = WeField.new("icla", "string", "Classification")
+static.CooldownGroup = WeField.new("icid", "string", "CooldownGroup")
+static.Description = WeField.new("ides", "string", "Description")
+static.DroppedWhenCarrierDies = WeField.new("idrp", "bool", "DroppedWhenCarrierDies")
+static.GoldCost = WeField.new("igol", "int", "GoldCost")
+static.HitPoints = WeField.new("ihtp", "int", "HitPoints")
+static.Hotkey = WeField.new("uhot", "string", "Hotkey")
+static.IgnoreCooldown = WeField.new("iicd", "bool", "IgnoreCooldown")
+static.IncludeAsRandomChoice = WeField.new("iprn", "bool", "IncludeAsRandomChoice")
+static.InterfaceIcon = WeField.new("iico", "string", "InterfaceIcon")
+static.Level = WeField.new("ilev", "int", "Level")
+static.LevelUnclassified = WeField.new("ilvo", "int", "LevelUnclassified")
+static.LumberCost = WeField.new("ilum", "int", "LumberCost")
+static.ModelUsed = WeField.new("ifil", "string", "ModelUsed")
+static.Name = WeField.new("unam", 'string', "Name")
+static.NumberofCharges = WeField.new("iuse", "int", "NumberofCharges")
+static.Perishable = WeField.new("iper", "bool", "Perishable")
+static.Priority = WeField.new("ipri", "int", "Priority")
+static.Requirements = WeField.new("ureq", "string", "Requirements")
+static.RequirementsLevels = WeField.new("urqa", "string", "RequirementsLevels")
+static.ScalingValue = WeField.new("isca", "real", "ScalingValue")
+static.StockMaximum = WeField.new("isto", "int", "StockMaximum")
+static.StockReplenishInterval = WeField.new("istr", "int", "StockReplenishInterval")
+static.StockStartDelay = WeField.new("isst", "int", "StockStartDelay")
+static.TintingColor1Red = WeField.new("iclr", "int", "TintingColor1Red")
+static.TintingColor2Green = WeField.new("iclg", "int", "TintingColor2Green")
+static.TintingColor3Blue = WeField.new("iclb", "int", "TintingColor3Blue")
+static.TooltipBasic = WeField.new("utip", "string", "TooltipBasic")
+static.TooltipExtended = WeField.new("utub", "string", "TooltipExtended")
+static.UseAutomaticallyWhenAcquired = WeField.new("ipow", "bool", "UseAutomaticallyWhenAcquired")
+static.ValidTargetForTransformation = WeField.new("imor", "bool", "ValidTargetForTransformation")
 
-local fmt = string.format
+--=========
+-- Private
+--=========
 
-function private.checkType(field, data)
-    local data_type = field:getDataType()
-    local res = false
-    if data_type == 'string' and type(data) == 'string' then
-        res = true
-    end
-    if data_type == 'int' and type(data) == 'number' and data % 1 == 0 then
-        res = true
-    end
-    if data_type == 'bool' and type(data) == 'boolean' then
-        res = true
-    end
-    if (data_type == 'real' or data_type == 'unreal') and type(data) == 'number' then
-        res = true
-    end
-
-    if not res then
-        local msg = fmt('wrong data type. Got %s. Need %s.',
-                         type(data), data_type)
-        Log(Log.Warn, field:getName(), msg)
-    end
-    return res
-end
-
---=============
--- Item fields
---=============
-static.Abilities = WeField.new("iabi", "string", "Abilities", private.checkType)
-static.ActivelyUsed = WeField.new("iusa", "bool", "ActivelyUsed", private.checkType)
-static.ArmorType = WeField.new("iarm", "string", "ArmorType", private.checkType)
-static.ButtonPositionX = WeField.new("ubpx", "int", "ButtonPositionX", private.checkType)
-static.ButtonPositionY = WeField.new("ubpy", "int", "ButtonPositionY", private.checkType)
-static.CanBeDropped = WeField.new("idro", "bool", "CanBeDropped", private.checkType)
-static.CanBeSoldByMerchants = WeField.new("isel", "bool", "CanBeSoldByMerchants", private.checkType)
-static.CanBeSoldToMerchants = WeField.new("ipaw", "bool", "CanBeSoldToMerchants", private.checkType)
-static.Classification = WeField.new("icla", "string", "Classification", private.checkType)
-static.CooldownGroup = WeField.new("icid", "string", "CooldownGroup", private.checkType)
-static.Description = WeField.new("ides", "string", "Description", private.checkType)
-static.DroppedWhenCarrierDies = WeField.new("idrp", "bool", "DroppedWhenCarrierDies", private.checkType)
-static.GoldCost = WeField.new("igol", "int", "GoldCost", private.checkType)
-static.HitPoints = WeField.new("ihtp", "int", "HitPoints", private.checkType)
-static.Hotkey = WeField.new("uhot", "string", "Hotkey", private.checkType)
-static.IgnoreCooldown = WeField.new("iicd", "bool", "IgnoreCooldown", private.checkType)
-static.IncludeAsRandomChoice = WeField.new("iprn", "bool", "IncludeAsRandomChoice", private.checkType)
-static.InterfaceIcon = WeField.new("iico", "string", "InterfaceIcon", private.checkType)
-static.Level = WeField.new("ilev", "int", "Level", private.checkType)
-static.LevelUnclassified = WeField.new("ilvo", "int", "LevelUnclassified", private.checkType)
-static.LumberCost = WeField.new("ilum", "int", "LumberCost", private.checkType)
-static.ModelUsed = WeField.new("ifil", "string", "ModelUsed", private.checkType)
-static.Name = WeField.new("unam", 'string', "Name", private.checkType)
-static.NumberofCharges = WeField.new("iuse", "int", "NumberofCharges", private.checkType)
-static.Perishable = WeField.new("iper", "bool", "Perishable", private.checkType)
-static.Priority = WeField.new("ipri", "int", "Priority", private.checkType)
-static.Requirements = WeField.new("ureq", "string", "Requirements", private.checkType)
-static.RequirementsLevels = WeField.new("urqa", "string", "RequirementsLevels", private.checkType)
-static.ScalingValue = WeField.new("isca", "real", "ScalingValue", private.checkType)
-static.StockMaximum = WeField.new("isto", "int", "StockMaximum", private.checkType)
-static.StockReplenishInterval = WeField.new("istr", "int", "StockReplenishInterval", private.checkType)
-static.StockStartDelay = WeField.new("isst", "int", "StockStartDelay", private.checkType)
-static.TintingColor1Red = WeField.new("iclr", "int", "TintingColor1Red", private.checkType)
-static.TintingColor2Green = WeField.new("iclg", "int", "TintingColor2Green", private.checkType)
-static.TintingColor3Blue = WeField.new("iclb", "int", "TintingColor3Blue", private.checkType)
-static.TooltipBasic = WeField.new("utip", "string", "TooltipBasic", private.checkType)
-static.TooltipExtended = WeField.new("utub", "string", "TooltipExtended", private.checkType)
-static.UseAutomaticallyWhenAcquired = WeField.new("ipow", "bool", "UseAutomaticallyWhenAcquired", private.checkType)
-static.ValidTargetForTransformation = WeField.new("imor", "bool", "ValidTargetForTransformation", private.checkType)
+private.path_sep = package.config:sub(1,1)
+private.file_src = _G._src_dir..private.path_sep..'war3map.w3t'
+private.file_dst = _G._dst_dir..private.path_sep..'war3map.w3t'
 
 return WeItem

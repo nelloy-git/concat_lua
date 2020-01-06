@@ -1,5 +1,4 @@
 local Globals = {}
----@alias callback fun():any
 
 Log = require('utils.Log')
 --require('utils.Class')

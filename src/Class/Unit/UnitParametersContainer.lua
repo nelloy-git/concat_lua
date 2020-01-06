@@ -15,33 +15,26 @@ local ParameterValue = require('Class.ParameterValue')
 -- Class
 --=======
 
----@type any
 local UnitParametersContainer = Class.newClass('UnitParametersContainer')
-
----@class UnitParametersContainerClass
-local static = UnitParametersContainer.static
-    static.new = 'function'
 ---@class UnitParametersContainer
 local public = UnitParametersContainer.public
----@type table
+---@class UnitParametersContainerClass
+local static = UnitParametersContainer.static
 local override = UnitParametersContainer.override
----@type table(UnitParametersContainer, table)
 local private = {}
 
-private.DB = DataBase.new('userdata', getClassName(UnitParametersContainer))
+private.DB = DataBase.new('userdata', Class.getClassName(UnitParametersContainer))
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@param owner unit
----@param instance_data table | nil
+---@param child_data table | nil
 ---@return UnitParametersContainer
-function static.new(owner, instance_data)
-    local instance = instance_data or Class.newInstanceData(UnitParametersContainer)
-    local priv = private.createPriv(owner)
-    private[instance] = priv
-    private.DB:set(owner, instance)
+function static.new(owner, child_data)
+    local instance = Class.newInstanceData(UnitParametersContainer, child_data)
+    private.newData(instance, owner)
 
     local params = ParameterType.getList()
     for i = 1, #params do
@@ -58,23 +51,19 @@ function static.get(owner)
     return private.DB:get(owner)
 end
 
-function public:free()
-    private.DB:remove(private[self].owner)
-    private[self] = nil
-    freeInstanceData(self)
-end
+--========
+-- Public
+--========
 
 ---@param param ParameterType
 ---@return number
 function public:getResult(param)
-    local priv = private[self]
-    return priv.results[param]
+    return private[self].results[param]
 end
 
 ---@return number
 function public:getBase(param)
-    local priv = private[self]
-    return priv.values[param]:getBase()
+    return private[self].values[param]:getBase()
 end
 
 ---@param param ParameterType
@@ -85,13 +74,15 @@ function public:setBase(param, value)
 end
 
 function public:addBase(param, value)
-    self:setBase(param, self:getBase(param) + value)
+    local priv = private[self]
+    local cur = priv.values[param]:getBase()
+    priv.values[param]:setBase(cur + value)
+    private.update(self, param)
 end
 
 ---@return number
 function public:getMult(param)
-    local priv = private[self]
-    return priv.values[param]:getMult()
+    return private[self].values[param]:getMult()
 end
 
 ---@param param ParameterType
@@ -102,13 +93,16 @@ function public:setMult(param, value)
 end
 
 function public:addMult(param, value)
-    self:setMult(param, self:getMult(param) + value)
+    local priv = private[self]
+    local cur = priv.values[param]:getMult()
+    priv.values[param]:setMult(cur + value)
+    private.update(self, param)
 end
 
+---@param param ParameterType
 ---@return number
 function public:getAdditive(param)
-    local priv = private[self]
-    return priv.values[param]:getAdditive()
+    return private[self].values[param]:getAdditive()
 end
 
 ---@param param ParameterType
@@ -118,22 +112,26 @@ function public:setAdditive(param, value)
     private.update(self, param)
 end
 
+---@param param ParameterType
+---@param value number
 function public:addAdditive(param, value)
-    self:setAdditive(param, self:getAdditive(param) + value)
+    local priv = private[self]
+    local cur = priv.values[param]:getAdditive()
+    priv.values[param]:setAdditive(cur + value)
+    private.update(self, param)
 end
 
----@param owner unit
----@return table
-function private.createPriv(owner)
-    local params = ParameterType.getList()
-    local results = {}
-    local values = {}
-    for i = 1, #params do
-        results[params[i]] = 0
-        values[params[i]] = ParameterValue.new()
-    end
-    return {owner = owner, results = results, values = values}
+function public:free()
+    private.freeData(self)
+    Class.freeInstanceData(self)
 end
+
+--=========
+-- Private
+--=========
+
+private.params_list = ParameterType.getList()
+private.params_count = #private.params_list
 
 ---@param self UnitParametersContainer
 ---@param param ParameterType
@@ -146,6 +144,29 @@ function private.update(self, param)
 
     priv.results[param] = new_val
     param:apply(priv.owner, old_val, new_val)
+end
+
+---@param self UnitParametersContainer
+---@param owner unit
+---@return table
+function private.newData(self, owner)
+    local priv = {
+        owner = owner,
+        values = {},
+        result = {}
+    }
+    for i = 1, #private.params_count do
+        priv.result[private.params_list[i]] = 0
+        priv.values[private.params_list[i]] = ParameterValue.new()
+    end
+    private[self] = priv
+    private.DB:set(owner, self)
+end
+
+---@param self UnitParametersContainer
+function private.freeData(self)
+    private.DB:remove(private[self].owner)
+    private[self] = nil
 end
 
 return UnitParametersContainer

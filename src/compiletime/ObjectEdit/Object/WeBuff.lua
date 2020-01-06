@@ -10,7 +10,7 @@ local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeObjectClass
 local WeObject = require('compiletime.ObjectEdit.WeObject')
 ---@type WeObjectFileClass
-local WeObjectFile = require('compiletime.ObjectEdit.WeObjectFile')
+local WeObjectFile = require('compiletime.ObjectEdit.WeFile')
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
 

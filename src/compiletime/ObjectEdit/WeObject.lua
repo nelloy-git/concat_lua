@@ -3,9 +3,8 @@
 --=========
 
 local Class = require('Utils.Class')
-
-require('utils.Globals')
 local Log = require('utils.Log')
+
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
 
@@ -13,46 +12,33 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type any
 local WeObject = Class.newClass('WeObject')
-
 ---@class WeObject
 local public = WeObject.public
 ---@class WeObjectClass
 local static = WeObject.static
----@type table
 local override = WeObject.override
----@type table(WeObject, table)
 local private = {}
 
-private.field_serial_end = '\0\0\0\0'
-
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@param id number | string
 ---@param base_id number | string
 ---@param name string
----@param instance_data table | nil
+---@param child_data any
 ---@return WeObject
-function static.new(id, base_id, name, instance_data)
-    local instance = instance_data or Class.newInstanceData(WeObject)
-    local priv = {
-        id = ID2str(id),
-        base_id = ID2str(base_id),
-        name = name,
-        fields = {}
-    }
-    private[instance] = priv
+function static.new(id, base_id, name, child_data)
+    local instance = Class.newInstanceData(WeObject, child_data)
+    private.newData(instance, id, base_id, name)
 
     return instance
 end
 
-function public:free()
-   private[self] = nil
-   freeInstanceData(self)
-end
+--========
+-- Public
+--========
 
 ---@return string
 function public:getId()
@@ -73,19 +59,16 @@ end
 ---@param data any
 function public:setField(field, data)
     local priv = private[self]
-    if field:checkData(data) then
+
+    if field:isValid(data) then
         priv.fields[field] = data
-    else
-        local msg = string.format("check data failed. Field change ignored.\n%s", WeUtils.getErrorPos())
-        Log(Log.Warn, getClassName(WeObject), msg)
     end
 end
 
 ---@param field WeField
 ---@return any
 function public:getField(field)
-    local priv = private[self]
-    return priv.fields[field]
+    return private[self].fields[field]
 end
 
 ---@return table<WeField,any>
@@ -93,23 +76,25 @@ function public:getAllChanges()
     local priv = private[self]
 
     local copy = {}
-    for k,v in pairs(priv.fields) do
-        copy[k] = v
+    for field, data in pairs(priv.fields) do
+        copy[field] = data
     end
 
     return copy
 end
 
+---@return table
 function public:toRuntime()
     local priv = private[self]
 
-    local t = {}
-    for k,v in pairs(priv.fields) do
-        t[k:getName()] = v
+    local res = {}
+    for field, data in pairs(priv.fields) do
+        res[field:getName()] = data
     end
-    t.id = priv.id
-    t.base_id = priv.base_id
-    return t
+    res.id = priv.id
+    res.base_id = priv.base_id
+    res.name = priv.name
+    return res
 end
 
 ---@return string
@@ -142,6 +127,36 @@ function public:serialize()
         res = res..fields_serial[i]
     end
     return res
+end
+
+function public:free()
+    private.freeData(self)
+    Class.freeInstanceData(self)
+end
+
+--=========
+-- Private
+--=========
+
+private.field_serial_end = '\0\0\0\0'
+
+---@param self WeObject
+---@param id number | string
+---@param base_id number | string
+---@param name string
+function private.newData(self, id, base_id, name)
+    local priv = {
+        id = WeUtils.ID2str(id),
+        base_id = WeUtils.ID2str(base_id),
+        name = name,
+        fields = {}
+    }
+    private[self] = priv
+end
+
+---@param self WeObject
+function private.freeData(self)
+    private[self] = nil
 end
 
 return WeObject

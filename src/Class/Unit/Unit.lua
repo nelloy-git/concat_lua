@@ -3,6 +3,7 @@
 --=========
 
 local Class = require('Utils.Class')
+local Log = require('utils.Log')
 
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
@@ -15,41 +16,27 @@ local UnitAbilitiesContainer = require('Class.Unit.UnitAbilitiesContainer')
 -- Class
 --=======
 
----@type any
 local Unit = Class.newClass('Unit')
-
----@class UnitClass
-local static = Unit.static
----@type table
-local override = Unit.override
 ---@class Unit
 local public = Unit.public
----@type table(Unit, table)
+---@class UnitClass
+local static = Unit.static
+local override = Unit.override
 local private = {}
 
-private.db = DataBase.new('userdata', getClassName(Unit))
-
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@param player player
 ---@param id string | number
 ---@param x number
 ---@param y number
 ---@param face number
----@param instance_data table | nil
-function Unit.static.new(player, id, x, y, face, instance_data)
-    id = ID(id)
-
-    local instance = instance_data or Class.newInstanceData(Unit)
-    local priv = {
-        id = id,
-        owner = player,
-        wc3_unit = CreateUnit(player, id, x, y, face)
-    }
-    private[instance] = priv
-    private.db:set(priv.wc3_unit, instance)
+---@param child_data table | nil
+function static.new(player, id, x, y, face, child_data)
+    local instance = Class.newInstanceData(Unit, child_data)
+    private.newData(instance, id, player, x, y, face)
 
     private.initComponents(instance)
 
@@ -59,41 +46,78 @@ end
 ---@param wc3_unit unit
 ---@return Unit
 function Unit.static.get(wc3_unit)
-    return private.db:get(wc3_unit)
+    return private.DB:get(wc3_unit)
 end
+
+--========
+-- Public
+--========
 
 public.parameters = 0
 
 function public:free()
-    local priv = private[self]
-    RemoveUnit(priv.wc3_unit)
-    private[self] = nil
-    freeInstanceData(self)
+    private.freeComponents(self)
+    private.freeData(self)
+    Class.freeInstanceData(self)
 end
 
 ---@return number
 function public:getId()
-    local priv = private[self]
-    return priv.id
+    return private[self].id
 end
 
 ---@return player
 function public:getOwner()
-    local priv = private[self]
-    return priv.owner
+    return private[self].owner
 end
 
 ---@return unit
 function public:getWc3Unit()
+    return private[self].wc3_unit
+end
+
+--=========
+-- Private
+--=========
+
+private.DB = DataBase.new('userdata', Unit)
+
+---@param self Unit
+---@param id string | number
+---@param player player
+---@param x number
+---@param y number
+---@param face number
+function private.newData(self, id, player, x, y, face)
+    local priv = {
+        id = ID(id),
+        owner = player,
+        wc3_unit = CreateUnit(player, id, x, y, face)
+    }
+    private[self] = priv
+    private.DB:set(priv.wc3_unit, self)
+end
+
+---@param self Unit
+function private.freeData(self)
     local priv = private[self]
-    return priv.wc3_unit
+    private.DB:remove(priv.wc3_unit)
+    RemoveUnit(priv.wc3_unit)
+
+    private[self] = nil
 end
 
 ---@param self Unit
 function private.initComponents(self)
     local priv = private[self]
 
+    ---@type UnitParametersContainer
     self.parameters = UnitParametersContainer.new(priv.wc3_unit)
+end
+
+---@param self Unit
+function private.freeComponents(self)
+    self.parameters:free()
 end
 
 

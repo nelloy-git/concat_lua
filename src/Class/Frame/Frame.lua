@@ -50,11 +50,6 @@ end
 -- Public
 --========
 
-function public:free()
-    private.free(self)
-    Class.freeInstanceData(self)
-end
-
 ---@return framehandle
 function public:getFramehandle()
     return private.get(self).framehandle
@@ -236,6 +231,11 @@ function public:setFollowOffsets(x, y)
     priv.follow_y_offset = y
 
     self:setFollowTarget(self:getFollowTarget())
+end
+
+function public:free()
+    private.free(self)
+    Class.freeInstanceData(self)
 end
 
 --=========

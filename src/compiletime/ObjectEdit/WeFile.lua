@@ -1,12 +1,12 @@
-local log_changes = false
+local log_all_changes = false
 
 --=========
 -- Include
 --=========
 
 local Class = require('Utils.Class')
-
 local Log = require('utils.Log')
+
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
 
@@ -14,40 +14,33 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
----@type any
-local WeObjectFile = Class.newClass('WeObjectFile')
-
----@class WeObjectFile
-local public = WeObjectFile.public
----@class WeObjectFileClass
-local static = WeObjectFile.static
----@type table
-local override = WeObjectFile.override
----@type table(WeObjectFile, table)
+local WeFile = Class.newClass('WeFile')
+---@class WeFile
+local public = WeFile.public
+---@class WeFileClass
+local static = WeFile.static
+local override = WeFile.override
 local private = {}
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
----@param instance_data table | nil
----@return WeObjectFile
-function static.new(src_path, dst_path, instance_data)
-    local instance = instance_data or Class.newInstanceData(WeObjectFile)
-    local priv = {
-        src_path = src_path,
-        dst_path = dst_path,
-        objects = {}
-    }
-    private[instance] = priv
+---@param src_path string
+---@param dst_path string
+---@param child_data any
+---@return WeFile
+function static.new(src_path, dst_path, child_data)
+    ---@type WeFile
+    local instance = Class.newInstanceData(WeFile, child_data)
+    private.newData(instance, src_path, dst_path)
 
     return instance
 end
 
-function public:free()
-   private[self] = nil
-   freeInstanceData(self)
-end
+--========
+-- Public
+--========
 
 ---@param obj WeObject
 function public:addObject(obj)
@@ -66,20 +59,43 @@ function public:update()
         local bytes = obj:serialize()
 
         content = content..bytes
-        local obj_type = getClassName(getInstanceClass(obj))
         local str_changes = ''
-        if log_changes then
+        if log_all_changes then
             str_changes = '\n'..obj:printChanges()
         end
 
         local msg = string.format('сreated %s \"%s\" with id \'%s\' based on \'%s\'%s',
-                                   obj_type, obj:getName(), obj:getId(), obj:getBaseId(), str_changes)
-        Log(Log.Msg, getClassName(WeObjectFile), msg)
+                                   obj, obj:getName(), obj:getId(), obj:getBaseId(), str_changes)
+        Log(Log.Msg, WeFile, msg)
     end
 
     local f = assert(io.open(priv.dst_path, "w"))
     f:write(content)
     f:close()
+end
+
+function public:free()
+    private.freeData(self)
+    Class.freeInstanceData(self)
+end
+
+--=========
+-- Private
+--=========
+
+---@param self WeFile
+function private.newData(self, src, dst)
+    local priv = {
+        src_path = src,
+        dst_path = dst,
+        objects = {}
+    }
+    private[self] = priv
+end
+
+---@param self WeFile
+function private.freeData(self)
+    private[self] = nil
 end
 
 ---@param path string
@@ -90,4 +106,4 @@ function private.newContent(path)
            string.char(0)..string.char(0)..string.char(0)..string.char(0)    -- changes count
 end
 
-return WeObjectFile
+return WeFile
