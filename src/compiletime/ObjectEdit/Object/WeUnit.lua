@@ -6,8 +6,8 @@ local Class = require('utils.Class')
 local Log = require('utils.Log')
 local WeObject = require('compiletime.ObjectEdit.WeObject')
 
-local WeField = require(Class.getPath('WeField'))
---local WeField = require('compiletime.ObjectEdit.WeField')
+--local WeField = require(Class.getPath('WeField'))
+local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeFileClass
 local WeObjectFile = require('compiletime.ObjectEdit.WeFile')
 ---@type WeUtils
@@ -360,12 +360,12 @@ static.UpgradesTo = WeField.new("uupt", 'string', "UpgradesTo")
 static.UpgradesTo = WeField.new("uupt", 'string', "UpgradesTo")
 
 --=========
--- Private
+-- Private\
 --=========
 
 private.path_sep = package.config:sub(1,1)
-private.file_src = _G._src_dir..private.path_sep..'war3map.w3u'
-private.file_dst = _G._dst_dir..private.path_sep..'war3map.w3u'
+private.file_src = lua_wc3.GetSrcDir()..private.path_sep..'war3map.w3u'
+private.file_dst = lua_wc3.GetDstDir()..private.path_sep..'war3map.w3u'
 
 private.ArmorSoundsTypes = {'Ethereal', 'Flesh', 'Wood', 'Stone', 'Metal'}
 

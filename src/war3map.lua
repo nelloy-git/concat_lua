@@ -1,3 +1,9 @@
+-- Azaza
+--[[
+
+]]
+
+
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
@@ -16,10 +22,12 @@ end
 
 local Test
 
+require('init.Init')
 function RunInitialization()
-    require('init.Init')
-    savetyRun(Test)
+    --savetyRun(Test)
+    Test()
 end
+local t = compiletime({['aaa'] = 3, [3] = 'bbb'})
 
 local unit_type = compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
@@ -110,7 +118,7 @@ local function testFrames()
 end
 --]]
 
-local texture = compiletime(require('compiletime.Icon').BTNAcidBomb)
+local texture = compiletime(function() return require('compiletime.Icon').BTNAcidBomb end)
 Test = function()
     CreateUnit(Player(0), ID(unit_type.id), 0, 0, 0)
     --local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
@@ -149,6 +157,7 @@ function main()
     InitGlobals()
     InitCustomTriggers()
 
+    CreateUnit(Player(0), ID(unit_type.id), 0, 0, 0)
     TimerStart(CreateTimer(), 0.1, false, RunInitialization)
 end
 

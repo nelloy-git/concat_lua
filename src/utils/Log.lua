@@ -1,6 +1,6 @@
 local Log = {}
 
-local is_runtime = not is_compiletime
+local is_runtime = not lua_wc3.isCompiletime()
 local ctime = {
     show_errors = true,
     show_warnings = true,
@@ -44,7 +44,7 @@ if is_runtime then
 else
     start_time = os.clock()
     if ctime.use_log_file then
-        local path = GetSource()..package.config:sub(1,1)..ctime.file_name
+        local path = lua_wc3.GetSrcDir()..package.config:sub(1,1)..ctime.file_name
         ctime.file_link = assert(io.open(path, "w"))
         ctime.file_link:write(fmt("[%0.3f] %s\n", os.clock() - start_time, "Logging started"))
         addCompiletimeFinalize(function()

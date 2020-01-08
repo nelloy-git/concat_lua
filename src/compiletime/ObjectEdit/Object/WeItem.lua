@@ -94,7 +94,7 @@ static.ValidTargetForTransformation = WeField.new("imor", "bool", "ValidTargetFo
 --=========
 
 private.path_sep = package.config:sub(1,1)
-private.file_src = _G._src_dir..private.path_sep..'war3map.w3t'
-private.file_dst = _G._dst_dir..private.path_sep..'war3map.w3t'
+private.file_src = lua_wc3.GetSrcDir()..private.path_sep..'war3map.w3t'
+private.file_dst = lua_wc3.GetDstDir()..private.path_sep..'war3map.w3t'
 
 return WeItem

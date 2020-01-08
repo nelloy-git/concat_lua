@@ -52,7 +52,7 @@ end
 ---@param name string | nil
 ---@return table(string, any)
 function static.createDummy(target, name)
-    if not is_compiletime then
+    if not lua_wc3.isCompiletime() then
         Log(Log.Warn, AbilityType, 'dummy ability can be created in compiletime only.')
         return nil
     end

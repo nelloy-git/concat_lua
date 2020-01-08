@@ -71,7 +71,7 @@ end
 
 local sep = package.config:sub(1,1)
 private.dst_path = 'war3mapImported'..sep..'GeneratedFdfFiles'..sep
-private.full_dst_path = _G._dst_dir..sep..private.dst_path
+private.full_dst_path = lua_wc3.GetDstDir()..sep..private.dst_path
 
 ---@param instance FdfFile
 ---@param name string

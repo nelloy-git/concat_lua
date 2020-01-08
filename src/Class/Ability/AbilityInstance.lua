@@ -157,7 +157,7 @@ private.DB = DataBase.new('userdata', AbilityInstance)
 private.ms_const = 10^10
 private.disable_attack_id = ID('Abun')
 private.attack_order = 851983
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     private.timer = BetterTimer.getGlobalTimer()
     private.timer_period = private.timer:getPeriod()
 

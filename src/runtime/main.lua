@@ -2,7 +2,7 @@
 local Globals = require('utils.Globals')
 local Settings = require('utils.Settings')
 
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
 
     local success, result = pcall(Globals.init)
     if not success then

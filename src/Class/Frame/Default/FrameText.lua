@@ -89,7 +89,7 @@ end
 -- Private
 --=========
 
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 end
 
@@ -122,7 +122,7 @@ private.default_frame_type_data = compiletime(function() return private.default_
 private.default_frame_file_data = compiletime(function() return private.default_frame_fdf_file:toRuntime() end)
 private.default_frame_type = FrameType.load(private.default_frame_type_data, true)
 
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     if not BlzLoadTOCFile(private.default_frame_file_data.toc) then
         Log(Log.Err, FrameText, "can not load default toc file.")
     end

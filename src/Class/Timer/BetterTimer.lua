@@ -142,7 +142,7 @@ function private.findPos(actions, time, first, len)
     end
 end
 
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     private.glTimer = static.new(private.minimum_period)
 end
 

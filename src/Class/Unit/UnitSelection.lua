@@ -25,7 +25,7 @@ local private = {}
 
 private.selected_lists = {}
 
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     private.select_trig = Trigger.new()
     private.deselect_trig = Trigger.new()
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do

@@ -245,7 +245,7 @@ end
 local private_data = {}
 
 private.DB = DataBase.new('userdata', Frame)
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 end
 

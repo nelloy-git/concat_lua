@@ -15,7 +15,7 @@
     ],
     "Lua.diagnostics.globals": [
         "__require_data",
-        "is_compiletime",
+        "lua_wc3.isCompiletime()",
         "compiletime",
         "addCompiletimeFinalize"
     ],

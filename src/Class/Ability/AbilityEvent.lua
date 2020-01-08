@@ -53,7 +53,7 @@ end
 --=========
 
 private.attack_order = 851983
-if not is_compiletime then
+if not lua_wc3.isCompiletime() then
     private.timer = BetterTimer.getGlobalTimer()
     private.timer_period = private.timer:getPeriod()
 
