@@ -23,7 +23,7 @@ local abil_name = 'Example ability'
 --- Dummy wc3 ability type. createDummy returns table with changed
 --- ability data and creates WeAbility object without animations and effects
 --- in compiletime.
-local Wc3Type = compiletime(AbilityType.createDummy('point', abil_name))
+local Wc3Type = Compiletime(AbilityType.createDummy('point', abil_name))
 
 --- Ability type for using in casting system.
 local ExampleAbility = AbilityType.new(Wc3Type.id)

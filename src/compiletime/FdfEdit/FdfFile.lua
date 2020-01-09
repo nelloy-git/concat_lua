@@ -31,7 +31,7 @@ function static.new(name, child_data)
     local instance = Class.newInstanceData(FdfFile, child_data)
     private.newData(instance, name)
 
-    addCompiletimeFinalize(function() private.free(instance) end)
+    AddCompileFinal(function() private.free(instance) end)
 
     return instance
 end
@@ -71,7 +71,7 @@ end
 
 local sep = package.config:sub(1,1)
 private.dst_path = 'war3mapImported'..sep..'GeneratedFdfFiles'..sep
-private.full_dst_path = lua_wc3.GetDstDir()..sep..private.dst_path
+private.full_dst_path = GetDstDir()..sep..private.dst_path
 
 ---@param instance FdfFile
 ---@param name string

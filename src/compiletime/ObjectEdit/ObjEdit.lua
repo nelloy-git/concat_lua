@@ -17,14 +17,4 @@ ObjEdit.getBuffId = ObjEdit.Utils.nextBuffId
 ObjEdit.getItemId = ObjEdit.Utils.nextItemId
 ObjEdit.getUpgradeId = ObjEdit.Utils.nextUpgradeId
 
----Function finish object editing.
-function ObjEdit.finish()
-    ObjEdit.Ability.save()
-    ObjEdit.Buff.save()
-    ObjEdit.Item.save()
-    ObjEdit.Unit.save()
-end
-
-addCompiletimeFinalize(ObjEdit.finish)
-
 return ObjEdit

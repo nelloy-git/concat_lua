@@ -54,6 +54,7 @@ local instance_metatable = {
     __gc = Class.freeInstanceData
 }
 
+---@param name string
 ---@return any
 function Class.newClass(name, ...)
     local class = {}
@@ -63,6 +64,9 @@ function Class.newClass(name, ...)
     return class
 end
 
+---@param class any
+---@param child_data any
+---@return any
 function Class.newInstanceData(class, child_data)
     if child_data then
         return child_data

@@ -6,6 +6,7 @@ local Class = require('utils.Class')
 local Log = require('utils.Log')
 local WeObject = require('compiletime.ObjectEdit.WeObject')
 
+---@type WeAbilityFieldClass
 local WeAbilityField = require('compiletime.ObjectEdit.WeAbilityField')
 ---@type WeFileClass
 local WeObjectFile = require('compiletime.ObjectEdit.WeFile')
@@ -17,10 +18,11 @@ local WeUtils = require('compiletime.Utils')
 --=======
 
 local WeAbility = Class.newClass('WeAbility', WeObject)
----@class WeAbility
+---@class WeAbility : WeObject
 local public = WeAbility.public
----@class WeAbilityClass
+---@class WeAbilityClass : WeObjectClass
 local static = WeAbility.static
+---@type WeAbilityClass
 local override = WeAbility.override
 local private = {}
 
@@ -40,16 +42,11 @@ function override.new(id, base_id, name, child_data)
 
     if not private.we_file then
         private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
+        AddCompileFinal(function() private.we_file:update() end)
     end
     private.we_file:addObject(instance)
 
     return instance
-end
-
-function static.save()
-    if private.we_file then
-        private.we_file:update()
-    end
 end
 
 static.AnimationNames = WeAbilityField.new("aani", 'string', 0, "AnimationNames", false)
@@ -255,8 +252,8 @@ end
 --=========
 
 private.path_sep = package.config:sub(1,1)
-private.file_src = lua_wc3.GetSrcDir()..private.path_sep..'war3map.w3a'
-private.file_dst = lua_wc3.GetDstDir()..private.path_sep..'war3map.w3a'
+private.file_src = GetSrcDir()..private.path_sep..'war3map.w3a'
+private.file_dst = GetDstDir()..private.path_sep..'war3map.w3a'
 
 private.field_serial_end = '\0\0\0\0'
 

@@ -25,7 +25,7 @@ local private = {}
 
 private.DB = DataBase.new('userdata', getClassName(GroundItem))
 
-private.item_type = compiletime(function()
+private.item_type = Compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
     local WeItem = WeObjEdit.Item
     local i = WeItem.new(WeObjEdit.getItemId(), 'rre1', 'Empty item')

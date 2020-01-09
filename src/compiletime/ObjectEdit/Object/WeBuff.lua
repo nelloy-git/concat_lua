@@ -3,13 +3,12 @@
 --=========
 
 local Class = require('utils.Class')
-
 local Log = require('utils.Log')
+local WeObject = require('compiletime.ObjectEdit.WeObject')
+
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
----@type WeObjectClass
-local WeObject = require('compiletime.ObjectEdit.WeObject')
----@type WeObjectFileClass
+---@type WeFileClass
 local WeObjectFile = require('compiletime.ObjectEdit.WeFile')
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
@@ -19,42 +18,34 @@ local WeUtils = require('compiletime.Utils')
 --=======
 
 local WeBuff = Class.newClass('WeBuff', WeObject)
-
----@class WeBuff
+---@class WeBuff : WeObject
 local public = WeBuff.public
----@class WeBuffClass
+---@class WeBuffClass : WeObjectClass
 local static = WeBuff.static
----@type table
 local override = WeBuff.override
----@type table(WeBuff, table)
 local private = {}
 
 private.path_sep = package.config:sub(1,1)
-private.file_src = lua_wc3.GetSrcDir()..private.path_sep..'war3map.w3h'
-private.file_dst = lua_wc3.GetDstDir()..private.path_sep..'war3map.w3h'
+private.file_src = GetSrcDir()..private.path_sep..'war3map.w3h'
+private.file_dst = GetDstDir()..private.path_sep..'war3map.w3h'
 
 --=========
 -- Methods
 --=========
 
----@param instance_data table | nil
+---@param child_data table | nil
 ---@return WeBuff
-function override.new(id, base_id, name, instance_data)
-    local instance = instance_data or Class.newInstanceData(WeBuff)
+function override.new(id, base_id, name, child_data)
+    local instance = Class.newInstanceData(WeBuff, child_data)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then
         private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
+        AddCompileFinal(function() private.we_file:update() end)
     end
     private.we_file:addObject(instance)
 
     return instance
-end
-
-function static.save()
-    if private.we_file then
-        private.we_file:update()
-    end
 end
 
 function public:free()

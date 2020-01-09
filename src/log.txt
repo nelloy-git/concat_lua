@@ -1,1 +1,3 @@
 [0.000] Logging started
+
+[0.001] Logging finished

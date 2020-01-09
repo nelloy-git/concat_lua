@@ -3,12 +3,11 @@
 --=========
 
 local Class = require('utils.Class')
+local Timer = require('Class.Timer.Timer')
 
 local Log = require('utils.Log')
 ---@type ActionClass
 local Action = require('Class.Action')
----@type TimerClass
-local Timer = require('Class.Timer.Timer')
 ---@type TimerActionClass
 local TimerAction = require('Class.Timer.TimerAction')
 
@@ -16,16 +15,12 @@ local TimerAction = require('Class.Timer.TimerAction')
 -- Class
 --=======
 
----@type any
 local BetterTimer = Class.newClass('BetterTimer', Timer)
-
----@class BetterTimerClass
-local static = BetterTimer.static
----@type table
-local override = BetterTimer.override
 ---@class BetterTimer : Timer
 local public = BetterTimer.public
----@type table(BetterTimer, table)
+---@class BetterTimerClass : TimerClass
+local static = BetterTimer.static
+local override = BetterTimer.override
 local private = {}
 
 private.minimum_period = 0.03125
@@ -36,10 +31,10 @@ private.glTimer = nil
 --=========
 
 ---@param period number
----@param instance_data table | nil
+---@param child_data table | nil
 ---@return BetterTimer
-function override.new(period, instance_data)
-    local instance = instance_data or Class.newInstanceData(BetterTimer)
+function override.new(period, child_data)
+    local instance = Class.newInstanceData(BetterTimer, child_data)
     instance = Timer.new(instance)
     if period < private.minimum_period then
         period = private.minimum_period
@@ -142,7 +137,7 @@ function private.findPos(actions, time, first, len)
     end
 end
 
-if not lua_wc3.isCompiletime() then
+if not IsCompiletime() then
     private.glTimer = static.new(private.minimum_period)
 end
 

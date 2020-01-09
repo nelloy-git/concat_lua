@@ -6,7 +6,7 @@ local Class = require('utils.Class')
 
 ---@type IconAssetClass
 local Icon
-compiletime(function()
+Compiletime(function()
     Icon = require('compiletime.Icon')
 end)
 ---@type TriggerClass
@@ -367,7 +367,7 @@ end
 static.PDmg = private.new()
 private[static.PDmg].short = 'PDmg'
 private[static.PDmg].full = 'Physical damage'
-private[static.PDmg].icon = compiletime(Icon.BTNSteelMelee)
+private[static.PDmg].icon = Compiletime(Icon.BTNSteelMelee)
 private[static.PDmg].tooltip = string.format('Physical damage of unit attacks and most of physical abilities. Attacks randomly deals %.0f-%.0f%% of this value as physical damage.',
                                               100 * private.min_pdmg_attack, 100 * private.max_pdmg_attack)
 private[static.PDmg].min = 0
@@ -379,7 +379,7 @@ private[static.PDmg].apply = private.applyPDmg
 static.ASpd = private.new()
 private[static.ASpd].short = 'ASpd'
 private[static.ASpd].full = 'Attack speed'
-private[static.ASpd].icon = compiletime(Icon.BTNCommand)
+private[static.ASpd].icon = Compiletime(Icon.BTNCommand)
 private[static.ASpd].tooltip = 'The frequency with which units attack is measured in attack speed. Base attacks per second multiplied by attack speed.'
 private[static.ASpd].min = 0
 private[static.ASpd].max = private.default_max
@@ -390,7 +390,7 @@ private[static.ASpd].apply = private.applyAttackCooldown
 static.Armor = private.new()
 private[static.Armor].short = 'PDef'
 private[static.Armor].full = 'Armor'
-private[static.Armor].icon = compiletime(Icon.BTNDefend)
+private[static.Armor].icon = Compiletime(Icon.BTNDefend)
 private[static.Armor].tooltip = 'Physical damage is reduced by this value. Works after physical damage reduction.'
 private[static.Armor].min = -private.default_max
 private[static.Armor].max = private.default_max
@@ -401,7 +401,7 @@ private[static.Armor].apply = private.applyNothing
 static.PDmgReduc = private.new()
 private[static.PDmgReduc].short = 'PReduc'
 private[static.PDmgReduc].full = 'Physical damage reduction'
-private[static.PDmgReduc].icon = compiletime(Icon.BTNHumanArmorUpThree)
+private[static.PDmgReduc].icon = Compiletime(Icon.BTNHumanArmorUpThree)
 private[static.PDmgReduc].tooltip = string.format('Physical damage is reduced by this value. Works before armor. Formula: %.0f * rating / (100 + rating) %%.',
                                                    100 * private.max_pdmg_reduc)
 private[static.PDmgReduc].min = -private.max_pdmg_reduc
@@ -413,7 +413,7 @@ private[static.PDmgReduc].apply = private.applyNothing
 static.MDmg = private.new()
 private[static.MDmg].short = 'MDmg'
 private[static.MDmg].full = 'Magical damage'
-private[static.MDmg].icon = compiletime(Icon.BTNAdvancedStrengthOfTheMoon)
+private[static.MDmg].icon = Compiletime(Icon.BTNAdvancedStrengthOfTheMoon)
 private[static.MDmg].tooltip = string.format('Magical damage of unit attacks and most of magical abilities. Attacks randomly deals %.0f-%.0f%% of this value as magical damage.',
                                               100 * private.min_mdmg_attack, 100 * private.max_mdmg_attack)
 private[static.MDmg].min = 0
@@ -425,7 +425,7 @@ private[static.MDmg].apply = private.applyNothing
 static.CSpd = private.new()
 private[static.CSpd].short = 'CSpd'
 private[static.CSpd].full = 'Casting time reduction'
-private[static.CSpd].icon = compiletime(Icon.BTNBansheeMaster)
+private[static.CSpd].icon = Compiletime(Icon.BTNBansheeMaster)
 private[static.CSpd].tooltip = 'Casting speed of abilities is multiplied by this value.'
 private[static.CSpd].min = 0
 private[static.CSpd].max = private.default_max
@@ -436,7 +436,7 @@ private[static.CSpd].apply = private.applyNothing
 static.Resist = private.new()
 private[static.Resist].short = 'Resist'
 private[static.Resist].full = 'Resistance'
-private[static.Resist].icon = compiletime(Icon.BTNResistantSkin)
+private[static.Resist].icon = Compiletime(Icon.BTNResistantSkin)
 private[static.Resist].tooltip = 'Magical damage is reduced by this value. Works after magical damage reduction.'
 private[static.Resist].min = -private.default_max
 private[static.Resist].max = private.default_max
@@ -447,7 +447,7 @@ private[static.Resist].apply = private.applyNothing
 static.MDmgReduc = private.new()
 private[static.MDmgReduc].short = 'MReduc'
 private[static.MDmgReduc].full = 'Magical damage reduction'
-private[static.MDmgReduc].icon = compiletime(Icon.BTNLightningShield)
+private[static.MDmgReduc].icon = Compiletime(Icon.BTNLightningShield)
 private[static.MDmgReduc].tooltip = string.format('Magical damage is reduced by this value. Works before resist. Formula: %.0f * (rating / (100 + rating)) %%.',
                                                    100 * private.max_mdmg_reduc)
 private[static.MDmgReduc].min = -private.max_mdmg_reduc
@@ -459,7 +459,7 @@ private[static.MDmgReduc].apply = private.applyNothing
 static.Dodge = private.new()
 private[static.Dodge].short = 'Dodge'
 private[static.Dodge].full = 'Dodge chance'
-private[static.Dodge].icon = compiletime(Icon.BTNEvasion)
+private[static.Dodge].icon = Compiletime(Icon.BTNEvasion)
 private[static.Dodge].tooltip = string.format('Chance to avoid incoming damage. Formula: %.0f * (rating / (100 + rating) %%.',
                                                 100 * private.max_dodge_ch)
 private[static.Dodge].min = 0
@@ -471,7 +471,7 @@ private[static.Dodge].apply = private.applyNothing
 static.CritCh = private.new()
 private[static.CritCh].short = 'CritCh'
 private[static.CritCh].full = 'Critical strike chance'
-private[static.CritCh].icon = compiletime(Icon.BTNCriticalStrike)
+private[static.CritCh].icon = Compiletime(Icon.BTNCriticalStrike)
 private[static.CritCh].tooltip = string.format('Chance to increase damage by critical damage value. Formula: %d * (rating / (100 + rating)',
                                                 100 * private.max_crit_ch)
 private[static.CritCh].min = 0
@@ -483,7 +483,7 @@ private[static.CritCh].apply = private.applyNothing
 static.CritDmg = private.new()
 private[static.CritDmg].short = 'CritDmg'
 private[static.CritDmg].full = 'Critical strike damage'
-private[static.CritDmg].icon = compiletime(Icon.BTNDeathPact)
+private[static.CritDmg].icon = Compiletime(Icon.BTNDeathPact)
 private[static.CritDmg].tooltip = 'Critical attacks and abilities deals bonus damage based on this value.'
 private[static.CritDmg].min = 0.25
 private[static.CritDmg].max = private.default_max
@@ -494,7 +494,7 @@ private[static.CritDmg].apply = private.applyNothing
 static.CdReduc = private.new()
 private[static.CdReduc].short = 'CDReduc'
 private[static.CdReduc].full = 'Cooldown reduction'
-private[static.CdReduc].icon = compiletime(Icon.BTNDispelMagic)
+private[static.CdReduc].icon = Compiletime(Icon.BTNDispelMagic)
 private[static.CdReduc].tooltip = string.format('Abilities cooldown reduced by this value. Formula: %d * (rating / (100 + rating)',
                                                 100 * private.max_cd_reduc)
 private[static.CdReduc].min = -private.max_cd_reduc
@@ -506,7 +506,7 @@ private[static.CdReduc].apply = private.applyNothing
 static.Health = private.new()
 private[static.Health].short = 'HP'
 private[static.Health].full = 'Health'
-private[static.Health].icon = compiletime(Icon.BTNHealthStone)
+private[static.Health].icon = Compiletime(Icon.BTNHealthStone)
 private[static.Health].tooltip = 'Maximum health.'
 private[static.Health].min = 5
 private[static.Health].max = private.default_max
@@ -517,7 +517,7 @@ private[static.Health].apply = private.applyHealth
 static.Regen = private.new()
 private[static.Regen].short = 'Regen'
 private[static.Regen].full = 'Regeneration'
-private[static.Regen].icon = compiletime(Icon.BTNRegenerate)
+private[static.Regen].icon = Compiletime(Icon.BTNRegenerate)
 private[static.Regen].tooltip = 'Health restoration per second.'
 private[static.Regen].min = -private.default_max
 private[static.Regen].max = private.default_max
@@ -528,7 +528,7 @@ private[static.Regen].apply = private.applyRegeneration
 static.Mana = private.new()
 private[static.Mana].short = 'MP'
 private[static.Mana].full = 'Mana'
-private[static.Mana].icon = compiletime(Icon.BTNManaStone)
+private[static.Mana].icon = Compiletime(Icon.BTNManaStone)
 private[static.Mana].tooltip = 'Maximum mana.'
 private[static.Mana].min = 5
 private[static.Mana].max = private.default_max
@@ -539,7 +539,7 @@ private[static.Mana].apply = private.applyMana
 static.Recov = private.new()
 private[static.Recov].short = 'Recov'
 private[static.Recov].full = 'Recovery'
-private[static.Recov].icon = compiletime(Icon.BTNBrilliance)
+private[static.Recov].icon = Compiletime(Icon.BTNBrilliance)
 private[static.Recov].tooltip = 'Mana restoration per second'
 private[static.Recov].min = -private.default_max
 private[static.Recov].max = private.default_max

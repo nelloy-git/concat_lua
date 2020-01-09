@@ -15,11 +15,11 @@ local Action = require('Class.Action')
 
 local Timer = Class.newClass('Timer')
 ---@class Timer
-local public = Timer.public
+local public = Class.getPublic(Timer)
 ---@class TimerClass
-local static = Timer.static
-local override = Timer.override
-local private = {}
+local static = Class.getStatic(Timer)
+local override = Class.getOverride(Timer)
+local private = Class.getPrivate(Timer)
 
 --========
 -- Static
@@ -28,6 +28,7 @@ local private = {}
 ---@param child_data table | nil
 ---@return Timer
 function static.new(child_data)
+    ---@type Timer
     local instance =  Class.newInstanceData(Timer, child_data)
     private.newData(instance)
 

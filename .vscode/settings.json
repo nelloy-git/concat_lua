@@ -6,18 +6,20 @@
         "dst/**"
     ],
     "Lua.workspace.library": {
-        "./lib": true
+        "./lib": true,
+        "./src/utils/Class.lua": true
     },
-    "Lua.workspace.maxPreload": 100,
+    "Lua.workspace.maxPreload": 200,
     "Lua.workspace.preloadFileSize": 5000,
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ],
     "Lua.diagnostics.globals": [
-        "__require_data",
-        "lua_wc3.isCompiletime()",
-        "compiletime",
-        "addCompiletimeFinalize"
+        "Compiletime",
+        "IsCompiletime",
+        "GetSrcDir",
+        "GetDstDir",
+        "AddCompileFinal",
     ],
     "Lua.workspace.ignoreSubmodules": true,
 }

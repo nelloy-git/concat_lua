@@ -37,16 +37,11 @@ function override.new(id, base_id, name, instance_data)
 
     if not private.we_file then
         private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
+        AddCompileFinal(function() private.we_file:update() end)
     end
     private.we_file:addObject(instance)
 
     return instance
-end
-
-function static.save()
-    if private.we_file then
-        private.we_file:update()
-    end
 end
 
 static.Abilities = WeField.new("iabi", "string", "Abilities")
@@ -94,7 +89,7 @@ static.ValidTargetForTransformation = WeField.new("imor", "bool", "ValidTargetFo
 --=========
 
 private.path_sep = package.config:sub(1,1)
-private.file_src = lua_wc3.GetSrcDir()..private.path_sep..'war3map.w3t'
-private.file_dst = lua_wc3.GetDstDir()..private.path_sep..'war3map.w3t'
+private.file_src = GetSrcDir()..private.path_sep..'war3map.w3t'
+private.file_dst = GetDstDir()..private.path_sep..'war3map.w3t'
 
 return WeItem
