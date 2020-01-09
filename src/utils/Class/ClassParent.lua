@@ -27,11 +27,6 @@ function ClassParent.register(class, ...)
             end
         end
     end
-    local str = ClassName.getName(class)..': '
-    for i = 1, #full_parents do
-        str = str..ClassName.getName(full_parents[i])..', '
-    end
-    print(str)
     class_parents[class] = full_parents
 end
 

@@ -22,7 +22,7 @@ end
 
 local Test
 
-require('utils.Class.Test')
+require('utils.Class.Test2')
 function RunInitialization()
     --savetyRun(Test)
     Test()

@@ -2,9 +2,9 @@ local Log = require('utils.Log')
 local ClassParent = require('utils.Class.ClassParent')
 local ClassName = require('utils.Class.ClassName')
 
-local ClassPublic = {}
+local ClassProtected = {}
 
-local publics = {}
+local protecteds = {}
 local NIL = '__RESERVED__'
 
 ---@param orig any
@@ -31,20 +31,20 @@ local function deepcopy(orig, copies)
     return copy
 end
 
-function ClassPublic.new(class)
-    publics[class] = {}
+function ClassProtected.new(class)
+    protecteds[class] = {}
 
     local parents = ClassParent.get(class)
     for i = 1, #parents do
         local cur_parent = parents[#parents + 1 - i]
-        local cur_parent_public = publics[cur_parent]
-        local copy = deepcopy(cur_parent_public)
+        local cur_parent_protected = protecteds[cur_parent]
+        local copy = deepcopy(cur_parent_protected)
         for k,v in pairs(copy) do
-            publics[class][k] = v
+            protecteds[class][k] = v
         end
     end
 
-    setmetatable(publics[class], {
+    setmetatable(protecteds[class], {
         __newindex = function(self, key, value)
             if value == nil then
                 value = NIL
@@ -53,11 +53,11 @@ function ClassPublic.new(class)
         end,
     })
 
-    return publics[class]
+    return protecteds[class]
 end
 
-function ClassPublic.get(class)
-    return publics[class]
+function ClassProtected.get(class)
+    return protecteds[class]
 end
 
-return ClassPublic
+return ClassProtected

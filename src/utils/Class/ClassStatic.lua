@@ -7,7 +7,6 @@ local ClassStatic = {}
 local statics = {}
 
 local function static_newindex(self, key, value, class)
-    print('new static:'..tostring(value))
     local parents = ClassParent.get(class)
     for i = 1, #parents do
         local parent_static = statics[parents[i]]
