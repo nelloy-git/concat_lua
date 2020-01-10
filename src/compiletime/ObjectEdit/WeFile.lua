@@ -4,7 +4,7 @@ local log_all_changes = false
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type WeUtils
@@ -14,11 +14,12 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local WeFile = Class.newClass('WeFile')
+local WeFile = Class.new('WeFile')
 ---@class WeFile
 local public = WeFile.public
 ---@class WeFileClass
 local static = WeFile.static
+---@type WeFileClass
 local override = WeFile.override
 local private = {}
 
@@ -28,11 +29,10 @@ local private = {}
 
 ---@param src_path string
 ---@param dst_path string
----@param child_data any
+---@param child_instance WeFile | nil
 ---@return WeFile
-function static.new(src_path, dst_path, child_data)
-    ---@type WeFile
-    local instance = Class.newInstanceData(WeFile, child_data)
+function static.new(src_path, dst_path, child_instance)
+    local instance = child_instance or Class.allocate(WeFile)
     private.newData(instance, src_path, dst_path)
 
     return instance
@@ -106,4 +106,4 @@ function private.newContent(path)
            string.char(0)..string.char(0)..string.char(0)..string.char(0)    -- changes count
 end
 
-return WeFile
+return WeFile.static

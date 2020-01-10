@@ -2,13 +2,13 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 --=======
 -- Class
 --=======
 
-local FrameType = Class.newClass('FrameType')
+local FrameType = Class.new('FrameType')
 ---@class FrameType
 local public = FrameType.public
 ---@class FrameTypeClass
@@ -26,8 +26,7 @@ local private = {}
 ---@param child_data any
 ---@return FrameType
 function static.new(name, base_name, is_simpleframe, child_data)
-    ---@type FrameType
-    local instance = Class.newInstanceData(FrameType, child_data)
+    local instance = child_data or Class.allocate(FrameType, child_data)
     private.new(instance, name, base_name, is_simpleframe)
 
     return instance
@@ -37,8 +36,7 @@ end
 ---@param is_simpleframe boolean
 ---@return FrameType
 function static.load(data, is_simpleframe, child_data)
-    ---@type FrameType
-    local instance = Class.newInstanceData(FrameType, child_data)
+    local instance = child_data or Class.allocate(FrameType, child_data)
     private.load(instance, data, is_simpleframe)
 
     return instance

@@ -1,16 +1,15 @@
 {
-    "Lua.completion.callSnippet": "Both",
-    "Lua.completion.keywordSnippet": "Both",
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "dst/**"
+        "dst",
+        "lib"
     ],
     "Lua.workspace.library": {
         "./lib": true,
-        "./src/utils/Class.lua": true
+        //"./src": true
     },
-    "Lua.workspace.maxPreload": 200,
-    "Lua.workspace.preloadFileSize": 5000,
+    "Lua.workspace.maxPreload": 100,
+    "Lua.workspace.preloadFileSize": 50,
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ],
@@ -20,6 +19,9 @@
         "GetSrcDir",
         "GetDstDir",
         "AddCompileFinal",
+        "Class"
     ],
     "Lua.workspace.ignoreSubmodules": true,
+    "Lua.develop.enable": false,
+    "Lua.completion.enable": true,
 }

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type ActionClass
 local Action = require('Class.Action')
@@ -13,7 +13,7 @@ local DataBase = require('Class.DataBase')
 -- Class
 --=======
 
-local Trigger = Class.newClass('Trigger')
+local Trigger = Class.new('Trigger')
 ---@class Trigger
 local public = Trigger.public
 ---@class TriggerClass
@@ -28,7 +28,7 @@ local private = {}
 ---@param child_data Trigger
 ---@return Trigger
 function static.new(child_data)
-    local instance = Class.newInstanceData(Trigger, child_data)
+    local instance = child_data or Class.allocate(Trigger, child_data)
     private.newData(instance)
 
     return instance

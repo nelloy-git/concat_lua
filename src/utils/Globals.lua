@@ -1,7 +1,7 @@
 local Globals = {}
 
 Log = require('utils.Log')
---require('utils.Class')
+--require('utils.Class.Class')
 
 local savety_run_enable = true
 ---@param func fun

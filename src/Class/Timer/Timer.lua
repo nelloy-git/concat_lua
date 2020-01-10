@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
@@ -13,13 +13,14 @@ local Action = require('Class.Action')
 -- Class
 --=======
 
-local Timer = Class.newClass('Timer')
+local Timer = Class.new('Timer')
 ---@class Timer
-local public = Class.getPublic(Timer)
+local public = Timer.public
 ---@class TimerClass
-local static = Class.getStatic(Timer)
-local override = Class.getOverride(Timer)
-local private = Class.getPrivate(Timer)
+local static = Timer.static
+---@type TimerClass
+local override = Timer.override
+local private = {}
 
 --========
 -- Static
@@ -28,8 +29,7 @@ local private = Class.getPrivate(Timer)
 ---@param child_data table | nil
 ---@return Timer
 function static.new(child_data)
-    ---@type Timer
-    local instance =  Class.newInstanceData(Timer, child_data)
+    local instance =  Class.new(Timer, child_data)
     private.newData(instance)
 
     return instance

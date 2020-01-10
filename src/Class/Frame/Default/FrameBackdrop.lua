@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Frame = require('Class.Frame.Frame')
 
 ---@type FrameTypeClass
@@ -12,7 +12,7 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
-local FrameBackdrop = Class.newClass('FrameBackdrop', Frame)
+local FrameBackdrop = Class.new('FrameBackdrop', Frame)
 ---@class FrameBackdrop : Frame
 local public = FrameBackdrop.public
 ---@class FrameBackdropClass : FrameClass
@@ -30,11 +30,9 @@ local private = {}
 ---@return FrameBackdrop
 function override.new(frame_type, child_data)
     if not frame_type then
-        ---@type FrameType
         frame_type = private.default_frame_type
     end
-    ---@type FrameBackdrop
-    local instance = Class.newInstanceData(FrameBackdrop, child_data)
+    local instance = child_data or Class.allocate(FrameBackdrop, child_data)
     instance = Frame.new(frame_type, instance)
     private.new(instance, frame_type)
 

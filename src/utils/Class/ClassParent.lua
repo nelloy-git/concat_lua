@@ -1,6 +1,12 @@
+local Log = require('utils.Log')
+
 local ClassName = require('utils.Class.ClassName')
+local ClassStatic = require('utils.Class.ClassStatic')
 
 local ClassParent = {}
+local rawget = rawget
+local rawset = rawset
+local fmt = string.format
 
 local class_parents = {}
 
@@ -9,6 +15,11 @@ function ClassParent.register(class, ...)
     local parents = {...}
     for i = 1, #parents do
         local cur = parents[i]
+
+        if ClassStatic.getClass(cur) then
+            cur = ClassStatic.getClass(cur)
+        end
+        
         if not ClassName.isClass(cur) then
             error(ClassName.getName(class)..': classes can have class parents only.')
         end
@@ -32,6 +43,27 @@ end
 
 function ClassParent.get(class)
     return class_parents[class]
+end
+
+function ClassParent.isChild(child, parent)
+    local parents = class_parents[child]
+    if not parents then
+        local msg = string.format('is not class.')
+        Log(Log.Warn, child, msg)
+        return
+    end
+    if not class_parents[parent] then
+        local msg = string.format('is not class.')
+        Log(Log.Warn, parent, msg)
+        return
+    end
+
+    for i = 1, #parents do
+        if parent == parents[i] then
+            return true
+        end
+    end
+    return false
 end
 
 return ClassParent

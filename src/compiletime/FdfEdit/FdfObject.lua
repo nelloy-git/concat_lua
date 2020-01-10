@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type FdfFieldClass
@@ -14,11 +14,12 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local FdfObject = Class.newClass('FdfObject')
+local FdfObject = Class.new('FdfObject')
 ---@class FdfObject
 local public = FdfObject.public
 ---@class FdfObjectClass
 local static = FdfObject.static
+---@type FdfObjectClass
 local override = FdfObject.override
 local private = {}
 
@@ -31,7 +32,7 @@ local private = {}
 ---@param child_data FdfObject | nil
 ---@return FdfObject
 function static.new(name, base_name, child_data)
-    local instance = Class.newInstanceData(FdfObject, child_data)
+    local instance = child_data or Class.allocate(FdfObject)
     private.newData(instance, name, base_name)
 
     return instance

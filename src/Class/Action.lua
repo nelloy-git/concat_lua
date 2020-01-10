@@ -2,13 +2,13 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 --=======
 -- Class
 --=======
 
-local Action = Class.newClass('Action')
+local Action = Class.new('Action')
 ---@class Action
 local public = Action.public
 ---@class ActionClass
@@ -26,7 +26,7 @@ local private = {}
 ---@param child_data Action | nil
 ---@return Action
 function static.new(callback, child_data)
-    local instance = Class.newInstanceData(Action, child_data)
+    local instance = child_data or Class.allocate(Action, child_data)
     local priv = {
         callback = callback,
     }

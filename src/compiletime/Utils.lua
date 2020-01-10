@@ -202,7 +202,6 @@ function WeUtils.nextUpgradeId()
 end
 
 local current_pos = 0
----@type string[]
 local orders = {"absorb", "acidbomb", "acolyteharvest", "whirlwind", "ambush", "ancestralspirit", "ancestralspirittarget", "animatedead", "antimagicshell", "webon", "weboff", "web", "attributemodskill", "auraunholy", "auravampiric", "autodispel", "autodispeloff", "autodispelon", "autoentangle", "autoentangleinstant", "wateryminion", "waterelemental", "avatar", "avengerform", "awaken", "banish", "barkskin", "barkskinoff", "barkskinon", "battleroar",
 	            "battlestations", "bearform", "berserk", "blackarrow", "blackarrowoff", "blackarrowon", "blight", "blink", "blizzard", "bloodlust", "bloodlustoff", "bloodluston", "board", "breathoffire", "breathoffrost", "ward", "burrow", "cannibalize", "carrionscarabs", "carrionscarabsinstant", "carrionscarabsoff", "carrionscarabson", "carrionswarm", "chainlightning", "channel", "charm", "chemicalrage", "cloudoffog", "clusterrockets", "coldarrows",
 	            "coldarrowstarg", "controlmagic", "corporealform", "corrosivebreath", "coupleinstant", "coupletarget", "creepanimatedead", "creepdevour", "creepheal", "creephealoff", "creephealon", "creepthunderbolt", "creepthunderclap", "cripple", "curse", "curseoff", "curseon", "cyclone", "darkconversion", "darkportal", "darkritual", "darksummoning", "deathanddecay", "deathcoil", "deathpact", "windwalk", "defend", "detectaoe", "detonate", "devour",

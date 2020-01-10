@@ -95,19 +95,19 @@ end
 function Log.write(log_level, header, str)
     local full_str = getFullStr(log_level, header, str)
     if is_runtime then
+        if rtime.use_log_file then
+            table.insert(rtime.buffer, #rtime.buffer + 1, convertToBat(full_str))
+            if rtime.file_autosave then
+                saveFileRuntime()
+            end
+        end
+
         if log_level == Log.Err and rtime.show_errors then
             DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, rtime.show_errors_time, full_str)
         elseif log_level == Log.Warn and rtime.show_warnings then
             DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, rtime.show_warnings_time, full_str)
         elseif log_level == Log.Msg and rtime.show_messages then
             DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, rtime.show_messages_time, full_str)
-        end
-
-        if rtime.use_log_file then
-            table.insert(rtime.buffer, #rtime.buffer + 1, convertToBat(full_str))
-            if rtime.file_autosave then
-                saveFileRuntime()
-            end
         end
     else
         if log_level == Log.Err and ctime.show_errors then

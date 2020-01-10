@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Timer = require('Class.Timer.Timer')
 
 local Log = require('utils.Log')
@@ -15,7 +15,7 @@ local TimerAction = require('Class.Timer.TimerAction')
 -- Class
 --=======
 
-local BetterTimer = Class.newClass('BetterTimer', Timer)
+local BetterTimer = Class.new('BetterTimer', Timer)
 ---@class BetterTimer : Timer
 local public = BetterTimer.public
 ---@class BetterTimerClass : TimerClass
@@ -34,7 +34,7 @@ private.glTimer = nil
 ---@param child_data table | nil
 ---@return BetterTimer
 function override.new(period, child_data)
-    local instance = Class.newInstanceData(BetterTimer, child_data)
+    local instance = child_data or Class.allocate(BetterTimer, child_data)
     instance = Timer.new(instance)
     if period < private.minimum_period then
         period = private.minimum_period
@@ -109,7 +109,6 @@ function private.runActions(self)
     local cur_time = priv.cur_time
 
     while #priv.actions > 0 do
-        ---@type TimerAction
         local action = table.remove(priv.actions, 1)
 
         local success = action:tryRun(cur_time)

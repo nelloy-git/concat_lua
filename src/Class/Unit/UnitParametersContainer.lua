@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
@@ -15,7 +15,7 @@ local ParameterValue = require('Class.ParameterValue')
 -- Class
 --=======
 
-local UnitParametersContainer = Class.newClass('UnitParametersContainer')
+local UnitParametersContainer = Class.new('UnitParametersContainer')
 ---@class UnitParametersContainer
 local public = UnitParametersContainer.public
 ---@class UnitParametersContainerClass
@@ -33,7 +33,7 @@ private.DB = DataBase.new('userdata', Class.getClassName(UnitParametersContainer
 ---@param child_data table | nil
 ---@return UnitParametersContainer
 function static.new(owner, child_data)
-    local instance = Class.newInstanceData(UnitParametersContainer, child_data)
+    local instance = child_data or Class.allocate(UnitParametersContainer, child_data)
     private.newData(instance, owner)
 
     local params = ParameterType.getList()

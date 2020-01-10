@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
@@ -11,16 +11,13 @@ local DataBase = require('Class.DataBase')
 -- Class
 --=======
 
----@type any
-local GroundItem = Class.newClass('GroundItem')
+local GroundItem = Class.new('GroundItem')
 
 ---@class GroundItem
 local public = GroundItem.public
 ---@class GroundItemClass
 local static = GroundItem.static
----@type table
 local override = GroundItem.override
----@type table(GroundItem, table)
 local private = {}
 
 private.DB = DataBase.new('userdata', getClassName(GroundItem))
@@ -44,7 +41,7 @@ end)
 ---@param instance_data table | nil
 ---@return GroundItem
 function static.new(x, y, instance_data)
-    local instance = instance_data or Class.newInstanceData(GroundItem)
+    local instance = instance_data or Class.allocate(GroundItem)
     local priv = {
         wc3_item = CreateItem(ID(private.item_type.id), x, y),
         name = private.item_type.Name,

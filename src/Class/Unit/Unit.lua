@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type DataBaseClass
@@ -16,7 +16,7 @@ local UnitAbilitiesContainer = require('Class.Unit.UnitAbilitiesContainer')
 -- Class
 --=======
 
-local Unit = Class.newClass('Unit')
+local Unit = Class.new('Unit')
 ---@class Unit
 local public = Unit.public
 ---@class UnitClass
@@ -35,7 +35,7 @@ local private = {}
 ---@param face number
 ---@param child_data table | nil
 function static.new(player, id, x, y, face, child_data)
-    local instance = Class.newInstanceData(Unit, child_data)
+    local instance = child_data or Class.allocate(Unit, child_data)
     private.newData(instance, id, player, x, y, face)
 
     private.initComponents(instance)

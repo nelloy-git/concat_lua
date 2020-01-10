@@ -1,19 +1,19 @@
 {
-    "Class.newClass":{
+    "Class.new":{
         "prefix": "createClass",
         "body": [
             "--=========",
             "-- Include",
             "--=========",
             "",
-            "local Class = require('utils.Class')",
+            "local Class = require('utils.Class.Class')",
             "local Log = require('utils.Log')",
             "",
             "--=======",
             "-- Class",
             "--=======",
             "",
-            "local ${1:className} = Class.newClass('${1:className}')",
+            "local ${1:className} = Class.new('${1:className}')",
             "---@class ${1:className}",
             "local public = ${1:className}.public",
             "---@class ${1:className}Class",
@@ -28,7 +28,7 @@
             "---@param child_data ${1:className} | nil",
             "---@return ${1:className}",
             "function static.new(child_data)",
-            "    local instance = Class.newInstanceData(${1:className}, child_data)",
+            "    local instance = child_data or Class.allocate(${1:className}, child_data)",
             "    local priv = private.newData(instance)",
             "",
             "    return instance",

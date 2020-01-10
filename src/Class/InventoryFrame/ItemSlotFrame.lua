@@ -2,22 +2,19 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 --=======
 -- Class
 --=======
 
----@type any
-local ItemSlotFrame = Class.newClass('ItemSlotFrame')
+local ItemSlotFrame = Class.new('ItemSlotFrame')
 
 ---@class ItemSlotFrame
 local public = ItemSlotFrame.public
 ---@class ItemSlotFrameClass
 local static = ItemSlotFrame.static
----@type table
 local override = ItemSlotFrame.override
----@type table(ItemSlotFrame, table)
 local private = {}
 
 --=========
@@ -27,7 +24,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return ItemSlotFrame
 function static.new(instance_data)
-    local instance = instance_data or Class.newInstanceData(ItemSlotFrame)
+    local instance = instance_data or Class.allocate(ItemSlotFrame)
     local priv = {
         icon = nil,
         

@@ -1,9 +1,3 @@
--- Azaza
---[[
-
-]]
-
-
 GG_trg_Melee_Initialization = nil
 function InitGlobals()
 end
@@ -20,18 +14,18 @@ function InitCustomTriggers()
     InitTrig_Melee_Initialization()
 end
 
-local Test
-
-require('utils.Class.Test2')
-function RunInitialization()
-    --savetyRun(Test)
-    Test()
+local main = require('main')
+if IsCompiletime() then
+    local success, result = pcall(main)
+    if not success then
+        print(result)
+    end
 end
-
-
-
-Test = function()
-    CreateUnit(Player(0), ID(unit_type.id), 0, 0, 0)
+function RunInitialization()
+    local success, result = pcall(main)
+    if not success then
+        DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, result)
+    end
 end
 
 function InitCustomPlayerSlots()

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type FrameClass
 local Frame = require('Class.Frame.Frame')
@@ -11,7 +11,7 @@ local Frame = require('Class.Frame.Frame')
 -- Class
 --=======
 
-local FrameCell = Class.newClass('FrameCell')
+local FrameCell = Class.new('FrameCell')
 ---@class FrameCell
 local public = FrameCell.public
 ---@class FrameCellClass
@@ -39,7 +39,7 @@ static.POSITION = {
 ---@param child_data any
 ---@return FrameCell
 function static.new(owner, child_data)
-    local instance = Class.newInstanceData(FrameCell, child_data)
+    local instance = child_data or Class.allocate(FrameCell, child_data)
     local priv = private.new(instance)
 
     return instance

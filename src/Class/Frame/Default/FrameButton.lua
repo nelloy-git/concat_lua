@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 local Frame = require('Class.Frame.Frame')
 local FrameType = require('Class.Frame.FrameType')
@@ -12,7 +12,7 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
-local FrameButton = Class.newClass('FrameButton', Frame)
+local FrameButton = Class.new('FrameButton', Frame)
 ---@class FrameButton : Frame
 local public = FrameButton.public
 ---@class FrameButtonClass : FrameClass
@@ -30,7 +30,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return FrameButton
 function override.new(frame_type, instance_data)
-    local instance = instance_data or Class.newInstanceData(FrameButton)
+    local instance = instance_data or Class.allocate(FrameButton)
 
     if frame_type then
         instance = Frame.new(frame_type, instance)

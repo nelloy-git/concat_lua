@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local FrameBackdrop = require('Class.Frame.Default.FrameBackdrop')
 
 ---@type FrameCellClass
@@ -14,7 +14,7 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
-local FrameSpringColumn = Class.newClass('FrameSpringColumn', FrameBackdrop)
+local FrameSpringColumn = Class.new('FrameSpringColumn', FrameBackdrop)
 ---@class FrameSpringColumn : FrameBackdrop
 local public = FrameSpringColumn.public
 ---@class FrameSpringColumnClass : FrameBackdropClass
@@ -34,8 +34,7 @@ function override.new(frame_type, child_data)
     if not frame_type then
         frame_type = private.default_frame_type
     end
-    ---@type FrameSpringColumn
-    local instance = Class.newInstanceData(FrameSpringColumn, child_data)
+    local instance = child_data or Class.allocate(FrameSpringColumn, child_data)
     instance = FrameBackdrop.new(frame_type, instance)
     private.new(instance)
 

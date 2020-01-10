@@ -2,15 +2,15 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 --=======
 -- Class
 --=======
 
-local IconAsset = Class.newClass('IconAsset')
+local IconAsset = Class.new('IconAsset')
 
----@class IconAssetClass
+---@class IconAssetClass : ClassStatic
 local static = IconAsset.static
 
 static.BTN3M1 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M1.blp"

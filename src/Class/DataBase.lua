@@ -2,14 +2,14 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 --=======
 -- Class
 --=======
 
-local DataBase = Class.newClass('DataBase')
+local DataBase = Class.new('DataBase')
 ---@class DataBase
 local public = DataBase.public
 ---@class DataBaseClass
@@ -26,7 +26,7 @@ local private = {}
 ---@param child_data DataBase | nil
 ---@return DataBase
 function static.new(key_type, value_type, child_data)
-    local instance = Class.newInstanceData(DataBase, child_data)
+    local instance = child_data or Class.allocate(DataBase, child_data)
     private.newData(instance, key_type, value_type)
 
     return instance

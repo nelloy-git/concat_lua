@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
@@ -13,7 +13,7 @@ local FrameType = require('Class.Frame.FrameType')
 -- Abstract Class
 --================
 
-local Frame = Class.newClass('Frame')
+local Frame = Class.new('Frame')
 ---@class Frame
 local public = Frame.public
 ---@class FrameClass
@@ -33,8 +33,7 @@ function static.new(frame_type, child_data)
         Log(Log.Err, Frame, 'can not create instance of abstract class')
         return nil
     end
-    ---@type Frame
-    local instance = Class.newInstanceData(Frame, child_data)
+    local instance = child_data or Class.allocate(Frame, child_data)
     private.new(instance, frame_type)
 
     return instance

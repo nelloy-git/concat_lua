@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type WeUtils
@@ -12,7 +12,7 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local FdfField = Class.newClass('FdfField')
+local FdfField = Class.new('FdfField')
 ---@class FdfField
 local public = FdfField.public
 ---@class FdfFieldClass
@@ -49,7 +49,7 @@ function static.new(name, val_type, serialize_func, child_data)
         return nil
     end
 
-    local instance = Class.newInstanceData(FdfField, child_data)
+    local instance = child_data or Class.allocate(FdfField, child_data)
     private.newData(instance, name, val_type, serialize_func)
 
     return instance

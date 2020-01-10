@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type WeUtils
@@ -12,13 +12,16 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local WeField = Class.newClass('WeField')
+local WeField = Class.new('WeField')
 ---@class WeField
 local public = WeField.public
 ---@class WeFieldClass
 local static = WeField.static
+---@type WeFieldClass
 local override = WeField.override
 local private = {}
+
+WeFieldClass = static
 
 --========
 -- Static
@@ -43,7 +46,7 @@ static.DataType = {
 ---@param child_data WeField | nil
 ---@return WeField
 function static.new(field_id, data_type, name, test_data_func, child_data)
-    local instance = Class.newInstanceData(WeField, child_data)
+    local instance = child_data or Class.allocate(WeField)
     private.newData(instance, field_id, data_type, name, test_data_func)
 
     return instance
@@ -218,4 +221,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return WeField
+return WeField.static

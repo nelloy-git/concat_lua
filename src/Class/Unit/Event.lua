@@ -2,20 +2,20 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
----@type DataBase
+---@type DataBaseClass
 local DataBase = require('utils.DataBase')
----@type Unit
+---@type UnitClass
 local Unit = require('Class.Unit.Main')
----@type Trigger
+---@type TriggerClass
 local Trigger = require('Include.Trigger')
 
 --=======
 -- Class
 --=======
 
-local UnitEvent-- = Class.newClass("UnitEvent")
+local UnitEvent-- = Class.new("UnitEvent")
 local UnitEvent_meta = newMeta(UnitEvent)
 UnitEvent.__triggers_db = DataBase.new('UnitEvent', 'Trigger')
 

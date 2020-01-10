@@ -1,9 +1,13 @@
----@class ObjEdit
+---@class ObjectEdit
 local ObjEdit = {}
 
+---@type WeAbilityClass
 ObjEdit.Ability = require('compiletime.ObjectEdit.Object.WeAbility')
+---@type WeBuffClass
 ObjEdit.Buff = require('compiletime.ObjectEdit.Object.WeBuff')
+---@type WeItemClass
 ObjEdit.Item = require('compiletime.ObjectEdit.Object.WeItem')
+---@type WeUnitClass
 ObjEdit.Unit = require('compiletime.ObjectEdit.Object.WeUnit')
 
 

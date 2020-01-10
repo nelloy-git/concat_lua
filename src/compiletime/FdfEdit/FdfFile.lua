@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type FdfObjectClass
@@ -12,7 +12,7 @@ local FdfObject = require('compiletime.FdfEdit.FdfObject')
 -- Class
 --=======
 
-local FdfFile = Class.newClass('FdfFile')
+local FdfFile = Class.new('FdfFile')
 ---@class FdfFile
 local public = FdfFile.public
 ---@class FdfFileClass
@@ -28,7 +28,7 @@ local private = {}
 ---@param child_data FdfFile | nil
 ---@return FdfFile
 function static.new(name, child_data)
-    local instance = Class.newInstanceData(FdfFile, child_data)
+    local instance = child_data or Class.allocate(FdfFile, child_data)
     private.newData(instance, name)
 
     AddCompileFinal(function() private.free(instance) end)

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type AbilityInstanceClass
@@ -18,7 +18,7 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
-local AbilityEvent = Class.newClass('AbilityEvent')
+local AbilityEvent = Class.new('AbilityEvent')
 ---@class AbilityEvent
 local public = AbilityEvent.public
 ---@class AbilityEventClass
@@ -33,7 +33,7 @@ local private = {}
 ---@param child_data AbilityEvent | nil
 ---@return AbilityEvent
 function static.new(child_data)
-    local instance = Class.newInstanceData(AbilityEvent, child_data)
+    local instance = child_data or Class.allocate(AbilityEvent, child_data)
     local priv = private.newData(instance)
 
     return instance

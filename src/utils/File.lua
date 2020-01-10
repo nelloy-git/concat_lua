@@ -2,21 +2,19 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 --=======
 -- Class
 --=======
 
-local File = Class.newClass('File')
+local File = Class.new('File')
 
 ---@class File
 local public = File.public
 ---@class FileClass
 local static = File.static
----@type table
 local override = File.override
----@type table(File, table)
 local private = {}
 
 --=========
@@ -27,7 +25,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return File
 function static.new(filename, instance_data)
-    local instance = instance_data or Class.newInstanceData(File)
+    local instance = instance_data or Class.allocate(File)
     local priv = private.new(instance, filename)
     
     return instance

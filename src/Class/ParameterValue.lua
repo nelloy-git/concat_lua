@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
@@ -11,16 +11,13 @@ local ParameterType = require('Class.ParameterType')
 -- Class
 --=======
 
----@type any
-local ParameterValue = Class.newClass('ParameterValue')
+local ParameterValue = Class.new('ParameterValue')
 
 ---@class ParameterValue
 local public = ParameterValue.public
 ---@class ParameterValueClass
 local static = ParameterValue.static
----@type table
 local override = ParameterValue.override
----@type table(ParameterValue, table)
 local private = {}
 
 
@@ -31,7 +28,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return ParameterValue
 function static.new(instance_data)
-    local instance = instance_data or Class.newInstanceData(ParameterValue)
+    local instance = instance_data or Class.allocate(ParameterValue)
     local priv = {
         base = 0,
         mult = 1,

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
@@ -13,15 +13,13 @@ local UnitParametersContainer = require('Class.Unit.UnitParametersContainer')
 -- Class
 --=======
 
-local AbilityTypeFlags = Class.newClass('AbilityTypeFlags')
+local AbilityTypeFlags = Class.new('AbilityTypeFlags')
 
 ---@class AbilityTypeFlags
 local public = AbilityTypeFlags.public
 ---@class AbilityTypeFlagsClass
 local static = AbilityTypeFlags.static
----@type table
 local override = AbilityTypeFlags.override
----@type table(AbilityTypeFlags, table)
 local private = {}
 
 --=========
@@ -31,7 +29,7 @@ local private = {}
 ---@param instance_data table | nil
 ---@return AbilityTypeFlags
 function static.new(instance_data)
-    local instance = instance_data or Class.newInstanceData(AbilityTypeFlags)
+    local instance = instance_data or Class.allocate(AbilityTypeFlags)
     local priv = {
         caster_can_move = true,
         caster_can_attack = true,

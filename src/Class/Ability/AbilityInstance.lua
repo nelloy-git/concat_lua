@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.AbilityType')
@@ -19,7 +19,7 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
-local AbilityInstance = Class.newClass('AbilityInstance')
+local AbilityInstance = Class.new('AbilityInstance')
 ---@class AbilityInstance
 local public = AbilityInstance.public
 ---@class AbilityInstanceClass
@@ -38,7 +38,7 @@ public.time_left = 0
 ---@param ability_type AbilityType
 ---@return boolean
 function static.new(caster, target, ability_type)
-    local instance = Class.newInstanceData(AbilityInstance)
+    local instance = child_data or Class.allocate(AbilityInstance)
     private.newData(instance, caster, target, ability_type)
 
     return instance

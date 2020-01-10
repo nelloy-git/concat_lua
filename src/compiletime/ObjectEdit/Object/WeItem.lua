@@ -2,10 +2,11 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
-local WeObject = require('compiletime.ObjectEdit.WeObject')
-
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+
+---@type WeObjectClass
+local WeObject = require('compiletime.ObjectEdit.WeObject')
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')
 ---@type WeFileClass
@@ -17,11 +18,12 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local WeItem = Class.newClass('WeItem', WeObject)
+local WeItem = Class.new('WeItem', WeObject)
 ---@class WeItem
 local public = WeItem.public
 ---@class WeItemClass
 local static = WeItem.static
+---@type WeItemClass
 local override = WeItem.override
 local private = {}
 
@@ -29,10 +31,13 @@ local private = {}
 -- Static
 --========
 
----@param instance_data table | nil
+---@param id string | number
+---@param base_id string | number
+---@param name string
+---@param child_instance WeItem | nil
 ---@return WeItem
-function override.new(id, base_id, name, instance_data)
-    local instance = instance_data or Class.newInstanceData(WeItem)
+function override.new(id, base_id, name, child_instance)
+    local instance = child_instance or Class.allocate(WeItem)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then
@@ -44,45 +49,46 @@ function override.new(id, base_id, name, instance_data)
     return instance
 end
 
-static.Abilities = WeField.new("iabi", "string", "Abilities")
-static.ActivelyUsed = WeField.new("iusa", "bool", "ActivelyUsed")
-static.ArmorType = WeField.new("iarm", "string", "ArmorType")
-static.ButtonPositionX = WeField.new("ubpx", "int", "ButtonPositionX")
-static.ButtonPositionY = WeField.new("ubpy", "int", "ButtonPositionY")
-static.CanBeDropped = WeField.new("idro", "bool", "CanBeDropped")
-static.CanBeSoldByMerchants = WeField.new("isel", "bool", "CanBeSoldByMerchants")
-static.CanBeSoldToMerchants = WeField.new("ipaw", "bool", "CanBeSoldToMerchants")
-static.Classification = WeField.new("icla", "string", "Classification")
-static.CooldownGroup = WeField.new("icid", "string", "CooldownGroup")
-static.Description = WeField.new("ides", "string", "Description")
-static.DroppedWhenCarrierDies = WeField.new("idrp", "bool", "DroppedWhenCarrierDies")
-static.GoldCost = WeField.new("igol", "int", "GoldCost")
-static.HitPoints = WeField.new("ihtp", "int", "HitPoints")
-static.Hotkey = WeField.new("uhot", "string", "Hotkey")
-static.IgnoreCooldown = WeField.new("iicd", "bool", "IgnoreCooldown")
-static.IncludeAsRandomChoice = WeField.new("iprn", "bool", "IncludeAsRandomChoice")
-static.InterfaceIcon = WeField.new("iico", "string", "InterfaceIcon")
-static.Level = WeField.new("ilev", "int", "Level")
-static.LevelUnclassified = WeField.new("ilvo", "int", "LevelUnclassified")
-static.LumberCost = WeField.new("ilum", "int", "LumberCost")
-static.ModelUsed = WeField.new("ifil", "string", "ModelUsed")
-static.Name = WeField.new("unam", 'string', "Name")
-static.NumberofCharges = WeField.new("iuse", "int", "NumberofCharges")
-static.Perishable = WeField.new("iper", "bool", "Perishable")
-static.Priority = WeField.new("ipri", "int", "Priority")
-static.Requirements = WeField.new("ureq", "string", "Requirements")
-static.RequirementsLevels = WeField.new("urqa", "string", "RequirementsLevels")
-static.ScalingValue = WeField.new("isca", "real", "ScalingValue")
-static.StockMaximum = WeField.new("isto", "int", "StockMaximum")
-static.StockReplenishInterval = WeField.new("istr", "int", "StockReplenishInterval")
-static.StockStartDelay = WeField.new("isst", "int", "StockStartDelay")
-static.TintingColor1Red = WeField.new("iclr", "int", "TintingColor1Red")
-static.TintingColor2Green = WeField.new("iclg", "int", "TintingColor2Green")
-static.TintingColor3Blue = WeField.new("iclb", "int", "TintingColor3Blue")
-static.TooltipBasic = WeField.new("utip", "string", "TooltipBasic")
-static.TooltipExtended = WeField.new("utub", "string", "TooltipExtended")
-static.UseAutomaticallyWhenAcquired = WeField.new("ipow", "bool", "UseAutomaticallyWhenAcquired")
-static.ValidTargetForTransformation = WeField.new("imor", "bool", "ValidTargetForTransformation")
+static.Field = {}
+static.Field.Abilities = WeField.new("iabi", "string", "Abilities")
+static.Field.ActivelyUsed = WeField.new("iusa", "bool", "ActivelyUsed")
+static.Field.ArmorType = WeField.new("iarm", "string", "ArmorType")
+static.Field.ButtonPositionX = WeField.new("ubpx", "int", "ButtonPositionX")
+static.Field.ButtonPositionY = WeField.new("ubpy", "int", "ButtonPositionY")
+static.Field.CanBeDropped = WeField.new("idro", "bool", "CanBeDropped")
+static.Field.CanBeSoldByMerchants = WeField.new("isel", "bool", "CanBeSoldByMerchants")
+static.Field.CanBeSoldToMerchants = WeField.new("ipaw", "bool", "CanBeSoldToMerchants")
+static.Field.Classification = WeField.new("icla", "string", "Classification")
+static.Field.CooldownGroup = WeField.new("icid", "string", "CooldownGroup")
+static.Field.Description = WeField.new("ides", "string", "Description")
+static.Field.DroppedWhenCarrierDies = WeField.new("idrp", "bool", "DroppedWhenCarrierDies")
+static.Field.GoldCost = WeField.new("igol", "int", "GoldCost")
+static.Field.HitPoints = WeField.new("ihtp", "int", "HitPoints")
+static.Field.Hotkey = WeField.new("uhot", "string", "Hotkey")
+static.Field.IgnoreCooldown = WeField.new("iicd", "bool", "IgnoreCooldown")
+static.Field.IncludeAsRandomChoice = WeField.new("iprn", "bool", "IncludeAsRandomChoice")
+static.Field.InterfaceIcon = WeField.new("iico", "string", "InterfaceIcon")
+static.Field.Level = WeField.new("ilev", "int", "Level")
+static.Field.LevelUnclassified = WeField.new("ilvo", "int", "LevelUnclassified")
+static.Field.LumberCost = WeField.new("ilum", "int", "LumberCost")
+static.Field.ModelUsed = WeField.new("ifil", "string", "ModelUsed")
+static.Field.Name = WeField.new("unam", 'string', "Name")
+static.Field.NumberofCharges = WeField.new("iuse", "int", "NumberofCharges")
+static.Field.Perishable = WeField.new("iper", "bool", "Perishable")
+static.Field.Priority = WeField.new("ipri", "int", "Priority")
+static.Field.Requirements = WeField.new("ureq", "string", "Requirements")
+static.Field.RequirementsLevels = WeField.new("urqa", "string", "RequirementsLevels")
+static.Field.ScalingValue = WeField.new("isca", "real", "ScalingValue")
+static.Field.StockMaximum = WeField.new("isto", "int", "StockMaximum")
+static.Field.StockReplenishInterval = WeField.new("istr", "int", "StockReplenishInterval")
+static.Field.StockStartDelay = WeField.new("isst", "int", "StockStartDelay")
+static.Field.TintingColor1Red = WeField.new("iclr", "int", "TintingColor1Red")
+static.Field.TintingColor2Green = WeField.new("iclg", "int", "TintingColor2Green")
+static.Field.TintingColor3Blue = WeField.new("iclb", "int", "TintingColor3Blue")
+static.Field.TooltipBasic = WeField.new("utip", "string", "TooltipBasic")
+static.Field.TooltipExtended = WeField.new("utub", "string", "TooltipExtended")
+static.Field.UseAutomaticallyWhenAcquired = WeField.new("ipow", "bool", "UseAutomaticallyWhenAcquired")
+static.Field.ValidTargetForTransformation = WeField.new("imor", "bool", "ValidTargetForTransformation")
 
 --=========
 -- Private

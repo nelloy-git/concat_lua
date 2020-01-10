@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type WeUtils
@@ -12,11 +12,12 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local WeObject = Class.newClass('WeObject')
+local WeObject = Class.new('WeObject')
 ---@class WeObject
 local public = WeObject.public
 ---@class WeObjectClass
 local static = WeObject.static
+---@type WeObjectClass
 local override = WeObject.override
 local private = {}
 
@@ -27,10 +28,10 @@ local private = {}
 ---@param id number | string
 ---@param base_id number | string
 ---@param name string
----@param child_data any
+---@param child_instance WeObject | nil
 ---@return WeObject
-function static.new(id, base_id, name, child_data)
-    local instance = Class.newInstanceData(WeObject, child_data)
+function static.new(id, base_id, name, child_instance)
+    local instance = child_instance or Class.allocate(WeObject)
     private.newData(instance, id, base_id, name)
 
     return instance
@@ -159,4 +160,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return WeObject
+return WeObject.static

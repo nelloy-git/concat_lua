@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type AbilityTypeCallbacksContainerClass
@@ -16,7 +16,7 @@ local DataBase = require('Class.DataBase')
 -- Class
 --=======
 
-local AbilityType = Class.newClass('AbilityType')
+local AbilityType = Class.new('AbilityType')
 ---@class AbilityType
 local public = AbilityType.public
 ---@class AbilityTypeClass
@@ -31,7 +31,7 @@ local private = {}
 ---@param child_data table | nil
 ---@return AbilityType
 function static.new(id, child_data)
-    local instance = Class.newInstanceData(AbilityType, child_data)
+    local instance = child_data or Class.allocate(AbilityType, child_data)
     private.newData(instance, id)
 
     instance.callbacks = AbilityTypeCallbacksContainer.new()
@@ -109,9 +109,7 @@ end
 -- Public
 --========
 
----@type AbilityTypeCallbacksContainer
 public.callbacks = "AbilityTypeCallbacksContainer"
----@type AbilityTypeFlagsClass
 public.flags = "AbilityTypeFlags"
 
 ---@return number

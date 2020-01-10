@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type IconAssetClass
 local Icon
@@ -16,16 +16,13 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
----@type any
-local ParameterType = Class.newClass('ParameterType')
+local ParameterType = Class.new('ParameterType')
 
 ---@class ParameterTypeClass
 local static = ParameterType.static
 ---@class ParameterType
 local public = ParameterType.public
----@type table
 local override = ParameterType.override
----@type table(ParameterType, table)
 local private = {}
 
 private.UnitParameterChangedTrigger = nil
@@ -233,7 +230,7 @@ end
 
 ---@return ParameterType
 function private.new()
-    local instance = Class.newInstanceData(ParameterType)
+    local instance = child_data or Class.allocate(ParameterType)
     local priv = {
         short = "Empty",
         full = "Empty",
@@ -241,9 +238,7 @@ function private.new()
         tooltip = "Empty",
         min_value = 0,
         max_value = 0,
-        ---@type fun(base:number, mult:number, additive:number, min:number, max:number):number
         math = function() return 0 end,
-        ---@type fun(target:unit, value:number)
         apply = function() return nil end,
     }
     private[instance] = priv

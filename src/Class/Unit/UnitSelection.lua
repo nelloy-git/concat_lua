@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class')
+local Class = require('utils.Class.Class')
 
 ---@type TriggerClass
 local Trigger = require('Class.Trigger')
@@ -12,7 +12,7 @@ local Trigger = require('Class.Trigger')
 --=======
 
 ---@type any
-local UnitSelection = Class.newClass('UnitSelection')
+local UnitSelection = Class.new('UnitSelection')
 
 ---@class UnitSelection
 local public = UnitSelection.public
