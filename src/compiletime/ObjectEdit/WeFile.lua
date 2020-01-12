@@ -35,6 +35,8 @@ function static.new(src_path, dst_path, child_instance)
     local instance = child_instance or Class.allocate(WeFile)
     private.newData(instance, src_path, dst_path)
 
+    AddCompileFinal(function() instance:free() end)
+
     return instance
 end
 
@@ -75,8 +77,9 @@ function public:update()
 end
 
 function public:free()
+    self:update()
     private.freeData(self)
-    Class.freeInstanceData(self)
+    Class.free(self)
 end
 
 --=========

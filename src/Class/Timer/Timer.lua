@@ -87,4 +87,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return Timer
+return static

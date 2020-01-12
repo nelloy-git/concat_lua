@@ -96,4 +96,4 @@ function public:getCasterCanAttack()
     return priv.caster_can_attack
 end
 
-return AbilityTypeFlags
+return static

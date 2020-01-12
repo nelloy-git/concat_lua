@@ -42,7 +42,6 @@ function override.new(id, base_id, name, child_instance)
 
     if not private.we_file then
         private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
-        AddCompileFinal(function() private.we_file:update() end)
     end
     private.we_file:addObject(instance)
 

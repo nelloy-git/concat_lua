@@ -20,25 +20,25 @@ local UnitParametersContainer = Class.new('UnitParametersContainer')
 local public = UnitParametersContainer.public
 ---@class UnitParametersContainerClass
 local static = UnitParametersContainer.static
+---@type UnitParametersContainerClass
 local override = UnitParametersContainer.override
 local private = {}
 
-private.DB = DataBase.new('userdata', Class.getClassName(UnitParametersContainer))
+private.DB = DataBase.new('userdata', UnitParametersContainer)
 
 --========
 -- Static
 --========
 
 ---@param owner unit
----@param child_data table | nil
+---@param child_instance UnitParametersContainer | nil
 ---@return UnitParametersContainer
-function static.new(owner, child_data)
-    local instance = child_data or Class.allocate(UnitParametersContainer, child_data)
+function static.new(owner, child_instance)
+    local instance = child_instance or Class.allocate(UnitParametersContainer)
     private.newData(instance, owner)
 
-    local params = ParameterType.getList()
-    for i = 1, #params do
-        private.update(instance, params[i])
+    for i = 1, private.params_count do
+        private.update(instance, private.params_list[i])
     end
     instance:setBase(ParameterType.MS, 250)
 
@@ -153,10 +153,10 @@ function private.newData(self, owner)
     local priv = {
         owner = owner,
         values = {},
-        result = {}
+        results = {}
     }
-    for i = 1, #private.params_count do
-        priv.result[private.params_list[i]] = 0
+    for i = 1, private.params_count do
+        priv.results[private.params_list[i]] = 0
         priv.values[private.params_list[i]] = ParameterValue.new()
     end
     private[self] = priv
@@ -169,4 +169,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return UnitParametersContainer
+return static

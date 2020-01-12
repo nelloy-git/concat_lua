@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+local Class = require('utils.Class.Class')
 
 ---@type FdfFieldClass
 local FdfField = require('compiletime.FdfEdit.FdfField')
@@ -29,10 +29,10 @@ local private = {}
 
 ---@param name string
 ---@param base_name string
----@param child_data FdfObject | nil
+---@param child_instance FdfObject | nil
 ---@return FdfObject
-function static.new(name, base_name, child_data)
-    local instance = child_data or Class.allocate(FdfObject)
+function static.new(name, base_name, child_instance)
+    local instance = child_instance or Class.allocate(FdfObject)
     private.newData(instance, name, base_name)
 
     return instance
@@ -52,6 +52,8 @@ function public:getBaseName()
     return private[self].base_name
 end
 
+---@param field FdfField
+---@param value any
 function public:setField(field, value)
     local priv = private[self]
 
@@ -71,6 +73,7 @@ function public:getFields()
     return priv.fields, priv.values
 end
 
+---@return string
 function public:serialize()
     local priv = private[self]
 
@@ -94,14 +97,17 @@ function public:toRuntime()
     for i = 1, #priv.fields do
         if priv.values[i] == nil then
             res.fields[priv.fields[i]:getName()] = 'nil'
-        elseif isType(priv.values[i], FdfObject) then
+
+        elseif Class.type(priv.values[i], FdfObject) then
             res.fields[priv.fields[i]:getName()] = priv.values[i]:toRuntime()
-        elseif type(priv.values[i]) == 'table' then
+
+        elseif Class.type(priv.values[i], 'table') then
             local list = {}
             res.fields[priv.fields[i]:getName()] = list
             for j = 1, #priv.values[i] do
                 list[priv.values[i][j]:getName()] = priv.values[i][j]:toRuntime()
             end
+
         else
             res.fields[priv.fields[i]:getName()] = priv.values[i]
         end
@@ -112,7 +118,7 @@ end
 
 function public:free()
     private.freeData(self)
-    Class.freeInstanceData(self)
+    Class.free(self)
 end
 
 --=========
@@ -138,4 +144,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return FdfObject
+return static

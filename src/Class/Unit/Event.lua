@@ -269,4 +269,4 @@ function UnitEvent.GetEventDamageTarget()
     return Unit.__db:get(BlzGetEventDamageTarget())
 end
 
-return UnitEvent
+return static

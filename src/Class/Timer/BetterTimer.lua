@@ -140,4 +140,4 @@ if not IsCompiletime() then
     private.glTimer = static.new(private.minimum_period)
 end
 
-return BetterTimer
+return static

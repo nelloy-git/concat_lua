@@ -30,4 +30,4 @@ end
 function UnitInventory.init()
 end
 
-return UnitInventory
+return static

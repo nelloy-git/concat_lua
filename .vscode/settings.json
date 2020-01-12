@@ -2,14 +2,13 @@
     "Lua.workspace.ignoreDir": [
         ".vscode",
         "dst",
-        "lib"
     ],
     "Lua.workspace.library": {
         "./lib": true,
         //"./src": true
     },
     "Lua.workspace.maxPreload": 100,
-    "Lua.workspace.preloadFileSize": 50,
+    "Lua.workspace.preloadFileSize": 500,
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ],

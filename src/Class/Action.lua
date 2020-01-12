@@ -67,4 +67,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return Action
+return static

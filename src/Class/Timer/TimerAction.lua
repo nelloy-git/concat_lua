@@ -12,12 +12,12 @@ local Action = require('Class.Action')
 --=======
 
 local TimerAction = Class.new('TimerAction', Action)
-
----@class TimerActionClass
-local static = TimerAction.static
-local override = TimerAction.override
 ---@class TimerAction
 local public = TimerAction.public
+---@class TimerActionClass
+local static = TimerAction.static
+---@type TimerActionClass
+local override = TimerAction.override
 local private = {}
 
 --=========
@@ -61,4 +61,4 @@ function public:tryRun(cur_time)
     return false
 end
 
-return TimerAction
+return static

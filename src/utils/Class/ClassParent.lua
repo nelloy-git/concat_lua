@@ -46,6 +46,10 @@ function ClassParent.get(class)
 end
 
 function ClassParent.isChild(child, parent)
+    if child == parent then
+        return true
+    end
+
     local parents = class_parents[child]
     if not parents then
         local msg = string.format('is not class.')

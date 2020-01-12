@@ -72,4 +72,11 @@ function ClassInstance.getClass(instance)
     return instance_class[instance]
 end
 
+function ClassInstance.isInstance(instance)
+    if instance_class[instance] then
+        return true
+    end
+    return false
+end
+
 return ClassInstance

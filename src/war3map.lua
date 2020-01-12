@@ -14,15 +14,14 @@ function InitCustomTriggers()
     InitTrig_Melee_Initialization()
 end
 
-local main = require('main')
 if IsCompiletime() then
-    local success, result = pcall(main)
+    local success, result = pcall(require, 'main')
     if not success then
         print(result)
     end
 end
 function RunInitialization()
-    local success, result = pcall(main)
+    local success, result = pcall(require, 'main')
     if not success then
         DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, result)
     end

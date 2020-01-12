@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+local Class = require('utils.Class.Class')
 
 ---@type FdfObjectClass
 local FdfObject = require('compiletime.FdfEdit.FdfObject')
@@ -17,6 +17,7 @@ local FdfFile = Class.new('FdfFile')
 local public = FdfFile.public
 ---@class FdfFileClass
 local static = FdfFile.static
+---@type FdfFileClass
 local override = FdfFile.override
 local private = {}
 
@@ -25,13 +26,13 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_data FdfFile | nil
+---@param child_instance FdfFile | nil
 ---@return FdfFile
-function static.new(name, child_data)
-    local instance = child_data or Class.allocate(FdfFile, child_data)
+function static.new(name, child_instance)
+    local instance = child_instance or Class.allocate(FdfFile)
     private.newData(instance, name)
 
-    AddCompileFinal(function() private.free(instance) end)
+    AddCompileFinal(function() instance:free() end)
 
     return instance
 end
@@ -142,4 +143,4 @@ if private.isFileExists(private.full_dst_path) then
     end
 end
 
-return FdfFile
+return static

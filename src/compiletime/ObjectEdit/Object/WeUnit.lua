@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+local Class = require('utils.Class.Class')
 
 ---@type WeObjectClass
 local WeObject = require('compiletime.ObjectEdit.WeObject')
@@ -19,9 +19,9 @@ local WeUtils = require('compiletime.Utils')
 --=======
 
 local WeUnit = Class.new('WeUnit', WeObject)
----@class WeUnit
+---@class WeUnit : WeObject
 local public = WeUnit.public
----@class WeUnitClass
+---@class WeUnitClass : WeObjectClass
 local static = WeUnit.static
 ---@type WeUnitClass
 local override = WeUnit.override
@@ -42,7 +42,6 @@ function override.new(id, base_id, name, child_instance)
 
     if not private.we_file then
         private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
-        AddCompileFinal(function() private.we_file:update() end)
     end
     private.we_file:addObject(instance)
 

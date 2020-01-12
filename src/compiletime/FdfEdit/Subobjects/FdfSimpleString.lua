@@ -3,8 +3,9 @@
 --=========
 
 local Class = require('utils.Class.Class')
-local FdfSubobject = require('compiletime.FdfEdit.FdfSubobject')
 
+---@type FdfSubobjectClass
+local FdfSubobject = require('compiletime.FdfEdit.FdfSubobject')
 ---@type FdfFieldClass
 local FdfField = require('compiletime.FdfEdit.FdfField')
 
@@ -17,6 +18,7 @@ local FdfSimpleString = Class.new('FdfSimpleString', FdfSubobject)
 local public = FdfSimpleString.public
 ---@class FdfSimpleStringClass : FdfSubobjectClass
 local static = FdfSimpleString.static
+---@type FdfSimpleStringClass
 local override = FdfSimpleString.override
 local private = {}
 
@@ -25,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_data FdfSimpleString | nil
+---@param child_instance FdfSimpleString | nil
 ---@return FdfSimpleString
-function override.new(name, child_data)
-    local instance = child_data or Class.allocate(FdfSimpleString, child_data)
+function override.new(name, child_instance)
+    local instance = child_instance or Class.allocate(FdfSimpleString, child_instance)
     instance = FdfSubobject.new(name, 'String', instance)
 
     return instance

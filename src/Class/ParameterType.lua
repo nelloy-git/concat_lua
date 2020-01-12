@@ -6,7 +6,7 @@ local Class = require('utils.Class.Class')
 
 ---@type IconAssetClass
 local Icon
-Compiletime(function()
+local tmp = Compiletime(function()
     Icon = require('compiletime.Icon')
 end)
 ---@type TriggerClass
@@ -17,41 +17,17 @@ local Trigger = require('Class.Trigger')
 --=======
 
 local ParameterType = Class.new('ParameterType')
-
 ---@class ParameterTypeClass
 local static = ParameterType.static
 ---@class ParameterType
 local public = ParameterType.public
+---@type ParameterType
 local override = ParameterType.override
 local private = {}
 
-private.UnitParameterChangedTrigger = nil
-private.list = {}
-private.default_max = 10^10
-private.min_pdmg_attack = 0.85
-private.max_pdmg_attack = 1.15
-private.max_pdmg_reduc = 0.75
-private.attack_index = 1
-private.min_mdmg_attack = 0.85
-private.max_mdmg_attack = 1.15
-private.max_ctime_reduc = 0.75
-private.max_mdmg_reduc = 0.75
-private.max_dodge_ch = 0.50
-private.max_crit_ch = 0.75
-private.max_cd_reduc = 0.75
-private.pdmg_per_str = 0.50
-private.armor_per_str = 0.25
-private.hp_per_str = 5
-private.aspd_per_agi = 1
-private.cspd_per_agi = 1
-private.dodge_per_agi = 1
-private.mdmg_per_int = 1
-private.mp_per_int = 5
-private.cdr_per_int = 1
-
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@return Trigger
 function static.getUnitParameterChangedTrigger()
@@ -227,6 +203,31 @@ function public:getMax()
     local priv = private[self]
     return  priv.max_value
 end
+
+
+private.UnitParameterChangedTrigger = nil
+private.list = {}
+private.default_max = 10^10
+private.min_pdmg_attack = 0.85
+private.max_pdmg_attack = 1.15
+private.max_pdmg_reduc = 0.75
+private.attack_index = 1
+private.min_mdmg_attack = 0.85
+private.max_mdmg_attack = 1.15
+private.max_ctime_reduc = 0.75
+private.max_mdmg_reduc = 0.75
+private.max_dodge_ch = 0.50
+private.max_crit_ch = 0.75
+private.max_cd_reduc = 0.75
+private.pdmg_per_str = 0.50
+private.armor_per_str = 0.25
+private.hp_per_str = 5
+private.aspd_per_agi = 1
+private.cspd_per_agi = 1
+private.dodge_per_agi = 1
+private.mdmg_per_int = 1
+private.mp_per_int = 5
+private.cdr_per_int = 1
 
 ---@return ParameterType
 function private.new()
@@ -588,4 +589,4 @@ private[static.MS].max = 512
 private[static.MS].math = private.mathLinear
 private[static.MS].apply = private.applyMoveSpeed
 
-return ParameterType
+return static

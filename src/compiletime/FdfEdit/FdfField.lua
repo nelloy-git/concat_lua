@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+local Class = require('utils.Class.Class')
 
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
@@ -17,6 +17,7 @@ local FdfField = Class.new('FdfField')
 local public = FdfField.public
 ---@class FdfFieldClass
 local static = FdfField.static
+---@type FdfFieldClass
 local override = FdfField.override
 local private = {}
 
@@ -26,6 +27,7 @@ local private = {}
 
 ---@alias FdfSerializeDataFunction fun(field:FdfField, data:any):string
 
+---@type table<string, FdfSerializeDataFunction>
 static.SERIAL_DATA = {
     EMPTY = private.serialize_Empty,
     STRING = private.serialize_String,
@@ -39,9 +41,9 @@ static.SERIAL_DATA = {
 ---@param name string
 ---@param val_type any
 ---@param serialize_func any
----@param child_data FdfField | nil
+---@param child_instance FdfField | nil
 ---@return FdfField
-function static.new(name, val_type, serialize_func, child_data)
+function static.new(name, val_type, serialize_func, child_instance)
     if not serialize_func then
         local msg = string.format('serialize function can not be \"nil\"\n%s',
                                    WeUtils.getErrorPos())
@@ -49,7 +51,7 @@ function static.new(name, val_type, serialize_func, child_data)
         return nil
     end
 
-    local instance = child_data or Class.allocate(FdfField, child_data)
+    local instance = child_instance or Class.allocate(FdfField)
     private.newData(instance, name, val_type, serialize_func)
 
     return instance
@@ -72,14 +74,14 @@ end
 ---@param value string
 ---@return boolean
 function public:checkType(value)
-    return isType(value, private[self].val_type)
+    return Class.type(value, private[self].val_type)
 end
 
 ---@param value any
 ---@return string
 function public:serialize(value)
     local priv = private[self]
-    if isType(value, priv.val_type) then
+    if Class.type(value, priv.val_type) then
         return priv.serialize_func(self, value)
     else
         local msg = string.format('wrong value type for field %s.',
@@ -91,7 +93,7 @@ end
 
 function public:free()
     private.freeData(self)
-    Class.freeInstanceData(self)
+    Class.free(self)
 end
 
 --=========
@@ -189,4 +191,4 @@ static.SERIAL_DATA = {
     SUBOBJECT_LIST = private.serialize_SubobjectList
 }
 
-return FdfField
+return static

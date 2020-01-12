@@ -154,4 +154,4 @@ function private.newData(instance, id)
     private.DB:set(ID(id), instance)
 end
 
-return AbilityType
+return static

@@ -108,4 +108,4 @@ function private.onUnitDeselect()
     end
 end
 
-return UnitSelection
+return static

@@ -89,13 +89,16 @@ private.DB = DataBase.new('userdata', Unit)
 ---@param y number
 ---@param face number
 function private.newData(self, id, player, x, y, face)
+    local num_id = ID(id)
     local priv = {
-        id = ID(id),
+        id = num_id,
         owner = player,
-        wc3_unit = CreateUnit(player, id, x, y, face)
+        wc3_unit = CreateUnit(player, num_id, x, y, face)
     }
     private[self] = priv
-    private.DB:set(priv.wc3_unit, self)
+    if not private.DB:set(priv.wc3_unit, self) then
+        error('Can not add Unit to DataBase.')
+    end
 end
 
 ---@param self Unit
@@ -121,4 +124,4 @@ function private.freeComponents(self)
 end
 
 
-return Unit
+return static

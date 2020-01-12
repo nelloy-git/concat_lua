@@ -78,4 +78,4 @@ function public:setAdditive(value)
     priv.additive = value
 end
 
-return ParameterValue
+return static

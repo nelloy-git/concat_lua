@@ -124,4 +124,4 @@ function private.runCallbackSavety(callback)
     return true
 end
 
-return AbilityTypeCallbacksContainer
+return static

@@ -10,7 +10,7 @@ local Class = require('utils.Class.Class')
 
 local IconAsset = Class.new('IconAsset')
 
----@class IconAssetClass : ClassStatic
+---@class IconAssetClass
 local static = IconAsset.static
 
 static.BTN3M1 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M1.blp"
@@ -2350,4 +2350,4 @@ static.pASBTNVampiricAura = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNVamp
 static.pASBTNVorpalBlades = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNVorpalBlades.blp"
 static.pASBTNWarStomp = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNWarStomp.blp"
 
-return IconAsset
+return static

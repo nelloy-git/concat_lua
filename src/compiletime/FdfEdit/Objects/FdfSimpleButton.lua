@@ -3,8 +3,9 @@
 --=========
 
 local Class = require('utils.Class.Class')
-local FdfObject = require('compiletime.FdfEdit.FdfObject')
 
+---@type FdfObjectClass
+local FdfObject = require('compiletime.FdfEdit.FdfObject')
 ---@type FdfFieldClass
 local FdfField = require('compiletime.FdfEdit.FdfField')
 
@@ -17,6 +18,7 @@ local FdfSimpleButton = Class.new('FdfSimpleButton', FdfObject)
 local public = FdfSimpleButton.public
 ---@class FdfSimpleButtonClass : FdfObjectClass
 local static = FdfSimpleButton.static
+---@type FdfSimpleButtonClass
 local override = FdfSimpleButton.override
 local private = {}
 
@@ -25,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_data FdfSimpleButton | nil
+---@param child_instance FdfSimpleButton | nil
 ---@return FdfSimpleButton
-function override.new(name, child_data)
-    local instance = child_data or Class.allocate(FdfSimpleButton, child_data)
+function override.new(name, child_instance)
+    local instance = child_instance or Class.allocate(FdfSimpleButton)
     instance = FdfObject.new(name, 'SIMPLEBUTTON', instance)
 
     return instance

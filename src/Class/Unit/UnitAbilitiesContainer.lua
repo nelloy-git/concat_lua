@@ -43,4 +43,4 @@ function public:free()
    freeInstanceData(self)
 end
 
-return UnitAbilitiesContainer
+return static

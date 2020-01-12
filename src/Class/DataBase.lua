@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+local Class = require('utils.Class.Class')
 
 --=======
 -- Class
@@ -14,6 +14,7 @@ local DataBase = Class.new('DataBase')
 local public = DataBase.public
 ---@class DataBaseClass
 local static = DataBase.static
+---@type DataBaseClass
 local override = DataBase.override
 local private = {}
 
@@ -23,10 +24,10 @@ local private = {}
 
 ---@param key_type string
 ---@param value_type string
----@param child_data DataBase | nil
+---@param child_instance DataBase | nil
 ---@return DataBase
-function static.new(key_type, value_type, child_data)
-    local instance = child_data or Class.allocate(DataBase, child_data)
+function static.new(key_type, value_type, child_instance)
+    local instance = child_instance or Class.allocate(DataBase)
     private.newData(instance, key_type, value_type)
 
     return instance
@@ -38,24 +39,26 @@ end
 
 ---@param key any
 ---@param value any
+---@return boolean
 function public:set(key, value)
     local priv = private[self]
 
     if not private.isValidKeyType(self, key) then
-        return nil
+        return false
     end
     if not private.isValidValueType(self, value) then
-        return nil
+        return false
     end
 
     priv.data[key] = value
+    return true
 end
 
 ---@return any
 function public:get(key)
     local priv = private[self]
     if not private.isValidKeyType(self, key) then
-        return nil
+        return false
     end
     return priv.data[key]
 end
@@ -83,8 +86,8 @@ end
 ---@return boolean
 function private.isValidKeyType(self, key)
     local priv = private[self]
-    if not isType(key, priv.key_type) then
-        local msg = string.format("wrong key type. Got: %s Avaliable: %s", type(key), priv.key_type)
+    if not Class.type(key, priv.key_type) then
+        local msg = string.format("wrong key type. Got: %s Avaliable: %s", tostring(key), priv.key_tostring)
         Log(Log.Err, DataBase, msg)
         return false
     end
@@ -96,8 +99,8 @@ end
 ---@return boolean
 function private.isValidValueType(self, value)
     local priv = private[self]
-    if not isType(value, priv.value_type) then
-        local msg = string.format("wrong value type. Got: %s Avaliable: %s", type(value), priv.value_type)
+    if not Class.type(value, priv.value_type) then
+        local msg = string.format("wrong value type. Got: %s Avaliable: %s", tostring(value), priv.value_type)
         Log(Log.Err, DataBase, msg)
         return false
     end
@@ -110,8 +113,8 @@ end
 function private.newData(instance, key_type, value_type)
     local priv = {
         data = {},
-        key_type = Class.getClassName() or key_type,
-        value_type = Class.getClassName() or value_type
+        key_type = key_type,
+        value_type = value_type
     }
     private[instance] = priv
 end
@@ -121,4 +124,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return DataBase
+return static
