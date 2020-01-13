@@ -35,7 +35,11 @@ local private = {}
 function static.apply(target, value, parameter)
     local func = private.ApplyParameterFunction[parameter]
     if not func then
-        Log(Log.Warn, UnitApplyParameter, 'unknown parameter type '..tostring(parameter))
+        if Class.type(parameter, ParameterType) then
+            Log(Log.Warn, UnitApplyParameter, 'unknown parameter type '..parameter:getShortName())
+        else
+            Log(Log.Warn, UnitApplyParameter, 'unknown parameter type '..tostring(parameter))
+        end
         return
     end
     func(target, value)
@@ -54,25 +58,28 @@ end
 -- Private
 --=========
 
-function private.applyNothing()
+function private.Nothing()
     return nil
 end
 
+local min_pdmg_attack = ParameterType.getMinAttackPDmg()
+local max_pdmg_attack = ParameterType.getMaxAttackPDmg()
 ---@param target unit
 ---@param value number
 function private.PDmg(target, value)
-    local dmg = private.min_pdmg_attack * value
-    local dice_sides = (private.max_pdmg_attack - private.min_pdmg_attack) * value
+    local dmg = min_pdmg_attack * value
+    local dice_sides = (max_pdmg_attack - min_pdmg_attack) * value
 
     BlzSetUnitBaseDamage(target, math.floor(dmg), 0)
     BlzSetUnitDiceNumber(target, 1, 0)
     BlzSetUnitDiceSides(target, math.floor(dice_sides + 1), 0)
 end
 
+local attack_index = 1
 ---@param target unit
 ---@param value number
 function private.AttackCooldown(target, value)
-    BlzSetUnitAttackCooldown(target, value, private.attack_index)
+    BlzSetUnitAttackCooldown(target, value, attack_index)
 end
 
 ---@param target unit

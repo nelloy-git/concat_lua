@@ -161,7 +161,6 @@ private.default_max = 10^10
 private.min_pdmg_attack = 0.85
 private.max_pdmg_attack = 1.15
 private.max_pdmg_reduc = 0.75
-private.attack_index = 1
 private.min_mdmg_attack = 0.85
 private.max_mdmg_attack = 1.15
 private.max_ctime_reduc = 0.75

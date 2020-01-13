@@ -19,13 +19,13 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
-local AbilityCast = Class.new('AbilityCast')
----@class AbilityCast
-local public = AbilityCast.public
----@class AbilityCastClass
-local static = AbilityCast.static
----@type AbilityCastClass
-local override = AbilityCast.override
+local AbilityCastInstance = Class.new('AbilityCastInstance')
+---@class AbilityCastInstance
+local public = AbilityCastInstance.public
+---@class AbilityCastInstanceClass
+local static = AbilityCastInstance.static
+---@type AbilityCastInstanceClass
+local override = AbilityCastInstance.override
 local private = {}
 
 public.time_left = 0
@@ -39,13 +39,13 @@ public.time_left = 0
 ---@param ability_type AbilityType
 ---@return boolean
 function static.new(caster, target, ability_type)
-    local instance = Class.allocate(AbilityCast)
+    local instance = Class.allocate(AbilityCastInstance)
     private.newData(instance, caster, target, ability_type)
 
     return instance
 end
 
----@return AbilityCast
+---@return AbilityCastInstance
 function static.get(caster)
     return private.DB:get(caster)
 end
@@ -154,7 +154,7 @@ end
 -- Private
 --=========
 
-private.DB = DataBase.new('userdata', AbilityCast)
+private.DB = DataBase.new('userdata', AbilityCastInstance)
 private.ms_const = 10^10
 private.disable_attack_id = ID('Abun')
 private.attack_order = 851983
@@ -248,11 +248,11 @@ function private.getAnyTarget()
     return target
 end
 
----@param self AbilityCast
+---@param self AbilityCastInstance
 ---@param caster unit
 ---@param target unit|item|destructable|table|nil
 ---@param ability_type AbilityType
----@return AbilityCast
+---@return AbilityCastInstance
 function private.newData(self, caster, target, ability_type)
     self.time_left = ability_type:getCastingTime(caster)
     local priv = {
@@ -278,4 +278,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return AbilityCast
+return static

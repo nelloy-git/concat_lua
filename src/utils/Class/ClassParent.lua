@@ -21,7 +21,11 @@ function ClassParent.register(class, ...)
         end
         
         if not ClassName.isClass(cur) then
-            error(ClassName.getName(class)..': classes can have class parents only.')
+            if ClassName.isClass(class) then
+                error(ClassName.getName(class)..': classes can have class parents only.')
+            else
+                error('classes can have class parents only.')
+            end
         end
         table.insert(full_parents, #full_parents + 1, cur)
         local cur_parents = class_parents[cur]

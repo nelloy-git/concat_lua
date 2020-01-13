@@ -6,7 +6,7 @@ local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
 ---@type AbilityInstanceClass
-local AbilityInstance = require('Class.Ability.AbilityInstance')
+local AbilityInstance = require('Class.Ability.Cast')
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.AbilityType')
 ---@type BetterTimerClass

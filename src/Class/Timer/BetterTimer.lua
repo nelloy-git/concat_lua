@@ -5,10 +5,8 @@
 local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
----@type Timer
+---@type TimerClass
 local Timer = require('Class.Timer.Timer')
----@type ActionClass
-local Action = require('Class.Action')
 ---@type TimerActionClass
 local TimerAction = require('Class.Timer.TimerAction')
 
@@ -25,9 +23,6 @@ local static = BetterTimer.static
 local override = BetterTimer.override
 local private = {}
 
-private.minimum_period = 0.03125
-private.glTimer = nil
-
 --========
 -- Static
 --========
@@ -38,7 +33,7 @@ private.glTimer = nil
 function override.new(period, child_instance)
     local instance = child_instance or Class.allocate(BetterTimer)
     instance = Timer.new(instance)
-    private.newData(instance)
+    private.newData(instance, period)
 
     private.TimerPublic.start(instance, period, true, function() private.runActions(instance) end)
 
@@ -107,10 +102,8 @@ end
 -- Private
 --=========
 
-private.TimerPublic = Class.getPublic(Timer)
-
 ---@param instance BetterTimer
-function private.newData(instance)
+function private.newData(instance, period)
     if period < private.minimum_period then
         period = private.minimum_period
     end
@@ -166,8 +159,10 @@ function private.findPos(actions, time, first, len)
     end
 end
 
+private.TimerPublic = Class.getPublic(Timer)
+private.minimum_period = 0.03125
 if not IsCompiletime() then
-    private.glTimer = static.run(private.minimum_period)
+    private.glTimer = BetterTimer.static.new(private.minimum_period)
 end
 
 return static

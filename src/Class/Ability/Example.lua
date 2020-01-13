@@ -8,7 +8,7 @@ local Log = require('utils.Log')
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.AbilityType')
 ---@type AbilityInstanceClass
-local AbilityInstance = require('Class.Ability.AbilityInstance')
+local AbilityInstance = require('Class.Ability.CastInstance')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.Timer.BetterTimer')
 
@@ -35,8 +35,8 @@ local flags = ExampleAbility.flags
 --- Set function for casting time calculating.
 ExampleAbility:setCastingTime(function()
     local caster = AbilityInstance.getCaster()
-    local full_time = GetUnitState(caster, UNIT_STATE_MAX_LIFE) / 100
-    Log(Log.Msg, abil_name, fmt('full casting time = %.2f (hp / 100)', full_time))
+    local full_time = 3
+    Log(Log.Msg, abil_name, fmt('full casting time = %.2f', 3))
     return full_time
 end)
 

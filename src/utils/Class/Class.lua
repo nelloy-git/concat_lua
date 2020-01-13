@@ -35,6 +35,10 @@ local function new(name, ...)
     local class = {}
     setmetatable(class, class_metatable)
 
+    if type(name) ~= 'string' then
+        error('name can be string only.')
+    end
+
     ClassName.register(class, name)
     ClassParent.register(class, ...)
 
@@ -91,8 +95,8 @@ function Class.type(value1, value2)
         return type(value1) == value2
     end
 
-    local class1 = value1
-    local class2 = value2
+    local class1 = ClassStatic.getClass(value1) or value1
+    local class2 = ClassStatic.getClass(value2) or value2
 
     if is_instance1 then
         class1 = Class.getClass(value1)
