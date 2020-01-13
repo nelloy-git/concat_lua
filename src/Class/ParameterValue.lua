@@ -17,27 +17,28 @@ local ParameterValue = Class.new('ParameterValue')
 local public = ParameterValue.public
 ---@class ParameterValueClass
 local static = ParameterValue.static
+---@type ParameterValueClass
 local override = ParameterValue.override
 local private = {}
 
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
----@param instance_data table | nil
+---@param child_instance table | nil
 ---@return ParameterValue
-function static.new(instance_data)
-    local instance = instance_data or Class.allocate(ParameterValue)
-    local priv = {
-        base = 0,
-        mult = 1,
-        additive = 0,
-    }
-    private[instance] = priv
+function static.new(child_instance)
+    local instance = child_instance or Class.allocate(ParameterValue)
+    private.newData(instance)
 
     return instance
 end
+
+
+--========
+-- Public
+--========
 
 ---@return number
 function public:getBase()
@@ -76,6 +77,29 @@ function public:setAdditive(value)
     local priv = private[self]
     priv.result_ready = false
     priv.additive = value
+end
+
+function public:free()
+    private.freeData(self)
+end
+
+--=========
+-- Private
+--=========
+
+---@param instance ParameterValue
+function private.newData(instance)
+    local priv = {
+        base = 0,
+        mult = 1,
+        additive = 0,
+    }
+    private[instance] = priv
+end
+
+---@param instance ParameterValue
+function private.freeData(instance)
+    private[instance] = nil
 end
 
 return static

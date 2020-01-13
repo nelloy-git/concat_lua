@@ -131,18 +131,18 @@ static.Field.ANcl_BaseOrderID = WeAbilityField.new("Ncl6", 'string', 6, "BaseOrd
 static.Field.ANcl_DisableOtherAbilities = WeAbilityField.new("Ncl5", 'bool', 5, "DisableOtherAbilities", true)
 static.Field.ANcl_FollowThroughTime = WeAbilityField.new("Ncl1", 'unreal', 1, "FollowThroughTime", true)
 
-static.Field.ANcl_TargetType_None = 0
-static.Field.ANcl_TargetType_Unit = 1
-static.Field.ANcl_TargetType_Point = 2
-static.Field.ANcl_TargetType_UnitOrPoint = 3
+static.ANcl_TargetType_None = 0
+static.ANcl_TargetType_Unit = 1
+static.ANcl_TargetType_Point = 2
+static.ANcl_TargetType_UnitOrPoint = 3
 --- 0 - none; 1 - unit; 2 - point; 3 - point or unit
 static.Field.ANcl_TargetType = WeAbilityField.new("Ncl2", 'int', 2, "TargetType", true)
 
-static.Field.ANcl_Options_Visible = 1
-static.Field.ANcl_Options_AreaTarget = 2
-static.Field.ANcl_Options_Material = 4
-static.Field.ANcl_Options_Universal = 8
-static.Field.ANcl_Options_Group = 16
+static.ANcl_Options_Visible = 1
+static.ANcl_Options_AreaTarget = 2
+static.ANcl_Options_Material = 4
+static.ANcl_Options_Universal = 8
+static.ANcl_Options_Group = 16
 --- Summ of flags: visible - 1, area target - 2, material - 4, universal - 8, group - 16
 static.Field.ANcl_Options = WeAbilityField.new("Ncl3", 'int', 3, "Options", true)
 
@@ -200,8 +200,8 @@ function public:toRuntime()
             copy[k:getName()] = deepcopy(v)
         end
     end
-    copy.id = WeObject.public.getId(self)
-    copy.base_id = WeObject.public.getBaseId(self)
+    copy.id = private.WeObjectPublic.getId(self)
+    copy.base_id = private.WeObjectPublic.getBaseId(self)
     return copy
 end
 
@@ -237,7 +237,7 @@ function public:serialize()
         end
     end
 
-    local res = WeObject.public.getBaseId(self) .. WeObject.public.getId(self) .. WeUtils.int2byte(#fields_serial)
+    local res = private.WeObjectPublic.getBaseId(self) .. private.WeObjectPublic.getId(self) .. WeUtils.int2byte(#fields_serial)
     for i = 1, #fields_serial do
         res = res..fields_serial[i]
     end
@@ -246,13 +246,14 @@ end
 
 function public:free()
     private.freeData(self)
-    WeObject.public.free(self)
+    private.WeObjectPublic.free(self)
 end
 
 --=========
 -- Private
 --=========
 
+private.WeObjectPublic = Class.getPublic(WeObject)
 private.path_sep = package.config:sub(1,1)
 private.file_src = GetSrcDir()..private.path_sep..'war3map.w3a'
 private.file_dst = GetDstDir()..private.path_sep..'war3map.w3a'

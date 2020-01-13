@@ -1,15 +1,17 @@
-local Class = require('utils.Class.Class')
 require('utils.Globals')
+
 ---@type UnitClass
 local Unit = require('Class.Unit')
+---@type AbilityTypeClass
+local ExampleAbility = require('Class.Ability.Example')
 
 local unit_type = Compiletime(function()
     ---@type ObjectEdit
     local ObjEdit = require('compiletime.ObjectEdit')
-    local Unit = ObjEdit.Unit
-    local unit_type = Unit.new(ObjEdit.getUnitId(), 'hfoo', 'Paladin')
-    unit_type:setField(Unit.Field.Name, 'Paladin')
-    unit_type:setField(Unit.Field.ArmorSoundType, 'Flesh')
+    local WeUnit = ObjEdit.Unit
+    local unit_type = WeUnit.new(ObjEdit.getUnitId(), 'hfoo', 'Paladin')
+    unit_type:setField(WeUnit.Field.Name, 'Paladin')
+    unit_type:setField(WeUnit.Field.ArmorSoundType, 'Flesh')
     return unit_type:toRuntime()
 end)
 

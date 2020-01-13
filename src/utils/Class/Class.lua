@@ -93,7 +93,7 @@ function Class.type(value1, value2)
 
     local class1 = value1
     local class2 = value2
-    
+
     if is_instance1 then
         class1 = Class.getClass(value1)
     end

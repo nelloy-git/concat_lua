@@ -7,7 +7,7 @@ local Class = require('utils.Class.Class')
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
 ---@type UnitParametersContainerClass
-local UnitParametersContainer = require('Class.Unit.UnitParametersContainer')
+local UnitParametersContainer = require('Class.Unit.Parameters.Container')
 
 --=======
 -- Class
@@ -19,31 +19,26 @@ local AbilityTypeFlags = Class.new('AbilityTypeFlags')
 local public = AbilityTypeFlags.public
 ---@class AbilityTypeFlagsClass
 local static = AbilityTypeFlags.static
+---@type AbilityTypeFlagsClass
 local override = AbilityTypeFlags.override
 local private = {}
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
----@param instance_data table | nil
+---@param child_instance AbilityTypeFlags | nil
 ---@return AbilityTypeFlags
-function static.new(instance_data)
-    local instance = instance_data or Class.allocate(AbilityTypeFlags)
-    local priv = {
-        caster_can_move = true,
-        caster_can_attack = true,
-        caster_can_cast = false
-    }
-    private[instance] = priv
+function static.new(child_instance)
+    local instance = child_instance or Class.allocate(AbilityTypeFlags)
+    private.newData(instance)
 
     return instance
 end
 
-function public:free()
-   private[self] = nil
-   freeInstanceData(self)
-end
+--========
+-- Public
+--========
 
 ---@param caster unit
 function public:applyFlagsToCaster(caster)
@@ -58,6 +53,7 @@ function public:applyFlagsToCaster(caster)
         UnitAddAbility(caster, private.disable_attack_id)
     end
 end
+
 ---@param caster unit
 function public:removeFlagsFromCaster(caster)
     local priv = private[self]
@@ -94,6 +90,30 @@ end
 function public:getCasterCanAttack()
     local priv = private[self]
     return priv.caster_can_attack
+end
+
+function public:free()
+   private.freeData(self)
+   Class.free(self)
+end
+
+--=========
+-- Private
+--=========
+
+---@param instance AbilityTypeFlagsClass
+function private.newData(instance)
+    local priv = {
+        caster_can_move = true,
+        caster_can_attack = true,
+        caster_can_cast = false
+    }
+    private[instance] = priv
+end
+
+---@param instance AbilityTypeFlagsClass
+function private.freeData(instance)
+    private[instance] = nil
 end
 
 return static

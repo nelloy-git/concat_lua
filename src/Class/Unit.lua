@@ -8,9 +8,7 @@ local Log = require('utils.Log')
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 ---@type UnitParametersContainerClass
-local UnitParametersContainer = require('Class.Unit.UnitParametersContainer')
----@type UnitAbilitiesContainerClass
-local UnitAbilitiesContainer = require('Class.Unit.UnitAbilitiesContainer')
+local UnitParametersContainer = require('Class.Unit.Parameters.Container')
 
 --=======
 -- Class
@@ -21,6 +19,7 @@ local Unit = Class.new('Unit')
 local public = Unit.public
 ---@class UnitClass
 local static = Unit.static
+---@type UnitClass
 local override = Unit.override
 local private = {}
 
@@ -33,11 +32,11 @@ local private = {}
 ---@param x number
 ---@param y number
 ---@param face number
----@param child_data table | nil
-function static.new(player, id, x, y, face, child_data)
-    local instance = child_data or Class.allocate(Unit, child_data)
+---@param child_instance Unit | nil
+---@return Unit
+function static.new(player, id, x, y, face, child_instance)
+    local instance = child_instance or Class.allocate(Unit)
     private.newData(instance, id, player, x, y, face)
-
     private.initComponents(instance)
 
     return instance
@@ -58,7 +57,7 @@ public.parameters = 'UnitParametersContainer'
 function public:free()
     private.freeComponents(self)
     private.freeData(self)
-    Class.freeInstanceData(self)
+    Class.free(self)
 end
 
 ---@return number

@@ -10,6 +10,12 @@ local DataBase = require('Class.DataBase')
 local ParameterType = require('Class.ParameterType')
 ---@type ParameterValueClass
 local ParameterValue = require('Class.ParameterValue')
+---@type Trigger
+local Trigger = require('Class.Trigger')
+
+--- Recursive include
+---@type UnitApplyParameterClass
+local UnitApplyParameter = require('Class.Unit.Parameters.Apply')
 
 --=======
 -- Class
@@ -49,6 +55,26 @@ end
 ---@return UnitParametersContainer
 function static.get(owner)
     return private.DB:get(owner)
+end
+
+---@return Unit
+function static.GetUnitWithChangedParameters()
+    Log(Log.Err, UnitParametersContainer, 'GetUnitWithChangedParameters called outside of \'UnitChangesParameter\' event.')
+end
+
+---@return ParameterType
+function static.GetChangedParameterType()
+    Log(Log.Err, UnitParametersContainer, 'GetChangedParameterType called outside of \'UnitChangesParameter\' event.')
+end
+
+---@return number
+function static.GetChangedParameterOldValue()
+    Log(Log.Err, UnitParametersContainer, 'GetChangedParameterOldValue called outside of \'UnitChangesParameter\' event.')
+end
+
+---@return number
+function static.GetChangedParameterNewValue()
+    Log(Log.Err, UnitParametersContainer, 'GetChangedParameterNewValue called outside of \'UnitChangesParameter\' event.')
 end
 
 --========
@@ -130,6 +156,10 @@ end
 -- Private
 --=========
 
+if not IsCompiletime() then
+    private.UnitParameterChangedTrigger = Trigger.new()
+end
+
 private.params_list = ParameterType.getList()
 private.params_count = #private.params_list
 
@@ -137,13 +167,32 @@ private.params_count = #private.params_list
 ---@param param ParameterType
 function private.update(self, param)
     local priv = private[self]
-
     local values = priv.values[param]
+
     local old_val = priv.results[param]
     local new_val = param:math(values:getBase(), values:getMult(), values:getAdditive())
 
+    local prev_unit = static.GetUnitWithChangedParameters
+    local prev_param = static.GetChangedParameterType
+    local prev_old = static.GetChangedParameterOldValue
+    local prev_new = static.GetChangedParameterNewValue
+
+    static.GetUnitWithChangedParameters = function() return priv.owner end
+    static.GetChangedParameterType = function() return self end
+    static.GetChangedParameterOldValue = function() return old_val end
+    static.GetChangedParameterNewValue = function() return new_val end
+
+    UnitApplyParameter = UnitApplyParameter or require('Class.Unit.Parameters.Apply')
+    UnitApplyParameter.apply(priv.owner, new_val, param)
     priv.results[param] = new_val
-    param:apply(priv.owner, old_val, new_val)
+    if private.UnitParameterChangedTrigger then
+        private.UnitParameterChangedTrigger:execute()
+    end
+
+    static.GetUnitWithChangedParameters = prev_unit
+    static.GetChangedParameterType = prev_param
+    static.GetChangedParameterOldValue = prev_old
+    static.GetChangedParameterNewValue = prev_new
 end
 
 ---@param self UnitParametersContainer

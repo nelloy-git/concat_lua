@@ -12,6 +12,12 @@ local AbilityTypeFlagsContainer = require('Class.Ability.AbilityTypeFlagsContain
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 
+---@type IconAssetClass
+local ObjEdit
+local tmp = Compiletime(function()
+    ObjEdit = require('compiletime.ObjectEdit')
+end)
+
 --=======
 -- Class
 --=======
@@ -21,6 +27,7 @@ local AbilityType = Class.new('AbilityType')
 local public = AbilityType.public
 ---@class AbilityTypeClass
 local static = AbilityType.static
+---@type AbilityTypeClass
 local override = AbilityType.override
 local private = {}
 
@@ -57,50 +64,49 @@ function static.createDummy(target, name)
         return nil
     end
 
-    local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
-    local WeAbility = WeObjEdit.Ability
-    local abil = WeAbility.new(WeObjEdit.getAbilityId(), 'ANcl', name or 'Dummy ability')
+    local WeAbility = ObjEdit.Ability
+    local abil = WeAbility.new(ObjEdit.getAbilityId(), 'ANcl', name or 'Dummy ability')
 
-    abil:setField(WeAbility.TooltipNormal, 1, 'Dummy Ability')
-    abil:setField(WeAbility.TooltipNormalExtended, 1, 'No description.')
-    abil:setField(WeAbility.CastingTime, 1, 0)
-    abil:setField(WeAbility.Cooldown, 1, 1)
-    abil:setField(WeAbility.Cooldown, 2, 1)
-    abil:setField(WeAbility.ArtCaster, 0, "")
-    abil:setField(WeAbility.ArtEffect, 0, "")
-    abil:setField(WeAbility.ArtSpecial, 0, "")
-    abil:setField(WeAbility.ArtTarget, 0, "")
-    abil:setField(WeAbility.AnimationNames, 0, "")
-    abil:setField(WeAbility.ANcl_FollowThroughTime, 1, 0)
+    abil:setField(WeAbility.Field.TooltipNormal, 1, 'Dummy Ability')
+    abil:setField(WeAbility.Field.TooltipNormalExtended, 1, 'No description.')
+    abil:setField(WeAbility.Field.CastingTime, 1, 0)
+    abil:setField(WeAbility.Field.Cooldown, 1, 1)
+    abil:setField(WeAbility.Field.Cooldown, 2, 1)
+    abil:setField(WeAbility.Field.ArtCaster, 0, "")
+    abil:setField(WeAbility.Field.ArtEffect, 0, "")
+    abil:setField(WeAbility.Field.ArtSpecial, 0, "")
+    abil:setField(WeAbility.Field.ArtTarget, 0, "")
+    abil:setField(WeAbility.Field.AnimationNames, 0, "")
+    abil:setField(WeAbility.Field.ANcl_FollowThroughTime, 1, 0)
 
     if target == 'none' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_None)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_None)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
     elseif target == 'point' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
     elseif target == 'unit' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
     elseif target == 'unitPoint' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
     elseif target == 'pointArea' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     elseif target == 'unitArea' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     elseif target == 'pointUnitArea' then
-        abil:setField(WeAbility.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
-        abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
+        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
+        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     else
-        local msg = string.format("wrong target type.\n%s", WeObjEdit.Utils.getErrorPos())
+        local msg = string.format("wrong target type.\n%s", ObjEdit.Utils.getErrorPos())
         Log(Log.Err, AbilityType, msg)
         return nil
     end
 
-    abil:setField(WeAbility.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+    abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
 
     return abil:toRuntime()
 end

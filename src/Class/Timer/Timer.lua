@@ -26,22 +26,13 @@ local private = {}
 -- Static
 --========
 
----@param child_data table | nil
+---@param child_instance Timer | nil
 ---@return Timer
-function static.new(child_data)
-    local instance =  Class.new(Timer, child_data)
+function static.new(child_instance)
+    local instance =  Class.new(Timer, child_instance)
     private.newData(instance)
 
     return instance
-end
-
---========
--- Public
---========
-
-function public:free()
-    private.freeData(self)
-    Class.freeInstanceData(self)
 end
 
 ---@return Timer
@@ -49,10 +40,15 @@ function static.getExpired()
     return private.DB:get(GetExpiredTimer())
 end
 
+--========
+-- Public
+--========
+
 ---@param timeout number
 ---@param periodic boolean
----@param action Action
-function public:new(timeout, periodic, action)
+---@param callback Callback
+function public:start(timeout, periodic, callback)
+    local action = Action.new(callback)
     TimerStart(private[self].wc3_timer, timeout, periodic, function() action:run() end)
 end
 
@@ -62,6 +58,11 @@ end
 
 function public:resume()
     ResumeTimer(private[self].wc3_timer)
+end
+
+function public:free()
+    private.freeData(self)
+    Class.free(self)
 end
 
 --=========
@@ -83,6 +84,7 @@ end
 function private.freeData(self)
     local priv = private[self]
     private.DB:remove(priv.wc3_timer)
+    PauseTimer(priv.wc3_timer)
     DestroyTimer(priv.wc3_timer)
     private[self] = nil
 end

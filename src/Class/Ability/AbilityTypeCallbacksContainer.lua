@@ -9,41 +9,33 @@ local Class = require('utils.Class.Class')
 --=======
 
 local AbilityTypeCallbacksContainer = Class.new('AbilityTypeCallbacksContainer')
-
 ---@class AbilityTypeCallbacksContainer
 local public = AbilityTypeCallbacksContainer.public
 ---@class AbilityTypeCallbacksContainerClass
 local static = AbilityTypeCallbacksContainer.static
+---@type AbilityTypeCallbacksContainerClass
 local override = AbilityTypeCallbacksContainer.override
 local private = {}
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
----@param instance_data table | nil
+---@param child_instance AbilityTypeCallbacksContainer | nil
 ---@return AbilityTypeCallbacksContainer
-function static.new(instance_data)
-    local instance = instance_data or Class.allocate(AbilityTypeCallbacksContainer)
-    local priv = {
-        start = nil,
-        cancel = nil,
-        casting = nil,
-        finish = nil,
-        interrupt = nil,
-    }
-    private[instance] = priv
+function static.new(child_instance)
+    local instance = child_instance or Class.allocate(AbilityTypeCallbacksContainer)
+    private.newData(instance)
 
     return instance
 end
 
-function public:free()
-   private[self] = nil
-   freeInstanceData(self)
-end
+--========
+-- Public
+--========
 
 --- Callback have to return true if started successfully
----@param callback callback
+---@param callback Callback
 function public:setStart(callback)
     local priv = private[self]
     priv.start = callback
@@ -56,7 +48,7 @@ function public:runStart()
     return private.runCallbackSavety(priv.start)
 end
 
----@param callback callback
+---@param callback Callback
 function public:setCancel(callback)
     local priv = private[self]
     priv.cancel = callback
@@ -70,7 +62,7 @@ function public:runCancel()
 end
 
 --- Callback have to return true if casting period was successfull
----@param callback callback
+---@param callback Callback
 function public:setCasting(callback)
     local priv = private[self]
     priv.casting = callback
@@ -83,7 +75,7 @@ function public:runCasting()
     return private.runCallbackSavety(priv.casting)
 end
 
----@param callback callback
+---@param callback Callback
 function public:setFinish(callback)
     local priv = private[self]
     priv.finish = callback
@@ -96,7 +88,7 @@ function public:runFinish()
     return private.runCallbackSavety(priv.finish)
 end
 
----@param callback callback
+---@param callback Callback
 function public:setInterrupt(callback)
     local priv = private[self]
     priv.interrupt = callback
@@ -107,6 +99,32 @@ end
 function public:runInterrupt()
     local priv = private[self]
     return private.runCallbackSavety(priv.interrupt)
+end
+
+function public:free()
+   private.freeData(self)
+   Class.free(self)
+end
+
+--=========
+-- Private
+--=========
+
+---@param instance AbilityTypeCallbacksContainerClass
+function private.newData(instance)
+    local priv = {
+        start = nil,
+        cancel = nil,
+        casting = nil,
+        finish = nil,
+        interrupt = nil,
+    }
+    private[instance] = priv
+end
+
+---@param instance AbilityTypeCallbacksContainerClass
+function private.freeData(instance)
+    private[instance] = nil
 end
 
 --- Returns true by default.

@@ -49,7 +49,7 @@ else
         ctime.file_link:write(fmt("[%0.3f] %s\n", os.clock() - start_time, "Logging started"))
         
         AddCompileFinal(function()
-            ctime.file_link:write(fmt("\n[%0.3f] %s", os.clock() - start_time, "Logging finished"))
+            ctime.file_link:write(fmt("[%0.3f] %s", os.clock() - start_time, "Logging finished"))
             ctime.file_link:close()
         end)
     end
@@ -119,7 +119,7 @@ function Log.write(log_level, header, str)
         end
 
         if ctime.use_log_file then
-            ctime.file_link:write(full_str)
+            ctime.file_link:write(full_str..'\n')
         end
     end
 end

@@ -3,9 +3,10 @@
 --=========
 
 local Class = require('utils.Class.Class')
-local Timer = require('Class.Timer.Timer')
-
 local Log = require('utils.Log')
+
+---@type Timer
+local Timer = require('Class.Timer.Timer')
 ---@type ActionClass
 local Action = require('Class.Action')
 ---@type TimerActionClass
@@ -20,33 +21,26 @@ local BetterTimer = Class.new('BetterTimer', Timer)
 local public = BetterTimer.public
 ---@class BetterTimerClass : TimerClass
 local static = BetterTimer.static
+---@type BetterTimerClass
 local override = BetterTimer.override
 local private = {}
 
 private.minimum_period = 0.03125
 private.glTimer = nil
 
---=========
--- Methods
---=========
+--========
+-- Static
+--========
 
 ---@param period number
----@param child_data table | nil
+---@param child_instance BetterTimer | nil
 ---@return BetterTimer
-function override.new(period, child_data)
-    local instance = child_data or Class.allocate(BetterTimer, child_data)
+function override.new(period, child_instance)
+    local instance = child_instance or Class.allocate(BetterTimer)
     instance = Timer.new(instance)
-    if period < private.minimum_period then
-        period = private.minimum_period
-    end
-    local priv = {
-        cur_time = 0,
-        period = period,
-        actions = {}
-    }
-    private[instance] = priv
+    private.newData(instance)
 
-    Timer.public.new(instance, period, true, Action.new(function() private.runActions(instance) end))
+    private.TimerPublic.start(instance, period, true, function() private.runActions(instance) end)
 
     return instance
 end
@@ -56,25 +50,27 @@ function static.getGlobalTimer()
     return private.glTimer
 end
 
+--========
+-- Public
+--========
+
 --- Removed function
-function public:new()
-    Log(Log.Warn, getClassName(BetterTimer), 'function \"start\" is deprecated.' )
+function public:start()
+    Log(Log.Warn, BetterTimer, 'function \"start\" is deprecated.' )
 end
 
 ---@return number
 function public:getTime()
-    local priv = private[self]
-    return priv.cur_time
+    return private[self].cur_time
 end
 
 ---@return number
 function public:getPeriod()
-    local priv = private[self]
-    return priv.period
+    return private[self].period
 end
 
 ---@param delay number
----@param callback callback
+---@param callback Callback
 ---@return TimerAction
 function public:addAction(delay, callback)
     local priv = private[self]
@@ -100,6 +96,40 @@ function public:removeAction(action)
         end
     end
     return false
+end
+
+function public:free()
+    private.freeData(self)
+    private.TimerPublic.free(self)
+end
+
+--=========
+-- Private
+--=========
+
+private.TimerPublic = Class.getPublic(Timer)
+
+---@param instance BetterTimer
+function private.newData(instance)
+    if period < private.minimum_period then
+        period = private.minimum_period
+    end
+    local priv = {
+        cur_time = 0,
+        period = period,
+        actions = {}
+    }
+    private[instance] = priv
+end
+
+---@param instance BetterTimer
+function private.freeData(instance)
+    local priv = private[instance]
+    for i = 1, #priv.actions do
+        priv.actions[i]:free()
+    end
+    private[instance] = nil
+    private.TimerPublic.free(instance)
 end
 
 ---@param self BetterTimer
@@ -137,7 +167,7 @@ function private.findPos(actions, time, first, len)
 end
 
 if not IsCompiletime() then
-    private.glTimer = static.new(private.minimum_period)
+    private.glTimer = static.run(private.minimum_period)
 end
 
 return static

@@ -23,6 +23,7 @@ local AbilityEvent = Class.new('AbilityEvent')
 local public = AbilityEvent.public
 ---@class AbilityEventClass
 local static = AbilityEvent.static
+---@type AbilityEventClass
 local override = AbilityEvent.override
 local private = {}
 
@@ -54,9 +55,6 @@ end
 
 private.attack_order = 851983
 if not IsCompiletime() then
-    private.timer = BetterTimer.getGlobalTimer()
-    private.timer_period = private.timer:getPeriod()
-
     private.wc3_spell_effect_trigger = Trigger.new()
     private.wc3_unit_issued_order_trigger = Trigger.new()
     private.wc3_unit_issued_point_order_trigger = Trigger.new()
@@ -71,6 +69,7 @@ if not IsCompiletime() then
         private.wc3_unit_issued_target_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
         private.wc3_unit_issued_unit_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
     end
+    
     private.wc3_spell_effect_trigger:addAction(function() savetyRun(private.onSpellEffect) end)
     private.wc3_unit_issued_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
     private.wc3_unit_issued_point_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
