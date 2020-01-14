@@ -3,7 +3,7 @@ require('utils.Globals')
 ---@type UnitClass
 local Unit = require('Class.Unit')
 ---@type AbilityTypeClass
-local ExampleAbility = require('Class.Ability.Example')
+--local ExampleAbility = require('Class.Ability.Example')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.Timer.BetterTimer')
 

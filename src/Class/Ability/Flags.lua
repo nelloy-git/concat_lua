@@ -17,9 +17,9 @@ local AbilityFlags = Class.new('AbilityFlags')
 
 ---@class AbilityFlags
 local public = AbilityFlags.public
----@class AbilityTypeFlagsClass
+---@class AbilityFlagsClass
 local static = AbilityFlags.static
----@type AbilityTypeFlagsClass
+---@type AbilityFlagsClass
 local override = AbilityFlags.override
 local private = {}
 
@@ -121,7 +121,7 @@ function private.setAttackFlag(flag, target)
     end
 end
 
----@param instance AbilityTypeFlagsClass
+---@param instance AbilityFlags
 ---@param block_move boolean
 ---@param block_attack boolean
 function private.newData(instance, block_move, block_attack)
@@ -132,7 +132,7 @@ function private.newData(instance, block_move, block_attack)
     private[instance] = priv
 end
 
----@param instance AbilityTypeFlagsClass
+---@param instance AbilityFlags
 function private.freeData(instance)
     private[instance] = nil
 end

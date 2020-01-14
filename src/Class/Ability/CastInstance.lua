@@ -8,6 +8,8 @@ local Class = require('utils.Class.Class')
 local AbilityType = require('Class.Ability')
 ---@type ActionClass
 local Action = require('Class.Action')
+---@type AbilityEventClass
+local AbilityEvent = require('Class.Ability.Event')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.Timer.BetterTimer')
 ---@type DataBaseClass

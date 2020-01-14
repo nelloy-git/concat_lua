@@ -22,3 +22,21 @@ ObjEdit.getItemId = ObjEdit.Utils.nextItemId
 ObjEdit.getUpgradeId = ObjEdit.Utils.nextUpgradeId
 
 return ObjEdit
+
+--[[ Example
+
+local unit_type = Compiletime(function()
+    ---@type ObjectEdit
+    local ObjEdit = require('compiletime.ObjectEdit')
+    local WeUnit = ObjEdit.Unit
+    local unit_type = WeUnit.new(ObjEdit.getUnitId(), 'hfoo', 'Paladin')
+    unit_type:setField(WeUnit.Field.Name, 'Paladin')
+    unit_type:setField(WeUnit.Field.ArmorSoundType, 'Flesh')
+    return unit_type:toRuntime()
+end)
+
+---->
+
+local unit_type = {['Name'] = 'Paladin',['id'] = 'x##$',['name'] = 'Paladin',['base_id'] = 'hfoo',}
+
+]]
