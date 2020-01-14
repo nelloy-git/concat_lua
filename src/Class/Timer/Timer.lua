@@ -48,7 +48,7 @@ end
 ---@param periodic boolean
 ---@param callback Callback
 function public:start(timeout, periodic, callback)
-    local action = Action.new(callback)
+    local action = Action.new(callback, self)
     TimerStart(private[self].wc3_timer, timeout, periodic, function() action:run() end)
 end
 

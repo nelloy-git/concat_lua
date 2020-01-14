@@ -1,4 +1,4 @@
 [0.000] Logging started
-[0.230] {Message} WeFile: сreated WeUnit_0001B69D2D1640 "Paladin" with id 'x##$' based on 'hfoo'
-[0.231] {Message} WeFile: сreated WeAbility_0001B69D5CD030 "Example ability" with id 'AM#$' based on 'ANcl'
-[0.232] Logging finished
+[0.056] {Message} WeFile: сreated WeUnit_f6e530 "Paladin" with id 'x##$' based on 'hfoo'
+[0.056] {Message} WeFile: сreated WeAbility_dcec20 "Example ability" with id 'AM#$' based on 'ANcl'
+[0.056] Logging finished

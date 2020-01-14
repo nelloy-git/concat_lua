@@ -28,9 +28,9 @@ local private = {}
 ---@param callback Callback
 ---@param child_instance TimerAction | nil
 ---@return TimerAction
-function override.new(timeout, callback, child_instance)
+function override.new(timeout, callback, owner, child_instance)
     local instance = child_instance or Class.allocate(TimerAction)
-    instance = Action.new(callback, instance)
+    instance = Action.new(callback, owner, instance)
     private.newData(instance, timeout)
 
     return instance

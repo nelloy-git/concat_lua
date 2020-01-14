@@ -13,6 +13,7 @@ local Action = Class.new('Action')
 local public = Action.public
 ---@class ActionClass
 local static = Action.static
+---@type ActionClass
 local override = Action.override
 local private = {}
 
@@ -23,31 +24,41 @@ local private = {}
 ---@alias Callback fun():any
 
 ---@param callback Callback
----@param child_data Action | nil
+---@param owner any
+---@param child_insatnce Action | nil
 ---@return Action
-function static.new(callback, child_data)
-    local instance = child_data or Class.allocate(Action, child_data)
-    local priv = {
-        callback = callback,
-    }
-    private[instance] = priv
+function static.new(callback, owner, child_insatnce)
+    local instance = child_insatnce or Class.allocate(Action)
+    private.newData(instance, callback, owner)
 
     return instance
+end
+
+function static.getRunningAction()
 end
 
 --========
 -- Public
 --========
 
+local savetyRun = savetyRun
 ---@return any
 function public:run()
-    local priv = private[self]
-    return savetyRun(priv.callback)
+    local prev = static.getRunningAction
+    static.getRunningAction = function() return self end
+    local res = savetyRun(private[self].callback)
+    static.getRunningAction = prev
+    return res
+end
+
+---@return any
+function public:getOwner()
+    return private[self].owner
 end
 
 function public:free()
-    private[self] = nil
-    Class.freeInstanceData(self)
+    private.freeData(self)
+    Class.free(self)
 end
 
 --=========
@@ -56,9 +67,10 @@ end
 
 ---@param instance Action
 ---@param callback Callback
-function private.newData(instance, callback)
+function private.newData(instance, callback, owner)
     local priv = {
         callback = callback,
+        owner = owner
     }
     private[instance] = priv
 end

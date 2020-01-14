@@ -30,7 +30,7 @@
             "---@return ${1:className}",
             "function static.new(child_instance)",
             "    local instance = child_instance or Class.allocate(${1:className})",
-            "    local priv = private.newData(instance)",
+            "    private.newData(instance)",
             "",
             "    return instance",
             "end",

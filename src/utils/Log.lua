@@ -137,5 +137,14 @@ Log.Warn = 'Warning'
 ---@type LogLevel
 Log.Msg = 'Message'
 
+---@overload fun(message:string, level:number)
+---@param prefix any
+---@param message string
+---@param level number | nil
+function Error(prefix, message, level)
+    Log.write(Log.Err, prefix, message)
+    error(tostring(prefix)..': '..message, (level or 0) + 1)
+end
+
 setmetatable(Log, {__call = function(self, log_level, header, str) self.write(log_level, header, str) end})
 return Log

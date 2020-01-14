@@ -264,6 +264,7 @@ end
 ---@param self Trigger
 function private.freeData(self)
     local priv = private[self]
+    self:clearActions()
     DestroyTrigger(priv.wc3_trigger)
     private.DB:remove(priv.wc3_trigger)
     private[self] = nil

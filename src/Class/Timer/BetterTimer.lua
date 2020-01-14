@@ -23,6 +23,8 @@ local static = BetterTimer.static
 local override = BetterTimer.override
 local private = {}
 
+local TimerPublic = Class.getPublic(Timer)
+
 --========
 -- Static
 --========
@@ -35,7 +37,7 @@ function override.new(period, child_instance)
     instance = Timer.new(instance)
     private.newData(instance, period)
 
-    private.TimerPublic.start(instance, period, true, function() private.runActions(instance) end)
+    TimerPublic.start(instance, period, true, function() private.runActions(instance) end)
 
     return instance
 end
@@ -73,7 +75,7 @@ function public:addAction(delay, callback)
         delay = 0.01
     end
     local timeout = priv.cur_time + delay
-    local action = TimerAction.new(timeout, callback)
+    local action = TimerAction.new(timeout, callback, owner)
     local pos = private.findPos(priv.actions, timeout, 1, #priv.actions)
     table.insert(priv.actions, pos, action)
 
@@ -87,6 +89,7 @@ function public:removeAction(action)
     for i = 1, #priv.actions do
         if priv.actions[i] == action then
             table.remove(priv.actions, i)
+            action:free()
             return true
         end
     end
@@ -95,7 +98,7 @@ end
 
 function public:free()
     private.freeData(self)
-    private.TimerPublic.free(self)
+    TimerPublic.free(self)
 end
 
 --=========
@@ -122,7 +125,6 @@ function private.freeData(instance)
         priv.actions[i]:free()
     end
     private[instance] = nil
-    private.TimerPublic.free(instance)
 end
 
 ---@param self BetterTimer
@@ -135,7 +137,9 @@ function private.runActions(self)
         local action = table.remove(priv.actions, 1)
 
         local success = action:tryRun(cur_time)
-        if not success then
+        if success then
+            action:free()
+        else
             table.insert(priv.actions, 1, action)
             break
         end
@@ -159,7 +163,6 @@ function private.findPos(actions, time, first, len)
     end
 end
 
-private.TimerPublic = Class.getPublic(Timer)
 private.minimum_period = 0.03125
 if not IsCompiletime() then
     private.glTimer = BetterTimer.static.new(private.minimum_period)

@@ -11,7 +11,7 @@ function savetyRun(func, ...)
         if success then
             return result
         else
-            Log(Log.Err, 'pcall', result)
+            Log(Log.Err, 'savetyRun', result)
             return nil
         end
     else

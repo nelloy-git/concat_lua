@@ -5,10 +5,10 @@
 local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
----@type AbilityTypeCallbacksContainerClass
-local AbilityTypeCallbacksContainer = require('Class.Ability.AbilityTypeCallbacksContainer')
----@type AbilityTypeFlagsClass
-local AbilityTypeFlagsContainer = require('Class.Ability.AbilityTypeFlagsContainer')
+---@type AbilityCallbacksContainerClass
+local AbilityCallbacksContainer = require('Class.Ability.Callbacks')
+---@type AbilityFlagsClass
+local AbilityFlagsContainer = require('Class.Ability.Flags')
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
 
@@ -22,45 +22,45 @@ end)
 -- Class
 --=======
 
-local AbilityType = Class.new('AbilityType')
----@class AbilityType
-local public = AbilityType.public
----@class AbilityTypeClass
-local static = AbilityType.static
----@type AbilityTypeClass
-local override = AbilityType.override
+local Ability = Class.new('Ability')
+---@class Ability
+local public = Ability.public
+---@class AbilityClass
+local static = Ability.static
+---@type AbilityClass
+local override = Ability.override
 local private = {}
 
 --========
 -- Static
 --========
 
----@param child_data table | nil
----@return AbilityType
-function static.new(id, child_data)
-    local instance = child_data or Class.allocate(AbilityType, child_data)
+---@param child_instance Ability | nil
+---@return Ability
+function static.new(id, child_instance)
+    local instance = child_instance or Class.allocate(Ability)
     private.newData(instance, id)
 
-    instance.callbacks = AbilityTypeCallbacksContainer.new()
-    instance.flags = AbilityTypeFlagsContainer.new()
+    instance.callbacks = AbilityCallbacksContainer.new()
+    instance.flags = AbilityFlagsContainer.new()
 
     return instance
 end
 
----@return AbilityType
+---@return Ability
 function static.get(id)
     return private.DB:get(id)
 end
 
----@alias AbilityTypeDummyTarget string | "'none'" | "'point'" | "'unit'" | "'unitPoint'" | "'pointArea'" | '"unitArea"' | "'pointUnitArea'"
+---@alias AbilityDummyTarget string | "'none'" | "'point'" | "'unit'" | "'unitPoint'" | "'pointArea'" | '"unitArea"' | "'pointUnitArea'"
 
 -- Compiletime only.
----@param target AbilityTypeDummyTarget
+---@param target AbilityDummyTarget
 ---@param name string | nil
 ---@return table(string, any)
 function static.createDummy(target, name)
     if not IsCompiletime() then
-        Log(Log.Warn, AbilityType, 'dummy ability can be created in Compiletime only.')
+        Log(Log.Warn, Ability, 'dummy ability can be created in Compiletime only.')
         return nil
     end
 
@@ -102,7 +102,7 @@ function static.createDummy(target, name)
         abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     else
         local msg = string.format("wrong target type.\n%s", ObjEdit.Utils.getErrorPos())
-        Log(Log.Err, AbilityType, msg)
+        Log(Log.Err, Ability, msg)
         return nil
     end
 
@@ -115,13 +115,12 @@ end
 -- Public
 --========
 
-public.callbacks = "AbilityTypeCallbacksContainer"
-public.flags = "AbilityTypeFlags"
+public.callbacks = "AbilityCallbacksContainer"
+public.flags = "AbilityFlags"
 
 ---@return number
 function public:getId()
-    local priv = private[self]
-    return priv.id
+    return private[self].id
 end
 
 ---@param caster unit
@@ -134,22 +133,22 @@ function public:getCastingTime(caster)
     elseif type(priv.casting_time) == 'number' then
         return priv.casting_time
     end
+    Log(Log.Warn, Ability, 'can not get ability casting time.')
     return 0
 end
 
 ---@param func fun(caster:unit):number | number
 function public:setCastingTime(func)
-    local priv = private[self]
-    priv.casting_time = func
+    private[self].casting_time = func
 end
 
 --=========
 -- Private
 --=========
 
-private.DB = DataBase.new('number', AbilityType)
+private.DB = DataBase.new('number', Ability)
 
----@param instance AbilityType
+---@param instance Ability
 ---@param id string | number
 function private.newData(instance, id)
     local priv = {
