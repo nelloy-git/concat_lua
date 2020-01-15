@@ -149,9 +149,9 @@ static.Field.ANcl_Options = WeAbilityField.new("Ncl3", 'int', 3, "Options", true
 --=======================
 -- Aasl Slow Aura fields
 --=======================
-static.Field.MovementSpeedFactor = WeAbilityField.new("Slo1", 'unreal', 1, "MovementSpeedFactor", true)
-static.Field.AlwaysAutocast = WeAbilityField.new("Slo3", 'bool', 3, "AlwaysAutocast", true)
-static.Field.AttackSpeedFactor = WeAbilityField.new("Slo2", 'unreal', 2, "AttackSpeedFactor", true)
+static.Field.Aasl_MovementSpeedFactor = WeAbilityField.new("Slo1", 'unreal', 1, "MovementSpeedFactor", true)
+static.Field.Aasl_AlwaysAutocast = WeAbilityField.new("Slo3", 'bool', 3, "AlwaysAutocast", true)
+static.Field.Aasl_AttackSpeedFactor = WeAbilityField.new("Slo2", 'unreal', 2, "AttackSpeedFactor", true)
 
 --========
 -- Public

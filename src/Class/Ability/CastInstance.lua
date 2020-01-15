@@ -4,12 +4,6 @@
 
 local Class = require('utils.Class.Class')
 
----@type AbilityClass
-local AbilityType = require('Class.Ability')
----@type ActionClass
-local Action = require('Class.Action')
----@type AbilityEventClass
-local AbilityEvent = require('Class.Ability.Event')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.Timer.BetterTimer')
 ---@type DataBaseClass
@@ -62,7 +56,7 @@ function public:start()
     local priv = private[self]
     local success = priv.ability.callbacks:runStart(self)
     if success then
-        priv.ability.flags.applyFlagsToCaster(priv.caster)
+        priv.ability.flags:applyFlagsToCaster(priv.caster)
     end
 
     return success
@@ -76,19 +70,22 @@ end
 function public:cancel()
     local priv = private[self]
     priv.ability.callbacks:runCancel(self)
-    priv.ability.flags.removeFlagsFromCaster(priv.caster)
+    priv.ability.flags:removeFlagsFromCaster(priv.caster)
+    self:free()
 end
 
 function public:interrupt()
     local priv = private[self]
     priv.ability.callbacks:runInterrupt(self)
-    priv.ability.flags.removeFlagsFromCaster(priv.caster)
+    priv.ability.flags:removeFlagsFromCaster(priv.caster)
+    self:free()
 end
 
 function public:finish()
     local priv = private[self]
     priv.ability.callbacks:runFinish(self)
-    priv.ability.flags.removeFlagsFromCaster(priv.caster)
+    priv.ability.flags:removeFlagsFromCaster(priv.caster)
+    self:free()
 end
 
 ---@return number
@@ -99,6 +96,16 @@ end
 ---@return number
 function public:getFullCastingTime()
     return private[self].full_time
+end
+
+---@return unit
+function public:getCaster()
+    return private[self].caster
+end
+
+---@return any
+function public:getTarget()
+    return private[self].caster
 end
 
 function public:free()
@@ -120,20 +127,18 @@ end
 function private.timerLoop(self)
     local priv = private[self]
 
-    self.time_left = self.time_left - private.timer_period
-    if self.time_left > 0 then
+    priv.time_left = priv.time_left - private.timer_period
+    if priv.time_left > 0 then
         -- Casting
         if not self:casting() then
             -- Interrupt
             self:interrupt()
-            self:free()
         end
         -- Add action to next timer period
         priv.timer_action = private.timer:addAction(0, function() private.timerLoop(self) end)
     else
         -- Finished
         self:finish()
-        self:free()
     end
 end
 
@@ -143,26 +148,27 @@ end
 ---@param ability Ability
 ---@return AbilityCastInstance
 function private.newData(self, caster, target, ability)
-    local time_left = ability:getCastingTime(caster)
     local priv = {
         caster = caster,
         target = target,
         ability = ability,
-        full_time = time_left,
-        time_left = time_left,
+        full_time = 0,
+        time_left = 0,
         timer_action = private.timer:addAction(0, function() private.timerLoop(self) end)
     }
     private[self] = priv
 
-    ability.flags:applyFlagsToCaster(caster)
     private.DB:set(caster, self)
+    
+    local time_left = ability.callbacks:getCastingTime(self)
+    priv.full_time = time_left
+    priv.time_left = time_left
 end
 
 function private.freeData(self)
     local priv = private[self]
 
     private.timer:removeAction(priv.timer_action)
-    priv.ability.flags:removeFlagsFromCaster(priv.caster)
     private.DB:remove(priv.caster)
 
     private[self] = nil

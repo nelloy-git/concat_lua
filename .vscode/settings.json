@@ -1,7 +1,7 @@
 {
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "dst/*",
+        "dst",
     ],
     "Lua.workspace.library": {
         "./lib": true,

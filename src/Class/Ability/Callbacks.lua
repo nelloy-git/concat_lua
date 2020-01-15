@@ -3,9 +3,7 @@
 --=========
 
 local Class = require('utils.Class.Class')
-
----@type AbilityCastInstanceClass
-local AbilityCastInstance = require('Class.Ability.CastInstance')
+local Log = require('utils.Log') 
 
 --=======
 -- Class
@@ -25,6 +23,7 @@ local private = {}
 --========
 
 ---@alias AbilityCallback fun(cast_data:AbilityCastInstance):boolean
+---@alias AbilityCastingTimeCallback fun(cast_data:AbilityCastInstance):number
 
 ---@param child_instance AbilityCallbacksContainer | nil
 ---@return AbilityCallbacksContainer
@@ -86,6 +85,15 @@ function public:setInterrupt(callback)
     Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
+---@param callback AbilityCastingTimeCallback | number
+function public:setCastingTime(callback)
+    if type(callback) == 'function' or type(callback) == 'number' then
+        private[self].casting_time = callback
+        return
+    end
+    Log.error(AbilityCallbacks, 'callback must be function type or number', 2)
+end
+
 --- Returns true by default.
 ---@param cast_data AbilityCastInstance
 ---@return boolean
@@ -121,6 +129,17 @@ function public:runInterrupt(cast_data)
     return private.runCallbackSavety(private[self].interrupt, cast_data)
 end
 
+--- Returns true by default.
+---@param cast_data AbilityCastInstance
+---@return number
+function public:getCastingTime(cast_data)
+    if type(private[self].casting_time) == 'function' then
+        return private[self].casting_time(cast_data)
+    else
+        return private[self].casting_time
+    end
+end
+
 function public:free()
    private.freeData(self)
    Class.free(self)
@@ -138,6 +157,7 @@ function private.newData(instance)
         casting = nil,
         finish = nil,
         interrupt = nil,
+        casting_time = nil
     }
     private[instance] = priv
 end

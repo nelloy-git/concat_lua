@@ -48,63 +48,33 @@ function override.new(id, base_id, name, child_instance)
     return instance
 end
 
-function public:free()
-    WeObject.free(self)
-end
-
-local fmt = string.format
-
-function private.checkType(field, data)
-    local data_type = field:getDataType()
-    local res = false
-    if data_type == 'string' and type(data) == 'string' then
-        res = true
-    end
-    if data_type == 'int' and type(data) == 'number' and data % 1 == 0 then
-        res = true
-    end
-    if data_type == 'bool' and type(data) == 'boolean' then
-        res = true
-    end
-    if (data_type == 'real' or data_type == 'unreal') and type(data) == 'number' then
-        res = true
-    end
-
-    if not res then
-        local msg = fmt('wrong data type. Got %s. Need %s.',
-                         type(data), data_type)
-        Log(Log.Wrn, field:getName(), msg)
-    end
-    return res
-end
-
 static.Field = {}
-static.Field.Name = WeField.new("fnam", 'string', 'Name', private.checkType)
-static.Field.EditorSuffix = WeField.new("fnsf", 'string', 'EditorSuffix', private.checkType)
-static.Field.Race = WeField.new("frac", 'string', 'Race', private.checkType)
-static.Field.IconNormal = WeField.new("fart", 'string', 'IconNormal', private.checkType)
-static.Field.Caster = WeField.new("fcat", 'string', 'Caster', private.checkType)
-static.Field.ArtTarget = WeField.new("ftat", 'string', 'ArtTarget', private.checkType)
-static.Field.ArtSpecial = WeField.new("fsat", 'string', 'ArtSpecial', private.checkType)
-static.Field.Effect = WeField.new("feat", 'string', 'Effect', private.checkType)
-static.Field.AreaEffect = WeField.new("faea", 'string', 'AreaEffect', private.checkType)
-static.Field.MissileArt = WeField.new("fmat", 'string', 'MissileArt', private.checkType)
-static.Field.MissileSpeed = WeField.new("fmsp", 'int', 'MissileSpeed', private.checkType)
-static.Field.MissileArc = WeField.new("fmac", 'real', 'MissileArc', private.checkType)
-static.Field.MissileHomingEnabled = WeField.new("fmho", 'bool', 'MissileHomingEnabled', private.checkType)
-static.Field.TargetAttachments = WeField.new("ftac", 'int', 'TargetAttachments', private.checkType)
-static.Field.TargetAttachmentPoint0 = WeField.new("fta0", 'string', 'TargetAttachmentPoint0', private.checkType)
-static.Field.TargetAttachmentPoint1 = WeField.new("fta1", 'string', 'TargetAttachmentPoint1', private.checkType)
-static.Field.TargetAttachmentPoint2 = WeField.new("fta2", 'string', 'TargetAttachmentPoint2', private.checkType)
-static.Field.TargetAttachmentPoint3 = WeField.new("fta3", 'string', 'TargetAttachmentPoint3', private.checkType)
-static.Field.TargetAttachmentPoint4 = WeField.new("fta4", 'string', 'TargetAttachmentPoint4', private.checkType)
-static.Field.TargetAttachmentPoint5 = WeField.new("fta5", 'string', 'TargetAttachmentPoint5', private.checkType)
-static.Field.CasterAttachments = WeField.new("fcac", 'int', 'CasterAttachments', private.checkType)
-static.Field.SpecialAttachmentPoint = WeField.new("fspt", 'string', 'SpecialAttachmentPoint', private.checkType)
-static.Field.TooltipNormal = WeField.new("ftip", 'string', 'TooltipNormal', private.checkType)
-static.Field.TooltipNormalExtended = WeField.new("fube", 'string', 'TooltipNormalExtended', private.checkType)
-static.Field.EffectSound = WeField.new("fefs", 'string', 'EffectSound', private.checkType)
-static.Field.EffectSoundLooping = WeField.new("fefl", 'string', 'EffectSoundLooping', private.checkType)
+static.Field.Name = WeField.new("fnam", 'string', 'Name')
+static.Field.EditorSuffix = WeField.new("fnsf", 'string', 'EditorSuffix')
+static.Field.Race = WeField.new("frac", 'string', 'Race')
+static.Field.IconNormal = WeField.new("fart", 'string', 'IconNormal')
+static.Field.Caster = WeField.new("fcat", 'string', 'Caster')
+static.Field.ArtTarget = WeField.new("ftat", 'string', 'ArtTarget')
+static.Field.ArtSpecial = WeField.new("fsat", 'string', 'ArtSpecial')
+static.Field.Effect = WeField.new("feat", 'string', 'Effect')
+static.Field.AreaEffect = WeField.new("faea", 'string', 'AreaEffect')
+static.Field.MissileArt = WeField.new("fmat", 'string', 'MissileArt')
+static.Field.MissileSpeed = WeField.new("fmsp", 'int', 'MissileSpeed')
+static.Field.MissileArc = WeField.new("fmac", 'real', 'MissileArc')
+static.Field.MissileHomingEnabled = WeField.new("fmho", 'bool', 'MissileHomingEnabled')
+static.Field.TargetAttachments = WeField.new("ftac", 'int', 'TargetAttachments')
+static.Field.TargetAttachmentPoint0 = WeField.new("fta0", 'string', 'TargetAttachmentPoint0')
+static.Field.TargetAttachmentPoint1 = WeField.new("fta1", 'string', 'TargetAttachmentPoint1')
+static.Field.TargetAttachmentPoint2 = WeField.new("fta2", 'string', 'TargetAttachmentPoint2')
+static.Field.TargetAttachmentPoint3 = WeField.new("fta3", 'string', 'TargetAttachmentPoint3')
+static.Field.TargetAttachmentPoint4 = WeField.new("fta4", 'string', 'TargetAttachmentPoint4')
+static.Field.TargetAttachmentPoint5 = WeField.new("fta5", 'string', 'TargetAttachmentPoint5')
+static.Field.CasterAttachments = WeField.new("fcac", 'int', 'CasterAttachments')
+static.Field.SpecialAttachmentPoint = WeField.new("fspt", 'string', 'SpecialAttachmentPoint')
+static.Field.TooltipNormal = WeField.new("ftip", 'string', 'TooltipNormal')
+static.Field.TooltipNormalExtended = WeField.new("fube", 'string', 'TooltipNormalExtended')
+static.Field.EffectSound = WeField.new("fefs", 'string', 'EffectSound')
+static.Field.EffectSoundLooping = WeField.new("fefl", 'string', 'EffectSoundLooping')
 
 --=========
 -- Private

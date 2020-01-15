@@ -5,11 +5,6 @@
 local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
----@type ParameterTypeClass
-local ParameterType = require('Class.ParameterType')
----@type UnitParametersContainerClass
-local UnitParametersContainer = require('Class.Unit.Parameters.Container')
-
 --=======
 -- Class
 --=======
@@ -28,9 +23,11 @@ local private = {}
 -- Static
 --========
 
+---@param block_move boolean
+---@param block_attack boolean
 ---@param child_instance AbilityFlags | nil
 ---@return AbilityFlags
-function static.new(child_instance, block_move, block_attack)
+function static.new(block_move, block_attack, child_instance)
     local instance = child_instance or Class.allocate(AbilityFlags)
     private.newData(instance, block_move, block_attack)
 
@@ -43,6 +40,7 @@ end
 
 ---@param caster unit
 function public:applyFlagsToCaster(caster)
+    print(self)
     local priv = private[self]
 
     if priv.block_move then
@@ -78,6 +76,24 @@ end
 
 private.ms_const = 10^10
 private.disable_attack_id = ID('Abun')
+private.disable_move_buff_type = Compiletime(function()
+    return 1
+end)
+private.disable_move_type = Compiletime(function()
+    ---@type ObjectEdit
+    local ObjEdit = require('compiletime.ObjectEdit')
+    local WeAbility = ObjEdit.Ability
+    print(ObjEdit:getAbilityId())
+    print(ObjEdit:getAbilityId())
+    print(ObjEdit:getAbilityId())
+    local abil_type = WeAbility.new(ObjEdit:getAbilityId(), 'Aasl', 'DisableMovement')
+    abil_type:setField(WeAbility.Field.Aasl_MovementSpeedFactor, 1, -100)
+    abil_type:setField(WeAbility.Field.TargetsAllowed, 1, "self")
+    abil_type:setField(WeAbility.Field.Buffs, 1, "")
+    
+    return abil_type:toRuntime()
+end)
+private.disable_move_id = ID(private.disable_move_type.id)
 
 private.move_blocked = {}
 private.attack_blocked = {}
@@ -85,17 +101,17 @@ private.attack_blocked = {}
 ---@param flag boolean
 ---@param target unit
 function private.setMoveFlag(flag, target)
-    local params = UnitParametersContainer.get(target)
     if flag then
         if not private.move_blocked[target] then
-            params:addMult(ParameterType.MS, -private.ms_const)
+            UnitAddAbility(target, private.disable_move_id)
             private.move_blocked[target] = true
         else
             Log.error(AbilityFlags, 'block move flag already applied.', 3)
+
         end
     else
         if private.move_blocked[target] then
-            params:addMult(ParameterType.MS, private.ms_const)
+            UnitRemoveAbility(target, private.disable_move_id)
             private.move_blocked[target] = nil
         else
             Log.error(AbilityFlags, 'unit does not have move block flag', 3)
@@ -114,8 +130,9 @@ function private.setAttackFlag(flag, target)
             Log.error(AbilityFlags, 'block attack flag already applied.', 3)
         end
     else
-        if not private.attack_blocked[target] then
+        if private.attack_blocked[target] then
             UnitRemoveAbility(target, private.disable_attack_id)
+            private.attack_blocked[target] = nil
         else
             Log.error(AbilityFlags, 'unit does not have attack block flag.', 3)
         end
@@ -131,6 +148,7 @@ function private.newData(instance, block_move, block_attack)
         block_attack = block_attack,
     }
     private[instance] = priv
+    print(tostring(instance)..' created')
 end
 
 ---@param instance AbilityFlags

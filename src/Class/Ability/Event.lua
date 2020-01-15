@@ -89,7 +89,6 @@ function private.onAnyOrder()
     local cast_instance = AbilityCastInstance.get(ordered_unit)
     if cast_instance then 
         cast_instance:cancel()
-        cast_instance:free()
     end
 end
 

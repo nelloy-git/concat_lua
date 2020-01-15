@@ -33,8 +33,8 @@ local callbacks = ExampleAbility.callbacks
 local flags = ExampleAbility.flags
 
 --- Set function for casting time calculating.
-ExampleAbility:setCastingTime(function()
-    local caster = AbilityInstance.getCaster()
+callbacks:setCastingTime(function(cast_data)
+    --local caster = AbilityInstance.getCaster()
     local full_time = 3
     Log(Log.Msg, abil_name, fmt('full casting time = %.2f', 3))
     return full_time
@@ -42,10 +42,10 @@ end)
 
 --- Set callback for casting start. Should return true(default) if started successfully.
 local state = "normal"
-callbacks:setStart(function()
+callbacks:setStart(function(cast_data)
     Log(Log.Msg, abil_name, 'got casting started event. Use more times for different tests.')
 
-    local caster = AbilityInstance.getCaster()
+    local caster = cast_data:getCaster()
     Log(Log.Msg, abil_name, fmt('caster %s.', caster))
     if state == 'normal' then
         Log(Log.Msg, abil_name, 'casting have to start normally.')
@@ -56,25 +56,21 @@ callbacks:setStart(function()
         state = 'interrupt'
         return false
     elseif state == 'interrupt' then
-        local interrupt_time = AbilityInstance.getFullCastingTime(caster) / 2
+        local interrupt_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, abil_name, fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
-        --- Save current ability instance to make sure we are interrupting right one.
-        local cur_instance = AbilityInstance.get(caster)
         BetterTimer.getGlobalTimer():addAction(interrupt_time, function()
-            if cur_instance == AbilityInstance.get(caster) then
-                AbilityInstance.interruptCurrent(caster)
+            if cast_data == AbilityInstance.get(caster) then
+                cast_data:interrupt()
             end
         end)
         state = 'cancel'
         return true
     else
-        local cancel_time = AbilityInstance.getFullCastingTime(caster) / 2
+        local cancel_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, abil_name, fmt('casting have to be canceled after %.2f sec.', cancel_time))
-        --- Save current ability instance to make sure we are canceling right one.
-        local cur_instance = AbilityInstance.get(caster)
         BetterTimer.getGlobalTimer():addAction(cancel_time, function()
-            if cur_instance == AbilityInstance.get(caster) then
-                AbilityInstance.cancelCurrent(caster)
+            if cast_data == AbilityInstance.get(caster) then
+                cast_data:cancel()
             end
         end)
         state = 'normal'
@@ -83,9 +79,8 @@ callbacks:setStart(function()
 end)
 
 local prev = -1
-callbacks:setCasting(function()
-    local caster = AbilityInstance.getCaster()
-    local cur = AbilityInstance.getCastingTimeLeft(caster)
+callbacks:setCasting(function(cast_data)
+    local cur = cast_data:getCastingTimeLeft()
     if math.floor(cur) ~= prev then
         Log(Log.Msg, abil_name, fmt('casting time - %0.2f', cur))
         prev = math.floor(cur)

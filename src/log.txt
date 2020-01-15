@@ -1,1 +1,1 @@
-[0.000] {Msg} WeFile: сreated WeUnit_2aafe80 "Paladin" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_29a3d00 "Example ability" with id 'AM#$' based on 'ANcl'
+[0.000] {Msg} WeFile: сreated WeUnit_000297A5DBAE10 "Paladin" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_000297A5DB9790 "Example ability" with id 'AM#(' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_000297A5DB81D0 "DisableMovement" with id 'AM#'' based on 'Aasl'

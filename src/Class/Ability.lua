@@ -7,6 +7,8 @@ local Log = require('utils.Log')
 
 ---@type AbilityCallbacksContainerClass
 local AbilityCallbacksContainer = require('Class.Ability.Callbacks')
+---@type AbilityEventClass
+local AbilityEvent = require('Class.Ability.Event')
 ---@type AbilityFlagsClass
 local AbilityFlagsContainer = require('Class.Ability.Flags')
 ---@type DataBaseClass
@@ -42,7 +44,7 @@ function static.new(id, child_instance)
     private.newData(instance, id)
 
     instance.callbacks = AbilityCallbacksContainer.new()
-    instance.flags = AbilityFlagsContainer.new()
+    instance.flags = AbilityFlagsContainer.new(true, true)
 
     return instance
 end
@@ -114,31 +116,14 @@ end
 -- Public
 --========
 
+---@type AbilityCallbacksContainer
 public.callbacks = "AbilityCallbacksContainer"
+---@type AbilityFlags
 public.flags = "AbilityFlags"
 
 ---@return number
 function public:getId()
     return private[self].id
-end
-
----@param caster unit
----@return number
-function public:getCastingTime(caster)
-    local priv = private[self]
-
-    if type(priv.casting_time) == 'function' then
-        return priv.casting_time(caster)
-    elseif type(priv.casting_time) == 'number' then
-        return priv.casting_time
-    end
-    Log(Log.Wrn, Ability, 'can not get ability casting time.')
-    return 0
-end
-
----@param func fun(caster:unit):number | number
-function public:setCastingTime(func)
-    private[self].casting_time = func
 end
 
 --=========
@@ -152,7 +137,6 @@ private.DB = DataBase.new('number', Ability)
 function private.newData(instance, id)
     local priv = {
         id = ID(id),
-        casting_time = nil,
     }
     private[instance] = priv
     private.DB:set(ID(id), instance)
