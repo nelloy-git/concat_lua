@@ -46,7 +46,7 @@ function public:setStart(callback)
         private[self].start = callback
         return
     end
-    Error(AbilityCallbacks, 'callback must be function type or nil', 2)
+    Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
 ---@param callback AbilityCallback
@@ -55,7 +55,7 @@ function public:setCancel(callback)
         private[self].cancel = callback
         return
     end
-    Error(AbilityCallbacks, 'callback must be function type or nil', 2)
+    Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
 --- Callback have to return true if casting period was successfull
@@ -65,7 +65,7 @@ function public:setCasting(callback)
         private[self].casting = callback
         return
     end
-    Error(AbilityCallbacks, 'callback must be function type or nil', 2)
+    Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
 ---@param callback AbilityCallback
@@ -74,7 +74,7 @@ function public:setFinish(callback)
         private[self].finish = callback
         return
     end
-    Error(AbilityCallbacks, 'callback must be function type or nil', 2)
+    Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
 ---@param callback AbilityCallback
@@ -83,7 +83,7 @@ function public:setInterrupt(callback)
         private[self].interrupt = callback
         return
     end
-    Error(AbilityCallbacks, 'callback must be function type or nil', 2)
+    Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
 --- Returns true by default.

@@ -65,7 +65,7 @@ function static.compareWithList(field, data, list)
 
     msg = string.format('wrong data. Got: \"%s\"". Available: %s.\n%s',
                          data, private.getPossibleValues(list), WeUtils.getErrorPos())
-    Log(Log.Warn, field:getName(), msg)
+    Log(Log.Wrn, field:getName(), msg)
     return false
 end
 
@@ -159,7 +159,7 @@ function private.checkType(self, data)
     if not res then
         local msg = string.format('Wrong data type. Got %s. Need %s.',
                                    type(data), data_type)
-        Log(Log.Warn, self:getName(), msg)
+        Log(Log.Wrn, self:getName(), msg)
     end
     return res
 end

@@ -138,7 +138,7 @@ function private.updateItemPos(self)
             x = priv.x
             y = priv.y
         else
-            Log(Log.Warn, FrameCell, 'wrong position constant.')
+            Log(Log.Wrn, FrameCell, 'wrong position constant.')
             x = priv.x
             y = priv.y
         end

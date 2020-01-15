@@ -103,19 +103,19 @@ function private.checkType(self, data, lvl)
     if not res then
         local msg = string.format('wrong data type. Got %s. Need %s.\n%s',
                                    type(data), data_type, WeUtils.getErrorPos())
-        Log(Log.Warn, self:getName(), msg)
+        Log(Log.Wrn, self:getName(), msg)
         return false
     end
 
     if lvl == 0 and priv.require_level then
         local msg = string.format('requires level.\n%s', WeUtils.getErrorPos())
-        Log(Log.Warn, self:getName(), msg)
+        Log(Log.Wrn, self:getName(), msg)
         return false
     end
 
     if lvl ~= 0 and not priv.require_level then
         local msg = string.format('does not require level.\n%s', WeUtils.getErrorPos())
-        Log(Log.Warn, self:getName(), msg)
+        Log(Log.Wrn, self:getName(), msg)
         return false
     end
 

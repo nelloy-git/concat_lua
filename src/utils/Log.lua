@@ -1,150 +1,154 @@
-local Log = {}
+--=========
+-- Include
+--=========
 
-local is_runtime = not IsCompiletime()
-local ctime = {
-    show_errors = true,
-    show_warnings = true,
-    show_messages = true,
+local Class = require('utils.Class.Class')
 
-    use_log_file = true,
-    file_name = 'log.txt',
-    file_link = nil
-}
+--=======
+-- Class
+--=======
 
-local rtime = {
-    show_errors = true,
-    show_errors_time = 60,
-    show_warnings = true,
-    show_warnings_time = 45,
-    show_messages = true,
-    show_messages_time = 30,
+local Logger = Class.new('Logger')
+---@class Logger
+local public = Logger.public
+---@class LoggerClass
+local static = Logger.static
+---@type LoggerClass
+local override = Logger.override
+local private = {}
 
-    use_log_file = true,
-    file_name = 'change_format_to_bat_and_run.txt',
-    timer = nil,
-    file_autosave = true,
-    buffer = {}
-}
+--=========
+-- Static
+--=========
+
+---@alias LogLevel string
+---@type LogLevel
+static.Err = 'ERROR'
+---@type LogLevel
+static.Wrn = 'Warning'
+---@type LogLevel
+static.Msg = 'Msg'
+
+---@param log_level LogLevel
+---@param header any
+---@param message string
+function static.write(_, log_level, header, message)
+    local log_msg = private.getLogMsg(log_level, private.time(), header, message)
+
+    -- Show message
+    if private.show[log_level] then
+        private.show_func(log_msg)
+    end
+    -- Add to file
+    if private.write[log_level] then
+        private.write_func(log_msg)
+    end
+end
+local meta = getmetatable(static)
+meta.__call = static.write
+
+---@param header any
+---@param message string
+---@param level number
+function static.error(header, message, level)
+    static.write(nil, static.Err, header, message)
+    error('', level + 1)
+end
+
+function static.close()
+    if IsCompiletime() then
+        private.compiletime.write.file:close()
+    else
+        PreloadGenClear()
+        PreloadGenStart()
+        Preload("\")\r\n\tDEL "..private.runtime.write.file_name.."\r\n\t(\"")
+        for i = 1, #private.runtime.write.file do
+            Preload(private.runtime.write.file[i])
+        end
+        Preload("\")\r\n\tstart "..private.runtime.write.file_name.."\r\n\t(\"")
+        PreloadGenEnd(private.runtime.write.file_name)
+    end
+end
+
+--=========
+-- Private
+--=========
 
 local fmt = string.format
 
-local start_time = 0
-local cur_time = 0
-
--- Initialization
-if is_runtime then
-    rtime.timer = CreateTimer()
-
-    local loop
-    loop = function ()
-        cur_time = cur_time + 0.03125
-        TimerStart(rtime.timer, 0.03125, false, loop)
+if IsCompiletime() then
+    private.show = {}
+    private.show[static.Err] = true
+    private.show[static.Wrn] = true
+    private.show[static.Msg] = true
+    private.show_func = print
+    private.write = {}
+    private.write.autosave = true
+    private.write.file_name = 'log.txt'
+    private.write.file = assert(io.open(GetSrcDir()..package.config:sub(1,1)..private.write.file_name, "w"))
+    private.write[static.Err] = true
+    private.write[static.Wrn] = true
+    private.write[static.Msg] = true
+    private.write_func = function(log_msg)
+        private.write.file:write(log_msg)
+        if private.write.autosave then
+            private.write.file:flush()
+        end
     end
-    loop()
 else
-    start_time = os.clock()
-    if ctime.use_log_file then
-        local path = GetSrcDir()..package.config:sub(1,1)..ctime.file_name
-        ctime.file_link = assert(io.open(path, "w"))
-        ctime.file_link:write(fmt("[%0.3f] %s\n", os.clock() - start_time, "Logging started"))
-        
-        AddCompileFinal(function()
-            ctime.file_link:write(fmt("[%0.3f] %s", os.clock() - start_time, "Logging finished"))
-            ctime.file_link:close()
-        end)
+    private = {}
+    private.show = {}
+    private.show[static.Err] = true
+    private.show[static.Wrn] = true
+    private.show[static.Msg] = true
+    private.show_func = print
+    private.write = {}
+    private.write.autosave = true
+    private.write.file_name = 'rename_to_bat_and_run.txt'
+    private.write.file = {}
+    private.write[static.Err] = true
+    private.write[static.Wrn] = true
+    private.write[static.Msg] = true
+    private.write_func = function(log_msg)
+        log_msg = fmt("\")\r\n\techo %s >> %s \r\n\t(\"", log_msg, private.write.file_name)
+        table.insert(private.write.file, log_msg)
+        if private.write.autosave then
+            PreloadGenClear()
+            PreloadGenStart()
+            Preload("\")\r\n\tDEL "..private.write.file_name.."\r\n\t(\"")
+            for i = 1, #private.write.file do
+                Preload(private.write.file[i])
+            end
+            Preload("\")\r\n\tstart "..private.write.file_name.."\r\n\t(\"")
+            PreloadGenEnd(private.write.file_name)
+        end
     end
+end
+
+
+---@param log_level LogLevel
+---@param time number
+---@param header string | any
+---@param str string
+---@return string
+function private.getLogMsg(log_level, time, header, str)
+    return fmt("[%.3f] {%s} %s: %s", time, log_level, tostring(header), str)
+end
+
+if IsCompiletime() then
+    private.start_time = os.time()
+else
+    private.current_time = 0
+    TimerStart(CreateTimer(), 0.03125, true, function() private.current_time = private.current_time + 0.03125 end)
 end
 
 ---@return number
-local function getTime()
-    if is_runtime then
-        return cur_time - start_time
+function private.time()
+    if IsCompiletime() then
+        return os.time() - private.start_time
     else
-        return os.clock() - start_time
+        return private.current_time
     end
 end
 
----@param log_level LogLevel
----@param header string | any
----@param str string
----@return string
-local function getFullStr(log_level, header, str)
-    return fmt("[%.3f] {%s} %s: %s", getTime(), log_level, tostring(header), str)
-end
-
----@param full_str string
----@return string
-local function convertToBat(full_str)
-    return fmt("\")\r\n\techo %s >> %s \r\n\t(\"", full_str, rtime.file_name)
-end
-
-local function saveFileRuntime()
-    PreloadGenClear()
-    PreloadGenStart()
-    Preload("\")\r\n\tDEL "..rtime.file_name.."\r\n\t(\"")
-    for i = 1, #rtime.buffer do
-        Preload(convertToBat(rtime.buffer[i]))
-    end
-    Preload("\")\r\n\tstart "..rtime.file_name.."\r\n\t(\"")
-    PreloadGenEnd(rtime.file_name)
-end
-
----@param log_level LogLevel
----@param header string | any
----@param str string
-function Log.write(log_level, header, str)
-    local full_str = getFullStr(log_level, header, str)
-    if is_runtime then
-        if rtime.use_log_file then
-            table.insert(rtime.buffer, #rtime.buffer + 1, convertToBat(full_str))
-            if rtime.file_autosave then
-                saveFileRuntime()
-            end
-        end
-
-        if log_level == Log.Err and rtime.show_errors then
-            DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, rtime.show_errors_time, full_str)
-        elseif log_level == Log.Warn and rtime.show_warnings then
-            DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, rtime.show_warnings_time, full_str)
-        elseif log_level == Log.Msg and rtime.show_messages then
-            DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, rtime.show_messages_time, full_str)
-        end
-    else
-        if log_level == Log.Err and ctime.show_errors then
-            print(full_str)
-        elseif log_level == Log.Warn and ctime.show_warnings then
-            print(full_str)
-        elseif log_level == Log.Msg and ctime.show_messages then
-            print(full_str)
-        end
-
-        if ctime.use_log_file then
-            ctime.file_link:write(full_str..'\n')
-        end
-    end
-end
-
-function Log.manualRuntimeSave()
-    saveFileRuntime()
-end
-
----@alias LogLevel string
-
----@type LogLevel
-Log.Err = 'ERROR'
----@type LogLevel
-Log.Warn = 'Warning'
----@type LogLevel
-Log.Msg = 'Message'
-
----@overload fun(message:string, level:number)
----@param prefix any
----@param message string
----@param level number | nil
-function Error(prefix, message, level)
-    Log.write(Log.Err, prefix, message)
-    error(tostring(prefix)..': '..message, (level or 0) + 1)
-end
-
-setmetatable(Log, {__call = function(self, log_level, header, str) self.write(log_level, header, str) end})
-return Log
+return static

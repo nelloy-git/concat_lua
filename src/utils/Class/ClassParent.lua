@@ -1,12 +1,7 @@
-local Log = require('utils.Log')
-
 local ClassName = require('utils.Class.ClassName')
 local ClassStatic = require('utils.Class.ClassStatic')
 
 local ClassParent = {}
-local rawget = rawget
-local rawset = rawset
-local fmt = string.format
 
 local class_parents = {}
 
@@ -19,12 +14,12 @@ function ClassParent.register(class, ...)
         if ClassStatic.getClass(cur) then
             cur = ClassStatic.getClass(cur)
         end
-        
+
         if not ClassName.isClass(cur) then
             if ClassName.isClass(class) then
-                error(ClassName.getName(class)..': classes can have class parents only.')
+                error(ClassName.getName(class)..': classes can have class parents only.', 3)
             else
-                error('classes can have class parents only.')
+                error('classes can have class parents only.', 3)
             end
         end
         table.insert(full_parents, #full_parents + 1, cur)
@@ -56,13 +51,11 @@ function ClassParent.isChild(child, parent)
 
     local parents = class_parents[child]
     if not parents then
-        local msg = string.format('is not class.')
-        Log(Log.Warn, child, msg)
+        error(tostring(child)..' is not class', 2)
         return
     end
     if not class_parents[parent] then
-        local msg = string.format('is not class.')
-        Log(Log.Warn, parent, msg)
+        error(tostring(parent)..' is not class', 2)
         return
     end
 

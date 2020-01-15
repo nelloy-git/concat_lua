@@ -36,9 +36,9 @@ function static.apply(target, value, parameter)
     local func = private.ApplyParameterFunction[parameter]
     if not func then
         if Class.type(parameter, ParameterType) then
-            Log(Log.Warn, UnitApplyParameter, 'unknown parameter type '..parameter:getShortName())
+            Log(Log.Wrn, UnitApplyParameter, 'unknown parameter type '..parameter:getShortName())
         else
-            Log(Log.Warn, UnitApplyParameter, 'unknown parameter type '..tostring(parameter))
+            Log(Log.Wrn, UnitApplyParameter, 'unknown parameter type '..tostring(parameter))
         end
         return
     end

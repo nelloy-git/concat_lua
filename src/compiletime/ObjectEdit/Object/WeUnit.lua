@@ -58,9 +58,9 @@ static.Field.AnimationCastPoint = WeField.new("ucpt", 'real', "AnimationCastPoin
 static.Field.AnimationRunSpeed = WeField.new("urun", 'real', "AnimationRunSpeed")
 static.Field.AnimationWalkSpeed = WeField.new("uwal", 'real', "AnimationWalkSpeed")
 --- 'Ethereal', 'Flesh', 'Wood', 'Stone', 'Metal'
-static.Field.ArmorSoundType = WeField.new("uarm", 'string', "ArmorSoundType", function(field, data) WeField.compareWithList(field, data, private.ArmorSoundsTypes) end)
+static.Field.ArmorSoundType = WeField.new("uarm", 'string', "ArmorSoundType", function(field, data) return WeField.compareWithList(field, data, private.ArmorSoundsTypes) end)
 --- 'normal', 'small', 'medium', 'large', 'fort', 'hero', 'divine', 'none'
-static.Field.ArmorType = WeField.new("udty", 'string', "ArmorType", function(field, data) WeField.compareWithList(field, data, private.checkArmorType) end)
+static.Field.ArmorType = WeField.new("udty", 'string', "ArmorType", function(field, data) return WeField.compareWithList(field, data, private.checkArmorType) end)
 static.Field.ArtSpecial = WeField.new("uspa", 'string', "ArtSpecial")
 static.Field.ArtTarget = WeField.new("utaa", 'string', "ArtTarget")
 static.Field.Attack1AnimationBackswingPoint = WeField.new("ubs1", 'real', "Attack1AnimationBackswingPoint")
@@ -70,7 +70,7 @@ static.Field.Attack1AreaofEffectMediumDamage = WeField.new("ua1h", 'int', "Attac
 static.Field.Attack1AreaofEffectSmallDamage = WeField.new("ua1q", 'int', "Attack1AreaofEffectSmallDamage")
 static.Field.Attack1AreaofEffectTargets = WeField.new("ua1p", 'string', "Attack1AreaofEffectTargets")
 --- 'unknown', 'normal', 'pierce', 'siege', 'spells', 'chaos', 'magic', 'hero'
-static.Field.Attack1AttackType = WeField.new("ua1t", 'string', "Attack1AttackType", function(field, data) WeField.compareWithList(field, data, private.AttackType) end)
+static.Field.Attack1AttackType = WeField.new("ua1t", 'string', "Attack1AttackType", function(field, data) return WeField.compareWithList(field, data, private.AttackType) end)
 static.Field.Attack1CooldownTime = WeField.new("ua1c", 'real', "Attack1CooldownTime")
 static.Field.Attack1DamageBase = WeField.new("ua1b", 'int', "Attack1DamageBase")
 static.Field.Attack1DamageFactorMedium = WeField.new("uhd1", 'real', "Attack1DamageFactorMedium")
@@ -92,13 +92,13 @@ static.Field.Attack1ShowUI = WeField.new("uwu1", 'bool', "Attack1ShowUI")
 --- 'air', 'alive', 'allies', 'ancient', 'dead', 'debris', 'decoration', 'enemies', 'friend', 'ground', 'hero',
 --- 'invulnerable', 'item', 'mechanical', 'neutral', 'nonancient', 'none', 'nonhero', 'nonsapper', 'notself',
 --- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall'
-static.Field.Attack1TargetsAllowed = WeField.new("ua1g", 'string', "Attack1TargetsAllowed", function(field, data) WeField.compareWithList(field, data, private.AttackTargetsAllowed) end)
+static.Field.Attack1TargetsAllowed = WeField.new("ua1g", 'string', "Attack1TargetsAllowed", function(field, data) return WeField.compareWithList(field, data, private.AttackTargetsAllowed) end)
 --- 'Nothing', 'AxeMediumChop', 'MetalHeavyBash', 'MetalHeavyChop',
 --- 'MetalHeavySlice', 'MetalLightChop', 'MetalLightSlice', 'MetalMediumBash', 'MetalMediumChop',
 --- 'MetalMediumSlice', 'RockHeavyBash', 'WoodHeavyBash', 'WoodLightBash', 'WoodMediumBash'
-static.Field.Attack1WeaponSound = WeField.new("ucs1", 'string', "Attack1WeaponSound", function(field, data) WeField.compareWithList(field, data, private.AttackWeaponSound) end)
+static.Field.Attack1WeaponSound = WeField.new("ucs1", 'string', "Attack1WeaponSound", function(field, data) return WeField.compareWithList(field, data, private.AttackWeaponSound) end)
 --- 'normal', 'instant', 'artillery', 'aline', 'missile', 'msplash', 'mbounce', 'mline'
-static.Field.Attack1WeaponType = WeField.new("ua1w", 'string', "Attack1WeaponType", function(field, data) WeField.compareWithList(field, data, private.AttackWeaponType) end)
+static.Field.Attack1WeaponType = WeField.new("ua1w", 'string', "Attack1WeaponType", function(field, data) return WeField.compareWithList(field, data, private.AttackWeaponType) end)
 static.Field.Attack2AnimationBackswingPoint = WeField.new("ubs2", 'real', "Attack2AnimationBackswingPoint")
 static.Field.Attack2AnimationDamagePoint = WeField.new("udp2", 'real', "Attack2AnimationDamagePoint")
 static.Field.Attack2AreaofEffectFullDamage = WeField.new("ua2f", 'int', "Attack2AreaofEffectFullDamage")
@@ -106,7 +106,7 @@ static.Field.Attack2AreaofEffectMediumDamage = WeField.new("ua2h", 'int', "Attac
 static.Field.Attack2AreaofEffectSmallDamage = WeField.new("ua2q", 'int', "Attack2AreaofEffectSmallDamage")
 static.Field.Attack2AreaofEffectTargets = WeField.new("ua2p", 'string', "Attack2AreaofEffectTargets")
 --- 'unknown', 'normal', 'pierce', 'siege', 'spells', 'chaos', 'magic', 'hero'
-static.Field.Attack2AttackType = WeField.new("ua2t", 'string', "Attack2AttackType", function(field, data) WeField.compareWithList(field, data, private.AttackType) end)
+static.Field.Attack2AttackType = WeField.new("ua2t", 'string', "Attack2AttackType", function(field, data) return WeField.compareWithList(field, data, private.AttackType) end)
 static.Field.Attack2CooldownTime = WeField.new("ua2c", 'real', "Attack2CooldownTime")
 static.Field.Attack2DamageBase = WeField.new("ua2b", 'int', "Attack2DamageBase")
 static.Field.Attack2DamageFactorMedium = WeField.new("uhd2", 'real', "Attack2DamageFactorMedium")
@@ -128,13 +128,13 @@ static.Field.Attack2ShowUI = WeField.new("uwu2", 'bool', "Attack2ShowUI")
 --- 'air', 'alive', 'allies', 'ancient', 'dead', 'debris', 'decoration', 'enemies', 'friend', 'ground', 'hero',
 --- 'invulnerable', 'item', 'mechanical', 'neutral', 'nonancient', 'none', 'nonhero', 'nonsapper', 'notself',
 --- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall'
-static.Field.Attack2TargetsAllowed = WeField.new("ua2g", 'string', "Attack2TargetsAllowed", function(field, data) WeField.compareWithList(field, data, private.AttackTargetsAllowed) end)
+static.Field.Attack2TargetsAllowed = WeField.new("ua2g", 'string', "Attack2TargetsAllowed", function(field, data) return WeField.compareWithList(field, data, private.AttackTargetsAllowed) end)
 --- 'Nothing', 'AxeMediumChop', 'MetalHeavyBash', 'MetalHeavyChop',
 --- 'MetalHeavySlice', 'MetalLightChop', 'MetalLightSlice', 'MetalMediumBash', 'MetalMediumChop',
 --- 'MetalMediumSlice', 'RockHeavyBash', 'WoodHeavyBash', 'WoodLightBash', 'WoodMediumBash'
-static.Field.Attack2WeaponSound = WeField.new("ucs2", 'string', "Attack2WeaponSound", function(field, data) WeField.compareWithList(field, data, private.AttackWeaponSound) end)
+static.Field.Attack2WeaponSound = WeField.new("ucs2", 'string', "Attack2WeaponSound", function(field, data) return WeField.compareWithList(field, data, private.AttackWeaponSound) end)
 --- 'unknown', 'normal', 'pierce', 'siege', 'spells', 'chaos', 'magic', 'hero'
-static.Field.Attack2WeaponType = WeField.new("ua2w", 'string', "Attack2WeaponType", function(field, data) WeField.compareWithList(field, data, private.AttackWeaponType) end)
+static.Field.Attack2WeaponType = WeField.new("ua2w", 'string', "Attack2WeaponType", function(field, data) return WeField.compareWithList(field, data, private.AttackWeaponType) end)
 static.Field.AttacksEnabled = WeField.new("uaen", 'int', "AttacksEnabled")
 static.Field.BuildTime = WeField.new("ubld", 'int', "BuildTime")
 static.Field.ButtonPositionX = WeField.new("ubpx", 'int', "ButtonPositionX")
@@ -182,13 +182,13 @@ static.Field.ManaRegeneration = WeField.new("umpr", 'real', "ManaRegeneration")
 static.Field.MaximumPitchAngledegrees = WeField.new("umxp", 'real', "MaximumPitchAngledegrees")
 static.Field.MaximumRollAngledegrees = WeField.new("umxr", 'real', "MaximumRollAngledegrees")
 static.Field.MinimumAttackRange = WeField.new("uamn", 'int', "MinimumAttackRange")
-static.Field.ModelFile = WeField.new("umdl", 'string', "ModelFile", function(field, data) WeField.compareWithList(field, data, private.checkPath) end)
+static.Field.ModelFile = WeField.new("umdl", 'string', "ModelFile", function(field, data) return WeField.compareWithList(field, data, private.checkPath) end)
 static.Field.ModelFileExtraVersions = WeField.new("uver", 'string', "ModelFileExtraVersions")
 static.Field.MovementHeight = WeField.new("umvh", 'real', "MovementHeight")
 static.Field.MovementHeightMinimum = WeField.new("umvf", 'real', "MovementHeightMinimum")
 static.Field.MovementSound = WeField.new("umsl", 'string', "MovementSound")
 --- 'horse', 'fly', 'hover', 'float', 'amph'
-static.Field.MovementType = WeField.new("umvt", 'string', "MovementType", function(field, data) WeField.compareWithList(field, data, private.MovementType) end)
+static.Field.MovementType = WeField.new("umvt", 'string', "MovementType", function(field, data) return WeField.compareWithList(field, data, private.MovementType) end)
 static.Field.Name = WeField.new("unam", 'string', "Name")
 static.Field.NameEditorSuffix = WeField.new("unsf", 'string', "NameEditorSuffix")
 static.Field.NormalAbilities = WeField.new("uabi", 'string', "NormalAbilities")
@@ -205,7 +205,7 @@ static.Field.ProjectileLaunchZ = WeField.new("ulpz", 'real', "ProjectileLaunchZ"
 static.Field.ProjectileLaunchZSwimming = WeField.new("ulsz", 'real', "ProjectileLaunchZSwimming")
 static.Field.PropulsionWindowdegrees = WeField.new("uprw", 'real', "PropulsionWindowdegrees")
 --- 'commoner', 'creeps', 'critters', 'demon', 'human', 'naga', 'nightelf', 'orc', 'other', 'undead', 'unknown'
-static.Field.Race = WeField.new("urac", 'string', "Race", function(field, data) WeField.compareWithList(field, data, private.checkRace) end)
+static.Field.Race = WeField.new("urac", 'string', "Race", function(field, data) return WeField.compareWithList(field, data, private.checkRace) end)
 static.Field.RandomSound = WeField.new("ursl", 'string', "RandomSound")
 static.Field.RepairGoldCost = WeField.new("ugor", 'int', "RepairGoldCost")
 static.Field.RepairLumberCost = WeField.new("ulur", 'int', "RepairLumberCost")

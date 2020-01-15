@@ -39,6 +39,7 @@ local function static_index(self, key)
             return parent_value
         end
     end
+    error(fmt('static field \'%s\' does not exist.', key), 2)
 end
 
 function ClassStatic.new(class)

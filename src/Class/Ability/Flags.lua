@@ -3,6 +3,7 @@
 --=========
 
 local Class = require('utils.Class.Class')
+local Log = require('utils.Log')
 
 ---@type ParameterTypeClass
 local ParameterType = require('Class.ParameterType')
@@ -90,14 +91,14 @@ function private.setMoveFlag(flag, target)
             params:addMult(ParameterType.MS, -private.ms_const)
             private.move_blocked[target] = true
         else
-            Error(AbilityFlags, 'block move flag already applied.', 3)
+            Log.error(AbilityFlags, 'block move flag already applied.', 3)
         end
     else
         if private.move_blocked[target] then
             params:addMult(ParameterType.MS, private.ms_const)
             private.move_blocked[target] = nil
         else
-            Error(AbilityFlags, 'unit does not have move block flag', 3)
+            Log.error(AbilityFlags, 'unit does not have move block flag', 3)
         end
     end
 end
@@ -110,13 +111,13 @@ function private.setAttackFlag(flag, target)
             UnitAddAbility(target, private.disable_attack_id)
             private.attack_blocked[target] = true
         else
-            Error(AbilityFlags, 'block attack flag already applied.', 3)
+            Log.error(AbilityFlags, 'block attack flag already applied.', 3)
         end
     else
         if not private.attack_blocked[target] then
             UnitRemoveAbility(target, private.disable_attack_id)
         else
-            Error(AbilityFlags, 'unit does not have attack block flag.', 3)
+            Log.error(AbilityFlags, 'unit does not have attack block flag.', 3)
         end
     end
 end

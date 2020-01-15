@@ -1,5 +1,3 @@
-local Log = require('utils.Log')
-
 local ClassName = require('utils.Class.ClassName')
 local ClassUtils = require('utils.Class.ClassUtils')
 
@@ -27,9 +25,7 @@ local function instance_index(instance, key)
     if value then
         return value
     end
-
-    local msg = fmt('field %s not found.', key)
-    Log(Log.Warn, instance, msg)
+    error(fmt('%s: public field \'%s\' does not exist.', instance, key), 2)
 end
 
 local function instance_newindex(instance, key, value)
@@ -38,9 +34,7 @@ local function instance_newindex(instance, key, value)
         rawset(instance, key, value)
         return
     end
-
-    local msg = fmt('field %s not found.', key)
-    Log(Log.Warn, instance, msg)
+    error(fmt('%s: public field \'%s\' does not exist.', instance, key), 2)
 end
 
 local instance_metatable = {
@@ -59,8 +53,8 @@ end
 
 function ClassInstance.free(instance)
     if not instance_class[instance] then
-        local msg = fmt('can free only instance of class.')
-        Log(Log.Warn, instance, msg)
+        error(tostring(instance)..' is not instance of class.', 2)
+        Log(Log.Wrn, instance, msg)
         return
     end
 

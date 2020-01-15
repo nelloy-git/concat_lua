@@ -73,7 +73,7 @@ function private.checkType(field, data)
     if not res then
         local msg = fmt('wrong data type. Got %s. Need %s.',
                          type(data), data_type)
-        Log(Log.Warn, field:getName(), msg)
+        Log(Log.Wrn, field:getName(), msg)
     end
     return res
 end

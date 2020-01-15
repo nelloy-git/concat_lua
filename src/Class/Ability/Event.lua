@@ -50,13 +50,15 @@ if not IsCompiletime() then
 end
 
 local getAbilityId = GetSpellAbilityId
-local getAbility = Ability.get
+local getAbility
 local getSpellAbilityUnit = GetSpellAbilityUnit
 function private.onSpellEffect()
+    Ability = Ability or require('Class.Ability')
+    getAbility = getAbility or Ability.get
     local id = getAbilityId()
     local ability = getAbility(id)
     if not ability then
-        Log(Log.Warn, AbilityEvent, 'unknown ability with id '..ID2str(id))
+        Log(Log.Wrn, AbilityEvent, 'unknown ability with id '..ID2str(id))
         return
     end
 

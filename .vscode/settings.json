@@ -1,7 +1,7 @@
 {
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "dst",
+        "dst/*",
     ],
     "Lua.workspace.library": {
         "./lib": true,
@@ -18,7 +18,6 @@
         "GetSrcDir",
         "GetDstDir",
         "AddCompileFinal",
-        "Class"
     ],
     "Lua.workspace.ignoreSubmodules": true,
     "Lua.develop.enable": false,

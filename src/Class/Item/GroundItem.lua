@@ -20,7 +20,7 @@ local static = GroundItem.static
 local override = GroundItem.override
 local private = {}
 
-private.DB = DataBase.new('userdata', getClassName(GroundItem))
+private.DB = DataBase.new('userdata', GroundItem)
 
 private.item_type = Compiletime(function()
     local WeObjEdit = require('compiletime.ObjectEdit.ObjEdit')
@@ -107,4 +107,4 @@ function public:getIcon()
     return priv.icon_path
 end
 
-return GroundItem
+return static

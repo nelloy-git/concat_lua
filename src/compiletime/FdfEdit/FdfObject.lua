@@ -64,7 +64,7 @@ function public:setField(field, value)
     else
         local msg = string.format("check data failed. Field change ignored. Got: %s need: %s.\n%s",
                                   type(value), field:getType(), WeUtils.getErrorPos())
-        Log(Log.Warn, FdfObject, msg)
+        Log(Log.Wrn, FdfObject, msg)
     end
 end
 

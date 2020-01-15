@@ -53,7 +53,7 @@ end
 
 --- Removed function
 function public:start()
-    Log(Log.Warn, BetterTimer, 'function \"start\" is deprecated.' )
+    Log(Log.Wrn, BetterTimer, 'function \"start\" is deprecated.' )
 end
 
 ---@return number

@@ -1,12 +1,9 @@
-local Log = require('utils.Log')
-
 local ClassName = require('utils.Class.ClassName')
 local ClassParent = require('utils.Class.ClassParent')
 local ClassStatic = require('utils.Class.ClassStatic')
 local ClassPublic = require('utils.Class.ClassPublic')
 local ClassInstance = require('utils.Class.ClassInstance')
 
----@class Class
 Class = {}
 local rawget = rawget
 local rawset = rawset
@@ -18,7 +15,6 @@ local function class_index(self, key)
         local info = debug.getinfo(2, 'lS')
         msg = msg..fmt(' %s:%d', info.source, info.currentline)
     end
-    Log(Log.Err, self, msg)
     error(tostring(self)..': '..msg)
     return nil
 end
@@ -49,6 +45,11 @@ local function new(name, ...)
     return class
 end
 
+local function getPublic(static)
+    local class = ClassStatic.getClass(static) or static
+    return class.public
+end
+
 ---@type fun(name:string, vararg:any):any
 Class.new = new
 ---@type fun(class:any):any
@@ -63,14 +64,8 @@ Class.isInstance = ClassInstance.isInstance
 Class.getClass = ClassInstance.getClass
 ---@type fun(child_class:any, parent_class:any):boolean
 Class.isChild = ClassParent.isChild
-
----@param static any
----@return any
----@overload fun(class:any):any
-function Class.getPublic(static)
-    local class = ClassStatic.getClass(static) or static
-    return class.public
-end
+---@type fun(class:any):any
+Class.getPublic = getPublic
 
 local type = type
 ---@param value1 any

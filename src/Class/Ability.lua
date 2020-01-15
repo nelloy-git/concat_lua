@@ -60,7 +60,7 @@ end
 ---@return table(string, any)
 function static.createDummy(target, name)
     if not IsCompiletime() then
-        Log(Log.Warn, Ability, 'dummy ability can be created in Compiletime only.')
+        Log(Log.Wrn, Ability, 'dummy ability can be created in Compiletime only.')
         return nil
     end
 
@@ -71,7 +71,6 @@ function static.createDummy(target, name)
     abil:setField(WeAbility.Field.TooltipNormalExtended, 1, 'No description.')
     abil:setField(WeAbility.Field.CastingTime, 1, 0)
     abil:setField(WeAbility.Field.Cooldown, 1, 1)
-    abil:setField(WeAbility.Field.Cooldown, 2, 1)
     abil:setField(WeAbility.Field.ArtCaster, 0, "")
     abil:setField(WeAbility.Field.ArtEffect, 0, "")
     abil:setField(WeAbility.Field.ArtSpecial, 0, "")
@@ -133,7 +132,7 @@ function public:getCastingTime(caster)
     elseif type(priv.casting_time) == 'number' then
         return priv.casting_time
     end
-    Log(Log.Warn, Ability, 'can not get ability casting time.')
+    Log(Log.Wrn, Ability, 'can not get ability casting time.')
     return 0
 end
 

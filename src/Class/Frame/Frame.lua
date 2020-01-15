@@ -65,7 +65,7 @@ function public:setParent(parent)
 
     if priv.is_simpleframe ~= parent:isSimpleframe() then
         local msg = ('simple and normal frames can not be parents for each other. \"setParent\" ignored.')
-        Log(Log.Warn, Frame, msg)
+        Log(Log.Wrn, Frame, msg)
     else
         priv.parent = parent
         if priv.parent then

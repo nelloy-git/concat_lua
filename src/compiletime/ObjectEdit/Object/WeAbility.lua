@@ -115,7 +115,7 @@ static.Field.TargetAttachments = WeAbilityField.new("atac", 'int', 0, "TargetAtt
 --- 'air', 'alive', 'allies', 'ancient', 'dead', 'debris', 'decoration', 'enemies', 'friend', 'ground', 'hero',
 --- 'invulnerable', 'item', 'mechanical', 'neutral', 'nonancient', 'none', 'nonhero', 'nonsapper', 'notself',
 --- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall'
-static.Field.TargetsAllowed = WeAbilityField.new("atar", 'string', 0, "TargetsAllowed", true, function(field, data) WeAbilityField.compareWithList(field, data, private.TargetsAllowed) end)
+static.Field.TargetsAllowed = WeAbilityField.new("atar", 'string', 0, "TargetsAllowed", true, function(field, data) return WeAbilityField.compareWithList(field, data, private.TargetsAllowed) end)
 static.Field.TooltipLearn = WeAbilityField.new("aret", 'string', 0, "TooltipLearn", false)
 static.Field.TooltipLearnExtended = WeAbilityField.new("arut", 'string', 0, "TooltipLearnExtended", false)
 static.Field.TooltipNormal = WeAbilityField.new("atp1", 'string', 0, "TooltipNormal", true)

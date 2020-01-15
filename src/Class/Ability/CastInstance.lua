@@ -14,13 +14,12 @@ local AbilityEvent = require('Class.Ability.Event')
 local BetterTimer = require('Class.Timer.BetterTimer')
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
----@type TriggerClass
-local Trigger = require('Class.Trigger')
 
 --=======
 -- Class
 --=======
 
+---@type any
 local AbilityCastInstance = Class.new('AbilityCastInstance')
 ---@class AbilityCastInstance
 local public = AbilityCastInstance.public
@@ -40,7 +39,7 @@ local private = {}
 ---@return boolean
 function static.new(caster, target, ability)
     if private.DB:get(caster) then
-        Error(AbilityCastInstance, 'unit is already casting an ability. Cancel it first.', 2)
+        error(AbilityCastInstance, 'unit is already casting an ability. Cancel it first.', 2)
         return
     end
 
