@@ -77,13 +77,11 @@ end
 ---@param frame Frame
 ---@return Frame | nil
 function public:setTooltip(frame)
-    local priv = private[self]
-
     if self:isSimpleframe() ~= frame:isSimpleframe() then
-        local msg = ('simple and normal frames can not be tooltips for each other. \"setTooltip\" ignored.')
-        Log(Log.Err, Frame, msg)
+        Log.error(FrameButton, 'simple and normal frames can not be tooltips for each other. \"setTooltip\" ignored.', 2)
         return nil
     end
+    local priv = private[self]
 
     local cur = priv.tooltip
     priv.tooltip = frame
@@ -104,7 +102,7 @@ function public:getTooltip()
     return private[self].tooltip
 end
 
----@param callback callback
+---@param callback Callback
 function public:setPressCallback(callback)
     local priv = private[self]
 

@@ -40,7 +40,6 @@ end
 
 ---@param caster unit
 function public:applyFlagsToCaster(caster)
-    print(self)
     local priv = private[self]
 
     if priv.block_move then
@@ -77,23 +76,28 @@ end
 private.ms_const = 10^10
 private.disable_attack_id = ID('Abun')
 private.disable_move_buff_type = Compiletime(function()
-    return 1
+    ---@type ObjectEdit
+    local ObjEdit = require('compiletime.ObjectEdit')
+    local Icons = require('compiletime.Icon')
+    local WeBuff = ObjEdit.Buff
+    local buff_type = WeBuff.new(ObjEdit:getBuffId(), 'Bfae', 'DisableMovement')
+    buff_type:setField(WeBuff.Field.TooltipNormal, 'Ability casting')
+    buff_type:setField(WeBuff.Field.TooltipNormalExtended, 'Unit can not move while casting an ability.')
+    buff_type:setField(WeBuff.Field.IconNormal, Icons.BTNBrilliance)
+    return buff_type:toRuntime()
 end)
 private.disable_move_type = Compiletime(function()
     ---@type ObjectEdit
     local ObjEdit = require('compiletime.ObjectEdit')
     local WeAbility = ObjEdit.Ability
-    print(ObjEdit:getAbilityId())
-    print(ObjEdit:getAbilityId())
-    print(ObjEdit:getAbilityId())
     local abil_type = WeAbility.new(ObjEdit:getAbilityId(), 'Aasl', 'DisableMovement')
     abil_type:setField(WeAbility.Field.Aasl_MovementSpeedFactor, 1, -100)
     abil_type:setField(WeAbility.Field.TargetsAllowed, 1, "self")
-    abil_type:setField(WeAbility.Field.Buffs, 1, "")
-    
+    abil_type:setField(WeAbility.Field.Buffs, 1, private.disable_move_buff_type.id)
     return abil_type:toRuntime()
 end)
 private.disable_move_id = ID(private.disable_move_type.id)
+private.disable_move_buff_id = ID(private.disable_move_buff_type.id)
 
 private.move_blocked = {}
 private.attack_blocked = {}
@@ -112,6 +116,7 @@ function private.setMoveFlag(flag, target)
     else
         if private.move_blocked[target] then
             UnitRemoveAbility(target, private.disable_move_id)
+            UnitRemoveAbility(target, private.disable_move_buff_id)
             private.move_blocked[target] = nil
         else
             Log.error(AbilityFlags, 'unit does not have move block flag', 3)
@@ -148,7 +153,6 @@ function private.newData(instance, block_move, block_attack)
         block_attack = block_attack,
     }
     private[instance] = priv
-    print(tostring(instance)..' created')
 end
 
 ---@param instance AbilityFlags

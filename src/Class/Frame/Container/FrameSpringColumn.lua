@@ -14,11 +14,12 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
-local FrameSpringColumn = Class.new('FrameSpringColumn', FrameBackdrop)
+local FrameSpringColumn = Class.new('FrameSpringColumn')
 ---@class FrameSpringColumn : FrameBackdrop
 local public = FrameSpringColumn.public
 ---@class FrameSpringColumnClass : FrameBackdropClass
 local static = FrameSpringColumn.static
+---@type FrameSpringColumnClass
 local override = FrameSpringColumn.override
 local private = {}
 
@@ -27,16 +28,16 @@ local private = {}
 --========
 
 --- SimpleFrame by default.
----@param frame_type FrameType | nil
----@param child_data any
+---@param owner Frame
+---@param child_instance FrameSpringColumn | nil
 ---@return FrameSpringColumn
-function override.new(frame_type, child_data)
-    if not frame_type then
+function static.new(owner, child_instance)
+    if not owner then
         frame_type = private.default_frame_type
     end
-    local instance = child_data or Class.allocate(FrameSpringColumn, child_data)
+    local instance = child_instance or Class.allocate(FrameSpringColumn)
     instance = FrameBackdrop.new(frame_type, instance)
-    private.new(instance)
+    private.newData(instance)
 
     return instance
 end
@@ -45,27 +46,10 @@ end
 -- Public
 --========
 
---- Function returns removed frames.
----@return Frame[]
-function public:free()
-    local priv = private.get(self)
-
-    local free_frames = {}
-    for i = 1, #priv.elements do
-        --free_frames[i]:setParent(nil)
-        table.insert(free_frames, #free_frames + 1, free_frames[i])
-    end
-
-    private.free(self)
-    FrameBackdrop.public.free(self)
-
-    return free_frames
-end
-
 ---@param row number
 ---@return boolean
 function public:isRowHeightFree(row)
-    local priv = private.get(self)
+    local priv = private[self]
     local b = priv.is_row_abs[row] or priv.is_row_ratio[row]
     return not b
 end
@@ -73,19 +57,19 @@ end
 ---@param row number
 ---@return boolean
 function public:isRowHeightRatio(row)
-    return private.get(self).is_row_ratio[row]
+    return private[self].is_row_ratio[row]
 end
 
 ---@param row number
 ---@return boolean
 function public:isRowHeightAbs(row)
-    return private.get(self).is_row_abs[row]
+    return private[self].is_row_abs[row]
 end
 
 ---@param count number
 ---@return Frame[]
 function public:setRows(count)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if count < 1 or count % 1 ~= 0 then
         Log(Log.Err, FrameSpringColumn,
@@ -110,14 +94,14 @@ end
 
 ---@return number
 function public:getRows()
-    return private.get(self).rows
+    return private[self].rows
 end
 
 --- Set ratio < 0 for auto size.
 ---@param ratio number
 ---@param row number
 function public:setRowRatioHeight(ratio, row)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if ratio >= 0 then
         priv.is_row_ratio[row] = true
@@ -133,7 +117,7 @@ end
 ---@param row number
 ---@return number
 function public:getRowHeightPart(row)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if priv.is_row_ratio[row] then
         return priv.row_ratio[row]
@@ -146,7 +130,7 @@ end
 ---@param height number
 ---@param row number
 function public:setRowAbsHeight(height, row)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if height >= 0 then
         priv.is_row_ratio[row] = false
@@ -162,7 +146,7 @@ end
 ---@param row number
 ---@return number
 function public:getRowAbsHeight(row)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if priv.is_row_abs[row] then
         return priv.row_height[row]
@@ -175,7 +159,7 @@ end
 ---@param row number
 ---@return Frame | nil
 function public:setCell(frame, row)
-    local priv = private.get(self)
+    local priv = private[self]
 
     if row < 1 or row % 1 ~= 0 then
         Log(Log.Err, FrameSpringColumn,
@@ -202,7 +186,7 @@ end
 ---@param row number
 ---@return Frame | nil
 function public:getCell(row)
-    return private.get(self).elements[row]
+    return private[self].elements[row]
 end
 
 ---@param left number
@@ -210,7 +194,7 @@ end
 ---@param top number
 ---@param bottom number
 function public:setOffsets(left, right, top, bottom)
-    local priv = private.get(self)
+    local priv = private[self]
 
     priv.left_offset = left
     priv.right_offset = right
@@ -221,8 +205,25 @@ end
 --- Returns left, right, top and bottom offsets
 ---@return number, number, number, number
 function public:getOffsets()
-    local priv = private.get(self)
+    local priv = private[self]
     return priv.left_offset, priv.right_offset, priv.top_offset, priv.bottom_offset
+end
+
+--- Function returns removed frames.
+---@return Frame[]
+function public:free()
+    local priv = private[self]
+
+    local free_frames = {}
+    for i = 1, #priv.elements do
+        --free_frames[i]:setParent(nil)
+        table.insert(free_frames, #free_frames + 1, free_frames[i])
+    end
+
+    private.freeData(self)
+    FrameBackdrop.public.free(self)
+
+    return free_frames
 end
 
 --=========
@@ -238,7 +239,7 @@ private.SIZE_TYPE = {
 local private_data = {}
 
 ---@param self FrameSpringColumn
-function private.new(self)
+function private.newData(self)
     local priv = {
         border_left = 0,
         border_right = 0,
@@ -264,15 +265,9 @@ function private.new(self)
 end
 
 ---@param self FrameSpringColumn
----@return table
-function private.get(self)
-    return private_data[self]
-end
-
----@param self FrameSpringColumn
 ---@return Frame[]
-function private.free(self)
-    local priv = private.get(self)
+function private.freeData(self)
+    local priv = private[self]
 
     local items = {}
     for i = 1, priv.cells_count do
@@ -289,7 +284,7 @@ end
 function private.applyAllElementsPos(self)
     private.updateRowHeight(self)
 
-    for row, element in pairs(private.get(self).elements) do
+    for row, element in pairs(private[self].elements) do
         private.applyElementPos(self, element, row)
     end
 end
@@ -297,7 +292,7 @@ end
 ---@param self FrameSpringColumn
 ---@param row number
 function private.applyElementPos(self, element, row)
-    local priv = private.get(self)
+    local priv = private[self]
 
     --local element = priv.elements[row]
     --if not element then return nil end
@@ -318,10 +313,9 @@ end
 
 ---@param self FrameSpringColumn
 function private.updateCells(self)
-    local priv = private.get(self)
+    local priv = private[self]
 
     private.updateResultSize(self)
-
 
     priv.row_center_x = self:getWidth() - (priv.left_offset + priv.right_offset)
     local prev_row_end = priv.bottom_offset
@@ -334,7 +328,7 @@ end
 ---@param self FrameSpringColumn
 ---@return number
 function private.updateResultSize(self)
-    local priv = private.get(self)
+    local priv = private[self]
 
     local height = self:getHeight() - (priv.border_top + priv.border_bottom)
     local free_cells = 0
@@ -366,7 +360,7 @@ function private.updateResultSize(self)
 end
 
 function private.updateCenters(self)
-    local priv = private.get(self)
+    local priv = private[self]
 
     local cell_left = priv.border_left
     for i = 1, #priv.cells_count do

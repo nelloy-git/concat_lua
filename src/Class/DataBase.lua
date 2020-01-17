@@ -87,8 +87,8 @@ end
 function private.isValidKeyType(self, key)
     local priv = private[self]
     if not Class.type(key, priv.key_type) then
-        local msg = string.format("wrong key type. Got: %s Avaliable: %s", tostring(key), priv.key_tostring)
-        Log(Log.Err, DataBase, msg)
+        local msg = string.format("wrong key type. Got: %s Avaliable: %s", tostring(key), tostring(priv.key_type))
+        Log.error(DataBase, msg, 3)
         return false
     end
     return true
@@ -100,8 +100,8 @@ end
 function private.isValidValueType(self, value)
     local priv = private[self]
     if not Class.type(value, priv.value_type) then
-        local msg = string.format("wrong value type. Got: %s Avaliable: %s", tostring(value), priv.value_type)
-        Log(Log.Err, DataBase, msg)
+        local msg = string.format("wrong value type. Got: %s Avaliable: %s", tostring(value), tostring(priv.value_type))
+        Log.error(DataBase, msg, 3)
         return false
     end
     return true

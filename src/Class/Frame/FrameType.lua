@@ -32,7 +32,7 @@ function static.new(name, base_name, is_simpleframe, child_data)
     return instance
 end
 
----@param data FdfObjectRuntime
+---@param data table
 ---@param is_simpleframe boolean
 ---@return FrameType
 function static.load(data, is_simpleframe, child_data)
@@ -83,13 +83,10 @@ end
 -- Private
 --=========
 
-local private_data = {}
-
 ---@param self FrameType
 ---@param name string
 ---@param base_name string
 ---@param is_simpleframe boolean
----@return table
 function private.new(self, name, base_name, is_simpleframe)
     local priv = {
         name = name,
@@ -97,30 +94,27 @@ function private.new(self, name, base_name, is_simpleframe)
         is_simpleframe = is_simpleframe
     }
 
-    private_data[self] = priv
-    return priv
+    private[self] = priv
 end
 
 ---@param self FrameType
 ---@param data any
 ---@param is_simpleframe boolean
----@return table
 function private.load(self, data, is_simpleframe)
     local priv = data
     priv.is_simpleframe = is_simpleframe
 
-    private_data[self] = priv
-    return priv
+    private[self] = priv
 end
 
 ---@param self FrameType
 function private.get(self)
-    return private_data[self]
+    return private[self]
 end
 
 ---@param self FrameType
 function private.free(self)
-    private_data[self] = nil
+    private[self] = nil
 end
 
 return FrameType

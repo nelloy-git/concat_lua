@@ -44,7 +44,7 @@ end
 
 ---@param wc3_unit unit
 ---@return Unit
-function Unit.static.get(wc3_unit)
+function static.get(wc3_unit)
     return private.DB:get(wc3_unit)
 end
 
@@ -53,12 +53,6 @@ end
 --========
 
 public.parameters = 'UnitParametersContainer'
-
-function public:free()
-    private.freeComponents(self)
-    private.freeData(self)
-    Class.free(self)
-end
 
 ---@return number
 function public:getId()
@@ -73,6 +67,12 @@ end
 ---@return unit
 function public:getWc3Unit()
     return private[self].wc3_unit
+end
+
+function public:free()
+    private.freeComponents(self)
+    private.freeData(self)
+    Class.free(self)
 end
 
 --=========
@@ -95,9 +95,7 @@ function private.newData(self, id, player, x, y, face)
         wc3_unit = CreateUnit(player, num_id, x, y, face)
     }
     private[self] = priv
-    if not private.DB:set(priv.wc3_unit, self) then
-        error('Can not add Unit to DataBase.')
-    end
+    private.DB:set(priv.wc3_unit, self)
 end
 
 ---@param self Unit

@@ -5,20 +5,14 @@
 local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
+require('Class.Ability.Event')
+
 ---@type AbilityCallbacksContainerClass
 local AbilityCallbacksContainer = require('Class.Ability.Callbacks')
----@type AbilityEventClass
-local AbilityEvent = require('Class.Ability.Event')
 ---@type AbilityFlagsClass
 local AbilityFlagsContainer = require('Class.Ability.Flags')
 ---@type DataBaseClass
 local DataBase = require('Class.DataBase')
-
----@type IconAssetClass
-local ObjEdit
-local tmp = Compiletime(function()
-    ObjEdit = require('compiletime.ObjectEdit')
-end)
 
 --=======
 -- Class
@@ -66,6 +60,7 @@ function static.createDummy(target, name)
         return nil
     end
 
+    local ObjEdit = require('compiletime.ObjectEdit')
     local WeAbility = ObjEdit.Ability
     local abil = WeAbility.new(ObjEdit.getAbilityId(), 'ANcl', name or 'Dummy ability')
 
@@ -102,8 +97,7 @@ function static.createDummy(target, name)
         abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
         abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
     else
-        local msg = string.format("wrong target type.\n%s", ObjEdit.Utils.getErrorPos())
-        Log(Log.Err, Ability, msg)
+        Log.error(Ability, 'wrong target type', 2)
         return nil
     end
 
