@@ -1,7 +1,7 @@
-require('utils.Globals')
+--require('utils.Globals')
 
-local Log = require('utils.Log')
-
+--local Log = require('utils.Log')
+--[[
 ---@type UnitClass
 local Unit = require('Class.Unit')
 ---@type AbilityClass
@@ -25,7 +25,9 @@ local icon = Compiletime(function() return require('compiletime.Icon').BTN3M1 en
 if not IsCompiletime() then
     local u = Unit.new(Player(0), unit_type.id, 0, 0, 0)
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
-    --local u = CreateUnit(Player(0), ID(unit_type.id), 0, 0, 0)
-    --local f = function() print(t:getTime()) end
-    --t:addAction(0.01, f)
 end
+]]
+
+local data = require('Class.CompileDataBase')
+data.save(1, 'aaa')
+print(data.load(1))

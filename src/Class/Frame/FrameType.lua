@@ -26,8 +26,17 @@ local private = {}
 ---@param child_data any
 ---@return FrameType
 function static.new(name, base_name, is_simpleframe, child_data)
-    local instance = child_data or Class.allocate(FrameType, child_data)
+    local instance = child_data or Class.allocate(FrameType)
     private.new(instance, name, base_name, is_simpleframe)
+
+    if IsCompiletime() then
+        if private.compiletime_data[name] then
+            Log.error(FrameType, 'selected name had been used already.', 2)
+            return
+        end
+        private.compiletime_data[name] = instance
+    else
+    end
 
     return instance
 end
@@ -45,11 +54,6 @@ end
 --========
 -- Public
 --========
-
-function public:free()
-    private.free(self)
-    Class.freeInstanceData(self)
-end
 
 ---@return string
 function public:getName()
@@ -79,9 +83,16 @@ function public:getStringFramehandleName()
     return priv.fields.String.name
 end
 
+function public:free()
+    private.free(self)
+    Class.free(self)
+end
+
 --=========
 -- Private
 --=========
+
+private.compiletime_data = {}
 
 ---@param self FrameType
 ---@param name string
