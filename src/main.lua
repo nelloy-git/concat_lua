@@ -27,5 +27,13 @@ if not IsCompiletime() then
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
 end
 ]]
+
+---@type AbilityTypeClass
+
 local AbilityType = require('Class.Ability.Type')
-local a = AbilityType.new('DummyAbility', 'none')
+local a = AbilityType.new('DummyAbility', AbilityType.TargetType.None)
+
+if not IsCompiletime() then
+    local u = CreateUnit(Player(0), ID('hfoo'), 0, 0, 0)
+    UnitAddAbility(u, a:getId())
+end

@@ -87,35 +87,50 @@ end
 private.DB = DataBase.new('number', AbilityType)
 private.CompiletimeData = CompiletimeData.new(AbilityType)
 
-local WeAbility = Compiletime()
+local _ = Compiletime(function() private.WeAbility = require('compiletime.ObjectEdit').Ability end)
 
 private.ANcl_TargetType = {
-    [static.TargetType.None] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_None),
-    [static.TargetType.Point] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.PointWithArea] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.Unit] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_Unit),
-    [static.TargetType.UnitOrPoint] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitOrPointWithArea] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitWithArea] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_Unit),
+    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_TargetType_None),
+    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
+    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
+    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
+    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
+    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
+    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
 }
 
 private.ANcl_Options = {
-    [static.TargetType.None] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_Options_Visible),
-    [static.TargetType.Point] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_Options_Visible),
-    [static.TargetType.PointWithArea] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.Unit] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_Options_Visible),
-    [static.TargetType.UnitOrPoint] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_Options_Visible),
-    [static.TargetType.UnitOrPointWithArea] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitWithArea] = Compiletime(require('compiletime.ObjectEdit').WeAbility.ANcl_TargetType_Unit),
+    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
+    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
+    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
 }
 
+---@param target_type any
+---@return boolean
+function private.isTargetType(target_type)
+    for _, v in pairs(static.TargetType) do
+        if target_type == v then
+            return true
+        end
+    end
+    return false
+end
+
 -- Compiletime only.
----@param target AbilityDummyTargetType
+---@param target_type AbilityDummyTargetType
 ---@param name string | nil
----@return table(string, any)
-function private.createDummy(target, name)
+---@return string
+function private.createDummy(target_type, name)
     if not IsCompiletime() then
         Log.error(AbilityType, 'dummy ability can be created in compiletime only.', 2)
+    end
+
+    if not private.isTargetType(target_type) then
+        Log.error(AbilityType, 'wrong target type.', 3)
     end
 
     local ObjEdit = require('compiletime.ObjectEdit')
@@ -133,34 +148,8 @@ function private.createDummy(target, name)
     abil:setField(WeAbility.Field.ArtTarget, 0, "")
     abil:setField(WeAbility.Field.AnimationNames, 0, "")
     abil:setField(WeAbility.Field.ANcl_FollowThroughTime, 1, 0)
-
-    if target == 'none' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_None)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
-    elseif target == 'point' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
-    elseif target == 'unit' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
-    elseif target == 'unitPoint' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
-    elseif target == 'pointArea' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Point)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
-    elseif target == 'unitArea' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_Unit)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
-    elseif target == 'pointUnitArea' then
-        abil:setField(WeAbility.Field.ANcl_TargetType, 1, WeAbility.ANcl_TargetType_UnitOrPoint)
-        abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible + WeAbility.ANcl_Options_AreaTarget)
-    else
-        Log.error(AbilityType, 'wrong target type', 2)
-        return nil
-    end
-
-    abil:setField(WeAbility.Field.ANcl_Options, 1, WeAbility.ANcl_Options_Visible)
+    abil:setField(WeAbility.Field.ANcl_TargetType, 1, private.ANcl_TargetType[target_type])
+    abil:setField(WeAbility.Field.ANcl_Options, 1, private.ANcl_Options[target_type])
 
     return id
 end

@@ -76,6 +76,10 @@ end
 
 private.instances = {}
 CompiletimeFinalToRuntime(function()
+    --for k, v in pairs(private.instances) do
+    --    print(k, v)
+    --end
+    --print(private.instances)
     private.instances = Compiletime(private.instances)
 end)
 
