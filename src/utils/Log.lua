@@ -52,7 +52,7 @@ meta.__call = static.write
 ---@param level number
 function static.error(header, message, level)
     static.write(nil, static.Err, header, message)
-    error('', level + 1)
+    error('', (level or 1) + 1)
 end
 
 function static.close()

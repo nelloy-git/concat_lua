@@ -149,7 +149,7 @@ end
 
 function public:free()
     private.freeData(self)
-    Class.freeInstanceData(self)
+    Class.free(self)
 end
 
 --=========

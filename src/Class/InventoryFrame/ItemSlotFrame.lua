@@ -36,7 +36,7 @@ end
 
 function public:free()
     private[self] = nil
-    freeInstanceData(self)
+    Class.free(self)
 end
 
 return ItemSlotFrame

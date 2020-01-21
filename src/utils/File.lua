@@ -37,7 +37,7 @@ end
 
 function public:free()
     private.free(self)
-    freeInstanceData(self)
+    free(self)
 end
 
 ---@return string[]

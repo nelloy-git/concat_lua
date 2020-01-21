@@ -1,57 +1,13 @@
+local ClassDeclare = require('utils.Class.ClassDeclare')
 local ClassName = require('utils.Class.ClassName')
 local ClassParent = require('utils.Class.ClassParent')
-local ClassStatic = require('utils.Class.ClassStatic')
 local ClassPublic = require('utils.Class.ClassPublic')
 local ClassInstance = require('utils.Class.ClassInstance')
 
-Class = {}
-local rawget = rawget
-local rawset = rawset
-local fmt = string.format
+local Class = {}
 
-local function class_index(self, key)
-    local msg = 'static, override, public, protected are allowed only.'
-    if IsCompiletime() then
-        local info = debug.getinfo(2, 'lS')
-        msg = msg..fmt(' %s:%d', info.source, info.currentline)
-    end
-    error(tostring(self)..': '..msg)
-    return nil
-end
-
-local class_metatable = {
-    __index = class_index,
-    __newindex = class_index,
-    __tostring = ClassName.getName
-}
-
----@param name string
----@return any
-local function new(name, ...)
-    local class = {}
-    setmetatable(class, class_metatable)
-
-    if type(name) ~= 'string' then
-        error('name can be string only.')
-    end
-
-    ClassName.register(class, name)
-    ClassParent.register(class, ...)
-
-    rawset(class, 'static', ClassStatic.new(class))
-    rawset(class, 'override', ClassStatic.newOverride(class))
-    rawset(class, 'public', ClassPublic.new(class))
-
-    return class
-end
-
-local function getPublic(static)
-    local class = ClassStatic.getClass(static) or static
-    return class.public
-end
-
----@type fun(name:string, vararg:any):any
-Class.new = new
+---@type fun(name:string, vararg:Class[]):Class
+Class.new = ClassDeclare.register
 ---@type fun(class:any):any
 Class.allocate = ClassInstance.allocate
 ---@type fun(instance:any)
@@ -65,9 +21,7 @@ Class.getClass = ClassInstance.getClass
 ---@type fun(child_class:any, parent_class:any):boolean
 Class.isChild = ClassParent.isChild
 ---@type fun(class:any):any
-Class.getPublic = getPublic
-
-local type = type
+Class.getPublic = ClassPublic.get
 ---@param value1 any
 ---@param value2 any
 ---@return boolean
@@ -75,33 +29,7 @@ local type = type
 ---@overload fun(child_class:any, parent_class:any):boolean
 ---@overload fun(child_instance:any, parent_class:any):boolean
 ---@overload fun(child_instance:any, parent_instance:any):boolean
-function Class.type(value1, value2)
-    if not value2 then
-        return type(value1)
-    end
+Class.type = ClassDeclare.type
 
-    local is_class1 = Class.isClass(value1)
-    local is_class2 = Class.isClass(value2)
-    local is_instance1 = Class.isInstance(value1)
-    local is_instance2 = Class.isInstance(value2)
-
-    --Log(Log.Msg, is_class1, is_class2, is_instance1, is_instance2)
-    if not (is_class1 or is_class2 or is_instance1 or is_instance2) then
-        return type(value1) == value2
-    end
-
-    local class1 = ClassStatic.getClass(value1) or value1
-    local class2 = ClassStatic.getClass(value2) or value2
-
-    if is_instance1 then
-        class1 = Class.getClass(value1)
-    end
-
-    if is_instance2 then
-        class2 = Class.getClass(value2)
-    end
-
-    return Class.isChild(class1, class2)
-end
 
 return Class

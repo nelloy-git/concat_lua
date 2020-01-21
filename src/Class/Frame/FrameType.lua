@@ -3,6 +3,7 @@
 --=========
 
 local Class = require('utils.Class.Class')
+local CompiletimeDataBase = require('Class.CompiletimeDataBase')
 
 --=======
 -- Class

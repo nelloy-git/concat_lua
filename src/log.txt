@@ -1,0 +1,1 @@
+[0.000] {Msg} WeFile: сreated WeAbility_1dfa2e0 "DummyAbility" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_1e2a400 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_1c704d0 "DisableMovement" with id 'BM#$' based on 'Bfae'

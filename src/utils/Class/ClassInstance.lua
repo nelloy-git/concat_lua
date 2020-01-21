@@ -4,6 +4,7 @@ local ClassUtils = require('utils.Class.ClassUtils')
 local ClassInstance = {}
 
 local instance_class = {}
+setmetatable(instance_class, {__mode = 'kv'})
 
 local rawget = rawget
 local rawset = rawset

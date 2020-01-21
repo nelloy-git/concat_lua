@@ -32,7 +32,7 @@ function static.new(name, child_instance)
     local instance = child_instance or Class.allocate(FdfFile)
     private.newData(instance, name)
 
-    AddCompileFinal(function() instance:free() end)
+    CompileFinal(function() instance:free() end)
 
     return instance
 end
@@ -63,7 +63,7 @@ end
 function public:free()
     private.save(self)
     private.free(self)
-    Class.freeInstanceData(self)
+    Class.free(self)
 end
 
 --=========

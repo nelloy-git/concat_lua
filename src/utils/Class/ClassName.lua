@@ -4,6 +4,10 @@ local class2name = {}
 local name2class = {}
 
 function ClassName.register(class, name)
+    if name2class[name] then
+        error('Class', 'name must be unique.', 3)
+    end
+
     class2name[class] = name
     name2class[name] = class
 end

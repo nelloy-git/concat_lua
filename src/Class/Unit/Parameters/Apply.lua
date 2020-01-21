@@ -10,7 +10,7 @@ local ParameterType = require('Class.ParameterType')
 
 --- Recursive include
 ---@type UnitParametersContainerClass
-local UnitParameterContainer = require('Class.Unit.Parameters.Container')
+--local UnitParameterContainer = require('Class.Unit.Parameters.Container')
 
 --=======
 -- Class

@@ -1,43 +1,47 @@
 local ClassParent = require('utils.Class.ClassParent')
+local ClassStatic = require('utils.Class.ClassStatic')
 local ClassUtils = require('utils.Class.ClassUtils')
 
 local ClassPublic = {}
 
-local rawget = rawget
 local rawset = rawset
-local fmt = string.format
 local deepcopy = ClassUtils.deepcopy
 
-local publics = {}
+local class2public = {}
+local public2class = {}
 local NIL = '__RESERVED__'
 
-function ClassPublic.new(class)
-    publics[class] = {}
+local public_meta = {
+    __newindex = function(self, key, value)
+        if value == nil then
+            value = NIL
+        end
+        rawset(self, key, value)
+    end,
+}
+
+function ClassPublic.register(class)
+    local public = {}
+    setmetatable(public, public_meta)
 
     local parents = ClassParent.get(class)
     for i = 1, #parents do
         local cur_parent = parents[#parents + 1 - i]
-        local cur_parent_public = publics[cur_parent]
-        local copy = deepcopy(cur_parent_public)
+        local cur_public = class2public[cur_parent]
+        local copy = deepcopy(cur_public)
         for k,v in pairs(copy) do
-            publics[class][k] = v
+            public[k] = v
         end
     end
 
-    setmetatable(publics[class], {
-        __newindex = function(self, key, value)
-            if value == nil then
-                value = NIL
-            end
-            rawset(self, key, value)
-        end,
-    })
-
-    return publics[class]
+    class2public[class] = public
+    public2class[public] = class
+    return public
 end
 
 function ClassPublic.get(class)
-    return publics[class]
+    class = ClassStatic.getClass(class) or class
+    return class2public[class]
 end
 
 return ClassPublic
