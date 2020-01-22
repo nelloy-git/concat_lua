@@ -27,11 +27,20 @@ local private = {}
 -- Static
 --=========
 
+---@alias UnitTypeMode string
+---@type UnitTypeMode[]
+static.UnitTypeMode = {
+    Unit = 1,
+    Hero = 2,
+    Building = 3
+}
+
+---@param type_mode UnitTypeMode
 ---@param child_instance UnitType | nil
 ---@return UnitType
-function static.new(child_instance)
+function static.new(uniq_name, type_mode, child_instance)
     local instance = child_instance or Class.allocate(UnitType)
-    private.newData(instance)
+    private.newData(instance, uniq_name, type_mode)
 
     return instance
 end
@@ -48,6 +57,14 @@ end
 --=========
 -- Private
 --=========
+
+private.DB = DataBase.new('number', UnitType)
+private.CompiletimeData = CompiletimeData.new(UnitType)
+local _ = Compiletime(function() private.WeUnit = require('compiletime.ObjectEdit').Unit end)
+
+function private.createDummyUnit()
+    
+end
 
 ---@param instance UnitType
 function private.newData(instance)

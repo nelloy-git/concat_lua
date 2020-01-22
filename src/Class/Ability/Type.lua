@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
+local Class = require('utils.Class.Class')
 
 ---@type AbilityCallbacksContainerClass
 local AbilityCallbacksContainer = require('Class.Ability.Callbacks')
@@ -48,17 +48,8 @@ static.TargetType = {
 ---@param child_instance AbilityType | nil
 ---@return AbilityType
 function static.new(uniq_name, target_type, child_instance)
-    if IsCompiletime() then
-        if private.CompiletimeData:get(uniq_name) then
-            Log.error(AbilityType, 'name is not unique.', 2)
-        end
-        local id = private.createDummy(target_type, uniq_name)
-        private.CompiletimeData:set(uniq_name, id)
-    end
-
     local instance = child_instance or Class.allocate(AbilityType)
-    local id = private.CompiletimeData:get(uniq_name)
-    private.newData(instance, id, uniq_name)
+    private.newData(instance, uniq_name, target_type)
 
     instance.callbacks = AbilityCallbacksContainer.new()
     instance.flags = AbilityFlagsContainer.new(true, true)
@@ -91,14 +82,19 @@ function public:getName()
     return private[self].name
 end
 
+local Player = Player
+local GetLocalPlayer = GetLocalPlayer
 ---@param tooltip string
-function public:setTooltip(tooltip)
+---@param player_index number | nil
+function public:setTooltip(tooltip, player_index)
     local priv = private[self]
     priv.tooltip = tooltip
     if IsCompiletime() then
-        abil:setField(WeAbility.Field.TooltipNormalExtended, 1, tooltip)
+        priv.we_abil:setField(private.WeAbility.Field.TooltipNormalExtended, 1, tooltip)
     else
-        BlzSetAbilityTooltip(priv.id, tooltip, 1)
+        if not player_index or GetLocalPlayer() == Player(player_index) then
+            BlzSetAbilityTooltip(priv.id, tooltip, 1)
+        end
     end
 end
 
@@ -113,7 +109,6 @@ end
 
 private.DB = DataBase.new('number', AbilityType)
 private.CompiletimeData = CompiletimeData.new(AbilityType)
-
 local _ = Compiletime(function() private.WeAbility = require('compiletime.ObjectEdit').Ability end)
 
 private.ANcl_TargetType = {
@@ -200,12 +195,6 @@ function private.newData(instance, uniq_name, target_type)
     end
 
     priv.id = ID(private.CompiletimeData:get(uniq_name))
-
-
-    local instance = child_instance or Class.allocate(AbilityType)
-    local id = private.CompiletimeData:get(uniq_name)
-    private.newData(instance, id, uniq_name)
-
 
     private[instance] = priv
     private.DB:set(priv.id, instance)
