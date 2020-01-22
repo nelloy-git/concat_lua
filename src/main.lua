@@ -1,11 +1,11 @@
 require('utils.Globals')
---[[
+
 --local Log = require('utils.Log')
 
 ---@type UnitClass
 local Unit = require('Class.Unit')
----@type AbilityClass
---local ExampleAbility = require('Class.Ability.Example')
+---@type AbilityType
+local ExampleAbility = require('Class.Ability.Example')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.Timer.BetterTimer')
 
@@ -25,15 +25,4 @@ local icon = Compiletime(function() return require('compiletime.Icon').BTN3M1 en
 if not IsCompiletime() then
     local u = Unit.new(Player(0), unit_type.id, 0, 0, 0)
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
-end
-]]
-
----@type AbilityTypeClass
-
-local AbilityType = require('Class.Ability.Type')
-local a = AbilityType.new('DummyAbility', AbilityType.TargetType.None)
-
-if not IsCompiletime() then
-    local u = CreateUnit(Player(0), ID('hfoo'), 0, 0, 0)
-    UnitAddAbility(u, a:getId())
 end

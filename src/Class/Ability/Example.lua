@@ -2,11 +2,10 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
-
 local Log = require('utils.Log')
----@type AbilityClass
-local AbilityType = require('Class.Ability')
+
+---@type AbilityTypeClass
+local AbilityType = require('Class.Ability.Type')
 ---@type AbilityCastInstanceClass
 local AbilityInstance = require('Class.Ability.CastInstance')
 ---@type BetterTimerClass
@@ -18,46 +17,44 @@ local fmt = string.format
 -- Ability
 --=========
 
-local abil_name = 'Example ability'
+-- Ability type for using in casting system.
+local ExampleAbility = AbilityType.new('Example ability', AbilityType.TargetType.None)
 
---- Dummy wc3 ability type. createDummy returns table with changed
---- ability data and creates WeAbility object without animations and effects
---- in compiletime.
-local Wc3Type = Compiletime(AbilityType.createDummy('point', abil_name))
+-- ===========
+--  Callbacks
+-- ===========
 
---- Ability type for using in casting system.
-local ExampleAbility = AbilityType.new(Wc3Type.id)
---- Callbacks container. Set Start, Casting, Cancel, Finish and Interrupt actions here.
-local callbacks = ExampleAbility.callbacks
---- Flags container. Move and attack while casting can be enabled with it.
-local flags = ExampleAbility.flags
-
---- Set function for casting time calculating.
-callbacks:setCastingTime(function(cast_data)
-    --local caster = AbilityInstance.getCaster()
-    local full_time = 3
-    Log(Log.Msg, abil_name, fmt('full casting time = %.2f', 3))
+---@param cast_data AbilityCastInstance
+---@return number
+local function getCastingTime(cast_data)
+    local caster = cast_data:getCaster()
+    local full_time = BlzGetUnitMaxHP(caster) / 100
+    if full_time < 3 then
+        full_time = 3
+    end
+    Log(Log.Msg, ExampleAbility:getName(), fmt('full casting time = %.2f (MaxHP / 100, min = 3)', full_time))
     return full_time
-end)
+end
 
---- Set callback for casting start. Should return true(default) if started successfully.
-local state = "normal"
-callbacks:setStart(function(cast_data)
-    Log(Log.Msg, abil_name, 'got casting started event. Use more times for different tests.')
+local state = 'normal'
+---@param cast_data AbilityCastInstance
+---@return boolean
+local function start(cast_data)
+    Log(Log.Msg, ExampleAbility:getName(), 'got casting started event. Use more times for different tests.')
 
     local caster = cast_data:getCaster()
-    Log(Log.Msg, abil_name, fmt('caster %s.', caster))
+    Log(Log.Msg, ExampleAbility:getName(), fmt('caster %s.', caster))
     if state == 'normal' then
-        Log(Log.Msg, abil_name, 'casting have to start normally.')
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
         state = 'failed'
         return true
     elseif state == 'failed' then
-        Log(Log.Msg, abil_name, 'casting have not to start.')
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have not to start.')
         state = 'interrupt'
         return false
     elseif state == 'interrupt' then
         local interrupt_time = cast_data:getFullCastingTime() / 2
-        Log(Log.Msg, abil_name, fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
+        Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
         BetterTimer.getGlobalTimer():addAction(interrupt_time, function()
             if cast_data == AbilityInstance.get(caster) then
                 cast_data:interrupt()
@@ -67,7 +64,7 @@ callbacks:setStart(function(cast_data)
         return true
     else
         local cancel_time = cast_data:getFullCastingTime() / 2
-        Log(Log.Msg, abil_name, fmt('casting have to be canceled after %.2f sec.', cancel_time))
+        Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be canceled after %.2f sec.', cancel_time))
         BetterTimer.getGlobalTimer():addAction(cancel_time, function()
             if cast_data == AbilityInstance.get(caster) then
                 cast_data:cancel()
@@ -76,27 +73,46 @@ callbacks:setStart(function(cast_data)
         state = 'normal'
         return true
     end
-end)
+end
 
 local prev = -1
-callbacks:setCasting(function(cast_data)
+---@param cast_data AbilityCastInstance
+---@return boolean
+local function casting(cast_data)
     local cur = cast_data:getCastingTimeLeft()
+    cur = math.floor(5 * cur) / 5
     if math.floor(cur) ~= prev then
-        Log(Log.Msg, abil_name, fmt('casting time - %0.2f', cur))
+        Log(Log.Msg, ExampleAbility:getName(), fmt('casting time - %.1f', cur))
         prev = math.floor(cur)
     end
-end)
+end
 
-callbacks:setFinish(function()
-    Log(Log.Msg, abil_name, 'casting finished')
-end)
+---@param cast_data AbilityCastInstance
+local function finish(cast_data)
+    Log(Log.Msg, ExampleAbility:getName(), 'casting finished')
+end
 
-callbacks:setCancel(function()
-    Log(Log.Msg, abil_name, 'casting canceled')
-end)
+---@param cast_data AbilityCastInstance
+local function cancel(cast_data)
+    Log(Log.Msg, ExampleAbility:getName(), 'casting canceled')
+end
 
-callbacks:setInterrupt(function()
-    Log(Log.Msg, abil_name, 'casting interrupted')
-end)
+---@param cast_data AbilityCastInstance
+local function interrupt(cast_data)
+    Log(Log.Msg, ExampleAbility:getName(), 'casting interrupted')
+end
+
+-- Set function for casting time calculating.
+ExampleAbility.callbacks:setCastingTime(getCastingTime)
+-- Set callback for casting start. Should return true(default) if started successfully.
+ExampleAbility.callbacks:setStart(start)
+-- Set callback for casting time loop. Have to return false if casting is interupted.
+ExampleAbility.callbacks:setCasting(casting)
+-- Set callback for casting finish.
+ExampleAbility.callbacks:setFinish(finish)
+-- Set callback for casting cancel.
+ExampleAbility.callbacks:setCancel(cancel)
+-- Set callback for casting interruption.
+ExampleAbility.callbacks:setInterrupt(interrupt)
 
 return ExampleAbility

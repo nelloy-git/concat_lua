@@ -6,7 +6,7 @@ local ClassInstance = require('utils.Class.ClassInstance')
 
 local Class = {}
 
----@type fun(name:string, vararg:Class[]):Class
+---@type fun(name:string, vararg:any):any
 Class.new = ClassDeclare.register
 ---@type fun(class:any):any
 Class.allocate = ClassInstance.allocate

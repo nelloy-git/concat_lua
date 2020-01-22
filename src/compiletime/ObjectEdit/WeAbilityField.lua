@@ -101,22 +101,18 @@ function private.checkType(self, data, lvl)
     end
 
     if not res then
-        local msg = string.format('wrong data type. Got %s. Need %s.\n%s',
-                                   type(data), data_type, WeUtils.getErrorPos())
-        Log(Log.Wrn, self:getName(), msg)
-        return false
+        Log.error(string.format('Field %s', self:getName()), string.format('wrong data type. Got %s. Need %s.', type(data), data_type), 3)
+        return
     end
 
     if lvl == 0 and priv.require_level then
-        local msg = string.format('requires level.\n%s', WeUtils.getErrorPos())
-        Log(Log.Wrn, self:getName(), msg)
-        return false
+        Log.error(string.format('Field %s', self:getName()), 'requires level.', 3)
+        return
     end
 
     if lvl ~= 0 and not priv.require_level then
-        local msg = string.format('does not require level.\n%s', WeUtils.getErrorPos())
-        Log(Log.Wrn, self:getName(), msg)
-        return false
+        Log.error(string.format('Field %s', self:getName()), 'does not require level.', 3)
+        return
     end
 
     return true

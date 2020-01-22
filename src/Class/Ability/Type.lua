@@ -43,17 +43,22 @@ static.TargetType = {
     UnitOrPointWithArea = 7
 }
 
+---@param uniq_name string
+---@param target_type AbilityDummyTargetType
 ---@param child_instance AbilityType | nil
 ---@return AbilityType
 function static.new(uniq_name, target_type, child_instance)
     if IsCompiletime() then
+        if private.CompiletimeData:get(uniq_name) then
+            Log.error(AbilityType, 'name is not unique.', 2)
+        end
         local id = private.createDummy(target_type, uniq_name)
         private.CompiletimeData:set(uniq_name, id)
     end
 
     local instance = child_instance or Class.allocate(AbilityType)
     local id = private.CompiletimeData:get(uniq_name)
-    private.newData(instance, id)
+    private.newData(instance, id, uniq_name)
 
     instance.callbacks = AbilityCallbacksContainer.new()
     instance.flags = AbilityFlagsContainer.new(true, true)
@@ -72,12 +77,34 @@ end
 
 ---@type AbilityCallbacksContainer
 public.callbacks = "AbilityCallbacksContainer"
+--- TODO
 ---@type AbilityFlags
 public.flags = "AbilityFlags"
 
 ---@return number
 function public:getId()
     return private[self].id
+end
+
+---@return string
+function public:getName()
+    return private[self].name
+end
+
+---@param tooltip string
+function public:setTooltip(tooltip)
+    local priv = private[self]
+    priv.tooltip = tooltip
+    if IsCompiletime() then
+        abil:setField(WeAbility.Field.TooltipNormalExtended, 1, tooltip)
+    else
+        BlzSetAbilityTooltip(priv.id, tooltip, 1)
+    end
+end
+
+---@return string
+function public:getTooltip()
+    return private[self].tooltip
 end
 
 --=========
@@ -122,7 +149,7 @@ end
 
 -- Compiletime only.
 ---@param target_type AbilityDummyTargetType
----@param name string | nil
+---@param name string
 ---@return string
 function private.createDummy(target_type, name)
     if not IsCompiletime() then
@@ -136,33 +163,52 @@ function private.createDummy(target_type, name)
     local ObjEdit = require('compiletime.ObjectEdit')
     local WeAbility = ObjEdit.Ability
     local id = ObjEdit.getAbilityId()
-    local abil = WeAbility.new(id, 'ANcl', name or 'Dummy ability')
+    local abil = WeAbility.new(id, 'ANcl', name)
 
-    abil:setField(WeAbility.Field.TooltipNormal, 1, 'Dummy Ability')
-    abil:setField(WeAbility.Field.TooltipNormalExtended, 1, 'No description.')
+    abil:setField(WeAbility.Field.TooltipNormal, 1, name)
+    abil:setField(WeAbility.Field.TooltipNormalExtended, 1, '')
     abil:setField(WeAbility.Field.CastingTime, 1, 0)
-    abil:setField(WeAbility.Field.Cooldown, 1, 1)
+    abil:setField(WeAbility.Field.Cooldown, 1, 0)
     abil:setField(WeAbility.Field.ArtCaster, 0, "")
     abil:setField(WeAbility.Field.ArtEffect, 0, "")
     abil:setField(WeAbility.Field.ArtSpecial, 0, "")
     abil:setField(WeAbility.Field.ArtTarget, 0, "")
     abil:setField(WeAbility.Field.AnimationNames, 0, "")
+    abil:setField(WeAbility.Field.ManaCost, 1, 0)
     abil:setField(WeAbility.Field.ANcl_FollowThroughTime, 1, 0)
     abil:setField(WeAbility.Field.ANcl_TargetType, 1, private.ANcl_TargetType[target_type])
     abil:setField(WeAbility.Field.ANcl_Options, 1, private.ANcl_Options[target_type])
 
-    return id
+    return abil
 end
 
 ---@param instance AbilityType
----@param id string | number
-function private.newData(instance, id)
-    id = ID(id)
+---@param uniq_name string | number
+---@param target_type AbilityDummyTargetType
+function private.newData(instance, uniq_name, target_type)
     local priv = {
-        id = id,
+        name = uniq_name,
+        tooltip = '',
     }
+
+    if IsCompiletime() then
+        if private.CompiletimeData:get(uniq_name) then
+            Log.error(AbilityType, 'name is not unique.', 2)
+        end
+        priv.we_abil = private.createDummy(target_type, uniq_name)
+        private.CompiletimeData:set(uniq_name, priv.we_abil:getId())
+    end
+
+    priv.id = ID(private.CompiletimeData:get(uniq_name))
+
+
+    local instance = child_instance or Class.allocate(AbilityType)
+    local id = private.CompiletimeData:get(uniq_name)
+    private.newData(instance, id, uniq_name)
+
+
     private[instance] = priv
-    private.DB:set(id, instance)
+    private.DB:set(priv.id, instance)
 end
 
 return static

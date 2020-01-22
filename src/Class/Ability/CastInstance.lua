@@ -29,7 +29,7 @@ local private = {}
 
 ---@param caster unit
 ---@param target unit|item|destructable|table|nil
----@param ability Ability
+---@param ability AbilityType
 ---@return boolean
 function static.new(caster, target, ability)
     if private.DB:get(caster) then
@@ -108,6 +108,11 @@ function public:getTarget()
     return private[self].caster
 end
 
+---@return number
+function public:getCastingPeriod()
+    return private.timer_period
+end
+
 function public:free()
     private.freeData(self)
     Class.free(self)
@@ -145,7 +150,7 @@ end
 ---@param self AbilityCastInstance
 ---@param caster unit
 ---@param target unit|item|destructable|table|nil
----@param ability Ability
+---@param ability AbilityType
 ---@return AbilityCastInstance
 function private.newData(self, caster, target, ability)
     local priv = {
@@ -159,7 +164,7 @@ function private.newData(self, caster, target, ability)
     private[self] = priv
 
     private.DB:set(caster, self)
-    
+
     local time_left = ability.callbacks:getCastingTime(self)
     priv.full_time = time_left
     priv.time_left = time_left
