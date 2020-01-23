@@ -146,33 +146,28 @@ end
 ---@param target_type AbilityDummyTargetType
 ---@param name string
 ---@return string
-function private.createDummy(target_type, name)
-    if not IsCompiletime() then
-        Log.error(AbilityType, 'dummy ability can be created in compiletime only.', 2)
-    end
-
+function private.createWc3Ability(name, target_type)
     if not private.isTargetType(target_type) then
         Log.error(AbilityType, 'wrong target type.', 3)
     end
 
-    local ObjEdit = require('compiletime.ObjectEdit')
-    local WeAbility = ObjEdit.Ability
-    local id = ObjEdit.getAbilityId()
-    local abil = WeAbility.new(id, 'ANcl', name)
+    local id = require('compiletime.ObjectEdit').getAbilityId()
+    local abil = private.WeAbility.new(id, 'ANcl', name)
 
-    abil:setField(WeAbility.Field.TooltipNormal, 1, name)
-    abil:setField(WeAbility.Field.TooltipNormalExtended, 1, '')
-    abil:setField(WeAbility.Field.CastingTime, 1, 0)
-    abil:setField(WeAbility.Field.Cooldown, 1, 0)
-    abil:setField(WeAbility.Field.ArtCaster, 0, "")
-    abil:setField(WeAbility.Field.ArtEffect, 0, "")
-    abil:setField(WeAbility.Field.ArtSpecial, 0, "")
-    abil:setField(WeAbility.Field.ArtTarget, 0, "")
-    abil:setField(WeAbility.Field.AnimationNames, 0, "")
-    abil:setField(WeAbility.Field.ManaCost, 1, 0)
-    abil:setField(WeAbility.Field.ANcl_FollowThroughTime, 1, 0)
-    abil:setField(WeAbility.Field.ANcl_TargetType, 1, private.ANcl_TargetType[target_type])
-    abil:setField(WeAbility.Field.ANcl_Options, 1, private.ANcl_Options[target_type])
+    local Fields = private.WeAbility.Field
+    abil:setField(Fields.TooltipNormal, 1, name)
+    abil:setField(Fields.TooltipNormalExtended, 1, '')
+    abil:setField(Fields.CastingTime, 1, 0)
+    abil:setField(Fields.Cooldown, 1, 0)
+    abil:setField(Fields.ArtCaster, 0, "")
+    abil:setField(Fields.ArtEffect, 0, "")
+    abil:setField(Fields.ArtSpecial, 0, "")
+    abil:setField(Fields.ArtTarget, 0, "")
+    abil:setField(Fields.AnimationNames, 0, "")
+    abil:setField(Fields.ManaCost, 1, 0)
+    abil:setField(Fields.ANcl_FollowThroughTime, 1, 0)
+    abil:setField(Fields.ANcl_TargetType, 1, private.ANcl_TargetType[target_type])
+    abil:setField(Fields.ANcl_Options, 1, private.ANcl_Options[target_type])
 
     return abil
 end
@@ -190,7 +185,7 @@ function private.newData(instance, uniq_name, target_type)
         if private.CompiletimeData:get(uniq_name) then
             Log.error(AbilityType, 'name is not unique.', 2)
         end
-        priv.we_abil = private.createDummy(target_type, uniq_name)
+        priv.we_abil = private.createWc3Ability(uniq_name, target_type)
         private.CompiletimeData:set(uniq_name, priv.we_abil:getId())
     end
 
