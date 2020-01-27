@@ -2,11 +2,13 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 local Class = require('utils.Class.Class')
-local Frame = require('Class.Frame.Frame')
 
+---@type FrameClass
+local Frame = require('Class.Frame.Frame')
 ---@type FrameTypeClass
-local FrameType = require('Class.Frame.FrameType')
+local FrameType = require('Class.Frame.Frame')
 
 --=======
 -- Class
@@ -17,6 +19,7 @@ local FrameBackdrop = Class.new('FrameBackdrop', Frame)
 local public = FrameBackdrop.public
 ---@class FrameBackdropClass : FrameClass
 local static = FrameBackdrop.static
+---@type FrameBackdropClass
 local override = FrameBackdrop.override
 
 local private = {}

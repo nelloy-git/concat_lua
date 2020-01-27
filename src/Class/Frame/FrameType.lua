@@ -2,8 +2,13 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 local Class = require('utils.Class.Class')
-local CompiletimeDataBase = require('Class.CompiletimeDataBase')
+
+---@type DataBaseClass
+local DataBase = require('Class.DataBase')
+---@type CompiletimeDataClass
+local CompiletimeData = require('Class.CompiletimeData')
 
 --=======
 -- Class
@@ -21,33 +26,13 @@ local private = {}
 -- Static
 --=========
 
----@param name string
----@param base_name string
----@param is_simpleframe boolean
----@param child_data any
+---@param uniq_name string
+---@param create_fdf function
+---@param child_instance any
 ---@return FrameType
-function static.new(name, base_name, is_simpleframe, child_data)
-    local instance = child_data or Class.allocate(FrameType)
-    private.new(instance, name, base_name, is_simpleframe)
-
-    if IsCompiletime() then
-        if private.compiletime_data[name] then
-            Log.error(FrameType, 'selected name had been used already.', 2)
-            return
-        end
-        private.compiletime_data[name] = instance
-    else
-    end
-
-    return instance
-end
-
----@param data table
----@param is_simpleframe boolean
----@return FrameType
-function static.load(data, is_simpleframe, child_data)
-    local instance = child_data or Class.allocate(FrameType, child_data)
-    private.load(instance, data, is_simpleframe)
+function static.new(uniq_name, create_fdf, child_instance)
+    local instance = child_instance or Class.allocate(FrameType)
+    private.newData(instance, uniq_name, create_fdf)
 
     return instance
 end
@@ -58,30 +43,13 @@ end
 
 ---@return string
 function public:getName()
-    return private.get(self).name
+    return private[self].name
 end
 
 ---@return boolean
 function public:isSimple()
-    return private.get(self).is_simpleframe
-end
-
----@return string
-function public:getTextureFramehandleName()
-    local priv = private.get(self)
-    if not priv.is_simpleframe then
-        return priv.name
-    end
-    return priv.fields.Texture.name
-end
-
----@return string
-function public:getStringFramehandleName()
-    local priv = private.get(self)
-    if not priv.is_simpleframe then
-        return priv.name
-    end
-    return priv.fields.String.name
+    Log.error(private[self].name, 'virtual function is not declared.')
+    return false
 end
 
 function public:free()
@@ -93,39 +61,34 @@ end
 -- Private
 --=========
 
-private.compiletime_data = {}
+private.compiletime_data = CompiletimeData.new(FrameType)
 
----@param self FrameType
----@param name string
----@param base_name string
----@param is_simpleframe boolean
-function private.new(self, name, base_name, is_simpleframe)
+---@param instance FrameType
+---@param uniq_name string
+---@param create_fdf function
+function private.newData(instance, uniq_name, create_fdf)
     local priv = {
-        name = name,
-        base_name = base_name,
-        is_simpleframe = is_simpleframe
+        name = uniq_name,
     }
 
-    private[self] = priv
+    if IsCompiletime() then
+        if private.compiletime_data:get(uniq_name) then
+            Log.error(FrameType, 'name is not unique.', 3)
+        end
+        local file = create_fdf(uniq_name)
+        private.compiletime_data:set(uniq_name, file.toc)
+    end
+
+    priv.toc = private.compiletime_data:get(uniq_name)
+    if not IsCompiletime() then
+        BlzLoadTOCFile(priv.toc)
+    end
+
+    private[instance] = priv
 end
 
 ---@param self FrameType
----@param data any
----@param is_simpleframe boolean
-function private.load(self, data, is_simpleframe)
-    local priv = data
-    priv.is_simpleframe = is_simpleframe
-
-    private[self] = priv
-end
-
----@param self FrameType
-function private.get(self)
-    return private[self]
-end
-
----@param self FrameType
-function private.free(self)
+function private.freeData(self)
     private[self] = nil
 end
 

@@ -78,7 +78,6 @@ end
 -- Private
 --=========
 
-private.DB = DataBase.new('number', FrameSimpleType)
 private.compiletime_data = CompiletimeData.new(FrameSimpleType)
 private.default_texture = 'war3mapImported\\frameFiles\\Transparent32x32.tga'
 local _ = Compiletime(function()

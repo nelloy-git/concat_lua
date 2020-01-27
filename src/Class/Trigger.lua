@@ -77,6 +77,11 @@ function public:removeAction(action)
     return false
 end
 
+---@return number
+function public:countActions()
+    return #private[self].actions
+end
+
 ---Function removes all actions from trigger without removing trigger.
 function public:clearActions()
     local priv = private[self]
