@@ -20,7 +20,7 @@ local static_meta = {
                 return value
             end
         end
-        error(fmt('static field \'%s\' does not exist.', key), 2)
+        error(fmt(tostring(self)..': static field \'%s\' does not exist.', key), 2)
     end,
 
     __newindex = function(self, key, value)

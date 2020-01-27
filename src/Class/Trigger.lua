@@ -69,6 +69,7 @@ function public:removeAction(action)
     for i = 1, #priv.actions do
         if priv.actions[i] == action then
             table.remove(priv.actions, i)
+            action:free()
             return true
         end
     end

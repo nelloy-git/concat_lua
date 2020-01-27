@@ -36,11 +36,11 @@ function override.new(name, child_instance)
     return instance
 end
 
-static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SERIAL_DATA.EMPTY)
-static.FontFlags = FdfField.new('FontFlags', 'string', FdfField.SERIAL_DATA.STRING)
-static.FrameFont = FdfField.new('FrameFont', 'table', FdfField.SERIAL_DATA.LIST_WITH_QUOTES)
-static.FontColor = FdfField.new('FontColor', 'table', FdfField.SERIAL_DATA.LIST)
-static.FontShadowColor = FdfField.new('FontShadowColor', 'table', FdfField.SERIAL_DATA.LIST)
-static.FontShadowOffset = FdfField.new('FontShadowOffset', 'table', FdfField.SERIAL_DATA.LIST)
+static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SerialFunc.EMPTY)
+static.FontFlags = FdfField.new('FontFlags', 'string', FdfField.SerialFunc.STRING)
+static.FrameFont = FdfField.new('FrameFont', 'table', FdfField.SerialFunc.LIST_WITH_QUOTES)
+static.FontColor = FdfField.new('FontColor', 'table', FdfField.SerialFunc.LIST)
+static.FontShadowColor = FdfField.new('FontShadowColor', 'table', FdfField.SerialFunc.LIST)
+static.FontShadowOffset = FdfField.new('FontShadowOffset', 'table', FdfField.SerialFunc.LIST)
 
 return FdfText

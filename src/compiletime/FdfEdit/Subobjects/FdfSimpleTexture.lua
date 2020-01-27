@@ -36,11 +36,12 @@ function override.new(name, child_instance)
     return instance
 end
 
-static.Alpha = FdfField.new('Alpha', 'string', FdfField.SERIAL_DATA.STRING)
-static.Anchor = FdfField.new('Anchor', 'table', FdfField.SERIAL_DATA.LIST)
-static.File = FdfField.new('File', 'string', FdfField.SERIAL_DATA.STRING)
-static.Height = FdfField.new('Height', 'number', FdfField.SERIAL_DATA.NUMBER)
-static.Width = FdfField.new('Width', 'number', FdfField.SERIAL_DATA.NUMBER)
-static.TexCoord = FdfField.new('TexCoord', 'table', FdfField.SERIAL_DATA.LIST)
+static.Field = {}
+static.Field.Alpha = FdfField.new('Alpha', 'string', FdfField.SerialFunc.STRING)
+static.Field.Anchor = FdfField.new('Anchor', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.File = FdfField.new('File', 'string', FdfField.SerialFunc.STRING)
+static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.TexCoord = FdfField.new('TexCoord', 'table', FdfField.SerialFunc.LIST)
 
-return FdfSimpleTexture
+return static

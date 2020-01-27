@@ -79,7 +79,8 @@ function public:serialize()
 
     local res = string.format("Frame \"%s\" \"%s\" {\n", priv.base_name, priv.name)
     for i = 1, #priv.fields do
-        res = res.."    "..priv.fields[i]:serialize(priv.values[i])..'\n'
+        local field_serial = '    '..string.gsub(priv.fields[i]:serialize(priv.values[i]), '\n', '\n    ')
+        res = res..field_serial..'\n'
     end
     return res.."}\n"
 end

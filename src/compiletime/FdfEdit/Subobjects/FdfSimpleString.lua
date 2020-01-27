@@ -36,10 +36,11 @@ function override.new(name, child_instance)
     return instance
 end
 
-static.Anchor = FdfField.new('Anchor', 'table', FdfField.SERIAL_DATA.LIST)
-static.Height = FdfField.new('Height', 'number', FdfField.SERIAL_DATA.NUMBER)
-static.Width = FdfField.new('Width', 'number', FdfField.SERIAL_DATA.NUMBER)
+static.Field = {}
+static.Field.Anchor = FdfField.new('Anchor', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
 --- Example simple_string:setField(FdfSimpleString.Font, {"InfoPanelTextFont", 0.009})
-static.Font = FdfField.new('Font', 'table', FdfField.SERIAL_DATA.LIST_WITH_QUOTES)
+static.Field.Font = FdfField.new('Font', 'table', FdfField.SerialFunc.LIST_WITH_QUOTES)
 
-return FdfSimpleString
+return static

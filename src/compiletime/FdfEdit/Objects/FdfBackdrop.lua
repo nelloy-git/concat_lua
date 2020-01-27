@@ -36,13 +36,14 @@ function override.new(name, child_instance)
     return instance
 end
 
-static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SERIAL_DATA.EMPTY)
-static.TileBackground = FdfField.new('BackdropTileBackground', 'nil', FdfField.SERIAL_DATA.EMPTY)
-static.Background = FdfField.new('BackdropBackground', 'string', FdfField.SERIAL_DATA.STRING)
-static.CornerFlags = FdfField.new('BackdropCornerFlags', 'string', FdfField.SERIAL_DATA.STRING)
-static.CornerSize = FdfField.new('BackdropCornerSize', 'number', FdfField.SERIAL_DATA.NUMBER)
-static.BackgroundInsets = FdfField.new('BackdropBackgroundInsets', 'table', FdfField.SERIAL_DATA.LIST)
-static.EdgeFile = FdfField.new('BackdropEdgeFile', 'string', FdfField.SERIAL_DATA.STRING)
-static.BlendAll = FdfField.new('BackdropBlendAll', 'nil', FdfField.SERIAL_DATA.EMPTY)
+print(FdfField.SerialFunc.NUMBER)
+static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SerialFunc.EMPTY)
+static.TileBackground = FdfField.new('BackdropTileBackground', 'nil', FdfField.SerialFunc.EMPTY)
+static.Background = FdfField.new('BackdropBackground', 'string', FdfField.SerialFunc.STRING)
+static.CornerFlags = FdfField.new('BackdropCornerFlags', 'string', FdfField.SerialFunc.STRING)
+static.CornerSize = FdfField.new('BackdropCornerSize', 'number', FdfField.SerialFunc.NUMBER)
+static.BackgroundInsets = FdfField.new('BackdropBackgroundInsets', 'table', FdfField.SerialFunc.LIST)
+static.EdgeFile = FdfField.new('BackdropEdgeFile', 'string', FdfField.SerialFunc.STRING)
+static.BlendAll = FdfField.new('BackdropBlendAll', 'nil', FdfField.SerialFunc.EMPTY)
 
 return FdfBackdrop

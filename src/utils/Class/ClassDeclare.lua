@@ -59,9 +59,14 @@ function ClassDeclare.type(value1, value2)
     local is_instance1 = ClassInstance.isInstance(value1)
     local is_instance2 = ClassInstance.isInstance(value2)
 
-    --Log(Log.Msg, is_class1, is_class2, is_instance1, is_instance2)
+    --print(value1, value2)
+    --print(is_class1, is_class2, is_instance1, is_instance2)
     if not (is_class1 or is_class2 or is_instance1 or is_instance2) then
         return type(value1) == value2
+    end
+
+    if (is_class1 or is_instance1) ~= (is_class2 or is_instance2) then
+        return false
     end
 
     local class1 = ClassStatic.getClass(value1) or value1

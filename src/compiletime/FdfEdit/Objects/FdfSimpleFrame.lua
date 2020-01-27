@@ -36,10 +36,11 @@ function override.new(name, child_instance)
     return instance
 end
 
-static.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SERIAL_DATA.EMPTY)
-static.Width = FdfField.new('Width', 'number', FdfField.SERIAL_DATA.NUMBER)
-static.Height = FdfField.new('Height', 'number', FdfField.SERIAL_DATA.NUMBER)
-static.String = FdfField.new('String', 'table', FdfField.SERIAL_DATA.SUBOBJECT_LIST)
-static.Texture = FdfField.new('Texture', 'table', FdfField.SERIAL_DATA.SUBOBJECT_LIST)
+static.Field = {}
+static.Field.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SerialFunc.EMPTY)
+static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.String = FdfField.new('String', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
+static.Field.Texture = FdfField.new('Texture', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 
-return FdfSimpleFrame
+return static

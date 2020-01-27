@@ -26,31 +26,24 @@ local private = {}
 --=========
 
 ---@alias FdfSerializeDataFunction fun(field:FdfField, data:any):string
-
 ---@type table<string, FdfSerializeDataFunction>
-static.SERIAL_DATA = {
-    EMPTY = private.serialize_Empty,
-    STRING = private.serialize_String,
-    NUMBER = private.serialize_Number,
-    LIST = private.serialize_List,
-    LIST_WITH_QUOTES = private.serialize_ListWithQuotes,
-    SUBOBJECT = private.serialize_Subobject,
-    SUBOBJECT_LIST = private.serialize_SubobjectList
+static.SerialFunc = {
+    EMPTY = 1,
+    STRING = 2,
+    NUMBER = 3,
+    LIST = 4,
+    LIST_WITH_COMMAS = 5,
+    LIST_WITH_QUOTES = 6,
+    SUBOBJECT = 7,
+    SUBOBJECT_LIST = 8
 }
 
 ---@param name string
----@param val_type any
----@param serialize_func any
+---@param val_type string
+---@param serialize_func FdfSerializeDataFunction
 ---@param child_instance FdfField | nil
 ---@return FdfField
 function static.new(name, val_type, serialize_func, child_instance)
-    if not serialize_func then
-        local msg = string.format('serialize function can not be \"nil\"\n%s',
-                                   WeUtils.getErrorPos())
-        Log(Log.Err, FdfField, msg)
-        return nil
-    end
-
     local instance = child_instance or Class.allocate(FdfField)
     private.newData(instance, name, val_type, serialize_func)
 
@@ -101,64 +94,70 @@ end
 --=========
 
 local fmt = string.format
+private.serialize = {
+    [static.SerialFunc.EMPTY] = function(self, data)
+        return private[self].name..','
+    end,
 
----@param self FdfField
----@param data nil
-function private.serialize_Empty(self, data)
-    return private[self].name..','
-end
+    [static.SerialFunc.STRING] = function(self, data)
+        return fmt('%s \"%s\",', private[self].name, data)
+    end,
 
----@param self FdfField
----@param data string
-function private.serialize_String(self, data)
-    return fmt('%s \"%s\",', private[self].name, data)
-end
+    [static.SerialFunc.NUMBER] = function(self, data)
+        return fmt('%s %f,', private[self].name, data)
+    end,
 
----@param self FdfField
----@param data number
-function private.serialize_Number(self, data)
-    return fmt('%s %f,', private[self].name, data)
-end
-
----@param self FdfField
----@param data number[]
-function private.serialize_List(self, data)
-    local list = private[self].name
-    for i = 1, #data do
-        list = list..' '..tostring(data[i])
-    end
-    return list..','
-end
-
----@param self FdfField
----@param data table<number,string|number>
-function private.serialize_ListWithQuotes(self, data)
-    local list = private[self].name
-    for i = 1, #data do
-        if type(data[i]) == 'string' then
-            list = list..' \"'..tostring(data[i])..'\"'
-        else
+    [static.SerialFunc.LIST] = function(self, data)
+        local list = private[self].name
+        for i = 1, #data do
             list = list..' '..tostring(data[i])
         end
-        list = list..','
-    end
-    return list
-end
+        return list..','
+    end,
 
----@param self FdfField
----@param data FdfSubobject
-function private.serialize_Subobject(self, data)
-    return data:serialize()
-end
+    [static.SerialFunc.LIST_WITH_COMMAS] = function(self, data)
+        local list = private[self].name..' '..tostring(data[1])
+        for i = 2, #data do
+            list = list..', '..tostring(data[i])
+        end
+        return list..','
+    end,
 
----@param self FdfField
----@param data FdfSubobject[]
-function private.serialize_SubobjectList(self, data)
-    local res = data[1]:serialize()..',\n'
-    for i = 2, #data do
-        res = res..'    '..data[i]:serialize()..',\n'
+    [static.SerialFunc.LIST_WITH_QUOTES] = function(self, data)
+        local list = private[self].name
+        for i = 1, #data do
+            if type(data[i]) == 'string' then
+                list = list..' \"'..tostring(data[i])..'\"'
+            else
+                list = list..' '..tostring(data[i])
+            end
+            list = list..','
+        end
+        return list
+    end,
+
+    [static.SerialFunc.SUBOBJECT] = function(self, data)
+        return data:serialize()
+    end,
+
+    [static.SerialFunc.SUBOBJECT_LIST] = function(self, data)
+        local res = data[1]:serialize()
+        for i = 2, #data do
+            res = '\n'..res..'    '..data[i]:serialize()
+        end
+        return res
     end
-    return res
+}
+
+---@param func any
+---@return boolean
+function private.isSerialFunc(func)
+    for k, v in pairs(static.SerialFunc) do
+        if func == v then
+            return true
+        end
+    end
+    return false
 end
 
 ---@param self FdfField
@@ -166,10 +165,14 @@ end
 ---@param val_type string
 ---@param serialize_func FdfSerializeDataFunction
 function private.newData(self, name, val_type, serialize_func)
+    if not private.isSerialFunc(serialize_func) then
+        Log.error(FdfField, 'wrong serial function.', 3)
+    end
+
     local priv = {
         name = name,
         val_type = val_type,
-        serialize_func = serialize_func
+        serialize_func = private.serialize[serialize_func]
     }
     private[self] = priv
 
@@ -180,15 +183,5 @@ end
 function private.freeData(self)
     private[self] = nil
 end
-
-static.SERIAL_DATA = {
-    EMPTY = private.serialize_Empty,
-    STRING = private.serialize_String,
-    NUMBER = private.serialize_Number,
-    LIST = private.serialize_List,
-    LIST_WITH_QUOTES = private.serialize_ListWithQuotes,
-    SUBOBJECT = private.serialize_Subobject,
-    SUBOBJECT_LIST = private.serialize_SubobjectList
-}
 
 return static
