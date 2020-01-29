@@ -11,7 +11,7 @@
         {
             "label": "Run Reforged",
             "type": "shell",
-            "command": "E:\\'Warcraft III Beta'\\x86_64\\'Warcraft III.exe' -launch -loadfile ${workspaceFolder}\\${config:lua-wc3.destinationFolder} -windowmode windowed"
+            "command": "E:\\'Warcraft III'\\x86_64\\'Warcraft III.exe' -launch -loadfile ${workspaceFolder}\\${config:lua-wc3.destinationFolder} -windowmode windowed"
         }
     ]
 }

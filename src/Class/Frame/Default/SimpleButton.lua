@@ -30,7 +30,7 @@ local private = {}
 ---@param simple_button_type SimpleButtonType
 ---@param child_instance FrameSimpleButton | nil
 ---@return FrameSimpleButton
-function static.new(simple_button_type, child_instance)
+function override.new(simple_button_type, child_instance)
     local instance = child_instance or Class.allocate(FrameSimpleButton)
     instance = Frame.new(simple_button_type, instance)
     private.newData(instance)

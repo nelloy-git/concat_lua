@@ -48,7 +48,7 @@ end
 
 ---@return boolean
 function public:isSimple()
-    Log.error(private[self].name, 'virtual function is not declared.')
+    Log.error(private[self].name, 'virtual function is not declared.', 2)
     return false
 end
 
@@ -92,4 +92,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return FrameType
+return static

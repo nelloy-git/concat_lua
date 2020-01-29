@@ -12,13 +12,13 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
-local SimpleButtonType = Class.new('SimpleButtonType', FrameType)
----@class SimpleButtonType
-local public = SimpleButtonType.public
----@class SimpleButtonTypeClass
-local static = SimpleButtonType.static
----@type SimpleButtonTypeClass
-local override = SimpleButtonType.override
+local ButtonType = Class.new('ButtonType', FrameType)
+---@class ButtonType
+local public = ButtonType.public
+---@class ButtonTypeClass
+local static = ButtonType.static
+---@type ButtonTypeClass
+local override = ButtonType.override
 local private = {}
 
 --=========
@@ -26,12 +26,11 @@ local private = {}
 --=========
 
 ---@param uniq_name string
----@param child_instance SimpleButtonType | nil
----@return SimpleButtonType
+---@param child_instance ButtonType | nil
+---@return ButtonType
 function override.new(uniq_name, child_instance)
-    local instance = child_instance or Class.allocate(SimpleButtonType)
+    local instance = child_instance or Class.allocate(ButtonType)
     instance = FrameType.new(uniq_name, private.createFdf, instance)
-    private.newData(instance)
 
     return instance
 end
@@ -42,16 +41,10 @@ end
 
 ---@return boolean
 function public:isSimple()
-    return true
-end
-
----@return string
-function public:getSubElementName()
-    return self:getName()..'Texture'
+    return false
 end
 
 function public:free()
-    private.freeData(self)
     Class.free(self)
 end
 
@@ -63,8 +56,7 @@ local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
     private.File = FdfEdit.File
-    private.SimpleButton = FdfEdit.SimpleButton
-    private.SimpleTexture = FdfEdit.SimpleTexture
+    --private.Button = FdfEdit.
 end)
 
 ---@param name string
@@ -85,16 +77,5 @@ function private.createFdf(name)
     return file:toRuntime()
 end
 
----@param instance SimpleButtonType
-function private.newData(instance)
-    local priv = {
-    }
-    private[instance] = priv
-end
-
----@param instance SimpleButtonType
-function private.freeData(instance)
-    private[instance] = nil
-end
 
 return static

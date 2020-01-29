@@ -128,7 +128,9 @@ function public:setParent(parent)
     priv.parent = parent
 
     -- Remove from old parent
-    private[old_parent].illigal_childrens[self] = nil
+    if old_parent then
+        private[old_parent].illigal_childrens[self] = nil
+    end
 
     -- Add to new one
     if self:isSimpleframe() ~= parent:isSimpleframe() then
@@ -136,10 +138,10 @@ function public:setParent(parent)
         self:setVisible(parent:isVisible())
         self:setAlpha(parent:getAlpha())
         self:setLevel(parent:getLevel())
-        private.updatePos(self)
     else
         BlzFrameSetParent(priv.framehandle, private[parent].framehandle)
     end
+    private.updatePos(self)
 end
 
 ---@return number
@@ -236,7 +238,7 @@ function private.updatePos(self)
     local priv = private[self]
     if priv.parent then
         BlzFrameSetPoint(priv.framehandle, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent, FRAMEPOINT_BOTTOMLEFT,
+                         priv.parent:getFramehandle(), FRAMEPOINT_BOTTOMLEFT,
                          priv.x, priv.y)
     else
         BlzFrameSetAbsPoint(priv.framehandle, FRAMEPOINT_BOTTOMLEFT,
@@ -315,4 +317,4 @@ function private.freeData(self)
     private[self] = nil
 end
 
-return Frame
+return static
