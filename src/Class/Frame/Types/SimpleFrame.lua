@@ -70,8 +70,8 @@ end)
 ---@param name string
 ---@return table
 function private.createFdf(name)
-    frame = private.SimpleFrame.new(name)
-    fields = private.SimpleFrame.Field
+    local frame = private.SimpleFrame.new(name)
+    local fields = private.SimpleFrame.Field
     frame:setField(fields.Width, 0.05)
     frame:setField(fields.Height, 0.05)
 

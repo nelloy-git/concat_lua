@@ -141,9 +141,9 @@ private.serialize = {
     end,
 
     [static.SerialFunc.SUBOBJECT_LIST] = function(self, data)
-        local res = data[1]:serialize()
+        local res = '\n'..data[1]:serialize()
         for i = 2, #data do
-            res = '\n'..res..'    '..data[i]:serialize()
+            res = res..data[i]:serialize()
         end
         return res
     end

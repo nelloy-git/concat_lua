@@ -1,10 +1,3 @@
-[0.000] {Warning} FdfObject: check data failed. Field change ignored. Got: nil need: string.
-  @.\war3map.lua:18
-  @.\main.lua:20
-  @.\Class\Frame\Types\SimpleButton.lua:34
-  @.\Class\Frame\FrameType.lua:35
-  @.\Class\Frame\FrameType.lua:78
-  @.\Class\Frame\Types\SimpleButton.lua:81
-  @.\compiletime\FdfEdit\FdfObject.lua:66
-[0.000] {Msg} FdfFile: created new Test fdf file.
-	added Test object.[0.000] {Msg} WeFile: сreated WeUnit_0001880B3F69C0 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_0001880B3F6300 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_0001880B3F2780 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_0001880B3F1980 "DisableMovement" with id 'BM#$' based on 'Bfae'
+[0.000] {Msg} FdfFile: created new TestButton fdf file.
+	added TestButton object.[0.000] {Msg} FdfFile: created new Test fdf file.
+	added Test object.[0.000] {Msg} WeFile: сreated WeUnit_11a7bc0 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_11a5a90 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_fca670 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_fc9f80 "DisableMovement" with id 'BM#$' based on 'Bfae'

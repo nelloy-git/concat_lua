@@ -40,3 +40,9 @@ if not IsCompiletime() then
     local u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
 end
+
+
+local Button = require('Class.Frame.Types.Gluebutton')
+local btn = Button.new('TestButton')
+
+print(btn:getControlDisabledName())

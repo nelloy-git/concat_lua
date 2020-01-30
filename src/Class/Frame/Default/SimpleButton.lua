@@ -28,7 +28,7 @@ local private = {}
 --=========
 
 ---@param simple_button_type SimpleButtonType
----@param child_instance FrameSimpleButton | nil
+---@param child_instance FrameSimpleButton
 ---@return FrameSimpleButton
 function override.new(simple_button_type, child_instance)
     local instance = child_instance or Class.allocate(FrameSimpleButton)

@@ -9,18 +9,21 @@ local fmt = string.format
 local class2static = {}
 local static2class = {}
 
+local log_level = 1
 local static_meta = {
     __index = function(self, key)
+        log_level = log_level + 1
         local class = static2class[self]
         local parents = ClassParent.get(class)
         for i = 1, #parents do
             local cur = class2static[parents[i]]
             local value = cur[key]
             if value then
+                log_level = log_level - 1
                 return value
             end
         end
-        error(fmt(tostring(self)..': static field \'%s\' does not exist.', key), 2)
+        error(fmt(tostring(self)..': static field \'%s\' does not exist.', key), log_level)
     end,
 
     __newindex = function(self, key, value)

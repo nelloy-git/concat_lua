@@ -70,13 +70,13 @@ end)
 ---@param name string
 ---@return table
 function private.createFdf(name)
-    frame = private.SimpleButton.new(name)
-    fields = private.SimpleButton.Field
+    local frame = private.SimpleButton.new(name)
+    local fields = private.SimpleButton.Field
     frame:setField(fields.Width, 0.05)
     frame:setField(fields.Height, 0.05)
 
     local texture = private.SimpleTexture.new(name..'Texture')
-    texture:setField(private.SimpleTexture.Field.File, private.default_texture)
+    texture:setField(private.SimpleTexture.Field.File, '')
     frame:setField(fields.Texture, {texture})
 
     local file = private.File.new(name)
