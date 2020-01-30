@@ -33,7 +33,7 @@ local private = {}
 function override.new(simple_button_type, child_instance)
     local instance = child_instance or Class.allocate(FrameSimpleButton)
     instance = Frame.new(simple_button_type, instance)
-    private.newData(instance)
+    private.newData(instance, simple_button_type)
 
     return instance
 end
@@ -47,7 +47,7 @@ function public:setTexture(texture)
     local priv = private[self]
     priv.texture = texture
     -- Remember its simpleframe
-    BlzFrameSetTexture(self:getSubFramehandle(), texture, 0, true)
+    BlzFrameSetTexture(priv.texture_framehandle, texture, 0, true)
 end
 
 ---@return string
@@ -87,8 +87,11 @@ end
 --=========
 
 ---@param instance FrameSimpleButton
-function private.newData(instance)
+---@param simple_button_type SimpleButtonType
+function private.newData(instance, simple_button_type)
     local priv = {
+        texture_framehandle = BlzGetFrameByName(simple_button_type:getTextureName(), 0),
+
         texture = '',
         trigger = nil,
     }

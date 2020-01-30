@@ -152,10 +152,11 @@ end
 ---@return number
 function public:getAbsX()
     local priv = private[self]
+    print(priv.parent)
     if priv.parent then
-        return priv.x
-    else
         return priv.parent:getAbsX() + priv.x
+    else
+        return priv.x
     end
 end
 
@@ -168,9 +169,9 @@ end
 function public:getAbsY()
     local priv = private[self]
     if priv.parent then
-        return priv.y
-    else
         return priv.parent:getAbsY() + priv.y
+    else
+        return priv.y
     end
 end
 
@@ -179,16 +180,10 @@ function public:getFramehandle()
     return private[self].framehandle
 end
 
----@return framehandle
-function public:getSubFramehandle()
-    return private[self].subframehandle
-end
-
 ---@return Frame | nil
 function public:getParent()
     return private[self].parent
 end
-
 
 ---@return number
 function public:getWidth()
@@ -278,17 +273,14 @@ end
 ---@return table
 function private.newData(self, frame_type)
     local framehandle
-    local subframehandle
     if frame_type:isSimple() then
         framehandle = BlzCreateSimpleFrame(frame_type:getName(), private.game_ui_frame, 0)
-        subframehandle = BlzGetFrameByName(frame_type:getSubElementName(), 0)
     else
         framehandle = BlzCreateFrameByType(frame_type:getName(), frame_type:getName(), private.game_ui_frame, '', 0)
     end
 
     local priv = {
         framehandle = framehandle,
-        subframehandle = subframehandle,
         frame_type = frame_type,
 
         x = 0,

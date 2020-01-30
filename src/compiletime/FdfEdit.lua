@@ -10,7 +10,7 @@ FdfEdit.Backdrop = require('compiletime.FdfEdit.Objects.FdfBackdrop')
 ----@type FdfBackdropClass
 FdfEdit.Highlight = require('compiletime.FdfEdit.Objects.FdfHighlight')
 ----@type FdfButtonClass
-FdfEdit.Gluebutton = require('compiletime.FdfEdit.Objects.FdfGluebutton')
+FdfEdit.GlueButton = require('compiletime.FdfEdit.Objects.FdfGlueButton')
 ---@type FdfSimpleFrameClass
 FdfEdit.SimpleFrame = require('compiletime.FdfEdit.Objects.FdfSimpleFrame')
 ---@type FdfSimpleButtonClass

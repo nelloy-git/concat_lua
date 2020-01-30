@@ -46,7 +46,7 @@ function public:isSimple()
 end
 
 ---@return string
-function public:getSubElementName()
+function public:getTextureName()
     return self:getName()..'Texture'
 end
 

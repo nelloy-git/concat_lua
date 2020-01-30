@@ -22,27 +22,27 @@ local frame_type = SimpleButtonType.new('Test')
 ---@type FrameSimpleButtonClass
 local SimpleButton = require('Class.Frame.Default.SimpleButton')
 
+local Button = require('Class.Frame.Types.GlueButton')
+local btn_type = Button.new('TestButton')
+
+---@type GlueButtonClass
+local GlueButton = require('Class.Frame.Default.GlueButton')
+
 if not IsCompiletime() then
-    local frame = SimpleButton.new(frame_type)
-    frame:setX(0.4)
+    local frame = GlueButton.new(btn_type)
+    frame:setX(0.3)
     frame:setY(0.3)
+    frame:setWidth(0.05)
+    frame:setHeight(0.05)
+
+    print(BlzFrameGetWidth(frame:getFramehandle()), BlzFrameGetHeight(frame:getFramehandle()))
+
     frame:setTexture('ReplaceableTextures\\CommandButtons\\BTNHeroPaladin')
-
-    local frame2 = SimpleButton.new(frame_type)
-    frame2:setX(0.05)
-    frame2:setY(0.05)
-    frame2:setTexture('ReplaceableTextures\\CommandButtons\\BTNHeroPaladin')
-
-    frame2:setParent(frame)
-    frame2:addAction(function() print('Button clicked') end)
-    frame:setAlpha(127)
+    frame:setPushedTexture('ReplaceableTextures\\CommandButtons\\BTNHeroPaladin')
 
     local u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
 end
 
 
-local Button = require('Class.Frame.Types.Gluebutton')
-local btn = Button.new('TestButton')
-
-print(btn:getControlDisabledName())
+--print(btn:getControlDisabledName())

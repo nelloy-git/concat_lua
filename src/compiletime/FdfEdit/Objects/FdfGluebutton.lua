@@ -13,13 +13,13 @@ local FdfField = require('compiletime.FdfEdit.FdfField')
 -- Class
 --=======
 
-local FdfGluebutton = Class.new('FdfGluebutton', FdfObject)
----@class FdfGluebutton : FdfObject
-local public = FdfGluebutton.public
----@class FdfGluebuttonClass : FdfObjectClass
-local static = FdfGluebutton.static
----@type FdfGluebuttonClass
-local override = FdfGluebutton.override
+local FdfGlueButton = Class.new('FdfGlueButton', FdfObject)
+---@class FdfGlueButton : FdfObject
+local public = FdfGlueButton.public
+---@class FdfGlueButtonClass : FdfObjectClass
+local static = FdfGlueButton.static
+---@type FdfGlueButtonClass
+local override = FdfGlueButton.override
 local private = {}
 
 --=========
@@ -27,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_instance FdfGluebutton | nil
----@return FdfGluebutton
+---@param child_instance FdfGlueButton | nil
+---@return FdfGlueButton
 function override.new(name, child_instance)
-    local instance = child_instance or Class.allocate(FdfGluebutton)
+    local instance = child_instance or Class.allocate(FdfGlueButton)
     instance = FdfObject.new(name, 'GLUEBUTTON', instance)
 
     return instance

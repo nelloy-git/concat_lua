@@ -12,13 +12,13 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
-local GluebuttonType = Class.new('GluebuttonType', FrameType)
----@class GluebuttonType
-local public = GluebuttonType.public
----@class GluebuttonTypeClass
-local static = GluebuttonType.static
----@type GluebuttonTypeClass
-local override = GluebuttonType.override
+local GlueButtonType = Class.new('GlueButtonType', FrameType)
+---@class GlueButtonType
+local public = GlueButtonType.public
+---@class GlueButtonTypeClass
+local static = GlueButtonType.static
+---@type GlueButtonTypeClass
+local override = GlueButtonType.override
 local private = {}
 
 --=========
@@ -26,10 +26,10 @@ local private = {}
 --=========
 
 ---@param uniq_name string
----@param child_instance GluebuttonType | nil
----@return GluebuttonType
+---@param child_instance GlueButtonType | nil
+---@return GlueButtonType
 function override.new(uniq_name, child_instance)
-    local instance = child_instance or Class.allocate(GluebuttonType)
+    local instance = child_instance or Class.allocate(GlueButtonType)
     instance = FrameType.new(uniq_name, private.createFdf, instance)
     private.newData(instance, uniq_name)
 
@@ -89,7 +89,7 @@ local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
     private.File = FdfEdit.File
-    private.Gluebutton = FdfEdit.Gluebutton
+    private.GlueButton = FdfEdit.GlueButton
     private.Backdrop = FdfEdit.Backdrop
     private.Highlight = FdfEdit.Highlight
 end)
@@ -106,8 +106,8 @@ private.suffixes = {
 ---@param name string
 ---@return table
 function private.createFdf(name)
-    local frame = private.Gluebutton.new(name)
-    local fields = private.Gluebutton.Field
+    local frame = private.GlueButton.new(name)
+    local fields = private.GlueButton.Field
 
     frame:setField(fields.Width, 0.05)
     frame:setField(fields.Height, 0.05)
@@ -142,7 +142,7 @@ function private.createFdf(name)
     return file:toRuntime()
 end
 
----@param instance GluebuttonType
+---@param instance GlueButtonType
 ---@param uniq_name string
 function private.newData(instance, uniq_name)
     local priv = {
@@ -151,7 +151,7 @@ function private.newData(instance, uniq_name)
     private[instance] = priv
 end
 
----@param instance GluebuttonType
+---@param instance GlueButtonType
 function private.freeData(instance)
     private[instance] = nil
 end
