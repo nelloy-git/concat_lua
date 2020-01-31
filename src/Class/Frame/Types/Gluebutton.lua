@@ -12,13 +12,13 @@ local FrameType = require('Class.Frame.FrameType')
 -- Class
 --=======
 
-local GlueButtonType = Class.new('GlueButtonType', FrameType)
----@class GlueButtonType
-local public = GlueButtonType.public
----@class GlueButtonTypeClass
-local static = GlueButtonType.static
----@type GlueButtonTypeClass
-local override = GlueButtonType.override
+local FrameGlueButtonType = Class.new('FrameGlueButtonType', FrameType)
+---@class FrameGlueButtonType
+local public = FrameGlueButtonType.public
+---@class FrameGlueButtonTypeClass
+local static = FrameGlueButtonType.static
+---@type FrameGlueButtonTypeClass
+local override = FrameGlueButtonType.override
 local private = {}
 
 --=========
@@ -26,10 +26,10 @@ local private = {}
 --=========
 
 ---@param uniq_name string
----@param child_instance GlueButtonType | nil
----@return GlueButtonType
+---@param child_instance FrameGlueButtonType | nil
+---@return FrameGlueButtonType
 function override.new(uniq_name, child_instance)
-    local instance = child_instance or Class.allocate(GlueButtonType)
+    local instance = child_instance or Class.allocate(FrameGlueButtonType)
     instance = FrameType.new(uniq_name, private.createFdf, instance)
     private.newData(instance, uniq_name)
 
@@ -142,7 +142,7 @@ function private.createFdf(name)
     return file:toRuntime()
 end
 
----@param instance GlueButtonType
+---@param instance FrameGlueButtonType
 ---@param uniq_name string
 function private.newData(instance, uniq_name)
     local priv = {
@@ -151,7 +151,7 @@ function private.newData(instance, uniq_name)
     private[instance] = priv
 end
 
----@param instance GlueButtonType
+---@param instance FrameGlueButtonType
 function private.freeData(instance)
     private[instance] = nil
 end
