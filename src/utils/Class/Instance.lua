@@ -37,7 +37,9 @@ instance_metatable = {
 function ClassInstance.allocate(class)
     ---@class Instance
     local instance = {}
+    print(class)
     local parents = ClassParent.getList(class)
+    print(parents)
 
     for i = 1, #parents do
         local cur = parents[#parents + 1 - i]

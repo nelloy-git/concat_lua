@@ -49,6 +49,7 @@ function ClassParent.register(class, ...)
         parents[parents_list[i]] = true
     end
 
+    print('Created parents')
     class2parents_list[class] = parents_list
     class2parents[class] = parents
 end

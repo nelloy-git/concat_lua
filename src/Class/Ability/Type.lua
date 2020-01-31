@@ -148,10 +148,7 @@ end
 ---@param uniq_name string | number
 ---@param target_type AbilityDummyTargetType
 function private.newData(instance, uniq_name, target_type)
-    local priv = {
-        name = uniq_name,
-        tooltip = '',
-    }
+    local priv = {}
 
     if IsCompiletime() then
         if private.CompiletimeData:get(uniq_name) then
@@ -161,6 +158,8 @@ function private.newData(instance, uniq_name, target_type)
         private.CompiletimeData:set(uniq_name, priv.we_abil:getId())
     end
 
+    priv.name = uniq_name
+    priv.tooltip = ''
     priv.id = ID(private.CompiletimeData:get(uniq_name))
 
     private.data[instance] = setmetatable(priv, private.metatable)

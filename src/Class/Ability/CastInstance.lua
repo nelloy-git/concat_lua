@@ -34,7 +34,6 @@ local private = {}
 function static.new(caster, target, ability)
     if private.DB:get(caster) then
         error(AbilityCastInstance, 'unit is already casting an ability. Cancel it first.', 2)
-        return
     end
 
     local instance = Class.allocate(AbilityCastInstance)
@@ -169,6 +168,12 @@ function private.newData(self, caster, target, ability)
     priv.full_time = time_left
     priv.time_left = time_left
 end
+
+private.metatable = {
+    __gc = function(self)
+    
+    end
+}
 
 function private.freeData(self)
     local priv = private[self]
