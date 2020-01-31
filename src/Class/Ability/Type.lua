@@ -107,40 +107,12 @@ end
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'kv'})
 private.DB = DataBase.new('number', AbilityType)
 private.CompiletimeData = CompiletimeData.new(AbilityType)
-local _ = Compiletime(function() private.WeAbility = require('compiletime.ObjectEdit').Ability end)
-
-private.ANcl_TargetType = {
-    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_TargetType_None),
-    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
-    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
-}
-
-private.ANcl_Options = {
-    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
-    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
-    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
-}
-
----@param target_type any
----@return boolean
-function private.isTargetType(target_type)
-    for _, v in pairs(static.TargetType) do
-        if target_type == v then
-            return true
-        end
-    end
-    return false
-end
+local _ = Compiletime(function()
+    private.WeAbility = require('compiletime.ObjectEdit').Ability
+end)
 
 -- Compiletime only.
 ---@param target_type AbilityDummyTargetType
@@ -191,8 +163,43 @@ function private.newData(instance, uniq_name, target_type)
 
     priv.id = ID(private.CompiletimeData:get(uniq_name))
 
-    private[instance] = priv
+    private.data[instance] = setmetatable(priv, private.metatable)
     private.DB:set(priv.id, instance)
 end
+
+private.metatable = {
+    __gc = function(self) end
+}
+
+---@param target_type any
+---@return boolean
+function private.isTargetType(target_type)
+    for _, v in pairs(static.TargetType) do
+        if target_type == v then
+            return true
+        end
+    end
+    return false
+end
+
+private.ANcl_TargetType = {
+    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_TargetType_None),
+    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
+    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
+    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
+    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
+    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
+    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
+}
+
+private.ANcl_Options = {
+    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
+    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_Options_Visible),
+    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
+    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
+}
 
 return static

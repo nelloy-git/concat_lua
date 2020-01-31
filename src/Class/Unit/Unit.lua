@@ -56,17 +56,17 @@ public.parameters = 'UnitParametersContainer'
 
 ---@return number
 function public:getId()
-    return private[self].id
+    return private.data[self].id
 end
 
 ---@return player
 function public:getOwner()
-    return private[self].owner
+    return private.data[self].owner
 end
 
 ---@return unit
 function public:getWc3Unit()
-    return private[self].wc3_unit
+    return private.data[self].wc3_unit
 end
 
 function public:free()
@@ -80,6 +80,7 @@ end
 --=========
 
 private.DB = DataBase.new('userdata', Unit)
+private.data = setmetatable({}, {__mode = 'kv'})
 
 ---@param self Unit
 ---@param id string | number
@@ -94,22 +95,27 @@ function private.newData(self, id, player, x, y, face)
         owner = player,
         wc3_unit = CreateUnit(player, num_id, x, y, face)
     }
-    private[self] = priv
+
+    private.data[self] = setmetatable(priv, private.metatable)
     private.DB:set(priv.wc3_unit, self)
 end
 
+private.metatable = {
+    __gc = function(self) RemoveUnit(private.data[self].wc3_unit) end
+}
+
 ---@param self Unit
 function private.freeData(self)
-    local priv = private[self]
+    local priv = private.data[self]
     private.DB:remove(priv.wc3_unit)
     RemoveUnit(priv.wc3_unit)
 
-    private[self] = nil
+    private.data[self] = nil
 end
 
 ---@param self Unit
 function private.initComponents(self)
-    local priv = private[self]
+    local priv = private.data[self]
 
     ---@type UnitParametersContainer
     self.parameters = UnitParametersContainer.new(priv.wc3_unit)

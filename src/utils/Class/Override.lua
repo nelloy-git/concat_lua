@@ -1,4 +1,4 @@
-local ClassStatic = require('utils.Class.ClassStatic')
+local ClassStatic = require('utils.Class.Static')
 
 local ClassOverride = {}
 
@@ -7,7 +7,9 @@ local rawset = rawset
 local fmt = string.format
 
 local override2class = {}
+setmetatable(override2class, {__mode = 'kv'})
 local override2static = {}
+setmetatable(override2static, {__mode = 'kv'})
 
 local override_meta = {
     __index = function(self, key)
@@ -17,6 +19,10 @@ local override_meta = {
     __newindex = function(self, key, value)
         rawset(override2static[self], key, value)
     end,
+
+    __tostring = function(self)
+        return tostring(override2class[self])
+    end
 }
 
 function ClassOverride.register(class)

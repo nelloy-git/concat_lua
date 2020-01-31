@@ -1,27 +1,32 @@
-local ClassDeclare = require('utils.Class.ClassDeclare')
-local ClassName = require('utils.Class.ClassName')
-local ClassParent = require('utils.Class.ClassParent')
-local ClassPublic = require('utils.Class.ClassPublic')
-local ClassInstance = require('utils.Class.ClassInstance')
+local ClassDeclare = require('utils.Class.Declare')
+local ClassName = require('utils.Class.Name')
+local ClassParent = require('utils.Class.Parent')
+local ClassPublic = require('utils.Class.Public')
+local ClassInstance = require('utils.Class.Instance')
 
-local Class = {}
+local ClassAPI = {}
 
----@type fun(name:string, vararg:any):any
-Class.new = ClassDeclare.register
+---@type fun(name:string, vararg:any):Class
+ClassAPI.new = ClassDeclare.register
+
 ---@type fun(class:any):any
-Class.allocate = ClassInstance.allocate
----@type fun(instance:any)
-Class.free = ClassInstance.free
+ClassAPI.allocate = ClassInstance.allocate
+
 ---@type fun(class:any):boolean
-Class.isClass = ClassName.isClass
+ClassAPI.isClass = ClassName.isClass
+
 ---@type fun(instance:any):boolean
-Class.isInstance = ClassInstance.isInstance
+ClassAPI.isInstance = ClassInstance.isInstance
+
 ---@type fun(instance:any):any
-Class.getClass = ClassInstance.getClass
+ClassAPI.getClass = ClassInstance.getClass
+
 ---@type fun(child_class:any, parent_class:any):boolean
-Class.isChild = ClassParent.isChild
+ClassAPI.isChild = ClassParent.isChild
+
 ---@type fun(class:any):any
-Class.getPublic = ClassPublic.get
+ClassAPI.getPublic = ClassPublic.get
+
 ---@param value1 any
 ---@param value2 any
 ---@return boolean
@@ -29,7 +34,6 @@ Class.getPublic = ClassPublic.get
 ---@overload fun(child_class:any, parent_class:any):boolean
 ---@overload fun(child_instance:any, parent_class:any):boolean
 ---@overload fun(child_instance:any, parent_instance:any):boolean
-Class.type = ClassDeclare.type
+ClassAPI.type = ClassDeclare.type
 
-
-return Class
+return ClassAPI
