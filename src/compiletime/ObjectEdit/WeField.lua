@@ -131,11 +131,6 @@ function public:isValid(data)
     end
 end
 
-function public:free()
-   private.freeData(self)
-   Class.free(self)
-end
-
 --=========
 -- Private
 --=========
@@ -213,12 +208,11 @@ function private.newData(self, field_id, data_type, name, test_data_func)
         name = name,
         test_data_func = test_data_func
     }
-    private[self] = priv
+    private[self] = setmetatable(priv, private.metatable)
 end
 
----@param self WeField
-function private.freeData(self)
-    private[self] = nil
-end
+private.metatable = {
+    __gc = function(self) end
+}
 
 return WeField.static

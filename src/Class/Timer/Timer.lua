@@ -49,26 +49,26 @@ end
 ---@param callback Callback
 function public:start(timeout, periodic, callback)
     local action = Action.new(callback, self)
-    TimerStart(private[self].wc3_timer, timeout, periodic, function() action:run() end)
+    TimerStart(private.data[self].wc3_timer, timeout, periodic, function() action:run() end)
 end
 
 function public:pause()
-    PauseTimer(private[self].wc3_timer)
+    PauseTimer(private.data[self].wc3_timer)
 end
 
 function public:resume()
-    ResumeTimer(private[self].wc3_timer)
+    ResumeTimer(private.data[self].wc3_timer)
 end
 
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+function public:destroy()
+    private.DB:remove(private.data[self].wc3_timer)
 end
 
 --=========
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
 private.DB = DataBase.new('userdata', Timer)
 
 ---@param self Timer
@@ -76,17 +76,15 @@ function private.newData(self)
     local priv = {
         wc3_timer = CreateTimer()
     }
-    private[self] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
     private.DB:set(priv.wc3_timer, self)
 end
 
----@param self Timer
-function private.freeData(self)
-    local priv = private[self]
-    private.DB:remove(priv.wc3_timer)
-    PauseTimer(priv.wc3_timer)
-    DestroyTimer(priv.wc3_timer)
-    private[self] = nil
-end
+private.metatable = {
+    __gc = function(priv)
+        PauseTimer(priv.wc3_timer)
+        DestroyTimer(priv.wc3_timer)
+    end
+}
 
 return static

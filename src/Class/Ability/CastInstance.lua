@@ -2,12 +2,8 @@
 -- Include
 --=========
 
+local Log = require('utils.Log')
 local Class = require('utils.Class.Class')
-
----@type BetterTimerClass
-local BetterTimer = require('Class.Timer.BetterTimer')
----@type DataBaseClass
-local DataBase = require('Class.DataBase')
 
 --=======
 -- Class
@@ -27,124 +23,118 @@ local private = {}
 -- Static
 --========
 
+---@alias CastInstanceStatus number
+---@type table<string, CastInstanceStatus>
+static.STATUS = {
+    OK = 1,
+    CANCEL = 2,
+    INTERRUPT = 3,
+    FINISH = 4,
+    NOTHING = 5
+}
+
 ---@param caster unit
 ---@param target unit|item|destructable|table|nil
 ---@param ability AbilityType
 ---@return boolean
 function static.new(caster, target, ability)
-    if private.DB:get(caster) then
-        error(AbilityCastInstance, 'unit is already casting an ability. Cancel it first.', 2)
-    end
-
     local instance = Class.allocate(AbilityCastInstance)
     private.newData(instance, caster, target, ability)
 
-    return instance
-end
-
----@return AbilityCastInstance
-function static.get(caster)
-    return private.DB:get(caster)
+    local status = ability.callbacks:runStart(instance)
+    if status == static.STATUS.OK then
+        ability.flags:applyFlagsToCaster(caster)
+        return instance
+    elseif status == static.STATUS.CANCEL then
+        ability.callbacks:runCancel(instance)
+    elseif status == static.STATUS.FINISH then
+        ability.callbacks:runFinish(instance)
+    elseif status == static.STATUS.INTERRUPT then
+        ability.callbacks:runInterrupt(instance)
+    end
 end
 
 --========
 -- Public
 --========
 
-function public:start()
-    local priv = private[self]
-    local success = priv.ability.callbacks:runStart(self)
-    if success then
-        priv.ability.flags:applyFlagsToCaster(priv.caster)
+---@param dt number
+---@return boolean
+function public:casting(dt)
+    local priv = private.data[self]
+
+    if priv.status ~= static.STATUS.OK then
+        return false
     end
 
-    return success
-end
-
----@return boolean
-function public:casting()
-    return private[self].ability.callbacks:runCasting(self)
+    priv.status = priv.ability.callbacks:runCasting(self)
+    if priv.status == static.STATUS.OK then
+        priv.time_left = priv.time_left - dt
+        if priv.time_left <= 0 then 
+            priv.ability.callbacks:runFinish(self)
+            priv.ability.flags:removeFlagsFromCaster(priv.caster)
+            return false
+        end
+        return true
+    end
+    return false
 end
 
 function public:cancel()
-    local priv = private[self]
-    priv.ability.callbacks:runCancel(self)
-    priv.ability.flags:removeFlagsFromCaster(priv.caster)
-    self:free()
+    local priv = private.data[self]
+
+    if priv.status == static.STATUS.OK then
+        priv.ability.callbacks:runCancel(self)
+        priv.ability.flags:removeFlagsFromCaster(priv.caster)
+    end
+    priv.status = static.STATUS.CANCEL
 end
 
 function public:interrupt()
-    local priv = private[self]
-    priv.ability.callbacks:runInterrupt(self)
-    priv.ability.flags:removeFlagsFromCaster(priv.caster)
-    self:free()
+    local priv = private.data[self]
+
+    if priv.status == static.STATUS.OK then
+        priv.ability.callbacks:runInterrupt(self)
+        priv.ability.flags:removeFlagsFromCaster(priv.caster)
+    end
+    priv.status = static.STATUS.INTERRUPT
 end
 
 function public:finish()
-    local priv = private[self]
-    priv.ability.callbacks:runFinish(self)
-    priv.ability.flags:removeFlagsFromCaster(priv.caster)
-    self:free()
+    local priv = private.data[self]
+
+    if priv.status == static.STATUS.OK then
+        priv.ability.callbacks:runFinish(self)
+        priv.ability.flags:removeFlagsFromCaster(priv.caster)
+    end
+    priv.status = static.STATUS.FINISH
 end
 
 ---@return number
 function public:getCastingTimeLeft()
-    return private[self].time_left
+    return private.data[self].time_left
 end
 
 ---@return number
 function public:getFullCastingTime()
-    return private[self].full_time
+    return private.data[self].full_time
 end
 
 ---@return unit
 function public:getCaster()
-    return private[self].caster
+    return private.data[self].caster
 end
 
 ---@return any
 function public:getTarget()
-    return private[self].caster
-end
-
----@return number
-function public:getCastingPeriod()
-    return private.timer_period
-end
-
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+    return private.data[self].caster
 end
 
 --=========
 -- Private
 --=========
 
-private.DB = DataBase.new('userdata', AbilityCastInstance)
-if not IsCompiletime() then
-    private.timer = BetterTimer.getGlobalTimer()
-    private.timer_period = private.timer:getPeriod()
-end
-
----@param self AbilityCastInstance
-function private.timerLoop(self)
-    local priv = private[self]
-
-    priv.time_left = priv.time_left - private.timer_period
-    if priv.time_left > 0 then
-        -- Casting
-        if not self:casting() then
-            -- Interrupt
-            self:interrupt()
-        end
-        -- Add action to next timer period
-        priv.timer_action = private.timer:addAction(0, function() private.timerLoop(self) end)
-    else
-        -- Finished
-        self:finish()
-    end
-end
+private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityCastInstance
 ---@param caster unit
@@ -153,16 +143,14 @@ end
 ---@return AbilityCastInstance
 function private.newData(self, caster, target, ability)
     local priv = {
+        status = static.STATUS.OK,
         caster = caster,
         target = target,
         ability = ability,
         full_time = 0,
         time_left = 0,
-        timer_action = private.timer:addAction(0, function() private.timerLoop(self) end)
     }
-    private[self] = priv
-
-    private.DB:set(caster, self)
+    private.data[self] = setmetatable(priv, private.metatable)
 
     local time_left = ability.callbacks:getCastingTime(self)
     priv.full_time = time_left
@@ -170,18 +158,7 @@ function private.newData(self, caster, target, ability)
 end
 
 private.metatable = {
-    __gc = function(self)
-    
-    end
+    __gc = function(self) end
 }
-
-function private.freeData(self)
-    local priv = private[self]
-
-    private.timer:removeAction(priv.timer_action)
-    private.DB:remove(priv.caster)
-
-    private[self] = nil
-end
 
 return static

@@ -69,18 +69,12 @@ function public:getWc3Unit()
     return private.data[self].wc3_unit
 end
 
-function public:free()
-    private.freeComponents(self)
-    private.freeData(self)
-    Class.free(self)
-end
-
 --=========
 -- Private
 --=========
 
 private.DB = DataBase.new('userdata', Unit)
-private.data = setmetatable({}, {__mode = 'kv'})
+private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self Unit
 ---@param id string | number
@@ -101,17 +95,8 @@ function private.newData(self, id, player, x, y, face)
 end
 
 private.metatable = {
-    __gc = function(self) RemoveUnit(private.data[self].wc3_unit) end
+    __gc = function(priv) RemoveUnit(priv.wc3_unit) end
 }
-
----@param self Unit
-function private.freeData(self)
-    local priv = private.data[self]
-    private.DB:remove(priv.wc3_unit)
-    RemoveUnit(priv.wc3_unit)
-
-    private.data[self] = nil
-end
 
 ---@param self Unit
 function private.initComponents(self)

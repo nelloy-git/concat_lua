@@ -3,7 +3,10 @@
 --=========
 
 local Class = require('utils.Class.Class')
-local Log = require('utils.Log') 
+local Log = require('utils.Log')
+
+---@type AbilityCastInstanceClass
+local CastInstance = require('Class.Ability.CastInstance')
 
 --=======
 -- Class
@@ -22,7 +25,8 @@ local private = {}
 -- Static
 --========
 
----@alias AbilityCallback fun(cast_data:AbilityCastInstance):boolean
+---@alias AbilityStatusCallback fun(cast_data:AbilityCastInstance):CastInstanceStatus
+---@alias AbilityCallback fun(cast_data:AbilityCastInstance)
 ---@alias AbilityCastingTimeCallback fun(cast_data:AbilityCastInstance):number
 
 ---@param child_instance AbilityCallbacksContainer | nil
@@ -38,8 +42,8 @@ end
 -- Public
 --========
 
---- Callback have to return true if started successfully
----@param callback AbilityCallback
+--- Callback have to return status.
+---@param callback AbilityStatusCallback
 function public:setStart(callback)
     if type(callback) == 'function' or type(callback) == nil then
         private[self].start = callback
@@ -57,8 +61,8 @@ function public:setCancel(callback)
     Log.error(AbilityCallbacks, 'callback must be function type or nil', 2)
 end
 
---- Callback have to return true if casting period was successfull
----@param callback AbilityCallback
+--- Callback have to return status.
+---@param callback AbilityStatusCallback
 function public:setCasting(callback)
     if type(callback) == 'function' or type(callback) == nil then
         private[self].casting = callback
@@ -96,37 +100,34 @@ end
 
 --- Returns true by default.
 ---@param cast_data AbilityCastInstance
----@return boolean
+---@return CastInstanceStatus
 function public:runStart(cast_data)
     return private.runCallbackSavety(private[self].start, cast_data)
 end
 
 --- Returns true by default.
 ---@param cast_data AbilityCastInstance
----@return boolean
 function public:runCancel(cast_data)
-    return private.runCallbackSavety(private[self].cancel, cast_data)
+    private.runCallbackSavety(private[self].cancel, cast_data)
 end
 
 --- Returns true by default.
 ---@param cast_data AbilityCastInstance
----@return boolean
+---@return CastInstanceStatus
 function public:runCasting(cast_data)
     return private.runCallbackSavety(private[self].casting, cast_data)
 end
 
 --- Returns true by default.
 ---@param cast_data AbilityCastInstance
----@return boolean
 function public:runFinish(cast_data)
-    return private.runCallbackSavety(private[self].finish, cast_data)
+    private.runCallbackSavety(private[self].finish, cast_data)
 end
 
 --- Returns true by default.
 ---@param cast_data AbilityCastInstance
----@return boolean
 function public:runInterrupt(cast_data)
-    return private.runCallbackSavety(private[self].interrupt, cast_data)
+    private.runCallbackSavety(private[self].interrupt, cast_data)
 end
 
 --- Returns true by default.
@@ -173,15 +174,9 @@ end
 ---@return boolean
 function private.runCallbackSavety(callback, cast_data)
     if not callback then
-        return true
+        return CastInstance.STATUS.OK
     end
-
-    local success = callback(cast_data)
-    if type(success) == 'boolean' then
-        return success
-    end
-
-    return true
+    return callback(cast_data)
 end
 
 return static

@@ -41,7 +41,7 @@ end
 ---@param value any
 ---@return boolean
 function public:set(key, value)
-    local priv = private[self]
+    local priv = private.data[self]
 
     if not private.isValidKeyType(self, key) then
         return false
@@ -56,7 +56,7 @@ end
 
 ---@return any
 function public:get(key)
-    local priv = private[self]
+    local priv = private.data[self]
     if not private.isValidKeyType(self, key) then
         return false
     end
@@ -65,7 +65,7 @@ end
 
 ---@return boolean
 function public:remove(key)
-    local priv = private[self]
+    local priv = private.data[self]
     if not private.isValidKeyType(self, key) then
         return false
     end
@@ -81,11 +81,13 @@ end
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
+
 ---@param self DataBase
 ---@param key any
 ---@return boolean
 function private.isValidKeyType(self, key)
-    local priv = private[self]
+    local priv = private.data[self]
     if not Class.type(key, priv.key_type) then
         local msg = string.format("wrong key type. Got: %s Avaliable: %s", tostring(key), tostring(priv.key_type))
         Log.error(DataBase, msg, 3)
@@ -98,7 +100,7 @@ end
 ---@param value any
 ---@return boolean
 function private.isValidValueType(self, value)
-    local priv = private[self]
+    local priv = private.data[self]
     if not Class.type(value, priv.value_type) then
         local msg = string.format("wrong value type. Got: %s Avaliable: %s", tostring(value), tostring(priv.value_type))
         Log.error(DataBase, msg, 3)
@@ -107,21 +109,25 @@ function private.isValidValueType(self, value)
     return true
 end
 
----@param instance DataBase
+---@param self DataBase
 ---@param key_type string
 ---@param value_type string
-function private.newData(instance, key_type, value_type)
+function private.newData(self, key_type, value_type)
     local priv = {
-        data = {},
+        data = setmetatable({}, {__mode = 'kv'}),
         key_type = key_type,
         value_type = value_type
     }
-    private[instance] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
 end
+
+private.metatable = {
+    __gc = function(self) end
+}
 
 ---@param self DataBase
 function private.freeData(self)
-    private[self] = nil
+    private.data[self] = nil
 end
 
 return static

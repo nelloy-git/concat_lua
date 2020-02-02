@@ -35,8 +35,6 @@ function static.new(src_path, dst_path, child_instance)
     local instance = child_instance or Class.allocate(WeFile)
     private.newData(instance, src_path, dst_path)
 
-    CompileFinal(function() instance:free() end)
-
     return instance
 end
 
@@ -46,12 +44,12 @@ end
 
 ---@param obj WeObject
 function public:addObject(obj)
-    local priv = private[self]
+    local priv = private.data[self]
     table.insert(priv.objects, 1, obj)
 end
 
 function public:update()
-    local priv = private[self]
+    local priv = private.data[self]
 
     local content = private.newContent(priv.src_path)
     content = content:sub(1, 8)..WeUtils.int2byte(#priv.objects)..content:sub(13)
@@ -76,15 +74,11 @@ function public:update()
     f:close()
 end
 
-function public:free()
-    self:update()
-    private.freeData(self)
-    Class.free(self)
-end
-
 --=========
 -- Private
 --=========
+
+private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self WeFile
 function private.newData(self, src, dst)
@@ -93,13 +87,33 @@ function private.newData(self, src, dst)
         dst_path = dst,
         objects = {}
     }
-    private[self] = priv
+    private.data[self] = setmetatable(priv, private.metadata)
 end
 
----@param self WeFile
-function private.freeData(self)
-    private[self] = nil
-end
+private.metadata = {
+    __gc = function(priv)
+        local content = private.newContent(priv.src_path)
+        content = content:sub(1, 8)..WeUtils.int2byte(#priv.objects)..content:sub(13)
+
+        for i = 1, #priv.objects do
+            local obj = priv.objects[i]
+            local bytes = obj:serialize()
+
+            content = content..bytes
+            local str_changes = ''
+            if log_all_changes then
+                str_changes = '\n'..obj:printChanges()
+            end
+
+            local msg = string.format('сreated %s \"%s\" with id \'%s\' based on \'%s\'%s',
+                                       obj, obj:getName(), obj:getId(), obj:getBaseId(), str_changes)
+            Log(Log.Msg, WeFile, msg)
+        end
+
+        local f = assert(io.open(priv.dst_path, "w"))
+        f:write(content)
+        f:close() end
+}
 
 ---@param path string
 ---@return string

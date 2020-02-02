@@ -47,31 +47,23 @@ local function start(cast_data)
     if state == 'normal' then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
         state = 'failed'
-        return true
+        return AbilityInstance.STATUS.OK
     elseif state == 'failed' then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have not to start.')
         state = 'interrupt'
-        return false
+        return AbilityInstance.STATUS.NOTHING
     elseif state == 'interrupt' then
         local interrupt_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
-        BetterTimer.getGlobalTimer():addAction(interrupt_time, function()
-            if cast_data == AbilityInstance.get(caster) then
-                cast_data:interrupt()
-            end
-        end)
+        BetterTimer.getGlobalTimer():addAction(interrupt_time, function() cast_data:interrupt() end)
         state = 'cancel'
-        return true
+        return AbilityInstance.STATUS.OK
     else
         local cancel_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be canceled after %.2f sec.', cancel_time))
-        BetterTimer.getGlobalTimer():addAction(cancel_time, function()
-            if cast_data == AbilityInstance.get(caster) then
-                cast_data:cancel()
-            end
-        end)
+        BetterTimer.getGlobalTimer():addAction(cancel_time, function() cast_data:cancel() end)
         state = 'normal'
-        return true
+        return AbilityInstance.STATUS.OK
     end
 end
 
@@ -85,6 +77,7 @@ local function casting(cast_data)
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting time - %.1f', cur))
         prev = math.floor(cur)
     end
+    return AbilityInstance.STATUS.OK
 end
 
 ---@param cast_data AbilityCastInstance

@@ -44,7 +44,7 @@
             "-- Private",
             "--=========",
             "",
-            "private.data = setmetatable({}, {__mode = 'kv'})",
+            "private.data = setmetatable({}, {__mode = 'k'})",
             "",
             "---@param instance ${1:className}",
             "function private.newData(instance)",

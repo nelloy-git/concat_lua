@@ -6,9 +6,7 @@ local ClassParent = {}
 local fmt = string.format
 
 local class2parents_list = {}
-setmetatable(class2parents_list, {__mode = 'kv'})
 local class2parents = {}
-setmetatable(class2parents, {__mode = 'kv'})
 
 local function isInList(elem, list)
     for i = 1, #list do
@@ -49,7 +47,6 @@ function ClassParent.register(class, ...)
         parents[parents_list[i]] = true
     end
 
-    print('Created parents')
     class2parents_list[class] = parents_list
     class2parents[class] = parents
 end
@@ -64,7 +61,7 @@ end
 ---@param parent Class
 ---@return boolean
 function ClassParent.isChild(child, parent)
-    return class2parents[child][parent] or false
+    return child == parent or class2parents[child][parent] or false
 end
 
 return ClassParent

@@ -1,0 +1,3 @@
+[0.000] {Msg} FdfFile: created new TestButton fdf file.
+	added TestButton object.[0.000] {Msg} FdfFile: created new Test fdf file.
+	added Test object.[0.000] {Msg} WeFile: сreated WeUnit_000254D11B0C60 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_000254D11B0560 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_000254D11ABDA0 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_000254D11AC1E0 "DisableMovement" with id 'BM#$' based on 'Bfae'

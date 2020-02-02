@@ -40,7 +40,7 @@ end
 -- Private
 --=========
 
-private.data = setmetatable({}, {__mode = 'kv'})
+private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param instance className
 function private.newData(instance)

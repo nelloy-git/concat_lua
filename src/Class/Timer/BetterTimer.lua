@@ -58,19 +58,19 @@ end
 
 ---@return number
 function public:getTime()
-    return private[self].cur_time
+    return private.data[self].cur_time
 end
 
 ---@return number
 function public:getPeriod()
-    return private[self].period
+    return private.data[self].period
 end
 
 ---@param delay number
 ---@param callback Callback
 ---@return TimerAction
 function public:addAction(delay, callback)
-    local priv = private[self]
+    local priv = private.data[self]
     if delay <= 0 then
         delay = 0.01
     end
@@ -85,28 +85,24 @@ end
 ---@param action TimerAction
 ---@return boolean
 function public:removeAction(action)
-    local priv = private[self]
+    local priv = private.data[self]
     for i = 1, #priv.actions do
         if priv.actions[i] == action then
             table.remove(priv.actions, i)
-            action:free()
             return true
         end
     end
     return false
 end
 
-function public:free()
-    private.freeData(self)
-    TimerPublic.free(self)
-end
-
 --=========
 -- Private
 --=========
 
----@param instance BetterTimer
-function private.newData(instance, period)
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self BetterTimer
+function private.newData(self, period)
     if period < private.minimum_period then
         period = private.minimum_period
     end
@@ -115,21 +111,12 @@ function private.newData(instance, period)
         period = period,
         actions = {}
     }
-    private[instance] = priv
-end
-
----@param instance BetterTimer
-function private.freeData(instance)
-    local priv = private[instance]
-    for i = 1, #priv.actions do
-        priv.actions[i]:free()
-    end
-    private[instance] = nil
+    private.data[self] = priv
 end
 
 ---@param self BetterTimer
 function private.runActions(self)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.cur_time = priv.cur_time + priv.period
     local cur_time = priv.cur_time
 
@@ -137,9 +124,7 @@ function private.runActions(self)
         local action = table.remove(priv.actions, 1)
 
         local success = action:tryRun(cur_time)
-        if success then
-            action:free()
-        else
+        if not success then
             table.insert(priv.actions, 1, action)
             break
         end

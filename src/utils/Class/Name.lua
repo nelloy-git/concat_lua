@@ -1,9 +1,7 @@
 local ClassName = {}
 
 local class2name = {}
-setmetatable(class2name, {__mode = 'kv'})
 local name2class = {}
-setmetatable(name2class, {__mode = 'kv'})
 
 ---@param class Class
 ---@param name string

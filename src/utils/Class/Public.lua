@@ -8,9 +8,7 @@ local rawset = rawset
 local deepcopy = ClassUtils.deepcopy
 
 local class2public = {}
-setmetatable(class2public, {__mode = 'kv'})
 local public2class = {}
-setmetatable(public2class, {__mode = 'kv'})
 
 local NIL = '__RESERVED__'
 

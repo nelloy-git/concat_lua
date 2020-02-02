@@ -32,8 +32,6 @@ function static.new(name, child_instance)
     local instance = child_instance or Class.allocate(FdfFile)
     private.newData(instance, name)
 
-    CompileFinal(function() instance:free() end)
-
     return instance
 end
 
@@ -43,13 +41,13 @@ end
 
 ---@param obj FdfObject
 function public:addObject(obj)
-    local priv = private[self]
+    local priv = private.data[self]
     table.insert(priv.objects, #priv.objects + 1, obj)
 end
 
 ---@return table
 function public:toRuntime()
-    local priv = private[self]
+    local priv = private.data[self]
 
     local res = {}
     res.fdf = string.gsub(private.dst_path..priv.name..'.fdf', '\\', '\\\\')
@@ -70,55 +68,51 @@ end
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
+
 local sep = package.config:sub(1,1)
 private.dst_path = 'war3mapImported'..sep..'GeneratedFdfFiles'..sep
 private.full_dst_path = GetDstDir()..sep..private.dst_path
 
----@param instance FdfFile
+---@param self FdfFile
 ---@param name string
-function private.newData(instance, name)
+function private.newData(self, name)
     ---@class FdfFilePrivate
     local priv = {
         name = name,
         objects = {}
     }
-    private[instance] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
 end
 
----@param self FdfFile
-function private.free(self)
-    private[self] = nil
-end
+private.metatable = {
+    __gc = function(priv)
+        local log_msg = string.format("created new %s fdf file.", priv.name)
+        local content = ""
 
----@param self FdfFile
-function private.save(self)
-    local priv = private[self]
+        for i = 1, #priv.objects do
+            local obj = priv.objects[i]
+            local obj_string = obj:serialize().."\n\n"
+            content = content..obj_string
 
-    local log_msg = string.format("created new %s fdf file.", priv.name)
-    local content = ""
+            log_msg = log_msg..string.format('\n\tadded %s object.', obj:getName())
+        end
+        Log(Log.Msg, FdfFile, log_msg)
 
-    for i = 1, #priv.objects do
-        local obj = priv.objects[i]
-        local obj_string = obj:serialize().."\n\n"
-        content = content..obj_string
+        local dir = private.full_dst_path
+        if not private.isFileExists(dir) then
+            os.execute('mkdir '..dir)
+        end
 
-        log_msg = log_msg..string.format('\n\tadded %s object.', obj:getName())
+        local fdf = assert(io.open(private.full_dst_path..priv.name..'.fdf', "w"))
+        fdf:write(content)
+        fdf:close()
+
+        local toc = assert(io.open(private.full_dst_path..priv.name..'.toc', "w"))
+        toc:write(private.dst_path..priv.name..".fdf\n")
+        toc.close()
     end
-    Log(Log.Msg, FdfFile, log_msg)
-
-    local dir = private.full_dst_path
-    if not private.isFileExists(dir) then
-        os.execute('mkdir '..dir)
-    end
-
-    local fdf = assert(io.open(private.full_dst_path..priv.name..'.fdf', "w"))
-    fdf:write(content)
-    fdf:close()
-
-    local toc = assert(io.open(private.full_dst_path..priv.name..'.toc', "w"))
-    toc:write(private.dst_path..priv.name..".fdf\n")
-    toc.close()
-end
+}
 
 ---@param path string
 function private.isFileExists(path)

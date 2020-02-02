@@ -14,6 +14,8 @@ local DataBase = require('Class.DataBase')
 ---@type CompiletimeDataClass
 local CompiletimeData = require('Class.CompiletimeData')
 
+local Event = require('Class.Ability.Event')
+
 --=======
 -- Class
 --=======
@@ -31,8 +33,8 @@ local private = {}
 -- Static
 --========
 
----@alias AbilityDummyTargetType string
----@type AbilityDummyTargetType[]
+---@alias AbilityDummyTargetType number
+---@type table<string, AbilityDummyTargetType>
 static.TargetType = {
     None = 1,
     Point = 2,
@@ -67,19 +69,18 @@ end
 --========
 
 ---@type AbilityCallbacksContainer
-public.callbacks = "AbilityCallbacksContainer"
---- TODO
+public.callbacks = nil
 ---@type AbilityFlags
-public.flags = "AbilityFlags"
+public.flags = nil
 
 ---@return number
 function public:getId()
-    return private[self].id
+    return private.data[self].id
 end
 
 ---@return string
 function public:getName()
-    return private[self].name
+    return private.data[self].name
 end
 
 local Player = Player
@@ -87,7 +88,7 @@ local GetLocalPlayer = GetLocalPlayer
 ---@param tooltip string
 ---@param player_index number | nil
 function public:setTooltip(tooltip, player_index)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.tooltip = tooltip
     if IsCompiletime() then
         priv.we_abil:setField(private.WeAbility.Field.TooltipNormalExtended, 1, tooltip)
@@ -100,14 +101,14 @@ end
 
 ---@return string
 function public:getTooltip()
-    return private[self].tooltip
+    return private.data[self].tooltip
 end
 
 --=========
 -- Private
 --=========
 
-private.data = setmetatable({}, {__mode = 'kv'})
+private.data = setmetatable({}, {__mode = 'k'})
 private.DB = DataBase.new('number', AbilityType)
 private.CompiletimeData = CompiletimeData.new(AbilityType)
 local _ = Compiletime(function()

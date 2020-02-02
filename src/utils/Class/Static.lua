@@ -7,9 +7,7 @@ local rawset = rawset
 local fmt = string.format
 
 local class2static = {}
-setmetatable(class2static, {__mode = 'kv'})
 local static2class = {}
-setmetatable(static2class, {__mode = 'kv'})
 
 local static_meta = {
     __index = function(self, key)

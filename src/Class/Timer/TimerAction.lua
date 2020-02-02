@@ -42,13 +42,13 @@ end
 
 ---@return number
 function public:getTime()
-    return private[self].timeout
+    return private.data[self].timeout
 end
 
 ---@param cur_time number
 ---@return boolean
 function public:tryRun(cur_time)
-    local priv = private[self]
+    local priv = private.data[self]
     if priv.timeout <= cur_time then
         self:run()
         return true
@@ -56,29 +56,23 @@ function public:tryRun(cur_time)
     return false
 end
 
-function public:free()
-    private.freeData(self)
-    private.ActionPublic.free(self)
-end
-
 --=========
 -- Private
 --=========
 
-private.ActionPublic = Class.getPublic(Action)
+private.data = setmetatable({}, {__mode = 'k'})
 
----@param instance TimerAction
+---@param self TimerAction
 ---@param timeout number
-function private.newData(instance, timeout)
+function private.newData(self, timeout)
     local priv = {
         timeout = timeout
     }
-    private[instance] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
 end
 
----@param instance TimerAction
-function private.freeData(instance)
-    private[instance] = nil
-end
+private.metatable = {
+    __gc = function(self) end
+}
 
 return static

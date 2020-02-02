@@ -46,37 +46,34 @@ local savetyRun = savetyRun
 function public:run()
     local prev = static.getRunningAction
     static.getRunningAction = function() return self end
-    local res = savetyRun(private[self].callback)
+    local res = savetyRun(private.data[self].callback)
     static.getRunningAction = prev
     return res
 end
 
 ---@return any
 function public:getOwner()
-    return private[self].owner
-end
-
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+    return private.data[self].owner
 end
 
 --=========
 -- Private
 --=========
 
----@param instance Action
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self Action
 ---@param callback Callback
-function private.newData(instance, callback, owner)
+function private.newData(self, callback, owner)
     local priv = {
         callback = callback,
         owner = owner
     }
-    private[instance] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
 end
 
-function private.freeData(self)
-    private[self] = nil
-end
+private.metatable = {
+    __gc = function(self) end
+}
 
 return static

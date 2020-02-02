@@ -7,9 +7,7 @@ local rawset = rawset
 local fmt = string.format
 
 local override2class = {}
-setmetatable(override2class, {__mode = 'kv'})
 local override2static = {}
-setmetatable(override2static, {__mode = 'kv'})
 
 local override_meta = {
     __index = function(self, key)

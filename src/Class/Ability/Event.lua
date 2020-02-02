@@ -5,8 +5,6 @@
 local Class = require('utils.Class.Class')
 local Log = require('utils.Log')
 
----@type AbilityClass
-local Ability = require('Class.Ability')
 ---@type AbilityCastInstanceClass
 local AbilityCastInstance = require('Class.Ability.CastInstance')
 ---@type BetterTimerClass
@@ -31,10 +29,15 @@ local private = {}
 -- Private
 --=========
 
+private.active_casting = {}
+
 private.attack_order = 851983
 if not IsCompiletime() then
     private.wc3_spell_effect_trigger = Trigger.new()
     private.wc3_unit_issued_any_order_trigger = Trigger.new()
+    private.timer = BetterTimer.getGlobalTimer()
+    private.timer_period = private.timer:getPeriod()
+    private.action = private.timer:addAction(0, function() private.timerLoop() end)
 
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
@@ -49,46 +52,41 @@ if not IsCompiletime() then
     private.wc3_unit_issued_any_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
 end
 
-local getAbilityId = GetSpellAbilityId
 local getAbility
-local getSpellAbilityUnit = GetSpellAbilityUnit
+local GetSpellAbilityId = GetSpellAbilityId
+local GetSpellAbilityUnit = GetSpellAbilityUnit
 function private.onSpellEffect()
-    Ability = Ability or require('Class.Ability')
-    getAbility = getAbility or Ability.get
-    local id = getAbilityId()
+    getAbility = getAbility or require('Class.Ability.Type').get
+    local id = GetSpellAbilityId()
     local ability = getAbility(id)
     if not ability then
         Log(Log.Wrn, AbilityEvent, 'unknown ability with id '..ID2str(id))
         return
     end
 
-    local caster = getSpellAbilityUnit()
+    local caster = GetSpellAbilityUnit()
     local target = private.getAnyTarget()
 
-    local cur_cast = AbilityCastInstance.get(caster)
-    if cur_cast then
-        cur_cast:cancel()
-        cur_cast:free()
+    local cur_cast_instance = private.active_casting[caster]
+    if cur_cast_instance then
+        cur_cast_instance:cancel()
     end
 
-    local cast_instance = AbilityCastInstance.new(caster, target, ability)
-    local success = cast_instance:start()
-    if not success then
-        cast_instance:free()
-    end
+    private.active_casting[caster] = AbilityCastInstance.new(caster, target, ability)
 end
 
-local getOrderId = GetIssuedOrderId
-local getOrderedUnit = GetOrderedUnit
+local GetIssuedOrderId = GetIssuedOrderId
+local GetOrderedUnit = GetOrderedUnit
 function private.onAnyOrder()
-    if getOrderId() == private.attack_order then
+    if GetIssuedOrderId() == private.attack_order then
         return nil
     end
-    -- Cancel current casting
-    local ordered_unit = getOrderedUnit()
-    local cast_instance = AbilityCastInstance.get(ordered_unit)
-    if cast_instance then 
+
+    local unit = GetOrderedUnit()
+    local cast_instance = private.active_casting[unit]
+    if cast_instance then
         cast_instance:cancel()
+        private.active_casting[unit] = nil
     end
 end
 
@@ -102,6 +100,16 @@ function private.getAnyTarget()
     if target then return target end
     target = {x = GetSpellTargetX(), y = GetSpellTargetY()}
     return target
+end
+
+function private.timerLoop()
+    for k,v in pairs(private.active_casting) do
+        if not v:casting(private.timer_period) then
+            private.active_casting[k] = nil
+        end
+    end
+
+    private.action = private.timer:addAction(0, function() private.timerLoop() end)
 end
 
 return AbilityEvent
