@@ -2,7 +2,6 @@
 -- Include
 --=========
 
-local Log = require('utils.Log')
 local Class = require('utils.Class.Class')
 
 ---@type FrameTypeClass
@@ -28,7 +27,7 @@ local private = {}
 ---@param uniq_name string
 ---@param child_instance SimpleTextType | nil
 ---@return SimpleTextType
-function static.new(uniq_name, child_instance)
+function override.new(uniq_name, child_instance)
     local instance = child_instance or Class.allocate(SimpleTextType)
     instance = FrameType.new(uniq_name, private.createFdf)
     private.newData(instance)
@@ -46,7 +45,7 @@ function public:isSimple()
 end
 
 ---@return string
-function public:getSubElementName()
+function public:getStringName()
     return self:getName()..'String'
 end
 

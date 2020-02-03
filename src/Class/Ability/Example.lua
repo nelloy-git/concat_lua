@@ -5,11 +5,11 @@
 local Log = require('utils.Log')
 
 ---@type AbilityTypeClass
-local AbilityType = require('Class.Ability.Type')
+local Type = require('Class.Ability.Type')
 ---@type AbilityCastInstanceClass
-local AbilityInstance = require('Class.Ability.CastInstance')
+local CastInstance = require('Class.Ability.CastInstance')
 ---@type BetterTimerClass
-local BetterTimer = require('Class.Timer.BetterTimer')
+local Timer = require('Class.Timer.BetterTimer')
 
 local fmt = string.format
 
@@ -18,7 +18,7 @@ local fmt = string.format
 --=========
 
 -- Ability type for using in casting system.
-local ExampleAbility = AbilityType.new('Example ability', AbilityType.TargetType.None)
+local ExampleAbility = Type.new('Example ability', Type.TargetType.None)
 
 -- ===========
 --  Callbacks
@@ -47,23 +47,23 @@ local function start(cast_data)
     if state == 'normal' then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
         state = 'failed'
-        return AbilityInstance.STATUS.OK
+        return CastInstance.Status.OK
     elseif state == 'failed' then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have not to start.')
         state = 'interrupt'
-        return AbilityInstance.STATUS.NOTHING
+        return CastInstance.Status.REMOVE
     elseif state == 'interrupt' then
         local interrupt_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
-        BetterTimer.getGlobalTimer():addAction(interrupt_time, function() cast_data:interrupt() end)
+        Timer.getGlobalTimer():addAction(interrupt_time, function() cast_data:interrupt() end)
         state = 'cancel'
-        return AbilityInstance.STATUS.OK
+        return CastInstance.Status.OK
     else
         local cancel_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be canceled after %.2f sec.', cancel_time))
-        BetterTimer.getGlobalTimer():addAction(cancel_time, function() cast_data:cancel() end)
+        Timer.getGlobalTimer():addAction(cancel_time, function() cast_data:cancel() end)
         state = 'normal'
-        return AbilityInstance.STATUS.OK
+        return CastInstance.Status.OK
     end
 end
 
@@ -77,7 +77,7 @@ local function casting(cast_data)
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting time - %.1f', cur))
         prev = math.floor(cur)
     end
-    return AbilityInstance.STATUS.OK
+    return CastInstance.Status.OK
 end
 
 ---@param cast_data AbilityCastInstance

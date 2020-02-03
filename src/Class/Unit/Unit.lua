@@ -95,7 +95,9 @@ function private.newData(self, id, player, x, y, face)
 end
 
 private.metatable = {
-    __gc = function(priv) RemoveUnit(priv.wc3_unit) end
+    __gc = function(priv)
+        RemoveUnit(priv.wc3_unit)
+    end
 }
 
 ---@param self Unit

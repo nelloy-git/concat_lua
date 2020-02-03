@@ -10330,15 +10330,15 @@ end
 --===========================================================================
 function MeleeStartingResources()
 	---@type integer
-	index          = nil
+	local index          = nil
 	---@type player
-	indexPlayer    = nil
+	local indexPlayer    = nil
 	---@type version
-	v              = nil
+	local v              = nil
 	---@type integer
-	startingGold   = nil
+	local startingGold   = nil
 	---@type integer
-	startingLumber = nil
+	local startingLumber = nil
 	
 	v              = VersionGet()
 	if (v == VERSION_REIGN_OF_CHAOS) then

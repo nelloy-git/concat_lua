@@ -2,7 +2,6 @@
 -- Include
 --=========
 
-local Log = require('utils.Log')
 local Class = require('utils.Class.Class')
 
 ---@type FrameTypeClass

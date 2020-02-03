@@ -14,13 +14,13 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
-local GlueButton = Class.new('GlueButton', Frame)
----@class GlueButton : Frame
-local public = GlueButton.public
----@class GlueButtonClass : FrameClass
-local static = GlueButton.static
----@type GlueButtonClass
-local override = GlueButton.override
+local FrameGlueButton = Class.new('FrameGlueButton', Frame)
+---@class FrameGlueButton : Frame
+local public = FrameGlueButton.public
+---@class FrameGlueButtonClass : FrameClass
+local static = FrameGlueButton.static
+---@type FrameGlueButtonClass
+local override = FrameGlueButton.override
 
 local private = {}
 
@@ -30,10 +30,10 @@ local private = {}
 
 --- SimpleFrame by default
 ---@param button_type GlueButtonType
----@param child_instance GlueButton
----@return GlueButton
+---@param child_instance FrameGlueButton
+---@return FrameGlueButton
 function override.new(button_type, child_instance)
-    local instance = child_instance or Class.allocate(GlueButton)
+    local instance = child_instance or Class.allocate(FrameGlueButton)
     instance = Frame.new(button_type, instance)
     private.newData(instance, button_type)
 
@@ -65,7 +65,7 @@ end
 -- Private
 --=========
 
----@param self GlueButton
+---@param self FrameGlueButton
 ---@param button_type FrameType
 ---@return table
 function private.newData(self, button_type)
@@ -93,7 +93,7 @@ function private.newData(self, button_type)
     return priv
 end
 
----@param self GlueButton
+---@param self FrameGlueButton
 function private.freeData(self)
     private[self] = nil
 end

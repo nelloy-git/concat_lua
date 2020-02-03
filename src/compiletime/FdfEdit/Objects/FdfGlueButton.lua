@@ -41,7 +41,7 @@ static.Field.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfFie
 static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
 -- "AUTOTRACK|HIGHLIGHTONFOCUS|HIGHLIGHTONMOUSEOVER"
-static.Field.ControlStype = FdfField.new('ControlStype', 'string', FdfField.SerialFunc.STRING)
+static.Field.ControlStyle = FdfField.new('ControlStyle', 'string', FdfField.SerialFunc.STRING)
 static.Field.ControlBackdrop = FdfField.new('ControlBackdrop', 'string', FdfField.SerialFunc.STRING)
 static.Field.ControlPushedBackdrop = FdfField.new('ControlPushedBackdrop', 'string', FdfField.SerialFunc.STRING)
 static.Field.ControlDisabledBackdrop = FdfField.new('ControlDisabledBackdrop', 'string', FdfField.SerialFunc.STRING)

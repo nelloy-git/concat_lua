@@ -2,25 +2,22 @@
 -- Include
 --=========
 
-local Log = require('utils.Log')
 local Class = require('utils.Class.Class')
 
 ---@type FrameClass
 local Frame = require('Class.Frame.Frame')
----@type TriggerClass
-local Trigger = require('Class.Trigger')
 
 --=======
 -- Class
 --=======
 
-local FrameSimpleButton = Class.new('FrameSimpleButton', Frame)
----@class FrameSimpleButton : Frame
-local public = FrameSimpleButton.public
----@class FrameSimpleButtonClass : FrameClass
-local static = FrameSimpleButton.static
----@type FrameSimpleButtonClass
-local override = FrameSimpleButton.override
+local FrameSimpleText = Class.new('FrameSimpleText', Frame)
+---@class FrameSimpleText : Frame
+local public = FrameSimpleText.public
+---@class FrameSimpleTextClass : FrameClass
+local static = FrameSimpleText.static
+---@type FrameSimpleTextClass
+local override = FrameSimpleText.override
 local private = {}
 
 --=========
@@ -28,10 +25,10 @@ local private = {}
 --=========
 
 ---@param simple_button_type SimpleButtonType
----@param child_instance FrameSimpleButton
----@return FrameSimpleButton
+---@param child_instance FrameSimpleText
+---@return FrameSimpleText
 function override.new(simple_button_type, child_instance)
-    local instance = child_instance or Class.allocate(FrameSimpleButton)
+    local instance = child_instance or Class.allocate(FrameSimpleText)
     instance = Frame.new(simple_button_type, instance)
     private.newData(instance, simple_button_type)
 
@@ -57,7 +54,7 @@ end
 
 ---@param callback Callback
 ---@return Action | nil
-function public:addPressedAction(callback)
+function public:addAction(callback)
     local priv = private[self]
 
     if not priv.trigger then
@@ -65,7 +62,7 @@ function public:addPressedAction(callback)
         priv.trigger:addFrameEvent(self:getFramehandle(), FRAMEEVENT_CONTROL_CLICK)
     end
 
-    return priv.trigger:addPressedAction(callback)
+    return priv.trigger:addAction(callback)
 end
 
 ---@param action Action
@@ -86,7 +83,7 @@ end
 -- Private
 --=========
 
----@param instance FrameSimpleButton
+---@param instance FrameSimpleText
 ---@param simple_button_type SimpleButtonType
 function private.newData(instance, simple_button_type)
     local priv = {
@@ -98,7 +95,7 @@ function private.newData(instance, simple_button_type)
     private[instance] = priv
 end
 
----@param instance FrameSimpleButton
+---@param instance FrameSimpleText
 function private.freeData(instance)
     private[instance] = nil
 end
