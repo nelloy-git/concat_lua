@@ -276,7 +276,7 @@ function private.newData(self, frame_type)
     if frame_type:isSimple() then
         framehandle = BlzCreateSimpleFrame(frame_type:getName(), private.game_ui_frame, 0)
     else
-        framehandle = BlzCreateFrameByType(frame_type:getName(), frame_type:getName(), private.game_ui_frame, '', 0)
+        framehandle = BlzCreateFrame(frame_type:getName(), private.game_ui_frame, 0, 0)
     end
 
     local priv = {

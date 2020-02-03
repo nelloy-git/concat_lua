@@ -7,6 +7,8 @@ local Log = require('utils.Log')
 
 ---@type AbilityCastInstanceClass
 local AbilityCastInstance = require('Class.Ability.CastInstance')
+---@type AbilityTypeClass
+local AbilityType = require('Class.Ability.Type')
 ---@type BetterTimerClass
 local BetterTimer = require('Class.Timer.BetterTimer')
 ---@type TriggerClass
@@ -25,13 +27,25 @@ local static = AbilityEvent.static
 local override = AbilityEvent.override
 local private = {}
 
+--========
+-- Static
+--========
+
+---@param caster unit
+---@return AbilityCastInstance[] 
+function static.GetCasterInstances(caster)
+    if not private.active_casters[caster] then
+        private.active_casters[caster] = {}
+    end
+    return private.active_casters[caster]
+end
+
 --=========
 -- Private
 --=========
 
-private.active_casting = {}
+private.active_casters = {}
 
-private.attack_order = 851983
 if not IsCompiletime() then
     private.wc3_spell_effect_trigger = Trigger.new()
     private.wc3_unit_issued_any_order_trigger = Trigger.new()
@@ -49,45 +63,26 @@ if not IsCompiletime() then
     end
 
     private.wc3_spell_effect_trigger:addAction(function() savetyRun(private.onSpellEffect) end)
-    private.wc3_unit_issued_any_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
+    --private.wc3_unit_issued_any_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
 end
 
-local getAbility
+local getAbility = AbilityType.get
 local GetSpellAbilityId = GetSpellAbilityId
 local GetSpellAbilityUnit = GetSpellAbilityUnit
 function private.onSpellEffect()
-    getAbility = getAbility or require('Class.Ability.Type').get
-    local id = GetSpellAbilityId()
-    local ability = getAbility(id)
+    local ability = getAbility(GetSpellAbilityId())
     if not ability then
-        Log(Log.Wrn, AbilityEvent, 'unknown ability with id '..ID2str(id))
         return
     end
 
     local caster = GetSpellAbilityUnit()
     local target = private.getAnyTarget()
 
-    local cur_cast_instance = private.active_casting[caster]
-    if cur_cast_instance then
-        cur_cast_instance:cancel()
+    local instance = AbilityCastInstance.new(caster, target, ability)
+    if not private.active_casters[caster] then
+        private.active_casters[caster] = {}
     end
-
-    private.active_casting[caster] = AbilityCastInstance.new(caster, target, ability)
-end
-
-local GetIssuedOrderId = GetIssuedOrderId
-local GetOrderedUnit = GetOrderedUnit
-function private.onAnyOrder()
-    if GetIssuedOrderId() == private.attack_order then
-        return nil
-    end
-
-    local unit = GetOrderedUnit()
-    local cast_instance = private.active_casting[unit]
-    if cast_instance then
-        cast_instance:cancel()
-        private.active_casting[unit] = nil
-    end
+    table.insert(private.active_casters[caster], instance)
 end
 
 ---@return unit|item|destructable|table|nil
@@ -102,14 +97,24 @@ function private.getAnyTarget()
     return target
 end
 
+local period = private.timer_period
 function private.timerLoop()
-    for k,v in pairs(private.active_casting) do
-        if not v:casting(private.timer_period) then
-            private.active_casting[k] = nil
+    for caster, list in pairs(private.active_casters) do
+        local new_list = {}
+        for i = 1, #list do
+            if list[i]:casting(period) then
+                table.insert(new_list, list[i])
+            end
         end
+
+        if #new_list == 0 then
+            new_list = nil
+        end
+
+        private.active_casters[caster] = new_list
     end
 
     private.action = private.timer:addAction(0, function() private.timerLoop() end)
 end
 
-return AbilityEvent
+return static

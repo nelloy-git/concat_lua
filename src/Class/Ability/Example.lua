@@ -11,6 +11,8 @@ local CastInstance = require('Class.Ability.CastInstance')
 ---@type BetterTimerClass
 local Timer = require('Class.Timer.BetterTimer')
 
+local Event = require('Class.Ability.Event')
+
 local fmt = string.format
 
 --=========
@@ -47,23 +49,23 @@ local function start(cast_data)
     if state == 'normal' then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
         state = 'failed'
-        return CastInstance.Status.OK
+        return Type.Status.OK
     elseif state == 'failed' then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have not to start.')
         state = 'interrupt'
-        return CastInstance.Status.REMOVE
+        return Type.Status.REMOVE
     elseif state == 'interrupt' then
         local interrupt_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
         Timer.getGlobalTimer():addAction(interrupt_time, function() cast_data:interrupt() end)
         state = 'cancel'
-        return CastInstance.Status.OK
+        return Type.Status.OK
     else
         local cancel_time = cast_data:getFullCastingTime() / 2
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be canceled after %.2f sec.', cancel_time))
         Timer.getGlobalTimer():addAction(cancel_time, function() cast_data:cancel() end)
         state = 'normal'
-        return CastInstance.Status.OK
+        return Type.Status.OK
     end
 end
 
@@ -77,7 +79,7 @@ local function casting(cast_data)
         Log(Log.Msg, ExampleAbility:getName(), fmt('casting time - %.1f', cur))
         prev = math.floor(cur)
     end
-    return CastInstance.Status.OK
+    return Type.Status.OK
 end
 
 ---@param cast_data AbilityCastInstance
@@ -96,16 +98,16 @@ local function interrupt(cast_data)
 end
 
 -- Set function for casting time calculating.
-ExampleAbility.callbacks:setCastingTime(getCastingTime)
+ExampleAbility:setCallback(Type.CallbackType.GET_TIME, getCastingTime)
 -- Set callback for casting start. Should return true(default) if started successfully.
-ExampleAbility.callbacks:setStart(start)
+ExampleAbility:setCallback(Type.CallbackType.START, start)
 -- Set callback for casting time loop. Have to return false if casting is interupted.
-ExampleAbility.callbacks:setCasting(casting)
+ExampleAbility:setCallback(Type.CallbackType.CASTING, casting)
 -- Set callback for casting finish.
-ExampleAbility.callbacks:setFinish(finish)
+ExampleAbility:setCallback(Type.CallbackType.FINISH, finish)
 -- Set callback for casting cancel.
-ExampleAbility.callbacks:setCancel(cancel)
+ExampleAbility:setCallback(Type.CallbackType.CANCEL, cancel)
 -- Set callback for casting interruption.
-ExampleAbility.callbacks:setInterrupt(interrupt)
+ExampleAbility:setCallback(Type.CallbackType.INTERRUPT, interrupt)
 
 return ExampleAbility

@@ -6,6 +6,8 @@ local Class = require('utils.Class.Class')
 
 ---@type AbilityTypeClass
 local AbilityType = require('Class.Ability.Type')
+local CbType = AbilityType.CallbackType
+local Status = AbilityType.Status
 
 --=======
 -- Class
@@ -25,6 +27,7 @@ local private = {}
 -- Static
 --========
 
+local GetCasterInstances
 ---@param caster unit
 ---@param target unit|item|destructable|table|nil
 ---@param ability AbilityType
@@ -33,16 +36,19 @@ function static.new(caster, target, ability)
     local instance = Class.allocate(AbilityCastInstance)
     private.newData(instance, caster, target, ability)
 
-    local status = ability:runCallback(AbilityType.CallbackType.START, instance)
-    if status == AbilityType.Status.OK then
+    priv = private.data[instance]
+    local status = priv.status
+    if status == Status.OK then
+        private.applyBlocks(instance)
         return instance
-    elseif status == AbilityType.Status.CANCEL then
-        ability:runCallback(AbilityType.CallbackType.CANCEL ,instance)
-    elseif status == AbilityType.Status.FINISH then
-        ability:runCallback(AbilityType.CallbackType.FINISH ,instance)
-    elseif status == AbilityType.Status.INTERRUPT then
-        ability:runCallback(AbilityType.CallbackType.INTERRUPT ,instance)
+    elseif status == Status.CANCEL then
+        ability:runCallback(CbType.CANCEL, instance)
+    elseif status == Status.FINISH then
+        ability:runCallback(CbType.FINISH, instance)
+    elseif status == Status.INTERRUPT then
+        ability:runCallback(CbType.INTERRUPT, instance)
     end
+    return
 end
 
 --========
@@ -54,56 +60,64 @@ end
 function public:casting(dt)
     local priv = private.data[self]
 
-    if priv.status ~= static.Status.OK then
+    if priv.status ~= Status.OK then
         return false
     end
 
-    local status = priv.ability:runCallback(AbilityType.CallbackType.CASTING, self)
-    if status == AbilityType.Status.OK then
-        priv.time_left = priv.time_left - dt
-        if priv.time_left <= 0 then 
-            priv.ability:runCallback(AbilityType.CallbackType.FINISH, self)
-            return false
-        end
-        return true
-    elseif status == AbilityType.Status.CANCEL then
-        priv.ability:runCallback(AbilityType.CallbackType.CANCEL, self)
-    elseif status == AbilityType.Status.FINISH then
-        priv.ability:runCallback(AbilityType.CallbackType.FINISH, self)
-    elseif status == AbilityType.Status.INTERRUPT then
-        priv.ability:runCallback(AbilityType.CallbackType.INTERRUPT, self)
+    local ability = priv.ability
+    local status = ability:runCallback(CbType.CASTING, self)
+    priv.time_left = priv.time_left - dt
+    if priv.time_left <= 0 then
+        status = Status.FINISH
     end
+
+    if status == Status.OK then
+        return true
+    end
+
+    private.removeBlocks(self)
+    if status == Status.CANCEL then
+        ability:runCallback(CbType.CANCEL, self)
+    elseif status == Status.FINISH then
+        ability:runCallback(CbType.FINISH, self)
+    elseif status == Status.INTERRUPT then
+        ability:runCallback(CbType.INTERRUPT, self)
+    end
+
     return false
 end
 
 function public:cancel()
     local priv = private.data[self]
+    local ability = priv.ability
 
-    if priv.status == static.Status.OK then
-        priv.callbacks:runCancel(self)
-        private.unlockUnit(priv.caster)
+    if priv.status == Status.OK then
+        private.removeBlocks(self)
+        ability:runCallback(CbType.CANCEL, self)
+        priv.status = Status.CANCEL
     end
-    priv.status = static.Status.CANCEL
 end
 
 function public:interrupt()
     local priv = private.data[self]
+    local ability = priv.ability
 
-    if priv.status == static.Status.OK then
-        priv.callbacks:runInterrupt(self)
-        private.unlockUnit(priv.caster)
+    if priv.status == Status.OK then
+        private.removeBlocks(self)
+        ability:runCallback(CbType.INTERRUPT, self)
+        priv.status = Status.INTERRUPT
     end
-    priv.status = static.Status.INTERRUPT
 end
 
 function public:finish()
     local priv = private.data[self]
+    local ability = priv.ability
 
-    if priv.status == static.Status.OK then
-        priv.callbacks:runFinish(self)
-        private.unlockUnit(priv.caster)
+    if priv.status == Status.OK then
+        private.removeBlocks(self)
+        ability:runCallback(CbType.FINISH, self)
+        priv.status = Status.FINISH
     end
-    priv.status = static.Status.FINISH
 end
 
 ---@return number
@@ -132,15 +146,41 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-function private.lockUnit(unit)
-    UnitAddAbility(unit, private.disable_move_id)
-    UnitAddAbility(unit, private.disable_attack_id)
+---@param self AbilityCastInstance
+function private.applyBlocks(self)
+    local priv = private.data[self]
+
+    if not priv.caster_can_attack then
+        UnitAddAbility(priv.caster, private.disable_attack_id)
+    end
+
+    if not priv.caster_can_move then
+        UnitAddAbility(priv.caster, private.disable_move_id)
+    end
+
+    if priv.cancel_other then
+        GetCasterInstances = GetCasterInstances or require('Class.Ability.Event').GetCasterInstances
+        local list = GetCasterInstances(priv.caster)
+        for i = 1, #list do
+            if not private.data[list[i]].ignore_cancel_by_others then
+                list[i]:cancel()
+            end
+        end
+    end
 end
 
-function private.unlockUnit(unit)
-    UnitRemoveAbility(unitX, private.disable_attack_id)
-    UnitRemoveAbility(unitX, private.disable_move_id)
-    UnitRemoveAbility(unitX, private.disable_move_buff_id)
+---@param self AbilityCastInstance
+function private.removeBlocks(self)
+    local priv = private.data[self]
+
+    if not priv.caster_can_attack then
+        UnitRemoveAbility(priv.caster, private.disable_attack_id)
+    end
+
+    if not priv.caster_can_move then
+        UnitRemoveAbility(priv.caster, private.disable_move_id)
+        UnitRemoveAbility(priv.caster, private.disable_move_buff_id)
+    end
 end
 
 ---@param self AbilityCastInstance
@@ -150,18 +190,29 @@ end
 ---@return AbilityCastInstance
 function private.newData(self, caster, target, ability)
     local priv = {
-        status = static.Status.OK,
+        status = Status.OK,
         caster = caster,
         target = target,
         ability = ability,
+
         full_time = -1,
         time_left = -1,
+        caster_can_move = true,
+        caster_can_attack = true,
+        cancel_other = true,
+        ignore_cancel_by_others = false
     }
     private.data[self] = setmetatable(priv, private.metatable)
 
-    local time_left = ability.callbacks:getCastingTime(self)
+    local time_left = ability:runCallback(CbType.GET_TIME, self)
     priv.full_time = time_left
     priv.time_left = time_left
+
+    priv.status = ability:runCallback(CbType.START, self)
+    priv.caster_can_move = ability:runCallback(CbType.CASTER_CAN_MOVE, self)
+    priv.caster_can_attack = ability:runCallback(CbType.CASTER_CAN_ATTACK, self)
+    priv.cancel_other = ability:runCallback(CbType.CASTER_CANCEL_OTHER_CASTS, self)
+    priv.ignore_cancel_by_others = ability:runCallback(CbType.IGNORE_CANCEL_BY_OTHER_CASTS, self)
 end
 
 private.metatable = {
@@ -182,7 +233,7 @@ private.disable_move_buff_id = Compiletime(function()
     buff_type:setField(WeBuff.Field.TooltipNormal, 'Ability casting')
     buff_type:setField(WeBuff.Field.TooltipNormalExtended, 'Unit can not move while casting an ability.')
     buff_type:setField(WeBuff.Field.IconNormal, Icons.BTNBrilliance)
-    return id
+    return ID(id)
 end)
 private.disable_move_id = Compiletime(function()
     ---@type ObjectEdit
@@ -192,8 +243,8 @@ private.disable_move_id = Compiletime(function()
     local abil_type = WeAbility.new(id, 'Aasl', 'DisableMovement')
     abil_type:setField(WeAbility.Field.Aasl_MovementSpeedFactor, 1, -100)
     abil_type:setField(WeAbility.Field.TargetsAllowed, 1, "self")
-    abil_type:setField(WeAbility.Field.Buffs, 1, private.disable_move_buff_id)
-    return id
+    abil_type:setField(WeAbility.Field.Buffs, 1, ID2str(private.disable_move_buff_id))
+    return ID(id)
 end)
 private.disable_attack_id = ID('Abun')
 

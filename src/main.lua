@@ -22,7 +22,7 @@ local icon = Compiletime(function() return require('compiletime.Icon').BTN3M1 en
 
 ---@type GlueButtonTypeClass
 local GlueButtonType = require('Class.Frame.Types.GlueButton')
----@type FrameGlueButtonClass
+---@type GlueButtonClass
 local GlueButton = require('Class.Frame.Default.GlueButton')
 
 local btn_type = GlueButtonType.new('TestButton')
@@ -41,7 +41,7 @@ if not IsCompiletime() then
     frame:setPushedTexture('ReplaceableTextures\\CommandButtons\\DISBTNHeroPaladin')
 
     u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
-    UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId()) 
+    UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
     --u = nil
     collectgarbage()
 end

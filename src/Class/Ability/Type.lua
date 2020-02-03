@@ -72,7 +72,7 @@ static.CallbackType.CASTER_CAN_ATTACK = 8
 static.CallbackType.CASTER_CANCEL_OTHER_CASTS = 9
 --- Must return boolean
 ---@type AbilityCallbackType
-static.CallbackType.CAN_IGNORE_CANCEL_BY_OTHER_CASTS = 10
+static.CallbackType.IGNORE_CANCEL_BY_OTHER_CASTS = 10
 
 ---@alias AbilityStatus number
 static.Status = {}
@@ -160,7 +160,7 @@ function public:runCallback(cb_type, cast_instance)
 
     local priv = private.data[self]
     if not priv.callbacks[cb_type] then
-        return private.default.callbacks[cb_type]
+        return private.default_callback[cb_type]
     end
 
     return priv.callbacks[cb_type](cast_instance)
