@@ -1,2 +1,4 @@
 [0.000] {Msg} FdfFile: created new TestButton fdf file.
-	added TestButton object.[0.000] {Msg} WeFile: сreated WeUnit_0002BD439AAC90 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_0002BD439AA390 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_0002BD439A7410 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_0002BD439A7450 "DisableMovement" with id 'BM#$' based on 'Bfae'
+	added TestButton object.[0.000] {Msg} FdfFile: created new ControllerDetectorTooltip fdf file.
+	added ControllerDetectorTooltip object.[0.000] {Msg} FdfFile: created new ControllerDetectorFrame fdf file.
+	added ControllerDetectorFrame object.[0.000] {Msg} WeFile: сreated WeUnit_13d3de0 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_13d1be0 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_13bf770 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_13ba030 "DisableMovement" with id 'BM#$' based on 'Bfae'

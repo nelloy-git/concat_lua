@@ -25,6 +25,9 @@ local GlueButtonType = require('Class.Frame.Types.GlueButton')
 ---@type GlueButtonClass
 local GlueButton = require('Class.Frame.Default.GlueButton')
 
+local CameraController = require('Class.Controller.CameraController')
+local ControllerGrid = require('Class.Controller.Grid')
+
 local btn_type = GlueButtonType.new('TestButton')
 
 local u = nil

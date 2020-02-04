@@ -6,8 +6,12 @@ local Class = require('utils.Class.Class')
 
 ---@type BetterTimerClass
 local Timer = require('Class.Timer.BetterTimer')
-local gl_timer = Timer.getGlobalTimer()
-local gl_period = gl_timer:getPeriod()
+local gl_timer
+local gl_period
+if not IsCompiletime() then
+    gl_timer = Timer.getGlobalTimer()
+    gl_period = gl_timer:getPeriod()
+end
 
 --=======
 -- Class

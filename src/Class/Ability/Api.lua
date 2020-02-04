@@ -3,7 +3,7 @@
 --=========
 
 ---@type AbilityTypeClass
-local Type = require('Class.Ability.Callbacks')
+local Type = require('Class.Ability.Type')
 ---@type AbilityEventClass
 local Event = require('Class.Ability.Event')
 
@@ -23,6 +23,6 @@ AbilityAPI.Status = Type.Status
 ---@type fun(uniq_name:string, target_type:AbilityTargetType, user_data:any):AbilityType
 AbilityAPI.newType = Type.new
 ---@type fun(caster:unit):AbilityCastInstance[]
-AbilityAPI.getActiveCasts = Event.getCasterInstances()
+AbilityAPI.getActiveCasts = Event.getCasterInstances
 
 return AbilityAPI
