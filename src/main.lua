@@ -21,31 +21,35 @@ local icon = Compiletime(function() return require('compiletime.Icon').BTN3M1 en
 --local SimpleButton = require('Class.Frame.Default.SimpleButton')
 
 ---@type GlueButtonTypeClass
-local GlueButtonType = require('Class.Frame.Types.GlueButton')
+--local GlueButtonType = require('Class.Frame.Types.GlueButton')
 ---@type GlueButtonClass
-local GlueButton = require('Class.Frame.Default.GlueButton')
-
+--local GlueButton = require('Class.Frame.Default.GlueButton')
+---@type CameraControllerClass
 local CameraController = require('Class.Controller.CameraController')
-local ControllerGrid = require('Class.Controller.Grid')
+--local ControllerGrid = require('Class.Controller.Grid')
 
-local btn_type = GlueButtonType.new('TestButton')
+--local btn_type = GlueButtonType.new('TestButton')
 
 local u = nil
 if not IsCompiletime() then
-    local frame = GlueButton.new(btn_type)
-    frame:setX(0.3)
-    frame:setY(0.3)
-    frame:setWidth(0.05)
-    frame:setHeight(0.05)
+    --local frame = GlueButton.new(btn_type)
+    --frame:setX(0.3)
+    --frame:setY(0.3)
+    --frame:setWidth(0.05)
+    --frame:setHeight(0.05)
+--
+    --print(BlzFrameGetWidth(frame:getFramehandle()), BlzFrameGetHeight(frame:getFramehandle()))
+--
+    --frame:setTexture('ReplaceableTextures\\CommandButtons\\BTNHeroPaladin')
+    --frame:setPushedTexture('ReplaceableTextures\\CommandButtons\\DISBTNHeroPaladin')
 
-    print(BlzFrameGetWidth(frame:getFramehandle()), BlzFrameGetHeight(frame:getFramehandle()))
-
-    frame:setTexture('ReplaceableTextures\\CommandButtons\\BTNHeroPaladin')
-    frame:setPushedTexture('ReplaceableTextures\\CommandButtons\\DISBTNHeroPaladin')
-
-    u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
+    local u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
     --u = nil
+
+    local camera = CameraController.new(Player(0))
+    camera:lockUnit(u:getWc3Unit())
+
     collectgarbage()
 end
 

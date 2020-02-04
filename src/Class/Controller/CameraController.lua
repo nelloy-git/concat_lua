@@ -85,7 +85,7 @@ end
 function public:lockUnit(unit)
     local priv = private.data[self]
     if priv.player == private.local_player then
-        priv.locked_unit_action = gl_timer:addAction(function() private.followUnit(priv, unit) end)
+        private.followUnit(priv, unit)
     end
 end
 
@@ -132,9 +132,11 @@ function private.followUnit(priv, unit)
         priv.z = GetUnitFlyHeight(unit)
         priv[static.Field.ROTATION] = GetUnitFacing(unit)
 
-        PanCameraToTimedWithZ(priv.x, priv.y, priv.z, gl_period)
+        SetCameraTargetController(unit, 0, 0, true)
+        --PanCameraToTimedWithZ(priv.x, priv.y, priv.z, gl_period)
         SetCameraField(static.Field.ROTATION, priv[static.Field.ROTATION], gl_period)
-        priv.locked_unit_action = gl_timer:addAction(function() private.followUnit(priv, unit) end)
+        SetCameraField()
+        priv.locked_unit_action = gl_timer:addAction(0, function() private.followUnit(priv, unit) end)
     end
 end
 
@@ -153,7 +155,7 @@ function private.newData(self, player)
         priv[field] = GetCameraField(field)
     end
 
-    priv.private.data[self] = setmetatable(priv, private.metatable)
+    private.data[self] = setmetatable(priv, private.metatable)
 end
 
 private.metatable = {
