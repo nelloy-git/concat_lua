@@ -30,7 +30,6 @@ local private = {}
 function override.new(uniq_name, child_instance)
     local instance = child_instance or Class.allocate(SimpleButtonType)
     instance = FrameType.new(uniq_name, private.createFdf, instance)
-    private.newData(instance)
 
     return instance
 end
@@ -46,17 +45,22 @@ end
 
 ---@return string
 function public:getTextureName()
-    return self:getName()..'Texture'
-end
-
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+    return private.getTextureName(self:getName())
 end
 
 --=========
 -- Private
 --=========
+
+---@param name string
+---@return string
+function private.getTextureName(name)
+    return name..'Texture'
+end
+
+--=============
+-- Compiletime
+--=============
 
 local _ = Compiletime(function()
     ---@type FdfEdit
@@ -82,18 +86,6 @@ function private.createFdf(name)
     file:addObject(frame)
 
     return file:toRuntime()
-end
-
----@param instance SimpleButtonType
-function private.newData(instance)
-    local priv = {
-    }
-    private[instance] = priv
-end
-
----@param instance SimpleButtonType
-function private.freeData(instance)
-    private[instance] = nil
 end
 
 return static

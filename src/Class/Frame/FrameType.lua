@@ -27,12 +27,12 @@ local private = {}
 --=========
 
 ---@param uniq_name string
----@param create_fdf function
+---@param get_toc fun(name:string):string
 ---@param child_instance any
 ---@return FrameType
-function static.new(uniq_name, create_fdf, child_instance)
+function static.new(uniq_name, get_toc, child_instance)
     local instance = child_instance or Class.allocate(FrameType)
-    private.newData(instance, uniq_name, create_fdf)
+    private.newData(instance, uniq_name, get_toc)
 
     return instance
 end
@@ -43,42 +43,46 @@ end
 
 ---@return string
 function public:getName()
-    return private[self].name
+    return private.data[self].name
 end
 
 ---@return boolean
 function public:isSimple()
-    Log.error(private[self].name, 'virtual function is not declared.', 2)
-    return false
+    Log.error(private.data[self].name, 'virtual function is not declared.', 2)
 end
 
-function public:free()
-    private.free(self)
-    Class.free(self)
+---@return number
+function public:getDefaultWidth()
+    Log.error(private.data[self].name, 'virtual function is not declared.', 2)
+end
+
+---@return number
+function public:getDefaultHeight()
+    Log.error(private.data[self].name, 'virtual function is not declared.', 2)
 end
 
 --=========
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
 private.compiletime_data = CompiletimeData.new(FrameType)
 
----@param instance FrameType
+---@param self FrameType
 ---@param uniq_name string
----@param create_fdf function
-function private.newData(instance, uniq_name, create_fdf)
-    local priv = {
-        name = uniq_name,
-    }
+---@param get_toc function
+function private.newData(self, uniq_name, get_toc)
+    local priv = {}
 
     if IsCompiletime() then
         if private.compiletime_data:get(uniq_name) then
             Log.error(FrameType, 'name is not unique.', 3)
         end
-        local file = create_fdf(uniq_name)
-        private.compiletime_data:set(uniq_name, file.toc)
+        local toc = get_toc(uniq_name)
+        private.compiletime_data:set(uniq_name, toc)
     end
 
+    priv.name = uniq_name
     priv.toc = private.compiletime_data:get(uniq_name)
     if not IsCompiletime() then
         if not BlzLoadTOCFile(priv.toc) then
@@ -86,12 +90,11 @@ function private.newData(instance, uniq_name, create_fdf)
         end
     end
 
-    private[instance] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
 end
 
----@param self FrameType
-function private.freeData(self)
-    private[self] = nil
-end
+private.metatable = {
+    __gc = function(priv) end
+}
 
 return static

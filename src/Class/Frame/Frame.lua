@@ -50,12 +50,12 @@ end
 
 ---@return boolean
 function public:isSimpleframe()
-    return private[self].frame_type:isSimple()
+    return private.data[self].frame_type:isSimple()
 end
 
 ---@param x number
 function public:setX(x)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.x = x
 
     private.updatePos(self)
@@ -63,7 +63,7 @@ end
 
 ---@param y number
 function public:setY(y)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.y = y
 
     private.updatePos(self)
@@ -71,7 +71,7 @@ end
 
 ---@param width number
 function public:setWidth(width)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.width = width
 
     BlzFrameSetSize(priv.framehandle, priv.width, priv.height)
@@ -80,7 +80,7 @@ end
 
 ---@param height number
 function public:setHeight(height)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.height = height
 
     BlzFrameSetSize(priv.framehandle, priv.width, priv.height)
@@ -89,7 +89,7 @@ end
 
 ---@param level number
 function public:setLevel(level)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.level = level
 
     BlzFrameSetLevel(priv.framehandle, priv.level)
@@ -100,7 +100,7 @@ end
 
 ---@param alpha number
 function public:setAlpha(alpha)
-    local priv = private[self]
+    local priv = private.data[self]
 
     priv.alpha = alpha
     BlzFrameSetAlpha(priv.framehandle, priv.alpha)
@@ -112,7 +112,7 @@ end
 
 ---@param flag boolean
 function public:setVisible(flag)
-    local priv = private[self]
+    local priv = private.data[self]
 
     priv.visible = flag
     BlzFrameSetVisible(priv.framehandle, priv.visible)
@@ -123,7 +123,7 @@ end
 
 ---@param parent Frame
 function public:setParent(parent)
-    local priv = private[self]
+    local priv = private.data[self]
     local old_parent = priv.parent
     priv.parent = parent
 
@@ -146,12 +146,12 @@ end
 
 ---@return number
 function public:getX()
-    return private[self].x
+    return private.data[self].x
 end
 
 ---@return number
 function public:getAbsX()
-    local priv = private[self]
+    local priv = private.data[self]
     print(priv.parent)
     if priv.parent then
         return priv.parent:getAbsX() + priv.x
@@ -162,12 +162,12 @@ end
 
 ---@return number
 function public:getY()
-    return private[self].y
+    return private.data[self].y
 end
 
 ---@return number
 function public:getAbsY()
-    local priv = private[self]
+    local priv = private.data[self]
     if priv.parent then
         return priv.parent:getAbsY() + priv.y
     else
@@ -177,50 +177,45 @@ end
 
 ---@return framehandle
 function public:getFramehandle()
-    return private[self].framehandle
+    return private.data[self].framehandle
 end
 
 ---@return Frame | nil
 function public:getParent()
-    return private[self].parent
+    return private.data[self].parent
 end
 
 ---@return number
 function public:getWidth()
-    return private[self].width
+    return private.data[self].width
 end
 
 ---@return number
 function public:getHeight()
-    return private[self].height
+    return private.data[self].height
 end
 
 ---@return number
 function public:getLevel()
-    return private[self].level
+    return private.data[self].level
 end
 
 ---@return number
 function public:getAlpha()
-    return private[self].alpha
+    return private.data[self].alpha
 end
 
 ---@return boolean
 function public:isVisible()
-    return private[self].visible
-end
-
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+    return private.data[self].visible
 end
 
 --=========
 -- Private
 --=========
 
-local fmt = string.format
 
+private.data = setmetatable({}, {__mode = 'k'})
 private.DB = DataBase.new('userdata', Frame)
 if not IsCompiletime() then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
@@ -230,7 +225,7 @@ end
 function private.updatePos(self)
     private.correctPosition(self)
 
-    local priv = private[self]
+    local priv = private.data[self]
     if priv.parent then
         BlzFrameSetPoint(priv.framehandle, FRAMEPOINT_BOTTOMLEFT,
                          priv.parent:getFramehandle(), FRAMEPOINT_BOTTOMLEFT,
@@ -241,29 +236,30 @@ function private.updatePos(self)
     end
 end
 
-private.warn_normal_rect = 'simple frames only can be outside of [0:0.8, 0:0.6] rectangle. Setting x = %.3f, y = %.3f'
+local fmt = string.format
+local warn_normal_rect = 'simple frames only can be outside of [0:0.8, 0:0.6] rectangle. Setting x = %.3f, y = %.3f'
 ---@param self Frame
 function private.correctPosition(self)
-    local priv = private[self]
+    local priv = private.data[self]
     if not priv.frame_type:isSimple() then
         local abs_x = self:getAbsX()
         local abs_y = self:getAbsY()
 
         if abs_x < 0 then
             priv.x = priv.x - abs_x
-            Log(Log.Wrn, self, fmt(private.warn_normal_rect, priv.x, priv.y))
+            Log(Log.Wrn, self, fmt(warn_normal_rect, priv.x, priv.y))
         end
         if (abs_x + priv.width) > 0.8 then
             priv.x = priv.x - (abs_x + priv.width - 0.8)
-            Log(Log.Wrn, self, fmt(private.warn_normal_rect, priv.x, priv.y))
+            Log(Log.Wrn, self, fmt(warn_normal_rect, priv.x, priv.y))
         end
         if abs_y < 0 then
             priv.y = priv.y - abs_y
-            Log(Log.Wrn, self, fmt(private.warn_normal_rect, priv.x, priv.y))
+            Log(Log.Wrn, self, fmt(warn_normal_rect, priv.x, priv.y))
         end
         if (priv.y + priv.height) > 0.6 then
             priv.y = priv.y - (abs_y + priv.height - 0.6)
-            Log(Log.Wrn, self, fmt(private.warn_normal_rect, priv.x, priv.y))
+            Log(Log.Wrn, self, fmt(warn_normal_rect, priv.x, priv.y))
         end
     end
 end
@@ -285,8 +281,8 @@ function private.newData(self, frame_type)
 
         x = 0,
         y = 0,
-        width = 0,
-        height = 0,
+        width = frame_type:getDefaultWidth(),
+        height = frame_type:getDefaultHeight(),
         level = 0,
         alpha = 255,
         visible = true,
@@ -294,19 +290,14 @@ function private.newData(self, frame_type)
         illigal_childrens = {}
     }
 
-    private[self] = priv
+    private.data[self] = setmetatable(priv, private.metatable)
     private.DB:set(framehandle, self)
-
-    return priv
 end
 
----@param self Frame
-function private.freeData(self)
-    local priv = private[self]
-    BlzDestroyFrame(priv.framehandle)
-    private.DB:remove(priv.framehandle)
-
-    private[self] = nil
-end
+private.metatable = {
+    __gc = function(priv)
+        BlzDestroyFrame(priv.framehandle)
+    end
+}
 
 return static

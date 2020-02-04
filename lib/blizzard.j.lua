@@ -3030,9 +3030,9 @@ end
 ---@param r rect
 function SetStackedSoundBJ(add, soundHandle, r)
 	---@type number
-	width  = GetRectMaxX(r) - GetRectMinX(r)
+	local width  = GetRectMaxX(r) - GetRectMinX(r)
 	---@type number
-	height = GetRectMaxY(r) - GetRectMinY(r)
+	local height = GetRectMaxY(r) - GetRectMinY(r)
 	
 	SetSoundPosition(soundHandle, GetRectCenterX(r), GetRectCenterY(r), 0)
 	if add then
@@ -7138,7 +7138,7 @@ end
 ---@param lb leaderboard
 function LeaderboardResizeBJ(lb)
 	---@type integer
-	size = LeaderboardGetItemCount(lb)
+	local size = LeaderboardGetItemCount(lb)
 	
 	if (LeaderboardGetLabelText(lb) == "") then
 		size = size - 1

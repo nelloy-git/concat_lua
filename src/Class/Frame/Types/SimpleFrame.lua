@@ -13,7 +13,7 @@ local FrameType = require('Class.Frame.FrameType')
 --=======
 
 local SimpleFrameType = Class.new('SimpleFrameType')
----@class SimpleFrameType
+---@class SimpleFrameType 
 local public = SimpleFrameType.public
 ---@class SimpleFrameTypeClass
 local static = SimpleFrameType.static
@@ -31,7 +31,6 @@ local private = {}
 function static.new(uniq_name, child_instance)
     local instance = child_instance or Class.allocate(SimpleFrameType)
     instance = FrameType.new(uniq_name, private.createFdf)
-    private.newData(instance)
 
     return instance
 end
@@ -47,17 +46,42 @@ end
 
 ---@return string
 function public:getTextureName()
-    return self:getName()..'Texture'
-end
-
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+    return private.getTextureName(self:getName())
 end
 
 --=========
 -- Private
 --=========
+
+---@param name string
+---@return string
+function private.getTextureName(name)
+    return name..'Texture'
+end
+
+---@return number
+function public:getDefaultWidth()
+    return private.default_width
+end
+
+---@return number
+function public:getDefaultHeight()
+    return private.default_height
+end
+
+---@return string
+function public:getDefaultTexture()
+    return private.default_texture
+end
+
+
+--=============
+-- Compiletime
+--=============
+
+private.default_width = 0.03
+private.default_height = 0.03
+private.default_texture = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin'
 
 local _ = Compiletime(function()
     ---@type FdfEdit
@@ -72,10 +96,10 @@ end)
 function private.createFdf(name)
     local frame = private.SimpleFrame.new(name)
     local fields = private.SimpleFrame.Field
-    frame:setField(fields.Width, 0.05)
-    frame:setField(fields.Height, 0.05)
+    frame:setField(fields.Width, private.default_width)
+    frame:setField(fields.Height, private.default_height)
 
-    local texture = private.SimpleTexture.new(name..'Texture')
+    local texture = private.SimpleTexture.new(private.getTextureName(name))
     texture:setField(private.SimpleTexture.Field.File, private.default_texture)
     frame:setField(fields.Texture, {texture})
 
@@ -83,18 +107,6 @@ function private.createFdf(name)
     file:addObject(frame)
 
     return file:toRuntime()
-end
-
----@param instance SimpleFrameType
-function private.newData(instance)
-    local priv = {
-    }
-    private[instance] = priv
-end
-
----@param instance SimpleFrameType
-function private.freeData(instance)
-    private[instance] = nil
 end
 
 return static

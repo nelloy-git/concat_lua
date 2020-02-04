@@ -30,7 +30,6 @@ local private = {}
 function override.new(uniq_name, child_instance)
     local instance = child_instance or Class.allocate(SimpleTextType)
     instance = FrameType.new(uniq_name, private.createFdf)
-    private.newData(instance)
 
     return instance
 end
@@ -46,17 +45,47 @@ end
 
 ---@return string
 function public:getStringName()
-    return self:getName()..'String'
+    return private.getStringName(self:getName())
 end
 
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+---@return number
+function public:getDefaultWidth()
+    return private.default_width
+end
+
+---@return number
+function public:getDefaultHeight()
+    return private.default_height
+end
+
+---@return string
+function public:getDefaultFont()
+    return private.default_font
+end
+
+---@return number
+function public:getDefaultFontSize()
+    return private.default_font_size
 end
 
 --=========
 -- Private
 --=========
+
+---@param name string
+---@return string
+function private.getStringName(name)
+    return name..'String'
+end
+
+--=============
+-- Compiletime
+--=============
+
+private.default_width = 0.03
+private.default_height = 0.03
+private.default_font = 'fonts\\nim_____.ttf'
+private.default_font_size = 0.009
 
 local _ = Compiletime(function()
     ---@type FdfEdit
@@ -67,34 +96,22 @@ local _ = Compiletime(function()
 end)
 
 ---@param name string
----@return table
+---@return string
 function private.createFdf(name)
     local frame = private.SimpleFrame.new(name)
     local fields = private.SimpleFrame.Field
-    frame:setField(fields.Width, 0.05)
-    frame:setField(fields.Height, 0.05)
+    frame:setField(fields.Width, private.default_width)
+    frame:setField(fields.Height, private.default_height)
 
-    local string = private.SimpleString.new(name..'String')
-    string:setField(private.SimpleString.Field.Font, {'fonts\\nim_____.ttf', 0.009})
-    string:setField(private.SimpleString.Field.Anchor, {'BOTTONRIGHT', 0, 0})
+    local string = private.SimpleString.new(private.getStringName(name))
+    string:setField(private.SimpleString.Field.Font, {private.default_font, private.default_font_size})
+    string:setField(private.SimpleString.Field.Anchor, {'BOTTONLEFT', 0, 0})
     frame:setField(fields.String, {string})
 
     local file = private.File.new(name)
     file:addObject(frame)
 
-    return file:toRuntime()
-end
-
----@param instance SimpleTextType
-function private.newData(instance)
-    local priv = {
-    }
-    private[instance] = priv
-end
-
----@param instance SimpleTextType
-function private.freeData(instance)
-    private[instance] = nil
+    return file:toRuntime().toc
 end
 
 return static

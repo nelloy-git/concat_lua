@@ -36,7 +36,7 @@ function static.new(caster, target, ability)
     local instance = Class.allocate(AbilityCastInstance)
     private.newData(instance, caster, target, ability)
 
-    priv = private.data[instance]
+    local priv = private.data[instance]
     local status = priv.status
     if status == Status.OK then
         private.applyBlocks(instance)

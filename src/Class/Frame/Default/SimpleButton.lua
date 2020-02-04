@@ -95,8 +95,14 @@ function private.newData(instance, simple_button_type)
         texture = '',
         trigger = nil,
     }
-    private[instance] = priv
+    private[instance] = setmetatable(priv, private.metatable)
 end
+
+private.metatable = {
+    __gc = function(priv)
+        BlzDestroyFrame(priv. texture_framehandle)
+    end
+}
 
 ---@param instance FrameSimpleButton
 function private.freeData(instance)
