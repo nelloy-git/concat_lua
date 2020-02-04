@@ -121,12 +121,12 @@ function public:finish()
 end
 
 ---@return number
-function public:getCastingTimeLeft()
+function public:getTimeLeft()
     return private.data[self].time_left
 end
 
 ---@return number
-function public:getFullCastingTime()
+function public:getFullTime()
     return private.data[self].full_time
 end
 
@@ -135,9 +135,9 @@ function public:getCaster()
     return private.data[self].caster
 end
 
----@return any
+---@return table
 function public:getTarget()
-    return private.data[self].caster
+    return private.data[self].target
 end
 
 --=========
@@ -159,7 +159,7 @@ function private.applyBlocks(self)
     end
 
     if priv.cancel_other then
-        GetCasterInstances = GetCasterInstances or require('Class.Ability.Event').GetCasterInstances
+        GetCasterInstances = GetCasterInstances or require('Class.Ability.Event').getCasterInstances
         local list = GetCasterInstances(priv.caster)
         for i = 1, #list do
             if not private.data[list[i]].ignore_cancel_by_others then
@@ -185,7 +185,7 @@ end
 
 ---@param self AbilityCastInstance
 ---@param caster unit
----@param target unit|item|destructable|table|nil
+---@param target table
 ---@param ability AbilityType
 ---@return AbilityCastInstance
 function private.newData(self, caster, target, ability)

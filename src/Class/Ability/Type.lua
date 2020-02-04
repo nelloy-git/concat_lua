@@ -3,6 +3,7 @@
 --=========
 
 local Log = require('utils.Log')
+---@type any
 local Class = require('utils.Class.Class')
 
 ---@type DataBaseClass
@@ -90,9 +91,9 @@ static.Status.REMOVE = 5
 ---@param uniq_name string
 ---@param target_type AbilityTargetType
 ---@return AbilityType
-function static.new(uniq_name, target_type)
+function static.new(uniq_name, target_type, user_data)
     local instance = Class.allocate(AbilityType)
-    private.newData(instance, uniq_name, target_type)
+    private.newData(instance, uniq_name, target_type, user_data)
 
     return instance
 end
@@ -137,8 +138,13 @@ function public:getTooltip()
     return private.data[self].tooltip
 end
 
+---@return string
+function public:getUserData()
+    return private.data[self].user_data
+end
+
 ---@param cb_type AbilityCallbackType
----@param cb fun | nil
+---@param cb fun(data:AbilityCastInstance) | nil
 function public:setCallback(cb_type, cb)
     if not private.isCallbackType(cb_type) then
         Log.error(AbilityType, 'wrong callback type', 2)
@@ -265,7 +271,7 @@ end
 ---@param instance AbilityType
 ---@param uniq_name string | number
 ---@param target_type AbilityTargetType
-function private.newData(instance, uniq_name, target_type)
+function private.newData(instance, uniq_name, target_type, user_data)
     local priv = {}
 
     if IsCompiletime() then
@@ -280,6 +286,7 @@ function private.newData(instance, uniq_name, target_type)
     priv.tooltip = ''
     priv.id = ID(private.CompiletimeData:get(uniq_name))
     priv.callbacks = {}
+    priv.user_data = user_data
 
     private.data[instance] = setmetatable(priv, private.metatable)
     private.DB:set(priv.id, instance)

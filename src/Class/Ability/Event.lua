@@ -33,7 +33,7 @@ local private = {}
 
 ---@param caster unit
 ---@return AbilityCastInstance[] 
-function static.GetCasterInstances(caster)
+function static.getCasterInstances(caster)
     if not private.active_casters[caster] then
         private.active_casters[caster] = {}
     end
@@ -85,15 +85,14 @@ function private.onSpellEffect()
     table.insert(private.active_casters[caster], instance)
 end
 
----@return unit|item|destructable|table|nil
+---@return table
 function private.getAnyTarget()
-    local target = GetSpellTargetUnit()
-    if target then return target end
-    target = GetSpellTargetItem()
-    if target then return target end
-    target = GetSpellTargetDestructable()
-    if target then return target end
-    target = {x = GetSpellTargetX(), y = GetSpellTargetY()}
+    local target = {}
+    target.unit = GetSpellTargetUnit()
+    target.item = GetSpellTargetItem()
+    target.destructable = GetSpellTargetDestructable()
+    target.x = GetSpellTargetX()
+    target.y = GetSpellTargetY()
     return target
 end
 
@@ -114,7 +113,7 @@ function private.timerLoop()
         private.active_casters[caster] = new_list
     end
 
-    private.action = private.timer:addAction(0, function() private.timerLoop() end)
+    private.action = private.timer:addAction(period, function() private.timerLoop() end)
 end
 
 return static

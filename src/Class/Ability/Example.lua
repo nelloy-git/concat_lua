@@ -4,14 +4,14 @@
 
 local Log = require('utils.Log')
 
----@type AbilityTypeClass
-local Type = require('Class.Ability.Type')
----@type AbilityCastInstanceClass
-local CastInstance = require('Class.Ability.CastInstance')
+---@type AbilityAPI
+local Ability = require('Class.Ability.Api')
+local TargetType = Ability.TargetType
+local CallbackType = Ability.CallbackType
+local Status = Ability.Status
+
 ---@type BetterTimerClass
 local Timer = require('Class.Timer.BetterTimer')
-
-local Event = require('Class.Ability.Event')
 
 local fmt = string.format
 
@@ -20,94 +20,113 @@ local fmt = string.format
 --=========
 
 -- Ability type for using in casting system.
-local ExampleAbility = Type.new('Example ability', Type.TargetType.None)
+local ExampleAbility = Ability.newType('Example ability', TargetType.None)
 
 -- ===========
 --  Callbacks
 -- ===========
 
----@param cast_data AbilityCastInstance
----@return number
-local function getCastingTime(cast_data)
-    local caster = cast_data:getCaster()
+local state = 0
+local count = 8
+local gl_timer = Timer.getGlobalTimer()
+ExampleAbility:setCallback(CallbackType.START, function(data)
+    if state % count == 0 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
+        return Status.OK
+
+    elseif state % count == 1 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be cancelled right now.')
+        return Status.CANCEL
+
+    elseif state % count == 2 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be interrupted right now.')
+        return Status.INTERRUPT
+
+    elseif state % count == 3 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be finished right now.')
+        return Status.FINISH
+
+    elseif state % count == 4 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be removed right now.')
+        return Status.REMOVE
+
+    elseif state % count == 5 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be cancelled after 1 sec.')
+        gl_timer:addAction(1, function() data:cancel() end)
+        return Status.OK
+
+    elseif state % count == 6 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be interrupted after 1 sec.')
+        gl_timer:addAction(1, function() data:interrupt() end)
+        return Status.OK
+
+    elseif state % count == 7 then
+        Log(Log.Msg, ExampleAbility:getName(), 'casting have to be finished after 1 sec.')
+        gl_timer:addAction(1, function() data:finish() end)
+        return Status.OK
+
+    elseif state % count == 8 then
+        Log(Log.Msg, ExampleAbility:getName(), 'caster can move while casting.')
+        return Status.OK
+
+    elseif state % count == 9 then
+        Log(Log.Msg, ExampleAbility:getName(), 'caster can attack while casting.')
+        return Status.OK
+
+    elseif state % count == 10 then
+        Log(Log.Msg, ExampleAbility:getName(), 'double casting is enabled.')
+        return Status.OK
+    end
+
+    state = state + 1
+end)
+
+ExampleAbility:setCallback(CallbackType.CASTING, function(data)
+    local time_left = data:getTimeLeft()
+    Log(Log.Msg, ExampleAbility:getName(), fmt('Time left: %.1f', time_left))
+    return Status.OK
+end)
+
+ExampleAbility:setCallback(CallbackType.CANCEL, function(data)
+    Log(Log.Msg, ExampleAbility:getName(), fmt('casting cancelled. Time left: %.1f', data:getTimeLeft()))
+end)
+
+ExampleAbility:setCallback(CallbackType.INTERRUPT, function(data)
+    Log(Log.Msg, ExampleAbility:getName(), fmt('casting interrupted. Time left: %.1f', data:getTimeLeft()))
+end)
+
+ExampleAbility:setCallback(CallbackType.FINISH, function(data)
+    Log(Log.Msg, ExampleAbility:getName(), fmt('casting finished. Time left: %.1f', data:getTimeLeft()))
+end)
+
+ExampleAbility:setCallback(CallbackType.GET_TIME, function(data)
+    local caster = data:getCaster()
     local full_time = BlzGetUnitMaxHP(caster) / 100
     if full_time < 3 then
         full_time = 3
     end
-    Log(Log.Msg, ExampleAbility:getName(), fmt('full casting time = %.2f (MaxHP / 100, min = 3)', full_time))
     return full_time
-end
+end)
 
-local state = 'normal'
----@param cast_data AbilityCastInstance
----@return boolean
-local function start(cast_data)
-    Log(Log.Msg, ExampleAbility:getName(), 'got casting started event. Use more times for different tests.')
-
-    local caster = cast_data:getCaster()
-    Log(Log.Msg, ExampleAbility:getName(), fmt('caster %s.', caster))
-    if state == 'normal' then
-        Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
-        state = 'failed'
-        return Type.Status.OK
-    elseif state == 'failed' then
-        Log(Log.Msg, ExampleAbility:getName(), 'casting have not to start.')
-        state = 'interrupt'
-        return Type.Status.REMOVE
-    elseif state == 'interrupt' then
-        local interrupt_time = cast_data:getFullCastingTime() / 2
-        Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be interrupted after %.2f sec.', interrupt_time))
-        Timer.getGlobalTimer():addAction(interrupt_time, function() cast_data:interrupt() end)
-        state = 'cancel'
-        return Type.Status.OK
-    else
-        local cancel_time = cast_data:getFullCastingTime() / 2
-        Log(Log.Msg, ExampleAbility:getName(), fmt('casting have to be canceled after %.2f sec.', cancel_time))
-        Timer.getGlobalTimer():addAction(cancel_time, function() cast_data:cancel() end)
-        state = 'normal'
-        return Type.Status.OK
+ExampleAbility:setCallback(CallbackType.CASTER_CAN_MOVE, function(data)
+    if state == 8 then
+        return true
     end
-end
+    return false
+end)
 
-local prev = -1
----@param cast_data AbilityCastInstance
----@return boolean
-local function casting(cast_data)
-    local cur = cast_data:getCastingTimeLeft()
-    cur = math.floor(5 * cur) / 5
-    if math.floor(cur) ~= prev then
-        Log(Log.Msg, ExampleAbility:getName(), fmt('casting time - %.1f', cur))
-        prev = math.floor(cur)
+ExampleAbility:setCallback(CallbackType.CASTER_CAN_ATTACK, function(data)
+    if state == 9 then
+        return true
     end
-    return Type.Status.OK
-end
+    return false
+end)
 
----@param cast_data AbilityCastInstance
-local function finish(cast_data)
-    Log(Log.Msg, ExampleAbility:getName(), 'casting finished')
-end
-
----@param cast_data AbilityCastInstance
-local function cancel(cast_data)
-    Log(Log.Msg, ExampleAbility:getName(), 'casting canceled')
-end
-
----@param cast_data AbilityCastInstance
-local function interrupt(cast_data)
-    Log(Log.Msg, ExampleAbility:getName(), 'casting interrupted')
-end
-
--- Set function for casting time calculating.
-ExampleAbility:setCallback(Type.CallbackType.GET_TIME, getCastingTime)
--- Set callback for casting start. Should return true(default) if started successfully.
-ExampleAbility:setCallback(Type.CallbackType.START, start)
--- Set callback for casting time loop. Have to return false if casting is interupted.
-ExampleAbility:setCallback(Type.CallbackType.CASTING, casting)
--- Set callback for casting finish.
-ExampleAbility:setCallback(Type.CallbackType.FINISH, finish)
--- Set callback for casting cancel.
-ExampleAbility:setCallback(Type.CallbackType.CANCEL, cancel)
--- Set callback for casting interruption.
-ExampleAbility:setCallback(Type.CallbackType.INTERRUPT, interrupt)
+ExampleAbility:setCallback(CallbackType.IGNORE_CANCEL_BY_OTHER_CASTS, function(data)
+    if state == 10 then
+        return true
+    end
+    return false
+end)
 
 return ExampleAbility
