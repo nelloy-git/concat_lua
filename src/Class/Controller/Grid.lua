@@ -56,11 +56,13 @@ function public:detect()
     for x = 1, priv.res_x do
         for y = 1, priv.res_y do
             if priv.detectors[x][y]:detect() then
+                local abs_x = self:getAbsX()
+                local abs_y = self:getAbsY()
                 local res = {
-                    min_x = self:getX() + priv.detector_width * (x - 1),
-                    min_y = self:getY() + priv.detector_height * (y - 1),
-                    max_x = self:getX() + priv.detector_width * x,
-                    max_y = self:getY() + priv.detector_height * y
+                    min_x = abs_x + priv.detector_width * (x - 1),
+                    min_y = abs_y + priv.detector_height * (y - 1),
+                    max_x = abs_x + priv.detector_width * x,
+                    max_y = abs_y + priv.detector_height * y
                 }
                 return res
             end
