@@ -92,7 +92,7 @@ local _ = Compiletime(function()
 end)
 
 ---@param name string
----@return table
+---@return string
 function private.createFdf(name)
     local frame = private.SimpleFrame.new(name)
     local fields = private.SimpleFrame.Field
@@ -106,7 +106,7 @@ function private.createFdf(name)
     local file = private.File.new(name)
     file:addObject(frame)
 
-    return file:toRuntime()
+    return file:toRuntime().toc
 end
 
 return static

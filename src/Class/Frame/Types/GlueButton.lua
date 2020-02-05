@@ -139,7 +139,7 @@ function private.createFdf(name)
     local file = private.File.new(name)
     file:addObject(frame)
 
-    return file:toRuntime()
+    return file:toRuntime().toc
 end
 
 ---@param instance GlueButtonType
