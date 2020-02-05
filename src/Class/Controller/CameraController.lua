@@ -81,29 +81,41 @@ function public:setPos(x, y, z, time)
     end
 end
 
----@param unit unit
+---@param unit unit | nil
 function public:lockUnit(unit)
-    local priv = private.data[self]
-    if priv.player == private.local_player then
-        priv.locked_unit_action = gl_timer:addAction(function() private.followUnit(priv, unit) end)
-    end
+    private.data[self].locked_unit = unit
 end
 
-function public:unlockUnit()
+---@param x number
+---@param y number
+function public:setUnitOffsets(x, y)
     local priv = private.data[self]
-    if priv.player == private.local_player then
-        gl_timer:removeAction(priv.locked_unit_action)
-        priv.locked_unit_action = nil
-    end
+    priv.offset_x = x
+    priv.offset_y = y
+end
+
+--- rot[radians]
+---@param rot number
+function public:setUnitRotation(rot)
+    priv = private.data[self]
+    priv.rotation = rot
+    priv.cos_rot = math.cos(rot)
+    priv.sin_rot = math.sin(rot)
+end
+
+---@param dist number
+function public:setUnitDistance(dist)
+    private.data[self].distance = distance
 end
 
 ---@param field camerafield
 ---@param value number
-function public:set(field, value)
+---@param time number
+function public:set(field, value, time)
     local priv = private.data[self]
     if priv.player == private.local_player then
         priv[field] = value
-        SetCameraField(field, value)
+        SetCameraField(field, value, time)
     end
 end
 
@@ -123,18 +135,70 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 if not IsCompiletime() then
     private.local_player = GetLocalPlayer()
+    private.action = gl_timer:addAction(0, private.followUnit)
 end
 
-function private.followUnit(priv, unit)
-    if priv.player == private.local_player then
-        priv.x = GetUnitX(unit)
-        priv.y = GetUnitY(unit)
-        priv.z = GetUnitFlyHeight(unit)
-        priv[static.Field.ROTATION] = GetUnitFacing(unit)
+private.check_height_range = 25
+private.unit_height_weight = 0.5
+private.cam_height_weight = 1 - private.unit_height_weight
+private.update_time = 0.2
+function private.followUnit()
+    -- Iterate all intances
+    for _, priv in pairs(private.data) do
+        if priv.locked_unit then
+            local unit = priv.locked_unit
 
-        PanCameraToTimedWithZ(priv.x, priv.y, priv.z, gl_period)
-        SetCameraField(static.Field.ROTATION, priv[static.Field.ROTATION], gl_period)
-        priv.locked_unit_action = gl_timer:addAction(function() private.followUnit(priv, unit) end)
+            local a = GetUnitFacing(unit)
+            local cos_a = math.cos(a * bj_DEGTORAD)
+            local sin_a = math.sin(a * bj_DEGTORAD)
+
+            local x = GetUnitX(unit) + priv.offset_x * cos_a + priv.offset_y * sin_a
+            local y = GetUnitY(unit) + priv.offset_x * sin_a + priv.offset_y * cos_a
+            local z = GetUnitFlyHeight(unit) + priv.offset_z
+
+            local range = private.check_height_range
+            local dx = range * cos_a
+            local dy = range * sin_a
+
+            local z_behind_unit = private.getZ(x + dx, y + dy)
+            local z_ahead_unit = private.getZ(x - dx, y - dy)
+            local z_behind_cam = private.getZ(GetCameraTargetPositionX() + dx, GetCameraTargetPositionY() + dy)
+            local z_ahead_cam = private.getZ(GetCameraTargetPositionX() - dx, GetCameraTargetPositionY() - dy)
+
+            local k_z = ((z_ahead_unit - z_behind_unit) * private.unit_height_weight +
+                         (z_ahead_cam - z_behind_cam) * private.cam_height_weight) / 2
+
+            local cam_x = x - (priv.distance + k_z) * priv.cos_rot
+            local cam_y = y - (priv.distance + k_z) * priv.sin_rot
+            local cam_z = private.getZ(cam_x, cam_y)
+
+            local z_angle = priv.z_angle + k_z
+            local z_offset = z + priv[static.Field.ZOFFSET] + cam_z + math.abs(k_z) - GetCameraEyePositionZ()
+            if priv.player == private.local_player then
+                PanCameraToTimed(cam_x, cam_y, private.update_time);
+
+                priv[static.Field.ZOFFSET] = z_offset
+                SetCameraField(static.Field.ZOFFSET, z_offset, private.update_time)
+
+                priv[static.Field.ANGLE_OF_ATTACK] = z_angle
+                SetCameraField(static.Field.ANGLE_OF_ATTACK, z_angle, private.update_time)
+
+                priv[static.Field.ROTATION] = priv.rotation * bj_RADTODEG
+                SetCameraField(static.Field.ROTATION, a --[[priv.rotation * bj_RADTODEG]], private.update_time)
+
+                priv[static.Field.TARGET_DISTANCE] = priv.distance + k_z
+                SetCameraField(static.Field.TARGET_DISTANCE, priv.distance + k_z, private.update_time)
+            end
+        end
+    end
+    private.action = gl_timer:addAction(0, private.followUnit)
+end
+
+if not IsCompiletime() then
+    local loc = Location(0,0)
+    function private.getZ(x, y)
+        MoveLocation(loc, x, y)
+        return GetLocationZ(loc)
     end
 end
 
@@ -146,7 +210,15 @@ function private.newData(self, player)
         y = GetCameraTargetPositionY(),
         z = GetCameraTargetPositionZ(),
 
-        locked_unit_action = nil,
+        locked_unit = nil,
+        offset_x = 0,
+        offset_y = 0,
+        offset_z = 190,
+        rotation = 0 * bj_DEGTORAD,
+        cos_rot = math.cos(0 * bj_DEGTORAD),
+        sin_rot = math.sin(0 * bj_DEGTORAD),
+        distance = 300,
+        z_angle = 350,
     }
 
     for _, field in pairs(static.Field) do
@@ -161,3 +233,194 @@ private.metatable = {
 }
 
 return static
+--[[
+library CameraSystem requires optional CameraKeyboardMovement
+    {
+        //////////////////////////////////////////////////////////////////////////
+        //
+        //      Configuration area
+       
+        //          - Just default variables which the system will use when no other ones are specified by the user.
+        //constant    real    CAMERA_DEFAULT_X        =   0,
+                            CAMERA_DEFAULT_Y        =   0,
+                            CAMERA_DEFAULT_ZANGLE   =   350,
+                            CAMERA_DEFAULT_ZHEIGHT  =   190,
+                            CAMERA_DEFAULT_ROTATION =   0,
+                            CAMERA_DEFAULT_DISTANCE =   175,
+                           
+        //          - This is tricky. It defines the weight the measurements of the z position have. This system measures
+        //            out 4 locations to get a neat z height, 2 of them are at the unit's location and 2 are at the camera
+        //            location which is a bit further away. Those values define which measure has more weight - if you have
+        //            low terrain with less cliff heights you should probably give the unit's measurement more weight.
+        //            If you don't understand a bit of what I'm trying to explain, just play around a bit with those values
+        //            and look what effect they might have.
+                            CAMERA_TARGET_WEIGHT    =   1,
+                            CAMERA_CAMERA_WEIGHT    =   2 - CAMERA_TARGET_WEIGHT,
+        //          - What difference the measures have, if you have really steep cliffs (I'm not talking about blizzard cliffs)
+        //            you should probably decrease this.
+                            CAMERA_ZDIST_MEASURE    =   50,
+                           
+        //          - Pretty much self-explaining. You don't really have to change anything here.
+                            CAMERA_LOOP_INTERVAL    =   0.01,
+                            CAMERA_UPDATE_INTERVAL  =   0.2;
+        //////////////////////////////////////////////////////////////////////////
+        //
+        //      Struct area
+       
+        public struct CAMERA
+        {
+       
+        //////////////////////////////////////////////////////////////////////////
+        //
+        //      Struct variable area
+       
+            public
+            {
+                real x = CAMERA_DEFAULT_X, y = CAMERA_DEFAULT_Y,
+                     zAngle = CAMERA_DEFAULT_ZANGLE, zHeight = CAMERA_DEFAULT_ZHEIGHT,
+                     rotation = CAMERA_DEFAULT_ROTATION, distanceToTarget = CAMERA_DEFAULT_DISTANCE;
+               
+                player applyFor = null;
+                unit   toFollow = null;
+            }
+           
+            private
+            {
+                integer node;
+                boolean activated = false;
+           
+                static timer t = CreateTimer();
+                static integer count = 0;
+                static thistype data[];
+               
+                static location loc = Location(0,0);
+            }
+           
+            optional module CameraKeyboardMovement;
+           
+        //////////////////////////////////////////////////////////////////////////
+        //
+        //      Struct method area
+           
+            static method create(player p) -> thistype
+            {
+                thistype this = thistype.allocate();
+                applyFor = p;
+                static if (thistype.movementInit.exists) { movementInit(); }
+                return this;
+            }
+           
+            method apply()
+            {
+                if (count == 0)
+                    TimerStart(t, CAMERA_LOOP_INTERVAL, true, static method thistype.cameraLoop);
+                   
+                data[count] = this;
+                node = count;
+                count += 1;
+               
+                activated = true;
+            }
+           
+            private static method cameraLoop()
+            {
+                real tX = 0, tY = 0, tZ[], tzAngle = 0, tzHeight = 0, tRotation = 0;
+                thistype this;
+                integer i = 0;
+               
+                while (i < count)
+                {
+                    this = data[i];
+                    static if (thistype.movement.exists) { movement(); }
+                   
+                    if (toFollow != null)
+                    {
+                        x = GetUnitX(toFollow); y = GetUnitY(toFollow);
+                        tRotation = GetUnitFacing(toFollow)*bj_DEGTORAD;
+                        tzHeight = GetUnitFlyHeight(toFollow);
+                    }
+                   
+                    tX = x; tY = y;
+                   
+                    tX += CAMERA_ZDIST_MEASURE/2 * Cos(tRotation);
+                    tY += CAMERA_ZDIST_MEASURE/2 * Sin(tRotation);
+                    MoveLocation(loc, tX, tY);
+                    tZ[0] = GetLocationZ(loc);
+                   
+                    tX -= CAMERA_ZDIST_MEASURE * Cos(tRotation);
+                    tY -= CAMERA_ZDIST_MEASURE * Sin(tRotation);
+                    MoveLocation(loc, tX, tY);
+                    tZ[1] = GetLocationZ(loc);
+                   
+                    tX = GetCameraTargetPositionX() + CAMERA_ZDIST_MEASURE/2 * Cos(tRotation);
+                    tY = GetCameraTargetPositionY() + CAMERA_ZDIST_MEASURE/2 * Sin(tRotation);
+                    MoveLocation(loc, tX, tY);
+                    tZ[2] = GetLocationZ(loc);
+                   
+                    tX -= CAMERA_ZDIST_MEASURE * Cos(tRotation);
+                    tY -= CAMERA_ZDIST_MEASURE * Sin(tRotation);
+                    MoveLocation(loc, tX, tY);
+                    tZ[3] = GetLocationZ(loc);
+                   
+                    tZ[2] = ((tZ[0]-tZ[1])*CAMERA_TARGET_WEIGHT+(tZ[2]-tZ[3])*CAMERA_CAMERA_WEIGHT)/4;
+                   
+                    tX = x; tY = y;
+                   
+                    tRotation += rotation*bj_DEGTORAD;
+                    tX -= (distanceToTarget+tZ[2]) * Cos(tRotation);
+                    tY -= (distanceToTarget+tZ[2]) * Sin(tRotation);
+                    MoveLocation(loc, tX, tY);
+                   
+                    tzAngle = zAngle + tZ[2];
+                    tzHeight += zHeight + GetCameraField(CAMERA_FIELD_ZOFFSET) + GetLocationZ(loc) + RAbsBJ(tZ[2]) - GetCameraEyePositionZ();
+                   
+                    if (GetLocalPlayer() == applyFor)
+                    {
+                        PanCameraToTimed(tX, tY, CAMERA_UPDATE_INTERVAL);
+                        SetCameraField(CAMERA_FIELD_ZOFFSET, tzHeight, CAMERA_UPDATE_INTERVAL);
+                        SetCameraField(CAMERA_FIELD_ANGLE_OF_ATTACK, tzAngle, CAMERA_UPDATE_INTERVAL);
+                        SetCameraField(CAMERA_FIELD_ROTATION, tRotation*bj_RADTODEG, CAMERA_UPDATE_INTERVAL);
+                        SetCameraField(CAMERA_FIELD_TARGET_DISTANCE, distanceToTarget+tZ[2], CAMERA_UPDATE_INTERVAL);
+                    }
+                   
+                    i += 1;
+                }
+            }
+           
+            method operator active() -> boolean
+                { return activated; }
+           
+            method operator active=(boolean b)
+            {
+                if (b && !activated)
+                    apply();
+                else if (!b && activated)
+                {
+                    data[node] = data[count-1];
+                    data[node].node = node;
+                    count -= 1;
+                   
+                    if (count == 0)
+                        PauseTimer(t);
+                       
+                    activated = false;
+                }
+            }
+           
+            method destroy()
+            {
+                if (activated)
+                {
+                    data[node] = data[count-1];
+                    data[node].node = node;
+                    count -= 1;
+                   
+                    if (count == 0)
+                        PauseTimer(t);
+                }
+               
+                deallocate();
+            }
+        }
+    }
+    ]]
