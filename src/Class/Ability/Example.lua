@@ -27,58 +27,61 @@ local ExampleAbility = Ability.newType('Example ability', TargetType.None)
 -- ===========
 
 local state = 0
-local count = 8
+local count = 11
 local gl_timer = Timer.getGlobalTimer()
 ExampleAbility:setCallback(CallbackType.START, function(data)
+    local res = Status.OK
+
     if state % count == 0 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to start normally.')
-        return Status.OK
+        res = Status.OK
 
     elseif state % count == 1 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be cancelled right now.')
-        return Status.CANCEL
+        res = Status.CANCEL
 
     elseif state % count == 2 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be interrupted right now.')
-        return Status.INTERRUPT
+        res = Status.INTERRUPT
 
     elseif state % count == 3 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be finished right now.')
-        return Status.FINISH
+        res = Status.FINISH
 
     elseif state % count == 4 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be removed right now.')
-        return Status.REMOVE
+        res = Status.REMOVE
 
     elseif state % count == 5 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be cancelled after 1 sec.')
         gl_timer:addAction(1, function() data:cancel() end)
-        return Status.OK
+        res = Status.OK
 
     elseif state % count == 6 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be interrupted after 1 sec.')
         gl_timer:addAction(1, function() data:interrupt() end)
-        return Status.OK
+        res = Status.OK
 
     elseif state % count == 7 then
         Log(Log.Msg, ExampleAbility:getName(), 'casting have to be finished after 1 sec.')
         gl_timer:addAction(1, function() data:finish() end)
-        return Status.OK
+        res = Status.OK
 
     elseif state % count == 8 then
         Log(Log.Msg, ExampleAbility:getName(), 'caster can move while casting.')
-        return Status.OK
+        res = Status.OK
 
     elseif state % count == 9 then
         Log(Log.Msg, ExampleAbility:getName(), 'caster can attack while casting.')
-        return Status.OK
+        res = Status.OK
 
     elseif state % count == 10 then
         Log(Log.Msg, ExampleAbility:getName(), 'double casting is enabled.')
-        return Status.OK
+        res = Status.OK
     end
 
     state = state + 1
+    return res
 end)
 
 ExampleAbility:setCallback(CallbackType.CASTING, function(data)

@@ -26,6 +26,8 @@ local icon = Compiletime(function() return require('compiletime.Icon').BTN3M1 en
 --local GlueButton = require('Class.Frame.Default.GlueButton')
 ---@type CameraControllerClass
 local CameraController = require('Class.Controller.CameraController')
+---@type ControllerWASDClass
+local WASD = require('Class.Controller.ControllerWASD')
 --local ControllerGrid = require('Class.Controller.Grid')
 
 --local btn_type = GlueButtonType.new('TestButton')
@@ -50,7 +52,10 @@ if not IsCompiletime() then
     local camera = CameraController.new(Player(0))
     camera:lockUnit(u:getWc3Unit())
 
-    collectgarbage()
+    local controller = WASD.new(Player(0))
+    controller:addUnit(u:getWc3Unit())
+
+    --collectgarbage()
 end
 
 
