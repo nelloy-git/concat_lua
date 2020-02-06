@@ -4,8 +4,9 @@
 
 local Class = require('utils.Class.Class')
 
----@type ParameterTypeClass
-local ParameterType = require('Class.ParameterType')
+---@type ParameterData
+local Data = require('Parameter.TypeData')
+local Param = Data.Type
 
 --=======
 -- Class
@@ -26,10 +27,9 @@ local private = {}
 -- Static
 --========
 
----@param child_instance table | nil
 ---@return ParameterValue
-function static.new(child_instance)
-    local instance = child_instance or Class.allocate(ParameterValue)
+function static.new()
+    local instance = Class.allocate(ParameterValue)
     private.newData(instance)
 
     return instance
@@ -40,61 +40,59 @@ end
 -- Public
 --========
 
----@return number
-function public:getBase()
-    local priv = private[self]
-    return priv.base
-end
-
 ---@param value number
 function public:setBase(value)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.result_ready = false
     priv.base = value
 end
 
----@return number
-function public:getMult()
-    local priv = private[self]
-    return priv.mult
+---@param value number
+function public:setAdditive(value)
+    local priv = private.data[self]
+    priv.result_ready = false
+    priv.additive = value
 end
 
 ---@param value number
 function public:setMult(value)
-    local priv = private[self]
+    local priv = private.data[self]
     priv.result_ready = false
     priv.mult = value
 end
 
 ---@return number
+function public:getBase()
+    local priv = private.data[self]
+    return private.data[self].base
+end
+
+---@return number
+function public:getMult()
+    local priv = private.data[self]
+    return priv.mult
+end
+
+---@return number
 function public:getAdditive()
-    local priv = private[self]
+    local priv = private.data[self]
     return priv.additive
-end
-
----@param value number
-function public:setAdditive(value)
-    local priv = private[self]
-    priv.result_ready = false
-    priv.additive = value
-end
-
-function public:free()
-    private.freeData(self)
 end
 
 --=========
 -- Private
 --=========
 
----@param instance ParameterValue
-function private.newData(instance)
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self ParameterValue
+function private.newData(self)
     local priv = {
         base = 0,
         mult = 1,
         additive = 0,
     }
-    private[instance] = priv
+    private.data[self] = priv
 end
 
 ---@param instance ParameterValue

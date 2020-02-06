@@ -21,26 +21,25 @@ local UnitApplyParameter = require('Class.Unit.Parameters.Apply')
 -- Class
 --=======
 
-local UnitParametersContainer = Class.new('UnitParametersContainer')
----@class UnitParametersContainer
-local public = UnitParametersContainer.public
----@class UnitParametersContainerClass
-local static = UnitParametersContainer.static
----@type UnitParametersContainerClass
-local override = UnitParametersContainer.override
+local ParameterUnit = Class.new('ParameterUnit')
+---@class ParameterUnit
+local public = ParameterUnit.public
+---@class ParametersContUnit
+local static = ParameterUnit.static
+---@type ParametersContUnit
+local override = ParameterUnit.override
 local private = {}
 
-private.DB = DataBase.new('userdata', UnitParametersContainer)
+private.DB = DataBase.new('userdata', ParameterUnit)
 
 --========
 -- Static
 --========
 
 ---@param owner unit
----@param child_instance UnitParametersContainer | nil
----@return UnitParametersContainer
-function static.new(owner, child_instance)
-    local instance = child_instance or Class.allocate(UnitParametersContainer)
+---@return ParameterUnit
+function static.new(owner)
+    local instance = Class.allocate(ParameterUnit)
     private.newData(instance, owner)
 
     for i = 1, private.params_count do
@@ -52,29 +51,29 @@ function static.new(owner, child_instance)
 end
 
 ---@param owner unit
----@return UnitParametersContainer
+---@return ParameterUnit
 function static.get(owner)
     return private.DB:get(owner)
 end
 
 ---@return Unit
 function static.GetUnitWithChangedParameters()
-    Log(Log.Err, UnitParametersContainer, 'GetUnitWithChangedParameters called outside of \'UnitChangesParameter\' event.')
+    Log(Log.Err, ParameterUnit, 'GetUnitWithChangedParameters called outside of \'UnitChangesParameter\' event.')
 end
 
 ---@return ParameterType
 function static.GetChangedParameterType()
-    Log(Log.Err, UnitParametersContainer, 'GetChangedParameterType called outside of \'UnitChangesParameter\' event.')
+    Log(Log.Err, ParameterUnit, 'GetChangedParameterType called outside of \'UnitChangesParameter\' event.')
 end
 
 ---@return number
 function static.GetChangedParameterOldValue()
-    Log(Log.Err, UnitParametersContainer, 'GetChangedParameterOldValue called outside of \'UnitChangesParameter\' event.')
+    Log(Log.Err, ParameterUnit, 'GetChangedParameterOldValue called outside of \'UnitChangesParameter\' event.')
 end
 
 ---@return number
 function static.GetChangedParameterNewValue()
-    Log(Log.Err, UnitParametersContainer, 'GetChangedParameterNewValue called outside of \'UnitChangesParameter\' event.')
+    Log(Log.Err, ParameterUnit, 'GetChangedParameterNewValue called outside of \'UnitChangesParameter\' event.')
 end
 
 --========
@@ -147,11 +146,6 @@ function public:addAdditive(param, value)
     private.update(self, param)
 end
 
-function public:free()
-    private.freeData(self)
-    Class.free(self)
-end
-
 --=========
 -- Private
 --=========
@@ -163,7 +157,7 @@ end
 private.params_list = ParameterType.getList()
 private.params_count = #private.params_list
 
----@param self UnitParametersContainer
+---@param self ParameterUnit
 ---@param param ParameterType
 function private.update(self, param)
     local priv = private[self]
@@ -195,7 +189,7 @@ function private.update(self, param)
     static.GetChangedParameterNewValue = prev_new
 end
 
----@param self UnitParametersContainer
+---@param self ParameterUnit
 ---@param owner unit
 ---@return table
 function private.newData(self, owner)
@@ -212,7 +206,7 @@ function private.newData(self, owner)
     private.DB:set(owner, self)
 end
 
----@param self UnitParametersContainer
+---@param self ParameterUnit
 function private.freeData(self)
     private.DB:remove(private[self].owner)
     private[self] = nil

@@ -16,13 +16,13 @@ local Trigger = require('Class.Trigger')
 -- Class
 --=======
 
-local ParameterType = Class.new('ParameterType')
----@class ParameterTypeClass
-local static = ParameterType.static
----@class ParameterType
-local public = ParameterType.public
----@type ParameterType
-local override = ParameterType.override
+local ParameterType2 = Class.new('ParameterType2')
+---@class ParameterType2Class
+local static = ParameterType2.static
+---@class ParameterType2
+local public = ParameterType2.public
+---@type ParameterType2
+local override = ParameterType2.override
 local private = {}
 
 --========
@@ -94,7 +94,7 @@ function static.getCooldownReductionPerInt()
     return private.cdr_per_int
 end
 
----@return ParameterType[]
+---@return ParameterType2[]
 function static.getList()
     local copy = {}
     for i = 1, #private.list do
@@ -178,9 +178,9 @@ private.mdmg_per_int = 1
 private.mp_per_int = 5
 private.cdr_per_int = 1
 
----@return ParameterType
+---@return ParameterType2
 function private.new()
-    local instance = Class.allocate(ParameterType)
+    local instance = Class.allocate(ParameterType2)
     local priv = {
         short = "Empty",
         full = "Empty",

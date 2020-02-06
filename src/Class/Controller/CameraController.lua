@@ -5,11 +5,7 @@
 local Class = require('utils.Class.Class')
 
 ---@type BetterTimerClass
-local Timer = require('Class.Timer.BetterTimer')
-local gl_timer
-if not IsCompiletime() then
-    gl_timer = Timer.getGlobalTimer()
-end
+local Timer = require('Class.Timer.Timer')
 
 --=======
 -- Class
@@ -123,8 +119,9 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.check_height_range = 25
-private.unit_height_weight = 0.5
+private.timer_period = 0.01
+private.check_height_range = 5
+private.unit_height_weight = 0.7
 private.cam_height_weight = 1 - private.unit_height_weight
 private.update_time = 0.2
 function private.followUnit()
@@ -176,18 +173,17 @@ function private.followUnit()
             end
         end
     end
-    private.action = gl_timer:addAction(0, private.followUnit)
 end
 
 if not IsCompiletime() then
     private.local_player = GetLocalPlayer()
-    private.action = gl_timer:addAction(0, private.followUnit)
+    private.timer = Timer.new()
+    private.timer:start(private.timer_period, true, private.followUnit)
 
     local loc = Location(0,0)
     function private.getZ(x, y)
         MoveLocation(loc, x, y)
         return GetLocationZ(loc)
-
     end
 end
 

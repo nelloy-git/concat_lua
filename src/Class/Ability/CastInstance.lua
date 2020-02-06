@@ -8,6 +8,10 @@ local Class = require('utils.Class.Class')
 local AbilityType = require('Class.Ability.Type')
 local CbType = AbilityType.CallbackType
 local Status = AbilityType.Status
+---@type UnitParametersContainerClass
+local UnitParam = require('Class.Unit.Parameters.Container')
+---@type ParameterTypeClass
+local Param = require('Class.ParameterType')
 
 --=======
 -- Class
@@ -145,17 +149,20 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.multiplier = 10^10
 
 ---@param self AbilityCastInstance
 function private.applyBlocks(self)
     local priv = private.data[self]
 
     if not priv.caster_can_attack then
-        UnitAddAbility(priv.caster, private.disable_attack_id)
+        UnitParam.get(priv.caster):addMult(Param.ASpd, -private.multiplier)
+        --UnitAddAbility(priv.caster, private.disable_attack_id)
     end
 
     if not priv.caster_can_move then
-        UnitAddAbility(priv.caster, private.disable_move_id)
+        UnitParam.get(priv.caster):addMult(Param.MS, -private.multiplier)
+        --UnitAddAbility(priv.caster, private.disable_move_id)
     end
 
     if priv.cancel_other then
@@ -174,12 +181,14 @@ function private.removeBlocks(self)
     local priv = private.data[self]
 
     if not priv.caster_can_attack then
-        UnitRemoveAbility(priv.caster, private.disable_attack_id)
+        UnitParam.get(priv.caster):addMult(Param.ASpd, private.multiplier)
+        --UnitRemoveAbility(priv.caster, private.disable_attack_id)
     end
 
     if not priv.caster_can_move then
-        UnitRemoveAbility(priv.caster, private.disable_move_id)
-        UnitRemoveAbility(priv.caster, private.disable_move_buff_id)
+        UnitParam.get(priv.caster):addMult(Param.MS, private.multiplier)
+        --UnitRemoveAbility(priv.caster, private.disable_move_id)
+        --UnitRemoveAbility(priv.caster, private.disable_move_buff_id)
     end
 end
 

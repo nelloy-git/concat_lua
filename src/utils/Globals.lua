@@ -11,7 +11,7 @@ function savetyRun(func, ...)
         if success then
             return result
         else
-            Log(Log.Err, 'savetyRun', result)
+            Log.error('savetyRun', result, 2)
             return nil
         end
     else

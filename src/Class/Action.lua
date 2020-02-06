@@ -43,10 +43,10 @@ end
 
 local savetyRun = savetyRun
 ---@return any
-function public:run()
+function public:run(...)
     local prev = static.getRunningAction
     static.getRunningAction = function() return self end
-    local res = savetyRun(private.data[self].callback)
+    local res = savetyRun(private.data[self].callback, ...)
     static.getRunningAction = prev
     return res
 end

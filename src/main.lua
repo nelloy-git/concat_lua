@@ -6,6 +6,9 @@ require('utils.Globals')
 local Unit = require('Class.Unit.Unit')
 ---@type UnitTypeClass
 local UnitType = require('Class.Unit.Type')
+---@type ParameterTypeClass
+local Param = require('Class.ParameterType')
+
 ---@type AbilityType
 local ExampleAbility = require('Class.Ability.Example')
 ---@type BetterTimerClass
@@ -32,7 +35,7 @@ local WASD = require('Class.Controller.ControllerWASD')
 
 --local btn_type = GlueButtonType.new('TestButton')
 
-local u = nil
+u = nil
 if not IsCompiletime() then
     --local frame = GlueButton.new(btn_type)
     --frame:setX(0.3)
@@ -45,17 +48,22 @@ if not IsCompiletime() then
     --frame:setTexture('ReplaceableTextures\\CommandButtons\\BTNHeroPaladin')
     --frame:setPushedTexture('ReplaceableTextures\\CommandButtons\\DISBTNHeroPaladin')
 
-    local u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
+    u = Unit.new(Player(0), footman_type:getId(), 0, 0, 0)
     UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
-    --u = nil
+    u.parameters:setBase(Param.Health, 500)
+    
+    u2 = Unit.new(Player(1), footman_type:getId(), 0, 0, 0)
+    UnitAddAbility(u:getWc3Unit(), ExampleAbility:getId())
+    u2.parameters:setBase(Param.Health, 500)
 
-    local camera = CameraController.new(Player(0))
+    camera = CameraController.new(Player(0))
     camera:lockUnit(u:getWc3Unit())
 
-    local controller = WASD.new(Player(0))
-    controller:addUnit(u:getWc3Unit())
+    controller = WASD.new(Player(0))
+    controller:lockUnit(u:getWc3Unit(), 6, 0)
 
-    --collectgarbage()
+    --TerrainDeformCrater(0, 0, 5, -300, 0, true)
+    --collectgarbage('collect')
 end
 
 
