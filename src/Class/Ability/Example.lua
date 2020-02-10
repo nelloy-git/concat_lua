@@ -86,7 +86,7 @@ end)
 
 ExampleAbility:setCallback(CallbackType.CASTING, function(data)
     local time_left = data:getTimeLeft()
-    Log(Log.Msg, ExampleAbility:getName(), fmt('Time left: %.1f', time_left))
+    --Log(Log.Msg, ExampleAbility:getName(), fmt('Time left: %.1f', time_left))
     return Status.OK
 end)
 
@@ -112,21 +112,21 @@ ExampleAbility:setCallback(CallbackType.GET_TIME, function(data)
 end)
 
 ExampleAbility:setCallback(CallbackType.CASTER_CAN_MOVE, function(data)
-    if state == 8 then
-        return true
-    end
-    return false
-end)
-
-ExampleAbility:setCallback(CallbackType.CASTER_CAN_ATTACK, function(data)
     if state == 9 then
         return true
     end
     return false
 end)
 
-ExampleAbility:setCallback(CallbackType.IGNORE_CANCEL_BY_OTHER_CASTS, function(data)
+ExampleAbility:setCallback(CallbackType.CASTER_CAN_ATTACK, function(data)
     if state == 10 then
+        return true
+    end
+    return false
+end)
+
+ExampleAbility:setCallback(CallbackType.IGNORE_CANCEL_BY_OTHER_CASTS, function(data)
+    if state == 11 then
         return true
     end
     return false

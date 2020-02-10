@@ -3,7 +3,6 @@
 --=========
 
 local Log = require('utils.Log')
----@type any
 local Class = require('utils.Class.Class')
 
 ---@type DataBaseClass
@@ -125,7 +124,7 @@ function public:setTooltip(tooltip, player_index)
     local priv = private.data[self]
     priv.tooltip = tooltip
     if IsCompiletime() then
-        priv.we_abil:setField(private.WeAbility.Field.TooltipNormalExtended, 1, tooltip)
+        priv.we_abil:setField(private.ObjEdit.Ability.Field.TooltipNormalExtended, 1, tooltip)
     else
         if not player_index or GetLocalPlayer() == Player(player_index) then
             BlzSetAbilityTooltip(priv.id, tooltip, 1)
@@ -180,7 +179,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.DB = DataBase.new('number', AbilityType)
 private.CompiletimeData = CompiletimeData.new(AbilityType)
 local _ = Compiletime(function()
-    private.WeAbility = require('compiletime.ObjectEdit').Ability
+    private.ObjEdit = require('compiletime.ObjectEdit')
 end)
 
 -- Compiletime only.
@@ -192,10 +191,11 @@ function private.createWc3Ability(name, target_type)
         Log.error(AbilityType, 'wrong target type.', 3)
     end
 
-    local id = require('compiletime.ObjectEdit').getAbilityId()
-    local abil = private.WeAbility.new(id, 'ANcl', name)
+    local ObjEdit = private.ObjEdit
+    local id = ObjEdit.getAbilityId()
+    local abil = ObjEdit.Ability.new(id, 'ANcl', name)
 
-    local Fields = private.WeAbility.Field
+    local Fields = private.ObjEdit.Ability.Field
     abil:setField(Fields.TooltipNormal, 1, name)
     abil:setField(Fields.TooltipNormalExtended, 1, '')
     abil:setField(Fields.CastingTime, 1, 0)
@@ -214,23 +214,23 @@ function private.createWc3Ability(name, target_type)
 end
 
 private.ANcl_TargetType = {
-    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_TargetType_None),
-    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Point),
-    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
-    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_UnitOrPoint),
-    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_TargetType_Unit),
+    [static.TargetType.None] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_None),
+    [static.TargetType.Point] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_Point),
+    [static.TargetType.PointWithArea] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_Point),
+    [static.TargetType.Unit] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_Unit),
+    [static.TargetType.UnitOrPoint] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_UnitOrPoint),
+    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_UnitOrPoint),
+    [static.TargetType.UnitWithArea] = Compiletime(private.ObjEdit.Ability.ANcl_TargetType_Unit),
 }
 
 private.ANcl_Options = {
-    [static.TargetType.None] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.Point] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.PointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
-    [static.TargetType.Unit] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.UnitOrPoint] = Compiletime(private.WeAbility.ANcl_Options_Visible),
-    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
-    [static.TargetType.UnitWithArea] = Compiletime(private.WeAbility.ANcl_Options_Visible + private.WeAbility.ANcl_Options_AreaTarget),
+    [static.TargetType.None] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible),
+    [static.TargetType.Point] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible),
+    [static.TargetType.PointWithArea] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible + private.ObjEdit.Ability.ANcl_Options_AreaTarget),
+    [static.TargetType.Unit] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible),
+    [static.TargetType.UnitOrPoint] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible),
+    [static.TargetType.UnitOrPointWithArea] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible + private.ObjEdit.Ability.ANcl_Options_AreaTarget),
+    [static.TargetType.UnitWithArea] = Compiletime(private.ObjEdit.Ability.ANcl_Options_Visible + private.ObjEdit.Ability.ANcl_Options_AreaTarget),
 }
 
 private.default_callback = {

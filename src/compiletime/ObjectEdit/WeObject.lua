@@ -60,6 +60,9 @@ end
 ---@param data any
 function public:setField(field, data)
     local priv = private[self]
+    if not field then
+        Log.error(self, 'field does not exist.', 2)
+    end
 
     if field:isValid(data) then
         priv.fields[field] = data

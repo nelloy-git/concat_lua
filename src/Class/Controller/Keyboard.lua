@@ -6,8 +6,6 @@ local Class = require('utils.Class.Class')
 
 ---@type TriggerClass
 local Trigger = require('Class.Trigger')
----@type TimerClass
-local Timer = require('Class.Timer.Timer')
 ---@type ActionClass
 local Action = require('Class.Action')
 
@@ -60,7 +58,7 @@ function private.getActionList(player, key, meta, is_down)
         }
     end
 
-    local key_list = private.player[player].key
+    local key_list = player_list[player].key
     if not key_list[key] then
         key_list[key] = {
             meta = {}
@@ -117,7 +115,7 @@ end
 
 if not IsCompiletime() then
     private.trigger = Trigger.new()
-    private.trigger:addAction(private.triggerFunc)
+    private.action = private.trigger:addAction(private.triggerFunc)
 end
 
 return static

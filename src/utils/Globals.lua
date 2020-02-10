@@ -28,7 +28,7 @@ function ID(id)
     elseif type(id) == 'number' and math.fmod(id, 1) == 0 then
         return id
     end
-    Log(Log.Err, "ID function", string.format("got %s", id))
+    Log.error("ID function", string.format("got %s", id), 2)
     return nil
 end
 
@@ -67,4 +67,19 @@ function deepcopy(orig, copies)
         copy = orig
     end
     return copy
+end
+
+---@param x number
+---@param y number
+---@param radius number
+function EnumUnitsInRange(x, y, radius)
+    local gr = CreateGroup()
+    local list = {}
+    GroupEnumUnitsInRange(gr, x, y, radius, nil)
+    local size = BlzGroupGetSize(gr)
+    for i = 0, size - 1 do
+        table.insert(list, BlzGroupUnitAt(gr, i))
+    end
+    DestroyGroup(gr)
+    return list
 end

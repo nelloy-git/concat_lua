@@ -5,18 +5,22 @@
 local Class = require('utils.Class.Class')
 
 ---@type SimpleFrameTypeClass
-local SimpleFrameType = require('Class.Frame.Types.SimpleFrame')
----@type FrameSimpleFrameClass
-local SimpleFrame = require('Class.Frame.Default.SimpleFrame')
+local SimpleFrameType = require('Frame.Type.SimpleFrame')
+---@type SimpleFrameTypeClass
+local SimpleButtonType = require('Frame.Type.SimpleButton')
+---@type SimpleFrameClass
+local SimpleFrame = require('Frame.Default.SimpleFrame')
+---@type SimpleButtonClass
+local SimpleButton = require('Frame.Default.SimpleButton')
 
 --=======
 -- Class
 --=======
 
-local ControllerDetector = Class.new('ControllerDetector', SimpleFrame)
----@class ControllerDetector : FrameSimpleFrame
+local ControllerDetector = Class.new('ControllerDetector', SimpleButton)
+---@class ControllerDetector : SimpleFrame
 local public = ControllerDetector.public
----@class ControllerDetectorClass : FrameSimpleFrameClass
+---@class ControllerDetectorClass : SimpleFrameClass
 local static = ControllerDetector.static
 ---@type ControllerDetectorClass
 local override = ControllerDetector.override
@@ -29,7 +33,7 @@ local private = {}
 ---@return ControllerDetector
 function override.new()
     local instance = Class.allocate(ControllerDetector)
-    instance = SimpleFrame(private.frame_type, instance)
+    instance = SimpleButton.new(private.frame_type, instance)
     private.newData(instance)
 
     return instance
@@ -49,7 +53,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.frame_type = SimpleFrameType.new('ControllerDetectorFrame')
+private.frame_type = SimpleButtonType.new('ControllerDetectorButton')
 private.tooltip_type = SimpleFrameType.new('ControllerDetectorTooltip')
 
 ---@param self ControllerDetector
@@ -57,15 +61,16 @@ function private.newData(self)
     local priv = {
         tooltip = SimpleFrame.new(private.tooltip_type)
     }
-    priv.tooltip:setX(-1)
-    priv.tooltip:setY(-1)
+    --priv.tooltip:setParent(self)
+    priv.tooltip:setX(-0.2)
+    priv.tooltip:setY(0)
+    priv.tooltip:setWidth(0.05)
+    priv.tooltip:setHeight(0.05)
+    priv.tooltip:setTexture('')
+
     self:setTooltip(priv.tooltip)
 
-    private.data[self] = setmetatable(priv, private.metadata)
+    private.data[self] = priv
 end
-
-private.metatable = {
-    __gc = function(self) end
-}
 
 return static

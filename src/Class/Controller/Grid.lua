@@ -7,9 +7,9 @@ local Class = require('utils.Class.Class')
 ---@type ControllerDetectorClass
 local Detector = require('Class.Controller.Detector')
 ---@type SimpleFrameTypeClass
-local SimpleFrameType = require('Class.Frame.Types.SimpleFrame')
----@type FrameSimpleFrameClass
-local SimpleFrame = require('Class.Frame.Default.SimpleFrame')
+local SimpleFrameType = require('Frame.Type.SimpleFrame')
+---@type SimpleFrameClass
+local SimpleFrame = require('Frame.Default.SimpleFrame')
 
 --=======
 -- Class
@@ -33,9 +33,9 @@ local private = {}
 ---@param width number
 ---@param height number
 ---@return ControllerGrid
-function static.new(x, y, width, height, res_x, res_y)
+function override.new(x, y, width, height, res_x, res_y)
     local instance = Class.allocate(ControllerGrid)
-    instance = SimpleFrame(private.frame_type, instance)
+    instance = SimpleFrame.new(private.frame_type, instance)
     private.newData(instance, width, height, res_x, res_y)
 
     instance:setX(x)
@@ -56,15 +56,7 @@ function public:detect()
     for x = 1, priv.res_x do
         for y = 1, priv.res_y do
             if priv.detectors[x][y]:detect() then
-                local abs_x = self:getAbsX()
-                local abs_y = self:getAbsY()
-                local res = {
-                    min_x = abs_x + priv.detector_width * (x - 1),
-                    min_y = abs_y + priv.detector_height * (y - 1),
-                    max_x = abs_x + priv.detector_width * x,
-                    max_y = abs_y + priv.detector_height * y
-                }
-                return res
+                return x, y
             end
         end
     end
@@ -86,25 +78,27 @@ function private.newData(self, width, height, res_x, res_y)
 
         detectors = {}
     }
+
+    self:setTexture('war3mapImported\\frameFiles\\Transparent32x32.tga')
     for x = 1, res_x do
         table.insert(priv.detectors, {})
         for y = 1, res_y do
             local detector = Detector.new()
+            detector:setParent(self)
             detector:setX(priv.detector_width * (x - 1))
             detector:setY(priv.detector_height * (y - 1))
             detector:setWidth(priv.detector_width)
             detector:setHeight(priv.detector_height)
-            detector:setParent(self)
+            detector:setTexture('war3mapImported\\frameFiles\\Transparent32x32.tga')
 
             priv.detectors[x][y] = detector
         end
     end
 
-    private.data[self] = setmetatable(priv, private.metadata)
+    private.data[self] = priv
 end
 
-private.metatable = {
-    __gc = function(self) end
-}
+
+private.frame_type = SimpleFrameType.new('ControllerGrid')
 
 return static

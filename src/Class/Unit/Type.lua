@@ -66,7 +66,9 @@ end
 
 private.DB = DataBase.new('number', UnitType)
 private.compiletime_data = CompiletimeData.new(UnitType)
-local _ = Compiletime(function() private.WeUnit = require('compiletime.ObjectEdit').Unit end)
+local _ = Compiletime(function()
+    private.ObjEdit = require('compiletime.ObjectEdit')
+end)
 
 private.BaseId = {
     [static.UnitTypeClassification.Unit] = 'hfoo',
@@ -91,12 +93,20 @@ function private.createWc3UnitType(name, classification)
         Log.error(UnitType, 'wrong target type.', 3)
     end
 
-    local id = require('compiletime.ObjectEdit').getUnitId()
-    local unit_type = private.WeUnit.new(id, private.BaseId[classification], name)
-    local Fields = private.WeUnit.Field
+    local ObjEdit = private.ObjEdit
+    local id
+    if classification == static.UnitTypeClassification.Unit then
+        id = ObjEdit.getUnitId()
+    elseif classification == static.UnitTypeClassification.Hero then
+        id = ObjEdit.getHeroId()
+    end
+    local unit_type = ObjEdit.Unit.new(id, private.BaseId[classification], name)
+    local Fields = ObjEdit.Unit.Field
 
     -- TODO dummy fields
     unit_type:setField(Fields.Name, name)
+    unit_type:setField(Fields.CollisionSize, 0)
+    unit_type:setField(Fields.NormalAbilities, 'AInv')
 
     return unit_type
 end

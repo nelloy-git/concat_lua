@@ -77,7 +77,7 @@ static.Field.Perishable = WeField.new("iper", "bool", "Perishable")
 static.Field.Priority = WeField.new("ipri", "int", "Priority")
 static.Field.Requirements = WeField.new("ureq", "string", "Requirements")
 static.Field.RequirementsLevels = WeField.new("urqa", "string", "RequirementsLevels")
-static.Field.ScalingValue = WeField.new("isca", "real", "ScalingValue")
+static.Field.ModelScale = WeField.new("isca", "real", "ScalingValue")
 static.Field.StockMaximum = WeField.new("isto", "int", "StockMaximum")
 static.Field.StockReplenishInterval = WeField.new("istr", "int", "StockReplenishInterval")
 static.Field.StockStartDelay = WeField.new("isst", "int", "StockStartDelay")
@@ -97,4 +97,4 @@ private.path_sep = package.config:sub(1,1)
 private.file_src = GetSrcDir()..private.path_sep..'war3map.w3t'
 private.file_dst = GetDstDir()..private.path_sep..'war3map.w3t'
 
-return WeItem
+return static

@@ -5,7 +5,9 @@
 local Class = require('utils.Class.Class')
 
 ---@type Object
-local Object = require('Object')
+local Object = require('Object.Object')
+
+local ID = ID
 
 --=======
 -- Class
@@ -24,50 +26,20 @@ local private = {}
 -- Static
 --=========
 
+---@param player player
+---@param unit_id number | string
+---@param x number
+---@param y number
+---@param face number
 ---@param child_instance UnitObj | nil
 ---@return UnitObj
-function static.new(child_instance)
+function override.new(player, unit_id, x, y, face, child_instance)
     local instance = child_instance or Class.allocate(UnitObj)
-    private.newData(instance)
+
+    local obj = CreateUnit(player, ID(unit_id), x, y, face)
+    instance = Object.new(obj, RemoveUnit, instance)
 
     return instance
 end
-
---========
--- Public
---========
-
-function public:getObj()
-    return private.data[self].obj
-end
-
-function public:destroy()
-    private.destroy(private.data[self])
-end
-
---=========
--- Private
---=========
-
-private.data = setmetatable({}, {__mode = 'k'})
-
----@param self UnitObj
-function private.newData(self, id, unit_id, x, y, face)
-    local priv = {
-        obj = CreateUnit(id, unit_id, x, y, face)
-    }
-    private.data[self] = setmetatable(priv, private.metadata)
-end
-
-function private.destroy(priv)
-    if priv.obj then
-        RemoveUnit(priv.obj)
-    end
-    priv.obj = nil
-end
-
-private.metatable = {
-    __gc = private.destroy
-}
 
 return static

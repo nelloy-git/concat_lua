@@ -8,10 +8,13 @@ local Class = require('utils.Class.Class')
 local AbilityType = require('Class.Ability.Type')
 local CbType = AbilityType.CallbackType
 local Status = AbilityType.Status
----@type UnitParametersContainerClass
-local UnitParam = require('Class.Unit.Parameters.Container')
----@type ParameterTypeClass
-local Param = require('Class.ParameterType')
+
+---@type UnitClass
+local Unit = require('Class.Unit.Unit')
+---@type ParameterAPI
+local ParamAPI = require('Parameter.Api')
+local Param = ParamAPI.ParamType
+local Value = ParamAPI.ValueType
 
 --=======
 -- Class
@@ -149,19 +152,25 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.multiplier = 10^10
+private.multiplier = 10^5
 
 ---@param self AbilityCastInstance
 function private.applyBlocks(self)
     local priv = private.data[self]
 
     if not priv.caster_can_attack then
-        UnitParam.get(priv.caster):addMult(Param.ASpd, -private.multiplier)
+        ---@type Unit
+        local u = Unit.getInstance(priv.caster)
+        u:enableAttack(false)
+        --UnitParam.get(priv.caster):addMult(Param.ASpd, -private.multiplier)
         --UnitAddAbility(priv.caster, private.disable_attack_id)
     end
 
     if not priv.caster_can_move then
-        UnitParam.get(priv.caster):addMult(Param.MS, -private.multiplier)
+        ---@type Unit
+        local u = Unit.getInstance(priv.caster)
+        u.Param:add(Param.MS, Value.MULT, -private.multiplier)
+        --UnitParam.get(priv.caster):addMult(Param.MS, -private.multiplier)
         --UnitAddAbility(priv.caster, private.disable_move_id)
     end
 
@@ -181,12 +190,18 @@ function private.removeBlocks(self)
     local priv = private.data[self]
 
     if not priv.caster_can_attack then
-        UnitParam.get(priv.caster):addMult(Param.ASpd, private.multiplier)
+        ---@type Unit
+        local u = Unit.getInstance(priv.caster)
+        u:enableAttack(true)
+        --UnitParam.get(priv.caster):addMult(Param.ASpd, private.multiplier)
         --UnitRemoveAbility(priv.caster, private.disable_attack_id)
     end
 
     if not priv.caster_can_move then
-        UnitParam.get(priv.caster):addMult(Param.MS, private.multiplier)
+        ---@type Unit
+        local u = Unit.getInstance(priv.caster)
+        u.Param:add(Param.MS, Value.MULT, private.multiplier)
+        --UnitParam.get(priv.caster):addMult(Param.MS, private.multiplier)
         --UnitRemoveAbility(priv.caster, private.disable_move_id)
         --UnitRemoveAbility(priv.caster, private.disable_move_buff_id)
     end
@@ -235,7 +250,7 @@ private.metatable = {
 private.disable_move_buff_id = Compiletime(function()
     ---@type ObjectEdit
     local ObjEdit = require('compiletime.ObjectEdit')
-    local Icons = require('compiletime.Icon')
+    local Icons = require('Resources.Icon')
     local WeBuff = ObjEdit.Buff
     local id = ObjEdit:getBuffId()
     local buff_type = WeBuff.new(id, 'Bfae', 'DisableMovement')

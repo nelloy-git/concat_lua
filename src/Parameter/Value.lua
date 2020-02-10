@@ -3,10 +3,7 @@
 --=========
 
 local Class = require('utils.Class.Class')
-
----@type ParameterData
-local Data = require('Parameter.TypeData')
-local Param = Data.Type
+local Log = require('utils.Log')
 
 --=======
 -- Class
@@ -27,6 +24,17 @@ local private = {}
 -- Static
 --========
 
+---@alias ParameterValueTypeEnum number
+
+---@type table<string,ParameterValueTypeEnum>
+static.ValueType = {}
+---@type ParameterValueTypeEnum
+static.ValueType.BASE = 1
+---@type ParameterValueTypeEnum
+static.ValueType.MULT = 2
+---@type ParameterValueTypeEnum
+static.ValueType.ADDIT = 3
+
 ---@return ParameterValue
 function static.new()
     local instance = Class.allocate(ParameterValue)
@@ -40,43 +48,31 @@ end
 -- Public
 --========
 
+---@param value_type ParameterValueTypeEnum
 ---@param value number
-function public:setBase(value)
-    local priv = private.data[self]
-    priv.result_ready = false
-    priv.base = value
+function public:set(value_type, value)
+    if not private.isValueType(value_type) then
+        Log.error(self, 'unknown ParameterValueTypeEnum', 2)
+    end
+    private.data[self][value_type] = value
 end
 
+---@param value_type ParameterValueTypeEnum
 ---@param value number
-function public:setAdditive(value)
-    local priv = private.data[self]
-    priv.result_ready = false
-    priv.additive = value
+function public:add(value_type, value)
+    if not private.isValueType(value_type) then
+        Log.error(self, 'unknown ParameterValueTypeEnum', 2)
+    end
+    private.data[self][value_type] = private.data[self][value_type] + value
 end
 
----@param value number
-function public:setMult(value)
-    local priv = private.data[self]
-    priv.result_ready = false
-    priv.mult = value
-end
-
+---@param value_type ParameterValueTypeEnum
 ---@return number
-function public:getBase()
-    local priv = private.data[self]
-    return private.data[self].base
-end
-
----@return number
-function public:getMult()
-    local priv = private.data[self]
-    return priv.mult
-end
-
----@return number
-function public:getAdditive()
-    local priv = private.data[self]
-    return priv.additive
+function public:get(value_type)
+    if not private.isValueType(value_type) then
+        Log.error(self, 'unknown ParameterValueTypeEnum', 2)
+    end
+    return private.data[self][value_type]
 end
 
 --=========
@@ -85,19 +81,33 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self ParameterValue
-function private.newData(self)
-    local priv = {
-        base = 0,
-        mult = 1,
-        additive = 0,
-    }
-    private.data[self] = priv
+function private.isValueType(value_type)
+    for _, v in pairs(static.ValueType) do
+        if value_type == v then
+            return true
+        end
+    end
+    return false
 end
 
----@param instance ParameterValue
-function private.freeData(instance)
-    private[instance] = nil
+private.default_value = {
+    [static.ValueType.BASE] = 0,
+    [static.ValueType.MULT] = 1,
+    [static.ValueType.ADDIT] = 0,
+}
+
+---@param self ParameterValue
+function private.newData(self)
+    local priv = {}
+    for _, value_type in pairs(static.ValueType) do
+        priv[value_type] = private.default_value[value_type]
+    end
+
+    private.data[self] = setmetatable(priv, private.metatable)
 end
+
+private.metatable = {
+    __gc = function(priv) end
+}
 
 return static
