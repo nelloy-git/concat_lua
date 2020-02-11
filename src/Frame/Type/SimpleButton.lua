@@ -30,6 +30,7 @@ local private = {}
 function override.new(uniq_name, child_instance)
     local instance = child_instance or Class.allocate(SimpleButtonType)
     instance = FrameType.new(uniq_name, private.createFdf, instance)
+    private.newData(instance)
 
     return instance
 end
@@ -43,34 +44,77 @@ function public:isSimple()
     return true
 end
 
+---@param width number
+function public:setWidth(width)
+    private.data[self].width = width
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.SimpleButton.Field.Width, width)
+    end
+end
+
+---@param height number
+function public:setHeight(height)
+    private.data[self].height = height
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.SimpleButton.Field.Height, height)
+    end
+end
+
+---@param texture string
+function public:setTexture(texture)
+    private.data[self].texture = texture
+
+    local fdf = self:getFdf()
+    if fdf then
+        local texture_fdf = fdf:getField(private.SimpleButton.Field.Texture)[1]
+        texture_fdf:setField(private.SimpleTexture.Field.File, texture)
+    end
+end
+
+---@return number
+function public:getWidth()
+    return private.data[self].width
+end
+
+---@return number
+function public:getHeight()
+    return private.data[self].height
+end
+
 ---@return string
-function public:getTextureName()
+function public:getTexture()
+    return private.data[self].texture
+end
+
+---@return string
+function public:getTextureFrameName()
     return private.getTextureName(self:getName())
-end
-
----@return number
-function public:getDefaultWidth()
-    return private.default_width
-end
-
----@return number
-function public:getDefaultHeight()
-    return private.default_height
-end
-
----@return string
-function public:getDefaultTexture()
-    return private.default_texture
 end
 
 --=========
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
+
 ---@param name string
 ---@return string
 function private.getTextureName(name)
     return name..'Texture'
+end
+
+---@param self SimpleButton
+function private.newData(self)
+    priv = {
+        width = private.default_width,
+        height = private.default_height,
+        texture = private.default_texture
+    }
+    private.data[self] = priv
 end
 
 --=============
@@ -101,10 +145,7 @@ function private.createFdf(name)
     texture:setField(private.SimpleTexture.Field.File, private.default_texture)
     frame:setField(fields.Texture, {texture})
 
-    local file = private.File.new(name)
-    file:addObject(frame)
-
-    return file:toRuntime().toc
+    return frame
 end
 
 return static

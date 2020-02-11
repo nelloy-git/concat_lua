@@ -74,8 +74,8 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param simple_frame_type SimpleButtonType
 function private.newData(self, simple_frame_type)
     local priv = {
-        texture_frame = BlzGetFrameByName(simple_frame_type:getTextureName(), 0),
-        texture = simple_frame_type:getDefaultTexture(),
+        texture_frame = BlzGetFrameByName(simple_frame_type:getTextureFrameName(), 0),
+        texture = simple_frame_type:getTexture(),
     }
     private.data[self] = priv
 end

@@ -55,6 +55,17 @@ end
 
 public.Param = nil
 
+---@return string
+function public:getName()
+    return private.data[self].name
+end
+
+---@return string
+function public:getDescription()
+    print('here', private.data[self].description)
+    return private.data[self].description
+end
+
 function public:updateDescription()
     local priv = private.data[self]
 
@@ -62,6 +73,17 @@ function public:updateDescription()
     if priv.item_model then
         priv.item_model:setDescription(descr)
     end
+end
+
+---@param icon string
+function public:setIcon(icon)
+    local priv = private.data[self]
+    priv.icon = icon
+end
+
+---@return string
+function public:getIcon()
+    return private.data[self].icon
 end
 
 ---@param x number
@@ -134,6 +156,7 @@ function private.newData(self, x, y)
         model_path = private.default_type:getModelPath(),
 
         item_model = nil,
+        item_interface = nil
     }
     priv.item_model = private.newModel(priv, x, y)
 

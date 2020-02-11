@@ -57,7 +57,6 @@ function public:setFont(font)
     local priv = private.data[self]
     priv.font = font
 
-    print(self, priv.font_size)
     BlzFrameSetFont(priv.text_framehandle, font, priv.font_size, 0)
 end
 
@@ -66,7 +65,6 @@ function public:setFontSize(size)
     local priv = private.data[self]
     priv.font_size = size
 
-    print(self, size)
     BlzFrameSetFont(priv.text_framehandle, priv.font, size, 0)
 end
 
@@ -90,10 +88,10 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param simple_text_type SimpleTextType
 function private.newData(self, simple_text_type)
     local priv = {
-        text_framehandle = BlzGetFrameByName(simple_text_type:getStringName(), 0),
+        text_framehandle = BlzGetFrameByName(simple_text_type:getStringFrameName(), 0),
         text = '',
-        font = simple_text_type:getDefaultFont(),
-        font_size = simple_text_type:getDefaultFontSize(),
+        font = simple_text_type:getFont(),
+        font_size = simple_text_type:getFontSize(),
     }
     private.data[self] = priv
 end

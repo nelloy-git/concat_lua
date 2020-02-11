@@ -27,12 +27,12 @@ local private = {}
 --=========
 
 ---@param uniq_name string
----@param get_toc fun(name:string):string
+---@param createFdf fun(name:string)
 ---@param child_instance any
 ---@return FrameType
-function static.new(uniq_name, get_toc, child_instance)
+function static.new(uniq_name, createFdf, child_instance)
     local instance = child_instance or Class.allocate(FrameType)
-    private.newData(instance, uniq_name, get_toc)
+    private.newData(instance, uniq_name, createFdf)
 
     return instance
 end
@@ -52,13 +52,18 @@ function public:isSimple()
 end
 
 ---@return number
-function public:getDefaultWidth()
+function public:getWidth()
     Log.error(private.data[self].name, 'virtual function is not declared.', 2)
 end
 
 ---@return number
-function public:getDefaultHeight()
+function public:getHeight()
     Log.error(private.data[self].name, 'virtual function is not declared.', 2)
+end
+
+---@return FdfObject
+function public:getFdf()
+    return private.data[self].fdf
 end
 
 --=========
@@ -68,18 +73,28 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.compiletime_data = CompiletimeData.new(FrameType)
 
+local _ = Compiletime(function()
+    ---@type FdfEdit
+    private.FdfEdit = require('compiletime.FdfEdit')
+    private.FdfFile = private.FdfEdit.File
+end)
+
 ---@param self FrameType
 ---@param uniq_name string
----@param get_toc function
-function private.newData(self, uniq_name, get_toc)
+---@param createFdf function
+function private.newData(self, uniq_name, createFdf)
     local priv = {}
 
     if IsCompiletime() then
         if private.compiletime_data:get(uniq_name) then
             Log.error(FrameType, 'name is not unique.', 3)
         end
-        local toc = get_toc(uniq_name)
-        private.compiletime_data:set(uniq_name, toc)
+
+        priv.fdf = createFdf(uniq_name)
+        local file = private.FdfFile.new(uniq_name)
+        file:addObject(priv.fdf)
+
+        private.compiletime_data:set(uniq_name, file:toRuntime().toc)
     end
 
     priv.name = uniq_name
@@ -90,11 +105,8 @@ function private.newData(self, uniq_name, get_toc)
         end
     end
 
-    private.data[self] = setmetatable(priv, private.metatable)
+    private.data[self] = priv
 end
 
-private.metatable = {
-    __gc = function(priv) end
-}
 
 return static

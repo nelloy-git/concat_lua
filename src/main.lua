@@ -19,8 +19,8 @@ local footman_type = UnitType.new('Footman', UnitType.UnitTypeClassification.Uni
 ---@type ItemAPI
 local ItemAPI = require('Item.Api')
 
----@type InterfaceItemTooltipClass
-local ItemFrame = require('Interface.Item')
+---@type InterfaceAPI
+local InterfaceAPI = require('Interface.Api')
 
 ---@type Unit
 --u = nil
@@ -59,6 +59,8 @@ if not IsCompiletime() then
     it.Param:set(ParamAPI.ParamType.Armor, ParamAPI.ValueType.ADDIT, 5)
     it:updateDescription()
 
+    InterfaceAPI.init()
+    InterfaceAPI.target = u
 
     --it2 = ItemAPI.newItem(0, 0)
     --it3 = ItemAPI.newItem(0, 0)

@@ -47,7 +47,7 @@ function override.new(player, id, x, y, face)
 
     instance.Param = ParamAPI.newUnitContainer(instance:getObj())
     instance.Animation = UnitAnimation.new(instance:getObj())
-    instance.Bag = InventoryAPI.newBag(instance:getObj(), 1)
+    instance.Bag = InventoryAPI.newBag(instance:getObj(), 20)
 
     return instance
 end

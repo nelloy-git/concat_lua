@@ -45,9 +45,9 @@ end
 ---@return string
 function public:serialize()
     local res = string.format("%s \"%s\" {\n", self:getBaseName(), self:getName())
-    local fields, values = self:getFields()
-    for i = 1, #fields do
-        res = res.."    "..fields[i]:serialize(values[i])..'\n'
+    local fields = self:getAllFields()
+    for field, value in pairs(fields) do
+        res = res.."    "..field:serialize(value)..'\n'
     end
     return res.."}"
 end

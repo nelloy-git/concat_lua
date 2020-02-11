@@ -5116,7 +5116,7 @@ end
 ---@return integer
 function GetElevatorHeight(d)
 	---@type integer
-	height = nil
+	local height = nil
 	
 	height = 1 + R2I(GetDestructableOccluderHeight(d) / bj_CLIFFHEIGHT)
 	if (height < 1) or (height > 3) then

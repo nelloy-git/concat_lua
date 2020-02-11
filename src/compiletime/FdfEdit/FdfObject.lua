@@ -44,42 +44,44 @@ end
 
 ---@return string
 function public:getName()
-    return private[self].name
+    return private.data[self].name
 end
 
 ---@return string
 function public:getBaseName()
-    return private[self].base_name
+    return private.data[self].base_name
 end
 
 ---@param field FdfField
 ---@param value any
 function public:setField(field, value)
-    local priv = private[self]
+    local priv = private.data[self]
 
-    if field:checkType(value) then
-        local pos = #priv.fields + 1
-        table.insert(priv.fields, #priv.fields + 1, field)
-        priv.values[pos] = value
-    else
+    if not field:checkType(value) then
         local msg = string.format("check data failed. Field change ignored. Got: %s need: %s.\n%s",
                                   type(value), field:getType(), WeUtils.getErrorPos())
-        Log(Log.Wrn, FdfObject, msg)
+        Log.error(FdfObject, msg, 2)
     end
+
+    priv.field[field] = value
 end
 
-function public:getFields()
-    local priv = private[self]
-    return priv.fields, priv.values
+---@return any
+function public:getField(field)
+    return private.data[self].field[field]
+end
+
+function public:getAllFields()
+    return private.data[self].field
 end
 
 ---@return string
 function public:serialize()
-    local priv = private[self]
+    local priv = private.data[self]
 
     local res = string.format("Frame \"%s\" \"%s\" {\n", priv.base_name, priv.name)
-    for i = 1, #priv.fields do
-        local field_serial = '    '..string.gsub(priv.fields[i]:serialize(priv.values[i]), '\n', '\n    ')
+    for field, value in pairs(priv.field) do
+        local field_serial = '    '..string.gsub(field:serialize(value), '\n', '\n    ')
         res = res..field_serial..'\n'
     end
     return res.."}\n"
@@ -87,44 +89,41 @@ end
 
 ---@return table
 function public:toRuntime()
-    local priv = private[self]
+    local priv = private.data[self]
 
     local res = {
         name = priv.name,
         base_name = priv.base_name,
-        fields = {},
+        field = {},
     }
 
-    for i = 1, #priv.fields do
-        if priv.values[i] == nil then
-            res.fields[priv.fields[i]:getName()] = 'nil'
+    for field, value in pairs(priv.field) do
+        if value == nil then
+            res.field[field:getName()] = 'nil'
 
-        elseif Class.type(priv.values[i], FdfObject) then
-            res.fields[priv.fields[i]:getName()] = priv.values[i]:toRuntime()
+        elseif Class.type(value, FdfObject) then
+            res.field[field:getName()] = value:toRuntime()
 
-        elseif Class.type(priv.values[i], 'table') then
+        elseif Class.type(value, 'table') then
             local list = {}
-            res.fields[priv.fields[i]:getName()] = list
-            for j = 1, #priv.values[i] do
-                list[priv.values[i][j]:getName()] = priv.values[i][j]:toRuntime()
+            res.field[field:getName()] = list
+            for j = 1, #value do
+                list[value[j]:getName()] = value[j]:toRuntime()
             end
 
         else
-            res.fields[priv.fields[i]:getName()] = priv.values[i]
+            res.field[field:getName()] = value
         end
     end
 
     return res
 end
 
-function public:free()
-    private.freeData(self)
-    Class.free(self)
-end
-
 --=========
 -- Private
 --=========
+
+private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self FdfObject
 ---@return FdfObjectPrivate
@@ -133,16 +132,9 @@ function private.newData(self, name, base_name)
     local priv = {
         base_name = base_name,
         name = name,
-        fields = {},
-        values = {}
+        field = {}
     }
-    private[self] = priv
-    return priv
-end
-
----@param self FdfObject
-function private.freeData(self)
-    private[self] = nil
+    private.data[self] = priv
 end
 
 return static

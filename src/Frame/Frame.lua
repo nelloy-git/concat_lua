@@ -54,35 +54,39 @@ end
 ---@param x number
 function public:setX(x)
     local priv = private.data[self]
-    priv.x = x
-
-    private.updatePos(self)
+    if priv.x ~= x then
+        priv.x = x
+        private.updatePos(self)
+    end
 end
 
 ---@param y number
 function public:setY(y)
     local priv = private.data[self]
-    priv.y = y
-
-    private.updatePos(self)
+    if priv.y ~= y then
+        priv.y = y
+        private.updatePos(self)
+    end
 end
 
 ---@param width number
 function public:setWidth(width)
     local priv = private.data[self]
-    priv.width = width
-
-    BlzFrameSetSize(self:getObj(), priv.width, priv.height)
-    private.updatePos(self)
+    if priv.width ~= width then
+        priv.width = width
+        BlzFrameSetSize(self:getObj(), priv.width, priv.height)
+        private.updatePos(self)
+    end
 end
 
 ---@param height number
 function public:setHeight(height)
     local priv = private.data[self]
-    priv.height = height
-
-    BlzFrameSetSize(self:getObj(), priv.width, priv.height)
-    private.updatePos(self)
+    if priv.height ~= height then
+        priv.height = height
+        BlzFrameSetSize(self:getObj(), priv.width, priv.height)
+        private.updatePos(self)
+    end
 end
 
 ---@param level number
@@ -121,6 +125,12 @@ end
 
 ---@param parent Frame
 function public:setParent(parent)
+    if not parent then
+        Log.error(self, 'got nil.', 2)
+    end
+
+    print(self, parent)
+
     local priv = private.data[self]
     local old_parent = priv.parent
     priv.parent = parent
@@ -267,8 +277,8 @@ function private.newData(self, frame_type)
 
         x = 0,
         y = 0,
-        width = frame_type:getDefaultWidth(),
-        height = frame_type:getDefaultHeight(),
+        width = frame_type:getWidth(),
+        height = frame_type:getHeight(),
         level = 0,
         alpha = 255,
         visible = true,

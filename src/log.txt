@@ -1,5 +1,8 @@
-[0.000] {Msg} FdfFile: created new InterfaceUnitBagSlotIcon fdf file.
-	added InterfaceUnitBagSlotIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipDescription fdf file.
-	added InterfaceItemTooltipTooltipDescription object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipTitle fdf file.
-	added InterfaceItemTooltipTooltipTitle object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipBackground fdf file.
-	added InterfaceItemTooltipTooltipBackground object.[0.000] {Msg} WeFile: сreated WeUnit_0001E03FBF0650 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_0001E03FBEF410 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_0001E03FB78DD0 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_0001E03FB790D0 "DisableMovement" with id 'BM#$' based on 'Bfae'[0.000] {Msg} WeFile: сreated WeItem_0001E03FB72750 "DefaultItem" with id 'IM#$' based on 'rhe2'
+[1.000] {Msg} FdfFile: created new InterfaceUnitBagBackground fdf file.
+	added InterfaceUnitBagBackground object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipDescription fdf file.
+	added InterfaceItemTooltipTooltipDescription object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipTitle fdf file.
+	added InterfaceItemTooltipTooltipTitle object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipIcon fdf file.
+	added InterfaceItemTooltipTooltipIcon object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipBackground fdf file.
+	added InterfaceItemTooltipTooltipBackground object.[1.000] {Msg} FdfFile: created new InterfaceItemSlotBackground fdf file.
+	added InterfaceItemSlotBackground object.[1.000] {Msg} FdfFile: created new InterfaceItemSlotIcon fdf file.
+	added InterfaceItemSlotIcon object.[1.000] {Msg} WeFile: сreated WeUnit_00020CBA8C6970 "Footman" with id 'x##$' based on 'hfoo'[1.000] {Msg} WeFile: сreated WeAbility_00020CBA8C57B0 "Example ability" with id 'AM#%' based on 'ANcl'[1.000] {Msg} WeFile: сreated WeAbility_00020CBA8616A0 "DisableMovement" with id 'AM#$' based on 'Aasl'[1.000] {Msg} WeFile: сreated WeBuff_00020CBA8607A0 "DisableMovement" with id 'BM#$' based on 'Bfae'[1.000] {Msg} WeFile: сreated WeItem_00020CBA8594A0 "DefaultItem" with id 'IM#$' based on 'rhe2'

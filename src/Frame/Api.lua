@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+---@type Frame
+local Frame = require('Frame.Frame')
 ---@type SimpleFrameTypeClass
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
@@ -21,6 +23,8 @@ local SimpleText = require('Frame.Default.SimpleText')
 
 ---@class FrameAPI
 local FrameAPI = {}
+
+FrameAPI.Frame = Frame
 
 -- Default types
 
