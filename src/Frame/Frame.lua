@@ -2,10 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
----@type DataBaseClass
-local DataBase = require('Class.DataBase')
 ---@type FrameTypeClass
 local FrameType = require('Frame.FrameType')
 ---@type FrameObjClass
@@ -219,7 +217,7 @@ end
 
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.DB = DataBase.new('userdata', Frame)
+
 if not IsCompiletime() then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
 end

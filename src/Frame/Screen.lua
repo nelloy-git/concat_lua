@@ -2,10 +2,10 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
 ---@type Timer
-local Timer = require('Class.Timer.Timer')
+local Timer = require('Timer.Timer')
 
 --=======
 -- Class

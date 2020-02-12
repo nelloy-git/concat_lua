@@ -2,10 +2,10 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
 ---@type FrameAPI
-local FrameAPI = require('Frame.Api')
+local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleButtonType = FrameAPI.SimpleButtonType
 local SimpleTextType = FrameAPI.SimpleTextType

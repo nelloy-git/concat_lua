@@ -1,4 +1,4 @@
-local Log = require('utils.Log')
+local Log = require('Utils.Log')
 
 ---@class ParameterData
 local Data = {}

@@ -1,26 +1,26 @@
-require('utils.Globals')
+require('Utils.Globals')
 
---local Log = require('utils.Log')
+--local Log = require('Utils.Log')
 
 ---@type UnitClass
-local Unit = require('Class.Unit.Unit')
+local Unit = require('Unit.Unit')
 ---@type UnitAnimationClass
-local Animation = require('Class.Unit.Animation')
+local Animation = require('Unit.Animation')
 ---@type UnitTypeClass
-local UnitType = require('Class.Unit.Type')
+local UnitType = require('Unit.Type')
 ---@type ParameterAPI
 local ParamAPI = require('Parameter.API')
 
 ---@type AbilityType
-local ExampleAbility = require('Class.Ability.Example')
+local ExampleAbility = require('Ability.Example')
 
 local footman_type = UnitType.new('Footman', UnitType.UnitTypeClassification.Unit)
 
 ---@type ItemAPI
-local ItemAPI = require('Item.Api')
+local ItemAPI = require('Item.API')
 
 ---@type InterfaceAPI
-local InterfaceAPI = require('Interface.Api')
+local InterfaceAPI = require('Interface.API')
 
 ---@type Unit
 --u = nil

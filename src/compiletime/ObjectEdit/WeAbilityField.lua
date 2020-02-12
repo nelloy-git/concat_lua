@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
 ---@type WeFieldClass
 local WeField = require('compiletime.ObjectEdit.WeField')

@@ -2,8 +2,8 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
-local Log = require('utils.Log')
+local Class = require('Utils.Class.Class')
+local Log = require('Utils.Log')
 
 ---@type WeObjectClass
 local WeObject = require('compiletime.ObjectEdit.WeObject')

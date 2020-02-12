@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
 ---@type FrameTypeClass
 local FrameType = require('Frame.FrameType')

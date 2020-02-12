@@ -1,4 +1,4 @@
-local Log = require('utils.Log')
+local Log = require('Utils.Log')
 
 ---@type ParameterData
 local Data = require('Parameter.Data')
@@ -54,7 +54,7 @@ local apply_function = {
     [Param.Str] = function(unit, value)
         SetHeroStr(unit, value // 1, true)
         --[[
-        UnitParameterContainer = UnitParameterContainer or require('Class.Unit.Parameters.Container')
+        UnitParameterContainer = UnitParameterContainer or require('Unit.Parameters.Container')
 
         local param_container = UnitParameterContainer.get(unit)
         local old_value = param_container:getResult(ParameterType.Str)
@@ -73,7 +73,7 @@ local apply_function = {
     [Param.Agi] = function(unit, value)
         SetHeroAgi(unit, value // 1, true)
         --[[
-        UnitParameterContainer = UnitParameterContainer or require('Class.Unit.Parameters.Container')
+        UnitParameterContainer = UnitParameterContainer or require('Unit.Parameters.Container')
 
         local param_container = UnitParameterContainer.get(unit)
         local old_value = param_container:getResult(ParameterType.Agi)
@@ -92,7 +92,7 @@ local apply_function = {
     [Param.Int] = function(unit, value)
         SetHeroInt(unit, value // 1, true)
         --[[
-        UnitParameterContainer = UnitParameterContainer or require('Class.Unit.Parameters.Container')
+        UnitParameterContainer = UnitParameterContainer or require('Unit.Parameters.Container')
 
         local param_container = UnitParameterContainer.get(unit)
         local old_value = param_container:getResult(ParameterType.Int)

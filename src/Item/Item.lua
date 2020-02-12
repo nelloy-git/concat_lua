@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
 ---@type ItemModelClass
 local ItemModel = require('Item.Model')
@@ -10,7 +10,7 @@ local ItemModel = require('Item.Model')
 local ItemModelType = require('Item.ModelType')
 local ModelItemTypeEnum = ItemModelType.ItemType
 ---@type ParameterAPI
-local ParameterAPI = require('Parameter.Api')
+local ParameterAPI = require('Parameter.API')
 
 --=======
 -- Class

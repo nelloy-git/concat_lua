@@ -2,10 +2,10 @@
 -- Include
 --=========
 
-local Class = require('utils.Class.Class')
+local Class = require('Utils.Class.Class')
 
 ---@type CompiletimeDataClass
-local CompiletimeData = require('Class.CompiletimeData')
+local CompiletimeData = require('Utils.CompiletimeData')
 
 --=======
 -- Class
