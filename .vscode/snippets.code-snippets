@@ -50,12 +50,8 @@
             "function private.newData(self)",
             "    local priv = {",
             "    }",
-            "    private.data[self] = setmetatable(priv, private.metatable)",
+            "    private.data[self] = priv",
             "end",
-            "",
-            "private.metatable = {",
-            "    __gc = function(self) end",
-            "}",
             "",
             "return static",
         ]

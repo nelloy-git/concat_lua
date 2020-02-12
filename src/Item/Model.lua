@@ -5,7 +5,7 @@
 local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
 
----@type DataBaseClass
+---@type ItemObjClass
 local ItemObj = require('Object.Item')
 ---@type ItemModelTypeClass
 local ItemType = require('Item.ModelType')
@@ -15,9 +15,9 @@ local ItemType = require('Item.ModelType')
 --=======
 
 local ItemModel = Class.new('ItemModel', ItemObj)
----@class ItemModel
+---@class ItemModel : ItemObj
 local public = ItemModel.public
----@class ItemModelClass
+---@class ItemModelClass : ItemObjClass
 local static = ItemModel.static
 ---@type ItemModelClass
 local override = ItemModel.override

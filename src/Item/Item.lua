@@ -29,13 +29,47 @@ local private = {}
 -- Static
 --=========
 
----@param x number
----@param y number
+---@alias ItemTypeEnum number
+
+---@type ItemTypeEnum[]
+static.Type = {}
+---@type ItemTypeEnum
+static.Type.BAG = 1
+---@type ItemTypeEnum
+static.Type.BELT = 2
+---@type ItemTypeEnum
+static.Type.BOOTS = 3
+---@type ItemTypeEnum
+static.Type.CHEST = 4
+---@type ItemTypeEnum
+static.Type.EARRING = 5
+---@type ItemTypeEnum
+static.Type.HANDS = 6
+---@type ItemTypeEnum
+static.Type.HEAD = 7
+---@type ItemTypeEnum
+static.Type.LEGS = 8
+---@type ItemTypeEnum
+static.Type.WEAPON = 9
+---@type ItemTypeEnum
+static.Type.NECKLACE = 10
+---@type ItemTypeEnum
+static.Type.RING = 11
+---@type ItemTypeEnum
+static.Type.OFFHAND = 12
+---@type ItemTypeEnum
+static.Type.SHOULDERS = 13
+---@type ItemTypeEnum
+static.Type.USABLE = 14
+---@type ItemTypeEnum
+static.Type.MISCELLANEOUS = 15
+
+---@param item_type ItemTypeEnum
 ---@param child_instance Item | nil
 ---@return Item
-function static.new(x, y, child_instance)
+function static.new(item_type, child_instance)
     local instance = child_instance or Class.allocate(Item)
-    private.newData(instance, x, y)
+    private.newData(instance, item_type)
 
     instance.Param = ParameterAPI.newItemContainer()
 
@@ -53,32 +87,38 @@ end
 -- Public
 --========
 
+---@type ParameterItem
 public.Param = nil
+---@type ItemModel
+public.Model = nil
+---@type ItemFrame
+public.Frame = nil
+---@type ItemTooltip
+public.Tooltip = nil
+
+---@param name string
+function public:setName(name)
+    private.data[self].name = name
+end
+
+---@param item_type ItemTypeEnum
+function public:setType(item_type)
+    private.data[self].item_type = item_type
+end
+
+---@param icon string
+function public:setIcon(icon)
+    private.data[self].icon = icon
+end
 
 ---@return string
 function public:getName()
     return private.data[self].name
 end
 
----@return string
-function public:getDescription()
-    print('here', private.data[self].description)
-    return private.data[self].description
-end
-
-function public:updateDescription()
-    local priv = private.data[self]
-
-    local descr = self.Param:toString()
-    if priv.item_model then
-        priv.item_model:setDescription(descr)
-    end
-end
-
----@param icon string
-function public:setIcon(icon)
-    local priv = private.data[self]
-    priv.icon = icon
+---@return ItemTypeEnum
+function public:getType()
+    return private.data[self].item_type
 end
 
 ---@return string
@@ -86,45 +126,19 @@ function public:getIcon()
     return private.data[self].icon
 end
 
----@param x number
----@param y number
-function public:placeModel(x, y)
+function public:update()
+    if not self.Param then
+        Log.error(self, 'must have ParameterItem instance in public \'Param\' field.', 2)
+    end
+
     local priv = private.data[self]
 
-    if priv.item_model then
-        priv.item_model:setPosition(x, y)
-    else
-        priv.item_model = private.newModel(priv, x, y)
-        private.model2item[priv.item_model] = self
+    if self.Frame then
+        local frame = self.Frame
+        frame:setItemIcon(priv.icon)
     end
-end
 
-function public:destroyModel()
-    local priv = private.data[self]
-
-    if priv.item_model then
-        priv.item_model:destroy()
-        private.model2item[priv.item_model] = nil
-        priv.item_model = nil
-    end
-end
-
----@return number | nil
-function public:getModelX()
-    local priv = private.data[self]
-
-    if priv.item_model then
-        return priv.item_model:getX()
-    end
-end
-
----@return number | nil
-function public:getModelY()
-    local priv = private.data[self]
-
-    if priv.item_model then
-        return priv.item_model:getY()
-    end
+    if self.
 end
 
 --=========
@@ -132,42 +146,15 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.model2item = setmetatable({}, {__mode = 'kv'})
-
-private.default_icon = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin'
-
----@param x number
----@param y number
----@return ItemModel
-function private.newModel(priv, x, y)
-    local model = ItemModel.new(private.default_type, x, y)
-    model:setName(priv.name)
-    model:setDescription(priv.description)
-    model:setModelPath(priv.model_path)
-    return model
-end
 
 ---@param self Item
-function private.newData(self, x, y)
+function private.newData(self, item_type)
     local priv = {
-        name = private.default_type:getName(),
-        description = private.default_type:getDescription(),
-        icon = private.default_icon,
-        model_path = private.default_type:getModelPath(),
-
-        item_model = nil,
-        item_interface = nil
+        name = 'Noname',
+        item_type = item_type,
+        icon = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin',
     }
-    priv.item_model = private.newModel(priv, x, y)
-
     private.data[self] = priv
-    private.model2item[priv.item_model] = self
 end
-
---=============
--- Compiletime
---=============
-
-private.default_type = ItemModelType.new('DefaultItem', ModelItemTypeEnum.POWER_UP)
 
 return static

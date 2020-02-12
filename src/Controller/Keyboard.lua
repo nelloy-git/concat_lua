@@ -28,16 +28,35 @@ local private = {}
 
 ---@alias KeyboardCallback fun(pl:player, key:oskeytype, meta:number, is_down:boolean)
 
---- Action can not be removed
 ---@param player player
 ---@param key oskeytype
 ---@param meta number
 ---@param is_down boolean
 ---@param keyboard_cb KeyboardCallback
+---@return Action
 function static.addAction(player, key, meta, is_down, keyboard_cb)
     local action = Action.new(keyboard_cb, KeyboardController)
     local list = private.getActionList(player, key, meta, is_down)
     table.insert(list, action)
+    private.list_pointer[action] = list
+    return action
+end
+
+---@param action Action
+---@return boolean
+function static.removeAction(action)
+    local list = private.list_pointer[action]
+    if not list then
+        return false
+    end
+
+    for i = 1, #list do
+        if action == list[i] then
+            table.remove(list, i)
+            return true
+        end
+    end
+    return false
 end
 
 --=========
@@ -46,10 +65,13 @@ end
 
 private.player = {}
 
+private.list_pointer = {}
+
 ---@param player player
 ---@param key oskeytype
 ---@param meta number
 ---@param is_down boolean
+---@return Action[]
 function private.getActionList(player, key, meta, is_down)
     local player_list = private.player
     if not player_list[player] then
@@ -85,6 +107,7 @@ end
 ---@param key oskeytype
 ---@param meta number
 ---@param is_down boolean
+---@return Action[]
 function private.getExistingActionList(player, key, meta, is_down)
     local player_list = private.player
     if not player_list[player] then return end
