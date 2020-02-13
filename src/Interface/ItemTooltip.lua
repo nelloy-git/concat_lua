@@ -115,7 +115,6 @@ function private.update(self)
     local space = private.space_ratio * width
 
     -- Icon
-    print(self)
     local icon_size = private.icon.width_ratio * width
     priv.icon:setX(border)
     priv.icon:setY(height - border - icon_size)

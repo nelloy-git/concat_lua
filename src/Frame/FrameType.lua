@@ -99,7 +99,7 @@ function private.newData(self, uniq_name, createFdf)
     priv.toc = private.compiletime_data:get(uniq_name)
     if not IsCompiletime() then
         if not BlzLoadTOCFile(priv.toc) then
-            Log.error(FrameType, 'load toc failed.', 3)
+            Log.error(self, uniq_name..' load toc failed.', 3)
         end
     end
 

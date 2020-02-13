@@ -138,6 +138,7 @@ function private.loadItem(item, slot, tooltip)
     if not item then
         slot:setItemIcon(nil)
         slot:setTexture(private.icon_background_texture)
+        return
     end
 
     item.Frame = slot

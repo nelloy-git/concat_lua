@@ -75,6 +75,7 @@ end
 
 ---@param param ParameterItem
 function public:setParameters(param)
+    print(private.data[self].params)
     private.data[self].params:loadParam(param)
 end
 

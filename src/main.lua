@@ -18,6 +18,7 @@ local footman_type = UnitType.new('Footman', UnitType.UnitTypeClassification.Uni
 
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
+local it_model_type = ItemAPI.newItemModelType('Test', ItemAPI.ItemModelTypeEnum.POWER_UP)
 
 ---@type InterfaceAPI
 local InterfaceAPI = require('Interface.API')
@@ -53,11 +54,15 @@ if not IsCompiletime() then
 
     --u2 = nil
 
-    it = ItemAPI.newItem(0, 0)
+    it = ItemAPI.newItem()
     it.Param:set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.BASE, 10)
     it.Param:set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.MULT, 0.1)
     it.Param:set(ParamAPI.ParamType.Armor, ParamAPI.ValueType.ADDIT, 5)
-    it:updateDescription()
+
+    it_model_type = ItemAPI.newItemModelType('Test', ItemAPI.ItemModelTypeEnum.POWER_UP)
+    it_model = ItemAPI.newItemModel(it_model_type, 0, 0)
+
+    it:setModel(it_model)
 
     InterfaceAPI.init()
     InterfaceAPI.target = u

@@ -28,7 +28,7 @@ local private = {}
 
 ---@param child_instance Timer | nil
 ---@return Timer
-function static.new(child_instance)
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(Timer)
     instance = TimerObj.new(instance)
 

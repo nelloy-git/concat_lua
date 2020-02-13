@@ -98,7 +98,7 @@ function public:setAnchor(anchor)
     local fdf = self:getFdf()
     if fdf then
         local string_fdf = fdf:getField(private.SimpleFrame.Field.String)[1]
-        string:setField(private.SimpleString.Field.Anchor, {anchor, 0, 0})
+        string_fdf:setField(private.SimpleString.Field.Anchor, {anchor, 0, 0})
     end
 end
 
@@ -174,6 +174,7 @@ function private.createFdf(name)
     local string = private.SimpleString.new(private.getStringName(name))
     string:setField(private.SimpleString.Field.Font, {private.default_font, private.default_font_size})
     string:setField(private.SimpleString.Field.Anchor, {private.default_anchor, 0, 0})
+
     frame:setField(fields.String, {string})
 
     return frame

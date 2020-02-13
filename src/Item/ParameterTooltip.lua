@@ -44,9 +44,9 @@ local private = {}
 ---@param max_params number
 ---@param child_instance ItemParameterTooltip | nil
 ---@return ItemParameterTooltip
-function static.new(max_params, child_instance)
+function override.new(max_params, child_instance)
     local instance = child_instance or Class.allocate(ItemParameterTooltip)
-    instance = SimpleFrame.new(private.background_type)
+    instance = SimpleFrame.new(private.background_type, instance)
     private.newData(instance, max_params)
 
     return instance
@@ -143,6 +143,8 @@ function private.newData(self, max_lines)
         line:setX(0)
         line:setWidth(self:getWidth())
         line:setVisible(false)
+
+        priv.line[i] = line
     end
 end
 

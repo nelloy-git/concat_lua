@@ -51,11 +51,16 @@ function private.puckUpAction()
     local item = ItemAPI.getItem(GetManipulatedItem())
     local bag = UnitInventoryBag.getByOwner(GetManipulatingUnit())
 
-    local item_x = item:getModelX()
-    local item_y = item:getModelY()
-    item:destroyModel()
+    local item_model = item:getModel()
+    item:setModel(nil)
+
+    local item_x = item_model:getX()
+    local item_y = item_model:getY()
+    item_model:destroy()
 
     if not bag then
+        --
+        ItemAPI.newItemModel()
         item:placeModel(item_x, item_y)
         return
     end

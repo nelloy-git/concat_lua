@@ -86,7 +86,7 @@ function public:setTextColor(red, green, blue, alpha)
     if alpha > 255 then alpha = 255 end
     if alpha < 0 then alpha = 0 end
 
-    BlzFrameSetTextColor(priv.text_framehandle, BlzConvertColor(alpha, red, green, blue))
+    --BlzFrameSetTextColor(priv.text_framehandle, BlzConvertColor(alpha, red, green, blue))
 end
 
 ---@return string

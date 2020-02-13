@@ -127,8 +127,6 @@ function public:setParent(parent)
         Log.error(self, 'got nil.', 2)
     end
 
-    print(self, parent)
-
     local priv = private.data[self]
     local old_parent = priv.parent
     priv.parent = parent

@@ -76,14 +76,21 @@ function static.new(item_type, child_instance)
     return instance
 end
 
+---@param obj item
+---@return Item
+function static.getInstance(obj)
+    local model = ItemModel.getInstance(obj)
+    if model then
+        return private.model2item[model]
+    end
+end
+
 --========
 -- Public
 --========
 
 ---@type ParameterItem
 public.Param = nil
----@type ItemModel
-public.Model = nil
 ---@type ItemFrame
 public.Frame = nil
 ---@type ItemTooltip
@@ -102,6 +109,15 @@ end
 ---@param icon string
 function public:setIcon(icon)
     private.data[self].icon = icon
+end
+
+---@param model ItemModel | nil
+function public:setModel(model)
+    private.data[self].model = model
+    if model then
+        private.model2item[model] = self
+        model:setName(private.data[self].name)
+    end
 end
 
 ---@return string
@@ -134,14 +150,14 @@ function public:update()
     if self.Tooltip then
         local tooltip = self.Tooltip
         tooltip:setIcon(priv.icon)
-        tooltip:setName(priv.name)
+        tooltip:setTitle(priv.name)
         tooltip:setDescription(priv.description)
         tooltip:setParameters(self.Param)
     end
+end
 
-    if self.Model then
-        self.Model:setName(priv.name)
-    end
+function public:getModel()
+    return private.data[self].model
 end
 
 --=========
@@ -149,6 +165,26 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.model2item = setmetatable({},  {__mode = 'kv'})
+
+private.TooltipIcon = {
+    [static.Type.BAG] = 'war3mapImported\\Icons\\Inventory\\Bag.blp',
+    [static.Type.BELT] = 'war3mapImported\\Icons\\Inventory\\Belt.blp',
+    [static.Type.BOOTS] = 'war3mapImported\\Icons\\Inventory\\Boots.blp',
+    [static.Type.CHEST] = 'war3mapImported\\Icons\\Inventory\\Chest.blp',
+    [static.Type.EARRING] = 'war3mapImported\\Icons\\Inventory\\Earring.blp',
+    [static.Type.HANDS] = 'war3mapImported\\Icons\\Inventory\\Gloves.blp',
+    [static.Type.HEAD] = 'war3mapImported\\Icons\\Inventory\\Head.blp',
+    [static.Type.LEGS] = 'war3mapImported\\Icons\\Inventory\\Legs.blp',
+    [static.Type.WEAPON] = 'war3mapImported\\Icons\\Inventory\\MeleeWeapon.blp',
+    [static.Type.NECKLACE] = 'war3mapImported\\Icons\\Inventory\\',
+    [static.Type.RING] = 'war3mapImported\\Icons\\Inventory\\',
+    [static.Type.OFFHAND] = 'war3mapImported\\Icons\\Inventory\\',
+    [static.Type.SHOULDERS] = 'war3mapImported\\Icons\\Inventory\\',
+    [static.Type.USABLE] = 'war3mapImported\\Icons\\Inventory\\',
+    [static.Type.MISCELLANEOUS] = 'war3mapImported\\Icons\\Inventory\\',
+}
+
 
 ---@param self Item
 function private.newData(self, item_type)
@@ -157,6 +193,8 @@ function private.newData(self, item_type)
         description = 'Empty description',
         item_type = item_type,
         icon = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin',
+
+        model = nil
     }
     private.data[self] = priv
 end

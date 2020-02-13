@@ -58,8 +58,8 @@ function public:getCurrentTime()
 end
 
 ---@return number
-function public:getPrecision()
-    return private.data[self].period
+function public:getPeriod()
+    return private.data[self].precision
 end
 
 ---@param delay number

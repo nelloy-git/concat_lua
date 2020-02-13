@@ -1,8 +1,11 @@
 [0.000] {Msg} FdfFile: created new InterfaceUnitBagBackground fdf file.
-	added InterfaceUnitBagBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipDescription fdf file.
-	added InterfaceItemTooltipTooltipDescription object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipTitle fdf file.
-	added InterfaceItemTooltipTooltipTitle object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipIcon fdf file.
-	added InterfaceItemTooltipTooltipIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipBackground fdf file.
-	added InterfaceItemTooltipTooltipBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemSlotBackground fdf file.
-	added InterfaceItemSlotBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemSlotIcon fdf file.
-	added InterfaceItemSlotIcon object.[0.000] {Msg} WeFile: сreated WeUnit_136db10 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_11bcf30 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_146c6b0 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_14761f0 "DisableMovement" with id 'BM#$' based on 'Bfae'
+	added InterfaceUnitBagBackground object.[0.000] {Msg} FdfFile: created new ItemTooltipTooltipDescription fdf file.
+	added ItemTooltipTooltipDescription object.[0.000] {Msg} FdfFile: created new ItemTooltipTooltipTitle fdf file.
+	added ItemTooltipTooltipTitle object.[0.000] {Msg} FdfFile: created new ItemTooltipTooltipIcon fdf file.
+	added ItemTooltipTooltipIcon object.[0.000] {Msg} FdfFile: created new ItemTooltipTooltipBackground fdf file.
+	added ItemTooltipTooltipBackground object.[0.000] {Msg} FdfFile: created new ItemParameterTooltipBackground fdf file.
+	added ItemParameterTooltipBackground object.[0.000] {Msg} FdfFile: created new ItemParameterLineText fdf file.
+	added ItemParameterLineText object.[0.000] {Msg} FdfFile: created new ItemParameterLineBackground fdf file.
+	added ItemParameterLineBackground object.[0.000] {Msg} FdfFile: created new ItemFrameSlotIcon fdf file.
+	added ItemFrameSlotIcon object.[0.000] {Msg} FdfFile: created new ItemFrameSlotBackground fdf file.
+	added ItemFrameSlotBackground object.[0.000] {Msg} WeFile: сreated WeItem_00019ACB6C8710 "Test" with id 'IM#$' based on 'rhe2'[0.000] {Msg} WeFile: сreated WeUnit_00019ACB6C8090 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_00019ACB6C87D0 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_00019ACB6C57D0 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_00019ACB6C5CD0 "DisableMovement" with id 'BM#$' based on 'Bfae'

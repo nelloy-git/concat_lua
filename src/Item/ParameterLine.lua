@@ -12,6 +12,9 @@ local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleTextType = FrameAPI.SimpleTextType
 local SimpleFrame = FrameAPI.SimpleFrame
 local SimpleText = FrameAPI.SimpleText
+local FramePublic = Class.getPublic(FrameAPI.Frame)
+
+local fmt = string.format
 
 --=======
 -- Class
@@ -32,7 +35,7 @@ local private = {}
 
 ---@param child_instance ItemParameterLine | nil
 ---@return ItemParameterLine
-function static.new(child_instance)
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(ItemParameterLine)
     instance = SimpleFrame.new(private.background_type, instance)
     private.newData(instance)
@@ -44,13 +47,21 @@ end
 -- Public
 --========
 
+---@param width number
+function public:setWidth(width)
+    FramePublic.setWidth(self, width)
+    private.update(self)
+end
+
+---@param height number
+function public:setHeight(height)
+    FramePublic.setHeight(self, height)
+    private.update(self)
+end
+
 ---@param name string
----@param red number
----@param green number
----@param blue number
-function public:setName(name, red, green, blue, alpha)
+function public:setName(name)
     private.data[self].name:setText(name)
-    private.data[self].name:setTextColor(red or 230, green or 230, blue or 230, alpha or 255)
 end
 
 ---@param value number
@@ -63,8 +74,7 @@ function public:setBase(value)
         color = private.penalty_color
     end
 
-    private.data[self].base:setText(tostring(value))
-    private.data[self].base:setTextColor(color.red, color.green, color.blue, color.alpha)
+    private.data[self].base:setText(fmt('%.1f', value))
 end
 
 ---@param value number
@@ -77,8 +87,7 @@ function public:setMult(value)
         color = private.penalty_color
     end
 
-    private.data[self].mult:setText(string.format())
-    private.data[self].mult:setTextColor(color.red, color.green, color.blue, color.alpha)
+    private.data[self].mult:setText(fmt('%.1f%%', value))
 end
 
 ---@param value number
@@ -91,8 +100,7 @@ function public:setAddit(value)
         color = private.penalty_color
     end
 
-    private.data[self].addi:setText(tostring(value))
-    private.data[self].addi:setTextColor(color.red, color.green, color.blue, color.alpha)
+    private.data[self].addi:setText(fmt('%.1f', value))
 end
 
 --=========
@@ -109,7 +117,7 @@ private.background_type:setTexture(Import.InventoryBackground)
 private.text_type = SimpleTextType.new('ItemParameterLineText')
 private.text_type:setFont('fonts\\nim_____.ttf')
 private.text_type:setFontSize(0.009)
-private.text_type:setAnchor('LEFT')
+private.text_type:setAnchor('CENTER')
 
 private.zero_color = {red = 230, green = 230, blue = 230, alpha = 255}
 private.bonus_color = {red = 50, green = 230, blue = 50, alpha = 255}

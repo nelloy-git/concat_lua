@@ -42,6 +42,8 @@ end
 
 if not IsCompiletime() then
     InterfaceAPI.BagUI = InterfaceUnitBag.new(5, 4)
+    InterfaceAPI.BagUI:setWidth(0.2)
+    InterfaceAPI.BagUI:setHeight(0.2)
 
     local timer = Timer.new()
     timer:start(1, true, timerLoop)
