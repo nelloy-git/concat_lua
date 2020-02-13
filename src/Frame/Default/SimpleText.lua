@@ -47,11 +47,6 @@ function public:setText(text)
     BlzFrameSetText(priv.text_framehandle, text)
 end
 
----@return string
-function public:getText()
-    return private.data[self].text
-end
-
 ---@param font string
 function public:setFont(font)
     local priv = private.data[self]
@@ -66,6 +61,37 @@ function public:setFontSize(size)
     priv.font_size = size
 
     BlzFrameSetFont(priv.text_framehandle, priv.font, size, 0)
+end
+
+---@param red number
+---@param green number
+---@param blue number
+---@param alpha number
+function public:setTextColor(red, green, blue, alpha)
+    local priv = private.data[self]
+
+    red = red or 0
+    if red > 255 then red = 255 end
+    if red < 0 then red = 0 end
+
+    green = green or 0
+    if green > 255 then green = 255 end
+    if green < 0 then green = 0 end
+
+    blue = blue or 0
+    if blue > 255 then blue = 255 end
+    if blue < 0 then blue = 0 end
+
+    alpha = alpha or 0
+    if alpha > 255 then alpha = 255 end
+    if alpha < 0 then alpha = 0 end
+
+    BlzFrameSetTextColor(priv.text_framehandle, BlzConvertColor(alpha, red, green, blue))
+end
+
+---@return string
+function public:getText()
+    return private.data[self].text
 end
 
 ---@return string

@@ -13,6 +13,5 @@ local Item = require('Item.Item')
 local ItemAPI = {}
 
 ItemAPI.newItem = Item.new
-ItemAPI.getItem = Item.getInstance
 
 return ItemAPI

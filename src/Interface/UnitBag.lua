@@ -8,11 +8,11 @@ local Class = require('Utils.Class.Class')
 local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
-local SimpleFramePublic = Class.getPublic(SimpleFrame)
----@type InterfaceItemClass
-local Item = require('Interface.Item')
----@type InterfaceItemTooltipClass
-local ItemTooltip = require('Interface.ItemTooltip')
+local FramePublic = Class.getPublic(FrameAPI.Frame)
+---@type ItemFrameClass
+local ItemFrame = require('Item.Frame')
+---@type ItemTooltipClass
+local ItemTooltip = require('Item.Tooltip')
 
 --=======
 -- Class
@@ -47,6 +47,18 @@ end
 --========
 -- Public
 --========
+
+---@param width number
+function public:setWidth(width)
+    FramePublic.setWidth(self, width)
+    private.update(self)
+end
+
+---@param height number
+function public:setHeight(height)
+    FramePublic.setHeight(self, height)
+    private.update(self)
+end
 
 ---@param unit_bag UnitInventoryBag
 function public:loadBag(unit_bag)
@@ -84,9 +96,40 @@ private.background_type:setTexture('war3mapImported\\Icons\\Inventory\\Backgroun
 private.empty_icon = 'war3mapImported\\Icons\\Transparent32x32.tga'
 private.icon_background_texture = 'war3mapImported\\Icons\\Inventory\\EmptyBag.tga'
 
-private.offset_ratio = 1/16
-private.border = 0.005
+private.border_ratio = 1/16
+private.space = 0.005
 private.tooltip_width = 0.2
+
+---@param self InterfaceUnitBag
+function private.update(self)
+    local priv = private.data[self]
+    local width = self:getWidth()
+    local height = self:getHeight()
+    local border_x = private.border_ratio * width
+    local border_y = private.border_ratio * height
+    local cols = priv.cols
+    local rows = priv.rows
+    local slot_width = (width - 2 * border_x - (cols - 1) * private.space) / cols
+    local slot_height = (height - 2 * border_y - (rows - 1) * private.space) / rows
+
+
+    for x = 1, priv.cols do
+        for y = 1, priv.rows do
+            local pos = private.getPos(x, y, priv.cols)
+            local slot = priv.slot[pos]
+            slot:setX(border_x + (x - 1) * (slot_width + private.space))
+            slot:setY(border_y + (y - 1) * (slot_height + private.space))
+            slot:setWidth(slot_width)
+            slot:setHeight(slot_height)
+
+            local tooltip = priv.tooltip[pos]
+            tooltip:setX(-private.tooltip_width)
+            tooltip:setY(0)
+            tooltip:setWidth(private.tooltip_width)
+            tooltip:setHeight(height)
+        end
+    end
+end
 
 ---@param item Item
 ---@param slot InterfaceItem
@@ -97,10 +140,9 @@ function private.loadItem(item, slot, tooltip)
         slot:setTexture(private.icon_background_texture)
     end
 
-    slot:setItemIcon(item:getIcon())
-    tooltip:setTitle(item:getName())
-    print('here')
-    tooltip:setDescription(item:getDescription())
+    item.Frame = slot
+    item.Tooltip = tooltip
+    item:update()
 end
 
 function private.getPos(x, y, cols)
@@ -119,36 +161,18 @@ function private.newData(self, cols, rows)
     }
     private.data[self] = priv
 
-    local slot_size = Item.getDefaultSize()
-    local slots_width = cols * (slot_size + private.border) - private.border
-    local slots_height = rows * (slot_size + private.border) - private.border
-    local offset_x = slots_width * private.offset_ratio
-    local offset_y = slots_height * private.offset_ratio
-
     for x = 1, cols do
         for y = 1, rows do
             local pos = private.getPos(x, y, cols)
-            local item = Item.new()
-            item:setParent(self)
-            item:setX(offset_x + (x - 1) * (item:getWidth() + private.border))
-            item:setY(offset_y + (y - 1) * (item:getHeight() + private.border))
+            priv.slot[pos] = ItemFrame.new()
+            priv.slot[pos]:setParent(self)
 
-            local tooltip = ItemTooltip.new()
-            tooltip:setParent(self)
-            tooltip:setX(-private.tooltip_width)
-            tooltip:setY(0)
-            tooltip:setWidth(private.tooltip_width)
-            tooltip:setHeight(2 * offset_y + slots_height)
+            priv.tooltip[pos] = ItemTooltip.new()
+            priv.tooltip[pos]:setParent(self)
 
-            item:setTooltip(tooltip)
-
-            priv.slot[pos] = item
-            priv.tooltip[pos] = tooltip
+            priv.slot[pos]:setTooltip(priv.tooltip[pos])
         end
     end
-
-    self:setWidth(2 * offset_x + slots_width)
-    self:setHeight(2 * offset_y + slots_height)
 end
 
 

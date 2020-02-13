@@ -76,13 +76,6 @@ function static.new(item_type, child_instance)
     return instance
 end
 
----@param obj item
----@return Item | nil
-function static.getInstance(obj)
-    local ground_item = ItemModel.getInstance(obj)
-    return private.model2item[ground_item]
-end
-
 --========
 -- Public
 --========
@@ -138,7 +131,17 @@ function public:update()
         frame:setItemIcon(priv.icon)
     end
 
-    if self.
+    if self.Tooltip then
+        local tooltip = self.Tooltip
+        tooltip:setIcon(priv.icon)
+        tooltip:setName(priv.name)
+        tooltip:setDescription(priv.description)
+        tooltip:setParameters(self.Param)
+    end
+
+    if self.Model then
+        self.Model:setName(priv.name)
+    end
 end
 
 --=========
@@ -151,6 +154,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self, item_type)
     local priv = {
         name = 'Noname',
+        description = 'Empty description',
         item_type = item_type,
         icon = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin',
     }

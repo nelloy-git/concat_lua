@@ -91,6 +91,7 @@ function public:setFontSize(font_size)
     end
 end
 
+---@param anchor string
 function public:setAnchor(anchor)
     private.data[self].anchor = anchor
 
