@@ -76,10 +76,13 @@ function static.new(item_type, child_instance)
     return instance
 end
 
----@param obj item
----@return Item
-function static.getInstance(obj)
-    local model = ItemModel.getInstance(obj)
+---@param obj_or_id item | number
+---@return Item | nil
+function static.get(obj_or_id)
+    if type(obj_or_id) == 'number' then
+        return private.id2item[obj_or_id]
+    end
+    local model = ItemModel.getInstance(obj_or_id)
     if model then
         return private.model2item[model]
     end
@@ -88,13 +91,6 @@ end
 --========
 -- Public
 --========
-
----@type ParameterItem
-public.Param = nil
----@type ItemFrame
-public.Frame = nil
----@type ItemTooltip
-public.Tooltip = nil
 
 ---@param name string
 function public:setName(name)
@@ -120,6 +116,11 @@ function public:setModel(model)
     end
 end
 
+---@param owner unit
+function public:setOwner(owner)
+    private.data[self].owner = owner
+end
+
 ---@return string
 function public:getName()
     return private.data[self].name
@@ -135,29 +136,24 @@ function public:getIcon()
     return private.data[self].icon
 end
 
-function public:update()
-    if not self.Param then
-        Log.error(self, 'must have ParameterItem instance in public \'Param\' field.', 2)
-    end
-
-    local priv = private.data[self]
-
-    if self.Frame then
-        local frame = self.Frame
-        frame:setItemIcon(priv.icon)
-    end
-
-    if self.Tooltip then
-        local tooltip = self.Tooltip
-        tooltip:setIcon(priv.icon)
-        tooltip:setTitle(priv.name)
-        tooltip:setDescription(priv.description)
-        tooltip:setParameters(self.Param)
-    end
-end
-
+---@return ItemModel
 function public:getModel()
     return private.data[self].model
+end
+
+---@return ParameterItem
+function public:getParameters()
+    return private.data[self].param
+end
+
+---@return number
+function public:getId()
+    return private.data[self].id
+end
+
+---@return unit
+function public:getOwner()
+    return private.data[self].owner
 end
 
 --=========
@@ -167,24 +163,18 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.model2item = setmetatable({},  {__mode = 'kv'})
 
-private.TooltipIcon = {
-    [static.Type.BAG] = 'war3mapImported\\Icons\\Inventory\\Bag.blp',
-    [static.Type.BELT] = 'war3mapImported\\Icons\\Inventory\\Belt.blp',
-    [static.Type.BOOTS] = 'war3mapImported\\Icons\\Inventory\\Boots.blp',
-    [static.Type.CHEST] = 'war3mapImported\\Icons\\Inventory\\Chest.blp',
-    [static.Type.EARRING] = 'war3mapImported\\Icons\\Inventory\\Earring.blp',
-    [static.Type.HANDS] = 'war3mapImported\\Icons\\Inventory\\Gloves.blp',
-    [static.Type.HEAD] = 'war3mapImported\\Icons\\Inventory\\Head.blp',
-    [static.Type.LEGS] = 'war3mapImported\\Icons\\Inventory\\Legs.blp',
-    [static.Type.WEAPON] = 'war3mapImported\\Icons\\Inventory\\MeleeWeapon.blp',
-    [static.Type.NECKLACE] = 'war3mapImported\\Icons\\Inventory\\',
-    [static.Type.RING] = 'war3mapImported\\Icons\\Inventory\\',
-    [static.Type.OFFHAND] = 'war3mapImported\\Icons\\Inventory\\',
-    [static.Type.SHOULDERS] = 'war3mapImported\\Icons\\Inventory\\',
-    [static.Type.USABLE] = 'war3mapImported\\Icons\\Inventory\\',
-    [static.Type.MISCELLANEOUS] = 'war3mapImported\\Icons\\Inventory\\',
-}
+private.cur_id = 1
+private.id2item = setmetatable({},  {__mode = 'v'})
 
+---@param item Item
+---@return number
+function private.newId(item)
+    local id = private.cur_id
+    private.cur_id = id + 1
+
+    private.id2item[id] = item
+    return id
+end
 
 ---@param self Item
 function private.newData(self, item_type)
@@ -193,8 +183,12 @@ function private.newData(self, item_type)
         description = 'Empty description',
         item_type = item_type,
         icon = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin',
+        id = private.newId(self),
 
-        model = nil
+        model = nil,
+        param = ParameterAPI.newItemContainer(),
+
+        owner = nil,
     }
     private.data[self] = priv
 end

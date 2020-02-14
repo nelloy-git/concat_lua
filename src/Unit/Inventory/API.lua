@@ -4,6 +4,8 @@
 
 ---@type UnitInventoryBagClass
 local Bag = require('Unit.Inventory.Bag')
+---@type UnitInventoryEquipmentClass
+local Equipment = require('Unit.Inventory.Equipment')
 ---@type UnitInvetoryEventClass
 local Event = require('Unit.Inventory.Event')
 
@@ -15,6 +17,6 @@ local Event = require('Unit.Inventory.Event')
 local InventoryAPI = {}
 
 InventoryAPI.newBag = Bag.new
-InventoryAPI.getBag = Bag.getByOwner
+InventoryAPI.newEquipment = Equipment.new
 
 return InventoryAPI

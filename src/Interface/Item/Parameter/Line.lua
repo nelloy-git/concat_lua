@@ -20,23 +20,23 @@ local fmt = string.format
 -- Class
 --=======
 
-local ItemParameterLine = Class.new('ItemParameterLine', SimpleFrame)
----@class ItemParameterLine : SimpleFrame
-local public = ItemParameterLine.public
----@class ItemParameterLineClass : SimpleFrameClass
-local static = ItemParameterLine.static
----@type ItemParameterLineClass
-local override = ItemParameterLine.override
+local InterfaceItemParameterLine = Class.new('InterfaceItemParameterLine', SimpleFrame)
+---@class InterfaceItemParameterLine : SimpleFrame
+local public = InterfaceItemParameterLine.public
+---@class InterfaceItemParameterLineClass : SimpleFrameClass
+local static = InterfaceItemParameterLine.static
+---@type InterfaceItemParameterLineClass
+local override = InterfaceItemParameterLine.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance ItemParameterLine | nil
----@return ItemParameterLine
+---@param child_instance InterfaceItemParameterLine | nil
+---@return InterfaceItemParameterLine
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(ItemParameterLine)
+    local instance = child_instance or Class.allocate(InterfaceItemParameterLine)
     instance = SimpleFrame.new(private.background_type, instance)
     private.newData(instance)
 
@@ -75,6 +75,7 @@ function public:setBase(value)
     end
 
     private.data[self].base:setText(fmt('%.1f', value))
+    private.data[self].base:setTextColor(color.red, color.green, color.blue, color.alpha)
 end
 
 ---@param value number
@@ -88,6 +89,7 @@ function public:setMult(value)
     end
 
     private.data[self].mult:setText(fmt('%.1f%%', value))
+    private.data[self].mult:setTextColor(color.red, color.green, color.blue, color.alpha)
 end
 
 ---@param value number
@@ -101,6 +103,7 @@ function public:setAddit(value)
     end
 
     private.data[self].addi:setText(fmt('%.1f', value))
+    private.data[self].addi:setTextColor(color.red, color.green, color.blue, color.alpha)
 end
 
 --=========
@@ -109,12 +112,12 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.background_type = SimpleFrameType.new('ItemParameterLineBackground')
+private.background_type = SimpleFrameType.new('InterfaceItemParameterLineBackground')
 private.background_type:setWidth(0.1)
 private.background_type:setHeight(0.01)
 private.background_type:setTexture(Import.InventoryBackground)
 
-private.text_type = SimpleTextType.new('ItemParameterLineText')
+private.text_type = SimpleTextType.new('InterfaceItemParameterLineText')
 private.text_type:setFont('fonts\\nim_____.ttf')
 private.text_type:setFontSize(0.009)
 private.text_type:setAnchor('CENTER')
@@ -123,7 +126,7 @@ private.zero_color = {red = 230, green = 230, blue = 230, alpha = 255}
 private.bonus_color = {red = 50, green = 230, blue = 50, alpha = 255}
 private.penalty_color = {red = 230, green = 50, blue = 50, alpha = 255}
 
----@param self ItemParameterLine
+---@param self InterfaceItemParameterLine
 function private.update(self)
     local width = self:getWidth()
     local height = self:getHeight()
@@ -147,7 +150,7 @@ function private.update(self)
     priv.addi:setHeight(height)
 end
 
----@param self ItemParameterLine
+---@param self InterfaceItemParameterLine
 function private.newData(self)
     local priv = {
         name = SimpleText.new(private.text_type),

@@ -24,6 +24,7 @@ local private = {}
 -- Static
 --=========
 
+---@param owner Unit
 ---@param size number
 ---@param child_instance UnitInventoryBag | nil
 ---@return UnitInventoryBag
@@ -32,12 +33,6 @@ function static.new(owner, size, child_instance)
     private.newData(instance, owner, size)
 
     return instance
-end
-
----@param owner unit
----@return UnitInventoryBag
-function static.getByOwner(owner)
-    return private.owner2bag[owner]
 end
 
 --========
@@ -54,9 +49,7 @@ function public:set(item, pos)
                   priv.size, pos), 2)
     end
 
-    local prev = priv.slot[pos]
     priv.slot[pos] = item
-    return prev
 end
 
 ---@param pos number
@@ -67,6 +60,7 @@ function public:get(pos)
         Log.error(self, fmt('wrong bag slot. Bag size: %d. Got pos = %d.',
                   priv.size, pos), 2)
     end
+
     return priv.slot[pos]
 end
 
@@ -87,6 +81,11 @@ function public:getEmpty()
     return
 end
 
+---@return Unit
+function public:getOwner()
+    return private.data[self].owner
+end
+
 --=========
 -- Private
 --=========
@@ -95,11 +94,12 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.owner2bag = setmetatable({}, {__mode = 'kv'})
 
 ---@param self UnitInventoryBag
+---@param owner Unit
+---@param size number
 function private.newData(self, owner, size)
     local priv = {
         owner = owner,
         size = size,
-
         slot = {},
     }
     private.data[self] = priv

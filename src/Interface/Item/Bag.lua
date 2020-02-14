@@ -4,27 +4,29 @@
 
 local Class = require('Utils.Class.Class')
 
+---@type Import
+local Import = require('Resources.Import')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type ItemFrameClass
-local ItemFrame = require('Item.Frame')
----@type ItemTooltipClass
-local ItemTooltip = require('Item.Tooltip')
+---@type InterfaceItemBagSlotClass
+local ItemBagSlot = require('Interface.Item.BagSlot')
+---@type InterfaceItemTooltipClass
+local ItemTooltip = require('Interface.Item.Tooltip')
 
 --=======
 -- Class
 --=======
 
-local InterfaceUnitBag = Class.new('InterfaceUnitBag', SimpleFrame)
----@class InterfaceUnitBag
-local public = InterfaceUnitBag.public
----@class InterfaceUnitBagClass
-local static = InterfaceUnitBag.static
----@type InterfaceUnitBagClass
-local override = InterfaceUnitBag.override
+local InterfaceItemBag = Class.new('InterfaceItemBag', SimpleFrame)
+---@class InterfaceItemBag
+local public = InterfaceItemBag.public
+---@class InterfaceItemBagClass
+local static = InterfaceItemBag.static
+---@type InterfaceItemBagClass
+local override = InterfaceItemBag.override
 local private = {}
 
 --=========
@@ -33,10 +35,10 @@ local private = {}
 
 ---@param cols number
 ---@param rows number
----@param child_instance InterfaceUnitBag | nil
----@return InterfaceUnitBag
+---@param child_instance InterfaceItemBag | nil
+---@return InterfaceItemBag
 function override.new(cols, rows, child_instance)
-    local instance = child_instance or Class.allocate(InterfaceUnitBag)
+    local instance = child_instance or Class.allocate(InterfaceItemBag)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance, cols, rows)
@@ -63,21 +65,66 @@ end
 ---@param unit_bag UnitInventoryBag
 function public:loadBag(unit_bag)
     local priv = private.data[self]
+    priv.loaded_bag = unit_bag
 
-    local unit_bag_size = unit_bag:getSize()
-    if unit_bag_size > priv.size then
-        Log.error(self, 'unit\'s bag is too large for loading.', 2)
+    if unit_bag and unit_bag:getSize() ~= priv.size then
+        Log.error(self, 'ui bag and unit bag have different sizes.', 2)
     end
 
-    for i = 1, unit_bag_size do
-        private.loadItem(unit_bag:get(i), priv.slot[i], priv.tooltip[i])
-    end
-
-    for i = unit_bag_size + 1, priv.size do
-        priv.slot[i]:setItemIcon(nil)
-        priv.slot[i]:setTexture(private.empty_icon)
+    for col = 1, priv.cols do
+        for row = 1, priv.rows do
+            local item
+            if unit_bag then
+                item = unit_bag:get(private.getPos(col, row, priv.cols))
+            else
+                item = nil
+            end
+            private.setItem(self, item, col, row)
+        end
     end
 end
+
+---@return UnitInventoryBag | nil
+function public:getLoadedBag(bag)
+    return private.data[self].loaded_bag
+end
+
+--[[
+---@param item Item
+---@param col number
+---@param row number
+function public:setItem(item, col, row)
+    local priv = private.data[self]
+    if col > priv.cols then
+        Log.error(self, 'selected column number > column size.', 2)
+    end
+    if row > priv.rows then
+        Log.error(self, 'selected row number > row size.', 2)
+    end
+
+    local pos = private.getPos(col, row, priv.cols)
+
+    priv.item[pos] = item
+    priv.slot[pos]:setItem(item)
+    priv.tooltip[pos]:setItem(item)
+end
+
+---@param col number
+---@param row number
+---@return Item | nil
+function public:getItem(col, row)
+    local priv = private.data[self]
+    if col > priv.cols then
+        Log.error(self, 'selected column number > column size.', 2)
+    end
+    if row > priv.rows then
+        Log.error(self, 'selected row number > row size.', 2)
+    end
+
+    local pos = private.getPos(col, row, priv.cols)
+    return priv.item[pos]
+end
+]]
 
 ---@return number
 function public:getSize()
@@ -90,17 +137,28 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.background_type = SimpleFrameType.new('InterfaceUnitBagBackground')
-private.background_type:setTexture('war3mapImported\\Icons\\Inventory\\Background.tga')
+private.background_type = SimpleFrameType.new('InterfaceItemBagBackground')
+private.background_type:setWidth(0.2)
+private.background_type:setWidth(0.16)
+private.background_type:setTexture(Import.InventoryBackground)
 
-private.empty_icon = 'war3mapImported\\Icons\\Transparent32x32.tga'
-private.icon_background_texture = 'war3mapImported\\Icons\\Inventory\\EmptyBag.tga'
+private.empty_icon = Import.TransparentTexture
+private.icon_background_texture = Import.Icon.Empty
 
 private.border_ratio = 1/16
 private.space = 0.005
 private.tooltip_width = 0.2
 
----@param self InterfaceUnitBag
+function private.setItem(self, item, col, row)
+    local priv = private.data[self]
+    local pos = private.getPos(col, row, priv.cols)
+
+    priv.item[pos] = item
+    priv.slot[pos]:setItem(item)
+    priv.tooltip[pos]:setItem(item)
+end
+
+---@param self InterfaceItemBag
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -132,7 +190,7 @@ function private.update(self)
 end
 
 ---@param item Item
----@param slot InterfaceItem
+---@param slot InterfaceItemBagSlot
 ---@param tooltip InterfaceItemTooltip
 function private.loadItem(item, slot, tooltip)
     if not item then
@@ -150,22 +208,24 @@ function private.getPos(x, y, cols)
     return x + (y - 1) * cols
 end
 
----@param self InterfaceUnitBag
+---@param self InterfaceItemBag
 function private.newData(self, cols, rows)
     local priv = {
+        loaded_bag = nil,
         cols = cols,
         rows = rows,
         size = cols * rows,
 
         slot = {},
-        tooltip = {}
+        tooltip = {},
+        item = {}
     }
     private.data[self] = priv
 
     for x = 1, cols do
         for y = 1, rows do
             local pos = private.getPos(x, y, cols)
-            priv.slot[pos] = ItemFrame.new()
+            priv.slot[pos] = ItemBagSlot.new(self)
             priv.slot[pos]:setParent(self)
 
             priv.tooltip[pos] = ItemTooltip.new()

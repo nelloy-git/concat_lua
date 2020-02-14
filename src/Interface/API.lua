@@ -2,8 +2,8 @@
 -- Include
 --=========
 
----@type InterfaceUnitBagClass
-local InterfaceUnitBag = require('Interface.UnitBag')
+---@type InterfaceItemBagClass
+local InterfaceItemBag = require('Interface.Item.Bag')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type Timer
@@ -36,17 +36,6 @@ function InterfaceAPI.init()
     local world_handle = BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0)
     BlzFrameClearAllPoints(world_handle)
     BlzFrameSetAllPoints(world_handle, game_handle)
-
-    timerLoop()
-end
-
-if not IsCompiletime() then
-    InterfaceAPI.BagUI = InterfaceUnitBag.new(5, 4)
-    InterfaceAPI.BagUI:setWidth(0.2)
-    InterfaceAPI.BagUI:setHeight(0.2)
-
-    local timer = Timer.new()
-    timer:start(1, true, timerLoop)
 end
 
 

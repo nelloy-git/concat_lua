@@ -44,7 +44,11 @@ function public:setText(text)
     local priv = private.data[self]
     priv.text = text
 
-    BlzFrameSetText(priv.text_framehandle, text)
+    if priv.color then
+        BlzFrameSetText(priv.text_framehandle, string.format('|c%s%s|r', priv.color, priv.text))
+    else
+        BlzFrameSetText(priv.text_framehandle, text)
+    end
 end
 
 ---@param font string
@@ -86,7 +90,8 @@ function public:setTextColor(red, green, blue, alpha)
     if alpha > 255 then alpha = 255 end
     if alpha < 0 then alpha = 0 end
 
-    --BlzFrameSetTextColor(priv.text_framehandle, BlzConvertColor(alpha, red, green, blue))
+    priv.color = string.format('%02x%02x%02x%02x', alpha, red, green, blue)
+    BlzFrameSetText(priv.text_framehandle, string.format('|c%s%s|r', priv.color, priv.text))
 end
 
 ---@return string
@@ -118,6 +123,7 @@ function private.newData(self, simple_text_type)
         text = '',
         font = simple_text_type:getFont(),
         font_size = simple_text_type:getFontSize(),
+        color = nil,
     }
     private.data[self] = priv
 end

@@ -59,7 +59,6 @@ function private.puckUpAction()
     item_model:destroy()
 
     if not bag then
-        --
         ItemAPI.newItemModel()
         item:placeModel(item_x, item_y)
         return
@@ -72,6 +71,7 @@ function private.puckUpAction()
     end
 
     bag:set(item, empty_pos)
+    item:setOwner(GetManipulatingUnit())
 end
 
 if not IsCompiletime() then

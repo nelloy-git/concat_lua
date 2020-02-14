@@ -9,11 +9,7 @@ local Import = require('Resources.Import')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
-local SimpleButtonType = FrameAPI.SimpleButtonType
-local SimpleTextType = FrameAPI.SimpleTextType
 local SimpleFrame = FrameAPI.SimpleFrame
-local SimpleButton = FrameAPI.SimpleButton
-local SimpleText = FrameAPI.SimpleText
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 
 ---@type ParameterAPI
@@ -21,20 +17,20 @@ local ParamAPI = require('Parameter.API')
 local ParamType = ParamAPI.ParamType
 local ParamValueType = ParamAPI.ValueType
 
----@type ItemParameterLineClass
-local ParamLine = require('Item.ParameterLine')
+---@type InterfaceItemParameterLineClass
+local ParamLine = require('Interface.Item.Parameter.Line')
 
 --=======
 -- Class
 --=======
 
-local ItemParameterTooltip = Class.new('ItemParameterTooltip', SimpleFrame)
----@class ItemParameterTooltip : SimpleFrame
-local public = ItemParameterTooltip.public
----@class ItemParameterTooltipClass : SimpleFrameClass
-local static = ItemParameterTooltip.static
----@type ItemParameterTooltipClass
-local override = ItemParameterTooltip.override
+local InterfaceItemParameterTooltip = Class.new('InterfaceItemParameterTooltip', SimpleFrame)
+---@class InterfaceItemParameterTooltip : SimpleFrame
+local public = InterfaceItemParameterTooltip.public
+---@class InterfaceItemParameterTooltipClass : SimpleFrameClass
+local static = InterfaceItemParameterTooltip.static
+---@type InterfaceItemParameterTooltipClass
+local override = InterfaceItemParameterTooltip.override
 local private = {}
 
 --=========
@@ -42,10 +38,10 @@ local private = {}
 --=========
 
 ---@param max_params number
----@param child_instance ItemParameterTooltip | nil
----@return ItemParameterTooltip
+---@param child_instance InterfaceItemParameterTooltip | nil
+---@return InterfaceItemParameterTooltip
 function override.new(max_params, child_instance)
-    local instance = child_instance or Class.allocate(ItemParameterTooltip)
+    local instance = child_instance or Class.allocate(InterfaceItemParameterTooltip)
     instance = SimpleFrame.new(private.background_type, instance)
     private.newData(instance, max_params)
 
@@ -59,11 +55,7 @@ end
 ---@param width number
 function public:setWidth(width)
     FramePublic.setWidth(self, width)
-
-    local priv = private.data[self]
-    for i = 1, priv.max do
-        priv.line[i]:setWidth(width)
-    end
+    private.update(self)
 end
 
 ---@param height number
@@ -72,21 +64,21 @@ function public:setHeight(height)
     private.update(self)
 end
 
----@param param ParameterItem
-function public:loadParam(param)
+---@param params ParameterItem
+function public:loadParameters(params)
     local priv = private.data[self]
     priv.used = 0
 
     for _, paramType in pairs(ParamType) do
-        local base = param:get(paramType, ParamValueType.BASE)
-        local mult = param:get(paramType, ParamValueType.MULT)
-        local addit = param:get(paramType, ParamValueType.ADDIT)
+        local base = params:get(paramType, ParamValueType.BASE)
+        local mult = params:get(paramType, ParamValueType.MULT)
+        local addit = params:get(paramType, ParamValueType.ADDIT)
         if base ~= 0 or mult ~= 0 or addit ~= 0 then
             priv.used = priv.used + 1
             if priv.used > priv.max then
                 Log.error(self, 'got max parameters count.', 2)
             end
-            ---@type ItemParameterLine
+            ---@type InterfaceItemParameterLine
             local line = priv.line[priv.used]
             line:setName(ParamAPI.getShortName(paramType))
             line:setBase(base)
@@ -104,23 +96,27 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.background_type = SimpleFrameType.new('ItemParameterTooltipBackground')
-private.background_type:setWidth(0.08)
-private.background_type:setHeight(0.1)
+private.max_line_height = 0.01
+
+private.background_type = SimpleFrameType.new('InterfaceItemParameterTooltipBackground')
+private.background_type:setWidth(0.1)
+private.background_type:setHeight(0.08)
 private.background_type:setTexture(Import.TransparentTexture)
 
----@param self ItemParameterTooltip
+---@param self InterfaceItemParameterTooltip
 function private.update(self)
     local priv = private.data[self]
     local count = priv.used
     local height = self:getHeight()
-    local line_height = height / count
+    local width = self:getWidth()
+    local line_height = math.min(height / count, private.max_line_height)
 
     for i = 1, count do
         local line = priv.line[i]
         line:setVisible(true)
-        line:setY((i - 1) * line_height)
+        line:setY(height - i * line_height)
         line:setHeight(line_height)
+        line:setWidth(width)
     end
 
     for i = count + 1, priv.max do
@@ -128,7 +124,7 @@ function private.update(self)
     end
 end
 
----@param self ItemParameterTooltip
+---@param self InterfaceItemParameterTooltip
 function private.newData(self, max_lines)
     local priv = {
         max = max_lines,

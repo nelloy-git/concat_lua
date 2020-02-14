@@ -16,10 +16,11 @@ local ItemModelType = require('Item.ModelType')
 ---@class ItemAPI
 local ItemAPI = {}
 
-ItemAPI.ItemModelTypeEnum = ItemModelType.ItemType
+ItemAPI.ItemType = Item.Type
+ItemAPI.ItemModelType = ItemModelType.ItemType
 
 ItemAPI.newItem = Item.new
-ItemAPI.getItem = Item.getInstance
+ItemAPI.getItem = Item.get
 ItemAPI.newItemModel = ItemModel.new
 ItemAPI.newItemModelType = ItemModelType.new
 
