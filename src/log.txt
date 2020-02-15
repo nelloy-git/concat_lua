@@ -1,11 +1,2 @@
-[0.000] {Msg} FdfFile: created new InterfaceItemBagBackground fdf file.
-	added InterfaceItemBagBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipDescription fdf file.
-	added InterfaceItemTooltipTooltipDescription object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipTitle fdf file.
-	added InterfaceItemTooltipTooltipTitle object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipIcon fdf file.
-	added InterfaceItemTooltipTooltipIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTooltipBackground fdf file.
-	added InterfaceItemTooltipTooltipBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemParameterTooltipBackground fdf file.
-	added InterfaceItemParameterTooltipBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemParameterLineText fdf file.
-	added InterfaceItemParameterLineText object.[0.000] {Msg} FdfFile: created new InterfaceItemParameterLineBackground fdf file.
-	added InterfaceItemParameterLineBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemBagSlotSlotIcon fdf file.
-	added InterfaceItemBagSlotSlotIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemBagSlotSlotBackground fdf file.
-	added InterfaceItemBagSlotSlotBackground object.[0.000] {Msg} WeFile: сreated WeItem_13c29b0 "Test" with id 'IM#$' based on 'rhe2'[0.000] {Msg} WeFile: сreated WeUnit_12bfe80 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_12d6270 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_139f120 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_13a8d30 "DisableMovement" with id 'BM#$' based on 'Bfae'
+[0.000] {Msg} FdfFile: created new TestButton fdf file.
+	added TestButton object.[0.000] {Msg} WeFile: сreated WeItem_00013F5206B280 "Test" with id 'IM#$' based on 'rhe2'[0.000] {Msg} WeFile: сreated WeUnit_00013F5206AE40 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_00013F5206AE00 "Example ability" with id 'AM#%' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeAbility_00013F520646C0 "DisableMovement" with id 'AM#$' based on 'Aasl'[0.000] {Msg} WeFile: сreated WeBuff_00013F52063E40 "DisableMovement" with id 'BM#$' based on 'Bfae'

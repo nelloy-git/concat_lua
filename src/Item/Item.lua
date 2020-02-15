@@ -71,8 +71,6 @@ function static.new(item_type, child_instance)
     local instance = child_instance or Class.allocate(Item)
     private.newData(instance, item_type)
 
-    instance.Param = ParameterAPI.newItemContainer()
-
     return instance
 end
 
@@ -107,6 +105,11 @@ function public:setIcon(icon)
     private.data[self].icon = icon
 end
 
+---@param description string
+function public:setDescription(description)
+    private.data[self].description = description
+end
+
 ---@param model ItemModel | nil
 function public:setModel(model)
     private.data[self].model = model
@@ -134,6 +137,11 @@ end
 ---@return string
 function public:getIcon()
     return private.data[self].icon
+end
+
+---@return string
+function public:getDescription()
+    return private.data[self].description
 end
 
 ---@return ItemModel

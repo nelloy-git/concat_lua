@@ -4,13 +4,6 @@
 
 local Class = require('Utils.Class.Class')
 
----@type TriggerClass
-local Trigger = require('Utils.Trigger')
----@type Unit
-local Unit = require('Unit.Unit')
----@type Interface
-local Interface = require('Interface.Interface')
-
 --=======
 -- Class
 --=======
@@ -28,35 +21,29 @@ local private = {}
 -- Static
 --=========
 
+---@alias InterfaceBagSlotPressedCallback fun(player:player, owner:Unit, item:Item)
+
 ---@param bag_slot InterfaceItemBagSlot
 function static.pressedBagSlot(bag_slot)
     local player = GetTriggerPlayer()
     local unit = bag_slot:getBag():getLoadedBag():getOwner()
     local item = bag_slot:getItem()
 
-    print(player, ' pressed ', item, ' from ', unit)
+    if private.pressedBagCallback then
+        private.pressedBagCallback(player, unit, item)
+    end
 end
 
 function static.pressedEquipmentSlot(equip_slot)
 end
 
-private.selected_unit = {}
-if not IsCompiletime then
-    private.local_player = GetLocalPlayer()
+---@param callback InterfaceBagSlotPressedCallback
+function static.setPressedBagSlotCallback(callback)
+    private.pressedBagCallback = callback
+end
 
-    private.selection_trigger = Trigger.new()
-    for i = 0, bj_MAX_PLAYER_SLOTS do
-        private.selection_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SELECTED, Player(i))
-    end
-    private.selection_trigger:addAction(function() 
-        local player = GetTriggerPlayer()
-        local unit = Unit.getInstance(GetTriggerUnit())
-        private.selected_unit[player] = unit
-
-        if player == private.local_player then
-            Interface.Bag:loadBag(unit.Bag)
-        end
-    end)
+private.pressedBagCallback = function (player, unit, item)
+    print(player, ' pressed ', item, ' from ', unit)
 end
 
 return static

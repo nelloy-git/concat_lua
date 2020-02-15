@@ -85,46 +85,9 @@ function public:loadBag(unit_bag)
 end
 
 ---@return UnitInventoryBag | nil
-function public:getLoadedBag(bag)
+function public:getLoadedBag()
     return private.data[self].loaded_bag
 end
-
---[[
----@param item Item
----@param col number
----@param row number
-function public:setItem(item, col, row)
-    local priv = private.data[self]
-    if col > priv.cols then
-        Log.error(self, 'selected column number > column size.', 2)
-    end
-    if row > priv.rows then
-        Log.error(self, 'selected row number > row size.', 2)
-    end
-
-    local pos = private.getPos(col, row, priv.cols)
-
-    priv.item[pos] = item
-    priv.slot[pos]:setItem(item)
-    priv.tooltip[pos]:setItem(item)
-end
-
----@param col number
----@param row number
----@return Item | nil
-function public:getItem(col, row)
-    local priv = private.data[self]
-    if col > priv.cols then
-        Log.error(self, 'selected column number > column size.', 2)
-    end
-    if row > priv.rows then
-        Log.error(self, 'selected row number > row size.', 2)
-    end
-
-    local pos = private.getPos(col, row, priv.cols)
-    return priv.item[pos]
-end
-]]
 
 ---@return number
 function public:getSize()

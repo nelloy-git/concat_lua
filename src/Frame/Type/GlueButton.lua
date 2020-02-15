@@ -2,7 +2,6 @@
 -- Include
 --=========
 
-local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
 
 ---@type FrameTypeClass
@@ -26,12 +25,13 @@ local private = {}
 --=========
 
 ---@param uniq_name string
+---@param separate_file boolean
 ---@param child_instance GlueButtonType | nil
 ---@return GlueButtonType
-function override.new(uniq_name, child_instance)
+function override.new(uniq_name, separate_file, child_instance)
     local instance = child_instance or Class.allocate(GlueButtonType)
-    instance = FrameType.new(uniq_name, private.createFdf, instance)
-    private.newData(instance, uniq_name)
+    instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
+    private.newData(instance)
 
     return instance
 end
@@ -45,63 +45,169 @@ function public:isSimple()
     return false
 end
 
----@return string
-function public:getControlName()
-    return private[self].name..private.suffixes.Control
+---@param width number
+function public:setWidth(width)
+    private.data[self].width = width
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.Width, width)
+    end
 end
 
----@return string
-function public:getControlPushedName()
-    return private[self].name..private.suffixes.ControlPushed
+---@param height number
+function public:setHeight(height)
+    private.data[self].height = height
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.Height, height)
+    end
 end
 
----@return string
-function public:getControlDisabledName()
-    return private[self].name..private.suffixes.ControlDisabled
+---@param backdrop_type BackdropType
+function public:setEnabledBackdrop(backdrop_type)
+    private.data[self].enabled = backdrop_type
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.ControlBackdrop, backdrop_type:getName())
+        private.applyChildrens(self)
+    end
 end
 
----@return string
-function public:getControlDisabledPushedName()
-    return private[self].name..private.suffixes.ControlDisabledPushed
+---@param backdrop_type BackdropType
+function public:setPressedBackdrop(backdrop_type)
+    private.data[self].pressed = backdrop_type
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.ControlPushedBackdrop, backdrop_type:getName())
+        private.applyChildrens(self)
+    end
 end
 
----@return string
-function public:getControlMouseOverName()
-    return private[self].name..private.suffixes.ControlMouseOver
+---@param backdrop_type BackdropType
+function public:setDisabledBackdrop(backdrop_type)
+    private.data[self].disabled = backdrop_type
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.ControlDisabledBackdrop, backdrop_type:getName())
+        private.applyChildrens(self)
+    end
 end
 
----@return string
-function public:getControlFocusName()
-    return private[self].name..private.suffixes.ControlFocus
+---@param highlight_type HighlightType
+function public:setHoveredHighlight(highlight_type)
+    private.data[self].hovered = highlight_type
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.ControlMouseOverHighlight, highlight_type:getName())
+        private.applyChildrens(self)
+    end
 end
 
+---@param highlight_type HighlightType
+function public:setFocusedHighlight(highlight_type)
+    private.data[self].focused = highlight_type
 
-function public:free()
-    private.freeData(self)
-    Class.free(self)
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.ControlFocusHighlight, highlight_type:getName())
+        private.applyChildrens(self)
+    end
+end
+
+---@return number
+function public:getWidth()
+    return private.data[self].width
+end
+
+---@return number
+function public:getHeight()
+    return private.data[self].height
+end
+
+---@return BackdropType
+function public:getEnabledBackdrop()
+    return private.data[self].enabled
+end
+
+---@return BackdropType
+function public:getPressedBackdrop()
+    return private.data[self].pressed
+end
+
+---@return BackdropType
+function public:getDisabledBackdrop()
+    return private.data[self].disabled
 end
 
 --=========
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self GlueButtonType
+function private.applyChildrens(self)
+    local priv = private.data[self]
+
+    local list = {}
+    local control_style = 'AUTOTRACK'
+    if priv.enabled then
+        table.insert(list, priv.enabled:getFdf())
+    end
+    if priv.pressed then
+        table.insert(list, priv.pressed:getFdf())
+    end
+    if priv.disabled then
+        table.insert(list, priv.disabled:getFdf())
+    end
+    if priv.hovered then
+        table.insert(list, priv.hovered:getFdf())
+        control_style = control_style..'|HIGHLIGHTONMOUSEOVER'
+    end
+    if priv.focused then
+        table.insert(list, priv.focused:getFdf())
+        control_style = control_style..'|HIGHLIGHTONFOCUS'
+    end
+
+    self:getFdf():setField(private.Field.ChildFrames, list)
+    self:getFdf():setField(private.Field.ControlStyle, control_style)
+end
+
+---@param self GlueButtonType
+function private.newData(self)
+    local priv = {
+        width = private.default_width,
+        height = private.default_height,
+
+        enabled = nil,
+        pressed = nil,
+        disabled = nil,
+        hovered = nil,
+        focused = nil,
+    }
+    private.data[self] = priv
+end
+
+--=============
+-- Compiletime
+--=============
+
+private.default_width = 0.03
+private.default_height = 0.03
+private.default_texture = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin'
+
 local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
-    private.File = FdfEdit.File
     private.GlueButton = FdfEdit.GlueButton
-    private.Backdrop = FdfEdit.Backdrop
-    private.Highlight = FdfEdit.Highlight
+    private.Field = FdfEdit.GlueButton.Field
 end)
-
-private.suffixes = {
-    Control = 'Control',
-    ControlPushed = 'ControlPushed',
-    ControlDisabled = 'ControlDisabled',
-    ControlDisabledPushed = 'ControlDisabledPushed',
-    ControlMouseOver = 'ControlMouseOver',
-    ControlFocus = 'ControlFocus',
-}
 
 ---@param name string
 ---@return table
@@ -109,51 +215,11 @@ function private.createFdf(name)
     local frame = private.GlueButton.new(name)
     local fields = private.GlueButton.Field
 
-    frame:setField(fields.Width, 0.05)
-    frame:setField(fields.Height, 0.05)
+    frame:setField(fields.Width, private.default_width)
+    frame:setField(fields.Height, private.default_height)
+    frame:setField(fields.ControlStyle, 'AUTOTRACK')
 
-    frame:setField(fields.ControlStyle, 'AUTOTRACK|HIGHLIGHTONFOCUS|HIGHLIGHTONMOUSEOVER')
-    local ControlName = name..private.suffixes.Control
-    frame:setField(fields.ControlBackdrop, ControlName)
-    local ControlPushedName = name..private.suffixes.ControlPushed
-    frame:setField(fields.ControlPushedBackdrop, ControlPushedName)
-    local ControlDisabledName = name..private.suffixes.ControlDisabled
-    frame:setField(fields.ControlDisabledBackdrop, ControlDisabledName)
-    local ControlDisabledPushedName = name..private.suffixes.ControlDisabledPushed
-    frame:setField(fields.ControlDisabledPushedBackdrop, ControlDisabledPushedName)
-    local ControlMouseOverName = name..private.suffixes.ControlMouseOver
-    frame:setField(fields.ControlMouseOverHighlight, ControlMouseOverName)
-    local ControlFocusName = name..private.suffixes.ControlFocus
-    frame:setField(fields.ControlFocusHighlight, ControlFocusName)
-
-    local childs = {
-        [1] = private.Backdrop.new(name..private.suffixes.Control),
-        [2] = private.Backdrop.new(name..private.suffixes.ControlPushed),
-        [3] = private.Backdrop.new(name..private.suffixes.ControlDisabled),
-        [4] = private.Backdrop.new(name..private.suffixes.ControlDisabledPushed),
-        [5] = private.Highlight.new(name..private.suffixes.ControlMouseOver),
-        [6] = private.Highlight.new(name..private.suffixes.ControlFocus),
-    }
-    frame:setField(fields.ChildFrames, childs)
-
-    local file = private.File.new(name)
-    file:addObject(frame)
-
-    return file:toRuntime().toc
-end
-
----@param instance GlueButtonType
----@param uniq_name string
-function private.newData(instance, uniq_name)
-    local priv = {
-        name = uniq_name
-    }
-    private[instance] = priv
-end
-
----@param instance GlueButtonType
-function private.freeData(instance)
-    private[instance] = nil
+    return frame
 end
 
 return static

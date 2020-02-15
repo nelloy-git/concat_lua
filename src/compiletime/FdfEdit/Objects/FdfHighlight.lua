@@ -38,16 +38,18 @@ end
 
 static.Field = {}
 static.Field.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SerialFunc.EMPTY)
+static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
+-- "FILETEXTURE" | "SHADE"
+static.Field.Type = FdfField.new('HighlightType', 'string', FdfField.SerialFunc.STRING)
 -- "EscMenuButtonMouseOverHighlight" | "EscMenuCheckBoxCheckHighlight" | "EscMenuDisabledRadioButtonSelectedHighlight"
 -- | "UI\Glues\ScoreScreen\scorescreen-tab-hilight.blp" | "UI\Widgets\Glues\GlueScreen-Button-KeyboardHighlight.blp"
 -- | "UI\Widgets\Glues\GlueScreen-Checkbox-Check.blp" | "UI\Widgets\Glues\GlueScreen-Checkbox-CheckDisabled.blp"
 -- | "UI\Widgets\Glues\GlueScreen-RadioButton-ButtonDisabled.blp"
-static.Field.HighlightAlphaFile = FdfField.new('HighlightAlphaFile', 'string', FdfField.SerialFunc.STRING)
+static.Field.AlphaFile = FdfField.new('HighlightAlphaFile', 'string', FdfField.SerialFunc.STRING)
 -- "ADD" | "BLEND"
-static.Field.HighlightAlphaMode = FdfField.new('HighlightAlphaMode', 'string', FdfField.SerialFunc.STRING)
+static.Field.AlphaMode = FdfField.new('HighlightAlphaMode', 'string', FdfField.SerialFunc.STRING)
 -- Example {0.0, 0.0, 1.0, 0.1}
-static.Field.HighlightColor = FdfField.new('HighlightColor', 'table', FdfField.SerialFunc.LIST)
--- "FILETEXTURE" | "SHADE"
-static.Field.HighlightType = FdfField.new('HighlightType', 'string', FdfField.SerialFunc.STRING)
+static.Field.Color = FdfField.new('HighlightColor', 'table', FdfField.SerialFunc.LIST)
 
 return static

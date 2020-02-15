@@ -17,6 +17,6 @@ local Event = require('Unit.Inventory.Event')
 local InventoryAPI = {}
 
 InventoryAPI.newBag = Bag.new
-InventoryAPI.newEquipment = Equipment.new
+InventoryAPI.getBag = Bag.getInstance
 
 return InventoryAPI

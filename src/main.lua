@@ -54,17 +54,17 @@ if not IsCompiletime() then
 
     --u2 = nil
 
-    it = ItemAPI.newItem()
-    it.Param:set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.BASE, 10)
-    it.Param:set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.MULT, 0.1)
-    it.Param:set(ParamAPI.ParamType.Armor, ParamAPI.ValueType.ADDIT, 5)
+    it = ItemAPI.newItem(ItemAPI.ItemType.BELT)
+    it:getParameters():set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.BASE, 10)
+    it:getParameters():set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.MULT, 0.1)
+    it:getParameters():set(ParamAPI.ParamType.Armor, ParamAPI.ValueType.ADDIT, 5)
 
     it_model = ItemAPI.newItemModel(it_model_type, 0, 0)
 
     it:setModel(it_model)
 
     InterfaceAPI.init()
-    InterfaceAPI.target = u
+    InterfaceAPI.Bag:loadBag(u.Bag)
 
     --it2 = ItemAPI.newItem(0, 0)
     --it3 = ItemAPI.newItem(0, 0)

@@ -88,7 +88,7 @@ function public:setMult(value)
         color = private.penalty_color
     end
 
-    private.data[self].mult:setText(fmt('%.1f%%', value))
+    private.data[self].mult:setText(fmt('%.1f%%', 100 * value))
     private.data[self].mult:setTextColor(color.red, color.green, color.blue, color.alpha)
 end
 

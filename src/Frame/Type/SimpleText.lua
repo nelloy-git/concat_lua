@@ -25,11 +25,12 @@ local private = {}
 --=========
 
 ---@param uniq_name string
+---@param separate_file boolean
 ---@param child_instance SimpleTextType | nil
 ---@return SimpleTextType
-function override.new(uniq_name, child_instance)
+function override.new(uniq_name, separate_file, child_instance)
     local instance = child_instance or Class.allocate(SimpleTextType)
-    instance = FrameType.new(uniq_name, private.createFdf, instance)
+    instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
 
     return instance

@@ -11,13 +11,13 @@ local FrameType = require('Frame.FrameType')
 -- Class
 --=======
 
-local SimpleFrameType = Class.new('SimpleFrameType', FrameType)
----@class SimpleFrameType  : FrameType
-local public = SimpleFrameType.public
----@class SimpleFrameTypeClass : FrameTypeClass
-local static = SimpleFrameType.static
----@type SimpleFrameTypeClass
-local override = SimpleFrameType.override
+local HighlightType = Class.new('HighlightType', FrameType)
+---@class HighlightType  : FrameType
+local public = HighlightType.public
+---@class HighlightTypeClass : FrameTypeClass
+local static = HighlightType.static
+---@type HighlightTypeClass
+local override = HighlightType.override
 local private = {}
 
 --=========
@@ -26,10 +26,10 @@ local private = {}
 
 ---@param uniq_name string
 ---@param separate_file boolean
----@param child_instance SimpleFrameType | nil
----@return SimpleFrameType
+---@param child_instance HighlightType | nil
+---@return HighlightType
 function override.new(uniq_name, separate_file, child_instance)
-    local instance = child_instance or Class.allocate(SimpleFrameType)
+    local instance = child_instance or Class.allocate(HighlightType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
 
@@ -42,7 +42,7 @@ end
 
 ---@return boolean
 function public:isSimple()
-    return true
+    return false
 end
 
 ---@param width number
@@ -51,7 +51,7 @@ function public:setWidth(width)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleFrame.Field.Width, width)
+        fdf:setField(private.Field.Width, width)
     end
 end
 
@@ -61,7 +61,7 @@ function public:setHeight(height)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleFrame.Field.Height, height)
+        fdf:setField(private.Field.Height, height)
     end
 end
 
@@ -71,8 +71,7 @@ function public:setTexture(texture)
 
     local fdf = self:getFdf()
     if fdf then
-        local texture_fdf = fdf:getField(private.SimpleFrame.Field.Texture)[1]
-        texture_fdf:setField(private.SimpleTexture.Field.File, texture)
+        fdf:setField(private.Field.Background, texture)
     end
 end
 
@@ -88,12 +87,7 @@ end
 
 ---@return string
 function public:getTexture()
-    return private.data[self].texture
-end
-
----@return string
-function public:getTextureFrameName()
-    return private.getTextureName(self:getName())
+    return private.data[self].background
 end
 
 --=========
@@ -102,18 +96,12 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param name string
----@return string
-function private.getTextureName(name)
-    return name..'Texture'
-end
-
 ---@param self SimpleFrame
 function private.newData(self)
     priv = {
         width = private.default_width,
         height = private.default_height,
-        texture = private.default_texture
+        texture = private.default_texture,
     }
     private.data[self] = priv
 end
@@ -124,27 +112,26 @@ end
 
 private.default_width = 0.03
 private.default_height = 0.03
-private.default_texture = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin'
+private.default_texture = 'UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp'
 
 local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
-    private.File = FdfEdit.File
-    private.SimpleFrame = FdfEdit.SimpleFrame
-    private.SimpleTexture = FdfEdit.SimpleTexture
+    private.Highlight = FdfEdit.Highlight
+    private.Field = FdfEdit.Highlight.Field
 end)
 
 ---@param name string
 ---@return string
 function private.createFdf(name)
-    local frame = private.SimpleFrame.new(name)
-    local fields = private.SimpleFrame.Field
-    frame:setField(fields.Width, private.default_width)
-    frame:setField(fields.Height, private.default_height)
+    local frame = private.Highlight.new(name)
+    local field = private.Field
 
-    local texture = private.SimpleTexture.new(private.getTextureName(name))
-    texture:setField(private.SimpleTexture.Field.File, private.default_texture)
-    frame:setField(fields.Texture, {texture})
+    frame:setField(field.Width, private.default_width)
+    frame:setField(field.Height, private.default_height)
+    frame:setField(field.AlphaMode, 'ADD')
+    frame:setField(field.Type, 'FILETEXTURE')
+    frame:setField(field.AlphaFile, private.default_texture)
 
     return frame
 end

@@ -10,6 +10,8 @@ local Trigger = require('Utils.Trigger')
 local UnitInventoryBag = require('Unit.Inventory.Bag')
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
+---@type InterfaceAPI
+local InterfaceAPI = require('Interface.API')
 
 --=======
 -- Class
@@ -48,8 +50,10 @@ end
 --=========
 
 function private.puckUpAction()
+    print('Item pick up event.')
+
     local item = ItemAPI.getItem(GetManipulatedItem())
-    local bag = UnitInventoryBag.getByOwner(GetManipulatingUnit())
+    local bag = UnitInventoryBag.getInstance(GetManipulatingUnit())
 
     local item_model = item:getModel()
     item:setModel(nil)
@@ -71,7 +75,10 @@ function private.puckUpAction()
     end
 
     bag:set(item, empty_pos)
-    item:setOwner(GetManipulatingUnit())
+    if bag == InterfaceAPI.Bag:getLoadedBag() then
+        InterfaceAPI.Bag:loadBag(bag)
+    end
+    --item:setOwner(GetManipulatingUnit())
 end
 
 if not IsCompiletime() then

@@ -38,12 +38,15 @@ end
 
 static.Field = {}
 static.Field.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SerialFunc.EMPTY)
+static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
+static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.TileBackground = FdfField.new('BackdropTileBackground', 'nil', FdfField.SerialFunc.EMPTY)
 static.Field.Background = FdfField.new('BackdropBackground', 'string', FdfField.SerialFunc.STRING)
 static.Field.CornerFlags = FdfField.new('BackdropCornerFlags', 'string', FdfField.SerialFunc.STRING)
 static.Field.CornerSize = FdfField.new('BackdropCornerSize', 'number', FdfField.SerialFunc.NUMBER)
-static.Field.BackgroundInsets = FdfField.new('BackdropBackgroundInsets', 'table', FdfField.SerialFunc.LIST)
+static.Field.Insets = FdfField.new('BackdropBackgroundInsets', 'table', FdfField.SerialFunc.LIST)
 static.Field.EdgeFile = FdfField.new('BackdropEdgeFile', 'string', FdfField.SerialFunc.STRING)
 static.Field.BlendAll = FdfField.new('BackdropBlendAll', 'nil', FdfField.SerialFunc.EMPTY)
+static.Field.ChildFrames = FdfField.new('', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 
 return static

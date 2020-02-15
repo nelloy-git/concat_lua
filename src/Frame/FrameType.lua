@@ -25,12 +25,13 @@ local private = {}
 --=========
 
 ---@param uniq_name string
----@param createFdf fun(name:string)
+---@param create_fdf fun(name:string):FdfObject
+---@param separate_file boolean
 ---@param child_instance any
 ---@return FrameType
-function static.new(uniq_name, createFdf, child_instance)
+function static.new(uniq_name, create_fdf, separate_file, child_instance)
     local instance = child_instance or Class.allocate(FrameType)
-    private.newData(instance, uniq_name, createFdf)
+    private.newData(instance, uniq_name, create_fdf, separate_file)
 
     return instance
 end
@@ -79,8 +80,9 @@ end)
 
 ---@param self FrameType
 ---@param uniq_name string
----@param createFdf function
-function private.newData(self, uniq_name, createFdf)
+---@param create_fdf function
+---@param separate_file boolean
+function private.newData(self, uniq_name, create_fdf, separate_file)
     local priv = {}
 
     if IsCompiletime() then
@@ -88,18 +90,24 @@ function private.newData(self, uniq_name, createFdf)
             Log.error(FrameType, 'name is not unique.', 3)
         end
 
-        priv.fdf = createFdf(uniq_name)
-        local file = private.FdfFile.new(uniq_name)
-        file:addObject(priv.fdf)
+        priv.fdf = create_fdf(uniq_name)
 
-        private.compiletime_data:set(uniq_name, file:toRuntime().toc)
+        if separate_file then
+            local file = private.FdfFile.new(uniq_name)
+            file:addObject(priv.fdf)
+
+            private.compiletime_data:set(uniq_name, file:toRuntime().toc)
+        end
     end
 
     priv.name = uniq_name
-    priv.toc = private.compiletime_data:get(uniq_name)
-    if not IsCompiletime() then
-        if not BlzLoadTOCFile(priv.toc) then
-            Log.error(self, uniq_name..' load toc failed.', 3)
+
+    if separate_file then
+        priv.toc = private.compiletime_data:get(uniq_name)
+        if not IsCompiletime() then
+            if not BlzLoadTOCFile(priv.toc) then
+                Log.error(self, uniq_name..' load toc failed.', 3)
+            end
         end
     end
 

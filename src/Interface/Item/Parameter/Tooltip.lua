@@ -65,7 +65,7 @@ function public:setHeight(height)
 end
 
 ---@param params ParameterItem
-function public:loadParameters(params)
+function public:setParameters(params)
     local priv = private.data[self]
     priv.used = 0
 

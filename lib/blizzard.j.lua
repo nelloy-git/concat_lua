@@ -4057,9 +4057,9 @@ end
 ---@return number
 function GetUnitStatePercent(whichUnit, whichState, whichMaxState)
 	---@type number
-	value    = GetUnitState(whichUnit, whichState)
+	local value    = GetUnitState(whichUnit, whichState)
 	---@type number
-	maxValue = GetUnitState(whichUnit, whichMaxState)
+	local maxValue = GetUnitState(whichUnit, whichMaxState)
 	
 	-- Return 0 for nil units.
 	if (whichUnit == nil) or (maxValue == 0) then

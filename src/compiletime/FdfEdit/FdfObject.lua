@@ -108,7 +108,11 @@ function public:toRuntime()
             local list = {}
             res.field[field:getName()] = list
             for j = 1, #value do
-                list[value[j]:getName()] = value[j]:toRuntime()
+                if type(value[j]) == 'number' then
+                    list[j] = value[j]
+                else
+                    list[value[j]:getName()] = value[j]:toRuntime()
+                end
             end
 
         else

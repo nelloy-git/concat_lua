@@ -24,7 +24,7 @@ local private = {}
 -- Static
 --=========
 
----@param owner Unit
+---@param owner unit
 ---@param size number
 ---@param child_instance UnitInventoryBag | nil
 ---@return UnitInventoryBag
@@ -33,6 +33,11 @@ function static.new(owner, size, child_instance)
     private.newData(instance, owner, size)
 
     return instance
+end
+
+---@param owner unit
+function static.getInstance(owner)
+    return private.owner2bag[owner]
 end
 
 --========
@@ -81,7 +86,7 @@ function public:getEmpty()
     return
 end
 
----@return Unit
+---@return unit
 function public:getOwner()
     return private.data[self].owner
 end
@@ -94,7 +99,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.owner2bag = setmetatable({}, {__mode = 'kv'})
 
 ---@param self UnitInventoryBag
----@param owner Unit
+---@param owner unit
 ---@param size number
 function private.newData(self, owner, size)
     local priv = {

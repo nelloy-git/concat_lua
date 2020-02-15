@@ -28,7 +28,7 @@ local private = {}
 --=========
 
 ---@param simple_button_type SimpleButtonType
----@param child_instance SimpleButton
+---@param child_instance SimpleButton | nil
 ---@return SimpleButton
 function override.new(simple_button_type, child_instance)
     local instance = child_instance or Class.allocate(SimpleButton)
@@ -46,7 +46,7 @@ end
 function public:setTexture(texture)
     local priv = private.data[self]
     priv.texture = texture
-    BlzFrameSetTexture(self:getObj(), texture, 0, true)
+    --BlzFrameSetTexture(self:getObj(), texture, 0, true)
     BlzFrameSetTexture(priv.texture_frame, texture, 0, true)
 end
 
@@ -75,7 +75,7 @@ function public:addPressedAction(callback)
         priv.trigger:addFrameEvent(self:getObj(), FRAMEEVENT_CONTROL_CLICK)
     end
 
-    return priv.trigger:addPressedAction(callback)
+    return priv.trigger:addAction(callback)
 end
 
 ---@param action Action

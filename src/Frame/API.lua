@@ -4,18 +4,32 @@
 
 ---@type Frame
 local Frame = require('Frame.Frame')
+
 ---@type SimpleFrameTypeClass
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
 local SimpleButtonType = require('Frame.Type.SimpleButton')
 ---@type SimpleButtonTypeClass
 local SimpleTextType = require('Frame.Type.SimpleText')
+---@type BackdropTypeClass
+local BackdropType = require('Frame.Type.Backdrop')
+---@type GlueButtonTypeClass
+local GlueButtonType = require('Frame.Type.GlueButton')
+---@type HighlightTypeClass
+local HighlightType = require('Frame.Type.Highlight')
+
 ---@type SimpleFrameClass
 local SimpleFrame = require('Frame.Default.SimpleFrame')
 ---@type SimpleButtonClass
 local SimpleButton = require('Frame.Default.SimpleButton')
 ---@type SimpleTextClass
 local SimpleText = require('Frame.Default.SimpleText')
+---@type BackdropClass
+local Backdrop = require('Frame.Default.Backdrop')
+---@type GlueButtonClass
+local GlueButton = require('Frame.Default.GlueButton')
+---@type HighlightClass
+local Highlight = require('Frame.Default.Highlight')
 
 --=============
 --     API
@@ -32,11 +46,18 @@ FrameAPI.SimpleFrameType = SimpleFrameType
 FrameAPI.SimpleButtonType = SimpleButtonType
 FrameAPI.SimpleTextType = SimpleTextType
 
+FrameAPI.BackdropType = BackdropType
+FrameAPI.GlueButtonType = GlueButtonType
+FrameAPI.HighlightType = HighlightType
+
 -- Default frames
 
 FrameAPI.SimpleFrame = SimpleFrame
 FrameAPI.SimpleButton = SimpleButton
 FrameAPI.SimpleText = SimpleText
 
+FrameAPI.Backdrop = Backdrop
+FrameAPI.GlueButton = GlueButton
+FrameAPI.Highlight = Highlight
 
 return FrameAPI
