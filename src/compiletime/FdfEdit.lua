@@ -16,7 +16,7 @@ FdfEdit.SimpleFrame = require('compiletime.FdfEdit.Objects.FdfSimpleFrame')
 ---@type FdfSimpleButtonClass
 FdfEdit.SimpleButton = require('compiletime.FdfEdit.Objects.FdfSimpleButton')
 ----@type FdfTextClass
---FdfEdit.Text = require('compiletime.FdfEdit.Objects.FdfText')
+FdfEdit.Text = require('compiletime.FdfEdit.Objects.FdfText')
 
 -- Subobjects
 ---@type FdfSimpleStringClass

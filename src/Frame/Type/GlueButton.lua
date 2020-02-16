@@ -145,6 +145,16 @@ function public:getDisabledBackdrop()
     return private.data[self].disabled
 end
 
+---@return HighlightType
+function public:getHoverHighlight()
+    return private.data[self].hovered
+end
+
+---@return HighlightType
+function public:getFocusedHighlight()
+    return private.data[self].focused
+end
+
 --=========
 -- Private
 --=========
