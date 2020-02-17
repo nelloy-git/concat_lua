@@ -4,6 +4,8 @@
 
 local Class = require('Utils.Class.Class')
 
+---@type Import
+local Import = require('Resources.Import')
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
@@ -54,7 +56,7 @@ function public:equip(item)
     end
 
     if priv.slot[item_type] then
-        Log.error(self, 'previous item was not unequiped.', 2)
+        Log.error(self, 'slot is not empty.', 2)
     end
 
     priv.slot[item_type] = item
@@ -71,11 +73,12 @@ function public:unequip(item_type)
         return false
     end
 
-    if priv.slot[item_type] then
-        private.removeParams(priv.owner, priv.slot[item_type])
-        priv.slot[item_type] = nil
+    if not priv.slot[item_type] then
+        Log.error(self, 'slot is empty.', 2)
     end
 
+    private.removeParams(priv.owner, priv.slot[item_type])
+    priv.slot[item_type] = nil
     return true
 end
 

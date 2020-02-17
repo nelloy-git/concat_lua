@@ -11,9 +11,9 @@ local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type InterfaceItemBagSlotClass
+---@type InterfaceBagSlotClass
 local ItemBagSlot = require('Interface.Bag.BagSlot')
----@type InterfaceItemTooltipClass
+---@type InterfaceBagTooltipClass
 local ItemTooltip = require('Interface.Bag.Tooltip')
 ---@type InterfaceBagSyncClass
 local SyncEvent = require('Interface.Bag.Sync')
@@ -22,13 +22,13 @@ local SyncEvent = require('Interface.Bag.Sync')
 -- Class
 --=======
 
-local InterfaceItemBag = Class.new('InterfaceItemBag', SimpleFrame)
----@class InterfaceItemBag
-local public = InterfaceItemBag.public
----@class InterfaceItemBagClass
-local static = InterfaceItemBag.static
----@type InterfaceItemBagClass
-local override = InterfaceItemBag.override
+local InterfaceBag = Class.new('InterfaceBag', SimpleFrame)
+---@class InterfaceBag
+local public = InterfaceBag.public
+---@class InterfaceBagClass
+local static = InterfaceBag.static
+---@type InterfaceBagClass
+local override = InterfaceBag.override
 local private = {}
 
 --=========
@@ -37,10 +37,10 @@ local private = {}
 
 ---@param cols number
 ---@param rows number
----@param child_instance InterfaceItemBag | nil
----@return InterfaceItemBag
+---@param child_instance InterfaceBag | nil
+---@return InterfaceBag
 function override.new(cols, rows, child_instance)
-    local instance = child_instance or Class.allocate(InterfaceItemBag)
+    local instance = child_instance or Class.allocate(InterfaceBag)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance, cols, rows)
@@ -105,9 +105,9 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.background_type = SimpleFrameType.new('InterfaceItemBagBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceBagBackground', true)
 private.background_type:setWidth(0.2)
-private.background_type:setWidth(0.16)
+private.background_type:setHeight(0.16)
 private.background_type:setTexture(Import.InventoryBackground)
 
 private.empty_icon = Import.TransparentTexture
@@ -126,7 +126,7 @@ function private.setItem(self, item, col, row)
     priv.tooltip[pos]:setItem(item)
 end
 
----@param self InterfaceItemBag
+---@param self InterfaceBag
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -157,26 +157,11 @@ function private.update(self)
     end
 end
 
----@param item Item
----@param slot InterfaceItemBagSlot
----@param tooltip InterfaceItemTooltip
-function private.loadItem(item, slot, tooltip)
-    if not item then
-        slot:setItemIcon(nil)
-        slot:setTexture(private.icon_background_texture)
-        return
-    end
-
-    item.Frame = slot
-    item.Tooltip = tooltip
-    item:update()
-end
-
 function private.getPos(x, y, cols)
     return x + (y - 1) * cols
 end
 
----@param self InterfaceItemBag
+---@param self InterfaceBag
 function private.newData(self, cols, rows)
     local priv = {
         loaded_bag = nil,

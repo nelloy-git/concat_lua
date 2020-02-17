@@ -16,30 +16,30 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
----@type InterfaceItemParameterTooltipClass
+---@type InterfaceBagParameterTooltipClass
 local ItemParamTooltip = require('Interface.Bag.Parameter.Tooltip')
 
 --=======
 -- Class
 --=======
 
-local InterfaceItemTooltip = Class.new('InterfaceItemTooltip', SimpleFrame)
----@class InterfaceItemTooltip : SimpleFrame
-local public = InterfaceItemTooltip.public
----@class InterfaceItemTooltipClass : SimpleFrameClass
-local static = InterfaceItemTooltip.static
----@type InterfaceItemTooltipClass
-local override = InterfaceItemTooltip.override
+local InterfaceBagTooltip = Class.new('InterfaceBagTooltip', SimpleFrame)
+---@class InterfaceBagTooltip : SimpleFrame
+local public = InterfaceBagTooltip.public
+---@class InterfaceBagTooltipClass : SimpleFrameClass
+local static = InterfaceBagTooltip.static
+---@type InterfaceBagTooltipClass
+local override = InterfaceBagTooltip.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance InterfaceItemTooltip | nil
----@return InterfaceItemTooltip
+---@param child_instance InterfaceBagTooltip | nil
+---@return InterfaceBagTooltip
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(InterfaceItemTooltip)
+    local instance = child_instance or Class.allocate(InterfaceBagTooltip)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance)
@@ -119,18 +119,18 @@ private.space_ratio_y = 0.05
 private.icon_ratio = 0.15
 private.descript_ratio = 0.15
 
-private.background_type = SimpleFrameType.new('InterfaceItemTooltipTooltipBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceBagTooltipTooltipBackground', true)
 private.background_type:setTexture(Import.InventoryBackground)
 
-private.icon_type = SimpleFrameType.new('InterfaceItemTooltipTooltipIcon', true)
+private.icon_type = SimpleFrameType.new('InterfaceBagTooltipTooltipIcon', true)
 private.icon_type:setTexture(Import.Icon.Empty)
 
-private.title_type = SimpleTextType.new('InterfaceItemTooltipTooltipTitle', true)
+private.title_type = SimpleTextType.new('InterfaceBagTooltipTooltipTitle', true)
 private.title_type:setFont('fonts\\nim_____.ttf')
 private.title_type:setFontSize(0.012)
 private.title_type:setAnchor('CENTER')
 
-private.description_type = SimpleTextType.new('InterfaceItemTooltipTooltipDescription', true)
+private.description_type = SimpleTextType.new('InterfaceBagTooltipTooltipDescription', true)
 private.description_type:setFont('fonts\\nim_____.ttf')
 private.description_type:setFontSize(0.009)
 private.description_type:setAnchor('CENTER')
@@ -153,7 +153,7 @@ private.ItemTypeIcon = {
     [ItemType.WEAPON] = Import.Icon.Weapon,
 }
 
----@param self InterfaceItemTooltip
+---@param self InterfaceBagTooltip
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -190,7 +190,7 @@ function private.update(self)
     priv.params:setHeight(height - 2 * border_y - icon_size - 2 * space_y - descr_height)
 end
 
----@param self InterfaceItemTooltip
+---@param self InterfaceBagTooltip
 function private.newData(self)
     local icon = SimpleFrame.new(private.icon_type)
     local title = SimpleText.new(private.title_type)

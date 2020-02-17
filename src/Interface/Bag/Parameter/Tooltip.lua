@@ -17,20 +17,20 @@ local ParamAPI = require('Parameter.API')
 local ParamType = ParamAPI.ParamType
 local ParamValueType = ParamAPI.ValueType
 
----@type InterfaceItemParameterLineClass
+---@type InterfaceBagParameterLineClass
 local ParamLine = require('Interface.Bag.Parameter.Line')
 
 --=======
 -- Class
 --=======
 
-local InterfaceItemParameterTooltip = Class.new('InterfaceItemParameterTooltip', SimpleFrame)
----@class InterfaceItemParameterTooltip : SimpleFrame
-local public = InterfaceItemParameterTooltip.public
----@class InterfaceItemParameterTooltipClass : SimpleFrameClass
-local static = InterfaceItemParameterTooltip.static
----@type InterfaceItemParameterTooltipClass
-local override = InterfaceItemParameterTooltip.override
+local InterfaceBagParameterTooltip = Class.new('InterfaceBagParameterTooltip', SimpleFrame)
+---@class InterfaceBagParameterTooltip : SimpleFrame
+local public = InterfaceBagParameterTooltip.public
+---@class InterfaceBagParameterTooltipClass : SimpleFrameClass
+local static = InterfaceBagParameterTooltip.static
+---@type InterfaceBagParameterTooltipClass
+local override = InterfaceBagParameterTooltip.override
 local private = {}
 
 --=========
@@ -38,10 +38,10 @@ local private = {}
 --=========
 
 ---@param max_params number
----@param child_instance InterfaceItemParameterTooltip | nil
----@return InterfaceItemParameterTooltip
+---@param child_instance InterfaceBagParameterTooltip | nil
+---@return InterfaceBagParameterTooltip
 function override.new(max_params, child_instance)
-    local instance = child_instance or Class.allocate(InterfaceItemParameterTooltip)
+    local instance = child_instance or Class.allocate(InterfaceBagParameterTooltip)
     instance = SimpleFrame.new(private.background_type, instance)
     private.newData(instance, max_params)
 
@@ -78,7 +78,7 @@ function public:setParameters(params)
             if priv.used > priv.max then
                 Log.error(self, 'got max parameters count.', 2)
             end
-            ---@type InterfaceItemParameterLine
+            ---@type InterfaceBagParameterLine
             local line = priv.line[priv.used]
             line:setName(ParamAPI.getShortName(paramType))
             line:setBase(base)
@@ -98,12 +98,12 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 private.max_line_height = 0.01
 
-private.background_type = SimpleFrameType.new('InterfaceItemParameterTooltipBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceBagParameterTooltipBackground', true)
 private.background_type:setWidth(0.1)
 private.background_type:setHeight(0.08)
 private.background_type:setTexture(Import.TransparentTexture)
 
----@param self InterfaceItemParameterTooltip
+---@param self InterfaceBagParameterTooltip
 function private.update(self)
     local priv = private.data[self]
     local count = priv.used
@@ -124,7 +124,7 @@ function private.update(self)
     end
 end
 
----@param self InterfaceItemParameterTooltip
+---@param self InterfaceBagParameterTooltip
 function private.newData(self, max_lines)
     local priv = {
         max = max_lines,

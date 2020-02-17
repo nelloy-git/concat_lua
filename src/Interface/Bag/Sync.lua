@@ -34,7 +34,7 @@ local private = {}
 
 ---@alias BagSlotPressedCallback fun(player:player, unit:Unit, item:Item, mouse_btn:mousebuttontype)
 
----@param bag_slot InterfaceItemBagSlot
+---@param bag_slot InterfaceBagSlot
 ---@param player player
 ---@param mouse_button mousebuttontype
 function static.startBagSlotPressedEvent(bag_slot, player, mouse_button)
