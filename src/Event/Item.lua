@@ -16,6 +16,10 @@ local UnitAPI = require('Unit.API')
 local Unit = UnitAPI.Unit
 ---@type InterfaceAPI
 local InterfaceAPI = require('Interface.API')
+---@type ParameterAPI
+local ParameterAPI = require('Parameter.API')
+local ParamType = ParameterAPI.ParamType
+local ValueType = ParameterAPI.ValueType
 
 --==============
 -- Pick up item
@@ -69,3 +73,21 @@ end
 -- Equip item
 --============
 
+local PressBagSlot = {}
+
+---@param player player
+---@param unit Unit
+---@param item Item
+---@param mouse_button mousebuttontype
+function PressBagSlot.callback(player, unit, item, mouse_button)
+    if mouse_button == MOUSE_BUTTON_TYPE_RIGHT then
+        local item_param = item:getParameters()
+        local unit_param = unit.Param
+
+        for _, param_type in pairs(ParamType) do
+            for  _, value_type in pairs(ValueType) do
+                unit_param:add(param_type, value_type, item_param:get(param_type, value_type))
+            end
+        end
+    end
+end

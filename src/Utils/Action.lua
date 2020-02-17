@@ -48,7 +48,7 @@ function public:run(...)
         if success then
             return result
         else
-            Log(Log.Err, 'War3Error', result)
+            Log(Log.Err, '', result)
         end
     else
         return private.data[self].callback(...)

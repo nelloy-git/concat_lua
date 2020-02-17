@@ -4,6 +4,8 @@
 
 ---@type Interface
 local Interface = require('Interface.Interface')
+---@type InterfaceBagSyncClass
+local BagSync = require('Interface.Bag.Sync')
 
 --=============
 --     API
@@ -15,6 +17,8 @@ local InterfaceAPI = {}
 
 InterfaceAPI.getTarget = function() end
 InterfaceAPI.Bag = Interface.Bag
+InterfaceAPI.addBagSlotPressedAction = BagSync.addBagSlotPressedAction
+InterfaceAPI.removeBagSlotPressedAction = BagSync.removeBagSlotPressedAction
 
 function InterfaceAPI.init()
     --BlzHideOriginFrames(true)
