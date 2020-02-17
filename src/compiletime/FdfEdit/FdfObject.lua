@@ -57,6 +57,10 @@ end
 function public:setField(field, value)
     local priv = private.data[self]
 
+    if not field then
+        Log.error(self, 'unknown field', 2)
+    end
+
     if not field:checkType(value) then
         local msg = string.format("check data failed. Field change ignored. Got: %s need: %s.\n%s",
                                   type(value), field:getType(), WeUtils.getErrorPos())

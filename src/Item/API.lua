@@ -6,8 +6,6 @@
 local Item = require('Item.Item')
 ---@type ItemModelClass
 local ItemModel = require('Item.Model')
----@type ItemModelTypeClass
-local ItemModelType = require('Item.ModelType')
 
 --=============
 --     API
@@ -16,12 +14,11 @@ local ItemModelType = require('Item.ModelType')
 ---@class ItemAPI
 local ItemAPI = {}
 
+-- Enums
 ItemAPI.ItemType = Item.Type
-ItemAPI.ItemModelType = ItemModelType.ItemType
 
-ItemAPI.newItem = Item.new
-ItemAPI.getItem = Item.get
-ItemAPI.newItemModel = ItemModel.new
-ItemAPI.newItemModelType = ItemModelType.new
+-- Classes
+ItemAPI.Item = Item
+ItemAPI.ItemModel = ItemModel
 
 return ItemAPI

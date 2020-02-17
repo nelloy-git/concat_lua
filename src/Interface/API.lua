@@ -13,6 +13,7 @@ local Interface = require('Interface.Interface')
 ---@class InterfaceAPI
 local InterfaceAPI = {}
 
+InterfaceAPI.getTarget = function() end
 InterfaceAPI.Bag = Interface.Bag
 
 function InterfaceAPI.init()

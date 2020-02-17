@@ -12,9 +12,11 @@ local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type InterfaceItemBagSlotClass
-local ItemBagSlot = require('Interface.Item.BagSlot')
+local ItemBagSlot = require('Interface.Bag.BagSlot')
 ---@type InterfaceItemTooltipClass
-local ItemTooltip = require('Interface.Item.Tooltip')
+local ItemTooltip = require('Interface.Bag.Tooltip')
+---@type InterfaceBagSyncClass
+local SyncEvent = require('Interface.Bag.Sync')
 
 --=======
 -- Class
@@ -45,6 +47,9 @@ function override.new(cols, rows, child_instance)
 
     return instance
 end
+
+static.addBagSlotPressedAction = SyncEvent.addBagSlotPressedAction
+static.removeBagSlotPressedAction = SyncEvent.removeBagSlotPressedAction
 
 --========
 -- Public

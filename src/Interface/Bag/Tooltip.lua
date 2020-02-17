@@ -17,7 +17,7 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
 ---@type InterfaceItemParameterTooltipClass
-local ItemParamTooltip = require('Interface.Item.Parameter.Tooltip')
+local ItemParamTooltip = require('Interface.Bag.Parameter.Tooltip')
 
 --=======
 -- Class

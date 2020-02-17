@@ -42,5 +42,6 @@ static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.String = FdfField.new('String', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 static.Field.Texture = FdfField.new('Texture', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
+static.Field.ChildFrames = FdfField.new('', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 
 return static

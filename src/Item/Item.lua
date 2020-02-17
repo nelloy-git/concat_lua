@@ -6,9 +6,6 @@ local Class = require('Utils.Class.Class')
 
 ---@type ItemModelClass
 local ItemModel = require('Item.Model')
----@type ItemModelTypeClass
-local ItemModelType = require('Item.ModelType')
-local ModelItemTypeEnum = ItemModelType.ItemType
 ---@type ParameterAPI
 local ParameterAPI = require('Parameter.API')
 
@@ -76,7 +73,7 @@ end
 
 ---@param obj_or_id item | number
 ---@return Item | nil
-function static.get(obj_or_id)
+function static.getIntance(obj_or_id)
     if type(obj_or_id) == 'number' then
         return private.id2item[obj_or_id]
     end

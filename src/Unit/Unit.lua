@@ -33,23 +33,30 @@ local private = {}
 -- Static
 --========
 
----@param player player
----@param id string | number
+---@param unit_type UnitType
+---@param owner player
 ---@param x number
 ---@param y number
----@param face number
 ---@return Unit
-function override.new(player, id, x, y, face)
+function override.new(unit_type, owner, x, y)
     local instance = Class.allocate(Unit)
-    instance = UnitObj.new(player, id, x, y, face, instance)
+    instance = UnitObj.new(owner, unit_type:getId(), x, y, 0, instance)
 
-    private.newData(instance, player, id)
+    private.newData(instance, owner)
 
     instance.Param = ParamAPI.newUnitContainer(instance:getObj())
     instance.Animation = UnitAnimation.new(instance:getObj())
-    instance.Bag = InventoryAPI.newBag(instance:getObj(), 20)
+    instance.Bag = InventoryAPI.Bag.new(instance, 20)
 
     return instance
+end
+
+---@param obj_or_id unit | number
+function override.getInstance(obj_or_id)
+    if type(obj_or_id) == 'number' then
+        return private.id2unit[obj_or_id]
+    end
+    return UnitObj.getInstance(obj_or_id)
 end
 
 --========
@@ -59,22 +66,6 @@ end
 public.Param = nil
 public.Animation = nil
 public.Bag = nil
-
----@param x number
-function public:setX(x)
-    SetUnitX(self:getObj(), x)
-end
-
----@param y number
-function public:setY(y)
-    SetUnitY(self:getObj(), y)
-end
-
----@param angle number
----@param time number | nil
-function public:setFacing(angle, time)
-    SetUnitFacingTimed(self:getObj(), angle, time or 0)
-end
 
 ---@return number
 function public:getId()
@@ -86,76 +77,14 @@ function public:getOwner()
     return private.data[self].owner
 end
 
+---@return number
 function public:getMoveSpeed()
     return self.Param:getResult(Param.MS)
 end
 
 ---@return number
-function public:getX()
-    return GetUnitX(self:getObj())
-end
-
----@return number
-function public:getY()
-    return GetUnitY(self:getObj())
-end
-
----@return number
-function public:getFacing()
-    return GetUnitFacing(self:getObj())
-end
-
----@return number
 function public:getTurnSpeed()
     return GetUnitTurnSpeed(self:getObj())
-end
-
-function public:enableMove(flag)
-    local priv = private.data[self]
-    if flag then
-        if priv.disable_move_refs == 0 then
-            Log.error(self, 'move is already enabled.', 2)
-        end
-
-        priv.disable_move_refs = priv.disable_move_refs - 1
-
-        if priv.disable_move_refs == 0 then
-            UnitAddAbility(self:getObj(), ID('Amov'))
-            SetUnitPathing(self:getObj(), true)
-        end
-
-        return
-    end
-
-    priv.disable_move_refs = priv.disable_move_refs + 1
-
-    if priv.disable_move_refs == 1 then
-        UnitRemoveAbility(self:getObj(), ID('Amov'))
-        --SetUnitPathing(self:getObj(), false)
-    end
-end
-
-function public:enableAttack(flag)
-    local priv = private.data[self]
-    if flag then
-        if priv.disable_attack_refs == 0 then
-            Log.error(self, 'attack is already enabled.', 2)
-        end
-
-        priv.disable_attack_refs = priv.disable_attack_refs - 1
-
-        if priv.disable_attack_refs == 0 then
-            UnitRemoveAbility(self:getObj(), ID('Abun'))
-        end
-
-        return
-    end
-
-    priv.disable_attack_refs = priv.disable_attack_refs + 1
-
-    if priv.disable_attack_refs == 1 then
-        UnitAddAbility(self:getObj(), ID('Abun'))
-    end
 end
 
 --=========
@@ -164,19 +93,26 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
+private.cur_id = 1
+private.id2unit = setmetatable({},  {__mode = 'v'})
+
+---@param unit Unit
+---@return number
+function private.newId(unit)
+    local id = private.cur_id
+    private.cur_id = id + 1
+
+    private.id2unit[id] = unit
+    return id
+end
+
 ---@param self Unit
----@param player player
----@param id string | number
-function private.newData(self, player, id)
-    local num_id = ID(id)
+---@param owner player
+function private.newData(self, owner)
     local priv = {
-        id = num_id,
-        owner = player,
-
-        disable_move_refs = 0,
-        disable_attack_refs = 0
+        id = private.newId(self),
+        owner = owner,
     }
-
     private.data[self] = priv
 end
 

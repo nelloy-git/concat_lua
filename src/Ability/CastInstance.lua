@@ -10,7 +10,8 @@ local CbType = AbilityType.CallbackType
 local Status = AbilityType.Status
 
 ---@type UnitClass
-local Unit = require('Unit.Unit')
+local UnitAPI = require('Unit.API')
+local Unit = UnitAPI.Unit
 ---@type ParameterAPI
 local ParamAPI = require('Parameter.API')
 local Param = ParamAPI.ParamType

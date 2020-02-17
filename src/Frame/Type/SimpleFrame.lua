@@ -51,7 +51,7 @@ function public:setWidth(width)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleFrame.Field.Width, width)
+        fdf:setField(private.Field.Width, width)
     end
 end
 
@@ -61,7 +61,7 @@ function public:setHeight(height)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleFrame.Field.Height, height)
+        fdf:setField(private.Field.Height, height)
     end
 end
 
@@ -71,8 +71,24 @@ function public:setTexture(texture)
 
     local fdf = self:getFdf()
     if fdf then
-        local texture_fdf = fdf:getField(private.SimpleFrame.Field.Texture)[1]
+        local texture_fdf = fdf:getField(private.Field.Texture)[1]
         texture_fdf:setField(private.SimpleTexture.Field.File, texture)
+    end
+end
+
+---@param list FrameType[]
+function public:setChildrens(list)
+    for i = 1, #list do
+        if not list[i]:isSimple() then
+            Log.error(self, 'Normal frame can not be a child of simple frame.', 2)
+        end
+    end
+
+    private.data[self].childrens = list
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.ChildFrames, list)
     end
 end
 
@@ -96,6 +112,11 @@ function public:getTextureFrameName()
     return private.getTextureName(self:getName())
 end
 
+---@return FrameType[]
+function public:getChildrens()
+    return private.data[self].childrens
+end
+
 --=========
 -- Private
 --=========
@@ -113,7 +134,8 @@ function private.newData(self)
     priv = {
         width = private.default_width,
         height = private.default_height,
-        texture = private.default_texture
+        texture = private.default_texture,
+        childrens = {},
     }
     private.data[self] = priv
 end
@@ -131,6 +153,7 @@ local _ = Compiletime(function()
     local FdfEdit = require('compiletime.FdfEdit')
     private.File = FdfEdit.File
     private.SimpleFrame = FdfEdit.SimpleFrame
+    private.Field = FdfEdit.SimpleFrame.Field
     private.SimpleTexture = FdfEdit.SimpleTexture
 end)
 
@@ -138,13 +161,13 @@ end)
 ---@return string
 function private.createFdf(name)
     local frame = private.SimpleFrame.new(name)
-    local fields = private.SimpleFrame.Field
-    frame:setField(fields.Width, private.default_width)
-    frame:setField(fields.Height, private.default_height)
+    frame:setField(private.Field.Width, private.default_width)
+    frame:setField(private.Field.Height, private.default_height)
 
     local texture = private.SimpleTexture.new(private.getTextureName(name))
     texture:setField(private.SimpleTexture.Field.File, private.default_texture)
-    frame:setField(fields.Texture, {texture})
+
+    frame:setField(private.Field.Texture, {texture})
 
     return frame
 end

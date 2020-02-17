@@ -27,16 +27,15 @@ local private = {}
 -- Static
 --========
 
----@param item_type ItemModelType
 ---@param x number
 ---@param y number
 ---@param child_instance table | nil
 ---@return ItemModel
-function override.new(item_type, x, y, child_instance)
+function override.new(x, y, child_instance)
     local instance = child_instance or Class.allocate(ItemModel)
-    instance = ItemObj.new(item_type:getId(), x, y, instance)
+    instance = ItemObj.new(private.model_type:getId(), x, y, instance)
 
-    private.newData(instance, item_type, x, y)
+    private.newData(instance, private.model_type, x, y)
 
     return instance
 end
@@ -77,6 +76,11 @@ function public:setModelPath(path)
     BlzSetItemStringField(self:getObj(), ITEM_SF_MODEL_USED, path)
 end
 
+---@return ItemModelType
+function public:getType()
+    return private.data[self].item_type
+end
+
 ---@return number
 function public:getX()
     return private.data[self].x
@@ -108,12 +112,15 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
+private.model_type = ItemType.new('Item', ItemType.Classification.POWER_UP)
+
 ---@param self ItemModel
 function private.newData(self, item_type, x, y)
     local priv = {
         x = x,
         y = y,
 
+        item_type = item_type,
         id = item_type:getId(),
         name = item_type:getName(),
         description = item_type:getDescription(),

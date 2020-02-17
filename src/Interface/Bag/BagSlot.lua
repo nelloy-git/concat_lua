@@ -13,8 +13,8 @@ local SimpleButton = FrameAPI.SimpleButton
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type InterfaceItemEventClass
-local Event = require('Interface.Item.Event')
+---@type InterfaceBagSyncClass
+local SyncEvent = require('Interface.Bag.Sync')
 
 --=======
 -- Class
@@ -121,6 +121,9 @@ function private.update(self)
     priv.icon:setHeight(height - 2 * border_y)
 end
 
+function private.mousePressCallback(instance, player, mouse_button)
+end
+
 ---@param self InterfaceItemBagSlot
 function private.newData(self, bag)
     local priv = {
@@ -134,7 +137,7 @@ function private.newData(self, bag)
     icon:setParent(self)
     icon:setVisible(false)
 
-    icon:addAction(SimpleButton.ActionType.MousePress, function(instance, player, btn) Event.pressedBagSlot(instance) end)
+    icon:addAction(SimpleButton.ActionType.MousePress, SyncEvent.startBagSlotPressedEvent)
 end
 
 

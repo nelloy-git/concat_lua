@@ -18,7 +18,7 @@ local ParamType = ParamAPI.ParamType
 local ParamValueType = ParamAPI.ValueType
 
 ---@type InterfaceItemParameterLineClass
-local ParamLine = require('Interface.Item.Parameter.Line')
+local ParamLine = require('Interface.Bag.Parameter.Line')
 
 --=======
 -- Class
