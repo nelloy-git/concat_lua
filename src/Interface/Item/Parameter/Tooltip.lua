@@ -98,7 +98,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 private.max_line_height = 0.01
 
-private.background_type = SimpleFrameType.new('InterfaceItemParameterTooltipBackground')
+private.background_type = SimpleFrameType.new('InterfaceItemParameterTooltipBackground', true)
 private.background_type:setWidth(0.1)
 private.background_type:setHeight(0.08)
 private.background_type:setTexture(Import.TransparentTexture)

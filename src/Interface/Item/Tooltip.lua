@@ -119,18 +119,18 @@ private.space_ratio_y = 0.05
 private.icon_ratio = 0.15
 private.descript_ratio = 0.15
 
-private.background_type = SimpleFrameType.new('InterfaceItemTooltipTooltipBackground')
+private.background_type = SimpleFrameType.new('InterfaceItemTooltipTooltipBackground', true)
 private.background_type:setTexture(Import.InventoryBackground)
 
-private.icon_type = SimpleFrameType.new('InterfaceItemTooltipTooltipIcon')
+private.icon_type = SimpleFrameType.new('InterfaceItemTooltipTooltipIcon', true)
 private.icon_type:setTexture(Import.Icon.Empty)
 
-private.title_type = SimpleTextType.new('InterfaceItemTooltipTooltipTitle')
+private.title_type = SimpleTextType.new('InterfaceItemTooltipTooltipTitle', true)
 private.title_type:setFont('fonts\\nim_____.ttf')
 private.title_type:setFontSize(0.012)
 private.title_type:setAnchor('CENTER')
 
-private.description_type = SimpleTextType.new('InterfaceItemTooltipTooltipDescription')
+private.description_type = SimpleTextType.new('InterfaceItemTooltipTooltipDescription', true)
 private.description_type:setFont('fonts\\nim_____.ttf')
 private.description_type:setFontSize(0.009)
 private.description_type:setAnchor('CENTER')

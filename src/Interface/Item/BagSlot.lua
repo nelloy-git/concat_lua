@@ -97,12 +97,12 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 private.border_ratio = 1 / 16
 
-private.background_type = SimpleFrameType.new('InterfaceItemBagSlotSlotBackground')
+private.background_type = SimpleFrameType.new('InterfaceItemBagSlotSlotBackground', true)
 private.background_type:setWidth(0.040)
 private.background_type:setHeight(0.040)
 private.background_type:setTexture(Import.Icon.Empty)
 
-private.icon_type = SimpleButtonType.new('InterfaceItemBagSlotSlotIcon')
+private.icon_type = SimpleButtonType.new('InterfaceItemBagSlotSlotIcon', true)
 private.icon_type:setWidth(0.035)
 private.icon_type:setHeight(0.035)
 private.icon_type:setTexture('')

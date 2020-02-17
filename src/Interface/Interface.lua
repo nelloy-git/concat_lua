@@ -1,5 +1,5 @@
 ---@type InterfaceItemBag
-InterfaceItemBag = require('Interface.Item.Bag')
+local InterfaceItemBag = require('Interface.Item.Bag')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 

@@ -100,7 +100,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.background_type = SimpleFrameType.new('InterfaceItemBagBackground')
+private.background_type = SimpleFrameType.new('InterfaceItemBagBackground', true)
 private.background_type:setWidth(0.2)
 private.background_type:setWidth(0.16)
 private.background_type:setTexture(Import.InventoryBackground)

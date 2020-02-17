@@ -112,12 +112,12 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.background_type = SimpleFrameType.new('InterfaceItemParameterLineBackground')
+private.background_type = SimpleFrameType.new('InterfaceItemParameterLineBackground', true)
 private.background_type:setWidth(0.1)
 private.background_type:setHeight(0.01)
 private.background_type:setTexture(Import.InventoryBackground)
 
-private.text_type = SimpleTextType.new('InterfaceItemParameterLineText')
+private.text_type = SimpleTextType.new('InterfaceItemParameterLineText', true)
 private.text_type:setFont('fonts\\nim_____.ttf')
 private.text_type:setFontSize(0.009)
 private.text_type:setAnchor('CENTER')
