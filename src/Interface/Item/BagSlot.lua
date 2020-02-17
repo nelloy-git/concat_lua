@@ -134,7 +134,7 @@ function private.newData(self, bag)
     icon:setParent(self)
     icon:setVisible(false)
 
-    icon:addPressedAction(function() Event.pressedBagSlot(self) end)
+    icon:addAction(SimpleButton.ActionType.MousePress, function(instance, player, btn) Event.pressedBagSlot(instance) end)
 end
 
 
