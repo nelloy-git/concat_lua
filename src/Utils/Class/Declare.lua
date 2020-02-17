@@ -44,6 +44,9 @@ end
 
 function ClassDeclare.type(value1, value2)
     if not value2 then
+        if ClassName.isClass(value1) or ClassInstance.isInstance(value1) then
+            return ClassName.getName(ClassStatic.getClass(value1) or value1)
+        end
         return type(value1)
     end
 

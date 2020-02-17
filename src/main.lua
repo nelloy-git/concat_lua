@@ -41,7 +41,7 @@ if not IsCompiletime() then
     it:setModel(it_model)
 
     InterfaceAPI.init()
-    InterfaceAPI.Bag:loadBag(u.Bag)
+    --InterfaceAPI.setTarget(u, Player(0))
 
     --it2 = ItemAPI.newItem(0, 0)
     --it3 = ItemAPI.newItem(0, 0)

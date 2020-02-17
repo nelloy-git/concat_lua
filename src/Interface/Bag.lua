@@ -11,12 +11,10 @@ local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type InterfaceBagSlotClass
-local ItemBagSlot = require('Interface.Bag.BagSlot')
+---@type InterfaceItemSlotClass
+local ItemSlot = require('Interface.Item.Slot')
 ---@type InterfaceBagTooltipClass
-local ItemTooltip = require('Interface.Bag.Tooltip')
----@type InterfaceBagSyncClass
-local SyncEvent = require('Interface.Bag.Sync')
+local ItemTooltip = require('Interface.Item.Tooltip')
 
 --=======
 -- Class
@@ -48,9 +46,6 @@ function override.new(cols, rows, child_instance)
     return instance
 end
 
-static.addBagSlotPressedAction = SyncEvent.addBagSlotPressedAction
-static.removeBagSlotPressedAction = SyncEvent.removeBagSlotPressedAction
-
 --========
 -- Public
 --========
@@ -68,7 +63,7 @@ function public:setHeight(height)
 end
 
 ---@param unit_bag UnitInventoryBag
-function public:loadBag(unit_bag)
+function public:load(unit_bag)
     local priv = private.data[self]
     priv.loaded_bag = unit_bag
 
@@ -90,7 +85,7 @@ function public:loadBag(unit_bag)
 end
 
 ---@return UnitInventoryBag | nil
-function public:getLoadedBag()
+function public:getLoaded()
     return private.data[self].loaded_bag
 end
 
@@ -178,7 +173,7 @@ function private.newData(self, cols, rows)
     for x = 1, cols do
         for y = 1, rows do
             local pos = private.getPos(x, y, cols)
-            priv.slot[pos] = ItemBagSlot.new(self)
+            priv.slot[pos] = ItemSlot.new()
             priv.slot[pos]:setParent(self)
 
             priv.tooltip[pos] = ItemTooltip.new()

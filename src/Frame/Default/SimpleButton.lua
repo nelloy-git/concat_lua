@@ -136,7 +136,6 @@ function private.mouseDownCallback()
 
     for instance, priv in pairs(private.data) do
         if priv.tooltip:isVisible() then
-            print(instance)
             local actions = priv.actions[static.ActionType.MouseDown]
             for i = 1, #actions do
                 actions[i]:run(instance, player, mouse_btn)

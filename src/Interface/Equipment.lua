@@ -14,8 +14,8 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
----@type InterfaceEquipmentSlotClass
-local ItemSlot = require('Interface.Equipment.EquipmentSlot')
+---@type InterfaceItemSlotClass
+local ItemSlot = require('Interface.Item.Slot')
 
 --=======
 -- Class
@@ -65,7 +65,7 @@ function public:setHeight(height)
 end
 
 ---@param unit_equip UnitInventoryEquipment | nil
-function public:loadEquipment(unit_equip)
+function public:load(unit_equip)
     local priv = private.data[self]
     priv.loaded_equip = unit_equip
 
@@ -77,12 +77,13 @@ function public:loadEquipment(unit_equip)
     end
 
     for item_type, _ in pairs(private.AvailableSlotTypes) do
-        priv.slot[item_type]:setItem(unit_equip:get(item_type))
+        local item = unit_equip:get(item_type)
+        priv.slot[item_type]:setItem(item)
     end
 end
 
 ---@return UnitInventoryBag | nil
-function public:getLoadedEquip()
+function public:getLoaded()
     return private.data[self].loaded_equip
 end
 
@@ -200,8 +201,9 @@ function private.newData(self)
     private.data[self] = priv
 
     for item_type, icon in pairs(private.AvailableSlotIcon) do
-        priv.slot[item_type] = ItemSlot.new(self, icon)
+        priv.slot[item_type] = ItemSlot.new()
         priv.slot[item_type]:setParent(self)
+        priv.slot[item_type]:setTexture(icon)
     end
 end
 

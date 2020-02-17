@@ -14,55 +14,60 @@ local Unit = UnitAPI.Unit
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local Item = ItemAPI.Item
+---@type Interface
+local Interface
 
 --=======
 -- Class
 --=======
 
-local InterfaceBagSync = Class.new('InterfaceBagSync')
----@class InterfaceBagSync
-local public = InterfaceBagSync.public
----@class InterfaceBagSyncClass
-local static = InterfaceBagSync.static
----@type InterfaceBagSyncClass
-local override = InterfaceBagSync.override
+local InterfaceItemSlotSync = Class.new('InterfaceItemSlotSync')
+---@class InterfaceItemSlotSync
+local public = InterfaceItemSlotSync.public
+---@class InterfaceItemSlotSyncClass
+local static = InterfaceItemSlotSync.static
+---@type InterfaceItemSlotSyncClass
+local override = InterfaceItemSlotSync.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@alias BagSlotPressedCallback fun(player:player, unit:Unit, item:Item, mouse_btn:mousebuttontype)
+---@alias InterfaceItemSlotSyncCallback fun(player:player, unit:Unit, item:Item, mouse_btn:mousebuttontype)
 
----@param bag_slot InterfaceBagSlot
+---@param slot_icon SimpleButton
 ---@param player player
 ---@param mouse_button mousebuttontype
-function static.startBagSlotPressedEvent(bag_slot, player, mouse_button)
-    local player_id = GetPlayerId(player)
-    local unit_id = bag_slot:getBag():getLoadedBag():getOwner():getId()
-    local item_id = bag_slot:getItem():getId()
-    local mouse_id = private.MouseButton2Id[mouse_button]
-    local data = private.serialize(player_id, unit_id, item_id, mouse_id)
+function static.startSync(slot_icon, player, mouse_button)
+    ---@type Interface
+    Interface = Interface or require('Interface.Interface')
 
-    print('Bag slot pressed sync start.')
-    BlzSendSyncData('BagSlotPressed', data)
+    local player_id = GetPlayerId(player)
+    local mouse_id = private.MouseButton2Id[mouse_button]
+    local item_slot = slot_icon:getParent()
+    local item_id = item_slot:getItem():getId()
+    local unit_id = Interface:getTarget():getId()
+
+    local data = private.serialize(player_id, unit_id, item_id, mouse_id)
+    BlzSendSyncData(private.prefix, data)
 end
 
----@param callback BagSlotPressedCallback
+---@param callback InterfaceItemSlotSyncCallback
 ---@return Action
-function static.addBagSlotPressedAction(callback)
-    local action = Action.new(callback, InterfaceBagSync)
-    table.insert(private.bag_slot_pressed_actions, action)
+function static.addSyncAction(callback)
+    local action = Action.new(callback, InterfaceItemSlotSync)
+    table.insert(private.actions, action)
 
     return action
 end
 
 ---@param action Action
 ---@return boolean
-function static.removeBagSlotPressedAction(action)
-    for i = 1, #private.bag_slot_pressed_actions do
-        if action == private.bag_slot_pressed_actions[i] then
-            table.remove(private.bag_slot_pressed_actions, i)
+function static.removeSyncAction(action)
+    for i = 1, #private.actions do
+        if action == private.actions[i] then
+            table.remove(private.actions, i)
             return true
         end
     end
@@ -73,7 +78,8 @@ end
 -- Private
 --=========
 
-private.bag_slot_pressed_actions = {}
+private.actions = {}
+private.prefix = 'SlotPressed'
 
 if not IsCompiletime() then
     private.MouseButton2Id = {
@@ -88,20 +94,19 @@ if not IsCompiletime() then
     }
 end
 
-function private.syncBagSlotPressedEventCallback()
+function private.finishSync()
     local prefix = BlzGetTriggerSyncPrefix()
-    if prefix == 'BagSlotPressed' then
+    if prefix == private.prefix then
         local data = BlzGetTriggerSyncData()
         local res = private.deserialize(data)
 
         local player = Player(res.player_id)
-        print(res.unit_id)
         local unit = Unit.getInstance(res.unit_id)
         local item = Item.getInstance(res.item_id)
         local mouse_button = private.Id2MouseButton[res.mouse_button_id]
 
-        for i = 1, #private.bag_slot_pressed_actions do
-            private.bag_slot_pressed_actions[i]:run(player, unit, item, mouse_button)
+        for i = 1, #private.actions do
+            private.actions[i]:run(player, unit, item, mouse_button)
         end
     end
 end
@@ -109,9 +114,9 @@ end
 if not IsCompiletime() then
     private.sync_trigger = Trigger.new()
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        private.sync_trigger:addPlayerSyncEvent(Player(i), 'BagSlotPressed', false)
+        private.sync_trigger:addPlayerSyncEvent(Player(i), private.prefix, false)
     end
-    private.sync_trigger:addAction(private.syncBagSlotPressedEventCallback)
+    private.sync_trigger:addAction(private.finishSync)
 end
 
 ---@param player_id number

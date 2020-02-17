@@ -47,6 +47,7 @@ function override.new(unit_type, owner, x, y)
     instance.Param = ParamAPI.newUnitContainer(instance:getObj())
     instance.Animation = UnitAnimation.new(instance:getObj())
     instance.Bag = InventoryAPI.Bag.new(instance, 20)
+    instance.Equipment = InventoryAPI.Equipment.new(instance)
 
     return instance
 end
@@ -63,9 +64,13 @@ end
 -- Public
 --========
 
+---@type ParameterUnit
 public.Param = nil
 public.Animation = nil
+---@type UnitInventoryBag
 public.Bag = nil
+---@type UnitInventoryEquipment
+public.Equipment = nil
 
 ---@return number
 function public:getId()

@@ -4,8 +4,8 @@
 
 ---@type Interface
 local Interface = require('Interface.Interface')
----@type InterfaceBagSyncClass
-local BagSync = require('Interface.Bag.Sync')
+---@type InterfaceItemSlotSyncClass
+local ItemSlotSync = require('Interface.Item.SlotSync')
 
 --=============
 --     API
@@ -16,10 +16,9 @@ local BagSync = require('Interface.Bag.Sync')
 local InterfaceAPI = {}
 
 InterfaceAPI.Bag = Interface.Bag
-InterfaceAPI.addBagSlotPressedAction = BagSync.addBagSlotPressedAction
-InterfaceAPI.removeBagSlotPressedAction = BagSync.removeBagSlotPressedAction
-
 InterfaceAPI.Equipment = Interface.Equipment
+InterfaceAPI.addItemSlotSyncAction = ItemSlotSync.addSyncAction
+InterfaceAPI.removeItemSlotSyncAction = ItemSlotSync.removeSyncAction
 
 function InterfaceAPI.init()
     --BlzHideOriginFrames(true)

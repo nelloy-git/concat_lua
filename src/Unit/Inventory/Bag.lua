@@ -78,7 +78,17 @@ function public:getEmpty()
             return i
         end
     end
-    return
+end
+
+---@param item Item
+---@return number | nil
+function public:find(item)
+    local priv = private.data[self]
+    for i = 1, priv.size do
+        if item == priv.slot[i] then
+            return i
+        end
+    end
 end
 
 ---@return Unit

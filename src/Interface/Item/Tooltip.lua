@@ -17,29 +17,31 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
 ---@type InterfaceBagParameterTooltipClass
-local ItemParamTooltip = require('Interface.Bag.Parameter.Tooltip')
+local ItemParamTooltip = require('Interface.Item.Parameter.Tooltip')
+---@type InterfaceItemSlotClass
+local ItemSlot = require('Interface.Item.Slot')
 
 --=======
 -- Class
 --=======
 
-local InterfaceBagTooltip = Class.new('InterfaceBagTooltip', SimpleFrame)
----@class InterfaceBagTooltip : SimpleFrame
-local public = InterfaceBagTooltip.public
----@class InterfaceBagTooltipClass : SimpleFrameClass
-local static = InterfaceBagTooltip.static
----@type InterfaceBagTooltipClass
-local override = InterfaceBagTooltip.override
+local InterfaceItemTooltip = Class.new('InterfaceItemTooltip', SimpleFrame)
+---@class InterfaceItemTooltip : SimpleFrame
+local public = InterfaceItemTooltip.public
+---@class InterfaceItemTooltipClass : SimpleFrameClass
+local static = InterfaceItemTooltip.static
+---@type InterfaceItemTooltipClass
+local override = InterfaceItemTooltip.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance InterfaceBagTooltip | nil
----@return InterfaceBagTooltip
+---@param child_instance InterfaceItemTooltip | nil
+---@return InterfaceItemTooltip
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(InterfaceBagTooltip)
+    local instance = child_instance or Class.allocate(InterfaceItemTooltip)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance)
@@ -119,18 +121,18 @@ private.space_ratio_y = 0.05
 private.icon_ratio = 0.15
 private.descript_ratio = 0.15
 
-private.background_type = SimpleFrameType.new('InterfaceBagTooltipTooltipBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceItemTooltipTooltipBackground', true)
 private.background_type:setTexture(Import.InventoryBackground)
 
-private.icon_type = SimpleFrameType.new('InterfaceBagTooltipTooltipIcon', true)
+private.icon_type = SimpleFrameType.new('InterfaceItemTooltipTooltipIcon', true)
 private.icon_type:setTexture(Import.Icon.Empty)
 
-private.title_type = SimpleTextType.new('InterfaceBagTooltipTooltipTitle', true)
+private.title_type = SimpleTextType.new('InterfaceItemTooltipTooltipTitle', true)
 private.title_type:setFont('fonts\\nim_____.ttf')
 private.title_type:setFontSize(0.012)
 private.title_type:setAnchor('CENTER')
 
-private.description_type = SimpleTextType.new('InterfaceBagTooltipTooltipDescription', true)
+private.description_type = SimpleTextType.new('InterfaceItemTooltipTooltipDescription', true)
 private.description_type:setFont('fonts\\nim_____.ttf')
 private.description_type:setFontSize(0.009)
 private.description_type:setAnchor('CENTER')
@@ -153,7 +155,7 @@ private.ItemTypeIcon = {
     [ItemType.WEAPON] = Import.Icon.Weapon,
 }
 
----@param self InterfaceBagTooltip
+---@param self InterfaceItemTooltip
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -190,33 +192,27 @@ function private.update(self)
     priv.params:setHeight(height - 2 * border_y - icon_size - 2 * space_y - descr_height)
 end
 
----@param self InterfaceBagTooltip
+---@param self InterfaceItemTooltip
 function private.newData(self)
-    local icon = SimpleFrame.new(private.icon_type)
-    local title = SimpleText.new(private.title_type)
-    local descr = SimpleText.new(private.description_type)
-    local params = ItemParamTooltip.new(7)
-
     local priv = {
-        icon = icon,
-        title = title,
-        description = descr,
-        params = params,
+        icon = ItemSlot.new(),
+        title = SimpleText.new(private.title_type),
+        description = SimpleText.new(private.description_type),
+        params = ItemParamTooltip.new(7),
 
         item = nil
     }
-
-    icon:setParent(self)
-
-    title:setParent(self)
-    title:setText('Title')
-
-    descr:setParent(self)
-    descr:setText('Description')
-
-    params:setParent(self)
-
     private.data[self] = priv
+
+    priv.icon:setParent(self)
+
+    priv.title:setParent(self)
+    priv.title:setText('Title')
+
+    priv.description:setParent(self)
+    priv.description:setText('Description')
+
+    priv.params:setParent(self)
 end
 
 

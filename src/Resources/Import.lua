@@ -19,7 +19,7 @@ Import.Icon.Necklace = 'war3mapImported\\Icons\\Inventory\\Necklace.blp'
 Import.Icon.Offhand = 'war3mapImported\\Icons\\Inventory\\Shield.blp'
 Import.Icon.Usable = 'war3mapImported\\Icons\\Inventory\\'
 Import.Icon.Ring = 'war3mapImported\\Icons\\Inventory\\Ring.blp'
-Import.Icon.Shoulders = 'war3mapImported\\Icons\\Inventory\\Shoulders.blp'
+Import.Icon.Shoulders = 'war3mapImported\\Icons\\Inventory\\Shoulder.blp'
 Import.Icon.SlotBorder = 'war3mapImported\\Icons\\Inventory\\SlotBorder.tga'
 Import.Icon.Weapon = 'war3mapImported\\Icons\\Inventory\\MeleeWeapon.blp'
 

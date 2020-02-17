@@ -15,5 +15,6 @@ local Equipment = require('Unit.Inventory.Equipment')
 local InventoryAPI = {}
 
 InventoryAPI.Bag = Bag
+InventoryAPI.Equipment = Equipment
 
 return InventoryAPI

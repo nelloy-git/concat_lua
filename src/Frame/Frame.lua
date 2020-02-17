@@ -282,6 +282,8 @@ function private.newData(self, frame_type)
         illigal_childrens = {}
     }
     private.data[self] = priv
+
+    BlzFrameSetLevel(self:getObj(), 0)
 end
 
 return static

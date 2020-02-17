@@ -33,10 +33,23 @@ function InitCustomPlayerSlots()
     SetPlayerRacePreference(Player(0), RACE_PREF_HUMAN)
     SetPlayerRaceSelectable(Player(0), true)
     SetPlayerController(Player(0), MAP_CONTROL_USER)
+    SetPlayerStartLocation(Player(1), 1)
+    SetPlayerColor(Player(1), ConvertPlayerColor(1))
+    SetPlayerRacePreference(Player(1), RACE_PREF_ORC)
+    SetPlayerRaceSelectable(Player(1), true)
+    SetPlayerController(Player(1), MAP_CONTROL_USER)
 end
 
 function InitCustomTeams()
     SetPlayerTeam(Player(0), 0)
+    SetPlayerTeam(Player(1), 0)
+end
+
+function InitAllyPriorities()
+    SetStartLocPrioCount(0, 1)
+    SetStartLocPrio(0, 0, 1, MAP_LOC_PRIO_HIGH)
+    SetStartLocPrioCount(1, 1)
+    SetStartLocPrio(1, 0, 0, MAP_LOC_PRIO_HIGH)
 end
 
 function main()
@@ -59,11 +72,15 @@ end
 function config()
     SetMapName("TRIGSTR_001")
     SetMapDescription("TRIGSTR_003")
-    SetPlayers(1)
-    SetTeams(1)
-    SetGamePlacement(MAP_PLACEMENT_USE_MAP_SETTINGS)
-    DefineStartLocation(0, 0, 0)
+    SetPlayers(2)
+    SetTeams(2)
+    SetGamePlacement(MAP_PLACEMENT_TEAMS_TOGETHER)
+    DefineStartLocation(0, -1984.0, -3136.0)
+    DefineStartLocation(1, -512.0, -2560.0)
     InitCustomPlayerSlots()
     SetPlayerSlotAvailable(Player(0), MAP_CONTROL_USER)
+    SetPlayerSlotAvailable(Player(1), MAP_CONTROL_USER)
     InitGenericPlayerSlots()
+    InitAllyPriorities()
+
 end

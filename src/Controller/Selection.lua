@@ -7,7 +7,7 @@ local Class = require('Utils.Class.Class')
 ---@type TriggerClass
 local Trigger = require('Utils.Trigger')
 ---@type ActionClass
-local Action = require('Class.Action')
+local Action = require('Utils.Action')
 
 --=======
 -- Class
