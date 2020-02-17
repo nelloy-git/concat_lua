@@ -50,8 +50,8 @@ function main()
     InitGlobals()
     InitCustomTriggers()
 
-    BlzFrameClearAllPoints(BlzGetFrameByName('ConsoleUI', 0))
-    BlzFrameSetAbsPoint(BlzGetFrameByName('ConsoleUI', 0), FRAMEPOINT_BOTTOM, 0, -0.14)
+    --BlzFrameClearAllPoints(BlzGetFrameByName('ConsoleUI', 0))
+    --BlzFrameSetAbsPoint(BlzGetFrameByName('ConsoleUI', 0), FRAMEPOINT_BOTTOM, 0, -0.14)
 
     TimerStart(CreateTimer(), 0.1, false, RunInitialization)
 end

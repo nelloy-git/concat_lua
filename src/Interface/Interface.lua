@@ -11,7 +11,7 @@ if not IsCompiletime() then
     Interface.Bag:setWidth(0.2)
     Interface.Bag:setHeight(0.16)
     Interface.Bag:setX(Screen.getRealZeroX() + Screen.getRealWidth() - 0.2)
-    Interface.Bag:setY(0)
+    Interface.Bag:setY(0.2)
 
     InterfaceBag = Interface.Bag
 end
