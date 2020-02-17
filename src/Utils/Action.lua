@@ -29,6 +29,9 @@ local private = {}
 ---@param child_instance Action | nil
 ---@return Action
 function static.new(callback, owner, child_instance)
+    if type(callback) ~= 'function' then
+        Log(Log.Err, Action, 'got nil callback.')
+    end
     local instance = child_instance or Class.allocate(Action)
     private.newData(instance, callback, owner)
 
@@ -45,7 +48,7 @@ function public:run(...)
         if success then
             return result
         else
-            Log.error('War3Error', result, 2)
+            Log(Log.Err, 'War3Error', result)
         end
     else
         return private.data[self].callback(...)

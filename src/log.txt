@@ -9,4 +9,4 @@
 	added InterfaceItemParameterLineBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemBagSlotSlotIcon fdf file.
 	added InterfaceItemBagSlotSlotIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemBagSlotSlotBackground fdf file.
 	added InterfaceItemBagSlotSlotBackground object.[0.000] {Msg} FdfFile: created new SimpleButtonMouseDetector fdf file.
-	added SimpleButtonMouseDetector object.[0.000] {Msg} WeFile: сreated WeUnit_161cd60 "Footman" with id 'HM#$' based on 'HPal'[0.000] {Msg} WeFile: сreated WeItem_17c0e10 "Item" with id 'IM#$' based on 'rhe2'
+	added SimpleButtonMouseDetector object.[0.000] {Msg} WeFile: сreated WeUnit_0001CD1267C2D0 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeItem_0001CD127EA5D0 "Item" with id 'IM#$' based on 'rhe2'

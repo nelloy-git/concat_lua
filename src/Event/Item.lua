@@ -62,7 +62,7 @@ if not IsCompiletime() then
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         PickUpItem.trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_PICKUP_ITEM, Player(i))
     end
-    PickUpItem.trigger:addAction(PickUpItem.puckUpAction)
+    PickUpItem.trigger:addAction(PickUpItem.callback)
 end
 
 --============

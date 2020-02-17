@@ -13,24 +13,26 @@ local InterfaceAPI = require('Interface.API')
 ---@type ParameterAPI
 local ParamAPI = require('Parameter.API')
 
-local footman_type = UnitType.new('Footman', UnitTypeClass.HERO)
+require('Event.Item')
+
+local footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 
 if not IsCompiletime() then
-    u = Unit.new(Player(0), footman_type:getId(), -200, -500, 0)
+    u = Unit.new(footman_type, Player(0), -200, -500)
     --UnitAddAbility(u:getObj(), ExampleAbility:getId())
     --u.Animation:add(Animation.AnimationType.WALK, 6)
     --u.Animation:add(Animation.AnimationType.STAND, 0)
     --print(Param.ParamType.Health)
     --u.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
 
-    u2 = Unit.new(Player(1), 'hfoo', 0, 0, 0)
+    u2 = Unit.new(footman_type, Player(1), 0, 0)
     --UnitAddAbility(u:getObj(), ExampleAbility:getId())
     --u2:destroy()
     --u2.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
 
     --u2 = nil
 
-    it = ItemAPI.newItem(ItemAPI.ItemType.BELT)
+    it = ItemAPI.Item.new(ItemAPI.ItemType.BELT)
     it:getParameters():set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.BASE, 10)
     it:getParameters():set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.MULT, 0.1)
     it:getParameters():set(ParamAPI.ParamType.Armor, ParamAPI.ValueType.ADDIT, 5)

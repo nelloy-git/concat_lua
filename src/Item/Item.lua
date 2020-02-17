@@ -73,7 +73,7 @@ end
 
 ---@param obj_or_id item | number
 ---@return Item | nil
-function static.getIntance(obj_or_id)
+function static.getInstance(obj_or_id)
     if type(obj_or_id) == 'number' then
         return private.id2item[obj_or_id]
     end
