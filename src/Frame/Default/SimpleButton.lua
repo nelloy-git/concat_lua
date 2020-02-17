@@ -148,13 +148,15 @@ function private.mouseUpCallback()
     local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
 
     for instance, priv in pairs(private.data) do
+        print(BlzFrameIsVisible(priv.detector:getObj()))
         if BlzFrameIsVisible(priv.detector:getObj()) then
             local actions = priv.actions[static.ActionType.MouseDown]
             for i = 1, #actions do
                 actions[i]:run(instance, player, mouse_btn)
             end
 
-            if priv.got_left_mouse_btn and is_left or priv.got_right_mouse_btn and is_right then
+            print(#priv.got_left_mouse_btn, is_left, priv.got_right_mouse_btn, is_right)
+            if (priv.got_left_mouse_btn and is_left) or (priv.got_right_mouse_btn and is_right) then
                 actions = priv.actions[static.ActionType.MousePress]
                 for i = 1, #actions do
                     actions[i]:run(instance, player, mouse_btn)

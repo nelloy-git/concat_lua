@@ -44,6 +44,7 @@ function static.startBagSlotPressedEvent(bag_slot, player, mouse_button)
     local mouse_id = private.MouseButton2Id[mouse_button]
     local data = private.serialize(player_id, unit_id, item_id, mouse_id)
 
+    print('Bag slot pressed sync start.')
     BlzSendSyncData('BagSlotPressed', data)
 end
 
@@ -100,6 +101,7 @@ function private.syncBagSlotPressedEventCallback()
             private.bag_slot_pressed_actions:run(player, unit, item, mouse_button)
         end
     end
+    print('Bag slot pressed sync finished.')
 end
 
 if not IsCompiletime() then

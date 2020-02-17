@@ -7,15 +7,15 @@ local UnitTypeClass = UnitAPI.UnitTypeClass
 local Unit = UnitAPI.Unit
 
 ---@type ItemAPI
-local ItemAPI = require('Item.API')
+ItemAPI = require('Item.API')
 ---@type InterfaceAPI
-local InterfaceAPI = require('Interface.API')
+InterfaceAPI = require('Interface.API')
 ---@type ParameterAPI
-local ParamAPI = require('Parameter.API')
+ParamAPI = require('Parameter.API')
 
 require('Event.Item')
 
-local footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
+footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 
 if not IsCompiletime() then
     u = Unit.new(footman_type, Player(0), -200, -500)

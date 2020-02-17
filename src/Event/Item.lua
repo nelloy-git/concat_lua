@@ -80,14 +80,22 @@ local PressBagSlot = {}
 ---@param item Item
 ---@param mouse_button mousebuttontype
 function PressBagSlot.callback(player, unit, item, mouse_button)
+    print('Got pressed bag slot')
+
     if mouse_button == MOUSE_BUTTON_TYPE_RIGHT then
         local item_param = item:getParameters()
         local unit_param = unit.Param
 
-        for _, param_type in pairs(ParamType) do
-            for  _, value_type in pairs(ValueType) do
-                unit_param:add(param_type, value_type, item_param:get(param_type, value_type))
+        for param_name, param_type in pairs(ParamType) do
+            for  value_name, value_type in pairs(ValueType) do
+                local val = item_param:get(param_type, value_type)
+                unit_param:add(param_type, value_type, val)
+                if val ~= 0 then
+                    print(param_name, value_name, val)
+                end
             end
         end
     end
 end
+
+InterfaceAPI.addBagSlotPressedAction(PressBagSlot.callback)
