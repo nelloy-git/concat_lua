@@ -80,8 +80,14 @@ function public:setTooltip(simple_frame)
         Log.error(self, 'normal frames can not be tooltip of simple frames.', 2)
     end
 
+    local priv = private.data[self]
+    if simple_frame ~= priv.tooltip then
+        priv.tooltip:destroy()
+    end
+
+    priv.tooltip = simple_frame
+    simple_frame:setVisible(false)
     BlzFrameSetTooltip(self:getObj(), simple_frame:getObj())
-    BlzFrameSetVisible(simple_frame:getObj(), false)
 end
 
 ---@param callback Callback
@@ -118,8 +124,8 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.invisible_simpleframe_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
-private.invisible_simpleframe_type:setWidth(0.01)
-private.invisible_simpleframe_type:setHeight(0.01)
+private.invisible_simpleframe_type:setWidth(0.001)
+private.invisible_simpleframe_type:setHeight(0.001)
 private.invisible_simpleframe_type:setTexture(Import.TransparentTexture)
 
 function private.mouseDownCallback()
@@ -129,7 +135,8 @@ function private.mouseDownCallback()
     local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
 
     for instance, priv in pairs(private.data) do
-        if BlzFrameIsVisible(priv.detector:getObj()) then
+        if priv.tooltip:isVisible() then
+            print(instance)
             local actions = priv.actions[static.ActionType.MouseDown]
             for i = 1, #actions do
                 actions[i]:run(instance, player, mouse_btn)
@@ -148,14 +155,12 @@ function private.mouseUpCallback()
     local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
 
     for instance, priv in pairs(private.data) do
-        print(BlzFrameIsVisible(priv.detector:getObj()))
-        if BlzFrameIsVisible(priv.detector:getObj()) then
+        if priv.tooltip:isVisible() then
             local actions = priv.actions[static.ActionType.MouseDown]
             for i = 1, #actions do
                 actions[i]:run(instance, player, mouse_btn)
             end
 
-            print(#priv.got_left_mouse_btn, is_left, priv.got_right_mouse_btn, is_right)
             if (priv.got_left_mouse_btn and is_left) or (priv.got_right_mouse_btn and is_right) then
                 actions = priv.actions[static.ActionType.MousePress]
                 for i = 1, #actions do
@@ -185,7 +190,8 @@ end
 function private.newData(self, simple_button_type)
     local priv = {
         texture_frame = BlzGetFrameByName(simple_button_type:getTextureFrameName(), 0),
-        detector = SimpleFrame.new(private.invisible_simpleframe_type),
+        tooltip = SimpleFrame.new(private.invisible_simpleframe_type),
+        default_detector = true,
         texture = simple_button_type:getTexture(),
 
         actions = {},
@@ -194,7 +200,7 @@ function private.newData(self, simple_button_type)
     }
     private.data[self] = priv
 
-    self:setTooltip(priv.detector)
+    self:setTooltip(priv.tooltip)
 
     for _, action_type in pairs(static.ActionType) do
         priv.actions[action_type] = {}

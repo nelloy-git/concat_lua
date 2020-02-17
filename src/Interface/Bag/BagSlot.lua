@@ -137,7 +137,7 @@ function private.newData(self, bag)
     icon:setParent(self)
     icon:setVisible(false)
 
-    icon:addAction(SimpleButton.ActionType.MousePress, SyncEvent.startBagSlotPressedEvent)
+    icon:addAction(SimpleButton.ActionType.MousePress, function(icon, player, mouse_btn) SyncEvent.startBagSlotPressedEvent(self, player, mouse_btn) end)
 end
 
 

@@ -40,7 +40,7 @@ local private = {}
 function static.startBagSlotPressedEvent(bag_slot, player, mouse_button)
     local player_id = GetPlayerId(player)
     local unit_id = bag_slot:getBag():getLoadedBag():getOwner():getId()
-    local item_id = bag_slot:setItem():getId()
+    local item_id = bag_slot:getItem():getId()
     local mouse_id = private.MouseButton2Id[mouse_button]
     local data = private.serialize(player_id, unit_id, item_id, mouse_id)
 
@@ -63,7 +63,7 @@ function static.removeBagSlotPressedAction(action)
     for i = 1, #private.bag_slot_pressed_actions do
         if action == private.bag_slot_pressed_actions[i] then
             table.remove(private.bag_slot_pressed_actions, i)
-            return false
+            return true
         end
     end
     return false
@@ -75,16 +75,18 @@ end
 
 private.bag_slot_pressed_actions = {}
 
-private.MouseButton2Id = {
-    MOUSE_BUTTON_TYPE_LEFT = 1,
-    MOUSE_BUTTON_TYPE_RIGHT = 2,
-    MOUSE_BUTTON_TYPE_MIDDLE = 3
-}
-private.Id2MouseButton = {
-    [1] = MOUSE_BUTTON_TYPE_LEFT,
-    [2] = MOUSE_BUTTON_TYPE_RIGHT,
-    [3] = MOUSE_BUTTON_TYPE_MIDDLE
-}
+if not IsCompiletime() then
+    private.MouseButton2Id = {
+        [MOUSE_BUTTON_TYPE_LEFT] = 1,
+        [MOUSE_BUTTON_TYPE_RIGHT] = 2,
+        [MOUSE_BUTTON_TYPE_MIDDLE] = 3
+    }
+    private.Id2MouseButton = {
+        [1] = MOUSE_BUTTON_TYPE_LEFT,
+        [2] = MOUSE_BUTTON_TYPE_RIGHT,
+        [3] = MOUSE_BUTTON_TYPE_MIDDLE
+    }
+end
 
 function private.syncBagSlotPressedEventCallback()
     local prefix = BlzGetTriggerSyncPrefix()
@@ -93,15 +95,15 @@ function private.syncBagSlotPressedEventCallback()
         local res = private.deserialize(data)
 
         local player = Player(res.player_id)
+        print(res.unit_id)
         local unit = Unit.getInstance(res.unit_id)
         local item = Item.getInstance(res.item_id)
         local mouse_button = private.Id2MouseButton[res.mouse_button_id]
 
         for i = 1, #private.bag_slot_pressed_actions do
-            private.bag_slot_pressed_actions:run(player, unit, item, mouse_button)
+            private.bag_slot_pressed_actions[i]:run(player, unit, item, mouse_button)
         end
     end
-    print('Bag slot pressed sync finished.')
 end
 
 if not IsCompiletime() then
@@ -135,7 +137,7 @@ function private.deserialize(str)
 
     local res = {
         player_id = tonumber(str:sub(player_start, player_end)),
-        unit_handle = tonumber(str:sub(unit_start, unit_end)),
+        unit_id = tonumber(str:sub(unit_start, unit_end)),
         item_id = tonumber(str:sub(item_start, item_end)),
         mouse_button_id = tonumber(str:sub(mouse_start, mouse_end))
     }
