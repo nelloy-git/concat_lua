@@ -118,8 +118,8 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.invisible_simpleframe_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
-private.invisible_simpleframe_type:setWidth(0.0001)
-private.invisible_simpleframe_type:setHeight(0.0001)
+private.invisible_simpleframe_type:setWidth(0.01)
+private.invisible_simpleframe_type:setHeight(0.01)
 private.invisible_simpleframe_type:setTexture(Import.TransparentTexture)
 
 function private.mouseDownCallback()
