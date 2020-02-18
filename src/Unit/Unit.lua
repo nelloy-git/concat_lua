@@ -84,7 +84,7 @@ function public:getEquipment()
 end
 
 ---@return UnitInventoryAbilities
-function public:getEquipment()
+function public:getAbilities()
     return private.data[self].abils
 end
 
@@ -124,11 +124,11 @@ function private.newData(self, owner)
         id = private.newId(self),
         owner = owner,
 
-        params = ParamAPI.newUnitContainer(self:getObj()),
+        params = ParamAPI.Unit.new(self:getObj()),
 
         bag = InventoryAPI.Bag.new(self, 20),
         equip = InventoryAPI.Equipment.new(self),
-        abils = InterfaceAPI.Abilities.new(self)
+        abils = InventoryAPI.Abilities.new(self)
     }
     private.data[self] = priv
 end

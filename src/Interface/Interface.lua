@@ -26,12 +26,14 @@ if not IsCompiletime() then
     Interface.Inventory = Inventory.new()
     Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - 0.2)
     Interface.Inventory:setY(0.2)
+    Interface.Inventory:setWidth(0.2)
+    Interface.Inventory:setHeight(0.3)
 
     ---@param unit Unit
     function Interface.setTarget(unit, player)
         if player == local_player and target ~= unit then
             target = unit
-            Interface.Inventory:load(unit.Bag)
+            Interface.Inventory:load(unit)
         end
     end
 

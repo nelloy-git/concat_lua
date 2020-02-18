@@ -20,6 +20,8 @@ InterfaceAPI.Inventory = Interface.Inventory
 InterfaceAPI.addItemSlotSyncAction = ItemSlotSync.addSyncAction
 InterfaceAPI.removeItemSlotSyncAction = ItemSlotSync.removeSyncAction
 
+InterfaceAPI.getTarget = Interface.getTarget
+
 function InterfaceAPI.init()
     --BlzHideOriginFrames(true)
     local game_handle = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)

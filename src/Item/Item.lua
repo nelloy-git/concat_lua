@@ -241,7 +241,7 @@ function private.newData(self, item_type)
         id = private.newId(self),
 
         model = nil,
-        param = ParameterAPI.newItemContainer(),
+        param = ParameterAPI.Item.new(),
 
         owner = nil,
     }

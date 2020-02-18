@@ -88,7 +88,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 private.background_type = SimpleFrameType.new('InterfaceInventoryBackground', true)
-private.background_type:setWidth(0.2)
+private.background_type:setWidth(0.3)
 private.background_type:setHeight(0.4)
 private.background_type:setTexture(Import.TransparentTexture)
 
@@ -100,17 +100,17 @@ private.space_ratio = 1 / 32
 private.bag_x_ratio = 0
 private.bag_y_ratio = 0
 private.bag_width_ratio = 1
-private.bag_height_ratio = 1 / 3
+private.bag_height_ratio = 3 / 14
 
 private.equip_x_ratio = 0
 private.equip_y_ratio = private.bag_height_ratio
-private.equip_width_ratio = 1 / 2
-private.equip_height_ratio = 1 - private.bag_height_ratio - private.space_ratio
+private.equip_width_ratio = 1 / 3
+private.equip_height_ratio = 1 - private.bag_height_ratio
 
-private.param_x_ratio = private.equip_width_ratio - private.space_ratio
+private.param_x_ratio = private.equip_width_ratio
 private.param_y_ratio = private.bag_height_ratio
-private.param_width_ratio = 1 - private.bag_width_ratio - private.space_ratio
-private.param_height_ratio = 1 - private.bag_height_ratio - private.space_ratio
+private.param_width_ratio = 1 - private.equip_width_ratio
+private.param_height_ratio = 1 - private.bag_height_ratio
 
 ---@param self InterfaceInventory
 function private.update(self)
@@ -139,9 +139,9 @@ function private.newData(self)
     local priv = {
         loaded = nil,
 
-        bag = Bag.new(5, 4),
+        bag = Bag.new(7, 3),
         equip = Equipment.new(),
-        param = Parameters.new(30)
+        param = Parameters.new(20)
     }
     private.data[self] = priv
 

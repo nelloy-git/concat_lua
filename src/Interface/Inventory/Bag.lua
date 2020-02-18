@@ -88,7 +88,7 @@ function public:load(unit)
         priv.tooltip[i]:setItem(item, unit)
     end
 
-    for i = bag_size, priv.size do
+    for i = bag_size + 1, priv.size do
         priv.slot[i]:setVisible(false)
     end
 end

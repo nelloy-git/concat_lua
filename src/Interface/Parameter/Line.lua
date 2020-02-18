@@ -107,17 +107,24 @@ function public:setAddit(value)
 end
 
 ---@param value number
-function public:setRes(value)
-
+---@param use_plus boolean
+function public:setRes(value, use_plus)
+    local first = ''
     local color = private.zero_color
     if value > 0 then
+        first = '+'
         color = private.bonus_color
     elseif value < 0 then
+        first = '-'
         color = private.penalty_color
     end
 
-    private.data[self].addi:setText(fmt('%.1f', value))
-    private.data[self].addi:setTextColor(color.red, color.green, color.blue, color.alpha)
+    if not use_plus then
+        first = ''
+    end
+
+    private.data[self].res:setText(fmt(first..'%.1f', value))
+    private.data[self].res:setTextColor(color.red, color.green, color.blue, color.alpha)
 end
 
 --=========

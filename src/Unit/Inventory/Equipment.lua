@@ -81,6 +81,9 @@ end
 
 ---@param item_type ItemTypeEnum
 function public:get(item_type)
+    if type(self) == 'number' then
+        error('', 2)
+    end
     return private.data[self].slot[item_type]
 end
 

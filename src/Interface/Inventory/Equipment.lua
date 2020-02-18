@@ -70,15 +70,19 @@ function public:load(unit)
     priv.loaded = unit
 
     if not unit then
-        for item_type, _ in pairs(private.AvailableSlotTypes) do
-            priv.slot[item_type]:setItem(nil)
+        for _, item_type in pairs(ItemType) do
+            if ItemAPI.isTypeEquipable(item_type) then
+                priv.slot[item_type]:setItem(nil)
+            end
         end
         return
     end
 
     local unit_equip = unit:getEquipment()
     for _, item_type in pairs(ItemType) do
-        priv.slot[item_type]:setItem(unit_equip:get(item_type))
+        if ItemAPI.isTypeEquipable(item_type) then
+            priv.slot[item_type]:setItem(unit_equip:get(item_type))
+        end
     end
 end
 
@@ -149,18 +153,20 @@ function private.update(self)
     local slot_width = (width - 2 * border_x - 2 * space_x) / 3
     local slot_height = (height - 2 * border_y - 4 * space_y) / 5
 
-    for _, item_type in pairs(ItemType) do
-        local slot = priv.slot[item_type]
-        slot:setX(border_x + private.SlotCol[item_type] * (slot_width + space_x))
-        slot:setY(border_y + private.SlotRow[item_type] * (slot_height + space_y))
-        slot:setWidth(slot_width)
-        slot:setHeight(slot_height)
+    for name, item_type in pairs(ItemType) do
+        if ItemAPI.isTypeEquipable(item_type) then
+            local slot = priv.slot[item_type]
+            slot:setX(border_x + private.SlotCol[item_type] * (slot_width + space_x))
+            slot:setY(border_y + private.SlotRow[item_type] * (slot_height + space_y))
+            slot:setWidth(slot_width)
+            slot:setHeight(slot_height)
 
-        local tooltip = priv.slot[item_type]
-        tooltip:setX(-private.tooltip_width)
-        tooltip:setY(height - private.tooltip_height)
-        tooltip:setWidth(private.tooltip_width)
-        tooltip:setHeight(height - private.tooltip_height)
+            local tooltip = priv.tooltip[item_type]
+            tooltip:setX(-private.tooltip_width)
+            tooltip:setY(height - private.tooltip_height)
+            tooltip:setWidth(private.tooltip_width)
+            tooltip:setHeight(height - private.tooltip_height)
+        end
     end
 end
 
@@ -175,14 +181,16 @@ function private.newData(self)
     private.data[self] = priv
 
     for _, item_type in pairs(ItemType) do
-        priv.slot[item_type] = ItemSlot.new()
-        priv.slot[item_type]:setParent(self)
-        priv.slot[item_type]:setTexture(getItemTypeIcon(item_type))
+        if ItemAPI.isTypeEquipable(item_type) then
+            priv.slot[item_type] = ItemSlot.new()
+            priv.slot[item_type]:setParent(self)
+            priv.slot[item_type]:setTexture(getItemTypeIcon(item_type))
 
-        priv.tooltip[item_type] = ItemTooltip.new()
-        priv.tooltip[item_type]:setParent(self)
+            priv.tooltip[item_type] = ItemTooltip.new()
+            priv.tooltip[item_type]:setParent(self)
 
-        priv.slot[item_type]:setTooltip(priv.tooltip[item_type])
+            priv.slot[item_type]:setTooltip(priv.tooltip[item_type])
+        end
     end
 end
 

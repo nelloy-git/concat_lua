@@ -119,7 +119,7 @@ function public:setItem(item, unit)
         local addit = unit_params:get(param, ADDIT) - cur_item_params:get(param, ADDIT) + item_params:get(param, ADDIT)
         local res = mathParam(param, base, mult, addit)
 
-        if res ~= 0 then
+        if res ~= unit_params:getResult(param) then
             priv.used = priv.used + 1
             if priv.used > priv.max then
                 Log.error(self, 'got max parameters count.', 2)
@@ -131,7 +131,7 @@ function public:setItem(item, unit)
             line:setBase(item_params:get(param, BASE))
             line:setMult(item_params:get(param, MULT))
             line:setAddit(item_params:get(param, ADDIT))
-            line:setRes(res)
+            line:setRes(res, true)
         end
     end
 
@@ -144,7 +144,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.max_line_height = 0.01
+private.max_line_height = 0.007
 private.zero_item_params = ParamAPI.Item.new()
 
 private.background_type = SimpleFrameType.new('InterfaceParameterTooltipBackground', true)
@@ -155,7 +155,7 @@ private.background_type:setTexture(Import.TransparentTexture)
 ---@param unit Unit
 ---@param item_type ItemTypeEnum
 function private.getCurItemParams(unit, item_type)
-    local cur_item = unit:getEquipment().get(item_type)
+    local cur_item = unit:getEquipment():get(item_type)
     if cur_item then
         return cur_item:getParameters()
     else
@@ -169,11 +169,12 @@ function private.update(self)
     local count = priv.used
     local height = self:getHeight()
     local width = self:getWidth()
-    local line_height = math.min(height / count, private.max_line_height)
+    local line_height = math.max(height / count, private.max_line_height)
 
     for i = 1, count do
         local line = priv.line[i]
         line:setVisible(true)
+        line:setX(0)
         line:setY(height - i * line_height)
         line:setHeight(line_height)
         line:setWidth(width)
