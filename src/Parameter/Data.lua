@@ -334,4 +334,12 @@ Data.Math = {
     [Data.Type.MS] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.MS], Data.MaxValue[Data.Type.MS]) end,
 }
 
+---@param param ParameterTypeEnum
+---@param base number
+---@param mult number
+---@param addit number
+function Data.mathParam(param, base, mult, addit)
+    return Data.Math[param](base, mult, addit)
+end
+
 return Data

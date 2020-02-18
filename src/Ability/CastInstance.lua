@@ -170,7 +170,7 @@ function private.applyBlocks(self)
     if not priv.caster_can_move then
         ---@type Unit
         local u = Unit.getInstance(priv.caster)
-        u.Param:add(Param.MS, Value.MULT, -private.multiplier)
+        u:getParameters():add(Param.MS, Value.MULT, -private.multiplier)
         --UnitParam.get(priv.caster):addMult(Param.MS, -private.multiplier)
         --UnitAddAbility(priv.caster, private.disable_move_id)
     end
@@ -201,7 +201,7 @@ function private.removeBlocks(self)
     if not priv.caster_can_move then
         ---@type Unit
         local u = Unit.getInstance(priv.caster)
-        u.Param:add(Param.MS, Value.MULT, private.multiplier)
+        u:getParameters():add(Param.MS, Value.MULT, private.multiplier)
         --UnitParam.get(priv.caster):addMult(Param.MS, private.multiplier)
         --UnitRemoveAbility(priv.caster, private.disable_move_id)
         --UnitRemoveAbility(priv.caster, private.disable_move_buff_id)

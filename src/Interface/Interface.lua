@@ -1,7 +1,5 @@
----@type InterfaceBagClass
-local Bag = require('Interface.Bag')
----@type InterfaceEquipmentClass
-local Equip = require('Interface.Equipment')
+---@type InterfaceInventoryClass
+local Inventory = require('Interface.Inventory')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type SelectionControllerClass
@@ -13,35 +11,27 @@ local UnitAPI = require('Unit.API')
 local Interface = {}
 
 local target = nil
+local local_player = nil
 
 local function selectTarget(player, selected, unit)
     unit = UnitAPI.Unit.getInstance(unit)
-    if selected and player == GetLocalPlayer() then
+    if selected and player == local_player then
         Interface.setTarget(unit, player)
     end
 end
 
 if not IsCompiletime() then
-    Interface.Bag = Bag.new(5, 4)
-    Interface.Bag:setWidth(0.2)
-    Interface.Bag:setHeight(0.16)
-    Interface.Bag:setX(Screen.getRealZeroX() + Screen.getRealWidth() - 0.2)
-    Interface.Bag:setY(0.2)
+    local_player = GetLocalPlayer()
 
-    Bag = Interface.Bag
-
-    Interface.Equipment = Equip.new()
-    Interface.Equipment:setWidth(0.1)
-    Interface.Equipment:setHeight(0.18)
-    Interface.Equipment:setX(Screen.getRealZeroX() + Screen.getRealWidth() - 0.2)
-    Interface.Equipment:setY(0.36)
+    Interface.Inventory = Inventory.new()
+    Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - 0.2)
+    Interface.Inventory:setY(0.2)
 
     ---@param unit Unit
     function Interface.setTarget(unit, player)
-        if player == GetLocalPlayer() and target ~= unit then
+        if player == local_player and target ~= unit then
             target = unit
-            Interface.Bag:load(unit.Bag)
-            Interface.Equipment:load(unit.Equipment)
+            Interface.Inventory:load(unit.Bag)
         end
     end
 

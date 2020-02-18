@@ -16,8 +16,8 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
----@type InterfaceBagParameterTooltipClass
-local ItemParamTooltip = require('Interface.Item.Parameter.Tooltip')
+---@type InterfaceParameterTooltipClass
+local ItemParamTooltip = require('Interface.Parameter.Tooltip')
 ---@type InterfaceItemSlotClass
 local ItemSlot = require('Interface.Item.Slot')
 
@@ -66,7 +66,8 @@ function public:setHeight(height)
 end
 
 ---@param item Item | nil
-function public:setItem(item)
+---@param unit Unit
+function public:setItem(item, unit)
     local priv = private.data[self]
     priv.item = item
 
@@ -74,38 +75,8 @@ function public:setItem(item)
         priv.title:setText(item:getName())
         priv.description:setText(item:getDescription())
         priv.icon:setTexture(private.ItemTypeIcon[item:getType()])
-        priv.params:setParameters(item:getParameters())
+        priv.params:setItem(item, unit)
     end
-end
-
----@param icon string
-function public:setIcon(icon)
-    private.data[self].icon:setTexture(icon)
-end
-
----@param title string
----@param red number | nil
----@param green number | nil
----@param blue number | nil
----@param alpha number | nil
-function public:setTitle(title, red, green, blue, alpha)
-    private.data[self].title:setText(title)
-    private.data[self].title:setTextColor(red or 230, green or 230, blue or 230, alpha or 255)
-end
-
----@param descr string | ParameterItem
----@param red number | nil
----@param green number | nil
----@param blue number | nil
----@param alpha number | nil
-function public:setDescription(descr, red, green, blue, alpha)
-    private.data[self].description:setText(descr)
-    private.data[self].description:setTextColor(red or 230, green or 230, blue or 230, alpha or 255)
-end
-
----@param param ParameterItem
-function public:setParameters(param)
-    private.data[self].params:loadParameters(param)
 end
 
 --=========
@@ -121,18 +92,18 @@ private.space_ratio_y = 0.05
 private.icon_ratio = 0.15
 private.descript_ratio = 0.15
 
-private.background_type = SimpleFrameType.new('InterfaceItemTooltipTooltipBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceItemTooltipBackground', true)
 private.background_type:setTexture(Import.InventoryBackground)
 
-private.icon_type = SimpleFrameType.new('InterfaceItemTooltipTooltipIcon', true)
+private.icon_type = SimpleFrameType.new('InterfaceItemTooltipIcon', true)
 private.icon_type:setTexture(Import.Icon.Empty)
 
-private.title_type = SimpleTextType.new('InterfaceItemTooltipTooltipTitle', true)
+private.title_type = SimpleTextType.new('InterfaceItemTooltipTitle', true)
 private.title_type:setFont('fonts\\nim_____.ttf')
 private.title_type:setFontSize(0.012)
 private.title_type:setAnchor('CENTER')
 
-private.description_type = SimpleTextType.new('InterfaceItemTooltipTooltipDescription', true)
+private.description_type = SimpleTextType.new('InterfaceItemTooltipDescription', true)
 private.description_type:setFont('fonts\\nim_____.ttf')
 private.description_type:setFontSize(0.009)
 private.description_type:setAnchor('CENTER')

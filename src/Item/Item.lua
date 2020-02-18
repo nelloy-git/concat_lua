@@ -4,6 +4,8 @@
 
 local Class = require('Utils.Class.Class')
 
+---@type Import
+local Import = require('Resources.Import')
 ---@type ItemModelClass
 local ItemModel = require('Item.Model')
 ---@type ParameterAPI
@@ -81,6 +83,18 @@ function static.getInstance(obj_or_id)
     if model then
         return private.model2item[model]
     end
+end
+
+---@param item_type ItemTypeEnum
+---@return boolean
+function static.isTypeEquipable(item_type)
+    return private.Equipable[item_type]
+end
+
+---@param item_type ItemTypeEnum
+---@return string
+function static.getTypeIcon(item_type)
+    return private.TypeIcon[item_type]
 end
 
 --========
@@ -170,6 +184,42 @@ private.model2item = setmetatable({},  {__mode = 'kv'})
 
 private.cur_id = 1
 private.id2item = setmetatable({},  {__mode = 'v'})
+
+private.Equipable = {
+    [static.Type.BAG] = true,
+    [static.Type.BELT] = true,
+    [static.Type.BOOTS] = true,
+    [static.Type.CHEST] = true,
+    [static.Type.EARRING] = true,
+    [static.Type.HANDS] = true,
+    [static.Type.HEAD] = true,
+    [static.Type.LEGS] = true,
+    [static.Type.WEAPON] = true,
+    [static.Type.NECKLACE] = true,
+    [static.Type.RING] = true,
+    [static.Type.OFFHAND] = true,
+    [static.Type.SHOULDERS] = true,
+    [static.Type.USABLE] = false,
+    [static.Type.MISCELLANEOUS] = false,
+}
+
+private.TypeIcon = {
+    [static.Type.BAG] = Import.Icon.Bag,
+    [static.Type.BELT] = Import.Icon.Belt,
+    [static.Type.BOOTS] = Import.Icon.Boots,
+    [static.Type.CHEST] = Import.Icon.Chest,
+    [static.Type.EARRING] = Import.Icon.Earring,
+    [static.Type.HANDS] = Import.Icon.Hands,
+    [static.Type.HEAD] = Import.Icon.Head,
+    [static.Type.LEGS] = Import.Icon.Legs,
+    [static.Type.WEAPON] = Import.Icon.Weapon,
+    [static.Type.NECKLACE] = Import.Icon.Necklace,
+    [static.Type.RING] = Import.Icon.Ring,
+    [static.Type.OFFHAND] = Import.Icon.Offhand,
+    [static.Type.SHOULDERS] = Import.Icon.Shoulders,
+    [static.Type.USABLE] = '',
+    [static.Type.MISCELLANEOUS] = '',
+}
 
 ---@param item Item
 ---@return number

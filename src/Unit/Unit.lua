@@ -41,13 +41,7 @@ local private = {}
 function override.new(unit_type, owner, x, y)
     local instance = Class.allocate(Unit)
     instance = UnitObj.new(owner, unit_type:getId(), x, y, 0, instance)
-
     private.newData(instance, owner)
-
-    instance.Param = ParamAPI.newUnitContainer(instance:getObj())
-    instance.Animation = UnitAnimation.new(instance:getObj())
-    instance.Bag = InventoryAPI.Bag.new(instance, 20)
-    instance.Equipment = InventoryAPI.Equipment.new(instance)
 
     return instance
 end
@@ -64,14 +58,6 @@ end
 -- Public
 --========
 
----@type ParameterUnit
-public.Param = nil
-public.Animation = nil
----@type UnitInventoryBag
-public.Bag = nil
----@type UnitInventoryEquipment
-public.Equipment = nil
-
 ---@return number
 function public:getId()
     return private.data[self].id
@@ -82,9 +68,29 @@ function public:getOwner()
     return private.data[self].owner
 end
 
+---@return ParameterUnit
+function public:getParameters()
+    return private.data[self].params
+end
+
+---@return UnitInventoryBag
+function public:getBag()
+    return private.data[self].bag
+end
+
+---@return UnitInventoryEquipment
+function public:getEquipment()
+    return private.data[self].equip
+end
+
+---@return UnitInventoryAbilities
+function public:getEquipment()
+    return private.data[self].abils
+end
+
 ---@return number
 function public:getMoveSpeed()
-    return self.Param:getResult(Param.MS)
+    return private.data[self].params:getResult(Param.MS)
 end
 
 ---@return number
@@ -117,6 +123,12 @@ function private.newData(self, owner)
     local priv = {
         id = private.newId(self),
         owner = owner,
+
+        params = ParamAPI.newUnitContainer(self:getObj()),
+
+        bag = InventoryAPI.Bag.new(self, 20),
+        equip = InventoryAPI.Equipment.new(self),
+        abils = InterfaceAPI.Abilities.new(self)
     }
     private.data[self] = priv
 end

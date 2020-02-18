@@ -63,7 +63,6 @@ if not IsCompiletime() then
     end
 
     private.wc3_spell_effect_trigger:addAction(function() savetyRun(private.onSpellEffect) end)
-    --private.wc3_unit_issued_any_order_trigger:addAction(function() savetyRun(private.onAnyOrder) end)
 end
 
 local getAbility = AbilityType.get

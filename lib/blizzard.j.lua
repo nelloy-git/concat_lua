@@ -5765,13 +5765,13 @@ end
 ---@return force
 function GetPlayersByMapControl(whichControl)
 	---@type force
-	f           = CreateForce()
+	local f = CreateForce()
 	---@type integer
-	playerIndex = nil
+	local playerIndex = nil
 	---@type player
-	indexPlayer = nil
+	local indexPlayer = nil
 	
-	playerIndex = 0
+	local playerIndex = 0
 	while true do
 		indexPlayer = Player(playerIndex)
 		if GetPlayerController(indexPlayer) == whichControl then
@@ -6295,11 +6295,11 @@ end
 ---@param whichPlayer player
 function ShareEverythingWithTeamAI(whichPlayer)
 	---@type integer
-	playerIndex = nil
+	local playerIndex = nil
 	---@type player
-	indexPlayer = nil
+	local indexPlayer = nil
 	
-	playerIndex = 0
+	local playerIndex = 0
 	while true do
 		indexPlayer = Player(playerIndex)
 		if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer) then
@@ -10452,7 +10452,7 @@ end
 ---@param whichUnit unit
 function MeleeGrantItemsToHero(whichUnit)
 	---@type integer
-	owner = GetPlayerId(GetOwningPlayer(whichUnit))
+	local owner = GetPlayerId(GetOwningPlayer(whichUnit))
 	
 	-- If we haven't twinked N heroes for this player yet, twink away.
 	if (bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES) then
@@ -10523,7 +10523,7 @@ function MeleeClearExcessUnit()
 	---@type unit
 	theUnit = GetEnumUnit()
 	---@type integer
-	owner   = GetPlayerId(GetOwningPlayer(theUnit))
+	local owner   = GetPlayerId(GetOwningPlayer(theUnit))
 	
 	if (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
 		-- Remove any Neutral Hostile units from the area.

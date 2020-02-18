@@ -25,7 +25,7 @@ local private = {}
 --=========
 
 ---@param simple_text_type SimpleTextType
----@param child_instance SimpleText
+---@param child_instance SimpleText | nil
 ---@return SimpleText
 function override.new(simple_text_type, child_instance)
     local instance = child_instance or Class.allocate(SimpleText)

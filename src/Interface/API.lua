@@ -15,8 +15,8 @@ local ItemSlotSync = require('Interface.Item.SlotSync')
 ---@class InterfaceAPI
 local InterfaceAPI = {}
 
-InterfaceAPI.Bag = Interface.Bag
-InterfaceAPI.Equipment = Interface.Equipment
+InterfaceAPI.Inventory = Interface.Inventory
+
 InterfaceAPI.addItemSlotSyncAction = ItemSlotSync.addSyncAction
 InterfaceAPI.removeItemSlotSyncAction = ItemSlotSync.removeSyncAction
 

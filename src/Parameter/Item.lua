@@ -106,13 +106,13 @@ function private.newData(self)
     local priv = {
         value = {}
     }
-
     private.data[self] = priv
 
     for _, cur_param in pairs(Param) do
         priv.value[cur_param] = ParamValue.new()
         priv.value[cur_param]:set(ValueType.BASE, 0)
         priv.value[cur_param]:set(ValueType.MULT, 0)
+        priv.value[cur_param]:set(ValueType.ADDIT, 0)
     end
 end
 

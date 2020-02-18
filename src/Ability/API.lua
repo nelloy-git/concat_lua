@@ -18,7 +18,7 @@ AbilityAPI.TargetType = Type.TargetType
 AbilityAPI.CallbackType = Type.CallbackType
 AbilityAPI.Status = Type.Status
 
-AbilityAPI.newType = Type.new
+AbilityAPI.Type = Type
 AbilityAPI.getActiveCasts = Event.getCasterInstances
 
 return AbilityAPI

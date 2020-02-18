@@ -41,12 +41,6 @@ function static.new(owner)
     return instance
 end
 
----@param owner unit
----@return ParameterUnit
-function static.get(owner)
-    return private.db[owner]
-end
-
 --========
 -- Public
 --========
@@ -94,7 +88,6 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.db = setmetatable({},{__mode = 'kv'})
 
 ---@param self ParameterUnit
 ---@param param ParameterTypeEnum
@@ -118,9 +111,7 @@ function private.newData(self, owner)
         value = {},
         result = {}
     }
-
-    private.data[self] = setmetatable(priv, private.metatable)
-    private.db[owner] = self
+    private.data[self] = priv
 
     for _, cur_param in pairs(Param) do
         priv.value[cur_param] = ParamValue.new()
@@ -128,9 +119,5 @@ function private.newData(self, owner)
         private.update(self, cur_param)
     end
 end
-
-private.metatable = {
-    __gc = function(priv) end
-}
 
 return static

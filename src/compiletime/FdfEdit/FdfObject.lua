@@ -88,7 +88,7 @@ function public:serialize()
         local field_serial = '    '..string.gsub(field:serialize(value), '\n', '\n    ')
         res = res..field_serial..'\n'
     end
-    return res.."}\n"
+    return res.."}"
 end
 
 ---@return table

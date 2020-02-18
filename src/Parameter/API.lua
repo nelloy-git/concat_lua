@@ -3,13 +3,13 @@
 --=========
 
 ---@type ParameterUnitClass
-local ParameterUnit = require('Parameter.Unit')
+local Unit = require('Parameter.Unit')
 ---@type ParameterItemClass
-local ParameterItem = require('Parameter.Item')
+local Item = require('Parameter.Item')
 ---@type ParameterValueClass
-local ParameterValue = require('Parameter.Value')
+local Value = require('Parameter.Value')
 ---@type ParameterData
-local ParameterData = require('Parameter.Data')
+local Data = require('Parameter.Data')
 
 --=============
 --     API
@@ -18,18 +18,17 @@ local ParameterData = require('Parameter.Data')
 ---@class ParameterAPI
 local ParameterAPI = {}
 
-ParameterAPI.ValueType = ParameterValue.ValueType
-ParameterAPI.ParamType = ParameterData.Type
+ParameterAPI.ValueType = Value.ValueType
+ParameterAPI.ParamType = Data.Type
 
-ParameterAPI.getShortName = ParameterData.getShortName
-ParameterAPI.getFullName = ParameterData.getFullName
-ParameterAPI.getIcon = ParameterData.getIcon
-ParameterAPI.getTooltip = ParameterData.getTooltip
+ParameterAPI.getShortName = Data.getShortName
+ParameterAPI.getFullName = Data.getFullName
+ParameterAPI.getIcon = Data.getIcon
+ParameterAPI.getTooltip = Data.getTooltip
+ParameterAPI.mathParameter = Data.mathParam
 
-ParameterAPI.newUnitContainer = ParameterUnit.new
-ParameterAPI.getUnitContainer = ParameterUnit.get
-
-ParameterAPI.newItemContainer = ParameterItem.new
+ParameterAPI.Unit = Unit
+ParameterAPI.Item = Item
 
 --=========
 -- Example

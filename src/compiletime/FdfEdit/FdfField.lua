@@ -141,15 +141,11 @@ private.serialize = {
     end,
 
     [static.SerialFunc.SUBOBJECT_LIST] = function(self, data)
-        if #data == 0 then
-            return ''
+        local res = ''
+        for i = 1, #data do
+            res = res..data[i]:serialize()..'\n'
         end
-        
-        local res = '\n'..data[1]:serialize()
-        for i = 2, #data do
-            res = res..data[i]:serialize()
-        end
-        return res
+        return res:sub(1, res:len() - 1)
     end
 }
 

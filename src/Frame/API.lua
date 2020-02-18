@@ -9,8 +9,10 @@ local Frame = require('Frame.Frame')
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
 local SimpleButtonType = require('Frame.Type.SimpleButton')
----@type SimpleButtonTypeClass
+---@type SimpleTextTypeClass
 local SimpleTextType = require('Frame.Type.SimpleText')
+---@type SimpleStatusBarTypeClass
+local SimpleStatusBarType = require('Frame.Type.SimpleStatusBar')
 ---@type BackdropTypeClass
 local BackdropType = require('Frame.Type.Backdrop')
 ---@type GlueButtonTypeClass

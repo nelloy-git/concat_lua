@@ -4,8 +4,6 @@
 
 local Class = require('Utils.Class.Class')
 
----@type Import
-local Import = require('Resources.Import')
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
@@ -51,7 +49,7 @@ function public:equip(item)
     local priv = private.data[self]
     local item_type = item:getType()
 
-    if not private.isSlotType(item_type) then
+    if not ItemAPI.isTypeEquipable(item_type) then
         return false
     end
 
@@ -59,8 +57,8 @@ function public:equip(item)
         Log.error(self, 'slot is not empty.', 2)
     end
 
+    private.applyParams(priv.owner, item, true)
     priv.slot[item_type] = item
-    private.addParams(priv.owner, item)
     return true
 end
 
@@ -69,15 +67,14 @@ end
 function public:unequip(item_type)
     local priv = private.data[self]
 
-    if not private.isSlotType(item_type) then
+    if not ItemAPI.isTypeEquipable(item_type) then
         return false
     end
 
-    if not priv.slot[item_type] then
-        Log.error(self, 'slot is empty.', 2)
+    if priv.slot[item_type] then
+        private.applyParams(priv.owner, priv.slot[item_type], false)
     end
 
-    private.removeParams(priv.owner, priv.slot[item_type])
     priv.slot[item_type] = nil
     return true
 end
@@ -98,53 +95,20 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.AvailableSlotTypes = {
-    [ItemType.BAG] = true,
-    [ItemType.BELT] = true,
-    [ItemType.BOOTS] = true,
-    [ItemType.CHEST] = true,
-    [ItemType.EARRING] = true,
-    [ItemType.HANDS] = true,
-    [ItemType.HEAD] = true,
-    [ItemType.LEGS] = true,
-    [ItemType.WEAPON] = true,
-    [ItemType.NECKLACE] = true,
-    [ItemType.RING] = true,
-    [ItemType.OFFHAND] = true,
-    [ItemType.SHOULDERS] = true,
-}
-
----@param item_type any
----@return boolean
-function private.isSlotType(item_type)
-    if private.AvailableSlotTypes[item_type] then
-        return true
-    end
-    return false
-end
-
----@param owner Unit
+---@param unit Unit
 ---@param item Item
-function private.addParams(owner, item)
+---@param add boolean
+function private.applyParams(unit, item, add)
     local item_param = item:getParameters()
-    local unit_param = owner.Param
+    local unit_param = unit:getParameters()
+    local mult = 1
+    if not add then
+        mult = -1
+    end
 
     for _, param_type in pairs(ParamType) do
         for _, value_type in pairs(ValueType) do
-            unit_param:add(param_type, value_type, item_param:get(param_type, value_type))
-        end
-    end
-end
-
----@param owner Unit
----@param item Item
-function private.removeParams(owner, item)
-    local item_param = item:getParameters()
-    local unit_param = owner.Param
-
-    for _, param_type in pairs(ParamType) do
-        for _, value_type in pairs(ValueType) do
-            unit_param:add(param_type, value_type, -item_param:get(param_type, value_type))
+            unit_param:add(param_type, value_type, mult * item_param:get(param_type, value_type))
         end
     end
 end

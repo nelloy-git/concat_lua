@@ -42,34 +42,36 @@ static.TargetType.UnitWithArea = 6
 ---@type AbilityTargetType
 static.TargetType.UnitOrPointWithArea = 7
 
----@alias AbilityCallbackType number
+---@alias AbilityCallbackTypeEnum number
+
+---@type table<string, AbilityCallbackTypeEnum>
 static.CallbackType = {}
 --- Must return AbilityStatus
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.START = 1
 --- Must return AbilityStatus
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.CASTING = 2
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.CANCEL = 3
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.FINISH = 4
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.INTERRUPT = 5
 --- Must return number
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.GET_TIME = 6
 --- Must return boolean
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.CASTER_CAN_MOVE = 7
 --- Must return boolean
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.CASTER_CAN_ATTACK = 8
 --- Must return boolean
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.CASTER_CANCEL_OTHER_CASTS = 9
 --- Must return boolean
----@type AbilityCallbackType
+---@type AbilityCallbackTypeEnum
 static.CallbackType.IGNORE_CANCEL_BY_OTHER_CASTS = 10
 
 ---@alias AbilityStatus number
@@ -104,6 +106,36 @@ end
 -- Public
 --========
 
+---@param tooltip string
+---@param player player
+function public:setTooltip(tooltip, player)
+    local priv = private.data[self]
+    if IsCompiletime() then
+        priv.we_abil:setField(private.ObjEdit.Ability.Field.TooltipNormalExtended, 1, tooltip)
+        priv.tooltip = tooltip
+    else
+        if not player or private.local_player == player then
+            BlzSetAbilityTooltip(priv.id, tooltip, 1)
+            priv.tooltip = tooltip
+        end
+    end
+end
+
+---@param icon string
+---@param player player
+function public:setIcon(icon, player)
+    local priv = private.data[self]
+    if IsCompiletime() then
+        priv.we_abil:setField(private.ObjEdit.Ability.Field.IconNormal, 1, icon)
+        priv.icon = icon
+    else
+        if not player or private.local_player == player then
+            BlzSetAbilityIcon(priv.id, icon, 1)
+            priv.icon = icon
+        end
+    end
+end
+
 ---@return number
 function public:getId()
     return private.data[self].id
@@ -114,25 +146,14 @@ function public:getName()
     return private.data[self].name
 end
 
-local Player = Player
-local GetLocalPlayer = GetLocalPlayer
----@param tooltip string
----@param player_index number | nil
-function public:setTooltip(tooltip, player_index)
-    local priv = private.data[self]
-    priv.tooltip = tooltip
-    if IsCompiletime() then
-        priv.we_abil:setField(private.ObjEdit.Ability.Field.TooltipNormalExtended, 1, tooltip)
-    else
-        if not player_index or GetLocalPlayer() == Player(player_index) then
-            BlzSetAbilityTooltip(priv.id, tooltip, 1)
-        end
-    end
-end
-
 ---@return string
 function public:getTooltip()
     return private.data[self].tooltip
+end
+
+---@return string
+function public:getIcon()
+    return private.data[self].icon
 end
 
 ---@return string
@@ -140,7 +161,7 @@ function public:getUserData()
     return private.data[self].user_data
 end
 
----@param cb_type AbilityCallbackType
+---@param cb_type AbilityCallbackTypeEnum
 ---@param cb fun(data:AbilityCastInstance) | nil
 function public:setCallback(cb_type, cb)
     if not private.isCallbackType(cb_type) then
@@ -154,7 +175,7 @@ function public:setCallback(cb_type, cb)
     private.data[self].callbacks[cb_type] = cb
 end
 
----@param cb_type AbilityCallbackType
+---@param cb_type AbilityCallbackTypeEnum
 ---@param cast_instance AbilityCastInstance
 function public:runCallback(cb_type, cast_instance)
     if not private.isCallbackType(cb_type) then
@@ -181,6 +202,10 @@ local _ = Compiletime(function()
     private.ObjEdit = require('compiletime.ObjectEdit')
 end)
 
+if not IsCompiletime() then
+    private.local_player = GetLocalPlayer()
+end
+
 -- Compiletime only.
 ---@param target_type AbilityTargetType
 ---@param name string
@@ -197,6 +222,7 @@ function private.createWc3Ability(name, target_type)
     local Fields = private.ObjEdit.Ability.Field
     abil:setField(Fields.TooltipNormal, 1, name)
     abil:setField(Fields.TooltipNormalExtended, 1, '')
+    abil:setField(Fields.IconNormal, 1, '')
     abil:setField(Fields.CastingTime, 1, 0)
     abil:setField(Fields.Cooldown, 1, 0)
     abil:setField(Fields.ArtCaster, 0, '')
@@ -205,6 +231,7 @@ function private.createWc3Ability(name, target_type)
     abil:setField(Fields.ArtTarget, 0, '')
     abil:setField(Fields.AnimationNames, 0, '')
     abil:setField(Fields.ManaCost, 1, 0)
+    abil:setField(Fields.HotkeyNormal, 'P')
     abil:setField(Fields.ANcl_FollowThroughTime, 1, 0)
     abil:setField(Fields.ANcl_TargetType, 1, private.ANcl_TargetType[target_type])
     abil:setField(Fields.ANcl_Options, 1, private.ANcl_Options[target_type])
@@ -283,6 +310,7 @@ function private.newData(self, uniq_name, target_type, user_data)
 
     priv.name = uniq_name
     priv.tooltip = ''
+    priv.icon = ''
     priv.id = ID(private.CompiletimeData:get(uniq_name))
     priv.callbacks = {}
     priv.user_data = user_data

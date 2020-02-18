@@ -47,7 +47,8 @@ function public:serialize()
     local res = string.format("%s \"%s\" {\n", self:getBaseName(), self:getName())
     local fields = self:getAllFields()
     for field, value in pairs(fields) do
-        res = res.."    "..field:serialize(value)..'\n'
+        local field_serial = '    '..string.gsub(field:serialize(value), '\n', '\n    ')
+        res = res..field_serial..'\n'
     end
     return res.."}"
 end

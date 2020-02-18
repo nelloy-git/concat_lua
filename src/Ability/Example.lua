@@ -20,7 +20,7 @@ local fmt = string.format
 --=========
 
 -- Ability type for using in casting system.
-local ExampleAbility = Ability.newType('Example ability', TargetType.None)
+local ExampleAbility = Ability.Type.new('Example ability', TargetType.None)
 
 -- ===========
 --  Callbacks

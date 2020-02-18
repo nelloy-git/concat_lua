@@ -39,15 +39,8 @@ function PickUpItem.callback()
     item_model:destroy()
     item:setModel(nil)
 
-    -- Restore model if unit does not have bag.
-    if not unit.Bag then
-        item = Item.ItemModel.new(item_type, item_x, item_y)
-        item:placeModel(item_x, item_y)
-        return
-    end
-
     -- Restore model if unit does not have empty slots.
-    local empty_pos = unit.Bag:getEmpty()
+    local empty_pos = unit:getBag():getEmpty()
     if not empty_pos then
         item = Item.ItemModel.new(item_type, item_x, item_y)
         item:placeModel(item_x, item_y)
@@ -55,9 +48,9 @@ function PickUpItem.callback()
     end
 
     -- Add item to bag. Update UI if bag is showing.
-    unit.Bag:set(item, empty_pos)
-    if unit.Bag == InterfaceAPI.Bag:getLoaded() then
-        InterfaceAPI.Bag:load(unit.Bag)
+    unit:getBag():set(item, empty_pos)
+    if unit:getBag() == InterfaceAPI.Bag:getLoaded() then
+        InterfaceAPI.Bag:load(unit:getBag())
     end
 end
 
@@ -73,61 +66,65 @@ end
 -- Item slot pressed
 --===================
 
-local PressBagSlot = {}
+local PressedItemSlot = {}
 
 ---@param player player
 ---@param unit Unit
 ---@param item Item
 ---@param mouse_button mousebuttontype
-function PressBagSlot.callback(player, unit, item, mouse_button)
+function PressedItemSlot.callback(player, unit, item, mouse_button)
     if player ~= unit:getOwner() then
         return
     end
 
     if mouse_button == MOUSE_BUTTON_TYPE_RIGHT then
-        local bag = unit.Bag
-        local equip = unit.Equipment
+        local bag = unit:getBag()
+        local equip = unit:getEquipment()
 
         local bag_pos = bag:find(item)
         local item_type = item:getType()
         -- Is in bag
         if bag_pos ~= nil then
-            PressBagSlot.equipItem(unit, item, bag_pos)
+            PressedItemSlot.equipItem(unit, item, bag_pos, item_type)
         -- Is in equipment
         elseif equip:get(item_type) == item then
-            PressBagSlot.unequipItem(unit, item, item_type)
+            PressedItemSlot.unequipItem(unit, item, item_type)
         end
 
-        if bag == InterfaceAPI.Bag:getLoaded() then
-            InterfaceAPI.Bag:load(bag)
-        end
-
-        if equip == InterfaceAPI.Equipment:getLoaded() then
-            InterfaceAPI.Equipment:load(equip)
-        end
+        PressedItemSlot.updateInterface(unit)
     end
 end
 
 ---@param unit Unit
 ---@param item Item
 ---@param bag_pos number
-function PressBagSlot.equipItem(unit, item, bag_pos)
-    local equiped = unit.Equipment:get(item:getType())
-    unit.Bag:set(equiped, bag_pos)
-    unit.Equipment:equip(item)
+---@param item_type ItemTypeEnum
+function PressedItemSlot.equipItem(unit, item, bag_pos, item_type)
+    local equiped = unit:getEquipment():get(item_type)
+    unit:getEquipment():unequip(item_type)
+    unit:getEquipment():equip(item)
+
+    unit:getBag():set(equiped, bag_pos)
 end
 
 ---@param unit Unit
 ---@param item Item
 ---@param item_type ItemTypeEnum
-function PressBagSlot.unequipItem(unit, item, item_type)
-    local empty_pos = unit.Bag:getEmpty()
+function PressedItemSlot.unequipItem(unit, item, item_type)
+    local empty_pos = unit:getBag():getEmpty()
     if not empty_pos then
         return
     end
 
     unit.Equipment:unequip(item_type)
-    unit.Bag:set(item, empty_pos)
+    unit:getBag():set(item, empty_pos)
 end
 
-InterfaceAPI.addItemSlotSyncAction(PressBagSlot.callback)
+---@param unit Unit
+function PressedItemSlot.updateInterface(unit)
+    if unit == InterfaceAPI.Bag:getLoaded() then
+        InterfaceAPI.Inventory:load(unit)
+    end
+end
+
+InterfaceAPI.addItemSlotSyncAction(PressedItemSlot.callback)

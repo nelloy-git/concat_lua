@@ -28,7 +28,7 @@ local private = {}
 --=========
 
 ---@param simple_frame_type SimpleButtonType
----@param child_instance SimpleFrame
+---@param child_instance SimpleFrame | nil
 ---@return SimpleFrame
 function override.new(simple_frame_type, child_instance)
     local instance = child_instance or Class.allocate(SimpleFrame)
@@ -52,16 +52,6 @@ end
 ---@return string
 function public:getTexture()
     return private.data[self].texture
-end
-
----@param simple_frame Frame
-function public:setTooltip(simple_frame)
-    if not simple_frame:isSimpleframe() then
-        Log.error(self, 'normal frames can not be tooltip of simple frames.', 2)
-    end
-
-    BlzFrameSetTooltip(self:getObj(), simple_frame:getObj())
-    BlzFrameSetVisible(simple_frame:getObj(), false)
 end
 
 --=========

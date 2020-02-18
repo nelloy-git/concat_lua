@@ -21,4 +21,8 @@ ItemAPI.ItemType = Item.Type
 ItemAPI.Item = Item
 ItemAPI.ItemModel = ItemModel
 
+-- Utils
+ItemAPI.isTypeEquipable = Item.isTypeEquipable
+ItemAPI.getTypeIcon = Item.getTypeIcon
+
 return ItemAPI

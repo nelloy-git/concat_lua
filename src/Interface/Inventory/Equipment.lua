@@ -14,39 +14,39 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
+local getItemTypeIcon = ItemAPI.getTypeIcon
 ---@type InterfaceItemSlotClass
 local ItemSlot = require('Interface.Item.Slot')
+---@type InterfaceItemTooltipClass
+local ItemTooltip = require('Interface.Item.Tooltip')
 
 --=======
 -- Class
 --=======
 
-local InterfaceEquipment = Class.new('InterfaceEquipment', SimpleFrame)
----@class InterfaceEquipment
-local public = InterfaceEquipment.public
----@class InterfaceEquipmentClass
-local static = InterfaceEquipment.static
----@type InterfaceEquipmentClass
-local override = InterfaceEquipment.override
+local InterfaceInventoryEquipment = Class.new('InterfaceInventoryEquipment', SimpleFrame)
+---@class InterfaceInventoryEquipment
+local public = InterfaceInventoryEquipment.public
+---@class InterfaceInventoryEquipmentClass
+local static = InterfaceInventoryEquipment.static
+---@type InterfaceInventoryEquipmentClass
+local override = InterfaceInventoryEquipment.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance InterfaceEquipment | nil
----@return InterfaceEquipment
+---@param child_instance InterfaceInventoryEquipment | nil
+---@return InterfaceInventoryEquipment
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(InterfaceEquipment)
+    local instance = child_instance or Class.allocate(InterfaceInventoryEquipment)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance)
 
     return instance
 end
-
---static.addBagSlotPressedAction = SyncEvent.addBagSlotPressedAction
---static.removeBagSlotPressedAction = SyncEvent.removeBagSlotPressedAction
 
 --========
 -- Public
@@ -64,27 +64,27 @@ function public:setHeight(height)
     private.update(self)
 end
 
----@param unit_equip UnitInventoryEquipment | nil
-function public:load(unit_equip)
+---@param unit Unit | nil
+function public:load(unit)
     local priv = private.data[self]
-    priv.loaded_equip = unit_equip
+    priv.loaded = unit
 
-    if not unit_equip then
+    if not unit then
         for item_type, _ in pairs(private.AvailableSlotTypes) do
             priv.slot[item_type]:setItem(nil)
         end
         return
     end
 
-    for item_type, _ in pairs(private.AvailableSlotTypes) do
-        local item = unit_equip:get(item_type)
-        priv.slot[item_type]:setItem(item)
+    local unit_equip = unit:getEquipment()
+    for _, item_type in pairs(ItemType) do
+        priv.slot[item_type]:setItem(unit_equip:get(item_type))
     end
 end
 
----@return UnitInventoryBag | nil
+---@return Unit
 function public:getLoaded()
-    return private.data[self].loaded_equip
+    return private.data[self].loaded
 end
 
 --=========
@@ -92,7 +92,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.background_type = SimpleFrameType.new('InterfaceEquipmentBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceInventoryEquipmentBackground', true)
 private.background_type:setWidth(0.2)
 private.background_type:setWidth(0.4)
 private.background_type:setTexture(Import.InventoryBackground)
@@ -102,39 +102,8 @@ private.icon_background_texture = Import.Icon.Empty
 
 private.border_ratio = 1/16
 private.space_ratio = 1/32
---private.tooltip_width = 0.2
-
-private.AvailableSlotTypes = {
-    [ItemType.BAG] = true,
-    [ItemType.BELT] = true,
-    [ItemType.BOOTS] = true,
-    [ItemType.CHEST] = true,
-    [ItemType.EARRING] = true,
-    [ItemType.HANDS] = true,
-    [ItemType.HEAD] = true,
-    [ItemType.LEGS] = true,
-    [ItemType.WEAPON] = true,
-    [ItemType.NECKLACE] = true,
-    [ItemType.RING] = true,
-    [ItemType.OFFHAND] = true,
-    [ItemType.SHOULDERS] = true,
-}
-
-private.AvailableSlotIcon = {
-    [ItemType.BAG] = Import.Icon.Bag,
-    [ItemType.BELT] = Import.Icon.Belt,
-    [ItemType.BOOTS] = Import.Icon.Boots,
-    [ItemType.CHEST] = Import.Icon.Chest,
-    [ItemType.EARRING] = Import.Icon.Earring,
-    [ItemType.HANDS] = Import.Icon.Hands,
-    [ItemType.HEAD] = Import.Icon.Head,
-    [ItemType.LEGS] = Import.Icon.Legs,
-    [ItemType.WEAPON] = Import.Icon.Weapon,
-    [ItemType.NECKLACE] = Import.Icon.Necklace,
-    [ItemType.RING] = Import.Icon.Ring,
-    [ItemType.OFFHAND] = Import.Icon.Offhand,
-    [ItemType.SHOULDERS] = Import.Icon.Shoulders,
-}
+private.tooltip_width = 0.2
+private.tooltip_height = 0.16
 
 private.SlotCol = {
     [ItemType.BAG] = 2,
@@ -168,7 +137,7 @@ private.SlotRow = {
     [ItemType.SHOULDERS] = 3,
 }
 
----@param self InterfaceEquipment
+---@param self InterfaceInventoryEquipment
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -180,30 +149,40 @@ function private.update(self)
     local slot_width = (width - 2 * border_x - 2 * space_x) / 3
     local slot_height = (height - 2 * border_y - 4 * space_y) / 5
 
-    for item_type,_ in pairs(private.AvailableSlotTypes) do
+    for _, item_type in pairs(ItemType) do
         local slot = priv.slot[item_type]
         slot:setX(border_x + private.SlotCol[item_type] * (slot_width + space_x))
         slot:setY(border_y + private.SlotRow[item_type] * (slot_height + space_y))
         slot:setWidth(slot_width)
         slot:setHeight(slot_height)
+
+        local tooltip = priv.slot[item_type]
+        tooltip:setX(-private.tooltip_width)
+        tooltip:setY(height - private.tooltip_height)
+        tooltip:setWidth(private.tooltip_width)
+        tooltip:setHeight(height - private.tooltip_height)
     end
 end
 
----@param self InterfaceEquipment
+---@param self InterfaceInventoryEquipment
 function private.newData(self)
     local priv = {
-        loaded_equip = nil,
+        loaded = nil,
 
         slot = {},
         tooltip = {},
-        item = {}
     }
     private.data[self] = priv
 
-    for item_type, icon in pairs(private.AvailableSlotIcon) do
+    for _, item_type in pairs(ItemType) do
         priv.slot[item_type] = ItemSlot.new()
         priv.slot[item_type]:setParent(self)
-        priv.slot[item_type]:setTexture(icon)
+        priv.slot[item_type]:setTexture(getItemTypeIcon(item_type))
+
+        priv.tooltip[item_type] = ItemTooltip.new()
+        priv.tooltip[item_type]:setParent(self)
+
+        priv.slot[item_type]:setTooltip(priv.tooltip[item_type])
     end
 end
 
