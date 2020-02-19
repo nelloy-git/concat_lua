@@ -20,6 +20,11 @@ local InterfaceAPI = require('Interface.API')
 local ParameterAPI = require('Parameter.API')
 local ParamType = ParameterAPI.ParamType
 local ValueType = ParameterAPI.ValueType
+---@type SmartTimerClass
+local SmartTimer = require('Timer.SmartTimer')
+---@type AbilityAPI
+local AbilityAPI = require('Ability.API')
+local getActiveCasts = AbilityAPI.getActiveCasts
 
 --==============
 -- Pick up item
@@ -129,3 +134,25 @@ function PressedItemSlot.updateInterface(unit)
 end
 
 InterfaceAPI.addItemSlotSyncAction(PressedItemSlot.callback)
+
+--=========
+-- Casting
+--=========
+
+local CastingAbility = {}
+CastingAbility.bar = InterfaceAPI.CastingBar
+
+function CastingAbility.timerLoop()
+    local unit = InterfaceAPI.getTarget()
+    local casts = getActiveCasts(unit)
+
+    for i = 1, #casts do
+        local ratio = casts[i]:getTimeLeft() / casts[i]:getFullTime()
+        CastingAbility.bar:setStatus(ratio)
+    end
+end
+
+if not IsCompiletime() then
+    CastingAbility.timer = SmartTimer:getGlobalTimer()
+
+end

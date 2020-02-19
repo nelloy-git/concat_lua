@@ -28,6 +28,8 @@ local SimpleFrame = require('Frame.Default.SimpleFrame')
 local SimpleButton = require('Frame.Default.SimpleButton')
 ---@type SimpleTextClass
 local SimpleText = require('Frame.Default.SimpleText')
+---@type SimpleStatusBarClass
+local SimpleStatusBar = require('Frame.Default.SimpleStatusBar')
 ---@type BackdropClass
 local Backdrop = require('Frame.Default.Backdrop')
 ---@type GlueButtonClass
@@ -51,6 +53,7 @@ FrameAPI.Frame = Frame
 FrameAPI.SimpleFrameType = SimpleFrameType
 FrameAPI.SimpleButtonType = SimpleButtonType
 FrameAPI.SimpleTextType = SimpleTextType
+FrameAPI.SimpleStatusBarType = SimpleStatusBarType
 
 FrameAPI.BackdropType = BackdropType
 FrameAPI.GlueButtonType = GlueButtonType
@@ -62,6 +65,7 @@ FrameAPI.TextType = TextType
 FrameAPI.SimpleFrame = SimpleFrame
 FrameAPI.SimpleButton = SimpleButton
 FrameAPI.SimpleText = SimpleText
+FrameAPI.SimpleStatusBar = SimpleStatusBar
 
 FrameAPI.Backdrop = Backdrop
 FrameAPI.GlueButton = GlueButton

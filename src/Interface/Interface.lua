@@ -4,6 +4,8 @@ local Inventory = require('Interface.Inventory')
 local Screen = require('Frame.Screen')
 ---@type SelectionControllerClass
 local Selection = require('Controller.Selection')
+---@type InterfaceAbilityCastingBarClass
+local CastingBar = require('Interface.Ability.CastingBar')
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')
 
@@ -28,6 +30,8 @@ if not IsCompiletime() then
     Interface.Inventory:setY(0.2)
     Interface.Inventory:setWidth(0.2)
     Interface.Inventory:setHeight(0.3)
+
+    Interface.CastingBar = CastingBar.new(1)
 
     ---@param unit Unit
     function Interface.setTarget(unit, player)
