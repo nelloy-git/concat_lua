@@ -28,9 +28,9 @@ local private = {}
 
 ---@param child_instance InterfaceAbilityCastingBar | nil
 ---@return InterfaceAbilityCastingBar
-function static.new(child_instance)
+function static.new(max_bars, child_instance)
     local instance = child_instance or Class.allocate(InterfaceAbilityCastingBar)
-    private.newData(instance)
+    private.newData(instance, max_bars)
 
     return instance
 end
@@ -44,6 +44,10 @@ function public:setStatus(pos, status)
 
     priv.bar[pos]:setVisible(status ~= 0)
     priv.bar[pos]:setStatus(status)
+end
+
+function public:getSize()
+    return private.data[self].max_bars
 end
 
 
@@ -67,6 +71,11 @@ function private.newData(self, max_bars)
 
     for i = 1, max_bars do
         local bar = SimpleStatusBar.new(private.bar_type)
+        bar:setX(0.4)
+        bar:setY(0.3)
+        bar:setWidth(0.2)
+        bar:setHeight(0.05)
+        bar:setText('Casting')
         bar:setVisible(false)
 
         priv.bar[i] = bar

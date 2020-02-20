@@ -31,7 +31,7 @@ if not IsCompiletime() then
     Interface.Inventory:setWidth(0.2)
     Interface.Inventory:setHeight(0.3)
 
-    Interface.CastingBar = CastingBar.new(1)
+    Interface.CastingBar = CastingBar.new(5)
 
     ---@param unit Unit
     function Interface.setTarget(unit, player)

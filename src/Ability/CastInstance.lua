@@ -247,7 +247,7 @@ private.metatable = {
 --=============
 -- Compiletime
 --=============
-
+--[[
 private.disable_move_buff_id = Compiletime(function()
     ---@type ObjectEdit
     local ObjEdit = require('compiletime.ObjectEdit')
@@ -272,5 +272,5 @@ private.disable_move_id = Compiletime(function()
     return ID(id)
 end)
 private.disable_attack_id = ID('Abun')
-
+]]
 return static

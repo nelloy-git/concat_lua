@@ -13,13 +13,15 @@ InterfaceAPI = require('Interface.API')
 ---@type ParameterAPI
 ParamAPI = require('Parameter.API')
 
+ExampleAbility = require('Ability.Example')
+
 require('Event.Item')
 
 footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 
 if not IsCompiletime() then
     u = Unit.new(footman_type, Player(0), -200, -500)
-    --UnitAddAbility(u:getObj(), ExampleAbility:getId())
+    UnitAddAbility(u:getObj(), ExampleAbility:getId())
     --u.Animation:add(Animation.AnimationType.WALK, 6)
     --u.Animation:add(Animation.AnimationType.STAND, 0)
     --print(Param.ParamType.Health)

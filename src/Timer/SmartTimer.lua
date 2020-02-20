@@ -67,9 +67,10 @@ end
 ---@return SmartTimerAction
 function public:addAction(delay, callback)
     local priv = private.data[self]
+    delay = math.max(delay, priv.precision)
 
     local timeout = priv.cur_time + delay
-    local action = SmartTimerAction.new(timeout, callback, owner)
+    local action = SmartTimerAction.new(timeout, callback, self)
     local pos = private.findPos(priv.actions, timeout, 1, #priv.actions)
     table.insert(priv.actions, pos, action)
 
@@ -113,7 +114,7 @@ function private.newData(self, precision)
 end
 
 function private.runActions(priv)
-    priv.cur_time = priv.cur_time + priv.period
+    priv.cur_time = priv.cur_time + priv.precision
 
     local cur_time = priv.cur_time
     while #priv.actions > 0 do
