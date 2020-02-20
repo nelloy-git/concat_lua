@@ -3805,7 +3805,7 @@ end
 ---@return integer
 function String2OrderIdBJ(orderIdString)
 	---@type integer
-	orderId = nil
+	local orderId = nil
 	
 	-- Check to see if it's a generic order.
 	orderId = OrderId(orderIdString)

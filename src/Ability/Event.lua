@@ -6,15 +6,20 @@ local Class = require('Utils.Class.Class')
 local Log = require('Utils.Log')
 
 ---@type AbilityCastInstanceClass
-local AbilityCastInstance = require('Ability.CastInstance')
+local CastInstance = require('Ability.CastInstance')
 ---@type AbilityTargetClass
 local AbilityTarget = require('Ability.Target')
 ---@type AbilityTypeClass
 local AbilityType = require('Ability.Type')
+---@type AbilityClass
+local Ability = require('Ability.Ability')
 ---@type SmartTimerClass
 local SmartTimer = require('Timer.SmartTimer')
 ---@type TriggerClass
 local Trigger = require('Utils.Trigger')
+---@type UnitAPI
+local UnitAPI = require('Unit.API')
+local Unit = UnitAPI.Unit
 
 --=======
 -- Class
@@ -36,92 +41,59 @@ local private = {}
 ---@param caster unit
 ---@return AbilityCastInstance[]
 function static.getCasterInstances(caster)
-    if not private.active_casters[caster] then
-        private.active_casters[caster] = {}
+    if not private.active_cast[caster] then
+        private.active_cast[caster] = {}
     end
-    return private.active_casters[caster]
+    return private.active_cast[caster]
 end
 
 --=========
 -- Private
 --=========
 
-private.active_casts = {}
+private.active_cast = {}
 
-private.spell_order = AbilityType.getOrder()
+private.spell_order_id = AbilityType.getOrder()
 
 function private.onSpellEffect()
-end
+    local caster = Unit.getInstance(GetSpellAbilityUnit())
+    local ability = Ability.getOrdered(caster)
+    local target = ability:getEventTarget()
 
-function private.onImmediateOrder()
-    local target = AbilityTarget.new()
-end
-
-function private.onPointOrder()
-end
-
-function private.onUnitOrder()
-end
-
-function private.onTargetOrder()
-end
-
----@return table
-function private.getAnyTarget()
-    local target = {}
-    target.unit = GetSpellTargetUnit()
-    target.item = GetSpellTargetItem()
-    target.destructable = GetSpellTargetDestructable()
-    target.x = GetSpellTargetX()
-    target.y = GetSpellTargetY()
-    return target
-end
-
-local period = private.timer_period
-function private.timerLoop()
-    for caster, list in pairs(private.active_casters) do
-        local new_list = {}
-        for i = 1, #list do
-            if list[i]:casting(period) then
-                table.insert(new_list, list[i])
-            end
-        end
-
-        if #new_list == 0 then
-            new_list = nil
-        end
-
-        private.active_casters[caster] = new_list
+    local cur_cast = private.active_cast[caster]
+    if cur_cast then
+        cur_cast:cancel()
     end
 
-    private.action = private.timer:addAction(period, function() private.timerLoop() end)
+    private.active_cast[caster] = CastInstance.new(caster, target, ability)
+end
+
+
+local period = 0.1
+function private.timerLoop()
+    for caster, cast_instance in pairs(private.active_cast) do
+        local status = cast_instance:casting(period)
+        if status ~= AbilityType.Status.OK then
+            private.active_cast[caster] = nil
+        end
+    end
+
+    private.action = private.timer:addAction(period, private.timerLoop)
 end
 
 if not IsCompiletime() then
     private.spell_effect_trigger = Trigger.new()
-    private.immediatly_order_trigger = Trigger.new()
-    private.point_order_trigger = Trigger.new()
-    private.target_order_trigger = Trigger.new()
-    private.unit_order_trigger = Trigger.new()
 
     private.timer = SmartTimer.getGlobalTimer()
     private.timer_period = private.timer:getPeriod()
-    private.action = private.timer:addAction(0, function() private.timerLoop() end)
+    private.action = private.timer:addAction(0, private.timerLoop)
 
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
         private.spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, pl)
-        private.immediatly_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_ORDER, pl)
-        private.point_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, pl)
-        private.target_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
-        private.unit_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
     end
 
     private.spell_effect_trigger:addAction(private.onSpellEffect)
-    private.immediatly_order_trigger:addAction(private.onImmediateOrder)
-    private.point_order_trigger:addAction(private.onPointOrder)
-    private.target_order_trigger:addAction(private.onTargetOrder)
-    private.unit_order_trigger:addAction(private.onUnitOrder)
 end
 
 return static

@@ -5,6 +5,8 @@
 local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
 
+---@type AbilityTargetClass
+local Target = require('Ability.Target')
 ---@type CompiletimeDataClass
 local CompiletimeData = require('Utils.CompiletimeData')
 
@@ -63,21 +65,17 @@ static.Status.REMOVE = 5
 ---@param target_type AbilityTargetingTypeEnum
 ---@return AbilityType
 function static.new(uniq_name, target_type, child_instance)
-    if not child_instance then
-        Log.error(AbilityType, 'can not create instance of abstract class', 2)
-    end
-
     if not private.isTargetType(target_type) then
         Log.error(AbilityType, 'unknown AbilityTargetingTypeEnum.', 2)
     end
 
-    local instance = child_instance
+    local instance = child_instance or Class.allocate(AbilityType)
     private.newData(instance, uniq_name, target_type)
 
     return instance
 end
 
----@return string
+---@return number
 function static.getOrder()
     return private.orderId
 end
@@ -97,6 +95,7 @@ end
 ---@param lvl number
 ---@return AbilityStatus
 function public:start(caster, target, lvl)
+    return static.Status.OK
 end
 
 --- Virtual function
@@ -105,6 +104,7 @@ end
 ---@param lvl number
 ---@return AbilityStatus
 function public:cast(caster, target, lvl)
+    return static.Status.OK
 end
 
 --- Virtual function
@@ -133,6 +133,7 @@ end
 ---@param lvl number
 ---@return string
 function public:getName(owner, lvl)
+    return private.data[self].name
 end
 
 --- Virtual function
@@ -177,6 +178,13 @@ end
 function public:getRange(owner, lvl)
 end
 
+---@return AbilityTarget
+function public:getEventTarget()
+    local target = Target.new()
+    private.initEventTarget[private.data[self].target_type](target)
+    return target
+end
+
 ---@return number
 function public:getId()
     return private.data[self].id
@@ -190,28 +198,50 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.id2abil = setmetatable({}, {__mode = 'kv'})
 
 private.CompiletimeData = CompiletimeData.new(AbilityType)
-private.order_func = {
-    [static.TargetingType.None] = function(caster, target)
-        IssueImmediateOrder(caster:getObj(), private.orderId)
-    end,
-
-    [static.TargetingType.Point] = function(caster, target)
-        IssuePointOrder(caster:getObj(), private.orderId, target:getX(), target:getY())
-    end,
-
-    [static.TargetingType.Unit] = function(caster, target)
-        IssueTargetOrder(caster:getObj(), private.orderId, target:getObj())
-    end,
-
-    [static.TargetingType.UnitOrPoint] = function(caster, target)  end,
-    [static.TargetingType.PointWithArea] = function(caster, target)  end,
-    [static.TargetingType.UnitWithArea] = function(caster, target)  end,
-    [static.TargetingType.UnitOrPointWithArea] = function(caster, target)  end,
-}
 
 if not IsCompiletime() then
     private.local_player = GetLocalPlayer()
 end
+
+private.initEventTarget = {
+    [static.TargetingType.None] = function(target)
+        target:initNone()
+    end,
+
+    [static.TargetingType.Point] = function(target)
+        target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+    end,
+
+    [static.TargetingType.Unit] = function(target)
+        target:initUnit(GetSpellTargetUnit())
+    end,
+
+    [static.TargetingType.UnitOrPoint] = function(target)
+        local unit = GetSpellTargetUnit()
+        if unit then
+            target:iniUnit(unit)
+        else
+            target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+        end
+    end,
+
+    [static.TargetingType.PointWithArea] = function(target)
+        target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+    end,
+
+    [static.TargetingType.UnitWithArea] = function(target)
+        target:initUnit(GetSpellTargetUnit())
+    end,
+
+    [static.TargetingType.UnitOrPointWithArea] = function(target)
+        local unit = GetSpellTargetUnit()
+        if unit then
+            target:iniUnit(unit)
+        else
+            target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+        end
+    end,
+}
 
 ---@param target_type any
 ---@return boolean
@@ -227,7 +257,7 @@ end
 ---@param self AbilityType
 ---@param uniq_name string | number
 ---@param target_type AbilityTargetingTypeEnum
-function private.newData(self, uniq_name, target_type, user_data)
+function private.newData(self, uniq_name, target_type)
     local priv = {}
 
     if IsCompiletime() then
@@ -273,6 +303,9 @@ private.ANcl_Options = {
 private.orderId = Compiletime(function()
     return require('compiletime.ObjectEdit').getOrderId()
 end)
+if not IsCompiletime() then
+    private.orderId = OrderId(private.orderId)
+end
 
 -- Compiletime only.
 ---@param target_type AbilityTargetingTypeEnum
@@ -302,7 +335,8 @@ function private.createWc3Ability(name, target_type)
     abil:setField(Field.ArtTarget, 0, '')
     abil:setField(Field.AnimationNames, 0, '')
     abil:setField(Field.ManaCost, 1, 0)
-    abil:setField(Field.HotkeyNormal, 0, 'Q')
+    abil:setField(Field.CastRange, 1, 1000000)
+    abil:setField(Field.HotkeyNormal, 0, '')
     abil:setField(Field.ANcl_FollowThroughTime, 1, 0)
     abil:setField(Field.ANcl_TargetType, 1, private.ANcl_TargetType[target_type])
     abil:setField(Field.ANcl_Options, 1, private.ANcl_Options[target_type])

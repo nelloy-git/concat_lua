@@ -6,7 +6,6 @@ local Class = require('Utils.Class.Class')
 
 ---@type AbilityTypeClass
 local AbilityType = require('Ability.Type')
-local CbType = AbilityType.CallbackType
 local Status = AbilityType.Status
 
 ---@type UnitClass
@@ -35,28 +34,27 @@ local private = {}
 -- Static
 --========
 
-local GetCasterInstances
 ---@param caster unit
----@param target unit|item|destructable|table|nil
----@param ability AbilityType
+---@param target AbilityTarget
+---@param ability Ability
 ---@return boolean
 function static.new(caster, target, ability)
     local instance = Class.allocate(AbilityCastInstance)
     private.newData(instance, caster, target, ability)
 
     local priv = private.data[instance]
-    local status = priv.status
-    if status == Status.OK then
-        private.applyBlocks(instance)
+    priv.status = priv.ability_type:start(caster, target, priv.lvl)
+
+    if priv.status == Status.OK then
+        private.applyBlocks(priv)
         return instance
-    elseif status == Status.CANCEL then
-        ability:runCallback(CbType.CANCEL, instance)
-    elseif status == Status.FINISH then
-        ability:runCallback(CbType.FINISH, instance)
-    elseif status == Status.INTERRUPT then
-        ability:runCallback(CbType.INTERRUPT, instance)
+    elseif priv.status == Status.CANCEL then
+        priv.ability_type:cancel(caster, target, priv.lvl)
+    elseif priv.status == Status.FINISH then
+        priv.ability_type:finish(caster, target, priv.lvl)
+    elseif priv.status == Status.INTERRUPT then
+        priv.ability_type:interrupt(caster, target, priv.lvl)
     end
-    return
 end
 
 --========
@@ -69,30 +67,30 @@ function public:casting(dt)
     local priv = private.data[self]
 
     if priv.status ~= Status.OK then
-        return false
+        return priv.status
     end
 
-    local ability = priv.ability
-    local status = ability:runCallback(CbType.CASTING, self)
+    priv.status = priv.ability_type:cast(priv.caster, priv.target, priv.lvl)
     priv.time_left = priv.time_left - dt
+
     if priv.time_left <= 0 then
-        status = Status.FINISH
+        priv.status = Status.FINISH
     end
 
-    if status == Status.OK then
-        return true
+    if priv.status == Status.OK then
+        return priv.status
     end
 
-    private.removeBlocks(self)
-    if status == Status.CANCEL then
-        ability:runCallback(CbType.CANCEL, self)
-    elseif status == Status.FINISH then
-        ability:runCallback(CbType.FINISH, self)
-    elseif status == Status.INTERRUPT then
-        ability:runCallback(CbType.INTERRUPT, self)
+    private.removeBlocks(priv)
+    if priv.status == Status.CANCEL then
+        priv.ability_type:cancel(priv.caster, priv.target, priv.lvl)
+    elseif priv.status == Status.FINISH then
+        priv.ability_type:finish(priv.caster, priv.target, priv.lvl)
+    elseif priv.status == Status.INTERRUPT then
+        priv.ability_type:interrupt(priv.caster, priv.target, priv.lvl)
     end
 
-    return false
+    return priv.status
 end
 
 function public:cancel()
@@ -100,8 +98,8 @@ function public:cancel()
     local ability = priv.ability
 
     if priv.status == Status.OK then
-        private.removeBlocks(self)
-        ability:runCallback(CbType.CANCEL, self)
+        private.removeBlocks(priv)
+        priv.ability_type:cancel(priv.caster, priv.target, priv.lvl)
         priv.status = Status.CANCEL
     end
 end
@@ -111,8 +109,8 @@ function public:interrupt()
     local ability = priv.ability
 
     if priv.status == Status.OK then
-        private.removeBlocks(self)
-        ability:runCallback(CbType.INTERRUPT, self)
+        private.removeBlocks(priv)
+        priv.ability_type:interrupt(priv.caster, priv.target, priv.lvl)
         priv.status = Status.INTERRUPT
     end
 end
@@ -122,8 +120,8 @@ function public:finish()
     local ability = priv.ability
 
     if priv.status == Status.OK then
-        private.removeBlocks(self)
-        ability:runCallback(CbType.FINISH, self)
+        private.removeBlocks(priv)
+        priv.ability_type:finish(priv.caster, priv.target, priv.lvl)
         priv.status = Status.FINISH
     end
 end
@@ -155,94 +153,39 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.multiplier = 10^5
 
----@param self AbilityCastInstance
-function private.applyBlocks(self)
-    local priv = private.data[self]
-
-    if not priv.caster_can_attack then
-        ---@type Unit
-        local u = Unit.getInstance(priv.caster)
-        u:enableAttack(false)
-        --UnitParam.get(priv.caster):addMult(Param.ASpd, -private.multiplier)
-        --UnitAddAbility(priv.caster, private.disable_attack_id)
-    end
-
-    if not priv.caster_can_move then
-        ---@type Unit
-        local u = Unit.getInstance(priv.caster)
-        u:getParameters():add(Param.MS, Value.MULT, -private.multiplier)
-        --UnitParam.get(priv.caster):addMult(Param.MS, -private.multiplier)
-        --UnitAddAbility(priv.caster, private.disable_move_id)
-    end
-
-    if priv.cancel_other then
-        GetCasterInstances = GetCasterInstances or require('Ability.Event').getCasterInstances
-        local list = GetCasterInstances(priv.caster)
-        for i = 1, #list do
-            if not private.data[list[i]].ignore_cancel_by_others then
-                list[i]:cancel()
-            end
-        end
-    end
+function private.applyBlocks(priv)
+    priv.caster:enableAttack(false)
+    priv.caster:getParameters():add(Param.MS, Value.MULT, -private.multiplier)
 end
 
----@param self AbilityCastInstance
-function private.removeBlocks(self)
-    local priv = private.data[self]
-
-    if not priv.caster_can_attack then
-        ---@type Unit
-        local u = Unit.getInstance(priv.caster)
-        u:enableAttack(true)
-        --UnitParam.get(priv.caster):addMult(Param.ASpd, private.multiplier)
-        --UnitRemoveAbility(priv.caster, private.disable_attack_id)
-    end
-
-    if not priv.caster_can_move then
-        ---@type Unit
-        local u = Unit.getInstance(priv.caster)
-        u:getParameters():add(Param.MS, Value.MULT, private.multiplier)
-        --UnitParam.get(priv.caster):addMult(Param.MS, private.multiplier)
-        --UnitRemoveAbility(priv.caster, private.disable_move_id)
-        --UnitRemoveAbility(priv.caster, private.disable_move_buff_id)
-    end
+function private.removeBlocks(priv)
+    priv.caster:enableAttack(true)
+    priv.caster:getParameters():add(Param.MS, Value.MULT, private.multiplier)
 end
 
 ---@param self AbilityCastInstance
 ---@param caster unit
 ---@param target table
----@param ability AbilityType
+---@param ability Ability
 ---@return AbilityCastInstance
 function private.newData(self, caster, target, ability)
+    local ability_type = ability:getType()
+    local lvl = ability:getLevel()
+    local time = ability_type:getCastingTime(caster, lvl)
+
     local priv = {
         status = Status.OK,
         caster = caster,
         target = target,
-        ability = ability,
+        lvl = lvl,
+        ability_type = ability_type,
 
-        full_time = -1,
-        time_left = -1,
-        caster_can_move = true,
-        caster_can_attack = true,
-        cancel_other = true,
-        ignore_cancel_by_others = false
+        full_time = time,
+        time_left = time,
     }
-    private.data[self] = setmetatable(priv, private.metatable)
-
-    local time_left = ability:runCallback(CbType.GET_TIME, self)
-    priv.full_time = time_left
-    priv.time_left = time_left
-
-    priv.status = ability:runCallback(CbType.START, self)
-    priv.caster_can_move = ability:runCallback(CbType.CASTER_CAN_MOVE, self)
-    priv.caster_can_attack = ability:runCallback(CbType.CASTER_CAN_ATTACK, self)
-    priv.cancel_other = ability:runCallback(CbType.CASTER_CANCEL_OTHER_CASTS, self)
-    priv.ignore_cancel_by_others = ability:runCallback(CbType.IGNORE_CANCEL_BY_OTHER_CASTS, self)
+    private.data[self] = priv
 end
 
-private.metatable = {
-    __gc = function(self) end
-}
 
 --=============
 -- Compiletime

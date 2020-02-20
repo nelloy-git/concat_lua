@@ -99,10 +99,11 @@ function public:getY()
 end
 
 ---@param unit Unit
----@param order string
+---@param order number
+---@return boolean
 function public:order(unit, order)
     local priv = private.data[self]
-    private.IssueOrder[priv.target_type](priv, unit:getObj(), order)
+    return private.IssueOrder[priv.target_type](priv, unit:getObj(), order)
 end
 
 --=========
@@ -112,11 +113,11 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.IssueOrder = {
-    [static.TargetType.None] = function(_, unit_obj, order) IssueImmediateOrder(unit_obj, order) end,
-    [static.TargetType.Point] = function(priv, unit_obj, order) IssuePointOrder(unit_obj, order, priv.x, priv.y) end,
-    [static.TargetType.Unit] = function(priv, unit_obj, order) IssueTargetOrder(unit_obj, order, priv.unit_obj) end,
-    [static.TargetType.Destructable] = function(priv, unit_obj, order) IssueTargetDestructableOrder(unit_obj, order, priv.destr_obj) end,
-    [static.TargetType.Item] = function(priv, unit_obj, order) IssueTargetItemOrder(unit_obj, order, priv.item_obj) end,
+    [static.TargetType.None] = function(_, unit_obj, order) return IssueImmediateOrderById(unit_obj, order) end,
+    [static.TargetType.Point] = function(priv, unit_obj, order) return IssuePointOrderById(unit_obj, order, priv.x, priv.y) end,
+    [static.TargetType.Unit] = function(priv, unit_obj, order) return IssueTargetOrderById(unit_obj, order, priv.unit_obj) end,
+    [static.TargetType.Destructable] = function(priv, unit_obj, order) return IssueTargetOrderById(unit_obj, order, priv.destr_obj) end,
+    [static.TargetType.Item] = function(priv, unit_obj, order) return IssueTargetOrderById(unit_obj, order, priv.item_obj) end,
 }
 
 private.getX = {

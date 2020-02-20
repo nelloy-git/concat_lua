@@ -1,16 +1,16 @@
-[0.000] {Msg} FdfFile: created new CastingBar fdf file.
-	added CastingBar object.[0.000] {Msg} FdfFile: created new InterfaceInventoryBackground fdf file.
-	added InterfaceInventoryBackground object.[0.000] {Msg} FdfFile: created new InterfaceInventoryEquipmentBackground fdf file.
-	added InterfaceInventoryEquipmentBackground object.[0.000] {Msg} FdfFile: created new InterfaceInventoryBagBackground fdf file.
-	added InterfaceInventoryBagBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipDescription fdf file.
-	added InterfaceItemTooltipDescription object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipTitle fdf file.
-	added InterfaceItemTooltipTitle object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipIcon fdf file.
-	added InterfaceItemTooltipIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemTooltipBackground fdf file.
-	added InterfaceItemTooltipBackground object.[0.000] {Msg} FdfFile: created new InterfaceParameterTooltipBackground fdf file.
-	added InterfaceParameterTooltipBackground object.[0.000] {Msg} FdfFile: created new InterfaceParameterLineText fdf file.
-	added InterfaceParameterLineText object.[0.000] {Msg} FdfFile: created new InterfaceParameterLineBackground fdf file.
-	added InterfaceParameterLineBackground object.[0.000] {Msg} FdfFile: created new InterfaceItemSlotIcon fdf file.
-	added InterfaceItemSlotIcon object.[0.000] {Msg} FdfFile: created new InterfaceItemSlotBorder fdf file.
-	added InterfaceItemSlotBorder object.[0.000] {Msg} FdfFile: created new InterfaceItemSlotBackground fdf file.
-	added InterfaceItemSlotBackground object.[0.000] {Msg} FdfFile: created new SimpleButtonMouseDetector fdf file.
-	added SimpleButtonMouseDetector object.[0.000] {Msg} WeFile: сreated WeUnit_00010C7B713970 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeAbility_00010C7B712AF0 "Example ability" with id 'AM#$' based on 'ANcl'[0.000] {Msg} WeFile: сreated WeItem_00010C7B626F40 "Item" with id 'IM#$' based on 'rhe2'
+[1.000] {Msg} FdfFile: created new CastingBar fdf file.
+	added CastingBar object.[1.000] {Msg} FdfFile: created new InterfaceInventoryBackground fdf file.
+	added InterfaceInventoryBackground object.[1.000] {Msg} FdfFile: created new InterfaceInventoryEquipmentBackground fdf file.
+	added InterfaceInventoryEquipmentBackground object.[1.000] {Msg} FdfFile: created new InterfaceInventoryBagBackground fdf file.
+	added InterfaceInventoryBagBackground object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipDescription fdf file.
+	added InterfaceItemTooltipDescription object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipTitle fdf file.
+	added InterfaceItemTooltipTitle object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipIcon fdf file.
+	added InterfaceItemTooltipIcon object.[1.000] {Msg} FdfFile: created new InterfaceItemTooltipBackground fdf file.
+	added InterfaceItemTooltipBackground object.[1.000] {Msg} FdfFile: created new InterfaceParameterTooltipBackground fdf file.
+	added InterfaceParameterTooltipBackground object.[1.000] {Msg} FdfFile: created new InterfaceParameterLineText fdf file.
+	added InterfaceParameterLineText object.[1.000] {Msg} FdfFile: created new InterfaceParameterLineBackground fdf file.
+	added InterfaceParameterLineBackground object.[1.000] {Msg} FdfFile: created new InterfaceItemSlotIcon fdf file.
+	added InterfaceItemSlotIcon object.[1.000] {Msg} FdfFile: created new InterfaceItemSlotBorder fdf file.
+	added InterfaceItemSlotBorder object.[1.000] {Msg} FdfFile: created new InterfaceItemSlotBackground fdf file.
+	added InterfaceItemSlotBackground object.[1.000] {Msg} FdfFile: created new SimpleButtonMouseDetector fdf file.
+	added SimpleButtonMouseDetector object.[1.000] {Msg} WeFile: сreated WeUnit_0001D414B8AF50 "Footman" with id 'x##$' based on 'hfoo'[1.000] {Msg} WeFile: сreated WeAbility_0001D414AE3070 "Example ability" with id 'AM#$' based on 'ANcl'[1.000] {Msg} WeFile: сreated WeItem_0001D414A50DE0 "Item" with id 'IM#$' based on 'rhe2'

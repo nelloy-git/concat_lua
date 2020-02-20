@@ -23,8 +23,8 @@ local ValueType = ParameterAPI.ValueType
 ---@type SmartTimerClass
 local SmartTimer = require('Timer.SmartTimer')
 ---@type AbilityAPI
-local AbilityAPI = require('Ability.API')
-local getActiveCasts = AbilityAPI.getActiveCasts
+--local AbilityAPI = require('Ability.API')
+--local getActiveCasts = AbilityAPI.getActiveCasts
 
 --==============
 -- Pick up item
@@ -138,7 +138,7 @@ InterfaceAPI.addItemSlotSyncAction(PressedItemSlot.callback)
 --=========
 -- Casting
 --=========
-
+--[[
 local CastingAbility = {}
 CastingAbility.bar = InterfaceAPI.CastingBar
 
@@ -166,3 +166,4 @@ if not IsCompiletime() then
     CastingAbility.timer = SmartTimer:getGlobalTimer()
     CastingAbility.timer:addAction(0, CastingAbility.timerLoop)
 end
+]]

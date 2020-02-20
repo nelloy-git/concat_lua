@@ -13,6 +13,11 @@ InterfaceAPI = require('Interface.API')
 ---@type ParameterAPI
 ParamAPI = require('Parameter.API')
 
+---@type AbilityAPI
+local AbilityAPI = require('Ability.API')
+local Ability = AbilityAPI.Ability
+local Target = AbilityAPI.Target
+
 ExampleAbility = require('Ability.Example')
 
 require('Event.Item')
@@ -20,14 +25,17 @@ require('Event.Item')
 footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 
 if not IsCompiletime() then
-    u = Unit.new(footman_type, Player(0), -200, -500)
-    UnitAddAbility(u:getObj(), ExampleAbility:getId())
-    --u.Animation:add(Animation.AnimationType.WALK, 6)
-    --u.Animation:add(Animation.AnimationType.STAND, 0)
-    --print(Param.ParamType.Health)
-    --u.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
+    u = Unit.new(footman_type, Player(0), -500, -500)
+    u:getParameters():set(ParamAPI.ParamType.Mana, ParamAPI.ValueType.BASE,  500)
+    SetUnitManaPercentBJ(u:getObj(), 100)
 
     u2 = Unit.new(footman_type, Player(1), 0, 0)
+
+    local abil = Ability.new(u, ExampleAbility)
+    local targ = Target.new()
+    targ:initUnit(u2:getObj())
+    abil:use(targ)
+
     --UnitAddAbility(u:getObj(), ExampleAbility:getId())
     --u2:destroy()
     --u2.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
