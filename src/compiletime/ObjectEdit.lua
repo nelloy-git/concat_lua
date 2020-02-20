@@ -20,6 +20,7 @@ ObjEdit.getAbilityId = ObjEdit.Utils.nextAbilityId
 ObjEdit.getBuffId = ObjEdit.Utils.nextBuffId
 ObjEdit.getItemId = ObjEdit.Utils.nextItemId
 ObjEdit.getUpgradeId = ObjEdit.Utils.nextUpgradeId
+ObjEdit.getOrderId = ObjEdit.Utils.nextOrderId
 
 return ObjEdit
 

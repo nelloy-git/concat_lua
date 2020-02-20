@@ -14,7 +14,7 @@ local Event = require('Ability.Event')
 ---@class AbilityAPI
 local AbilityAPI = {}
 
-AbilityAPI.TargetType = Type.TargetType
+AbilityAPI.TargetType = Type.TargetingType
 AbilityAPI.CallbackType = Type.CallbackType
 AbilityAPI.Status = Type.Status
 

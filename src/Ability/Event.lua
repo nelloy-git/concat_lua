@@ -7,6 +7,8 @@ local Log = require('Utils.Log')
 
 ---@type AbilityCastInstanceClass
 local AbilityCastInstance = require('Ability.CastInstance')
+---@type AbilityTargetClass
+local AbilityTarget = require('Ability.Target')
 ---@type AbilityTypeClass
 local AbilityType = require('Ability.Type')
 ---@type SmartTimerClass
@@ -44,44 +46,24 @@ end
 -- Private
 --=========
 
-private.active_casters = {}
+private.active_casts = {}
 
-if not IsCompiletime() then
-    private.wc3_spell_effect_trigger = Trigger.new()
-    private.wc3_unit_issued_any_order_trigger = Trigger.new()
-    private.timer = SmartTimer.getGlobalTimer()
-    private.timer_period = private.timer:getPeriod()
-    private.action = private.timer:addAction(0, function() private.timerLoop() end)
+private.spell_order = AbilityType.getOrder()
 
-    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        local pl = Player(i)
-        private.wc3_spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, pl)
-        private.wc3_unit_issued_any_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_ORDER, pl)
-        private.wc3_unit_issued_any_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, pl)
-        private.wc3_unit_issued_any_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
-        private.wc3_unit_issued_any_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
-    end
-
-    private.wc3_spell_effect_trigger:addAction(function() savetyRun(private.onSpellEffect) end)
+function private.onSpellEffect()
 end
 
-local getAbility = AbilityType.get
-local GetSpellAbilityId = GetSpellAbilityId
-local GetSpellAbilityUnit = GetSpellAbilityUnit
-function private.onSpellEffect()
-    local ability = getAbility(GetSpellAbilityId())
-    if not ability then
-        return
-    end
+function private.onImmediateOrder()
+    local target = AbilityTarget.new()
+end
 
-    local caster = GetSpellAbilityUnit()
-    local target = private.getAnyTarget()
+function private.onPointOrder()
+end
 
-    local instance = AbilityCastInstance.new(caster, target, ability)
-    if not private.active_casters[caster] then
-        private.active_casters[caster] = {}
-    end
-    table.insert(private.active_casters[caster], instance)
+function private.onUnitOrder()
+end
+
+function private.onTargetOrder()
 end
 
 ---@return table
@@ -113,6 +95,33 @@ function private.timerLoop()
     end
 
     private.action = private.timer:addAction(period, function() private.timerLoop() end)
+end
+
+if not IsCompiletime() then
+    private.spell_effect_trigger = Trigger.new()
+    private.immediatly_order_trigger = Trigger.new()
+    private.point_order_trigger = Trigger.new()
+    private.target_order_trigger = Trigger.new()
+    private.unit_order_trigger = Trigger.new()
+
+    private.timer = SmartTimer.getGlobalTimer()
+    private.timer_period = private.timer:getPeriod()
+    private.action = private.timer:addAction(0, function() private.timerLoop() end)
+
+    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
+        local pl = Player(i)
+        private.spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, pl)
+        private.immediatly_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_ORDER, pl)
+        private.point_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, pl)
+        private.target_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER, pl)
+        private.unit_order_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_ISSUED_UNIT_ORDER, pl)
+    end
+
+    private.spell_effect_trigger:addAction(private.onSpellEffect)
+    private.immediatly_order_trigger:addAction(private.onImmediateOrder)
+    private.point_order_trigger:addAction(private.onPointOrder)
+    private.target_order_trigger:addAction(private.onTargetOrder)
+    private.unit_order_trigger:addAction(private.onUnitOrder)
 end
 
 return static
