@@ -2,29 +2,28 @@
 -- Include
 --=========
 
-local Log = require('Utils.Log')
-local Class = require('Utils.Class.Class')
-
 ---@type AbilityAPI
 local Ability = require('Ability.API')
-local TargetType = Ability.TargetType
-local CallbackType = Ability.CallbackType
-local Status = Ability.Status
-
----@type SmartTimerClass
-local Timer = require('Timer.SmartTimer')
-
-local fmt = string.format
+local TargetingType = Ability.TargetingType
 
 --=========
 -- Ability
 --=========
 
 -- Ability type for using in casting system.
-local ExampleAbility = Ability.Type.new('Example ability', TargetType.Unit)
+local ExampleAbility = Ability.Type.new('Example ability', TargetingType.UnitOrPoint)
 
+---@param caster Unit
+---@param target AbilityTarget
+---@param lvl number
 function ExampleAbility:start(caster, target, lvl)
-    print('Started')
+    local targ_unit = target:getObj()
+    local t = 'Point'
+    if targ_unit then
+        t = 'Unit'
+    end
+
+    print('Started', t, target:getX(), target:getY())
     return Ability.Status.OK
 end
 

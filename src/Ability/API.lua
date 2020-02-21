@@ -6,8 +6,8 @@
 local Type = require('Ability.Type')
 ---@type AbilityClass
 local Ability = require('Ability.Ability')
----@type AbilityTargetClass
-local Target = require('Ability.Target')
+---@type AbilityCastInstanceClass
+local CastInstance = require('Ability.CastInstance')
 ---@type AbilityEventClass
 local Event = require('Ability.Event')
 
@@ -18,11 +18,24 @@ local Event = require('Ability.Event')
 ---@class AbilityAPI
 local AbilityAPI = {}
 
-AbilityAPI.TargetType = Type.TargetingType
-AbilityAPI.Status = Type.Status
+-- Enums
+AbilityAPI.TargetingType = Type.TargetingType
+AbilityAPI.Status = CastInstance.Status
 
+-- Classes
 AbilityAPI.Type = Type
 AbilityAPI.Ability = Ability
-AbilityAPI.Target = Target
+
+-- Utils
+AbilityAPI.cancel = Event.cancelCurrentCasting
+AbilityAPI.interrupt = Event.interruptCurrentCasting
+AbilityAPI.finish = Event.finishCurrentCasting
+
+-- Targets
+AbilityAPI.TargetNone = require('Ability.Target.None')
+AbilityAPI.TargetPoint = require('Ability.Target.Point')
+AbilityAPI.TargetUnit = require('Ability.Target.Unit')
+AbilityAPI.TargetDestructable = require('Ability.Target.Destructable')
+AbilityAPI.TargetItem = require('Ability.Target.Item')
 
 return AbilityAPI

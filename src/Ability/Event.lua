@@ -7,8 +7,6 @@ local Log = require('Utils.Log')
 
 ---@type AbilityCastInstanceClass
 local CastInstance = require('Ability.CastInstance')
----@type AbilityTargetClass
-local AbilityTarget = require('Ability.Target')
 ---@type AbilityTypeClass
 local AbilityType = require('Ability.Type')
 ---@type AbilityClass
@@ -38,13 +36,59 @@ local private = {}
 -- Static
 --========
 
----@param caster unit
----@return AbilityCastInstance[]
-function static.getCasterInstances(caster)
-    if not private.active_cast[caster] then
-        private.active_cast[caster] = {}
+---@param unit Unit
+function static.cancelCurrentCasting(unit)
+    local cast = private.active_cast[unit]
+    if cast then
+        cast:cancel()
     end
-    return private.active_cast[caster]
+end
+
+---@param unit Unit
+function static.interruptCurrentCasting(unit)
+    local cast = private.active_cast[unit]
+    if cast then
+        cast:interrupt()
+    end
+end
+
+---@param unit Unit
+function static.finishCurrentCasting(unit)
+    local cast = private.active_cast[unit]
+    if cast then
+        cast:finish()
+    end
+end
+
+---@param unit Unit
+---@return boolean
+function static.hasActiveCast(unit)
+    return not (private.active_cast[unit] == nil)
+end
+
+---@param unit Unit
+---@return number | nil
+function static.getCastingTimeLeft(unit)
+    local cast = private.active_cast[unit]
+    if cast then
+        return cast:getTimeLeft()
+    end
+end
+
+---@param unit Unit
+---@return number | nil
+function static.getCastingTimeFull(unit)
+    local cast = private.active_cast[unit]
+    if cast then
+        return cast:getFullTime()
+    end
+end
+
+function static.getCurrentAbilityType(unit)
+    local cast = private.active_cast[unit]
+    if cast then
+        return cast:getType()
+    end
 end
 
 --=========
@@ -53,19 +97,25 @@ end
 
 private.active_cast = {}
 
-private.spell_order_id = AbilityType.getOrder()
+private.spell_order_id = AbilityType.getOrderId()
 
 function private.onSpellEffect()
     local caster = Unit.getInstance(GetSpellAbilityUnit())
-    local ability = Ability.getOrdered(caster)
-    local target = ability:getEventTarget()
+    local ability = Ability.getLastOrdered(caster)
+    local ability_type = AbilityType.getInstance(GetSpellAbilityId())
+    local target = ability_type:getEventTarget()
+
+    if ability:getType() ~= ability_type then
+        Log.error(AbilityEvent, 'error in casting system. Current ability != last ordered ability.', 1)
+    end
 
     local cur_cast = private.active_cast[caster]
     if cur_cast then
-        cur_cast:cancel()
+        print('Can not start new ablity casting. Cancel current casting first.')
+        return
     end
 
-    private.active_cast[caster] = CastInstance.new(caster, target, ability)
+    private.active_cast[caster] = CastInstance.new(caster, target, ability_type, ability:getLevel())
 end
 
 

@@ -6,7 +6,6 @@ local Class = require('Utils.Class.Class')
 
 ---@type AbilityTypeClass
 local AbilityType = require('Ability.Type')
-local Status = AbilityType.Status
 
 ---@type UnitClass
 local UnitAPI = require('Unit.API')
@@ -34,26 +33,42 @@ local private = {}
 -- Static
 --========
 
+---@alias AbilityStatusEnum number
+
+---@type table<string, AbilityStatusEnum>
+static.Status = {}
+---@type AbilityStatusEnum
+static.Status.OK = 1
+---@type AbilityStatusEnum
+static.Status.CANCEL = 2
+---@type AbilityStatusEnum
+static.Status.INTERRUPT = 3
+---@type AbilityStatusEnum
+static.Status.FINISH = 4
+---@type AbilityStatusEnum
+static.Status.REMOVE = 5
+
 ---@param caster unit
 ---@param target AbilityTarget
----@param ability Ability
+---@param ability_type AbilityType
+---@param lvl number
 ---@return boolean
-function static.new(caster, target, ability)
+function static.new(caster, target, ability_type, lvl)
     local instance = Class.allocate(AbilityCastInstance)
-    private.newData(instance, caster, target, ability)
+    private.newData(instance, caster, target, ability_type, lvl)
 
     local priv = private.data[instance]
-    priv.status = priv.ability_type:start(caster, target, priv.lvl)
+    priv.status = ability_type:start(caster, target, priv.lvl)
 
-    if priv.status == Status.OK then
+    if priv.status == static.Status.OK then
         private.applyBlocks(priv)
         return instance
-    elseif priv.status == Status.CANCEL then
-        priv.ability_type:cancel(caster, target, priv.lvl)
-    elseif priv.status == Status.FINISH then
-        priv.ability_type:finish(caster, target, priv.lvl)
-    elseif priv.status == Status.INTERRUPT then
-        priv.ability_type:interrupt(caster, target, priv.lvl)
+    elseif priv.status == static.Status.CANCEL then
+        ability_type:cancel(caster, target, priv.lvl)
+    elseif priv.status == static.Status.FINISH then
+        ability_type:finish(caster, target, priv.lvl)
+    elseif priv.status == static.Status.INTERRUPT then
+        ability_type:interrupt(caster, target, priv.lvl)
     end
 end
 
@@ -66,7 +81,7 @@ end
 function public:casting(dt)
     local priv = private.data[self]
 
-    if priv.status ~= Status.OK then
+    if priv.status ~= static.Status.OK then
         return priv.status
     end
 
@@ -74,19 +89,19 @@ function public:casting(dt)
     priv.time_left = priv.time_left - dt
 
     if priv.time_left <= 0 then
-        priv.status = Status.FINISH
+        priv.status = static.Status.FINISH
     end
 
-    if priv.status == Status.OK then
+    if priv.status == static.Status.OK then
         return priv.status
     end
 
     private.removeBlocks(priv)
-    if priv.status == Status.CANCEL then
+    if priv.status == static.Status.CANCEL then
         priv.ability_type:cancel(priv.caster, priv.target, priv.lvl)
-    elseif priv.status == Status.FINISH then
+    elseif priv.status == static.Status.FINISH then
         priv.ability_type:finish(priv.caster, priv.target, priv.lvl)
-    elseif priv.status == Status.INTERRUPT then
+    elseif priv.status == static.Status.INTERRUPT then
         priv.ability_type:interrupt(priv.caster, priv.target, priv.lvl)
     end
 
@@ -95,34 +110,31 @@ end
 
 function public:cancel()
     local priv = private.data[self]
-    local ability = priv.ability
 
-    if priv.status == Status.OK then
+    if priv.status == static.Status.OK then
         private.removeBlocks(priv)
         priv.ability_type:cancel(priv.caster, priv.target, priv.lvl)
-        priv.status = Status.CANCEL
+        priv.status = static.Status.CANCEL
     end
 end
 
 function public:interrupt()
     local priv = private.data[self]
-    local ability = priv.ability
 
-    if priv.status == Status.OK then
+    if priv.status == static.Status.OK then
         private.removeBlocks(priv)
         priv.ability_type:interrupt(priv.caster, priv.target, priv.lvl)
-        priv.status = Status.INTERRUPT
+        priv.status = static.Status.INTERRUPT
     end
 end
 
 function public:finish()
     local priv = private.data[self]
-    local ability = priv.ability
 
-    if priv.status == Status.OK then
+    if priv.status == static.Status.OK then
         private.removeBlocks(priv)
         priv.ability_type:finish(priv.caster, priv.target, priv.lvl)
-        priv.status = Status.FINISH
+        priv.status = static.Status.FINISH
     end
 end
 
@@ -146,6 +158,11 @@ function public:getTarget()
     return private.data[self].target
 end
 
+---@return AbilityType
+function public:getAbilityType()
+    return private.data[self].ability_type
+end
+
 --=========
 -- Private
 --=========
@@ -166,15 +183,12 @@ end
 ---@param self AbilityCastInstance
 ---@param caster unit
 ---@param target table
----@param ability Ability
+---@param ability_type Ability
 ---@return AbilityCastInstance
-function private.newData(self, caster, target, ability)
-    local ability_type = ability:getType()
-    local lvl = ability:getLevel()
+function private.newData(self, caster, target, ability_type, lvl)
     local time = ability_type:getCastingTime(caster, lvl)
-
     local priv = {
-        status = Status.OK,
+        status = static.Status.OK,
         caster = caster,
         target = target,
         lvl = lvl,
@@ -190,30 +204,5 @@ end
 --=============
 -- Compiletime
 --=============
---[[
-private.disable_move_buff_id = Compiletime(function()
-    ---@type ObjectEdit
-    local ObjEdit = require('compiletime.ObjectEdit')
-    local Icons = require('Resources.Icon')
-    local WeBuff = ObjEdit.Buff
-    local id = ObjEdit:getBuffId()
-    local buff_type = WeBuff.new(id, 'Bfae', 'DisableMovement')
-    buff_type:setField(WeBuff.Field.TooltipNormal, 'Ability casting')
-    buff_type:setField(WeBuff.Field.TooltipNormalExtended, 'Unit can not move while casting an ability.')
-    buff_type:setField(WeBuff.Field.IconNormal, Icons.BTNBrilliance)
-    return ID(id)
-end)
-private.disable_move_id = Compiletime(function()
-    ---@type ObjectEdit
-    local ObjEdit = require('compiletime.ObjectEdit')
-    local WeAbility = ObjEdit.Ability
-    local id = ObjEdit:getAbilityId()
-    local abil_type = WeAbility.new(id, 'Aasl', 'DisableMovement')
-    abil_type:setField(WeAbility.Field.Aasl_MovementSpeedFactor, 1, -100)
-    abil_type:setField(WeAbility.Field.TargetsAllowed, 1, "self")
-    abil_type:setField(WeAbility.Field.Buffs, 1, ID2str(private.disable_move_buff_id))
-    return ID(id)
-end)
-private.disable_attack_id = ID('Abun')
-]]
+
 return static

@@ -5,8 +5,16 @@
 local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
 
----@type AbilityTargetClass
-local Target = require('Ability.Target')
+---@type AbilityTargetNoneClass
+local TargetNone = require('Ability.Target.None')
+---@type AbilityTargetPointClass
+local TargetPoint = require('Ability.Target.Point')
+---@type AbilityTargetUnitClass
+local TargetUnit = require('Ability.Target.Unit')
+---@type AbilityTargetDestructableClass
+local TargetDestructable = require('Ability.Target.Destructable')
+---@type AbilityTargetItemClass
+local TargetItem = require('Ability.Target.Item')
 ---@type CompiletimeDataClass
 local CompiletimeData = require('Utils.CompiletimeData')
 
@@ -46,21 +54,6 @@ static.TargetingType.UnitWithArea = 6
 ---@type AbilityTargetingTypeEnum
 static.TargetingType.UnitOrPointWithArea = 7
 
----@alias AbilityStatus number
-
----@type table<string, AbilityStatus>
-static.Status = {}
----@type AbilityStatus
-static.Status.OK = 1
----@type AbilityStatus
-static.Status.CANCEL = 2
----@type AbilityStatus
-static.Status.INTERRUPT = 3
----@type AbilityStatus
-static.Status.FINISH = 4
----@type AbilityStatus
-static.Status.REMOVE = 5
-
 ---@param uniq_name string
 ---@param target_type AbilityTargetingTypeEnum
 ---@return AbilityType
@@ -76,7 +69,7 @@ function static.new(uniq_name, target_type, child_instance)
 end
 
 ---@return number
-function static.getOrder()
+function static.getOrderId()
     return private.orderId
 end
 
@@ -93,18 +86,18 @@ end
 ---@param caster Unit
 ---@param target AbilityTarget
 ---@param lvl number
----@return AbilityStatus
+---@return AbilityStatusEnum
 function public:start(caster, target, lvl)
-    return static.Status.OK
+    return 1
 end
 
 --- Virtual function
 ---@param caster Unit
 ---@param target AbilityTarget
 ---@param lvl number
----@return AbilityStatus
+---@return AbilityStatusEnum
 function public:cast(caster, target, lvl)
-    return static.Status.OK
+    return 1
 end
 
 --- Virtual function
@@ -186,9 +179,7 @@ end
 
 ---@return AbilityTarget
 function public:getEventTarget()
-    local target = Target.new()
-    private.initEventTarget[private.data[self].target_type](target)
-    return target
+    return private.getEventTarget[private.data[self].target_type]()
 end
 
 ---@return number
@@ -216,42 +207,42 @@ if not IsCompiletime() then
     private.local_player = GetLocalPlayer()
 end
 
-private.initEventTarget = {
-    [static.TargetingType.None] = function(target)
-        target:initNone()
+private.getEventTarget = {
+    [static.TargetingType.None] = function()
+        return TargetNone.new()
     end,
 
-    [static.TargetingType.Point] = function(target)
-        target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+    [static.TargetingType.Point] = function()
+        return TargetPoint.new(GetSpellTargetX(), GetSpellTargetY())
     end,
 
-    [static.TargetingType.Unit] = function(target)
-        target:initUnit(GetSpellTargetUnit())
+    [static.TargetingType.Unit] = function()
+        return TargetUnit.new(GetSpellTargetUnit())
     end,
 
-    [static.TargetingType.UnitOrPoint] = function(target)
+    [static.TargetingType.UnitOrPoint] = function()
         local unit = GetSpellTargetUnit()
         if unit then
-            target:iniUnit(unit)
+            return TargetUnit.new(unit)
         else
-            target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+            return TargetPoint.new(GetSpellTargetX(), GetSpellTargetY())
         end
     end,
 
-    [static.TargetingType.PointWithArea] = function(target)
-        target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+    [static.TargetingType.PointWithArea] = function()
+        return TargetPoint.new(GetSpellTargetX(), GetSpellTargetY())
     end,
 
-    [static.TargetingType.UnitWithArea] = function(target)
-        target:initUnit(GetSpellTargetUnit())
+    [static.TargetingType.UnitWithArea] = function()
+        return TargetUnit.new(GetSpellTargetUnit())
     end,
 
-    [static.TargetingType.UnitOrPointWithArea] = function(target)
+    [static.TargetingType.UnitOrPointWithArea] = function()
         local unit = GetSpellTargetUnit()
         if unit then
-            target:iniUnit(unit)
+            return TargetUnit.new(unit)
         else
-            target:initPoint(GetSpellTargetX(), GetSpellTargetY())
+            return TargetPoint.new(GetSpellTargetX(), GetSpellTargetY())
         end
     end,
 }
