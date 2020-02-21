@@ -30,6 +30,12 @@ function InterfaceAPI.init()
     BlzFrameClearAllPoints(world_handle)
     BlzFrameSetAllPoints(world_handle, game_handle)
 
+    local menu_handle = BlzGetFrameByName("UpperButtonBarMenuButton", 0)
+    BlzFrameClearAllPoints(menu_handle)
+    BlzFrameSetParent(menu_handle, world_handle)
+    BlzFrameSetAbsPoint(menu_handle, FRAMEPOINT_BOTTOMLEFT, 0, 0)
+
+    BlzHideOriginFrames(true)
 end
 
 

@@ -141,6 +141,7 @@ end
 ---@param lvl number
 ---@return string
 function public:getIcon(owner, lvl)
+    return private.default_icon
 end
 
 --- Virtual function
@@ -148,6 +149,7 @@ end
 ---@param lvl number
 ---@return string
 function public:getDescription(owner, lvl)
+    return private.default_description
 end
 
 --- Virtual function
@@ -155,6 +157,7 @@ end
 ---@param lvl number
 ---@return number
 function public:getCastingTime(owner, lvl)
+    return private.default_casting_time
 end
 
 --- Virtual function
@@ -162,6 +165,7 @@ end
 ---@param lvl number
 ---@return number
 function public:getCooldown(owner, lvl)
+    return private.default_cooldown
 end
 
 --- Virtual function
@@ -169,6 +173,7 @@ end
 ---@param lvl number
 ---@return number
 function public:getManaCost(owner, lvl)
+    return private.default_mana_cost
 end
 
 --- Virtual function
@@ -176,6 +181,7 @@ end
 ---@param lvl number
 ---@return number
 function public:getRange(owner, lvl)
+    return private.default_range
 end
 
 ---@return AbilityTarget
@@ -196,6 +202,13 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 private.id2abil = setmetatable({}, {__mode = 'kv'})
+
+private.default_icon = ''
+private.default_description = ''
+private.default_casting_time = 1
+private.default_cooldown = 0
+private.default_mana_cost = 0
+private.default_range = 1000000
 
 private.CompiletimeData = CompiletimeData.new(AbilityType)
 
