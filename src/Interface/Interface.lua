@@ -2,54 +2,52 @@
 local Inventory = require('Interface.Inventory')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
----@type SelectionControllerClass
-local Selection = require('Controller.Selection')
 ---@type InterfaceAbilityCastingBarClass
 local CastingBar = require('Interface.Ability.CastingBar')
+---@type InterfaceAbilityBarClass
+local AbilityBar = require('Interface.Ability.Bar')
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')
 
 ---@class Interface
 local Interface = {}
 
-local target = nil
-local local_player = nil
+Interface.target = nil
 
-local function selectTarget(player, selected, unit)
-    unit = UnitAPI.Unit.getInstance(unit)
-    if selected and player == local_player then
-        Interface.setTarget(unit, player)
+function Interface.init()
+    Interface.Inventory = Inventory.new()
+    Interface.Inventory:setWidth(0.3)
+    Interface.Inventory:setHeight(0.3)
+    Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - Interface.Inventory:getWidth())
+    Interface.Inventory:setY(0.2)
+
+    Interface.CastingBar = CastingBar.new(1)
+    Interface.CastingBar:setX(0.3)
+    Interface.CastingBar:setY(0.045)
+    Interface.CastingBar:setWidth(0.2)
+    Interface.CastingBar:setHeight(0.02)
+
+    Interface.AbilityBar = AbilityBar.new(10, 1)
+    Interface.AbilityBar:setX(0.175)
+    Interface.AbilityBar:setY(0.0)
+    Interface.AbilityBar:setWidth(0.45)
+    Interface.AbilityBar:setHeight(0.045)
+end
+
+--- Should be used async.
+---@param unit Unit
+function Interface.setTarget(unit)
+    if Interface.target ~= unit then
+        Interface.target = unit
+        Interface.Inventory:load(unit)
+        Interface.AbilityBar:load(unit)
     end
 end
 
-if not IsCompiletime() then
-    local_player = GetLocalPlayer()
-
-    Interface.Inventory = Inventory.new()
-    Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - 0.2)
-    Interface.Inventory:setY(0.2)
-    Interface.Inventory:setWidth(0.2)
-    Interface.Inventory:setHeight(0.3)
-
-    Interface.CastingBar = CastingBar.new(5)
-
-    ---@param unit Unit
-    function Interface.setTarget(unit, player)
-        if player == local_player and target ~= unit then
-            target = unit
-            Interface.Inventory:load(unit)
-        end
-    end
-
-    --- Async
-    ---@return Unit
-    function Interface.getTarget()
-        return target
-    end
-
-    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        Selection.addAction(Player(i), true, selectTarget)
-    end
+--- Async
+---@return Unit
+function Interface.getTarget()
+    return Interface.target
 end
 
 return Interface

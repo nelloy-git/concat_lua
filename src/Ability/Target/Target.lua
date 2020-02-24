@@ -23,7 +23,7 @@ local private = {}
 
 ---@param child_instance AbilityTarget
 ---@return AbilityTarget
-function static.new(child_instance)
+function override.new(child_instance)
     if not child_instance then
         Log.error(AbilityTarget, 'can not create instance of abstract class.', 2)
     end

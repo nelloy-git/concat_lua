@@ -5,7 +5,7 @@
 local Class = require('Utils.Class.Class')
 
 ---@type FrameTypeClass
-local FrameType = require('Frame.FrameType')
+local FrameType = require('Frame.Type')
 ---@type FrameObjClass
 local FrameObj = require('Object.Frame')
 

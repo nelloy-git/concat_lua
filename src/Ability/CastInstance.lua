@@ -4,12 +4,6 @@
 
 local Class = require('Utils.Class.Class')
 
----@type AbilityTypeClass
-local AbilityType = require('Ability.Type')
-
----@type UnitClass
-local UnitAPI = require('Unit.API')
-local Unit = UnitAPI.Unit
 ---@type ParameterAPI
 local ParamAPI = require('Parameter.API')
 local Param = ParamAPI.ParamType
@@ -61,7 +55,7 @@ function static.new(caster, target, ability_type, lvl)
     priv.status = ability_type:start(caster, target, priv.lvl)
 
     if priv.status == static.Status.OK then
-        private.applyBlocks(priv)
+        private.applyBlocks(instance, priv)
         return instance
     elseif priv.status == static.Status.CANCEL then
         ability_type:cancel(caster, target, priv.lvl)
@@ -72,12 +66,18 @@ function static.new(caster, target, ability_type, lvl)
     end
 end
 
+---@param unit Unit
+---@return AbilityCastInstance | nil
+function static.getInstance(unit)
+    return private.caster2cast[unit]
+end
+
 --========
 -- Public
 --========
 
 ---@param dt number
----@return boolean
+---@return AbilityStatusEnum
 function public:casting(dt)
     local priv = private.data[self]
 
@@ -96,7 +96,7 @@ function public:casting(dt)
         return priv.status
     end
 
-    private.removeBlocks(priv)
+    private.removeBlocks(self, priv)
     if priv.status == static.Status.CANCEL then
         priv.ability_type:cancel(priv.caster, priv.target, priv.lvl)
     elseif priv.status == static.Status.FINISH then
@@ -112,7 +112,7 @@ function public:cancel()
     local priv = private.data[self]
 
     if priv.status == static.Status.OK then
-        private.removeBlocks(priv)
+        private.removeBlocks(self, priv)
         priv.ability_type:cancel(priv.caster, priv.target, priv.lvl)
         priv.status = static.Status.CANCEL
     end
@@ -122,7 +122,7 @@ function public:interrupt()
     local priv = private.data[self]
 
     if priv.status == static.Status.OK then
-        private.removeBlocks(priv)
+        private.removeBlocks(self, priv)
         priv.ability_type:interrupt(priv.caster, priv.target, priv.lvl)
         priv.status = static.Status.INTERRUPT
     end
@@ -132,7 +132,7 @@ function public:finish()
     local priv = private.data[self]
 
     if priv.status == static.Status.OK then
-        private.removeBlocks(priv)
+        private.removeBlocks(self, priv)
         priv.ability_type:finish(priv.caster, priv.target, priv.lvl)
         priv.status = static.Status.FINISH
     end
@@ -169,15 +169,23 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 private.multiplier = 10^5
+private.caster2cast = setmetatable({}, {__mode = 'k'})
 
-function private.applyBlocks(priv)
+function private.applyBlocks(self, priv)
     priv.caster:enableAttack(false)
     priv.caster:getParameters():add(Param.MS, Value.MULT, -private.multiplier)
+
+    local cur_cast = private.caster2cast[priv.caster]
+    if cur_cast then
+        cur_cast:cancel()
+    end
+    private.caster2cast[priv.caster] = self
 end
 
-function private.removeBlocks(priv)
+function private.removeBlocks(self, priv)
     priv.caster:enableAttack(true)
     priv.caster:getParameters():add(Param.MS, Value.MULT, private.multiplier)
+    private.caster2cast[priv.caster] = nil
 end
 
 ---@param self AbilityCastInstance

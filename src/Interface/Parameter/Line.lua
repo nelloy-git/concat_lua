@@ -144,7 +144,7 @@ private.background_type:setTexture(Import.InventoryBackground)
 private.text_type = SimpleTextType.new('InterfaceParameterLineText', true)
 private.text_type:setFont('fonts\\nim_____.ttf')
 private.text_type:setFontSize(0.009)
-private.text_type:setAnchor('CENTER')
+private.text_type:setAnchor('LEFT')
 
 private.zero_color = {red = 230, green = 230, blue = 230, alpha = 255}
 private.bonus_color = {red = 50, green = 230, blue = 50, alpha = 255}

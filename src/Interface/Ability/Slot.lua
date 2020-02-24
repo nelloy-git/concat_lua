@@ -14,6 +14,8 @@ local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local SimpleTextType = FrameAPI.SimpleTextType
 local SimpleText = FrameAPI.SimpleText
+local SimpleStatusBarType = FrameAPI.SimpleStatusBarType
+local SimpleStatusBar = FrameAPI.SimpleStatusBar
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 
 --=======
@@ -71,9 +73,32 @@ function public:setAbility(abil)
 
         priv.hotkey:setText('Q')
         priv.hotkey:setVisible(true)
+
+        priv.cooldown:setVisible(true)
     else
         priv.icon:setVisible(false)
     end
+end
+
+function public:updateCooldown()
+    local priv = private.data[self]
+
+    if not priv.abil then
+        return
+    end
+
+    local cur_cd = priv.abil:getCooldown()
+    local full_cd = priv.abil:getFullCooldown()
+    local ratio = cur_cd / full_cd
+
+    if cur_cd > 0 then
+        priv.cooldown:setVisible(true)
+        priv.cooldown:setStatus(100 * ratio)
+        priv.cooldown:setText(string.format('%.f', cur_cd))
+    else
+        priv.cooldown:setVisible(false)
+    end
+        
 end
 
 ---@param tooltip Frame
@@ -110,10 +135,15 @@ private.icon_type:setWidth(0.035)
 private.icon_type:setHeight(0.035)
 private.icon_type:setTexture('')
 
-private.hotkey_type = SimpleTextType.new('InterfaceAbilitySlotIcon', true)
+private.hotkey_type = SimpleTextType.new('InterfaceAbilitySlotHotkey', true)
 private.hotkey_type:setWidth(0.005)
 private.hotkey_type:setHeight(0.005)
-private.hotkey_type:setTexture('')
+
+private.cooldown_type = SimpleStatusBarType.new('InterfaceAbilitySlotCooldown', true)
+private.cooldown_type:setWidth(0.035)
+private.cooldown_type:setHeight(0.035)
+private.cooldown_type:setBackground(Import.HalfTransparentTexture)
+private.cooldown_type:setBar(Import.HalfTransparentTexture)
 
 ---@param self InterfaceAbilitySlot
 function private.update(self)
@@ -135,6 +165,11 @@ function private.update(self)
     priv.hotkey:setY((1 - private.hotkey_ratio) * height)
     priv.hotkey:setWidth(private.hotkey_ratio * width)
     priv.hotkey:setHeight(private.hotkey_ratio * height)
+
+    priv.cooldown:setX(border_x)
+    priv.cooldown:setY(border_y)
+    priv.cooldown:setWidth(width - 2 * border_x)
+    priv.cooldown:setHeight(height - 2 * border_y)
 end
 
 ---@param self InterfaceAbilitySlot
@@ -143,6 +178,7 @@ function private.newData(self)
         border = SimpleFrame.new(private.border_type),
         icon = SimpleButton.new(private.icon_type),
         hotkey = SimpleText.new(private.hotkey_type),
+        cooldown = SimpleStatusBar.new(private.cooldown_type),
         abil = nil,
     }
     private.data[self] = priv
@@ -157,6 +193,12 @@ function private.newData(self)
 
     priv.hotkey:setParent(self)
     priv.hotkey:setVisible(false)
+    priv.hotkey:setLevel(self:getLevel() + 6)
+    priv.hotkey:setTextColor(0, 0, 0, 0)
+
+    priv.cooldown:setParent(self)
+    priv.cooldown:setVisible(false)
+    priv.cooldown:setLevel(self:getLevel() + 8)
 end
 
 

@@ -28,12 +28,24 @@ function ExampleAbility:start(caster, target, lvl)
 end
 
 function ExampleAbility:cast(caster, target, lvl)
-    print('Casting')
+    --print('Casting')
     return Ability.Status.OK
 end
 
 function ExampleAbility:finish(caster, target, lvl)
     print('Finished')
+end
+
+function ExampleAbility:cancel(caster, target, lvl)
+    print('Canceled')
+end
+
+function ExampleAbility:getIcon(owner, lvl)
+    return "ReplaceableTextures\\\\CommandButtons\\\\BTNCharm.blp"
+end
+
+function ExampleAbility:getCooldown()
+    return 5
 end
 
 function ExampleAbility:getCastingTime(caster, target, lvl)

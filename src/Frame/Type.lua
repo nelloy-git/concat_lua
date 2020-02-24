@@ -87,7 +87,7 @@ function private.newData(self, uniq_name, create_fdf, separate_file)
 
     if IsCompiletime() then
         if private.compiletime_data:get(uniq_name) then
-            Log.error(FrameType, 'name is not unique.', 3)
+            Log.error(FrameType, 'name is not unique.', 4)
         end
 
         priv.fdf = create_fdf(uniq_name)
@@ -105,8 +105,12 @@ function private.newData(self, uniq_name, create_fdf, separate_file)
     if separate_file then
         priv.toc = private.compiletime_data:get(uniq_name)
         if not IsCompiletime() then
+            if not priv.toc then
+                Log.error(self, 'nil toc path', 4)
+            end
+
             if not BlzLoadTOCFile(priv.toc) then
-                Log.error(self, uniq_name..' load toc failed.', 3)
+                Log.error(self, uniq_name..' load toc failed.', 4)
             end
         end
     end

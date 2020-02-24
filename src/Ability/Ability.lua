@@ -110,6 +110,12 @@ function public:getDescription()
     return priv.ability_type:getDescription(priv.owner, priv.lvl)
 end
 
+---@return string
+function public:getIcon()
+    local priv = private.data[self]
+    return priv.ability_type:getIcon(priv.owner, priv.lvl)
+end
+
 ---@return number
 function public:getLevel()
     return private.data[self].lvl
@@ -133,6 +139,12 @@ end
 ---@return number
 function public:getCooldown()
     return math.max(0, private.data[self].cooldown - private.timer_cur_time)
+end
+
+---@return number
+function public:getFullCooldown()
+    local priv = private.data[self]
+    return priv.ability_type:getCooldown(priv.owner, priv.lvl)
 end
 
 ---@return number
@@ -176,21 +188,24 @@ function private.timerLoop()
     private.timer_cur_time = time
 
     for instance, priv in pairs(private.data) do
-        if priv.cooldown >= time then
-            if priv.charges >= priv.max_charges then
+        if priv.cooldown > 0 and priv.cooldown < time then
+            if priv.charges > priv.max_charges then
                 Log.error(Ability, 'error in charges gaining.', 1)
+                return
             end
-            priv.charges = private.charges + 1
 
+            priv.charges = priv.charges + 1
             if priv.charges < priv.max_charges then
                 priv.cooldown = priv.cooldown + priv.ability_type:getCooldown(priv.owner, priv.lvl)
+            else
+                priv.cooldown = -1
             end
         end
     end
 end
 
----@param owner Unit
 ---@param self Ability
+---@param owner Unit
 ---@param ability_type AbilityType
 function private.newData(self, owner, ability_type)
     local priv = {
@@ -198,7 +213,7 @@ function private.newData(self, owner, ability_type)
         ability_type = ability_type,
 
         lvl = 1,
-        cooldown = 0,
+        cooldown = -1,
         charges = 1,
         max_charges = 1
     }

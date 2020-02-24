@@ -4,12 +4,10 @@
 
 ---@type AbilityTypeClass
 local Type = require('Ability.Type')
----@type AbilityClass
-local Ability = require('Ability.Ability')
 ---@type AbilityCastInstanceClass
 local CastInstance = require('Ability.CastInstance')
----@type AbilityEventClass
-local Event = require('Ability.Event')
+---@type AbilityClass
+local Ability = require('Ability.Ability')
 
 --=============
 --     API
@@ -25,11 +23,12 @@ AbilityAPI.Status = CastInstance.Status
 -- Classes
 AbilityAPI.Type = Type
 AbilityAPI.Ability = Ability
+AbilityAPI. CastInstance = CastInstance
 
 -- Utils
-AbilityAPI.cancel = Event.cancelCurrentCasting
-AbilityAPI.interrupt = Event.interruptCurrentCasting
-AbilityAPI.finish = Event.finishCurrentCasting
+--AbilityAPI.cancel = Event.cancelCurrentCasting
+--AbilityAPI.interrupt = Event.interruptCurrentCasting
+--AbilityAPI.finish = Event.finishCurrentCasting
 
 -- Targets
 AbilityAPI.TargetNone = require('Ability.Target.None')

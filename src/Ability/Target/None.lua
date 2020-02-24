@@ -26,7 +26,7 @@ local private = {}
 
 ---@param child_instance AbilityTargetNone | nil
 ---@return AbilityTargetNone
-function static.new(child_instance)
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(AbilityTargetNone)
     instance = AbilityTarget.new(instance)
 

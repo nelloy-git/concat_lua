@@ -27,7 +27,7 @@ local private = {}
 ---@param unit_obj unit
 ---@param child_instance AbilityTargetUnit | nil
 ---@return AbilityTargetUnit
-function static.new(unit_obj, child_instance)
+function override.new(unit_obj, child_instance)
     local instance = child_instance or Class.allocate(AbilityTargetUnit)
     instance = AbilityTarget.new(instance)
     private.newData(instance, unit_obj)
@@ -58,7 +58,8 @@ end
 ---@param order number
 ---@return boolean
 function public:order(unit, order)
-    return IssueTargetOrderById(unit:getObj(), order, priv.unit_obj)
+    --print(unit:getObj(), order, priv.unit_obj)
+    return IssueTargetOrderById(unit:getObj(), order, private.data[self].unit_obj)
 end
 
 --=========

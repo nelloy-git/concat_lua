@@ -39,6 +39,26 @@ end
 -- Public
 --========
 
+---@param x number
+function public:setX(x)
+    private.data[self].bar[1]:setX(x)
+end
+
+---@param y number
+function public:setY(y)
+    private.data[self].bar[1]:setY(y)
+end
+
+---@param width number
+function public:setWidth(width)
+    private.data[self].bar[1]:setWidth(width)
+end
+
+---@param height number
+function public:setHeight(height)
+    private.data[self].bar[1]:setHeight(height)
+end
+
 function public:setStatus(pos, status)
     local priv = private.data[self]
 
@@ -48,6 +68,10 @@ end
 
 function public:getSize()
     return private.data[self].max_bars
+end
+
+function public:setText(text)
+    private.data[self].bar[1]:setText(text)
 end
 
 

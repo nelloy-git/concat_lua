@@ -27,7 +27,7 @@ local private = {}
 ---@param destr_obj destructable
 ---@param child_instance AbilityTargetDestructable | nil
 ---@return AbilityTargetDestructable
-function static.new(destr_obj, child_instance)
+function override.new(destr_obj, child_instance)
     local instance = child_instance or Class.allocate(AbilityTargetDestructable)
     instance = AbilityTarget.new(instance)
     private.newData(instance, destr_obj)

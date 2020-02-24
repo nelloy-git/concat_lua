@@ -104,8 +104,9 @@ private.background_type:setTexture(Import.InventoryBackground)
 private.empty_icon = Import.TransparentTexture
 private.icon_background_texture = Import.Icon.Empty
 
-private.border_ratio = 1/16
-private.space_ratio = 1/32
+private.border_x_ratio = 1/6
+private.border_y_ratio = 1/12
+private.space_ratio = 1/24
 private.tooltip_width = 0.2
 private.tooltip_height = 0.16
 
@@ -146,8 +147,8 @@ function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
     local height = self:getHeight()
-    local border_x = private.border_ratio * width
-    local border_y = private.border_ratio * height
+    local border_x = private.border_x_ratio * width
+    local border_y = private.border_y_ratio * height
     local space_x = private.space_ratio * width
     local space_y = private.space_ratio * height
     local slot_width = (width - 2 * border_x - 2 * space_x) / 3

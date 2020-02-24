@@ -43,5 +43,7 @@ static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBE
 static.Field.String = FdfField.new('String', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 static.Field.Texture = FdfField.new('Texture', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 static.Field.Layer = FdfField.new('Layer', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
+static.Field.ChildFrames = FdfField.new('', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
+static.Field.Anchor = FdfField.new('Anchor', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
 
 return static

@@ -27,6 +27,7 @@ local private = {}
 --=========
 
 ---@param name string
+
 ---@param child_instance FdfSimpleString | nil
 ---@return FdfSimpleString
 function override.new(name, child_instance)

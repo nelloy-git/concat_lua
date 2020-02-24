@@ -27,7 +27,7 @@ local private = {}
 ---@param item_obj item
 ---@param child_instance AbilityTargetItem | nil
 ---@return AbilityTargetItem
-function static.new(item_obj, child_instance)
+function override.new(item_obj, child_instance)
     local instance = child_instance or Class.allocate(AbilityTargetItem)
     instance = AbilityTarget.new(instance)
     private.newData(instance, item_obj)

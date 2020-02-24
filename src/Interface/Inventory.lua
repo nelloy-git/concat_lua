@@ -97,20 +97,20 @@ private.icon_background_texture = Import.Icon.Empty
 
 private.space_ratio = 1 / 32
 
-private.bag_x_ratio = 0
+private.bag_x_ratio = 1 / 2
 private.bag_y_ratio = 0
-private.bag_width_ratio = 1
-private.bag_height_ratio = 3 / 14
+private.bag_width_ratio = 1 / 2
+private.bag_height_ratio = 1 / 3
 
-private.equip_x_ratio = 0
+private.equip_x_ratio = 1 / 2
 private.equip_y_ratio = private.bag_height_ratio
-private.equip_width_ratio = 1 / 3
+private.equip_width_ratio = 1 / 2
 private.equip_height_ratio = 1 - private.bag_height_ratio
 
-private.param_x_ratio = private.equip_width_ratio
-private.param_y_ratio = private.bag_height_ratio
-private.param_width_ratio = 1 - private.equip_width_ratio
-private.param_height_ratio = 1 - private.bag_height_ratio
+private.param_x_ratio = 0
+private.param_y_ratio = 0
+private.param_width_ratio = 1 - private.bag_width_ratio
+private.param_height_ratio = 1
 
 ---@param self InterfaceInventory
 function private.update(self)
@@ -139,7 +139,7 @@ function private.newData(self)
     local priv = {
         loaded = nil,
 
-        bag = Bag.new(7, 3),
+        bag = Bag.new(5, 4),
         equip = Equipment.new(),
         param = Parameters.new(20)
     }

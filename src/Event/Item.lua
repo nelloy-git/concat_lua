@@ -134,36 +134,3 @@ function PressedItemSlot.updateInterface(unit)
 end
 
 InterfaceAPI.addItemSlotSyncAction(PressedItemSlot.callback)
-
---=========
--- Casting
---=========
---[[
-local CastingAbility = {}
-CastingAbility.bar = InterfaceAPI.CastingBar
-
-function CastingAbility.timerLoop()
-    local unit = InterfaceAPI.getTarget()
-    if not unit then
-        CastingAbility.timer:addAction(0, CastingAbility.timerLoop)
-        return
-    end
-
-    local casts = getActiveCasts(unit:getObj())
-    for i = 1, #casts do
-        local ratio = casts[i]:getTimeLeft() / casts[i]:getFullTime()
-        CastingAbility.bar:setStatus(i, 100 * (1 - ratio))
-    end
-
-    for i = #casts + 1, CastingAbility.bar:getSize() do
-        CastingAbility.bar:setStatus(i, 0)
-    end
-
-    CastingAbility.timer:addAction(0, CastingAbility.timerLoop)
-end
-
-if not IsCompiletime() then
-    CastingAbility.timer = SmartTimer:getGlobalTimer()
-    CastingAbility.timer:addAction(0, CastingAbility.timerLoop)
-end
-]]

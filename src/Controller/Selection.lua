@@ -26,7 +26,7 @@ local private = {}
 -- Static
 --=========
 
----@alias SelectionCallback fun(player:player, select:boolean, unit:unit)
+---@alias SelectionCallback fun(player:player, select:boolean, unit_obj:unit)
 
 ---@param player player
 ---@param selected boolean
@@ -37,9 +37,17 @@ function static.addAction(player, selected, selection_cb)
     table.insert(list, action)
 end
 
+---@param player player
+---@return unit[]
+function static.getSelectedUnits(player)
+    return private.selected_units[player] or {}
+end
+
 --=========
 -- Private
 --=========
+
+private.selected_units = {}
 
 private.selected_actions = {}
 private.deselected_actions = {}
@@ -66,20 +74,32 @@ function private.getActionList(player, selected)
     return list[player]
 end
 
-local savetyRun = savetyRun
 function private.selectTriggerFunc()
     local pl = GetTriggerPlayer()
+    local unit_obj = GetTriggerUnit()
+    if not private.selected_units[pl] then
+        private.selected_units[pl] = {}
+    end
+    table.insert(private.selected_units[pl], unit_obj)
 
     local list = private.selected_actions[pl]
     if list then
         for i = 1, #list do
-            list[i]:run(pl, true, GetTriggerUnit())
+            list[i]:run(pl, true, unit_obj)
         end
     end
 end
 
 function private.deselectTriggerFunc()
     local pl = GetTriggerPlayer()
+    local unit_obj = GetTriggerUnit()
+    local new_list = {}
+    for i = 1, #private.selected_units[pl] do
+        if private.selected_units[pl][i] ~= unit_obj then
+            table.insert(new_list, private.selected_units[pl][i])
+        end
+    end
+    private.selected_units[pl] = new_list
 
     local list = private.deselected_actions[pl]
     if list then

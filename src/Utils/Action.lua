@@ -30,7 +30,7 @@ local private = {}
 ---@return Action
 function static.new(callback, owner, child_instance)
     if type(callback) ~= 'function' then
-        Log(Log.Err, Action, 'got nil callback.')
+        Log.error(Action, 'got nil callback.', 2)
     end
     local instance = child_instance or Class.allocate(Action)
     private.newData(instance, callback, owner)

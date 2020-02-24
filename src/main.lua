@@ -16,11 +16,13 @@ ParamAPI = require('Parameter.API')
 ---@type AbilityAPI
 local AbilityAPI = require('Ability.API')
 local Ability = AbilityAPI.Ability
-local Target = AbilityAPI.Target
+local TargetUnit = AbilityAPI.TargetUnit
 
 ExampleAbility = require('Ability.Example')
 
 require('Event.Item')
+require('Event.Ability')
+require('Event.Interface')
 
 footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 
@@ -31,10 +33,10 @@ if not IsCompiletime() then
 
     u2 = Unit.new(footman_type, Player(1), 0, 0)
 
-    local abil = Ability.new(u, ExampleAbility)
-    local targ = Target.new()
-    targ:initUnit(u2:getObj())
-    abil:use(targ)
+    u:getAbilities():set(ExampleAbility, 1)
+    --local targ = TargetUnit.new(u2:getObj())
+    --print(targ:getObj())
+    --abil:use(targ)
 
     --UnitAddAbility(u:getObj(), ExampleAbility:getId())
     --u2:destroy()
