@@ -71,12 +71,22 @@ function public:setAbility(abil)
         priv.icon:setTexture(abil:getIcon())
         priv.icon:setVisible(true)
 
+        priv.hotkey_background:setVisible(true)
         priv.hotkey:setText('Q')
         priv.hotkey:setVisible(true)
+
+        priv.charges_background:setVisible(true)
+        priv.charges:setText(string.format("%d", abil:getCharges()))
+        priv.charges:setVisible(true)
 
         priv.cooldown:setVisible(true)
     else
         priv.icon:setVisible(false)
+
+        priv.hotkey_background:setVisible(false)
+        priv.hotkey:setVisible(false)
+        priv.charges_background:setVisible(false)
+        priv.charges:setVisible(false)
     end
 end
 
@@ -87,8 +97,13 @@ function public:updateCooldown()
         return
     end
 
-    local cur_cd = priv.abil:getCooldown()
-    local full_cd = priv.abil:getFullCooldown()
+    ---@type Ability
+    local abil = priv.abil
+    ---@type AbilityType
+    local abil_type = abil:getType()
+
+    local cur_cd = abil:getCooldownTimeLeft()
+    local full_cd = abil_type:getCooldown(abil:getOwner(), abil:getLevel())
     local ratio = cur_cd / full_cd
 
     if cur_cd > 0 then
@@ -98,7 +113,8 @@ function public:updateCooldown()
     else
         priv.cooldown:setVisible(false)
     end
-        
+
+    priv.charges:setText(string.format("%d", abil:getCharges()))
 end
 
 ---@param tooltip Frame
@@ -125,7 +141,7 @@ private.background_type:setWidth(0.035)
 private.background_type:setHeight(0.035)
 private.background_type:setTexture(Import.Icon.Empty)
 
-private.border_type = SimpleFrameType.new('InterfaceEquipmentSlotBorder', true)
+private.border_type = SimpleFrameType.new('InterfaceAbilitySlotBorder', true)
 private.border_type:setWidth(0.040)
 private.border_type:setHeight(0.040)
 private.border_type:setTexture(Import.Icon.SlotBorder)
@@ -135,9 +151,14 @@ private.icon_type:setWidth(0.035)
 private.icon_type:setHeight(0.035)
 private.icon_type:setTexture('')
 
-private.hotkey_type = SimpleTextType.new('InterfaceAbilitySlotHotkey', true)
-private.hotkey_type:setWidth(0.005)
-private.hotkey_type:setHeight(0.005)
+private.text_background_type = SimpleFrameType.new('InterfaceaAbilitySlotHotkeyBackground', true)
+private.text_background_type:setWidth(0.005)
+private.text_background_type:setHeight(0.005)
+private.text_background_type:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
+
+private.text_type = SimpleTextType.new('InterfaceAbilitySlotHotkey', true)
+private.text_type:setWidth(0.005)
+private.text_type:setHeight(0.005)
 
 private.cooldown_type = SimpleStatusBarType.new('InterfaceAbilitySlotCooldown', true)
 private.cooldown_type:setWidth(0.035)
@@ -161,15 +182,30 @@ function private.update(self)
     priv.icon:setWidth(width - 2 * border_x)
     priv.icon:setHeight(height - 2 * border_y)
 
+    priv.cooldown:setX(border_x)
+    priv.cooldown:setY(border_y)
+    priv.cooldown:setWidth(width - 2 * border_x)
+    priv.cooldown:setHeight(height - 2 * border_y)
+
+    priv.hotkey_background:setX((1 - private.hotkey_ratio) * width)
+    priv.hotkey_background:setY((1 - private.hotkey_ratio) * height)
+    priv.hotkey_background:setWidth(private.hotkey_ratio * width)
+    priv.hotkey_background:setHeight(private.hotkey_ratio * height)
+
     priv.hotkey:setX((1 - private.hotkey_ratio) * width)
     priv.hotkey:setY((1 - private.hotkey_ratio) * height)
     priv.hotkey:setWidth(private.hotkey_ratio * width)
     priv.hotkey:setHeight(private.hotkey_ratio * height)
 
-    priv.cooldown:setX(border_x)
-    priv.cooldown:setY(border_y)
-    priv.cooldown:setWidth(width - 2 * border_x)
-    priv.cooldown:setHeight(height - 2 * border_y)
+    priv.charges_background:setX((1 - private.hotkey_ratio) * width)
+    priv.charges_background:setY((1 - private.hotkey_ratio) * height)
+    priv.charges_background:setWidth(private.hotkey_ratio * width)
+    priv.charges_background:setHeight(private.hotkey_ratio * height)
+
+    priv.charges:setX(0)
+    priv.charges:setY(0)
+    priv.charges:setWidth(private.hotkey_ratio * width)
+    priv.charges:setHeight(private.hotkey_ratio * height)
 end
 
 ---@param self InterfaceAbilitySlot
@@ -177,28 +213,43 @@ function private.newData(self)
     local priv = {
         border = SimpleFrame.new(private.border_type),
         icon = SimpleButton.new(private.icon_type),
-        hotkey = SimpleText.new(private.hotkey_type),
         cooldown = SimpleStatusBar.new(private.cooldown_type),
+        hotkey_background = SimpleFrame.new(private.text_background_type),
+        hotkey = SimpleText.new(private.text_type),
+        charges_background = SimpleFrame.new(private.text_background_type),
+        charges = SimpleText.new(private.text_type),
         abil = nil,
     }
     private.data[self] = priv
 
     priv.border:setParent(self)
-    priv.border:setLevel(self:getLevel() + 2)
+    priv.border:setLevel(self:getLevel() + 1)
 
     priv.icon:setParent(self)
     priv.icon:setVisible(false)
-    priv.icon:setLevel(self:getLevel() + 4)
-    --priv.icon:addAction(SimpleButton.ActionType.MousePress, SyncEvent.startSync)
-
-    priv.hotkey:setParent(self)
-    priv.hotkey:setVisible(false)
-    priv.hotkey:setLevel(self:getLevel() + 6)
-    priv.hotkey:setTextColor(0, 0, 0, 0)
+    priv.icon:setLevel(self:getLevel() + 2)
 
     priv.cooldown:setParent(self)
     priv.cooldown:setVisible(false)
-    priv.cooldown:setLevel(self:getLevel() + 8)
+    priv.cooldown:setLevel(self:getLevel() + 3)
+
+    priv.hotkey_background:setParent(self)
+    priv.hotkey_background:setVisible(false)
+    priv.hotkey_background:setLevel(self:getLevel() + 5)
+
+    priv.hotkey:setParent(self)
+    priv.hotkey:setVisible(false)
+    priv.hotkey:setLevel(self:getLevel() + 7)
+    priv.hotkey:setTextColor(255, 255, 255, 0)
+
+    priv.charges_background:setParent(self)
+    priv.charges_background:setVisible(false)
+    priv.charges_background:setLevel(self:getLevel() + 5)
+
+    priv.charges:setParent(self)
+    priv.charges:setVisible(false)
+    priv.charges:setLevel(self:getLevel() + 7)
+    priv.charges:setTextColor(255, 255, 255, 0)
 end
 
 

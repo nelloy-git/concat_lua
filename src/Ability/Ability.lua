@@ -74,6 +74,11 @@ function public:getType()
     return private.data[self].ability_type
 end
 
+---@return Unit
+function public:getOwner()
+    return private.data[self].owner
+end
+
 --=========
 -- Private
 --=========

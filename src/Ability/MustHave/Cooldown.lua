@@ -131,7 +131,7 @@ function private.newData(self)
     return priv
 end
 
-if not IsCompiletime then
+if not IsCompiletime() then
     private.timer = Timer.new()
     private.timer:start(private.timer_period, true, private.timerLoop)
 end

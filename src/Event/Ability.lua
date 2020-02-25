@@ -26,54 +26,6 @@ local AbilityCasting = {}
 
 AbilityCasting.casting_period = 0.1
 AbilityCasting.casters = {}
-AbilityCasting.spell_order_id = AbilityType.getOrderId()
-
-function AbilityCasting.onSpellEffect()
-    local caster = Unit.getInstance(GetSpellAbilityUnit())
-    local ability = Ability.getLastOrdered(caster)
-    local ability_type = AbilityType.getInstance(GetSpellAbilityId())
-    local target = ability_type:getEventTarget()
-
-    if ability:getType() ~= ability_type then
-        Log.error('AbilityCastingEvent', 'error in casting system. Current ability != last ordered ability.', 1)
-    end
-
-    AbilityCastInstance.new(caster, target, ability_type, ability:getLevel())
-    table.insert(AbilityCasting.casters, caster)
-end
-
-function AbilityCasting.castingLoop()
-    local new_list = {}
-    for i = 1, #AbilityCasting.casters do
-        local caster = AbilityCasting.casters[i]
-        local cast = AbilityCastInstance.getInstance(caster)
-
-        local status = cast:casting(AbilityCasting.casting_period)
-        if status == AbilityStatus.OK then
-            table.insert(new_list, caster)
-
-            InterfaceAPI.CastingBar:setText(string.format('%.1f', cast:getTimeLeft()))
-            InterfaceAPI.CastingBar:setStatus(1, 100 * (1 - cast:getTimeLeft() / cast:getFullTime()) )
-        end
-
-        if status == AbilityStatus.FINISH then
-            InterfaceAPI.CastingBar:setText('Finished')
-        end
-
-    end
-    AbilityCasting.casters = new_list
-end
-
-if not IsCompiletime() then
-    AbilityCasting.timer = Timer.new()
-    AbilityCasting.timer:start(AbilityCasting.casting_period, true, AbilityCasting.castingLoop)
-
-    AbilityCasting.spell_effect_trigger = Trigger.new()
-    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        AbilityCasting.spell_effect_trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, Player(i))
-    end
-    AbilityCasting.spell_effect_trigger:addAction(AbilityCasting.onSpellEffect)
-end
 
 --=================
 -- Ability control
@@ -122,8 +74,20 @@ function AbilityControl.mouseCallback()
     AbilityControl.mouse_y = BlzGetTriggerPlayerMouseY()
 end
 
-function AbilityControl.cooldownLoop()
+function AbilityControl.timerLoop()
     InterfaceAPI.AbilityBar:updateCooldown()
+
+    local target = InterfaceAPI.getTarget()
+    local cur_cast_time = AbilityAPI.getCastingTimeLeft(target)
+    if cur_cast_time < 0 then
+        return
+    end
+    local full_cast_time = AbilityAPI.getCastingTimeFull(target)
+    if full_cast_time < 0 then
+        return
+    end
+
+    InterfaceAPI.CastingBar:setStatus(1, 100 * cur_cast_time / full_cast_time)
 end
 
 if not IsCompiletime() then
@@ -151,5 +115,5 @@ if not IsCompiletime() then
     AbilityControl.mouse_trigger:addAction(AbilityControl.mouseCallback)
 
     AbilityControl.cooldown_timer = Timer.new()
-    AbilityControl.cooldown_timer:start(1 / 32, true, AbilityControl.cooldownLoop)
+    AbilityControl.cooldown_timer:start(1 / 32, true, AbilityControl.timerLoop)
 end

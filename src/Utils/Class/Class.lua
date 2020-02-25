@@ -3,7 +3,7 @@ local ClassName = require('Utils.Class.Name')
 local ClassParent = require('Utils.Class.Parent')
 local ClassPublic = require('Utils.Class.Public')
 local ClassInstance = require('Utils.Class.Instance')
-local ClassOverride = require('Utild.Class.Override')
+local ClassOverride = require('Utils.Class.Override')
 
 local ClassAPI = {}
 

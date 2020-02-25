@@ -11,11 +11,12 @@ local TargetingType = Ability.TargetingType
 --=========
 
 -- Ability type for using in casting system.
-local ExampleAbility = Ability.Type.new('Example ability', TargetingType.UnitOrPoint)
+local ExampleAbility = Ability.Type.new(TargetingType.UnitOrPoint)
 
 ---@param caster Unit
 ---@param target AbilityTarget
 ---@param lvl number
+---@return boolean
 function ExampleAbility:start(caster, target, lvl)
     local targ_unit = target:getObj()
     local t = 'Point'
@@ -24,12 +25,7 @@ function ExampleAbility:start(caster, target, lvl)
     end
 
     print('Started', t, target:getX(), target:getY())
-    return Ability.Status.OK
-end
-
-function ExampleAbility:cast(caster, target, lvl)
-    --print('Casting')
-    return Ability.Status.OK
+    return true
 end
 
 function ExampleAbility:finish(caster, target, lvl)

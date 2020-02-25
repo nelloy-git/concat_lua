@@ -33,23 +33,38 @@ end
 ---@param caster Unit
 ---@return Ability | nil
 function static.getCastingAbility(caster)
+    if not private.is_casting[caster] then
+        return nil
+    end
     return private.is_casting[caster].ability
 end
 
 ---@param caster Unit
 ---@return AbilityTarget | nil
 function static.getCastingTarget(caster)
+    if not private.is_casting[caster] then
+        return nil
+    end
     return private.is_casting[caster].target
 end
 
 ---@param caster Unit
 ---@return number
 function static.getCastingTimeLeft(caster)
-    local end_time = private.is_casting[caster].end_time
-    if not end_time then
+    if not private.is_casting[caster] then
         return -1
     end
-    return end_time - private.cur_time
+
+    return private.is_casting[caster].end_time - private.cur_time
+end
+
+---@param caster Unit
+---@return number
+function static.getCastingTimeFull(caster)
+    if not private.is_casting[caster] then
+        return -1
+    end
+    return private.is_casting[caster].full_time
 end
 
 ---@param caster Unit
@@ -125,14 +140,15 @@ function public:use(target)
 
     local mana_cost = abil_type:getManaCost(caster, lvl)
     local cur_mana = caster:getCurrentMana()
-    if mana_cost < cur_mana then
+    if mana_cost > cur_mana then
         -- TODO callback
         print('Out of mana.')
         return false
     end
 
     local charges_cost = abil_type:getChargesCost(caster, lvl)
-    if charges_cost < self:getCharges() then
+    print(charges_cost, self:getCharges())
+    if charges_cost > self:getCharges() then
         -- TODO callback
         print('Out of charges.')
         return false
@@ -146,6 +162,7 @@ function public:use(target)
 
     self:addCharges(-charges_cost)
     caster:setCurrentMana(cur_mana - mana_cost)
+    private.newData(self, target, abil_type:getCastingTime(caster, lvl))
 
     return true
 end
@@ -178,9 +195,10 @@ function private.newData(self, target, casting_time)
     local data = {
         ability = self,
         target = target,
-        end_time = private.cur_time + casting_time
+        end_time = private.cur_time + casting_time,
+        full_time = casting_time
     }
-    private.is_casting[self] = data
+    private.is_casting[self:getOwner()] = data
 end
 
 if not IsCompiletime() then

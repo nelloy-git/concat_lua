@@ -5,19 +5,6 @@
 local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
 
----@type AbilityTargetNoneClass
-local TargetNone = require('Ability.Target.None')
----@type AbilityTargetPointClass
-local TargetPoint = require('Ability.Target.Point')
----@type AbilityTargetUnitClass
-local TargetUnit = require('Ability.Target.Unit')
----@type AbilityTargetDestructableClass
-local TargetDestructable = require('Ability.Target.Destructable')
----@type AbilityTargetItemClass
-local TargetItem = require('Ability.Target.Item')
----@type CompiletimeDataClass
-local CompiletimeData = require('Utils.CompiletimeData')
-
 --=======
 -- Class
 --=======
