@@ -3,6 +3,7 @@ local ClassName = require('Utils.Class.Name')
 local ClassParent = require('Utils.Class.Parent')
 local ClassPublic = require('Utils.Class.Public')
 local ClassInstance = require('Utils.Class.Instance')
+local ClassOverride = require('Utild.Class.Override')
 
 local ClassAPI = {}
 
@@ -26,6 +27,9 @@ ClassAPI.isChild = ClassParent.isChild
 
 ---@type fun(class:any):any
 ClassAPI.getPublic = ClassPublic.get
+
+---@type fun(class:any):any
+ClassAPI.getOverride = ClassOverride.get
 
 ---@param value1 any
 ---@param value2 any

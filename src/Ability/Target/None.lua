@@ -47,6 +47,12 @@ function public:getY()
     return 0
 end
 
+---@param caster Unit
+---@return number
+function public:getRange(caster)
+    return 0
+end
+
 ---@param unit Unit
 ---@param order number
 ---@return boolean

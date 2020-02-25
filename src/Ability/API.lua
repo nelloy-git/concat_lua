@@ -4,8 +4,6 @@
 
 ---@type AbilityTypeClass
 local Type = require('Ability.Type')
----@type AbilityCastInstanceClass
-local CastInstance = require('Ability.CastInstance')
 ---@type AbilityClass
 local Ability = require('Ability.Ability')
 
@@ -18,7 +16,6 @@ local AbilityAPI = {}
 
 -- Enums
 AbilityAPI.TargetingType = Type.TargetingType
-AbilityAPI.Status = CastInstance.Status
 
 -- Classes
 AbilityAPI.Type = Type

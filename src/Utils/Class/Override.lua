@@ -8,6 +8,7 @@ local fmt = string.format
 
 local override2class = {}
 local override2static = {}
+local class2override = {}
 
 local override_meta = {
     __index = function(self, key)
@@ -29,7 +30,15 @@ function ClassOverride.register(class)
 
     override2class[override] = class
     override2static[override] = ClassStatic.getStatic(class)
+    class2override[class] = override
     return override
+end
+
+---@param class Class
+---@return table
+function ClassOverride.get(class)
+    class = ClassStatic.getClass(class) or class
+    return class2override[class]
 end
 
 return ClassOverride

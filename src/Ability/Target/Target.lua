@@ -46,6 +46,12 @@ function public:getY()
     Log.error(self, 'can not call virtual function.', 2)
 end
 
+---@param caster Unit
+---@return number
+function public:getRange(caster)
+    return ((caster:getX() - self:getX())^2 + (caster:getY() - self:getY())^2)^0.5
+end
+
 ---@return any
 function public:getObj()
     return nil

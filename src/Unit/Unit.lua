@@ -58,6 +58,11 @@ end
 -- Public
 --========
 
+---@param mana number
+function public:setCurrentMana(mana)
+    return SetUnitState(self:getObj(), UNIT_STATE_MANA, mana)
+end
+
 ---@return number
 function public:getId()
     return private.data[self].id
@@ -96,6 +101,11 @@ end
 ---@return number
 function public:getTurnSpeed()
     return GetUnitTurnSpeed(self:getObj())
+end
+
+---@return number
+function public:getCurrentMana()
+    return GetUnitState(self:getObj(), UNIT_STATE_MANA)
 end
 
 --=========
