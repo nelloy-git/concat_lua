@@ -1,5 +1,5 @@
 ---@type InterfaceInventoryClass
-local Inventory = require('Interface.Inventory')
+--local Inventory = require('Interface.Inventory')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type InterfaceAbilityCastingBarClass
@@ -8,8 +8,8 @@ local Screen = require('Frame.Screen')
 --local AbilityBar = require('Interface.Ability.Bar')
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')
-
-require('Interface.Item.SlotType')
+---@type InterfaceItemSlotClass
+local ItemSlot = require('Interface.Item.Slot')
 
 ---@class Interface
 local Interface = {}
@@ -17,12 +17,18 @@ local Interface = {}
 Interface.target = nil
 
 function Interface.init()
+    local test = ItemSlot.new()
+    test:setX(0.4)
+    test:setY(0.3)
+    test:setWidth(0.05)
+    test:setHeight(0.05)
+--[[
     Interface.Inventory = Inventory.new()
     Interface.Inventory:setWidth(0.3)
     Interface.Inventory:setHeight(0.3)
     Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - Interface.Inventory:getWidth())
     Interface.Inventory:setY(0.2)
---[[
+
     Interface.CastingBar = CastingBar.new(1)
     Interface.CastingBar:setX(0.3)
     Interface.CastingBar:setY(0.045)

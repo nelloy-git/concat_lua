@@ -29,21 +29,21 @@ local HighlightType = require('Frame.Type.Highlight')
 local TextType = require('Frame.Type.Text')
 
 ---@type SimpleFrameClass
-local SimpleFrame = require('Frame.Default.SimpleFrame')
+--local SimpleFrame = require('Frame.Default.SimpleFrame')
 ---@type SimpleButtonClass
-local SimpleButton = require('Frame.Default.SimpleButton')
+--local SimpleButton = require('Frame.Default.SimpleButton')
 ---@type SimpleTextClass
-local SimpleText = require('Frame.Default.SimpleText')
+--local SimpleText = require('Frame.Default.SimpleText')
 ---@type SimpleStatusBarClass
-local SimpleStatusBar = require('Frame.Default.SimpleStatusBar')
+--local SimpleStatusBar = require('Frame.Default.SimpleStatusBar')
 ---@type BackdropClass
-local Backdrop = require('Frame.Default.Backdrop')
+--local Backdrop = require('Frame.Default.Backdrop')
 ---@type GlueButtonClass
-local GlueButton = require('Frame.Default.GlueButton')
+--local GlueButton = require('Frame.Default.GlueButton')
 ---@type HighlightClass
-local Highlight = require('Frame.Default.Highlight')
+--local Highlight = require('Frame.Default.Highlight')
 ---@type TextClass
-local Text = require('Frame.Default.Text')
+--local Text = require('Frame.Default.Text')
 
 --=============
 --     API

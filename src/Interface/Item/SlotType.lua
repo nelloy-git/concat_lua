@@ -15,18 +15,25 @@ SlotType.iconName = 'InterfaceItemSlotIcon'
 SlotType.countName = 'InterfaceItemSlotCount'
 
 SlotType.FrameType = SimpleFrame.new(SlotType.name, true)
+    SlotType.FrameType:setWidth(0.1)
+    SlotType.FrameType:setHeight(0.1)
         local back_layer = SimpleLayer.new('BACKGROUND')
             local background = SimpleTexture.new(SlotType.backgroundName)
+            background:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor01.blp')
         back_layer:setChildrens({background})
 
         local button = SimpleButton.new(SlotType.buttonName)
-        button:setAllPoints()
             local forw_layer = SimpleLayer.new('ARTWORK')
                 local icon = SimpleTexture.new(SlotType.iconName)
                 icon:setAnchor('CENTER', 0, 0)
+                icon:setWidth(0.1)
+                icon:setHeight(0.1)
+                icon:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor00.blp')
 
                 local count = SimpleString.new(SlotType.countName)
                 count:setAnchor('BOTTOMRIGHT', 0, 0)
+                count:setWidth(0.1)
+                count:setHeight(0.1)
                 count:setFont('fonts\\nim_____.ttf', 0.009)
             forw_layer:setChildrens({icon, count})
         button:setChildrens({forw_layer})

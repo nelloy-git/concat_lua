@@ -117,7 +117,7 @@ function public:setTooltip(tooltip)
     local priv = private.data[self]
 
     if tooltip then
-        priv.tooltip = tooltip
+        priv.tooltip = tooltip:getObj()
         BlzFrameSetTooltip(priv.button, tooltip:getObj())
     else
         priv.tooltip = priv.detector
@@ -144,12 +144,12 @@ function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
     local height = self:getHeight()
-    local icon_w = width * private.icon_ratio
-    local icon_h = height * private.icon_ratio
+    local button_w = width * private.icon_ratio
+    local button_h = height * private.icon_ratio
     local count_w = width * private.count_ratio
     local count_h = height * private.count_ratio
 
-    BlzFrameSetSize(priv.icon, icon_w, icon_h)
+    BlzFrameSetSize(priv.icon, button_w, button_h)
     BlzFrameSetSize(priv.count, count_w, count_h)
 end
 
@@ -161,12 +161,13 @@ function private.newData(self)
         icon = BlzGetFrameByName(SlotType.iconName, 0),
         count = BlzGetFrameByName(SlotType.countName, 0),
 
-        detector = Frame.new(SimpleEmpty),
+        detector = BlzCreateSimpleFrame(SimpleEmpty:getName(), nil, 0),
         tooltip = nil,
 
         trigger = nil,
     }
     priv.tooltip = priv.detector
+    BlzFrameSetText(priv.count, '5')
 
     private.data[self] = priv
 end
@@ -217,14 +218,14 @@ function private.mouseUpCallback()
 end
 
 if not IsCompiletime() then
-    private.trigger_mouse_down = Trigger.new()
-    private.trigger_mouse_up = Trigger.new()
-    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        private.trigger_mouse_down:addPlayerEvent(EVENT_PLAYER_MOUSE_DOWN, Player(i))
-        private.trigger_mouse_up:addPlayerEvent(EVENT_PLAYER_MOUSE_UP, Player(i))
-    end
-    private.trigger_mouse_down:addAction(private.mouseDownCallback)
-    private.trigger_mouse_up:addAction(private.mouseUpCallback)
+    --private.trigger_mouse_down = Trigger.new()
+    --private.trigger_mouse_up = Trigger.new()
+    --for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
+    --    private.trigger_mouse_down:addPlayerEvent(EVENT_PLAYER_MOUSE_DOWN, Player(i))
+    --    private.trigger_mouse_up:addPlayerEvent(EVENT_PLAYER_MOUSE_UP, Player(i))
+    --end
+    --private.trigger_mouse_down:addAction(private.mouseDownCallback)
+    --private.trigger_mouse_up:addAction(private.mouseUpCallback)
 end
 
 return static

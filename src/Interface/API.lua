@@ -7,6 +7,11 @@ local Interface = require('Interface.Interface')
 ---@type InterfaceItemSlotSyncClass
 local ItemSlotSync = require('Interface.Item.SlotSync')
 
+---@type FrameAPI
+local FrameAPI = require('Frame.API')
+local SimpleFrame = FrameAPI.SimpleFrame
+local SimpleEmpty = FrameAPI.SimpleEmpty
+
 --=============
 --     API
 --=============
@@ -45,9 +50,10 @@ function InterfaceAPI.init()
     BlzHideOriginFrames(true)
     BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop",0), false)
 
+    local empty = BlzCreateSimpleFrame(SimpleEmpty:getName(), BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 0)
     local main_menu = BlzGetFrameByName("UpperButtonBarFrame", 0)
     BlzFrameSetVisible(main_menu, true)
-    BlzFrameSetParent(main_menu, InterfaceAPI.Inventory:getObj())
+    BlzFrameSetParent(main_menu, empty)
 
     --local menu_handle = BlzGetFrameByName("UpperButtonBarMenuButton", 0)
     --BlzFrameSetParent(menu_handle, world_handle)

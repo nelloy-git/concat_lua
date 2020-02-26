@@ -20,9 +20,9 @@ local TargetUnit = AbilityAPI.TargetUnit
 
 ExampleAbility = require('Ability.Example')
 
-require('Event.Item')
-require('Event.Ability')
-require('Event.Interface')
+--require('Event.Item')
+--require('Event.Ability')
+--require('Event.Interface')
 
 footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 

@@ -73,7 +73,7 @@ function public:setWidth(width)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleFrame.Field.Width, width)
+        fdf:setField(private.Field.Width, width)
     end
 end
 
@@ -83,7 +83,7 @@ function public:setHeight(height)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleFrame.Field.Height, height)
+        fdf:setField(private.Field.Height, height)
     end
 end
 
