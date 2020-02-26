@@ -97,7 +97,7 @@ private.metatable = {
 
             log_msg = log_msg..string.format('\n\tadded %s object.', obj:getName())
         end
-        Log(Log.Msg, FdfFile, log_msg)
+        --Log(Log.Msg, FdfFile, log_msg)
 
         local dir = private.full_dst_path
         if not private.isFileExists(dir) then

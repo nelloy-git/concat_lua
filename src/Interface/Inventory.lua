@@ -12,11 +12,11 @@ local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type InterfaceInventoryBagClass
-local Bag = require('Interface.Inventory.Bag')
+--local Bag = require('Interface.Inventory.Bag')
 ---@type InterfaceInventoryEquipmentClass
-local Equipment = require('Interface.Inventory.Equipment')
+--local Equipment = require('Interface.Inventory.Equipment')
 ---@type InterfaceParameterTooltipClass
-local Parameters = require('Interface.Parameter.Tooltip')
+--local Parameters = require('Interface.Parameter.Tooltip')
 
 --=======
 -- Class
@@ -90,7 +90,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.background_type = SimpleFrameType.new('InterfaceInventoryBackground', true)
 private.background_type:setWidth(0.3)
 private.background_type:setHeight(0.4)
-private.background_type:setTexture(Import.TransparentTexture)
+--private.background_type:setTexture(Import.TransparentTexture)
 
 private.empty_icon = Import.TransparentTexture
 private.icon_background_texture = Import.Icon.Empty

@@ -20,7 +20,9 @@
         "CompileFinal",
         "CompiletimeFinalToRuntime",
     ],
-    "Lua.workspace.ignoreSubmodules": true,
     "Lua.develop.enable": false,
     "Lua.completion.enable": true,
+    "files.associations": {
+        "chrono": "cpp"
+    },
 }

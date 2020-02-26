@@ -45,11 +45,21 @@ function override.new(name, is_simple, child_instance)
         obj = BlzCreateFrame(name, gameui, 0, 0)
     end
 
-    -- TODO error if exit game without waiting
-    --instance = Object.new(obj, BlzDestroyFrame, instance)
-    instance = Object.new(obj, function() end, instance)
+    instance = Object.new(obj, BlzDestroyFrame, instance)
 
-    return instance
+    return Object.new(obj, BlzDestroyFrame, instance)
+end
+
+local function nilFunc()
+end
+
+--- Can not be destroyed
+function override.getSub(name, child_instance)
+    local instance = child_instance or Class.allocate(FrameObj)
+
+    local obj = BlzGetFrameByName(name, 0)
+
+    return Object.new(obj, nilFunc, instance)
 end
 
 return static

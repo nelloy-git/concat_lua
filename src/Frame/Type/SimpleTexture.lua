@@ -11,13 +11,13 @@ local FrameType = require('Frame.Type')
 -- Class
 --=======
 
-local SimpleButtonType = Class.new('SimpleButtonType', FrameType)
----@class SimpleButtonType
-local public = SimpleButtonType.public
----@class SimpleButtonTypeClass
-local static = SimpleButtonType.static
----@type SimpleButtonTypeClass
-local override = SimpleButtonType.override
+local SimpleTextureType = Class.new('SimpleTextureType', FrameType)
+---@class SimpleTextureType  : FrameType
+local public = SimpleTextureType.public
+---@class SimpleTextureTypeClass : FrameTypeClass
+local static = SimpleTextureType.static
+---@type SimpleTextureTypeClass
+local override = SimpleTextureType.override
 local private = {}
 
 --=========
@@ -26,10 +26,10 @@ local private = {}
 
 ---@param uniq_name string
 ---@param separate_file boolean
----@param child_instance SimpleButtonType | nil
----@return SimpleButtonType
+---@param child_instance SimpleTextureType | nil
+---@return SimpleTextureType
 function override.new(uniq_name, separate_file, child_instance)
-    local instance = child_instance or Class.allocate(SimpleButtonType)
+    local instance = child_instance or Class.allocate(SimpleTextureType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
 
@@ -73,7 +73,7 @@ function public:setWidth(width)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleButton.Field.Width, width)
+        fdf:setField(private.Field.Width, width)
     end
 end
 
@@ -83,26 +83,35 @@ function public:setHeight(height)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleButton.Field.Height, height)
+        fdf:setField(private.Field.Height, height)
     end
 end
 
----@param list FrameType[]
-function public:setChildrens(list)
-    for i = 1, #list do
-        if not list[i]:isSimple() then
-            Log.error(self, 'Normal frame can not be a child of simple frame.', 2)
-        end
-    end
+---@param texture string
+function public:setTexture(texture)
+    private.data[self].texture = texture
 
-    private.data[self].childrens = list
     local fdf = self:getFdf()
     if fdf then
-        local fdf_list = {}
-        for i = 1, #list do
-            table.insert(fdf_list, list[i]:getFdf())
-        end
-        fdf:setField(private.Field.ChildFrames, fdf_list)
+        fdf:setField(private.Field.File, texture)
+    end
+end
+
+---@param min_x number
+---@param min_y number
+---@param max_x number
+---@param max_y number
+function public:setTexCoord(min_x, min_y, max_x, max_y)
+    local priv = private.data[self]
+
+    priv.tex_min_x = min_x
+    priv.tex_min_y = min_y
+    priv.tex_max_x = max_x
+    priv.tex_max_y = max_y
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.TexCoord, {min_x, min_y, max_x, max_y})
     end
 end
 
@@ -116,14 +125,9 @@ function public:getHeight()
     return private.data[self].height
 end
 
----@return string
+---@return string | nil
 function public:getTexture()
     return private.data[self].texture
-end
-
----@return FrameType[]
-function public:getChildrens()
-    return private.data[self].childrens
 end
 
 --=========
@@ -132,12 +136,17 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self SimpleButton
+---@param self SimpleFrame
 function private.newData(self)
     priv = {
         width = nil,
         height = nil,
-        childrens = nil
+
+        texture = nil,
+        tex_min_x = nil,
+        tex_min_y = nil,
+        tex_max_x = nil,
+        tex_max_y = nil
     }
     private.data[self] = priv
 end
@@ -146,21 +155,17 @@ end
 -- Compiletime
 --=============
 
-private.default_width = 0.03
-private.default_height = 0.03
-private.default_texture = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin'
-
 local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
-    private.SimpleButton = FdfEdit.SimpleButton
-    private.Field = FdfEdit.SimpleButton.Field
+    private.SimpleTexture = FdfEdit.SimpleTexture
+    private.Field = FdfEdit.SimpleTexture.Field
 end)
 
 ---@param name string
 ---@return string
 function private.createFdf(name)
-    return private.SimpleButton.new(name)
+    return private.SimpleTexture.new(name)
 end
 
 return static

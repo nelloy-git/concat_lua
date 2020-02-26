@@ -37,13 +37,15 @@ function override.new(name, child_instance)
 end
 
 static.Field = {}
-static.Field.DecorateFileNames = FdfField.new('DecorateFileNames', 'nil', FdfField.SerialFunc.EMPTY)
+static.Field.SetAllPoints = FdfField.new('SetAllPoints', 'string', FdfField.SerialFunc.EMPTY)
+static.Field.SetPoint = {}
+static.Field.SetPoint[1] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.SetPoint[2] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.SetPoint[3] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.SetPoint[4] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.Anchor = FdfField.new('Anchor', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
 static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
-static.Field.String = FdfField.new('String', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
-static.Field.Texture = FdfField.new('Texture', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
-static.Field.Layer = FdfField.new('Layer', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 static.Field.ChildFrames = FdfField.new('', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
-static.Field.Anchor = FdfField.new('Anchor', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
 
 return static

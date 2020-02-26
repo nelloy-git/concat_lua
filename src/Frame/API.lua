@@ -11,10 +11,14 @@ local FrameType = require('Frame.Type')
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
 local SimpleButtonType = require('Frame.Type.SimpleButton')
----@type SimpleTextTypeClass
-local SimpleTextType = require('Frame.Type.SimpleText')
 ---@type SimpleStatusBarTypeClass
 local SimpleStatusBarType = require('Frame.Type.SimpleStatusBar')
+---@type SimpleLayerTypeClass
+local SimpleLayerType = require('Frame.Type.SimpleLayer')
+---@type SimpleStringTypeClass
+local SimpleStringType = require('Frame.Type.SimpleString')
+---@type SimpleTextureTypeClass
+local SimpleTextureType = require('Frame.Type.SimpleTexture')
 ---@type BackdropTypeClass
 local BackdropType = require('Frame.Type.Backdrop')
 ---@type GlueButtonTypeClass
@@ -55,8 +59,11 @@ FrameAPI.Type = FrameType
 
 FrameAPI.SimpleFrameType = SimpleFrameType
 FrameAPI.SimpleButtonType = SimpleButtonType
-FrameAPI.SimpleTextType = SimpleTextType
+FrameAPI.SimpleLayerType = SimpleLayerType
+FrameAPI.SimpleStringType = SimpleStringType
+FrameAPI.SimpleTextureType = SimpleTextureType
 FrameAPI.SimpleStatusBarType = SimpleStatusBarType
+FrameAPI.SimpleEmpty = SimpleFrameType.new('EmptyFrame', true)
 
 FrameAPI.BackdropType = BackdropType
 FrameAPI.GlueButtonType = GlueButtonType

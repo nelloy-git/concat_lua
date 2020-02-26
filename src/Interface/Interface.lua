@@ -3,11 +3,13 @@ local Inventory = require('Interface.Inventory')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type InterfaceAbilityCastingBarClass
-local CastingBar = require('Interface.Ability.CastingBar')
+--local CastingBar = require('Interface.Ability.CastingBar')
 ---@type InterfaceAbilityBarClass
-local AbilityBar = require('Interface.Ability.Bar')
+--local AbilityBar = require('Interface.Ability.Bar')
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')
+
+require('Interface.Item.SlotType')
 
 ---@class Interface
 local Interface = {}
@@ -20,7 +22,7 @@ function Interface.init()
     Interface.Inventory:setHeight(0.3)
     Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - Interface.Inventory:getWidth())
     Interface.Inventory:setY(0.2)
-
+--[[
     Interface.CastingBar = CastingBar.new(1)
     Interface.CastingBar:setX(0.3)
     Interface.CastingBar:setY(0.045)
@@ -32,6 +34,7 @@ function Interface.init()
     Interface.AbilityBar:setY(0.0)
     Interface.AbilityBar:setWidth(0.45)
     Interface.AbilityBar:setHeight(0.045)
+]]
 end
 
 --- Should be used async.

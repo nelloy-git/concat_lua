@@ -37,8 +37,6 @@ function override.new(name, child_instance)
 end
 
 static.Field = {}
-static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
-static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.ChildFrames = FdfField.new('', 'table', FdfField.SerialFunc.SUBOBJECT_LIST)
 
 return static

@@ -7,8 +7,6 @@ local Class = require('Utils.Class.Class')
 
 ---@type Action
 local Action = require('Utils.Action')
----@type Import
-local Import = require('Resources.Import')
 ---@type FrameClass
 local Frame = require('Frame.Frame')
 ---@type SimpleFrameTypeClass
@@ -126,7 +124,6 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.invisible_simpleframe_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
 private.invisible_simpleframe_type:setWidth(0.001)
 private.invisible_simpleframe_type:setHeight(0.001)
-private.invisible_simpleframe_type:setTexture(Import.TransparentTexture)
 
 function private.mouseDownCallback()
     local player = GetTriggerPlayer()

@@ -37,11 +37,16 @@ function override.new(name, child_instance)
 end
 
 static.Field = {}
-static.Field.Alpha = FdfField.new('Alpha', 'string', FdfField.SerialFunc.STRING)
 static.Field.Anchor = FdfField.new('Anchor', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
-static.Field.File = FdfField.new('File', 'string', FdfField.SerialFunc.STRING)
+static.Field.SetAllPoints = FdfField.new('SetAllPoints', 'string', FdfField.SerialFunc.EMPTY)
+static.Field.SetPoint = {}
+static.Field.SetPoint[1] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.SetPoint[2] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.SetPoint[3] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
+static.Field.SetPoint[4] = FdfField.new('SetPoint', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
 static.Field.Height = FdfField.new('Height', 'number', FdfField.SerialFunc.NUMBER)
 static.Field.Width = FdfField.new('Width', 'number', FdfField.SerialFunc.NUMBER)
-static.Field.TexCoord = FdfField.new('TexCoord', 'table', FdfField.SerialFunc.LIST)
+static.Field.File = FdfField.new('File', 'string', FdfField.SerialFunc.STRING)
+static.Field.TexCoord = FdfField.new('TexCoord', 'table', FdfField.SerialFunc.LIST_WITH_COMMAS)
 
 return static

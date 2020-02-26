@@ -139,7 +139,7 @@ private.value_ratio = 1 / 6
 private.background_type = SimpleFrameType.new('InterfaceParameterLineBackground', true)
 private.background_type:setWidth(0.1)
 private.background_type:setHeight(0.01)
-private.background_type:setTexture(Import.InventoryBackground)
+private.background_type:setTexture(Import.TransparentTexture)
 
 private.text_type = SimpleTextType.new('InterfaceParameterLineText', true)
 private.text_type:setFont('fonts\\nim_____.ttf')

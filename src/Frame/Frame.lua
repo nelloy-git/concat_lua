@@ -4,8 +4,6 @@
 
 local Class = require('Utils.Class.Class')
 
----@type FrameTypeClass
-local FrameType = require('Frame.Type')
 ---@type FrameObjClass
 local FrameObj = require('Object.Frame')
 
@@ -32,8 +30,7 @@ function override.new(frame_type, child_instance)
     if not child_instance then
         Log.error(Frame, 'can not create instance of abstract class', 2)
     end
-    --print(frame_type)
-    --print(frame_type:getName())
+
     local instance = FrameObj.new(frame_type:getName(), frame_type:isSimple(), child_instance)
     private.newData(instance, frame_type)
 
@@ -146,6 +143,11 @@ function public:setParent(parent)
         BlzFrameSetParent(self:getObj(), parent:getObj())
     end
     private.updatePos(self)
+end
+
+---@return FrameType
+function public:getType()
+    return private.data[self].frame_type
 end
 
 ---@return number

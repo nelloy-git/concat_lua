@@ -240,27 +240,7 @@ end)
 ---@param name string
 ---@return string
 function private.createFdf(name)
-    local frame = private.SimpleStatusBar.new(name)
-    local field = private.SimpleStatusBar.Field
-
-    frame:setField(field.Width, private.default_width)
-    frame:setField(field.Height, private.default_height)
-    frame:setField(field.BarTexture, private.default_bar_texture)
-
-    local layer_back = private.SimpleLayer.new('BACKGROUND')
-    local background = private.SimpleTexture.new(private.getBackgroundName(name))
-    background:setField(private.SimpleTexture.Field.File, private.default_background_texture)
-    layer_back:setField(private.SimpleLayer.Field.ChildFrames, {background})
-
-    local layer_forw = private.SimpleLayer.new('ARTWORK')
-    local string = private.SimpleString.new(private.getTextName(name))
-    string:setField(private.SimpleString.Field.Font, {private.default_font, private.default_font_size})
-    string:setField(private.SimpleString.Field.Anchor, {private.default_anchor, 0, 0})
-    layer_forw:setField(private.SimpleLayer.Field.ChildFrames, {string})
-
-    frame:setField(field.ChildFrames, {layer_back, layer_forw})
-
-    return frame
+    return private.SimpleStatusBar.new(name)
 end
 
 return static
