@@ -44,6 +44,8 @@ function static.startSync(slot, player, mouse_button, is_down)
     ---@type Interface
     Interface = Interface or require('Interface.Interface')
 
+    print('Button pressed')
+
     local player_id = GetPlayerId(player)
     local mouse_id = private.MouseButton2Id[mouse_button]
     local item_id = slot:getItem():getId()

@@ -62,14 +62,14 @@ end
 
 ---@param width number
 function public:setWidth(width)
-    FramePublic.setWidth(self, width)
-    private.update(self)
+    --FramePublic.setWidth(self, width)
+    --private.update(self)
 end
 
 ---@param height any number
 function public:setHeight(height)
-    FramePublic.setHeight(self, height)
-    private.update(self)
+    --FramePublic.setHeight(self, height)
+    --private.update(self)
 end
 
 ---@param item Item | nil
@@ -90,7 +90,7 @@ function public:setTooltip(tooltip)
         BlzFrameSetTooltip(priv.button, tooltip:getObj())
     else
         priv.tooltip = priv.detector
-        BlzFrameSetTooltip(priv.button, priv.detector:getObj())
+        BlzFrameSetTooltip(priv.button, priv.detector)
     end
 
     SimpleEvent.setMouseDetector(self, priv.tooltip)
@@ -121,9 +121,10 @@ function private.update(self)
     local count_h = height * private.count_ratio
 
     --BlzFrameSetSize(priv.background, width, height)
-    BlzFrameSetSize(priv.icon, icon_w, icon_h)
-    BlzFrameSetSize(priv.count, count_w, count_h)
-    BlzFrameSetSize(priv.count_icon, count_w, count_h)
+    --BlzFrameSetSize(priv.button, icon_w, icon_h )
+    --BlzFrameSetSize(priv.icon, icon_w, icon_h)
+    --BlzFrameSetSize(priv.count, count_w, count_h)
+    --BlzFrameSetSize(priv.count_icon, count_w, count_h)
 end
 
 ---@param self InterfaceItemSlot
@@ -174,6 +175,16 @@ function private.newData(self)
     }
     priv.tooltip = priv.detector
     private.data[self] = priv
+
+    BlzFrameSetVisible(priv.tooltip, false)
+    BlzFrameSetTooltip(priv.button, priv.tooltip)
+
+    local trigger = Trigger.new()
+    trigger:addFrameEvent(priv.button, FRAMEEVENT_CONTROL_CLICK)
+    trigger:addAction(function() print('Control click.') end)
+    --BlzFrameSetVisible(priv.button, true)
+    --BlzFrameSetVisible(priv.count, false)
+    --BlzFrameSetVisible(priv.count_icon, false)
 
     SimpleEvent.setMouseDetector(self, priv.tooltip)
     SimpleEvent.addAction(SimpleEvent.Type.OnMousePress, self, SyncEvent.startSync)
