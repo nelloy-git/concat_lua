@@ -144,13 +144,15 @@ function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
     local height = self:getHeight()
-    local button_w = width * private.icon_ratio
-    local button_h = height * private.icon_ratio
+    local icon_w = width * private.icon_ratio
+    local icon_h = height * private.icon_ratio
     local count_w = width * private.count_ratio
     local count_h = height * private.count_ratio
 
-    BlzFrameSetSize(priv.icon, button_w, button_h)
+    BlzFrameSetSize(priv.background, width, height)
+    BlzFrameSetSize(priv.icon, icon_w, icon_h)
     BlzFrameSetSize(priv.count, count_w, count_h)
+    BlzFrameSetSize(priv.count_icon, count_w, count_h)
 end
 
 ---@param self InterfaceItemSlot
@@ -160,6 +162,7 @@ function private.newData(self)
         button = BlzGetFrameByName(SlotType.buttonName, 0),
         icon = BlzGetFrameByName(SlotType.iconName, 0),
         count = BlzGetFrameByName(SlotType.countName, 0),
+        count_icon = BlzGetFrameByName(SlotType.countBackgroundName, 0),
 
         detector = BlzCreateSimpleFrame(SimpleEmpty:getName(), nil, 0),
         tooltip = nil,
