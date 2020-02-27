@@ -8,6 +8,7 @@ local Class = require('Utils.Class.Class')
 local FrameAPI = require('Frame.API')
 local Frame = FrameAPI.Frame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
+local SimpleEvent = FrameAPI.SimpleEvent
 local SimpleEmpty = FrameAPI.SimpleEmpty
 ---@type InterfaceItemSlotSyncClass
 local SyncEvent = require('Interface.Item.SlotSync')
@@ -76,40 +77,8 @@ function public:setItem(item)
     local priv = private.data[self]
     priv.item = item
 
-    if item then
-        priv.icon:setTexture(item:getIcon())
-        priv.icon:setVisible(true)
-    else
-        priv.icon:setVisible(false)
-    end
-end
-
----@param action_type InterfaceItemSlotActionEnum
----@param callback Callback
----@return Action | nil
-function public:addAction(action_type, callback)
-    local priv = private.data[self]
-    local action = Action.new(callback, self)
-    table.insert(priv.actions[action_type], action)
-
-    return action
-end
-
----@param action Action
----@return boolean
-function public:removeAction(action_type, action)
-    local priv = private.data[self]
-    if not priv.trigger then
-        Log.error(self, 'can not remove action from empty trigger.', 2)
-    end
-
-    local res = priv.trigger:removeAction(action)
-    if priv.trigger:countActions() <= 0 then
-        priv.trigger:destroy()
-        priv.trigger = nil
-    end
-
-    return res
+    private.setIcon(self, item)
+    private.setCount(self, item)
 end
 
 ---@param tooltip Frame
@@ -123,6 +92,8 @@ function public:setTooltip(tooltip)
         priv.tooltip = priv.detector
         BlzFrameSetTooltip(priv.button, priv.detector:getObj())
     end
+
+    SimpleEvent.setMouseDetector(self, priv.tooltip)
 end
 
 ---@return Item | nil
@@ -149,10 +120,42 @@ function private.update(self)
     local count_w = width * private.count_ratio
     local count_h = height * private.count_ratio
 
-    BlzFrameSetSize(priv.background, width, height)
+    --BlzFrameSetSize(priv.background, width, height)
     BlzFrameSetSize(priv.icon, icon_w, icon_h)
     BlzFrameSetSize(priv.count, count_w, count_h)
     BlzFrameSetSize(priv.count_icon, count_w, count_h)
+end
+
+---@param self InterfaceItemSlot
+---@param item Item
+function private.setIcon(self, item)
+    local priv = private.data[self]
+
+    if item then
+        BlzFrameSetVisible(priv.button, true)
+        BlzFrameSetTexture(priv.icon, item:getIcon())
+    else
+        BlzFrameSetVisible(priv.button, false)
+    end
+end
+
+---@param self InterfaceItemSlot
+---@param item Item
+function private.setCount(self, item)
+    local priv = private.data[self]
+    local count = 1
+    if item then
+        count = item:getCount()
+    end
+
+    if count > 1 then
+        BlzFrameSetVisible(priv.count, true)
+        BlzFrameSetVisible(priv.count_icon, true)
+        BlzFrameSetText(priv.count, string.format('%d', count))
+    else
+        BlzFrameSetVisible(priv.count, false)
+        BlzFrameSetVisible(priv.count_icon, false)
+    end
 end
 
 ---@param self InterfaceItemSlot
@@ -167,68 +170,13 @@ function private.newData(self)
         detector = BlzCreateSimpleFrame(SimpleEmpty:getName(), nil, 0),
         tooltip = nil,
 
-        trigger = nil,
+        item = nil
     }
     priv.tooltip = priv.detector
-    BlzFrameSetText(priv.count, '5')
-
     private.data[self] = priv
-end
 
-function private.mouseDownCallback()
-    local player = GetTriggerPlayer()
-    local mouse_btn = BlzGetTriggerPlayerMouseButton()
-    local is_left = mouse_btn == MOUSE_BUTTON_TYPE_LEFT
-    local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
-
-    for instance, priv in pairs(private.data) do
-        if priv.tooltip:isVisible() then
-            local actions = priv.actions[static.ActionType.MouseDown]
-            for i = 1, #actions do
-                actions[i]:run(instance, player, mouse_btn)
-            end
-
-            priv.got_left_mouse_btn = is_left
-            priv.got_right_mouse_btn = is_right
-        end
-    end
-end
-
-function private.mouseUpCallback()
-    local player = GetTriggerPlayer()
-    local mouse_btn = BlzGetTriggerPlayerMouseButton()
-    local is_left = mouse_btn == MOUSE_BUTTON_TYPE_LEFT
-    local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
-
-    for instance, priv in pairs(private.data) do
-        if priv.tooltip:isVisible() then
-            local actions = priv.actions[static.ActionType.MouseDown]
-            for i = 1, #actions do
-                actions[i]:run(instance, player, mouse_btn)
-            end
-
-            if (priv.got_left_mouse_btn and is_left) or (priv.got_right_mouse_btn and is_right) then
-                actions = priv.actions[static.ActionType.MousePress]
-                for i = 1, #actions do
-                    actions[i]:run(instance, player, mouse_btn)
-                end
-            end
-        end
-
-        priv.got_left_mouse_btn = not is_left
-        priv.got_right_mouse_btn = not is_right
-    end
-end
-
-if not IsCompiletime() then
-    --private.trigger_mouse_down = Trigger.new()
-    --private.trigger_mouse_up = Trigger.new()
-    --for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-    --    private.trigger_mouse_down:addPlayerEvent(EVENT_PLAYER_MOUSE_DOWN, Player(i))
-    --    private.trigger_mouse_up:addPlayerEvent(EVENT_PLAYER_MOUSE_UP, Player(i))
-    --end
-    --private.trigger_mouse_down:addAction(private.mouseDownCallback)
-    --private.trigger_mouse_up:addAction(private.mouseUpCallback)
+    SimpleEvent.setMouseDetector(self, priv.tooltip)
+    SimpleEvent.addAction(SimpleEvent.Type.OnMousePress, self, SyncEvent.startSync)
 end
 
 return static

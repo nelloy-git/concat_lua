@@ -7,6 +7,8 @@ local Frame = require('Frame.Frame')
 ---@type FrameTypeClass
 local FrameType = require('Frame.Type')
 
+local SimpleEvent = require('Frame.SimpleEvent')
+
 ---@type SimpleFrameTypeClass
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
@@ -54,6 +56,11 @@ local FrameAPI = {}
 
 FrameAPI.Frame = Frame
 FrameAPI.Type = FrameType
+
+-- Events
+
+FrameAPI.SimpleEventEnum = SimpleEvent.Type
+FrameAPI.SimpleEvent = SimpleEvent
 
 -- Default types
 

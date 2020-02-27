@@ -79,10 +79,12 @@ local PressedItemSlot = {}
 ---@param item Item
 ---@param mouse_button mousebuttontype
 function PressedItemSlot.callback(player, unit, item, mouse_button)
+    print('InterfaceItemSlot pressed')
     if player ~= unit:getOwner() then
         return
     end
 
+--[[
     if mouse_button == MOUSE_BUTTON_TYPE_RIGHT then
         local bag = unit:getBag()
         local equip = unit:getEquipment()
@@ -99,6 +101,7 @@ function PressedItemSlot.callback(player, unit, item, mouse_button)
 
         PressedItemSlot.updateInterface(unit)
     end
+]]
 end
 
 ---@param unit Unit

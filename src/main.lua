@@ -20,7 +20,7 @@ local TargetUnit = AbilityAPI.TargetUnit
 
 ExampleAbility = require('Ability.Example')
 
---require('Event.Item')
+require('Event.Item')
 --require('Event.Ability')
 --require('Event.Interface')
 

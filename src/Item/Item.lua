@@ -175,6 +175,11 @@ function public:getOwner()
     return private.data[self].owner
 end
 
+---@return number
+function public:getCount()
+    return 1
+end
+
 --=========
 -- Private
 --=========

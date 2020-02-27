@@ -36,17 +36,17 @@ local private = {}
 
 ---@alias InterfaceItemSlotSyncCallback fun(player:player, unit:Unit, item:Item, mouse_btn:mousebuttontype)
 
----@param slot_icon SimpleButton
+---@param slot InterfaceItemSlot
 ---@param player player
 ---@param mouse_button mousebuttontype
-function static.startSync(slot_icon, player, mouse_button)
+---@param is_down boolean
+function static.startSync(slot, player, mouse_button, is_down)
     ---@type Interface
     Interface = Interface or require('Interface.Interface')
 
     local player_id = GetPlayerId(player)
     local mouse_id = private.MouseButton2Id[mouse_button]
-    local item_slot = slot_icon:getParent()
-    local item_id = item_slot:getItem():getId()
+    local item_id = slot:getItem():getId()
     local unit_id = Interface:getTarget():getId()
 
     local data = private.serialize(player_id, unit_id, item_id, mouse_id)
@@ -79,7 +79,7 @@ end
 --=========
 
 private.actions = {}
-private.prefix = 'SlotPressed'
+private.prefix = 'ItemSlotPressed'
 
 if not IsCompiletime() then
     private.MouseButton2Id = {
