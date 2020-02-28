@@ -56,7 +56,13 @@ end
 ---@param uniq_name string
 ---@return boolean
 function static.isExist(uniq_name)
-    return not IsCompiletime() or private.compiletime_data:get(uniq_name)
+    if not IsCompiletime() then
+        return false
+    end
+    if private.compiletime_data:get(uniq_name) then
+        return true
+    end
+    return false
 end
 
 --========

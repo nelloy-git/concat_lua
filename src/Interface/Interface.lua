@@ -18,8 +18,7 @@ Interface.target = nil
 
 function Interface.init()
     local test = ItemSlot.new()
-    test:setX(0.4)
-    test:setY(0.3)
+    test:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT, 0.4, 0.3)
     --test:setWidth(0.05)
     --test:setHeight(0.05)
 --[[

@@ -15,6 +15,8 @@ local FramePublic = Class.getPublic(Frame)
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
 local SimpleButtonType = require('Frame.Type.SimpleButton')
+---@type SimpleTextureTypeClass
+local SimpleTextureType = require('Frame.Type.SimpleTexture')
 ---@type TriggerClass
 local Trigger = require('Utils.Trigger')
 
@@ -95,8 +97,9 @@ function public:setTooltip(frame)
         frame:setParent(self)
     end
 
+    frame:setVisible(false)
+    BlzFrameSetVisible(frame:getObj(), false)
     priv.detector = frame
-    FramePublic.setTooltip(self, frame)
 end
 
 ---@param action_type SimpleButtonActionTypeEnum
@@ -135,8 +138,10 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.active = setmetatable({}, {__mode = 'k'})
 
 private.detector_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
-private.detector_type:setWidth(0.0001)
-private.detector_type:setHeight(0.0001)
+local detector_texture = SimpleTextureType.new('SimpleButtonMouseDetectorTexture', false)
+private.detector_type:setWidth(0.1)
+private.detector_type:setHeight(0.1)
+private.detector_type:setChildrens({detector_texture})
 
 function private.mouseDownCallback()
     local player = GetTriggerPlayer()
@@ -199,8 +204,10 @@ function private.newData(self)
     private.data[self] = priv
     private.active[self] = priv
 
-    priv.detector:setParent(self)
-    self:setTooltip(priv.detector)
+    --priv.detector:setParent(self)
+    priv.detector:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, -0.1, -0.1)
+    --priv.detector:setVisible(false)
+    BlzFrameSetTooltip(priv.detector:getObj())
 end
 
 if not IsCompiletime() then

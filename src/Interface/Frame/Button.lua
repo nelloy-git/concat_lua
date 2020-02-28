@@ -35,7 +35,7 @@ local private = {}
 
 ---@param child_instance InterfaceItemButtonType | nil
 ---@return InterfaceItemButtonType
-function static.new(child_instance)
+function override.new(child_instance)
     if child_instance and not Class.type(child_instance, InterfaceFrameButton) then
         Log.error(InterfaceFrameButton, '\"child_instance\" must be InterfaceFrameButton or nil', 2)
     end
@@ -67,7 +67,7 @@ local suffix = {
     corner = {
         'TOPLEFT',
         'TOP',
-        'RIGHTTOP',
+        'TOPRIGHT',
         'LEFT',
         'CENTER',
         'RIGHT',
@@ -87,33 +87,39 @@ do
         local list = {}
 
         local background = SimpleTextureType.new(name..suffix.background, false)
+        background:setAnchor('CENTER', 0, 0)
         background:setWidth(0.1)
         background:setHeight(0.1)
         -- TODO TexCoord of default inventory
         background:setTexture(Import.Icon.Empty)
+        --background:setTexture(Import.TransparentTexture)
         table.insert(list, background)
 
         local icon = SimpleTextureType.new(name..suffix.icon, false)
-        background:setWidth(0.08)
-        background:setHeight(0.08)
+        icon:setAnchor('CENTER', 0, 0)
+        icon:setWidth(0.08)
+        icon:setHeight(0.08)
         icon:setTexture(Import.Icon.Bag)
+        --icon:setTexture(Import.TransparentTexture)
         table.insert(list, icon)
 
         local progress = SimpleStatusBarType.new(name..suffix.progress, false)
-        progress:setAllPoints()
         progress:setTexture(Import.HalfTransparentTexture)
         table.insert(list, progress)
 
         for i = 1, #suffix.corner do
             local corner_name = name..suffix.corner[i]
             local corner = SimpleFrameType.new(corner_name, false)
-            corner:setWidth(0.02)
-            corner:setHeight(0.02)
-            corner:setAnchor(suffix.corner[i], 0, 0)
                 local corner_background = SimpleTextureType.new(corner_name..suffix.corner_background, false)
+                corner_background:setAnchor(suffix.corner[i], 0, 0)
+                corner_background:setWidth(0.02)
+                corner_background:setHeight(0.02)
                 corner_background:setTexture(Import.Icon.Empty)
 
                 local corner_string = SimpleStringType.new(corner_name..suffix.corner_string, false)
+                corner_string:setAnchor(suffix.corner[i], 0, 0)
+                corner_string:setWidth(0.02)
+                corner_string:setHeight(0.02)
                 corner_string:setFont('fonts\\nim_____.ttf', 0.008)
                 corner_string:setText('0')
             corner:setChildrens({corner_background, corner_string})
@@ -121,7 +127,6 @@ do
         end
     private.frame_type:setChildrens(list)
 end
-
 
 ---@param self InterfaceItemButtonType
 function private.newData(self)
@@ -134,13 +139,19 @@ function private.newData(self)
         corner_background = {},
         corner_string = {}
     }
-    for i = 1, suffix.corner do
+    for i = 1, #suffix.corner do
         local corner_name = name..suffix.corner[i]
         priv.corner[i] = BlzGetFrameByName(corner_name, 0)
         priv.corner_background[i] = BlzGetFrameByName(corner_name..suffix.corner_background, 0)
         priv.corner_string[i] = BlzGetFrameByName(corner_name..suffix.corner_string, 0)
     end
     private.data[self] = priv
+
+    BlzFrameSetValue(priv.progress, 0)
+
+    self:addAction(SimpleButton.ActionType.MousePress, function() print('Press') end)
+    self:addAction(SimpleButton.ActionType.MouseDown, function() print('Down') end)
+    self:addAction(SimpleButton.ActionType.MouseUp, function() print('Up') end)
 end
 
 return static

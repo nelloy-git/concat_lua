@@ -50,10 +50,10 @@ function InterfaceAPI.init()
     BlzHideOriginFrames(true)
     BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop",0), false)
 
-    local empty = BlzCreateSimpleFrame(SimpleEmpty:getName(), BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 0)
+    --local empty = BlzCreateSimpleFrame(SimpleEmpty:getName(), BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 0)
     local main_menu = BlzGetFrameByName("UpperButtonBarFrame", 0)
     BlzFrameSetVisible(main_menu, true)
-    BlzFrameSetParent(main_menu, empty)
+    BlzFrameSetParent(main_menu, nil)
 
     --local menu_handle = BlzGetFrameByName("UpperButtonBarMenuButton", 0)
     --BlzFrameSetParent(menu_handle, world_handle)
