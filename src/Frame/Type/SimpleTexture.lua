@@ -12,7 +12,7 @@ local FrameType = require('Frame.Type')
 --=======
 
 local SimpleTextureType = Class.new('SimpleTextureType', FrameType)
----@class SimpleTextureType  : FrameType
+---@class SimpleTextureType : FrameType
 local public = SimpleTextureType.public
 ---@class SimpleTextureTypeClass : FrameTypeClass
 local static = SimpleTextureType.static
@@ -29,6 +29,18 @@ local private = {}
 ---@param child_instance SimpleTextureType | nil
 ---@return SimpleTextureType
 function override.new(uniq_name, separate_file, child_instance)
+    if FrameType.isExist(uniq_name) then
+        Log.error(SimpleTextureType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(SimpleTextureType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if child_instance and not Class.type(child_instance, SimpleTextureType) then
+        Log.error(SimpleTextureType, '\"child_instance\" must be SimpleTextureType or nil.', 2)
+    end
+
     local instance = child_instance or Class.allocate(SimpleTextureType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
@@ -39,11 +51,6 @@ end
 --========
 -- Public
 --========
-
----@return boolean
-function public:isSimple()
-    return true
-end
 
 --- Can not be used with width, height and anchor parameters.
 function public:setAllPoints()
@@ -136,17 +143,13 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self SimpleFrame
+---@param self SimpleFrameType
 function private.newData(self)
     priv = {
         width = nil,
         height = nil,
 
         texture = nil,
-        tex_min_x = nil,
-        tex_min_y = nil,
-        tex_max_x = nil,
-        tex_max_y = nil
     }
     private.data[self] = priv
 end

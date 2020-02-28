@@ -12,9 +12,9 @@ local FrameType = require('Frame.Type')
 --=======
 
 local SimpleButtonType = Class.new('SimpleButtonType', FrameType)
----@class SimpleButtonType
+---@class SimpleButtonType : FrameType
 local public = SimpleButtonType.public
----@class SimpleButtonTypeClass
+---@class SimpleButtonTypeClass : FrameTypeClass
 local static = SimpleButtonType.static
 ---@type SimpleButtonTypeClass
 local override = SimpleButtonType.override
@@ -29,6 +29,18 @@ local private = {}
 ---@param child_instance SimpleButtonType | nil
 ---@return SimpleButtonType
 function override.new(uniq_name, separate_file, child_instance)
+    if FrameType.isExist(uniq_name) then
+        Log.error(SimpleButtonType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(SimpleButtonType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if child_instance and not Class.type(child_instance, SimpleButtonType) then
+        Log.error(SimpleButtonType, '\"child_instance\" must be SimpleButtonType or nil.', 2)
+    end
+
     local instance = child_instance or Class.allocate(SimpleButtonType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
@@ -39,11 +51,6 @@ end
 --========
 -- Public
 --========
-
----@return boolean
-function public:isSimple()
-    return true
-end
 
 --- Can not be used with width, height and anchor parameters.
 function public:setAllPoints()
@@ -89,15 +96,10 @@ end
 
 ---@param list FrameType[]
 function public:setChildrens(list)
-    for i = 1, #list do
-        if not list[i]:isSimple() then
-            Log.error(self, 'Normal frame can not be a child of simple frame.', 2)
-        end
-    end
-
-    private.data[self].childrens = list
     local fdf = self:getFdf()
+
     if fdf then
+        private.data[self].childrens = list
         local fdf_list = {}
         for i = 1, #list do
             table.insert(fdf_list, list[i]:getFdf())
@@ -137,7 +139,8 @@ function private.newData(self)
     priv = {
         width = nil,
         height = nil,
-        childrens = nil
+
+        childrens = {}
     }
     private.data[self] = priv
 end
@@ -145,10 +148,6 @@ end
 --=============
 -- Compiletime
 --=============
-
-private.default_width = 0.03
-private.default_height = 0.03
-private.default_texture = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin'
 
 local _ = Compiletime(function()
     ---@type FdfEdit

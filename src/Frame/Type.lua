@@ -4,6 +4,7 @@
 
 local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
+local fmt = string.format
 
 ---@type CompiletimeDataClass
 local CompiletimeData = require('Utils.CompiletimeData')
@@ -27,13 +28,35 @@ local private = {}
 ---@param uniq_name string
 ---@param create_fdf fun(name:string):FdfObject
 ---@param separate_file boolean
----@param child_instance any
+---@param child_instance FrameType
 ---@return FrameType
 function static.new(uniq_name, create_fdf, separate_file, child_instance)
-    local instance = child_instance or Class.allocate(FrameType)
+    if IsCompiletime() and private.compiletime_data:get(uniq_name) then
+        Log.error(FrameType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(create_fdf) ~= 'function' then
+        Log.error(FrameType, '\"create_fdf\" must be function.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(FrameType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if not Class.type(child_instance, FrameType) then
+        Log.error(FrameType, '\"child_instance\" must be FrameType.', 2)
+    end
+
+    local instance = child_instance
     private.newData(instance, uniq_name, create_fdf, separate_file)
 
     return instance
+end
+
+---@param uniq_name string
+---@return boolean
+function static.isExist(uniq_name)
+    return not IsCompiletime() or private.compiletime_data:get(uniq_name)
 end
 
 --========
@@ -43,21 +66,6 @@ end
 ---@return string
 function public:getName()
     return private.data[self].name
-end
-
----@return boolean
-function public:isSimple()
-    Log.error(private.data[self].name, 'virtual function is not declared.', 2)
-end
-
----@return number
-function public:getWidth()
-    Log.error(private.data[self].name, 'virtual function is not declared.', 2)
-end
-
----@return number
-function public:getHeight()
-    Log.error(private.data[self].name, 'virtual function is not declared.', 2)
 end
 
 ---@return FdfObject
@@ -83,39 +91,32 @@ end)
 ---@param create_fdf function
 ---@param separate_file boolean
 function private.newData(self, uniq_name, create_fdf, separate_file)
-    local priv = {}
+    local priv = {
+        name = uniq_name
+    }
+    private.data[self] = priv
 
     if IsCompiletime() then
-        if private.compiletime_data:get(uniq_name) then
-            Log.error(FrameType, 'name is not unique.', 4)
-        end
-
         priv.fdf = create_fdf(uniq_name)
-
-        if separate_file then
-            local file = private.FdfFile.new(uniq_name)
-            file:addObject(priv.fdf)
-
-            private.compiletime_data:set(uniq_name, file:toRuntime().toc)
-        end
     end
-
-    priv.name = uniq_name
 
     if separate_file then
-        priv.toc = private.compiletime_data:get(uniq_name)
-        if not IsCompiletime() then
-            if not priv.toc then
-                Log.error(self, 'nil toc path', 4)
+        if IsCompiletime() then
+            local file = private.FdfFile.new(uniq_name)
+            file:addObject(priv.fdf)
+            private.compiletime_data:set(uniq_name, file:toRuntime().toc)
+        else
+            local toc = private.compiletime_data:get(uniq_name)
+
+            if not toc then
+                Log.error(self, 'can not find toc file path.', 3)
             end
 
-            if not BlzLoadTOCFile(priv.toc) then
-                Log.error(self, uniq_name..' load toc failed.', 4)
+            if not BlzLoadTOCFile(toc) then
+                Log.error(self, 'error in toc file loading.', 3)
             end
         end
     end
-
-    private.data[self] = priv
 end
 
 

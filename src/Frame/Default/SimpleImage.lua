@@ -13,8 +13,6 @@ local Frame = require('Frame.Frame')
 local FramePublic = Class.getPublic(Frame)
 ---@type SimpleFrameTypeClass
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
----@type SimpleButtonTypeClass
-local SimpleButtonType = require('Frame.Type.SimpleButton')
 ---@type TriggerClass
 local Trigger = require('Utils.Trigger')
 
@@ -22,44 +20,32 @@ local Trigger = require('Utils.Trigger')
 -- Class
 --=======
 
-local SimpleButton = Class.new('SimpleButton', Frame)
----@class SimpleButton : Frame
-local public = SimpleButton.public
----@class SimpleButtonClass : FrameClass
-local static = SimpleButton.static
----@type SimpleButtonClass
-local override = SimpleButton.override
+local SimpleImage = Class.new('SimpleImage', Frame)
+---@class SimpleFrame : Frame
+local public = SimpleImage.public
+---@class SimpleFrameClass : FrameClass
+local static = SimpleImage.static
+---@type SimpleFrameClass
+local override = SimpleImage.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@alias SimpleMouseButtonCallback fun(instance:SimpleButton, player:player, button:mousebuttontype)
----@alias SimpleButtonActionTypeEnum number
-
----@type table<string, SimpleButtonActionTypeEnum>
-static.ActionType = {}
----@type SimpleButtonActionTypeEnum
-static.ActionType.MousePress = 1
----@type SimpleButtonActionTypeEnum
-static.ActionType.MouseDown = 2
----@type SimpleButtonActionTypeEnum
-static.ActionType.MouseUp = 3
-
----@param frame_type SimpleButtonType
----@param child_instance SimpleButton | nil
----@return SimpleButton
+---@param frame_type SimpleFrameType
+---@param child_instance SimpleFrame | nil
+---@return SimpleFrame
 function override.new(frame_type, child_instance)
-    if not Class.type(frame_type, SimpleButtonType) then
-        Log.error(SimpleButton, '\"frame_type\" must be SimpleButtonType', 2)
+    if not Class.type(frame_type, SimpleFrameType) then
+        Log.error(SimpleImage, fmt('\"simple_button_type\" must be %s', tostring(SimpleFrameType)), 2)
     end
 
-    if child_instance and not Class.type(child_instance, SimpleButton) then
-        Log.error(SimpleButton, '\"child_instance\" must be SimpleButton or nil', 2)
+    if child_instance and not Class.type(child_instance, SimpleImage) then
+        Log.error(SimpleImage, fmt('\"child_instance\" must be %s or nil', tostring(SimpleImage)), 2)
     end
 
-    local instance = child_instance or Class.allocate(SimpleButton)
+    local instance = child_instance or Class.allocate(SimpleImage)
     instance = Frame.new(frame_type, instance)
     private.newData(instance, frame_type)
 
@@ -99,7 +85,7 @@ function public:setTooltip(frame)
     FramePublic.setTooltip(self, frame)
 end
 
----@param action_type SimpleButtonActionTypeEnum
+---@param action_type SimpleFrameActionTypeEnum
 ---@param callback Callback
 ---@return Action | nil
 function public:addAction(action_type, callback)
@@ -111,7 +97,7 @@ function public:addAction(action_type, callback)
     return action
 end
 
----@param action_type SimpleButtonActionTypeEnum
+---@param action_type SimpleFrameActionTypeEnum
 ---@param action Action
 ---@return boolean
 function public:removeAction(action_type, action)
@@ -134,7 +120,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.active = setmetatable({}, {__mode = 'k'})
 
-private.detector_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
+private.detector_type = SimpleFrameType.new('ButtonMouseDetector', true)
 private.detector_type:setWidth(0.0001)
 private.detector_type:setHeight(0.0001)
 
@@ -183,7 +169,7 @@ function private.mouseUpCallback()
     end
 end
 
----@param self SimpleButton
+---@param self SimpleFrame
 function private.newData(self)
     local priv = {
         detector = Frame.new(private.detector_type),

@@ -9,7 +9,7 @@ local Screen = require('Frame.Screen')
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')
 ---@type InterfaceItemSlotClass
-local ItemSlot = require('Interface.Item.Slot')
+local ItemSlot = require('Interface.Frame.Button')
 
 ---@class Interface
 local Interface = {}
@@ -20,8 +20,8 @@ function Interface.init()
     local test = ItemSlot.new()
     test:setX(0.4)
     test:setY(0.3)
-    test:setWidth(0.05)
-    test:setHeight(0.05)
+    --test:setWidth(0.05)
+    --test:setHeight(0.05)
 --[[
     Interface.Inventory = Inventory.new()
     Interface.Inventory:setWidth(0.3)

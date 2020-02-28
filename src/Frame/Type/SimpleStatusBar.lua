@@ -12,9 +12,9 @@ local FrameType = require('Frame.Type')
 --=======
 
 local SimpleStatusBarType = Class.new('SimpleStatusBarType', FrameType)
----@class SimpleStatusBarType
+---@class SimpleStatusBarType : FrameType
 local public = SimpleStatusBarType.public
----@class SimpleStatusBarTypeClass
+---@class SimpleStatusBarTypeClass : FrameTypeClass
 local static = SimpleStatusBarType.static
 ---@type SimpleStatusBarTypeClass
 local override = SimpleStatusBarType.override
@@ -29,6 +29,18 @@ local private = {}
 ---@param child_instance SimpleStatusBarType | nil
 ---@return SimpleStatusBarType
 function override.new(uniq_name, separate_file, child_instance)
+    if FrameType.isExist(uniq_name) then
+        Log.error(SimpleStatusBarType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(SimpleStatusBarType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if child_instance and not Class.type(child_instance, SimpleStatusBarType) then
+        Log.error(SimpleStatusBarType, '\"child_instance\" must be SimpleStatusBarType or nil.', 2)
+    end
+
     local instance = child_instance or Class.allocate(SimpleStatusBarType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
@@ -40,9 +52,26 @@ end
 -- Public
 --========
 
----@return boolean
-function public:isSimple()
-    return true
+--- Can not be used with width, height and anchor parameters.
+function public:setAllPoints()
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.SetAllPoints, '')
+    end
+end
+
+---@param anchor string | 'TOPLEFT' | 'TOP' | 'TOPRIGHT' | 'LEFT' | 'CENTER' | 'RIGHT' | 'BOTTOMLEFT' | 'BOTTOM' | 'RIGHT'
+---@param offset_x number
+---@param offset_y number
+function public:setAnchor(anchor, offset_x, offset_y)
+    private.data[self].anchor = anchor
+    private.data[self].anchor_x = offset_x
+    private.data[self].anchor_y = offset_y
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.Anchor, {anchor, offset_x, offset_y})
+    end
 end
 
 ---@param width number
@@ -51,7 +80,7 @@ function public:setWidth(width)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleStatusBar.Field.Width, width)
+        fdf:setField(private.Field.Width, width)
     end
 end
 
@@ -61,85 +90,32 @@ function public:setHeight(height)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleStatusBar.Field.Height, height)
+        fdf:setField(private.Field.Height, height)
     end
 end
 
 ---@param texture string
-function public:setBackground(texture)
-    private.data[self].background = texture
+function public:setTexture(texture)
+    private.data[self].texture = texture
 
     local fdf = self:getFdf()
     if fdf then
-        local layers = fdf:getField(private.SimpleStatusBar.Field.ChildFrames)
-        for i = 1, #layers do
-            if layers[i]:getName() == 'BACKGROUND' then
-                local texture_fdf = layers[i]:getField(private.SimpleLayer.Field.ChildFrames)[1]
-                texture_fdf:setField(private.SimpleTexture.Field.File, texture)
-                return
-            end
-        end
+        fdf:setField(private.Field.BarTexture, texture)
     end
 end
 
----@param texture string
-function public:setBar(texture)
-    private.data[self].bar = texture
-
+---@param list FrameType[]
+function public:setChildrens(list)
     local fdf = self:getFdf()
-    if fdf then
-        fdf:setField(private.SimpleStatusBar.Field.BarTexture, texture)
-    end
-end
 
----@param font string
-function public:setFont(font)
-    private.data[self].font = font
-
-    local fdf = self:getFdf()
     if fdf then
-        local layers = fdf:getField(private.SimpleStatusBar.Field.ChildFrames)
-        for i = 1, #layers do
-            if layers[i]:getName() == 'ARTWORK' then
-                local string_fdf = layers[i]:getField(private.SimpleLayer.Field.ChildFrames)[1]
-                string_fdf:setField(private.SimpleString.Field.Font, {font, private.data[self].font_size})
-                return
-            end
+        private.data[self].childrens = list
+
+        local fdf_list = {}
+        for i = 1, #list do
+            table.insert(fdf_list, list[i]:getFdf())
         end
-    end
-end
-
----@param font_size number
-function public:setFontSize(font_size)
-    private.data[self].font_size = font_size
-
-    local fdf = self:getFdf()
-    if fdf then
-        local layers = fdf:getField(private.SimpleStatusBar.Field.ChildFrames)
-        for i = 1, #layers do
-            if layers[i]:getName() == 'ARTWORK' then
-                local string_fdf = layers[i]:getField(private.SimpleLayer.Field.ChildFrames)[1]
-                string_fdf:setField(private.SimpleString.Field.Font, {private.data[self].font, font_size})
-                return
-            end
-        end
-    end
-end
-
----@param anchor string
-function public:setAnchor(anchor)
-    private.data[self].anchor = anchor
-
-    local fdf = self:getFdf()
-    if fdf then
-        local layers = fdf:getField(private.SimpleStatusBar.Field.ChildFrames)
-        for i = 1, #layers do
-            if layers[i]:getName() == 'ARTWORK' then
-                local string_fdf = layers[i]:getField(private.SimpleLayer.Field.ChildFrames)[1]
-                string_fdf:setField(private.SimpleString.Field.Anchor, {anchor, 0, 0})
-                return
-            end
-        end
+        fdf:setField(private.Field.ChildFrames, fdf_list)
     end
 end
 
@@ -154,33 +130,13 @@ function public:getHeight()
 end
 
 ---@return string
-function public:getBackground()
-    return private.data[self].background
+function public:getTexture()
+    return private.data[self].texture
 end
 
----@return string
-function public:getBar()
-    return private.data[self].bar
-end
-
----@return string
-function public:getFont()
-    return private.data[self].font
-end
-
----@return number
-function public:getFontSize()
-    return private.data[self].font_size
-end
-
----@return string
-function public:getBackgroundFrameName()
-    return private.getBackgroundName(self:getName())
-end
-
----@return string
-function public:getTextFrameName()
-    return private.getTextName(self:getName())
+---@return FrameType[]
+function public:getChildrens()
+    return private.data[self].childrens
 end
 
 --=========
@@ -189,28 +145,14 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param name string
----@return string
-function private.getBackgroundName(name)
-    return name..'BackgroundTexture'
-end
-
----@param name string
----@return string
-function private.getTextName(name)
-    return name..'Text'
-end
-
 ---@param self SimpleButton
 function private.newData(self)
     priv = {
-        width = private.default_width,
-        height = private.default_height,
-        background = private.default_background_texture,
-        bar = private.default_bar_texture,
-        font = private.default_font_size,
-        font_size = private.default_font_size,
-        anchor = private.default_anchor
+        width = nil,
+        height = nil,
+
+        texture = nil,
+        childrens = {},
     }
     private.data[self] = priv
 end
@@ -219,22 +161,11 @@ end
 -- Compiletime
 --=============
 
-private.default_width = 0.03
-private.default_height = 0.03
-private.default_font = 'fonts\\nim_____.ttf'
-private.default_font_size = 0.009
-private.default_anchor = 'CENTER'
-private.default_background_texture = 'Replaceabletextures\\Teamcolor\\Teamcolor27.blp'
-private.default_bar_texture = 'Replaceabletextures\\Teamcolor\\Teamcolor00.blp'
-
 local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
-    private.File = FdfEdit.File
     private.SimpleStatusBar = FdfEdit.SimpleStatusBar
-    private.SimpleLayer = FdfEdit.SimpleLayer
-    private.SimpleString = FdfEdit.SimpleString
-    private.SimpleTexture = FdfEdit.SimpleTexture
+    private.Field = FdfEdit.SimpleStatusBar.Field
 end)
 
 ---@param name string

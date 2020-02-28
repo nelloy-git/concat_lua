@@ -29,6 +29,18 @@ local private = {}
 ---@param child_instance SimpleLayerType | nil
 ---@return SimpleLayerType
 function override.new(uniq_name, separate_file, child_instance)
+    if FrameType.isExist(uniq_name) then
+        Log.error(SimpleLayerType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(SimpleLayerType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if child_instance and not Class.type(child_instance, SimpleLayerType) then
+        Log.error(SimpleLayerType, '\"child_instance\" must be SimpleLayerType or nil.', 2)
+    end
+
     local instance = child_instance or Class.allocate(SimpleLayerType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
@@ -40,22 +52,13 @@ end
 -- Public
 --========
 
----@return boolean
-function public:isSimple()
-    return true
-end
-
 ---@param list FrameType[]
 function public:setChildrens(list)
-    for i = 1, #list do
-        if not list[i]:isSimple() then
-            Log.error(self, 'Normal frame can not be a child of simple frame.', 2)
-        end
-    end
-
-    private.data[self].childrens = list
     local fdf = self:getFdf()
+
     if fdf then
+        private.data[self].childrens = list
+
         local fdf_list = {}
         for i = 1, #list do
             table.insert(fdf_list, list[i]:getFdf())
@@ -75,7 +78,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self SimpleFrame
+---@param self SimpleFrameType
 function private.newData(self)
     priv = {
         childrens = {}

@@ -29,6 +29,18 @@ local private = {}
 ---@param child_instance SimpleFrameType | nil
 ---@return SimpleFrameType
 function override.new(uniq_name, separate_file, child_instance)
+    if FrameType.isExist(uniq_name) then
+        Log.error(SimpleFrameType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(SimpleFrameType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if child_instance and not Class.type(child_instance, SimpleFrameType) then
+        Log.error(SimpleFrameType, '\"child_instance\" must be SimpleFrameType or nil.', 2)
+    end
+
     local instance = child_instance or Class.allocate(SimpleFrameType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
@@ -40,9 +52,26 @@ end
 -- Public
 --========
 
----@return boolean
-function public:isSimple()
-    return true
+--- Can not be used with width, height and anchor parameters.
+function public:setAllPoints()
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.SetAllPoints, '')
+    end
+end
+
+---@param anchor string | 'TOPLEFT' | 'TOP' | 'TOPRIGHT' | 'LEFT' | 'CENTER' | 'RIGHT' | 'BOTTOMLEFT' | 'BOTTOM' | 'RIGHT'
+---@param offset_x number
+---@param offset_y number
+function public:setAnchor(anchor, offset_x, offset_y)
+    private.data[self].anchor = anchor
+    private.data[self].anchor_x = offset_x
+    private.data[self].anchor_y = offset_y
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.Anchor, {anchor, offset_x, offset_y})
+    end
 end
 
 ---@param width number
@@ -67,15 +96,10 @@ end
 
 ---@param list FrameType[]
 function public:setChildrens(list)
-    for i = 1, #list do
-        if not list[i]:isSimple() then
-            Log.error(self, 'Normal frame can not be a child of simple frame.', 2)
-        end
-    end
-
-    private.data[self].childrens = list
     local fdf = self:getFdf()
     if fdf then
+        private.data[self].childrens = list
+
         local fdf_list = {}
         for i = 1, #list do
             table.insert(fdf_list, list[i]:getFdf())
@@ -105,11 +129,12 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self SimpleFrame
+---@param self SimpleFrameType
 function private.newData(self)
     priv = {
-        width = 0,
-        height = 0,
+        width = nil,
+        height = nil,
+
         childrens = {},
     }
     private.data[self] = priv
@@ -122,10 +147,8 @@ end
 local _ = Compiletime(function()
     ---@type FdfEdit
     local FdfEdit = require('compiletime.FdfEdit')
-    private.File = FdfEdit.File
     private.SimpleFrame = FdfEdit.SimpleFrame
     private.Field = FdfEdit.SimpleFrame.Field
-    private.SimpleTexture = FdfEdit.SimpleTexture
 end)
 
 ---@param name string

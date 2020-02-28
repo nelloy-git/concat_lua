@@ -17,16 +17,18 @@ local Trigger = require('Utils.Trigger')
 ---@type ActionClass
 local Action = require('Utils.Action')
 
-local SlotType = require('Interface.Item.SlotType')
+--local SlotType = require('Interface.Item.SlotType')
+
+require('Interface.Frame.Button')
 
 --=======
 -- Class
 --=======
 
 local InterfaceItemSlot = Class.new('InterfaceItemSlot', Frame)
----@class InterfaceItemSlot : SimpleFrame
+---@class InterfaceItemSlot : Frame
 local public = InterfaceItemSlot.public
----@class InterfaceItemSlotClass : SimpleFrameClass
+---@class InterfaceItemSlotClass : FrameClass
 local static = InterfaceItemSlot.static
 ---@type InterfaceItemSlotClass
 local override = InterfaceItemSlot.override

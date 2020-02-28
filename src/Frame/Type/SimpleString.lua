@@ -12,9 +12,9 @@ local FrameType = require('Frame.Type')
 --=======
 
 local SimpleStringType = Class.new('SimpleStringType', FrameType)
----@class SimpleStringType
+---@class SimpleStringType : FrameType
 local public = SimpleStringType.public
----@class SimpleStringTypeClass
+---@class SimpleStringTypeClass : FrameTypeClass
 local static = SimpleStringType.static
 ---@type SimpleStringTypeClass
 local override = SimpleStringType.override
@@ -29,6 +29,18 @@ local private = {}
 ---@param child_instance SimpleStringType | nil
 ---@return SimpleStringType
 function override.new(uniq_name, separate_file, child_instance)
+    if FrameType.isExist(uniq_name) then
+        Log.error(SimpleStringType, '\"uniq_name\" must be unique.', 2)
+    end
+
+    if type(separate_file) ~= 'boolean' then
+        Log.error(SimpleStringType, '\"separate_file\" must be boolean.', 2)
+    end
+
+    if child_instance and not Class.type(child_instance, SimpleStringType) then
+        Log.error(SimpleStringType, '\"child_instance\" must be SimpleStringType or nil.', 2)
+    end
+
     local instance = child_instance or Class.allocate(SimpleStringType)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
@@ -39,11 +51,6 @@ end
 --========
 -- Public
 --========
-
----@return boolean
-function public:isSimple()
-    return true
-end
 
 --- Can not be used with width, height and anchor parameters.
 function public:setAllPoints()
@@ -94,7 +101,17 @@ function public:setFont(font, size)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.SimpleString.Field.Font, {font, size})
+        fdf:setField(private.Field.Font, {font, size})
+    end
+end
+
+---@param text string
+function public:setText(text)
+    private.data[self].text = text
+
+    local fdf = self:getFdf()
+    if fdf then
+        fdf:setField(private.Field.Text, text)
     end
 end
 
@@ -118,26 +135,26 @@ function public:getFontSize()
     return private.data[self].font_size
 end
 
+---@return string
+function public:getText()
+    return private.data[self].text
+end
+
 --=========
 -- Private
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param name string
----@return string
-function private.getStringName(name)
-    return name..'String'
-end
-
 ---@param self SimpleButton
 function private.newData(self)
     priv = {
-        width = private.default_width,
-        height = private.default_height,
+        width = nil,
+        height = nil,
 
-        font = private.default_font,
-        font_size = private.default_font_size
+        font = nil,
+        font_size = nil,
+        text = nil,
     }
     private.data[self] = priv
 end
