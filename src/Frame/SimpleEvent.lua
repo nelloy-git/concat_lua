@@ -46,6 +46,9 @@ end
 ---@return Action
 function SimpleEvent.addAction(event_type, frame, callback)
     local action = Action.new(callback, frame)
+    if not actions[event_type][frame] then
+        actions[event_type][frame] = {}
+    end
     table.insert(actions[event_type][frame], action)
 
     return action
@@ -73,6 +76,7 @@ function SimpleEvent.mouseDownCallback()
     local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
 
     for frame, tooltip in pairs(frame2tooltip) do
+        print(BlzFrameIsVisible(tooltip))
         if BlzFrameIsVisible(tooltip) then
             local list = actions[SimpleEvent.Type.OnMouseDown][frame]
             if list then
