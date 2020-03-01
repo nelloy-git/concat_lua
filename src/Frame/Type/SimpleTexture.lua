@@ -118,7 +118,7 @@ function public:setTexCoord(min_x, min_y, max_x, max_y)
 
     local fdf = self:getFdf()
     if fdf then
-        fdf:setField(private.Field.TexCoord, {min_x, min_y, max_x, max_y})
+        fdf:setField(private.Field.TexCoord, {min_x, max_x, min_y, max_y})
     end
 end
 

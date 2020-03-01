@@ -76,7 +76,7 @@ end
 function public:setVisible(flag)
     local priv = private.data[self]
 
-    if flag then
+    if flag and priv.active then
         private.active[self] = priv
     else
         private.active[self] = nil
@@ -100,6 +100,17 @@ function public:setTooltip(frame)
     frame:setVisible(false)
     BlzFrameSetVisible(frame:getObj(), false)
     priv.detector = frame
+end
+
+function public:enableActions(flag)
+    local priv = private.data[self]
+    priv.active = flag
+
+    if self:isVisible() and priv.active then
+        private.active[self] = priv
+    else
+        private.active[self] = nil
+    end
 end
 
 ---@param action_type SimpleButtonActionTypeEnum
@@ -138,10 +149,6 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.active = setmetatable({}, {__mode = 'k'})
 
 private.detector_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
-local detector_texture = SimpleTextureType.new('SimpleButtonMouseDetectorTexture', false)
-private.detector_type:setWidth(0.1)
-private.detector_type:setHeight(0.1)
-private.detector_type:setChildrens({detector_texture})
 
 function private.mouseDownCallback()
     local player = GetTriggerPlayer()
@@ -170,7 +177,7 @@ function private.mouseUpCallback()
 
     for instance, priv in pairs(private.active) do
         if priv.detector:isVisible() then
-            local actions = priv.actions[static.ActionType.MouseDown]
+            local actions = priv.actions[static.ActionType.MouseUp]
             for i = 1, #actions do
                 actions[i]:run(instance, player, mouse_btn)
             end
@@ -193,6 +200,7 @@ function private.newData(self)
     local priv = {
         detector = Frame.new(private.detector_type),
 
+        active = true,
         actions = {},
 
         got_left_mouse_btn = false,
@@ -205,9 +213,9 @@ function private.newData(self)
     private.active[self] = priv
 
     --priv.detector:setParent(self)
-    priv.detector:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, -0.1, -0.1)
-    --priv.detector:setVisible(false)
-    BlzFrameSetTooltip(priv.detector:getObj())
+    priv.detector:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, 0.2, 0.2)
+    priv.detector:setVisible(false)
+    BlzFrameSetTooltip(self:getObj(), priv.detector:getObj())
 end
 
 if not IsCompiletime() then

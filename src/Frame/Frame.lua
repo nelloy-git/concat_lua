@@ -49,10 +49,6 @@ end
 -- Public
 --========
 
---- Virtual function
-function public:update()
-end
-
 ---@param point framepointtype
 ---@param parent_point framepointtype
 ---@param x number
@@ -74,8 +70,6 @@ function public:setPoint(point, parent_point, x, y)
             BlzFrameSetAbsPoint(self:getObj(), point,
                                 x, y)
         end
-
-        self:update()
     end
 end
 
@@ -89,7 +83,6 @@ function public:setSize(width, height)
         priv.height = height
 
         BlzFrameSetSize(self:getObj(), priv.width, priv.height)
-        self:update()
     end
 end
 
@@ -108,8 +101,6 @@ function public:setParent(parent)
             BlzFrameSetAbsPoint(self:getObj(), priv.point,
                                 priv.x, priv.y)
         end
-
-        self:update()
     end
 end
 

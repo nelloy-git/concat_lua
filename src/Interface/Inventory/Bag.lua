@@ -8,11 +8,10 @@ local Class = require('Utils.Class.Class')
 local Import = require('Resources.Import')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
-local SimpleFrameType = FrameAPI.SimpleFrameType
-local SimpleFrame = FrameAPI.SimpleFrame
+local SimpleImage = FrameAPI.SimpleImage
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type InterfaceItemSlotClass
-local ItemSlot = require('Interface.Item.Slot')
+---@type InterfaceFrameButtonClass
+local Button = require('Interface.Item.Slot')
 ---@type InterfaceItemTooltipClass
 local ItemTooltip = require('Interface.Item.Tooltip')
 
@@ -20,7 +19,7 @@ local ItemTooltip = require('Interface.Item.Tooltip')
 -- Class
 --=======
 
-local InterfaceInventoryBag = Class.new('InterfaceInventoryBag', SimpleFrame)
+local InterfaceInventoryBag = Class.new('InterfaceInventoryBag', SimpleImage)
 ---@class InterfaceInventoryBag
 local public = InterfaceInventoryBag.public
 ---@class InterfaceInventoryBagClass
@@ -33,15 +32,14 @@ local private = {}
 -- Static
 --=========
 
----@param cols number
----@param rows number
 ---@param child_instance InterfaceInventoryBag | nil
 ---@return InterfaceInventoryBag
-function override.new(cols, rows, child_instance)
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(InterfaceInventoryBag)
-    instance = SimpleFrame.new(private.background_type, instance)
+    instance = SimpleImage.new(instance)
+    instance:setTexture('ui\\console\\human\\human-transport-slot.dds')
 
-    private.newData(instance, cols, rows)
+    private.newData(instance)
 
     return instance
 end
@@ -52,14 +50,15 @@ end
 
 ---@param width number
 function public:setWidth(width)
-    FramePublic.setWidth(self, width)
-    private.update(self)
 end
 
 ---@param height number
 function public:setHeight(height)
-    FramePublic.setHeight(self, height)
-    private.update(self)
+end
+
+function public:setColumns(cols)
+    private.data[self].cols = cols
+    self:update()
 end
 
 ---@param unit Unit | nil
@@ -103,78 +102,69 @@ function public:getSize()
     return private.data[self].size
 end
 
+function public:update()
+    local priv = private.data[self]
+    local size = priv.loaded:getBag():getSize()
+    local cols = priv.cols
+    local rows = math.ceil(size / cols)
+    local slot_size = priv.slot[1]:getWidth()
+    local width = (slot_size * cols + (cols - 1) * private.space) / (1 - 2 * private.border_ratio)
+    local height = (slot_size * rows + (rows - 1) * private.space) / (1 - 2 * private.border_ratio)
+    local border_x = private.border_ratio * width
+    local border_y = private.border_ratio * height
+
+    local i = 0
+    for x = 1, cols do
+        for y = 1, rows do
+            i = i + 1
+
+            local slot = priv.slot[i]
+            slot:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT,
+                          border_x + (x - 1) * (slot_size + private.space),
+                          height - border_y - (y - 1) * (slot_size + private.space))
+        end
+    end
+
+    FramePublic.setWidth()
+end
 
 --=========
 -- Private
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.background_type = SimpleFrameType.new('InterfaceInventoryBagBackground', true)
-private.background_type:setWidth(0.2)
-private.background_type:setHeight(0.16)
-private.background_type:setTexture(Import.InventoryBackground)
 
-private.empty_icon = Import.TransparentTexture
-private.icon_background_texture = Import.Icon.Empty
-
+private.slot_count = 'BOTTOMRIGHT'
 private.border_ratio = 1 / 16
-private.space_ratio = 1 / 32
-private.tooltip_width = 0.2
+private.space = 0.005
 
 ---@param self InterfaceInventoryBag
-function private.update(self)
-    local priv = private.data[self]
-    local width = self:getWidth()
-    local height = self:getHeight()
-    local border_x = private.border_ratio * width
-    local border_y = private.border_ratio * height
-    local space_x = private.space_ratio * width
-    local space_y = private.space_ratio * height
-    local cols = priv.cols
-    local rows = priv.rows
-    local slot_width = (width - 2 * border_x - (cols - 1) * space_x) / cols
-    local slot_height = (height - 2 * border_y - (rows - 1) * space_y) / rows
-
-    local i = 0
-    for x = 1, priv.cols do
-        for y = 1, priv.rows do
-            i = i + 1
-            local slot = priv.slot[i]
-            slot:setX(border_x + (x - 1) * (slot_width + space_x))
-            slot:setY(height - border_y - y * (slot_height + space_y) + space_y)
-            slot:setWidth(slot_width)
-            slot:setHeight(slot_height)
-
-            local tooltip = priv.tooltip[i]
-            tooltip:setX(-private.tooltip_width)
-            tooltip:setY(0)
-            tooltip:setWidth(private.tooltip_width)
-            tooltip:setHeight(height)
-        end
-    end
-end
-
----@param self InterfaceInventoryBag
-function private.newData(self, cols, rows)
+function private.newData(self)
     local priv = {
         loaded = nil,
-        cols = cols,
-        rows = rows,
-        size = cols * rows,
+        cols = 5,
+        max_size = 40,
 
         slot = {},
-        tooltip = {}
+        slot_count = {},
+        --tooltip = {}
     }
     private.data[self] = priv
 
     for i = 1, priv.size do
-        priv.slot[i] = ItemSlot.new()
-        priv.slot[i]:setParent(self)
+        local slot = Button.new()
+        slot:setParent(self)
 
-        priv.tooltip[i] = ItemTooltip.new()
-        priv.tooltip[i]:setParent(self)
+        for j = 1, #Button.cornerName do
+            slot:setCornerText(Button.cornerName[j], nil)
+        end
 
-        priv.slot[i]:setTooltip(priv.tooltip[i])
+        priv.slot[i] = slot
+
+        --priv.tooltip[i] = ItemTooltip.new()
+        --priv.tooltip[i]:setParent(self)
+
+        --priv.slot[i]:setTooltip(priv.tooltip[i])
     end
 end
 
