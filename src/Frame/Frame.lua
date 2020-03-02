@@ -62,13 +62,17 @@ function public:setPoint(point, parent_point, x, y)
         priv.x = x
         priv.y = y
 
+        BlzFrameClearAllPoints(self:getObj())
         if priv.parent then
             BlzFrameSetPoint(self:getObj(), point,
                              priv.parent:getObj(), parent_point,
                              x, y)
         else
+
+
             BlzFrameSetAbsPoint(self:getObj(), point,
-                                x, y)
+                                private.abs_point_x[parent_point] + x,
+                                private.abs_point_y[parent_point] + y)
         end
     end
 end
@@ -92,12 +96,13 @@ function public:setParent(parent)
     if priv.parent ~= parent then
         priv.parent = parent
 
-        if priv.parent then
+        if parent then
+            BlzFrameSetParent(self:getObj(), parent:getObj())
             BlzFrameSetPoint(self:getObj(), priv.point,
                              priv.parent:getObj(), priv.parent_point,
                              priv.x, priv.y)
         else
-            BlzFrameSetParent(self:getObj(), private.game_ui_frame)
+            BlzFrameSetParent(self:getObj(), nil)
             BlzFrameSetAbsPoint(self:getObj(), priv.point,
                                 priv.x, priv.y)
         end
@@ -197,6 +202,30 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 if not IsCompiletime() then
     private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+
+    private.abs_point_x = {
+        [FRAMEPOINT_TOPLEFT] = 0,
+        [FRAMEPOINT_TOP] = 0.4,
+        [FRAMEPOINT_TOPRIGHT] = 0.8,
+        [FRAMEPOINT_LEFT] = 0,
+        [FRAMEPOINT_CENTER] = 0.4,
+        [FRAMEPOINT_RIGHT] = 0.8,
+        [FRAMEPOINT_BOTTOMLEFT] = 0,
+        [FRAMEPOINT_BOTTOM] = 0.4,
+        [FRAMEPOINT_BOTTOMRIGHT] = 0.8,
+    }
+
+    private.abs_point_y = {
+        [FRAMEPOINT_TOPLEFT] = 0.6,
+        [FRAMEPOINT_TOP] = 0.6,
+        [FRAMEPOINT_TOPRIGHT] = 0.6,
+        [FRAMEPOINT_LEFT] = 0.3,
+        [FRAMEPOINT_CENTER] = 0.3,
+        [FRAMEPOINT_RIGHT] = 0.3,
+        [FRAMEPOINT_BOTTOMLEFT] = 0,
+        [FRAMEPOINT_BOTTOM] = 0,
+        [FRAMEPOINT_BOTTOMRIGHT] = 0,
+    }
 end
 
 ---@param self Frame

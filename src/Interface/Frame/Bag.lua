@@ -38,7 +38,7 @@ local private = {}
 function override.new(child_instance)
     local instance = child_instance or Class.allocate(InterfaceFrameBag)
     instance = SimpleImage.new(instance)
-    instance:setTexture('ui\\console\\human\\human-transport-slot.dds')
+    instance:setTexture(nil)
 
     private.newData(instance)
 
@@ -48,16 +48,6 @@ end
 --========
 -- Public
 --========
-
---- Disabled. Autosized frame.
----@param width number
-function public:setWidth(width)
-end
-
---- Disabled. Autosized frame.
----@param height number
-function public:setHeight(height)
-end
 
 ---@param unit_bag UnitInventoryBag | nil
 function public:setUnitBag(unit_bag)
@@ -72,6 +62,7 @@ function public:setUnitBag(unit_bag)
 
     for i = 1, priv.size do
         private.setItemSlot(self, i, unit_bag:get(i))
+        priv.slot[i]:setVisible(true)
     end
 
     for i = priv.size + 1, priv.max_size do
@@ -127,10 +118,10 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.max_bag_size = 40
+private.max_bag_size = 20
 private.slot_count = 'BOTTOMRIGHT'
-private.border_ratio = 1 / 16
-private.space = 0.005
+private.border_ratio = 1/32
+private.space = 0.001
 private.slot_size = Button.getDefaultSize()
 
 ---@param self InterfaceFrameBag
@@ -139,29 +130,32 @@ function private.updatePositions(self)
 
     local size = priv.size
     local cols = priv.cols
-    local rows = math.ceil(size / cols)
+    local rows, _ = math.modf(size / cols)
+    rows = rows + 1
     local slot_size = private.slot_size
-    local slots_width = slot_size * cols + (math.min(0, cols - 1)) * private.space
-    local slots_height = slot_size * rows + (math.min(0, rows - 1)) * private.space
+    local slots_width = slot_size * cols + (math.max(0, cols - 1)) * private.space
+    local slots_height = slot_size * rows + (math.max(0, rows - 1)) * private.space
     local width = slots_width / (1 - 2 * private.border_ratio)
     local height = slots_height / (1 - 2 * private.border_ratio)
     local border_x = private.border_ratio * width
     local border_y = private.border_ratio * height
 
+    FramePublic.setSize(self, width, height)
+
     local i = 0
-    for x = 1, cols do
-        for y = 1, rows do
+    for y = 1, rows do
+        for x = 1, cols do
             i = i + 1
 
+            print(x, y)
             local slot = priv.slot[i]
-            slot:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT,
-                          border_x + (x - 1) * (slot_size + private.space),
-                          height - border_y - (y - 1) * (slot_size + private.space))
+            slot:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT,
+                          -(border_x + (x - 1) * (slot_size + private.space)),
+                          border_y + (y - 1) * (slot_size + private.space))
+
         end
     end
 
-    FramePublic.setWidth(self, width)
-    FramePublic.setHeight(self, height)
 end
 
 ---@param self InterfaceFrameBag
@@ -198,7 +192,7 @@ end
 function private.newData(self)
     local priv = {
         cols = 5,
-        size = 0,
+        size = 10,
         max_size = private.max_bag_size,
 
         unit_bag = nil,
@@ -215,6 +209,7 @@ function private.newData(self)
     for i = 1, private.max_bag_size do
         local slot = Button.new()
         slot:setParent(self)
+        slot:setVisible(false)
 
         for _, event in pairs(BtnActionType) do
             slot:addAction(event, function (slot, player, btn, event)

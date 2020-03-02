@@ -126,7 +126,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.default_size = 0.05
+private.default_size = 0.035
 
 local name = 'InterfaceFrameButton'
 local suffix = {

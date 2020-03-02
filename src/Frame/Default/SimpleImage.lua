@@ -73,9 +73,7 @@ private.image_type = SimpleFrameType.new('SimpleImage', true)
 private.image_type:setWidth(0.05)
 private.image_type:setHeight(0.05)
     local image_texture = SimpleTextureType.new('SimpleImageTexture', false)
-    image_texture:setWidth(0.05)
-    image_texture:setHeight(0.05)
-    image_texture:setAnchor('CENTER', 0, 0)
+    image_texture:setAllPoints()
 private.image_type:setChildrens({image_texture})
 
 
@@ -86,6 +84,7 @@ function private.newData(self)
 
         texture = nil
     }
+    private.data[self] = priv
 end
 
 return static

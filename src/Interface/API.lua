@@ -29,7 +29,7 @@ InterfaceAPI.getTarget = Interface.getTarget
 function InterfaceAPI.init()
     Interface.init()
 
-    InterfaceAPI.Inventory = Interface.Inventory
+    InterfaceAPI.Bag = Interface.getBag()
     InterfaceAPI.CastingBar = Interface.CastingBar
     InterfaceAPI.AbilityBar = Interface.AbilityBar
 

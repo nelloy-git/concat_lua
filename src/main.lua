@@ -27,6 +27,8 @@ require('Event.Item')
 footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
 
 if not IsCompiletime() then
+    InterfaceAPI.init()
+
     u = Unit.new(footman_type, Player(0), -500, -500)
     u:getParameters():set(ParamAPI.ParamType.Mana, ParamAPI.ValueType.BASE,  500)
     SetUnitManaPercentBJ(u:getObj(), 100)
@@ -36,6 +38,9 @@ if not IsCompiletime() then
     u:getAbilities():set(ExampleAbility, 1)
     local abil = u:getAbilities():get(1)
     abil:setMaxCharges(3)
+
+    InterfaceAPI.Bag:setUnitBag(u:getBag())
+
     --local targ = TargetUnit.new(u2:getObj())
     --print(targ:getObj())
     --abil:use(targ)
@@ -53,8 +58,7 @@ if not IsCompiletime() then
 
     it_model = ItemAPI.ItemModel.new(0, 0)
     it:setModel(it_model)
-
-    InterfaceAPI.init()
+    
     --InterfaceAPI.setTarget(u, Player(0))
 
     --it2 = ItemAPI.newItem(0, 0)

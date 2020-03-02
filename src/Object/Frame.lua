@@ -40,9 +40,9 @@ function override.new(name, is_simple, child_instance)
 
     local obj
     if is_simple then
-        obj = BlzCreateSimpleFrame(name, gameui, 0)
+        obj = BlzCreateSimpleFrame(name, nil, 0)
     else
-        obj = BlzCreateFrame(name, gameui, 0, 0)
+        obj = BlzCreateFrame(name, nil, 0, 0)
     end
 
     return Object.new(obj, BlzDestroyFrame, instance)

@@ -1,11 +1,13 @@
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
 local SimpleButton = FrameAPI.SimpleButton
-local SimpleButtonActionType = FrameAPI.SimpleButtonEvent
----@type InterfaceInventoryBag
+local SimpleButtonEvent = FrameAPI.SimpleButtonEvent
+---@type InterfaceFrameBag
 local InterfaceBag = require('Interface.Frame.Bag')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
+---@type InterfaceFrameButtonClass
+local Button = require('Interface.Frame.Button')
 ---@type InterfaceAbilityCastingBarClass
 --local CastingBar = require('Interface.Ability.CastingBar')
 ---@type InterfaceAbilityBarClass
@@ -21,18 +23,23 @@ local Interface = {}
 local bag_btn
 local bag
 
+
+
 function Interface.init()
-    bag_btn = SimpleButton.new()
-    bag_btn:setSize(0.05, 0.05)
-    bag_btn:setTexture('')
-    bag_btn:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT, Screen.getRealWidth(), 0)
+    bag_btn = Button.new()
+    bag_btn:setIcon('')
+    bag_btn:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMLEFT,
+                     Screen.getRealZeroX() + Screen.getRealWidth(), 0)
+    --bag_btn:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER,
+    --                 0, 0)
 
     bag = InterfaceBag.new()
+    --bag:setVisible(false)
     bag:setParent(bag_btn)
     bag:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPLEFT, 0, 0)
 
-    bag_btn:addAction(SimpleButtonActionType.MousePress, function() bag:setVisible(not bag:isVisible()) end)
-
+    bag_btn:addAction(SimpleButtonEvent.MousePress, function() bag:setVisible(not bag:isVisible()) end)
+    --bag_btn:addAction(SimpleButtonEvent.MousePress, function() print('azaza') end)
 --[[
     Interface.Inventory = Inventory.new()
     Interface.Inventory:setWidth(0.3)
@@ -54,7 +61,7 @@ function Interface.init()
 ]]
 end
 
----@return InterfaceInventoryBag
+---@return InterfaceFrameBag
 function Interface.getBag()
     return bag
 end
