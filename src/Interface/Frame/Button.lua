@@ -10,7 +10,6 @@ local Import = require('Resources.Import')
 local FrameAPI = require('Frame.API')
 local SimpleButtonType = FrameAPI.SimpleButtonType
 local SimpleButton = FrameAPI.SimpleButton
-local SimpleLayerType = FrameAPI.SimpleLayerType
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleTextureType = FrameAPI.SimpleTextureType
 local SimpleStringType = FrameAPI.SimpleStringType
@@ -57,6 +56,11 @@ function override.new(child_instance)
     private.newData(instance)
 
     return instance
+end
+
+---@return number
+function override.getDefaultSize()
+    return private.default_size
 end
 
 --========
@@ -122,6 +126,8 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
+private.default_size = 0.05
+
 local name = 'InterfaceFrameButton'
 local suffix = {
     background = 'Background',
@@ -144,7 +150,7 @@ local suffix = {
 
 -- Frame type
 do
-    local size = 0.05
+    local size = private.default_size
     private.frame_type = SimpleButtonType.new(name, true)
     private.frame_type:setWidth(size)
     private.frame_type:setHeight(size)

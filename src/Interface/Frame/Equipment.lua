@@ -4,27 +4,28 @@
 
 local Class = require('Utils.Class.Class')
 
----@type Import
-local Import = require('Resources.Import')
+
+---@type ActionListClass
+local ActionList = require('Utils.ActionList')
+---@type InterfaceFrameButtonClass
+local Button = require('Interface.Frame.Button')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
-local SimpleFrameType = FrameAPI.SimpleFrameType
-local SimpleFrame = FrameAPI.SimpleFrame
+local SimpleImage = FrameAPI.SimpleImage
+local BtnActionType = FrameAPI.SimpleButtonEvent
 local FramePublic = Class.getPublic(FrameAPI.Frame)
+---@type Import
+local Import = require('Resources.Import')
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
 local getItemTypeIcon = ItemAPI.getTypeIcon
----@type InterfaceItemSlotClass
-local ItemSlot = require('Interface.Item.Slot')
----@type InterfaceItemTooltipClass
-local ItemTooltip = require('Interface.Item.Tooltip')
 
 --=======
 -- Class
 --=======
 
-local InterfaceInventoryEquipment = Class.new('InterfaceInventoryEquipment', SimpleFrame)
+local InterfaceInventoryEquipment = Class.new('InterfaceInventoryEquipment', SimpleImage)
 ---@class InterfaceInventoryEquipment
 local public = InterfaceInventoryEquipment.public
 ---@class InterfaceInventoryEquipmentClass
@@ -41,7 +42,8 @@ local private = {}
 ---@return InterfaceInventoryEquipment
 function override.new(child_instance)
     local instance = child_instance or Class.allocate(InterfaceInventoryEquipment)
-    instance = SimpleFrame.new(private.background_type, instance)
+    instance = SimpleImage.new(instance)
+    instance:setTexture('ui\\console\\human\\human-transport-slot.dds')
 
     private.newData(instance)
 
@@ -52,30 +54,23 @@ end
 -- Public
 --========
 
+--- Disabled. Autosized frame.
 ---@param width number
 function public:setWidth(width)
-    FramePublic.setWidth(self, width)
-    private.update(self)
 end
 
+--- Disabled. Autosized frame.
 ---@param height number
 function public:setHeight(height)
-    FramePublic.setHeight(self, height)
-    private.update(self)
 end
 
----@param unit Unit | nil
-function public:load(unit)
+---@param unit_equip UnitInventoryEquipment | nil
+function public:setUnitEquipment(unit_equip)
     local priv = private.data[self]
-    priv.loaded = unit
+    priv.unit_equio = unit_equip
 
-    if not unit then
-        for _, item_type in pairs(ItemType) do
-            if ItemAPI.isTypeEquipable(item_type) then
-                priv.slot[item_type]:setItem(nil)
-            end
-        end
-        return
+    if not unit_equip then
+        self:setAlpha(0)
     end
 
     local unit_equip = unit:getEquipment()

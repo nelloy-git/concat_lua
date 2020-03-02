@@ -83,6 +83,11 @@ function public:getBag()
     return private.data[self].bag
 end
 
+---@return UnitInventoryBelt
+function public:getBelt()
+    return private.data[self].belt
+end
+
 ---@return UnitInventoryEquipment
 function public:getEquipment()
     return private.data[self].equip
@@ -136,11 +141,15 @@ function private.newData(self, owner)
 
         params = ParamAPI.Unit.new(self:getObj()),
 
-        bag = InventoryAPI.Bag.new(self, 20),
+        bag = InventoryAPI.Bag.new(self),
+        belt = InventoryAPI.Belt.new(self),
         equip = InventoryAPI.Equipment.new(self),
         abils = InventoryAPI.Abilities.new(self)
     }
     private.data[self] = priv
+
+    priv.bag:setSize(8)
+    priv.belt:setSize(1)
 end
 
 return static

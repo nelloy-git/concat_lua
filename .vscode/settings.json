@@ -7,7 +7,7 @@
         "./lib": true,
         //"./src": true
     },
-    "Lua.workspace.maxPreload": 500,
+    "Lua.workspace.maxPreload": 200,
     "Lua.workspace.preloadFileSize": 500,
     "Lua.diagnostics.disable": [
         "lowercase-global"
@@ -25,4 +25,7 @@
     "files.associations": {
         "chrono": "cpp"
     },
+    "Lua.awakened.cat": true,
+    "Lua.workspace.ignoreSubmodules": false,
+    "Lua.workspace.useGitIgnore": false,
 }

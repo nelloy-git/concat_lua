@@ -7,7 +7,7 @@ local Class = require('Utils.Class.Class')
 local fmt = string.format
 
 ---@type Import
-local Import = require('Resouces.Import')
+local Import = require('Resources.Import')
 ---@type FrameClass
 local Frame = require('Frame.Frame')
 ---@type SimpleFrameTypeClass

@@ -19,9 +19,9 @@ local WeUtils = require('compiletime.Utils')
 --=======
 
 local WeAbility = Class.new('WeAbility', WeObject)
----@class WeAbility
+---@class WeAbility : WeObject
 local public = WeAbility.public
----@class WeAbilityClass
+---@class WeAbilityClass : WeObjectClass
 local static = WeAbility.static
 ---@type WeAbilityClass
 local override = WeAbility.override
@@ -131,18 +131,20 @@ static.Field.ANcl_BaseOrderID = WeAbilityField.new("Ncl6", 'string', 6, "BaseOrd
 static.Field.ANcl_DisableOtherAbilities = WeAbilityField.new("Ncl5", 'bool', 5, "DisableOtherAbilities", true)
 static.Field.ANcl_FollowThroughTime = WeAbilityField.new("Ncl1", 'unreal', 1, "FollowThroughTime", true)
 
-static.ANcl_TargetType_None = 0
-static.ANcl_TargetType_Unit = 1
-static.ANcl_TargetType_Point = 2
-static.ANcl_TargetType_UnitOrPoint = 3
+static.ANcl_Target = {}
+static.ANcl_Target.None = 0
+static.ANcl_Target.Unit = 1
+static.ANcl_Target.Point = 2
+static.ANcl_Target.UnitOrPoint = 3
 --- 0 - none; 1 - unit; 2 - point; 3 - point or unit
 static.Field.ANcl_TargetType = WeAbilityField.new("Ncl2", 'int', 2, "TargetType", true)
 
-static.ANcl_Options_Visible = 1
-static.ANcl_Options_AreaTarget = 2
-static.ANcl_Options_Material = 4
-static.ANcl_Options_Universal = 8
-static.ANcl_Options_Group = 16
+static.ANcl_Option = {}
+static.ANcl_Option.Visible = 1
+static.ANcl_Option.AreaTarget = 2
+static.ANcl_Option.Material = 4
+static.ANcl_Option.Universal = 8
+static.ANcl_Option.Group = 16
 --- Summ of flags: visible - 1, area target - 2, material - 4, universal - 8, group - 16
 static.Field.ANcl_Options = WeAbilityField.new("Ncl3", 'int', 3, "Options", true)
 

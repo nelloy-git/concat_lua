@@ -6,8 +6,8 @@ local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
 local fmt = string.format
 
----@type Action
-local Action = require('Utils.Action')
+---@type ActionListClass
+local ActionList = require('Utils.ActionList')
 ---@type FrameClass
 local Frame = require('Frame.Frame')
 local FramePublic = Class.getPublic(Frame)
@@ -37,16 +37,16 @@ local private = {}
 -- Static
 --=========
 
----@alias SimpleMouseButtonCallback fun(instance:SimpleButton, player:player, button:mousebuttontype)
----@alias SimpleButtonActionTypeEnum number
+---@alias SimpleMouseButtonCallback fun(instance:SimpleButton, player:player, button:mousebuttontype, event:SimpleButtonEvent)
+---@alias SimpleButtonEvent number
 
----@type table<string, SimpleButtonActionTypeEnum>
+---@type table<string, SimpleButtonEvent>
 static.ActionType = {}
----@type SimpleButtonActionTypeEnum
+---@type SimpleButtonEvent
 static.ActionType.MousePress = 1
----@type SimpleButtonActionTypeEnum
+---@type SimpleButtonEvent
 static.ActionType.MouseDown = 2
----@type SimpleButtonActionTypeEnum
+---@type SimpleButtonEvent
 static.ActionType.MouseUp = 3
 
 ---@param frame_type SimpleButtonType
@@ -113,32 +113,18 @@ function public:enableActions(flag)
     end
 end
 
----@param action_type SimpleButtonActionTypeEnum
----@param callback Callback
+---@param event SimpleButtonEvent
+---@param callback SimpleMouseButtonCallback
 ---@return Action | nil
-function public:addAction(action_type, callback)
-    local priv = private.data[self]
-
-    local action = Action.new(callback, self)
-    table.insert(priv.actions[action_type], action)
-
-    return action
+function public:addAction(event, callback)
+    return private.data[self].actions[event]:add(callback)
 end
 
----@param action_type SimpleButtonActionTypeEnum
+---@param event SimpleButtonEvent
 ---@param action Action
 ---@return boolean
-function public:removeAction(action_type, action)
-    local priv = private.data[self]
-
-    local actions = priv.actions[action_type]
-    for i = 1, #actions do
-        if actions[i] == action then
-            table.remove(actions, i)
-            return true
-        end
-    end
-    return false
+function public:removeAction(event, action)
+    return private.data[self].actions[event]:remove(action)
 end
 
 --=========
@@ -156,12 +142,11 @@ function private.mouseDownCallback()
     local is_left = mouse_btn == MOUSE_BUTTON_TYPE_LEFT
     local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
 
+    local mouse_down = static.ActionType.MouseDown
+
     for instance, priv in pairs(private.active) do
         if priv.detector:isVisible() then
-            local actions = priv.actions[static.ActionType.MouseDown]
-            for i = 1, #actions do
-                actions[i]:run(instance, player, mouse_btn)
-            end
+            priv.actions[mouse_down]:run(instance, player, mouse_btn, mouse_down)
 
             priv.got_left_mouse_btn = priv.got_left_mouse_btn or is_left
             priv.got_right_mouse_btn = priv.got_right_mouse_btn or is_right
@@ -175,18 +160,15 @@ function private.mouseUpCallback()
     local is_left = mouse_btn == MOUSE_BUTTON_TYPE_LEFT
     local is_right = mouse_btn == MOUSE_BUTTON_TYPE_RIGHT
 
+    local mouse_up = static.ActionType.MouseUp
+    local mouse_press = static.ActionType.MousePress
+
     for instance, priv in pairs(private.active) do
         if priv.detector:isVisible() then
-            local actions = priv.actions[static.ActionType.MouseUp]
-            for i = 1, #actions do
-                actions[i]:run(instance, player, mouse_btn)
-            end
+            priv.actions[mouse_up]:run(instance, player, mouse_btn, mouse_up)
 
             if (priv.got_left_mouse_btn and is_left) or (priv.got_right_mouse_btn and is_right) then
-                actions = priv.actions[static.ActionType.MousePress]
-                for i = 1, #actions do
-                    actions[i]:run(instance, player, mouse_btn)
-                end
+                priv.actions[mouse_press]:run(instance, player, mouse_btn, mouse_press)
             end
         end
 
@@ -206,14 +188,13 @@ function private.newData(self)
         got_left_mouse_btn = false,
         got_right_mouse_btn = false,
     }
-    for _, action_type in pairs(static.ActionType) do
-        priv.actions[action_type] = {}
+    for _, event in pairs(static.ActionType) do
+        priv.actions[event] = ActionList.new()
     end
     private.data[self] = priv
     private.active[self] = priv
 
-    --priv.detector:setParent(self)
-    priv.detector:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, 0.2, 0.2)
+    priv.detector:setParent(self)
     priv.detector:setVisible(false)
     BlzFrameSetTooltip(self:getObj(), priv.detector:getObj())
 end

@@ -148,7 +148,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self SimpleButton
 function private.newData(self)
-    priv = {
+    local priv = {
         width = nil,
         height = nil,
 

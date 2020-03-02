@@ -10,7 +10,7 @@ local ClassAPI = {}
 ---@type fun(name:string, vararg:any):Class
 ClassAPI.new = ClassDeclare.register
 
----@type fun(class:any):any
+---@type fun(class:Class):any
 ClassAPI.allocate = ClassInstance.allocate
 
 ---@type fun(class:any):boolean

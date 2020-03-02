@@ -150,6 +150,16 @@ function public:getIcon()
     return private.data[self].icon
 end
 
+---@return number
+function public:getCount()
+    return 1
+end
+
+---@return number
+function public:getProgress()
+    return nil
+end
+
 ---@return string
 function public:getDescription()
     return private.data[self].description

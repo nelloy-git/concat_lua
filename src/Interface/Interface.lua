@@ -1,5 +1,9 @@
----@type InterfaceInventoryClass
---local Inventory = require('Interface.Inventory')
+---@type FrameAPI
+local FrameAPI = require('Frame.API')
+local SimpleButton = FrameAPI.SimpleButton
+local SimpleButtonActionType = FrameAPI.SimpleButtonEvent
+---@type InterfaceInventoryBag
+local InterfaceBag = require('Interface.Frame.Bag')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type InterfaceAbilityCastingBarClass
@@ -14,13 +18,21 @@ local ItemSlot = require('Interface.Frame.Button')
 ---@class Interface
 local Interface = {}
 
-Interface.target = nil
+local bag_btn
+local bag
 
 function Interface.init()
-    local test = ItemSlot.new()
-    test:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT, 0.4, 0.3)
-    --test:setWidth(0.05)
-    --test:setHeight(0.05)
+    bag_btn = SimpleButton.new()
+    bag_btn:setSize(0.05, 0.05)
+    bag_btn:setTexture('')
+    bag_btn:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT, Screen.getRealWidth(), 0)
+
+    bag = InterfaceBag.new()
+    bag:setParent(bag_btn)
+    bag:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPLEFT, 0, 0)
+
+    bag_btn:addAction(SimpleButtonActionType.MousePress, function() bag:setVisible(not bag:isVisible()) end)
+
 --[[
     Interface.Inventory = Inventory.new()
     Interface.Inventory:setWidth(0.3)
@@ -42,20 +54,9 @@ function Interface.init()
 ]]
 end
 
---- Should be used async.
----@param unit Unit
-function Interface.setTarget(unit)
-    if Interface.target ~= unit then
-        Interface.target = unit
-        Interface.Inventory:load(unit)
-        Interface.AbilityBar:load(unit)
-    end
-end
-
---- Async
----@return Unit
-function Interface.getTarget()
-    return Interface.target
+---@return InterfaceInventoryBag
+function Interface.getBag()
+    return bag
 end
 
 return Interface

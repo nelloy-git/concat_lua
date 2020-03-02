@@ -76,7 +76,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    priv = private.data[self]
+    local priv = private.data[self]
 
     if priv.width ~= width or priv.height ~= height then
         priv.width = width

@@ -7,17 +7,21 @@ local Class = require('Utils.Class.Class')
 
 local fmt = string.format
 
+---@type ItemAPI
+local ItemAPI = require('Item.API')
+local ItemType = ItemAPI.ItemType
+
 --=======
 -- Class
 --=======
 
-local UnitInventoryBag = Class.new('UnitInventoryBag')
----@class UnitInventoryBag
-local public = UnitInventoryBag.public
----@class UnitInventoryBagClass
-local static = UnitInventoryBag.static
----@type UnitInventoryBagClass
-local override = UnitInventoryBag.override
+local UnitInventoryBelt = Class.new('UnitInventoryBelt')
+---@class UnitInventoryBelt
+local public = UnitInventoryBelt.public
+---@class UnitInventoryBeltClass
+local static = UnitInventoryBelt.static
+---@type UnitInventoryBeltClass
+local override = UnitInventoryBelt.override
 local private = {}
 
 --=========
@@ -25,10 +29,10 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param child_instance UnitInventoryBag | nil
----@return UnitInventoryBag
+---@param child_instance UnitInventoryBelt | nil
+---@return UnitInventoryBelt
 function static.new(owner, child_instance)
-    local instance = child_instance or Class.allocate(UnitInventoryBag)
+    local instance = child_instance or Class.allocate(UnitInventoryBelt)
     private.newData(instance, owner)
 
     return instance
@@ -43,8 +47,13 @@ end
 ---@return Item | nil
 function public:set(pos, item)
     local priv = private.data[self]
+
+    if item:getType() ~= ItemType.USABLE then
+        Log.error(self, 'can take USABLE items only.', 2)
+    end
+
     if pos < 1 or pos > priv.size then
-        Log.error(self, fmt('wrong bag slot. Bag size: %d. Got pos = %d.',
+        Log.error(self, fmt('wrong bag slot. Belt size: %d. Got pos = %d.',
                   priv.size, pos), 2)
     end
 
@@ -72,7 +81,7 @@ end
 function public:get(pos)
     local priv = private.data[self]
     if pos < 1 or pos > priv.size then
-        Log.error(self, fmt('wrong bag slot. Bag size: %d. Got pos = %d.',
+        Log.error(self, fmt('wrong bag slot. Belt size: %d. Got pos = %d.',
                   priv.size, pos), 2)
     end
 
@@ -118,7 +127,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.owner2bag = setmetatable({}, {__mode = 'kv'})
 
----@param self UnitInventoryBag
+---@param self UnitInventoryBelt
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {
