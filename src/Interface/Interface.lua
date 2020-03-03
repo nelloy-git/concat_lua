@@ -4,6 +4,8 @@ local SimpleButton = FrameAPI.SimpleButton
 local SimpleButtonEvent = FrameAPI.SimpleButtonEvent
 ---@type InterfaceFrameBag
 local InterfaceBag = require('Interface.Frame.Bag')
+---@type InterfaceFrameEquipment
+local InterfaceEquipment = require('Interface.Frame.Equipment')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type InterfaceFrameButtonClass
@@ -20,25 +22,28 @@ local ItemSlot = require('Interface.Frame.Button')
 ---@class Interface
 local Interface = {}
 
-local bag_btn
+local inventory_btn
 local bag
-
-
+local equipment
 
 function Interface.init()
-    bag_btn = Button.new()
-    bag_btn:setIcon('')
-    bag_btn:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMLEFT,
+    inventory_btn = Button.new()
+    inventory_btn:setIcon('ReplaceableTextures\\CommandButtons\\BTNDust')
+    inventory_btn:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMLEFT,
                      Screen.getRealZeroX() + Screen.getRealWidth(), 0)
-    --bag_btn:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER,
-    --                 0, 0)
 
     bag = InterfaceBag.new()
-    --bag:setVisible(false)
-    bag:setParent(bag_btn)
+    bag:setVisible(false)
+    bag:setParent(inventory_btn)
     bag:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPLEFT, 0, 0)
+    inventory_btn:addAction(SimpleButtonEvent.MousePress, function() bag:setVisible(not bag:isVisible()) end)
 
-    bag_btn:addAction(SimpleButtonEvent.MousePress, function() bag:setVisible(not bag:isVisible()) end)
+    equipment = InterfaceEquipment.new()
+    equipment:setVisible(false)
+    equipment:setParent(bag)
+    equipment:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPLEFT, 0, 0)
+    inventory_btn:addAction(SimpleButtonEvent.MousePress, function() equipment:setVisible(not equipment:isVisible()) end)
+
     --bag_btn:addAction(SimpleButtonEvent.MousePress, function() print('azaza') end)
 --[[
     Interface.Inventory = Inventory.new()
@@ -64,6 +69,11 @@ end
 ---@return InterfaceFrameBag
 function Interface.getBag()
     return bag
+end
+
+---@return InterfaceFrameBag
+function Interface.getEquipment()
+    return equipment
 end
 
 return Interface

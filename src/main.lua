@@ -40,6 +40,7 @@ if not IsCompiletime() then
     abil:setMaxCharges(3)
 
     InterfaceAPI.Bag:setUnitBag(u:getBag())
+    InterfaceAPI.Equip:setUnitBag(u:getEquipment())
 
     --local targ = TargetUnit.new(u2:getObj())
     --print(targ:getObj())

@@ -30,6 +30,7 @@ function InterfaceAPI.init()
     Interface.init()
 
     InterfaceAPI.Bag = Interface.getBag()
+    InterfaceAPI.Equip = Interface.getEquipment()
     InterfaceAPI.CastingBar = Interface.CastingBar
     InterfaceAPI.AbilityBar = Interface.AbilityBar
 

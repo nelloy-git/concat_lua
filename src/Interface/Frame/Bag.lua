@@ -49,6 +49,13 @@ end
 -- Public
 --========
 
+--- Autosizing frame. Disabled function
+---@param width number
+---@param height number
+function public:setSize(width, height)
+    Log(Log.Wrn, self, 'function disabled.', 2)
+end
+
 ---@param unit_bag UnitInventoryBag | nil
 function public:setUnitBag(unit_bag)
     local priv = private.data[self]
@@ -77,6 +84,10 @@ end
 function public:updateSlot(pos)
     local priv = private.data[self]
 
+    if not priv.unit_bag then
+        return
+    end
+
     if pos and pos > 0 then
         private.setItemSlot(self, pos, priv.unit_bag:get(pos))
         return
@@ -98,6 +109,7 @@ function public:getMaxSize()
     return private.data[self].max_size
 end
 
+--- Async
 ---@param event SimpleButtonEvent
 ---@param callback InterfaceFrameBagCallback
 ---@return Action | nil
@@ -105,6 +117,7 @@ function public:addAction(event, callback)
     return private.data[self].actions[event]:add(callback)
 end
 
+--- Async
 ---@param event SimpleButtonEvent
 ---@param action Action
 ---@return boolean
@@ -146,12 +159,9 @@ function private.updatePositions(self)
     for y = 1, rows do
         for x = 1, cols do
             i = i + 1
-
-            print(x, y)
-            local slot = priv.slot[i]
-            slot:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT,
-                          -(border_x + (x - 1) * (slot_size + private.space)),
-                          border_y + (y - 1) * (slot_size + private.space))
+            priv.slot[i]:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT,
+                                  -(border_x + (x - 1) * (slot_size + private.space)),
+                                  border_y + (y - 1) * (slot_size + private.space))
 
         end
     end
