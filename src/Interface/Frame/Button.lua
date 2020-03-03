@@ -14,6 +14,7 @@ local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleTextureType = FrameAPI.SimpleTextureType
 local SimpleStringType = FrameAPI.SimpleStringType
 local SimpleStatusBarType = FrameAPI.SimpleStatusBarType
+local FramePublic = Class.getPublic(FrameAPI.Frame)
 
 --=======
 -- Class
@@ -66,6 +67,16 @@ end
 --========
 -- Public
 --========
+
+function public:setLevel(level)
+    local priv = private.data[self]
+
+    FramePublic.setLevel(self, level)
+    BlzFrameSetLevel(priv.progress, level + 1)
+    for i = 1, #private.suffix.corner do
+        BlzFrameSetLevel(priv.corner[i], level + 2)
+    end
+end
 
 ---@param texture string | nil
 function public:setIcon(texture)
@@ -129,7 +140,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.default_size = 0.035
 
 local name = 'InterfaceFrameButton'
-local suffix = {
+private.suffix = {
     background = 'Background',
     icon = 'Icon',
     progress = 'Progress',
@@ -156,7 +167,7 @@ do
     private.frame_type:setHeight(size)
         local list = {}
 
-        local background = SimpleTextureType.new(name..suffix.background, false)
+        local background = SimpleTextureType.new(name..private.suffix.background, false)
         background:setAnchor('CENTER', 0, 0)
         background:setWidth(size)
         background:setHeight(size)
@@ -164,29 +175,29 @@ do
         background:setTexCoord(3/512, 283/512, 78/512, 356/512)
         table.insert(list, background)
 
-        local icon = SimpleTextureType.new(name..suffix.icon, false)
+        local icon = SimpleTextureType.new(name..private.suffix.icon, false)
         icon:setAnchor('CENTER', 0, 0)
         icon:setWidth(0.8 * size)
         icon:setHeight(0.8 * size)
         icon:setTexture(Import.TransparentTexture)
         table.insert(list, icon)
 
-        local progress = SimpleStatusBarType.new(name..suffix.progress, false)
+        local progress = SimpleStatusBarType.new(name..private.suffix.progress, false)
         progress:setTexture(Import.HalfTransparentTexture)
         table.insert(list, progress)
 
-        for i = 1, #suffix.corner do
-            local corner_name = name..suffix.corner[i]
+        for i = 1, #private.suffix.corner do
+            local corner_name = name..private.suffix.corner[i]
             local corner = SimpleFrameType.new(corner_name, false)
-                local corner_background = SimpleTextureType.new(corner_name..suffix.corner_background, false)
-                corner_background:setAnchor(suffix.corner[i], 0, 0)
+                local corner_background = SimpleTextureType.new(corner_name..private.suffix.corner_background, false)
+                corner_background:setAnchor(private.suffix.corner[i], 0, 0)
                 corner_background:setWidth(0.2 * size)
                 corner_background:setHeight(0.2 * size)
                 corner_background:setTexture('ui\\widgets\\console\\human\\infocard-attack-siege')
                 corner_background:setTexCoord(31/64, 33/64, 1, 1)
 
-                local corner_string = SimpleStringType.new(corner_name..suffix.corner_string, false)
-                corner_string:setAnchor(suffix.corner[i], 0, 0)
+                local corner_string = SimpleStringType.new(corner_name..private.suffix.corner_string, false)
+                corner_string:setAnchor(private.suffix.corner[i], 0, 0)
                 corner_string:setWidth(0.2 * size)
                 corner_string:setHeight(0.2 * size)
                 corner_string:setFont('fonts\\nim_____.ttf', 0.008)
@@ -200,24 +211,25 @@ end
 ---@param self InterfaceFrameButton
 function private.newData(self)
     local priv = {
-        background = BlzGetFrameByName(name..suffix.background, 0),
-        icon = BlzGetFrameByName(name..suffix.icon, 0),
-        progress = BlzGetFrameByName(name..suffix.progress, 0),
+        background = BlzGetFrameByName(name..private.suffix.background, 0),
+        icon = BlzGetFrameByName(name..private.suffix.icon, 0),
+        progress = BlzGetFrameByName(name..private.suffix.progress, 0),
 
         corner = {},
         corner_background = {},
         corner_string = {},
     }
-    for i = 1, #suffix.corner do
-        local corner_name = name..suffix.corner[i]
-        priv.corner[suffix.corner[i]] = BlzGetFrameByName(corner_name, 0)
-        priv.corner_background[suffix.corner[i]] = BlzGetFrameByName(corner_name..suffix.corner_background, 0)
-        priv.corner_string[suffix.corner[i]] = BlzGetFrameByName(corner_name..suffix.corner_string, 0)
+    for i = 1, #private.suffix.corner do
+        local corner_name = name..private.suffix.corner[i]
+        priv.corner[private.suffix.corner[i]] = BlzGetFrameByName(corner_name, 0)
+        priv.corner_background[private.suffix.corner[i]] = BlzGetFrameByName(corner_name..private.suffix.corner_background, 0)
+        priv.corner_string[private.suffix.corner[i]] = BlzGetFrameByName(corner_name..private.suffix.corner_string, 0)
 
-        BlzFrameSetVisible(priv.corner[suffix.corner[i]], false)
+        BlzFrameSetVisible(priv.corner[private.suffix.corner[i]], false)
     end
     private.data[self] = priv
 
+    self:setLevel(1)
     BlzFrameSetValue(priv.progress, 0)
 end
 
