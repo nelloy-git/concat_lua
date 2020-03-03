@@ -101,7 +101,15 @@ end
 ---@param cols number
 function public:setColumns(cols)
     private.data[self].cols = cols
-    self:update()
+    private.updatePositions(self)
+end
+
+---@param level number
+function public:setLevel(level)
+    FramePublic.setLevel(self, level)
+    for _, slot in pairs(private.data[self].slot) do
+        slot:setLevel(level + 1)
+    end
 end
 
 ---@return number
@@ -143,8 +151,8 @@ function private.updatePositions(self)
 
     local size = priv.size
     local cols = priv.cols
-    local rows, _ = math.modf(size / cols)
-    rows = rows + 1
+    local rows, frac = math.modf(size / cols)
+    rows = frac ~= 0 and rows + 1 or rows
     local slot_size = private.slot_size
     local slots_width = slot_size * cols + (math.max(0, cols - 1)) * private.space
     local slots_height = slot_size * rows + (math.max(0, rows - 1)) * private.space
@@ -154,6 +162,7 @@ function private.updatePositions(self)
     local border_y = private.border_ratio * height
 
     FramePublic.setSize(self, width, height)
+    self:setLevel(self:getLevel())
 
     local i = 0
     for y = 1, rows do

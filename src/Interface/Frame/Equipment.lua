@@ -13,8 +13,7 @@ local Button = require('Interface.Frame.Button')
 local FrameAPI = require('Frame.API')
 local SimpleImage = FrameAPI.SimpleImage
 local BtnActionType = FrameAPI.SimpleButtonEvent
----@type Import
-local Import = require('Resources.Import')
+local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ItemAPI
 local ItemAPI = require('Item.API')
 local ItemType = ItemAPI.ItemType
@@ -92,6 +91,14 @@ function public:updateSlot(item_type)
     end
 end
 
+---@param level number
+function public:setLevel(level)
+    FramePublic.setLevel(self, level)
+    for _, slot in pairs(private.data[self].slot) do
+        slot:setLevel(level + 1)
+    end
+end
+
 --- Async
 ---@param event SimpleButtonEvent
 ---@param callback InterfaceFrameEquipmentCallback
@@ -155,7 +162,7 @@ function private.updatePositions(self)
     local priv = private.data[self]
 
     local cols = 3
-    local rows = 4
+    local rows = 5
     local slot_size = private.slot_size
     local slots_width = slot_size * cols + (math.max(0, cols - 1)) * private.space
     local slots_height = slot_size * rows + (math.max(0, rows - 1)) * private.space
@@ -164,9 +171,12 @@ function private.updatePositions(self)
     local border_x = private.border_ratio * width
     local border_y = private.border_ratio * height
 
+    FramePublic.setSize(self, width, height)
+    self:setLevel(self:getLevel())
+
     for _, item_type in pairs(ItemType) do
         if ItemAPI.isTypeEquipable(item_type) then
-            priv.slot[item_type]:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT,
+            priv.slot[item_type]:setPoint(FRAMEPOINT_BOTTOMLEFT, FRAMEPOINT_BOTTOMLEFT,
                                           border_x + private.SlotCol[item_type] * (slot_size + private.space),
                                           border_y + private.SlotRow[item_type] * (slot_size + private.space))
         end
@@ -179,7 +189,7 @@ end
 function private.setItemSlot(self, item_type, item)
     local slot = private.data[self].slot[item_type]
 
-    local icon
+    local icon = getItemTypeIcon(item_type)
     local progress
     if item then
         icon = item:getIcon()

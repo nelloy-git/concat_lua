@@ -58,7 +58,7 @@ end
 ---@param order number
 ---@return boolean
 function public:order(unit, order)
-    return IssueTargetOrderById(unit:getObj(), order, priv.item_obj)
+    return IssueTargetOrderById(unit:getObj(), order, private.data[self].item_obj)
 end
 
 --=========

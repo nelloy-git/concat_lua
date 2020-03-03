@@ -86,7 +86,7 @@ function public:setSize(width, height)
         priv.width = width
         priv.height = height
 
-        BlzFrameSetSize(self:getObj(), priv.width, priv.height)
+        BlzFrameSetSize(self:getObj(), width, height)
     end
 end
 
@@ -96,16 +96,9 @@ function public:setParent(parent)
     if priv.parent ~= parent then
         priv.parent = parent
 
-        if parent then
-            BlzFrameSetParent(self:getObj(), parent:getObj())
-            BlzFrameSetPoint(self:getObj(), priv.point,
-                             priv.parent:getObj(), priv.parent_point,
-                             priv.x, priv.y)
-        else
-            BlzFrameSetParent(self:getObj(), nil)
-            BlzFrameSetAbsPoint(self:getObj(), priv.point,
-                                priv.x, priv.y)
-        end
+        BlzFrameSetParent(self:getObj(), parent and parent:getObj())
+        self:setLevel(parent and parent:getLevel() or 0)
+        self:setPoint(priv.point, priv.parent_point, priv.x, priv.y)
     end
 end
 

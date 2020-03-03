@@ -33,16 +33,19 @@ function Interface.init()
                      Screen.getRealZeroX() + Screen.getRealWidth(), 0)
 
     bag = InterfaceBag.new()
-    bag:setVisible(false)
+    bag:setTexture('')
+    bag:setColumns(8)
+    bag:setVisible(true)
     bag:setParent(inventory_btn)
     bag:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPLEFT, 0, 0)
     inventory_btn:addAction(SimpleButtonEvent.MousePress, function() bag:setVisible(not bag:isVisible()) end)
 
     equipment = InterfaceEquipment.new()
-    equipment:setVisible(false)
+    equipment:setTexture('')
     equipment:setParent(bag)
-    equipment:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPLEFT, 0, 0)
-    inventory_btn:addAction(SimpleButtonEvent.MousePress, function() equipment:setVisible(not equipment:isVisible()) end)
+    equipment:setVisible(true)
+    equipment:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPRIGHT, 0, 0)
+    --inventory_btn:addAction(SimpleButtonEvent.MousePress, function() equipment:setVisible(not equipment:isVisible()) end)
 
     --bag_btn:addAction(SimpleButtonEvent.MousePress, function() print('azaza') end)
 --[[

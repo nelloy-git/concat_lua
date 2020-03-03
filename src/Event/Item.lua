@@ -53,10 +53,10 @@ function PickUpItem.callback()
     end
 
     -- Add item to bag. Update UI if bag is showing.
-    unit:getBag():set(item, empty_pos)
+    unit:getBag():set(empty_pos, item)
 
-    if unit == InterfaceAPI.getTarget() then
-        InterfaceAPI.Inventory:load(unit)
+    if true --[[unit == InterfaceAPI.getTarget()]] then
+        InterfaceAPI.Bag:updateSlot(empty_pos)
     end
 end
 
