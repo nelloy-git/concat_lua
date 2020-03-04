@@ -10,7 +10,7 @@ local ActionList = require('Utils.ActionList')
 local Button = require('Interface.Frame.Button')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
-local SimpleImage = FrameAPI.SimpleImage
+local SimpleButton = FrameAPI.SimpleButton
 local BtnActionType = FrameAPI.SimpleButtonEvent
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 
@@ -18,10 +18,10 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 -- Class
 --=======
 
-local InterfaceFrameBag = Class.new('InterfaceFrameBag', SimpleImage)
----@class InterfaceFrameBag : SimpleImage
+local InterfaceFrameBag = Class.new('InterfaceFrameBag', SimpleButton)
+---@class InterfaceFrameBag : SimpleButton
 local public = InterfaceFrameBag.public
----@class InterfaceFrameBagClass : SimpleImageClass
+---@class InterfaceFrameBagClass : SimpleButtonClass
 local static = InterfaceFrameBag.static
 ---@type InterfaceFrameBagClass
 local override = InterfaceFrameBag.override
@@ -37,7 +37,7 @@ local private = {}
 ---@return InterfaceFrameBag
 function override.new(child_instance)
     local instance = child_instance or Class.allocate(InterfaceFrameBag)
-    instance = SimpleImage.new(instance)
+    instance = SimpleButton.new(instance)
     instance:setTexture(nil)
 
     private.newData(instance)
@@ -53,7 +53,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log(Log.Wrn, self, 'function disabled.', 2)
+    Log(Log.Wrn, self, 'Autosizing frame. Disabled function.', 2)
 end
 
 ---@param unit_bag UnitInventoryBag | nil

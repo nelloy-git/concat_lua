@@ -6,6 +6,8 @@ local SimpleButtonEvent = FrameAPI.SimpleButtonEvent
 local InterfaceBag = require('Interface.Frame.Bag')
 ---@type InterfaceFrameEquipment
 local InterfaceEquipment = require('Interface.Frame.Equipment')
+---@type InterfaceFrameIconValueClass
+local InterfaceIconValue = require('Interface.Frame.IconValue')
 ---@type ScreenUpdater
 local Screen = require('Frame.Screen')
 ---@type InterfaceFrameButtonClass

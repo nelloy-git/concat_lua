@@ -21,13 +21,13 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 -- Class
 --=======
 
-local InterfaceFrameButton = Class.new('InterfaceFrameButton', SimpleButton)
----@class InterfaceFrameButton : SimpleButton
-local public = InterfaceFrameButton.public
----@class InterfaceFrameButtonClass :SimpleButtonClass
-local static = InterfaceFrameButton.static
----@type InterfaceFrameButtonClass
-local override = InterfaceFrameButton.override
+local InterfaceFrameItemToolti = Class.new('InterfaceFrameItemToolti', SimpleButton)
+---@class InterfaceFrameItemToolti : SimpleButton
+local public = InterfaceFrameItemToolti.public
+---@class InterfaceFrameItemTooltiClass :SimpleButtonClass
+local static = InterfaceFrameItemToolti.static
+---@type InterfaceFrameItemTooltiClass
+local override = InterfaceFrameItemToolti.override
 local private = {}
 
 --=========
@@ -46,14 +46,14 @@ static.cornerName = {
     'BOTTOMRIGHT',
 }
 
----@param child_instance InterfaceFrameButton | nil
----@return InterfaceFrameButton
+---@param child_instance InterfaceFrameItemToolti | nil
+---@return InterfaceFrameItemToolti
 function override.new(child_instance)
-    if child_instance and not Class.type(child_instance, InterfaceFrameButton) then
-        Log.error(InterfaceFrameButton, '\"child_instance\" must be InterfaceFrameButton or nil', 2)
+    if child_instance and not Class.type(child_instance, InterfaceFrameItemToolti) then
+        Log.error(InterfaceFrameItemToolti, '\"child_instance\" must be InterfaceFrameItemToolti or nil', 2)
     end
 
-    local instance = child_instance or Class.allocate(InterfaceFrameButton)
+    local instance = child_instance or Class.allocate(InterfaceFrameItemToolti)
     instance = SimpleButton.new(private.frame_type, instance)
     private.newData(instance)
 
@@ -140,7 +140,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 private.default_size = 0.035
 
-local name = 'InterfaceFrameButton'
+local name = 'InterfaceFrameItemToolti'
 private.suffix = {
     background = 'Background',
     icon = 'Icon',
@@ -213,7 +213,7 @@ do
     private.frame_type:setChildrens(list)
 end
 
----@param self InterfaceFrameButton
+---@param self InterfaceFrameItemToolti
 function private.newData(self)
     local priv = {
         background = BlzGetFrameByName(name..private.suffix.background, 0),

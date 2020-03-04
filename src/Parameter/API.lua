@@ -18,7 +18,7 @@ local Data = require('Parameter.Data')
 ---@class ParameterAPI
 local ParameterAPI = {}
 
-ParameterAPI.ValueType = Value.ValueType
+ParameterAPI.ValueType = Value.ValuePos
 ParameterAPI.ParamType = Data.Type
 
 ParameterAPI.getShortName = Data.getShortName

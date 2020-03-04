@@ -26,6 +26,5 @@
         "chrono": "cpp"
     },
     "Lua.awakened.cat": true,
-    "Lua.workspace.ignoreSubmodules": false,
     "Lua.workspace.useGitIgnore": false,
 }

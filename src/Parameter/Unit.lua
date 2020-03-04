@@ -11,7 +11,7 @@ local ParamMath = Data.Math
 local ParamDefault = Data.DefaultValue
 ---@type ParameterValueClass
 local ParamValue = require('Parameter.Value')
-local ValueType = ParamValue.ValueType
+local ValueType = ParamValue.ValuePos
 ---@type fun(unit:unit, param:ParameterTypeEnum, value:number)
 local ParameterUnitApply = require('Parameter.UnitApply')
 

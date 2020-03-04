@@ -16,6 +16,8 @@ local SimpleTextureType = FrameAPI.SimpleTextureType
 local SimpleStringType = FrameAPI.SimpleStringType
 local SimpleStatusBarType = FrameAPI.SimpleStatusBarType
 local FramePublic = Class.getPublic(FrameAPI.Frame)
+---@type InterfaceFrameIconValueClass
+local IconValue = require('Interface.Frame.IconValue')
 
 --=======
 -- Class
@@ -34,17 +36,28 @@ local private = {}
 -- Static
 --=========
 
-static.cornerName = {
-    'TOPLEFT',
-    'TOP',
-    'TOPRIGHT',
-    'LEFT',
-    'CENTER',
-    'RIGHT',
-    'BOTTOMLEFT',
-    'BOTTOM',
-    'BOTTOMRIGHT',
-}
+---@alias InterfaceFrameButtonValuePos number
+
+---@type table<string, InterfaceFrameButtonValuePos>
+static.ValuePos = {}
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.TOPLEFT = 1
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.TOP = 2
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.TOPRIGHT = 3
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.LEFT = 4
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.CENTER = 5
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.RIGHT = 6
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.BOTTOMLEFT = 7
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.BOTTOM = 8
+---@type InterfaceFrameButtonValuePos
+static.ValuePos.BOTTOMRIGHT = 9
 
 ---@param child_instance InterfaceFrameButton | nil
 ---@return InterfaceFrameButton
@@ -69,14 +82,37 @@ end
 -- Public
 --========
 
+---@param width number
+---@param height number
+function public:setSize(width, height)
+    local ratio_w = width / self:getWidth()
+    local ratio_h = height / self:getHeight()
+    FramePublic.setSize(self, width, height)
+
+    local priv = private.data[self]
+    BlzFrameSetSize(priv.icon, private.icon_ratio * width, private.icon_ratio * height)
+    for _, val_pos in pairs(static.ValuePos) do
+        local value = priv.value[val_pos]
+        value:setSize(ratio_w * value:getWidth(), ratio_h * value:getHeight())
+    end
+end
+
+---@param level number
 function public:setLevel(level)
     local priv = private.data[self]
 
     FramePublic.setLevel(self, level)
     BlzFrameSetLevel(priv.progress, level + 1)
-    for i = 1, #private.suffix.corner do
-        BlzFrameSetLevel(priv.corner[i], level + 2)
+
+    for _, val_pos in pairs(static.ValuePos) do
+        priv.value[val_pos]:setLevel(level + 1)
     end
+end
+
+---@param texture string | nil
+function public:setBackground(texture)
+    texture = texture or Import.TransparentTexture
+    BlzFrameSetTexture(private.data[self].icon, texture, 0, true)
 end
 
 ---@param texture string | nil
@@ -102,34 +138,15 @@ function public:setProgress(value)
     BlzFrameSetVisible(priv.progress, true)
 end
 
----@param corner string | 'TOPLEFT' | 'TOP' | 'TOPRIGHT' | 'LEFT' | 'CENTER' | 'RIGHT' | 'BOTTOMLEFT' | 'BOTTOM' | 'BOTTOMRIGHT'
----@param text string | nil
----@param red number | nil
----@param green number | nil
----@param blue number | nil
----@param alpha number | nil
-function public:setCornerText(corner, text, red, green, blue, alpha)
-    if not text then
-        BlzFrameSetVisible(private.data[self].corner[corner], false)
-        return
-    end
-
-    red = math.max(math.min(red or 255, 255), 1)
-    green = math.max(math.min(green or 255, 255), 1)
-    blue = math.max(math.min(blue or 255, 255), 1)
-    alpha = math.max(math.min(alpha or 255, 255), 1)
-
-    local color = string.format('|c%x%x%x%x', alpha, red, green, blue)
-    BlzFrameSetText(private.data[self].corner_string[corner], color..text..'|r')
+---@return number
+function public:getLevel()
+    return FramePublic.getLevel(self) + 1
 end
 
----@param corner string | 'TOPLEFT' | 'TOP' | 'TOPRIGHT' | 'LEFT' | 'CENTER' | 'RIGHT' | 'BOTTOMLEFT' | 'BOTTOM' | 'BOTTOMRIGHT'
----@param texture string
-function public:setCornerBackground(corner, texture)
-    if not texture then
-        texture = Import.TransparentTexture
-    end
-    BlzFrameSetTexture(private.data[self].corner_background[corner], texture, 0, true)
+---@param val_pos InterfaceFrameButtonValuePos
+---@return InterfaceFrameIconValue
+function public:getIconValue(val_pos)
+    return private.data[self].value[val_pos]
 end
 
 --=========
@@ -139,25 +156,25 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.default_size = 0.035
+private.icon_ratio = 0.8
 
 local name = 'InterfaceFrameButton'
 private.suffix = {
     background = 'Background',
     icon = 'Icon',
     progress = 'Progress',
-    corner = {
-        'TOPLEFT',
-        'TOP',
-        'TOPRIGHT',
-        'LEFT',
-        'CENTER',
-        'RIGHT',
-        'BOTTOMLEFT',
-        'BOTTOM',
-        'BOTTOMRIGHT'
-    },
-    corner_background = 'Background',
-    corner_string = 'String'
+}
+
+private.framepoint = {
+    [static.ValuePos.TOPLEFT] = FRAMEPOINT_TOPLEFT,
+    [static.ValuePos.TOP] = FRAMEPOINT_TOP,
+    [static.ValuePos.TOPRIGHT] = FRAMEPOINT_TOPRIGHT,
+    [static.ValuePos.LEFT] = FRAMEPOINT_LEFT,
+    [static.ValuePos.CENTER] = FRAMEPOINT_CENTER,
+    [static.ValuePos.RIGHT] = FRAMEPOINT_RIGHT,
+    [static.ValuePos.BOTTOMLEFT] = FRAMEPOINT_BOTTOMLEFT,
+    [static.ValuePos.BOTTOM] = FRAMEPOINT_BOTTOM,
+    [static.ValuePos.BOTTOMRIGHT] = FRAMEPOINT_BOTTOMRIGHT,
 }
 
 -- Frame type
@@ -181,8 +198,8 @@ do
         local forw_layer = SimpleLayerType.new('ARTWORK', false)
             local icon = SimpleTextureType.new(name..private.suffix.icon, false)
             icon:setAnchor('CENTER', 0, 0)
-            icon:setWidth(0.8 * size)
-            icon:setHeight(0.8 * size)
+            icon:setWidth(private.icon_ratio * size)
+            icon:setHeight(private.icon_ratio * size)
             icon:setTexture(Import.TransparentTexture)
         forw_layer:setChildrens({icon})
         table.insert(list, forw_layer)
@@ -190,26 +207,6 @@ do
         local progress = SimpleStatusBarType.new(name..private.suffix.progress, false)
         progress:setTexture(Import.HalfTransparentTexture)
         table.insert(list, progress)
-
-        for i = 1, #private.suffix.corner do
-            local corner_name = name..private.suffix.corner[i]
-            local corner = SimpleFrameType.new(corner_name, false)
-                local corner_background = SimpleTextureType.new(corner_name..private.suffix.corner_background, false)
-                corner_background:setAnchor(private.suffix.corner[i], 0, 0)
-                corner_background:setWidth(0.2 * size)
-                corner_background:setHeight(0.2 * size)
-                corner_background:setTexture('ui\\widgets\\console\\human\\infocard-attack-siege')
-                corner_background:setTexCoord(31/64, 33/64, 1, 1)
-
-                local corner_string = SimpleStringType.new(corner_name..private.suffix.corner_string, false)
-                corner_string:setAnchor(private.suffix.corner[i], 0, 0)
-                corner_string:setWidth(0.2 * size)
-                corner_string:setHeight(0.2 * size)
-                corner_string:setFont('fonts\\nim_____.ttf', 0.008)
-                corner_string:setText('0')
-            corner:setChildrens({corner_background, corner_string})
-            table.insert(list, corner)
-        end
     private.frame_type:setChildrens(list)
 end
 
@@ -220,17 +217,14 @@ function private.newData(self)
         icon = BlzGetFrameByName(name..private.suffix.icon, 0),
         progress = BlzGetFrameByName(name..private.suffix.progress, 0),
 
-        corner = {},
-        corner_background = {},
-        corner_string = {},
+        value = {},
     }
-    for i = 1, #private.suffix.corner do
-        local corner_name = name..private.suffix.corner[i]
-        priv.corner[private.suffix.corner[i]] = BlzGetFrameByName(corner_name, 0)
-        priv.corner_background[private.suffix.corner[i]] = BlzGetFrameByName(corner_name..private.suffix.corner_background, 0)
-        priv.corner_string[private.suffix.corner[i]] = BlzGetFrameByName(corner_name..private.suffix.corner_string, 0)
-
-        BlzFrameSetVisible(priv.corner[private.suffix.corner[i]], false)
+    for _, val_pos in pairs(static.ValuePos) do
+        local value = IconValue.new()
+        value:setParent(self)
+        value:setPoint(private.framepoint[val_pos], private.framepoint[val_pos], 0, 0)
+        value:setVisible(false)
+        priv.value[val_pos] = value
     end
     private.data[self] = priv
 

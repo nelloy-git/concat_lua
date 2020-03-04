@@ -27,13 +27,13 @@ local private = {}
 ---@alias ParameterValueTypeEnum number
 
 ---@type table<string,ParameterValueTypeEnum>
-static.ValueType = {}
+static.ValuePos = {}
 ---@type ParameterValueTypeEnum
-static.ValueType.BASE = 1
+static.ValuePos.BASE = 1
 ---@type ParameterValueTypeEnum
-static.ValueType.MULT = 2
+static.ValuePos.MULT = 2
 ---@type ParameterValueTypeEnum
-static.ValueType.ADDIT = 3
+static.ValuePos.ADDIT = 3
 
 ---@return ParameterValue
 function static.new()
@@ -82,7 +82,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 function private.isValueType(value_type)
-    for _, v in pairs(static.ValueType) do
+    for _, v in pairs(static.ValuePos) do
         if value_type == v then
             return true
         end
@@ -91,15 +91,15 @@ function private.isValueType(value_type)
 end
 
 private.default_value = {
-    [static.ValueType.BASE] = 0,
-    [static.ValueType.MULT] = 1,
-    [static.ValueType.ADDIT] = 0,
+    [static.ValuePos.BASE] = 0,
+    [static.ValuePos.MULT] = 1,
+    [static.ValuePos.ADDIT] = 0,
 }
 
 ---@param self ParameterValue
 function private.newData(self)
     local priv = {}
-    for _, value_type in pairs(static.ValueType) do
+    for _, value_type in pairs(static.ValuePos) do
         priv[value_type] = private.default_value[value_type]
     end
 

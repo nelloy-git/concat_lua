@@ -9,7 +9,7 @@ local Data = require('Parameter.Data')
 local Param = Data.Type
 ---@type ParameterValueClass
 local ParamValue = require('Parameter.Value')
-local ValueType = ParamValue.ValueType
+local ValueType = ParamValue.ValuePos
 
 local fmt = string.format
 
