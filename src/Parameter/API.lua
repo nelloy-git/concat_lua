@@ -21,6 +21,8 @@ local ParameterAPI = {}
 ParameterAPI.ValueType = Value.ValuePos
 ParameterAPI.ParamType = Data.Type
 
+ParameterAPI.isPhysic = Data.isParamPhysic
+ParameterAPI.isMagic = Data.isParamMagic
 ParameterAPI.getShortName = Data.getShortName
 ParameterAPI.getFullName = Data.getFullName
 ParameterAPI.getIcon = Data.getIcon

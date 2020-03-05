@@ -9,9 +9,13 @@ local Class = require('Utils.Class.Class')
 local ActionList = require('Utils.ActionList')
 ---@type InterfaceFrameButtonClass
 local Button = require('Interface.Frame.Button')
+---@type Import
+local Import = require('Resources.Import')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
-local SimpleImage = FrameAPI.SimpleImage
+local SimpleButton = FrameAPI.SimpleButton
+local SimpleButtonType = FrameAPI.SimpleButtonType
+local SimpleTextureType = FrameAPI.SimpleTextureType
 local BtnActionType = FrameAPI.SimpleButtonEvent
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ItemAPI
@@ -23,7 +27,7 @@ local getItemTypeIcon = ItemAPI.getTypeIcon
 -- Class
 --=======
 
-local InterfaceFrameEquipment = Class.new('InterfaceFrameEquipment', SimpleImage)
+local InterfaceFrameEquipment = Class.new('InterfaceFrameEquipment', SimpleButton)
 ---@class InterfaceFrameEquipment
 local public = InterfaceFrameEquipment.public
 ---@class InterfaceFrameEquipmentClass
@@ -41,8 +45,12 @@ local private = {}
 ---@param child_instance InterfaceFrameEquipment | nil
 ---@return InterfaceFrameEquipment
 function override.new(child_instance)
+    if child_instance and not Class.type(child_instance, InterfaceFrameEquipment) then
+        Log.error(InterfaceFrameEquipment, '\"child_instance\" must be InterfaceFrameEquipment or nil', 2)
+    end
+
     local instance = child_instance or Class.allocate(InterfaceFrameEquipment)
-    instance = SimpleImage.new(instance)
+    instance = SimpleButton.new(instance)
     instance:setTexture(nil)
 
     private.newData(instance)
@@ -53,6 +61,31 @@ end
 --========
 -- Public
 --========
+
+--- Autosizing frame. Disabled function
+---@param width number
+---@param height number
+function public:setSize(width, height)
+    Log(Log.Wrn, self, 'Autosizing frame. Disabled function.', 2)
+end
+
+---@param level number
+function public:setLevel(level)
+    local priv = private.data[self]
+
+    FramePublic.setLevel(self, level)
+    priv.background:setLevel(level)
+    
+    for _, slot in pairs(private.data[self].slot) do
+        slot:setLevel(level + 1)
+    end
+end
+
+---@param texture string | nil
+function public:setBackground(texture)
+    texture = texture or Import.TransparentTexture
+    BlzFrameSetTexture(private.data[self].background, texture, 0, true)
+end
 
 ---@param unit_equip UnitInventoryEquipment
 function public:setUnitEquipment(unit_equip)
@@ -91,14 +124,6 @@ function public:updateSlot(item_type)
     end
 end
 
----@param level number
-function public:setLevel(level)
-    FramePublic.setLevel(self, level)
-    for _, slot in pairs(private.data[self].slot) do
-        slot:setLevel(level + 1)
-    end
-end
-
 --- Async
 ---@param event SimpleButtonEvent
 ---@param callback InterfaceFrameEquipmentCallback
@@ -107,7 +132,6 @@ function public:addAction(event, callback)
     return private.data[self].actions[event]:add(callback)
 end
 
---- Async
 ---@param event SimpleButtonEvent
 ---@param action Action
 ---@return boolean
@@ -200,9 +224,21 @@ function private.setItemSlot(self, item_type, item)
     slot:setProgress(progress)
 end
 
+do
+    local name = tostring(InterfaceFrameEquipment)
+    private.frame_type = SimpleButtonType.new(name, true)
+    private.frame_type:setWidth(0.01)
+    private.frame_type:setHeight(0.01)
+        local background = SimpleTextureType.new(name..'Background', false)
+        background:setAllPoints()
+    private.frame_type:setChildrens({background})
+end
+
 ---@param self InterfaceFrameEquipment
 function private.newData(self)
     local priv = {
+        background = BlzGetFrameByName(tostring(InterfaceFrameEquipment)..'Background', 0),
+
         unit_equip = nil,
         slot = {},
 

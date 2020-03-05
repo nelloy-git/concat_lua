@@ -42,6 +42,10 @@ local private = {}
 ---@param child_instance InterfaceFrameBag | nil
 ---@return InterfaceFrameBag
 function override.new(child_instance)
+    if child_instance and not Class.type(child_instance, InterfaceFrameBag) then
+        Log.error(InterfaceFrameBag, '\"child_instance\" must be InterfaceFrameBag or nil', 2)
+    end
+
     local instance = child_instance or Class.allocate(InterfaceFrameBag)
     instance = SimpleButton.new(private.frame_type, instance)
 
@@ -63,8 +67,12 @@ end
 
 ---@param level number
 function public:setLevel(level)
+    local priv = private.data[self]
+
     FramePublic.setLevel(self, level)
-    for _, slot in pairs(private.data[self].slot) do
+    priv.background:setLevel(level)
+
+    for _, slot in pairs(priv.slot) do
         slot:setLevel(level + 1)
     end
 end
@@ -136,7 +144,6 @@ function public:addAction(event, callback)
     return private.data[self].actions[event]:add(callback)
 end
 
---- Async
 ---@param event SimpleButtonEvent
 ---@param action Action
 ---@return boolean

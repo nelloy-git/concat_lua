@@ -59,6 +59,34 @@ function Data.isParamType(param)
     return false
 end
 
+Data.PhysicType = {
+    [Data.Type.PDmg] = true,
+    [Data.Type.ASpd] = true,
+    [Data.Type.Armor] = true,
+    [Data.Type.PDmgReduc] = true,
+    [Data.Type.Health] = true,
+    [Data.Type.Regen] = true,
+}
+
+---@return boolean
+function Data.isParamPhysic(param)
+    return Data.MagicType[param] or false
+end
+
+Data.MagicType = {
+    [Data.Type.MDmg] = true,
+    [Data.Type.CSpd] = true,
+    [Data.Type.Resist] = true,
+    [Data.Type.MDmgReduc] = true,
+    [Data.Type.Mana] = true,
+    [Data.Type.Recov] = true,
+}
+
+---@return boolean
+function Data.isParamMagic(param)
+    return Data.MagicType[param] or false
+end
+
 Data.ShortName = {
     [Data.Type.PDmg] = 'PDmg',
     [Data.Type.ASpd] = 'ASpd',

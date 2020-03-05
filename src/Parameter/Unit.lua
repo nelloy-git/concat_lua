@@ -9,6 +9,9 @@ local Data = require('Parameter.Data')
 local Param = Data.Type
 local ParamMath = Data.Math
 local ParamDefault = Data.DefaultValue
+---@type ParameterValueListClass
+local ValueList = require('Parameter.ValueList')
+local ValueListPublic = Class.getPublic(ValueList)
 ---@type ParameterValueClass
 local ParamValue = require('Parameter.Value')
 local ValueType = ParamValue.ValuePos
@@ -19,10 +22,10 @@ local ParameterUnitApply = require('Parameter.UnitApply')
 -- Class
 --=======
 
-local ParameterUnit = Class.new('ParameterUnit')
----@class ParameterUnit
+local ParameterUnit = Class.new('ParameterUnit', ValueList)
+---@class ParameterUnit : ParameterValueList
 local public = ParameterUnit.public
----@class ParameterUnitClass
+---@class ParameterUnitClass : ParameterValueListClass
 local static = ParameterUnit.static
 ---@type ParameterUnitClass
 local override = ParameterUnit.override
@@ -36,6 +39,7 @@ local private = {}
 ---@return ParameterUnit
 function static.new(owner)
     local instance = Class.allocate(ParameterUnit)
+    instance = ValueList.new(instance)
     private.newData(instance, owner)
 
     return instance
@@ -49,10 +53,7 @@ end
 ---@param value_type ParameterValueTypeEnum
 ---@param value number
 function public:set(param, value_type, value)
-    if not Data.isParamType(param) then
-        Log.error(self, 'unknown parameter type.', 2)
-    end
-    private.data[self].value[param]:set(value_type, value)
+    ValueListPublic.set(self, param, value_type, value)
     private.update(self, param)
 end
 
@@ -60,21 +61,8 @@ end
 ---@param value_type ParameterValueTypeEnum
 ---@param value number
 function public:add(param, value_type, value)
-    if not Data.isParamType(param) then
-        Log.error(self, 'unknown parameter type.', 2)
-    end
-    private.data[self].value[param]:add(value_type, value)
+    ValueListPublic.add(self, param, value_type, value)
     private.update(self, param)
-end
-
----@param param ParameterTypeEnum
----@param value_type ParameterValueTypeEnum
----@return number
-function public:get(param, value_type)
-    if not Data.isParamType(param) then
-        Log.error(self, 'unknown parameter type.', 2)
-    end
-    return private.data[self].value[param]:get(value_type)
 end
 
 ---@param param ParameterTypeEnum
@@ -90,17 +78,15 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self ParameterUnit
----@param param ParameterTypeEnum
-function private.update(self, param)
+---@param param_type ParameterTypeEnum
+function private.update(self, param_type)
     local priv = private.data[self]
-    local value = priv.value[param]
 
-    --local old_val = priv.result[param]
-    priv.result[param] = ParamMath[param](value:get(ValueType.BASE),
-                                          value:get(ValueType.MULT),
-                                          value:get(ValueType.ADDIT))
+    priv.result[param_type] = ParamMath[param_type](self:get(param_type, ValueType.BASE),
+                                                    self:get(param_type, ValueType.MULT),
+                                                    self:get(param_type, ValueType.ADDIT))
 
-    ParameterUnitApply(priv.owner, param, priv.result[param])
+    ParameterUnitApply(priv.owner, param_type, priv.result[param_type])
 end
 
 ---@param self ParameterUnit
@@ -108,15 +94,14 @@ end
 function private.newData(self, owner)
     local priv = {
         owner = owner,
-        value = {},
         result = {}
     }
     private.data[self] = priv
 
-    for _, cur_param in pairs(Param) do
-        priv.value[cur_param] = ParamValue.new()
-        priv.value[cur_param]:set(ValueType.BASE, ParamDefault[cur_param])
-        private.update(self, cur_param)
+    for _, param_type in pairs(Param) do
+        self:set(param_type, ValueType.BASE, ParamDefault[param_type])
+        self:set(param_type, ValueType.MULT, 1)
+        private.update(self, param_type)
     end
 end
 
