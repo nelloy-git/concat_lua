@@ -35,7 +35,7 @@ function Interface.init()
                      Screen.getRealZeroX() + Screen.getRealWidth(), 0)
 
     bag = InterfaceBag.new()
-    bag:setTexture('')
+    bag:setBackground('')
     bag:setColumns(8)
     bag:setVisible(true)
     bag:setParent(inventory_btn)

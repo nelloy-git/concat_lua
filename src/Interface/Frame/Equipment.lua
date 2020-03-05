@@ -226,10 +226,6 @@ function private.newData(self)
                 end)
             end
 
-            for j = 1, #Button.cornerName do
-                slot:setCornerText(Button.cornerName[j], nil)
-            end
-
             priv.slot[item_type] = slot
         end
     end

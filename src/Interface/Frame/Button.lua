@@ -76,10 +76,6 @@ function public:setLevel(level)
 
     FramePublic.setLevel(self, level)
     BlzFrameSetLevel(priv.progress, level + 1)
-
-    for _, val_pos in pairs(static.ValuePos) do
-        priv.value[val_pos]:setLevel(level + 1)
-    end
 end
 
 ---@param texture string | nil

@@ -10,9 +10,13 @@ local ActionList = require('Utils.ActionList')
 local Button = require('Interface.Frame.Button')
 ---@type InterfaceFrameIconValueClass
 local IconValue = require('Interface.Frame.IconValue')
+---@type Import
+local Import = require('Resources.Import')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
 local SimpleButton = FrameAPI.SimpleButton
+local SimpleButtonType = FrameAPI.SimpleButtonType
+local SimpleTextureType = FrameAPI.SimpleTextureType
 local BtnActionType = FrameAPI.SimpleButtonEvent
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 
@@ -39,8 +43,7 @@ local private = {}
 ---@return InterfaceFrameBag
 function override.new(child_instance)
     local instance = child_instance or Class.allocate(InterfaceFrameBag)
-    instance = SimpleButton.new(private.fr instance)
-    instance:setTexture(nil)
+    instance = SimpleButton.new(private.frame_type, instance)
 
     private.newData(instance)
 
@@ -64,6 +67,12 @@ function public:setLevel(level)
     for _, slot in pairs(private.data[self].slot) do
         slot:setLevel(level + 1)
     end
+end
+
+---@param texture string | nil
+function public:setBackground(texture)
+    texture = texture or Import.TransparentTexture
+    BlzFrameSetTexture(private.data[self].background, texture, 0, true)
 end
 
 ---@param unit_bag UnitInventoryBag | nil
@@ -142,7 +151,6 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.max_bag_size = 20
-private.slot_count = 'BOTTOMRIGHT'
 private.border_ratio = 1/32
 private.space = 0.001
 private.slot_size = Button.getDefaultSize()
@@ -210,9 +218,21 @@ function private.setItemSlot(self, pos, item)
     end
 end
 
+do
+    local name = tostring(InterfaceFrameBag)
+    private.frame_type = SimpleButtonType.new(name, true)
+    private.frame_type:setWidth(0.01)
+    private.frame_type:setHeight(0.01)
+        local background = SimpleTextureType.new(name..'Background', false)
+        background:setAllPoints()
+    private.frame_type:setChildrens({background})
+end
+
 ---@param self InterfaceFrameBag
 function private.newData(self)
     local priv = {
+        background = BlzGetFrameByName(tostring(InterfaceFrameBag)..'Background', 0),
+
         cols = 5,
         size = 0,
         max_size = private.max_bag_size,
