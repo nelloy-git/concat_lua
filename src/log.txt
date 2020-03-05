@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 [0.000] {Msg} WeFile: сreated WeUnit_1891f90 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeItem_1848940 "Item" with id 'IM#$' based on 'rhe2'
+=======
+[1.000] {Msg} WeFile: сreated WeUnit_0001104A3F54C0 "Footman" with id 'x##$' based on 'hfoo'[1.000] {Msg} WeFile: сreated WeItem_0001104A341450 "Item" with id 'IM#$' based on 'rhe2'
+>>>>>>> f32882588719c6415b6fb1af665d966af64d6513

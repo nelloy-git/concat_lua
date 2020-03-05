@@ -39,7 +39,7 @@ local private = {}
 ---@return InterfaceFrameBag
 function override.new(child_instance)
     local instance = child_instance or Class.allocate(InterfaceFrameBag)
-    instance = SimpleButton.new(instance)
+    instance = SimpleButton.new(private.fr instance)
     instance:setTexture(nil)
 
     private.newData(instance)
