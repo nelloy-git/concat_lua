@@ -11,13 +11,9 @@ local FrameAPI = require('Frame.API')
 local SimpleButton = FrameAPI.SimpleButton
 local SimpleButtonType = FrameAPI.SimpleButtonType
 local SimpleLayerType = FrameAPI.SimpleLayerType
-local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleTextureType = FrameAPI.SimpleTextureType
-local SimpleStringType = FrameAPI.SimpleStringType
 local SimpleStatusBarType = FrameAPI.SimpleStatusBarType
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type InterfaceFrameIconValueClass
-local IconValue = require('Interface.Frame.IconValue')
 
 --=======
 -- Class
@@ -35,29 +31,6 @@ local private = {}
 --=========
 -- Static
 --=========
-
----@alias InterfaceFrameButtonValuePos number
-
----@type table<string, InterfaceFrameButtonValuePos>
-static.ValuePos = {}
----@type InterfaceFrameButtonValuePos
-static.ValuePos.TOPLEFT = 1
----@type InterfaceFrameButtonValuePos
-static.ValuePos.TOP = 2
----@type InterfaceFrameButtonValuePos
-static.ValuePos.TOPRIGHT = 3
----@type InterfaceFrameButtonValuePos
-static.ValuePos.LEFT = 4
----@type InterfaceFrameButtonValuePos
-static.ValuePos.CENTER = 5
----@type InterfaceFrameButtonValuePos
-static.ValuePos.RIGHT = 6
----@type InterfaceFrameButtonValuePos
-static.ValuePos.BOTTOMLEFT = 7
----@type InterfaceFrameButtonValuePos
-static.ValuePos.BOTTOM = 8
----@type InterfaceFrameButtonValuePos
-static.ValuePos.BOTTOMRIGHT = 9
 
 ---@param child_instance InterfaceFrameButton | nil
 ---@return InterfaceFrameButton
@@ -143,12 +116,6 @@ function public:getLevel()
     return FramePublic.getLevel(self) + 1
 end
 
----@param val_pos InterfaceFrameButtonValuePos
----@return InterfaceFrameIconValue
-function public:getIconValue(val_pos)
-    return private.data[self].value[val_pos]
-end
-
 --=========
 -- Private
 --=========
@@ -158,27 +125,16 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.default_size = 0.035
 private.icon_ratio = 0.8
 
-local name = 'InterfaceFrameButton'
+private.name = tostring(InterfaceFrameButton)
 private.suffix = {
     background = 'Background',
     icon = 'Icon',
     progress = 'Progress',
 }
 
-private.framepoint = {
-    [static.ValuePos.TOPLEFT] = FRAMEPOINT_TOPLEFT,
-    [static.ValuePos.TOP] = FRAMEPOINT_TOP,
-    [static.ValuePos.TOPRIGHT] = FRAMEPOINT_TOPRIGHT,
-    [static.ValuePos.LEFT] = FRAMEPOINT_LEFT,
-    [static.ValuePos.CENTER] = FRAMEPOINT_CENTER,
-    [static.ValuePos.RIGHT] = FRAMEPOINT_RIGHT,
-    [static.ValuePos.BOTTOMLEFT] = FRAMEPOINT_BOTTOMLEFT,
-    [static.ValuePos.BOTTOM] = FRAMEPOINT_BOTTOM,
-    [static.ValuePos.BOTTOMRIGHT] = FRAMEPOINT_BOTTOMRIGHT,
-}
-
 -- Frame type
 do
+    local name = private.name
     local size = private.default_size
     private.frame_type = SimpleButtonType.new(name, true)
     private.frame_type:setWidth(size)
@@ -213,19 +169,10 @@ end
 ---@param self InterfaceFrameButton
 function private.newData(self)
     local priv = {
-        background = BlzGetFrameByName(name..private.suffix.background, 0),
-        icon = BlzGetFrameByName(name..private.suffix.icon, 0),
-        progress = BlzGetFrameByName(name..private.suffix.progress, 0),
-
-        value = {},
+        background = BlzGetFrameByName(private.name..private.suffix.background, 0),
+        icon = BlzGetFrameByName(private.name..private.suffix.icon, 0),
+        progress = BlzGetFrameByName(private.name..private.suffix.progress, 0),
     }
-    for _, val_pos in pairs(static.ValuePos) do
-        local value = IconValue.new()
-        value:setParent(self)
-        value:setPoint(private.framepoint[val_pos], private.framepoint[val_pos], 0, 0)
-        value:setVisible(false)
-        priv.value[val_pos] = value
-    end
     private.data[self] = priv
 
     self:setLevel(1)

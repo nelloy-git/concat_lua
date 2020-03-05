@@ -118,7 +118,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.frame_type_name = 'InterfaceFrameIconValue'
+private.frame_type_name = tostring(InterfaceFrameIconValue)
 private.suffix = {
     background = 'Background',
     icon = 'Icon',

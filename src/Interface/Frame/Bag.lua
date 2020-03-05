@@ -8,6 +8,8 @@ local Class = require('Utils.Class.Class')
 local ActionList = require('Utils.ActionList')
 ---@type InterfaceFrameButtonClass
 local Button = require('Interface.Frame.Button')
+---@type InterfaceFrameIconValueClass
+local IconValue = require('Interface.Frame.IconValue')
 ---@type FrameAPI
 local FrameAPI = require('Frame.API')
 local SimpleButton = FrameAPI.SimpleButton
@@ -56,6 +58,14 @@ function public:setSize(width, height)
     Log(Log.Wrn, self, 'Autosizing frame. Disabled function.', 2)
 end
 
+---@param level number
+function public:setLevel(level)
+    FramePublic.setLevel(self, level)
+    for _, slot in pairs(private.data[self].slot) do
+        slot:setLevel(level + 1)
+    end
+end
+
 ---@param unit_bag UnitInventoryBag | nil
 function public:setUnitBag(unit_bag)
     local priv = private.data[self]
@@ -102,14 +112,6 @@ end
 function public:setColumns(cols)
     private.data[self].cols = cols
     private.updatePositions(self)
-end
-
----@param level number
-function public:setLevel(level)
-    FramePublic.setLevel(self, level)
-    for _, slot in pairs(private.data[self].slot) do
-        slot:setLevel(level + 1)
-    end
 end
 
 ---@return number
@@ -171,7 +173,6 @@ function private.updatePositions(self)
             priv.slot[i]:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT,
                                   -(border_x + (x - 1) * (slot_size + private.space)),
                                   border_y + (y - 1) * (slot_size + private.space))
-
         end
     end
 
@@ -187,8 +188,6 @@ function private.setItemSlot(self, pos, item)
         Log.error(self, 'wrong item position.', 2)
     end
 
-    local slot = priv.slot[pos]
-
     local icon
     local count
     local progress
@@ -196,26 +195,31 @@ function private.setItemSlot(self, pos, item)
         icon = item:getIcon()
         count = item:getCount()
         progress = item:getProgress()
-
-        if count == 1 then
-            count = nil
-        end
     end
 
+    local slot = priv.slot[pos]
+    local value = priv.value[pos]
+
     slot:setIcon(icon)
-    slot:setCornerText(private.slot_count, tostring(count))
     slot:setProgress(progress)
+    if count == 1 then
+        value:setVisible(false)
+    else
+        value:setText(tostring(count))
+        value:setVisible(true)
+    end
 end
 
 ---@param self InterfaceFrameBag
 function private.newData(self)
     local priv = {
         cols = 5,
-        size = 10,
+        size = 0,
         max_size = private.max_bag_size,
 
         unit_bag = nil,
         slot = {},
+        value = {},
 
         actions = {}
     }
@@ -236,11 +240,14 @@ function private.newData(self)
             end)
         end
 
-        for j = 1, #Button.cornerName do
-            slot:setCornerText(Button.cornerName[j], nil)
-        end
+        local value = IconValue.new()
+        value:setParent(slot)
+        value:setVisible(false)
+        value:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_BOTTOMRIGHT,
+                       0, 0)
 
         priv.slot[i] = slot
+        priv.value[i] = value
     end
 
     private.updatePositions(self)
