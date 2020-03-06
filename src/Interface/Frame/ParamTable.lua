@@ -21,6 +21,9 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ParameterAPI
 local ParameterAPI = require('Parameter.API')
 local ParamType = ParameterAPI.ParamType
+local BASE = ParameterAPI.ValueType.BASE
+local ADDIT = ParameterAPI.ValueType.ADDIT
+local MULT = ParameterAPI.ValueType.MULT
 local isMagic = ParameterAPI.isMagic
 local isPhysic = ParameterAPI.isPhysic
 
@@ -77,10 +80,32 @@ function public:setBackground(texture)
     BlzFrameSetTexture(private.data[self].background, texture, 0, true)
 end
 
+---@param unit_params ParameterUnit
 function public:setUnit(unit_params)
     local priv = private.data[self]
 
-    
+    priv.used_util = {}
+    priv.used_magic = {}
+    priv.used_phys = {}
+
+    for i = 1, #private.params_queue do
+        local param_type = private.params_queue[i]
+
+        local base = unit_params:get(param_type, BASE)
+        local addit = unit_params:get(param_type, ADDIT)
+        local mult = unit_params:get(param_type, MULT)
+        local res = unit_params:getResult(param_type)
+
+        local list = (isMagic(param_type) and priv.used_magic) or
+                     (isPhysic(param_type) and priv.used_phys) or
+                     priv.used_util
+        table.insert(list, param_type)
+
+        priv.param[param_type]:setText(res)
+        -- TODO tooltips
+    end
+
+    private.updatePositions(self)
 end
 
 --=========
@@ -111,6 +136,51 @@ private.params_queue = {
 function private.updatePositions(self)
     local priv = private.data[self]
 
+    local count = 0
+    for i = 1, #priv.used_util do
+        local row, mod = math.modf(count / 2)
+
+        local param = priv.param[priv.used_util[i]]
+        local point = mod == 0 and FRAMEPOINT_TOPLEFT or FRAMEPOINT_TOPRIGHT
+        param:setVisible(true)
+        param:setPoint(point, point, 0, row * private.param_height)
+        count = count + 1
+    end
+
+    for i = 1, #private.params_queue do
+        local param_type = private.params_queue[i]
+        if isMagic(param_type) or isPhysic(param_type) then
+            priv.param[param_type]:setVisible(false)
+        end
+    end
+
+    if #priv.used_magic == 0 and #priv.used_phys == 0 then
+        priv.magic_text:setVisible(false)
+        priv.phys_text:setVisible(false)
+        return
+    end
+
+    local y_offset = math.modf(count) + 1
+    local text_y = y_offset * private.param_height
+    priv.magic_text:setVisible(true)
+    priv.magic_text:setPoint(FRAMEPOINT_TOPRIGHT, FRAMEPOINT_TOPRIGHT, 0, text_y)
+    priv.phys_text:setVisible(true)
+    priv.phys_text:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT, 0, text_y)
+
+    for i = 1, #priv.used_phys do
+        local param = priv.param[priv.used_phys[i]]
+        param:setVisible(true)
+        param:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT, 0, text_y + i * private.param_height)
+    end
+
+    for i = 1, #priv.used_magic do
+        local param = priv.param[priv.used_phys[i]]
+        param:setVisible(true)
+        param:setPoint(FRAMEPOINT_TOPRIGHT, FRAMEPOINT_TOPRIGHT, 0, text_y + i * private.param_height)
+    end
+
+    FramePublic.setSize(2 * private.param_width,
+                        y_offset + (math.max(#priv.used_phys, #priv.used_magic) + 1) * private.param_height)
 end
 
 -- Frame type
@@ -123,12 +193,12 @@ do
         background:setAllPoints()
 
         local magicText = SimpleStringType.new(name..'MagicText', false)
-        magicText:setAnchor('RIGHT', 0 , 0)
+        magicText:setAnchor('TOPRIGHT', 0 , 0)
         magicText:setFont(private.default_font, private.default_font_size)
         magicText:setText('Magical')
 
         local physText = SimpleStringType.new(name..'PhysText', false)
-        physText:setAnchor('LEFT', 0 , 0)
+        physText:setAnchor('TOPLEFT', 0 , 0)
         physText:setFont(private.default_font, private.default_font_size)
         physText:setText('Physical')
 
@@ -140,7 +210,7 @@ function private.newData(self)
     local priv = {
         background = BlzGetFrameByName(private.name..'Background', 0),
         magic_text = BlzGetFrameByName(private.name..'MagicText', 0),
-        physic_text = BlzGetFrameByName(private.name..'PhysText', 0),
+        phys_text = BlzGetFrameByName(private.name..'PhysText', 0),
         param = {},
 
         show_all = false,

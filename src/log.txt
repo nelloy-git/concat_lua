@@ -1,1 +1,1 @@
-[0.000] {Msg} WeFile: сreated WeUnit_00012BB2C07140 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeItem_00012BB2B7CE70 "Item" with id 'IM#$' based on 'rhe2'
+[0.000] {Msg} WeFile: сreated WeUnit_2666170 "Footman" with id 'x##$' based on 'hfoo'[0.000] {Msg} WeFile: сreated WeItem_2607600 "Item" with id 'IM#$' based on 'rhe2'

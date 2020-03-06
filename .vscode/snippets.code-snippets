@@ -56,4 +56,11 @@
             "return static",
         ]
     },
+
+    "PrivateData":{
+        "prefix": "local priv",
+        "body": [
+            "local priv = private.data[self]"
+        ]
+    },
 }

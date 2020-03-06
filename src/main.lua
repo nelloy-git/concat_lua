@@ -12,6 +12,8 @@ ItemAPI = require('Item.API')
 InterfaceAPI = require('Interface.API')
 ---@type ParameterAPI
 ParamAPI = require('Parameter.API')
+---@type InterfaceFrameParamTableClass
+local ParamTable = require('Interface.Frame.ParamTable')
 
 ---@type AbilityAPI
 local AbilityAPI = require('Ability.API')
@@ -41,6 +43,9 @@ if not IsCompiletime() then
 
     InterfaceAPI.Bag:setUnitBag(u:getBag())
     InterfaceAPI.Equip:setUnitEquipment(u:getEquipment())
+
+    local param_table = ParamTable.new()
+    param_table:setUnit(u:getParameters())
 
     --local targ = TargetUnit.new(u2:getObj())
     --print(targ:getObj())

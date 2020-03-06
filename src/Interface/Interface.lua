@@ -47,28 +47,7 @@ function Interface.init()
     equipment:setParent(bag)
     equipment:setVisible(true)
     equipment:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPRIGHT, 0, 0)
-    --inventory_btn:addAction(SimpleButtonEvent.MousePress, function() equipment:setVisible(not equipment:isVisible()) end)
 
-    --bag_btn:addAction(SimpleButtonEvent.MousePress, function() print('azaza') end)
---[[
-    Interface.Inventory = Inventory.new()
-    Interface.Inventory:setWidth(0.3)
-    Interface.Inventory:setHeight(0.3)
-    Interface.Inventory:setX(Screen.getRealZeroX() + Screen.getRealWidth() - Interface.Inventory:getWidth())
-    Interface.Inventory:setY(0.2)
-
-    Interface.CastingBar = CastingBar.new(1)
-    Interface.CastingBar:setX(0.3)
-    Interface.CastingBar:setY(0.045)
-    Interface.CastingBar:setWidth(0.2)
-    Interface.CastingBar:setHeight(0.02)
-
-    Interface.AbilityBar = AbilityBar.new(10, 1)
-    Interface.AbilityBar:setX(0.175)
-    Interface.AbilityBar:setY(0.0)
-    Interface.AbilityBar:setWidth(0.45)
-    Interface.AbilityBar:setHeight(0.045)
-]]
 end
 
 ---@return InterfaceFrameBag
