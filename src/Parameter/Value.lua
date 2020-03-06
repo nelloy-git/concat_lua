@@ -36,7 +36,7 @@ static.ValuePos.MULT = 2
 static.ValuePos.ADDIT = 3
 
 ---@return ParameterValue
-function static.new()
+function override.new()
     local instance = Class.allocate(ParameterValue)
     private.newData(instance)
 

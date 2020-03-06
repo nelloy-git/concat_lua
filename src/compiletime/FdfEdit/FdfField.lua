@@ -43,7 +43,7 @@ static.SerialFunc = {
 ---@param serialize_func FdfSerializeDataFunction
 ---@param child_instance FdfField | nil
 ---@return FdfField
-function static.new(name, val_type, serialize_func, child_instance)
+function override.new(name, val_type, serialize_func, child_instance)
     local instance = child_instance or Class.allocate(FdfField)
     private.newData(instance, name, val_type, serialize_func)
 

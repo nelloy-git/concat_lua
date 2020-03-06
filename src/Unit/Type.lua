@@ -38,7 +38,7 @@ static.Classification.HERO = 2
 ---@param unit_class UnitTypeClassEnum
 ---@param child_instance UnitType | nil
 ---@return UnitType
-function static.new(uniq_name, unit_class, child_instance)
+function override.new(uniq_name, unit_class, child_instance)
     local instance = child_instance or Class.allocate(UnitType)
     private.newData(instance, uniq_name, unit_class)
 

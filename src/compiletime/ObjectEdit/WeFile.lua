@@ -31,7 +31,7 @@ local private = {}
 ---@param dst_path string
 ---@param child_instance WeFile | nil
 ---@return WeFile
-function static.new(src_path, dst_path, child_instance)
+function override.new(src_path, dst_path, child_instance)
     local instance = child_instance or Class.allocate(WeFile)
     private.newData(instance, src_path, dst_path)
 

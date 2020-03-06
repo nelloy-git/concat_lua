@@ -32,7 +32,7 @@ local private = {}
 ---@param owner Unit
 ---@param child_instance UnitInventoryEquipment | nil
 ---@return UnitInventoryEquipment
-function static.new(owner, child_instance)
+function override.new(owner, child_instance)
     local instance = child_instance or Class.allocate(UnitInventoryEquipment)
     private.newData(instance, owner)
 

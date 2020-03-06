@@ -47,7 +47,7 @@ static.Classification.MISCELLANEOUS = 7
 ---@param item_class ItemModelClassificationEnum
 ---@param child_instance ItemModelType | nil
 ---@return ItemModelType
-function static.new(uniq_name, item_class, child_instance)
+function override.new(uniq_name, item_class, child_instance)
     local instance = child_instance or Class.allocate(ItemModelType)
     private.newData(instance, uniq_name, item_class)
 

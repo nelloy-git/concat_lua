@@ -34,7 +34,7 @@ local private = {}
 --========
 
 ---@return ParameterItem
-function static.new()
+function override.new()
     local instance = Class.allocate(ParameterItem)
     instance = ValueList.new(instance)
     private.newData(instance)

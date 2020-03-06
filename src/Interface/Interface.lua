@@ -43,7 +43,7 @@ function Interface.init()
     inventory_btn:addAction(SimpleButtonEvent.MousePress, function() bag:setVisible(not bag:isVisible()) end)
 
     equipment = InterfaceEquipment.new()
-    equipment:setTexture('')
+    equipment:setBackground('')
     equipment:setParent(bag)
     equipment:setVisible(true)
     equipment:setPoint(FRAMEPOINT_BOTTOMRIGHT, FRAMEPOINT_TOPRIGHT, 0, 0)

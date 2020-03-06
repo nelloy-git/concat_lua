@@ -32,12 +32,12 @@ local private = {}
 
 ---@param child_instance ParameterValueList | nil
 ---@return ParameterValueList
-function static.new(child_instance)
+function override.new(child_instance)
     if child_instance and not Class.type(child_instance, ParameterValueList) then
         Log.error(ParameterValueList, '\"child_instance\" must be ParameterValueList or nil', 2)
     end
 
-    local instance = Class.allocate(ParameterValueList)
+    local instance = child_instance or Class.allocate(ParameterValueList)
     private.newData(instance)
 
     return instance

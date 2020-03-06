@@ -45,7 +45,7 @@ static.DataType = {
 ---@param test_data_func WeFieldTestDataFunc | nil
 ---@param child_data WeField | nil
 ---@return WeField
-function static.new(field_id, data_type, name, test_data_func, child_data)
+function override.new(field_id, data_type, name, test_data_func, child_data)
     local instance = child_data or Class.allocate(WeField)
     private.newData(instance, field_id, data_type, name, test_data_func)
 

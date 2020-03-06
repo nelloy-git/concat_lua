@@ -31,7 +31,7 @@ local private = {}
 ---@param base_name string
 ---@param child_instance FdfObject | nil
 ---@return FdfObject
-function static.new(name, base_name, child_instance)
+function override.new(name, base_name, child_instance)
     local instance = child_instance or Class.allocate(FdfObject)
     private.newData(instance, name, base_name)
 

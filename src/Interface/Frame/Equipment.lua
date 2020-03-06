@@ -50,8 +50,7 @@ function override.new(child_instance)
     end
 
     local instance = child_instance or Class.allocate(InterfaceFrameEquipment)
-    instance = SimpleButton.new(instance)
-    instance:setTexture(nil)
+    instance = SimpleButton.new(private.frame_type, instance)
 
     private.newData(instance)
 
@@ -74,8 +73,6 @@ function public:setLevel(level)
     local priv = private.data[self]
 
     FramePublic.setLevel(self, level)
-    priv.background:setLevel(level)
-    
     for _, slot in pairs(private.data[self].slot) do
         slot:setLevel(level + 1)
     end

@@ -28,7 +28,7 @@ local private = {}
 
 ---@param child_instance InterfaceAbilityCastingBar | nil
 ---@return InterfaceAbilityCastingBar
-function static.new(max_bars, child_instance)
+function override.new(max_bars, child_instance)
     local instance = child_instance or Class.allocate(InterfaceAbilityCastingBar)
     private.newData(instance, max_bars)
 

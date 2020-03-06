@@ -25,7 +25,7 @@ local private = {}
 ---@param obj any
 ---@param child_instance Object | nil
 ---@return Object
-function static.new(obj, destructor, child_instance)
+function override.new(obj, destructor, child_instance)
     if not child_instance then
         Log.error(Object, 'can not create instance of abstract class.', 2)
     end

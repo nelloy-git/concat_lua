@@ -32,7 +32,7 @@ local private = {}
 
 ---@param child_instance ControllerAim | nil
 ---@return ControllerAim
-function static.new(child_instance)
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(ControllerAim)
     private.newData(instance)
 

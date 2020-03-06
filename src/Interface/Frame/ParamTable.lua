@@ -94,6 +94,7 @@ function public:setUnit(unit_params)
         local base = unit_params:get(param_type, BASE)
         local addit = unit_params:get(param_type, ADDIT)
         local mult = unit_params:get(param_type, MULT)
+        print(unit_params)
         local res = unit_params:getResult(param_type)
 
         local list = (isMagic(param_type) and priv.used_magic) or
@@ -155,17 +156,21 @@ function private.updatePositions(self)
     end
 
     if #priv.used_magic == 0 and #priv.used_phys == 0 then
-        priv.magic_text:setVisible(false)
-        priv.phys_text:setVisible(false)
+        BlzFrameSetVisible(priv.magic_text)
+        BlzFrameSetVisible(priv.phys_text)
         return
     end
 
     local y_offset = math.modf(count) + 1
     local text_y = y_offset * private.param_height
-    priv.magic_text:setVisible(true)
-    priv.magic_text:setPoint(FRAMEPOINT_TOPRIGHT, FRAMEPOINT_TOPRIGHT, 0, text_y)
-    priv.phys_text:setVisible(true)
-    priv.phys_text:setPoint(FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOPLEFT, 0, text_y)
+    BlzFrameSetVisible(priv.magic_text)
+    BlzFrameSetPoint(priv.magic_text, FRAMEPOINT_TOPRIGHT,
+                     self:getObj(), FRAMEPOINT_TOPRIGHT,
+                    0, text_y)
+    BlzFrameSetVisible(priv.phys_text)
+    BlzFrameSetPoint(priv.magic_text, FRAMEPOINT_TOPLEFT,
+                     self:getObj(), FRAMEPOINT_TOPLEFT,
+                    0, text_y)
 
     for i = 1, #priv.used_phys do
         local param = priv.param[priv.used_phys[i]]

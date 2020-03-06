@@ -27,7 +27,7 @@ local private = {}
 
 ---@param child_instance ActionList | nil
 ---@return ActionList
-function static.new(child_instance)
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(ActionList)
     private.newData(instance)
 

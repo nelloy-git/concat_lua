@@ -30,7 +30,7 @@ local private = {}
 ---@param ability_type AbilityType
 ---@param child_instance Ability | nil
 ---@return Ability
-function static.new(owner, ability_type, child_instance)
+function override.new(owner, ability_type, child_instance)
     local instance = child_instance or Class.allocate(Ability)
     private.newData(instance, owner, ability_type)
 

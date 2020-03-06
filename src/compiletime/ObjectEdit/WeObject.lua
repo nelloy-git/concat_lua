@@ -30,7 +30,7 @@ local private = {}
 ---@param name string
 ---@param child_instance WeObject | nil
 ---@return WeObject
-function static.new(id, base_id, name, child_instance)
+function override.new(id, base_id, name, child_instance)
     local instance = child_instance or Class.allocate(WeObject)
     private.newData(instance, id, base_id, name)
 

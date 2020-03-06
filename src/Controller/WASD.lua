@@ -31,7 +31,7 @@ local private = {}
 ---@param player player
 ---@param unit Unit
 ---@return ControllerWASD
-function static.new(player, unit)
+function override.new(player, unit)
     local instance = Class.allocate(ControllerWASD)
     private.newData(instance, player, unit)
 

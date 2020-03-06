@@ -28,7 +28,7 @@ local private = {}
 ---@param owner any
 ---@param child_instance Action | nil
 ---@return Action
-function static.new(callback, owner, child_instance)
+function override.new(callback, owner, child_instance)
     if type(callback) ~= 'function' then
         Log.error(Action, 'got nil callback.', 2)
     end

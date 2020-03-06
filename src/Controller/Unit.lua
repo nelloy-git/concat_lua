@@ -31,7 +31,7 @@ local private = {}
 
 ---@param unit Unit
 ---@return UnitController
-function static.new(unit)
+function override.new(unit)
     local instance = Class.allocate(UnitController)
     private.newData(instance, unit)
 

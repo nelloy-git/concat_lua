@@ -37,7 +37,7 @@ static.AnimationType.CAST = 4
 
 ---@param unit unit
 ---@return UnitAnimation
-function static.new(unit)
+function override.new(unit)
     local instance = Class.allocate(UnitAnimation)
     private.newData(instance, unit)
 

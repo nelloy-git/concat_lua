@@ -37,7 +37,7 @@ local private = {}
 
 ---@param owner unit
 ---@return ParameterUnit
-function static.new(owner)
+function override.new(owner)
     local instance = Class.allocate(ParameterUnit)
     instance = ValueList.new(instance)
     private.newData(instance, owner)

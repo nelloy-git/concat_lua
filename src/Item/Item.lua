@@ -66,7 +66,7 @@ static.Type.MISCELLANEOUS = 15
 ---@param item_type ItemTypeEnum
 ---@param child_instance Item | nil
 ---@return Item
-function static.new(item_type, child_instance)
+function override.new(item_type, child_instance)
     local instance = child_instance or Class.allocate(Item)
     private.newData(instance, item_type)
 

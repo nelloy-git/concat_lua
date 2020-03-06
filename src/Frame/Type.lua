@@ -30,7 +30,7 @@ local private = {}
 ---@param separate_file boolean
 ---@param child_instance FrameType
 ---@return FrameType
-function static.new(uniq_name, create_fdf, separate_file, child_instance)
+function override.new(uniq_name, create_fdf, separate_file, child_instance)
     if IsCompiletime() and private.compiletime_data:get(uniq_name) then
         Log.error(FrameType, '\"uniq_name\" must be unique.', 2)
     end

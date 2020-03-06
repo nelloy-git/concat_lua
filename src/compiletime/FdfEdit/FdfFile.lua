@@ -28,7 +28,7 @@ local private = {}
 ---@param name string
 ---@param child_instance FdfFile | nil
 ---@return FdfFile
-function static.new(name, child_instance)
+function override.new(name, child_instance)
     local instance = child_instance or Class.allocate(FdfFile)
     private.newData(instance, name)
 

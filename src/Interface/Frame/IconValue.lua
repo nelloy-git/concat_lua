@@ -75,7 +75,7 @@ function public:setSize(width, height)
     BlzFrameSetPoint(priv.str, FRAMEPOINT_RIGHT,
                      priv.background, FRAMEPOINT_RIGHT,
                      (height - size) / 2, 0)
-    BlzFrameSetSize(priv.str, width - 2 * (height - size) - priv.icon_tex and size or 0, size)
+    BlzFrameSetSize(priv.str, width - 2 * (height - size) - (priv.icon_tex and size or 0), size)
     BlzFrameSetFont(priv.str, priv.font, private.default_font_size * height / private.default_height, 0)
 end
 

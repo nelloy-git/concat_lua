@@ -70,8 +70,6 @@ function public:setLevel(level)
     local priv = private.data[self]
 
     FramePublic.setLevel(self, level)
-    priv.background:setLevel(level)
-
     for _, slot in pairs(priv.slot) do
         slot:setLevel(level + 1)
     end

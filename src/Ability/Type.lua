@@ -43,7 +43,7 @@ static.TargetingType.UnitOrPointWithArea = 7
 
 ---@param target_type AbilityTargetingTypeEnum
 ---@return AbilityType
-function static.new(target_type, child_instance)
+function override.new(target_type, child_instance)
     if not private.isTargetType(target_type) then
         Log.error(AbilityType, 'unknown AbilityTargetingTypeEnum.', 2)
     end

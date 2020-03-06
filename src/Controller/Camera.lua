@@ -50,7 +50,7 @@ static.Field.LOCAL_ROLL = CAMERA_FIELD_LOCAL_ROLL
 
 ---@param player player
 ---@return CameraController
-function static.new(player)
+function override.new(player)
     local instance = Class.allocate(CameraController)
     private.newData(instance, player)
 

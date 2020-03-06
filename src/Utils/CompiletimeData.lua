@@ -24,7 +24,7 @@ local private = {}
 
 ---@param unique_name string
 ---@return CompiletimeData
-function static.new(unique_name)
+function override.new(unique_name)
     if type(unique_name) ~= 'string' then
         unique_name = tostring(unique_name)
     end

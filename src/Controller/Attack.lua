@@ -28,7 +28,7 @@ local private = {}
 
 ---@param player player
 ---@return ControllerAttack
-function static.new(player)
+function override.new(player)
     local instance = Class.allocate(ControllerAttack)
     private.newData(instance, player)
 

@@ -146,7 +146,7 @@ function private.findPos(actions, time, first, len)
 end
 
 if not IsCompiletime() then
-    private.glTimer = SmartTimer.static.new(private.minimum_period)
+    private.glTimer = static.new(private.minimum_period)
 end
 
 return static

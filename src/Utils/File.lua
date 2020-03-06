@@ -24,7 +24,7 @@ local private = {}
 ---@param filename string
 ---@param instance_data table | nil
 ---@return File
-function static.new(filename, instance_data)
+function override.new(filename, instance_data)
     local instance = instance_data or Class.allocate(File)
     local priv = private.new(instance, filename)
     
