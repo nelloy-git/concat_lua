@@ -20,13 +20,15 @@ local SimpleStringType = require('Frame.Type.SimpleString')
 ---@type SimpleTextureTypeClass
 local SimpleTextureType = require('Frame.Type.SimpleTexture')
 
----@type SimpleImageClass
-local SimpleImage = require('Frame.Default.SimpleImage')
 ---@type SimpleButtonClass
 local SimpleButton = require('Frame.Default.SimpleButton')
 local SimpleButtonEvent = SimpleButton.ActionType
+---@type SimpleImageClass
+local SimpleImage = require('Frame.Default.SimpleImage')
 ---@type SimpleStatusBarClass
 local SimpleStatusBar = require('Frame.Default.SimpleStatusBar')
+---@type SimpleTextClass
+local SimpleText = require('Frame.Default.SimpleText')
 
 --=============
 --     API
@@ -51,9 +53,10 @@ FrameAPI.SimpleTextureType = SimpleTextureType
 
 -- Default frames
 
-FrameAPI.SimpleImage = SimpleImage
 FrameAPI.SimpleButton = SimpleButton
+FrameAPI.SimpleImage = SimpleImage
 FrameAPI.SimpleStatusBar = SimpleStatusBar
+FrameAPI.SimpleText = SimpleText
 
 -- Other
 

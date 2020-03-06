@@ -4,7 +4,6 @@
 
 local Log = require('Utils.Log')
 local Class = require('Utils.Class.Class')
-local fmt = string.format
 
 ---@type ActionListClass
 local ActionList = require('Utils.ActionList')
@@ -15,8 +14,6 @@ local FramePublic = Class.getPublic(Frame)
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
 ---@type SimpleButtonTypeClass
 local SimpleButtonType = require('Frame.Type.SimpleButton')
----@type SimpleTextureTypeClass
-local SimpleTextureType = require('Frame.Type.SimpleTexture')
 ---@type TriggerClass
 local Trigger = require('Utils.Trigger')
 
@@ -49,7 +46,7 @@ static.ActionType.MouseDown = 2
 ---@type SimpleButtonEvent
 static.ActionType.MouseUp = 3
 
----@param frame_type SimpleButtonType
+---@param frame_type SimpleButtonType | nil
 ---@param child_instance SimpleButton | nil
 ---@return SimpleButton
 function override.new(frame_type, child_instance)

@@ -68,12 +68,20 @@ function public:setPoint(point, parent_point, x, y)
                              priv.parent:getObj(), parent_point,
                              x, y)
         else
-
-
             BlzFrameSetAbsPoint(self:getObj(), point,
                                 private.abs_point_x[parent_point] + x,
                                 private.abs_point_y[parent_point] + y)
         end
+    end
+end
+
+function public:setAllPoints()
+    local priv = private.data[self]
+    BlzFrameClearAllPoints(self:getObj())
+    if priv.parent then
+        BlzFrameSetAllPoints(self:getObj(), private.data[self].parent:getObj())
+    else
+        BlzFrameSetAllPoints(self:getObj(), private.game_ui_frame)
     end
 end
 

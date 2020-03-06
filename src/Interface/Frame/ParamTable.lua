@@ -12,11 +12,8 @@ local Import = require('Resources.Import')
 local FrameAPI = require('Frame.API')
 local SimpleButton = FrameAPI.SimpleButton
 local SimpleButtonType = FrameAPI.SimpleButtonType
-local SimpleLayerType = FrameAPI.SimpleLayerType
-local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleTextureType = FrameAPI.SimpleTextureType
-local SimpleStringType = FrameAPI.SimpleStringType
-local SimpleStatusBarType = FrameAPI.SimpleStatusBarType
+local SimpleText = FrameAPI.SimpleText
 local FramePublic = Class.getPublic(FrameAPI.Frame)
 ---@type ParameterAPI
 local ParameterAPI = require('Parameter.API')
@@ -196,26 +193,15 @@ do
     private.frame_type:setHeight(0.01)
         local background = SimpleTextureType.new(name..'Background', false)
         background:setAllPoints()
-
-        local magicText = SimpleStringType.new(name..'MagicText', false)
-        magicText:setAnchor('TOPRIGHT', 0 , 0)
-        magicText:setFont(private.default_font, private.default_font_size)
-        magicText:setText('Magical')
-
-        local physText = SimpleStringType.new(name..'PhysText', false)
-        physText:setAnchor('TOPLEFT', 0 , 0)
-        physText:setFont(private.default_font, private.default_font_size)
-        physText:setText('Physical')
-
-    private.frame_type:setChildrens({background, magicText, physText})
+    private.frame_type:setChildrens({background})
 end
 
 ---@param self InterfaceFrameParamTable
 function private.newData(self)
     local priv = {
         background = BlzGetFrameByName(private.name..'Background', 0),
-        magic_text = BlzGetFrameByName(private.name..'MagicText', 0),
-        phys_text = BlzGetFrameByName(private.name..'PhysText', 0),
+        magic_text = SimpleText.new(),
+        phys_text = SimpleText.new(),
         param = {},
 
         show_all = false,
@@ -225,6 +211,7 @@ function private.newData(self)
     }
     private.data[self] = priv
 
+    
     for _, param_type in pairs(ParamType) do
         local value = IconValue.new()
         value:setSize(private.param_width, private.param_height)
