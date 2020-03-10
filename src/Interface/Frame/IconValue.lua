@@ -71,18 +71,29 @@ function public:setSize(width, height)
     priv.value:setFontSize(private.default_font_size * height / private.default_height)
 end
 
+---@param level number
+function public:setLevel(level)
+    FramePublic.setLevel(self, level)
+    private.data[self].value:setLevel(level + 1)
+end
+
 ---@param texture string | nil
 function public:setBackground(texture)
+    texture = texture or Import.TransparentTexture
     BlzFrameSetTexture(private.data[self].background, texture, 0, true)
 end
 
 ---@param texture string | nil
 function public:setIcon(texture)
+    texture = texture or Import.TransparentTexture
     BlzFrameSetTexture(private.data[self].icon, texture, 0, true)
 end
 
 ---@param text string | nil
 function public:setText(text)
+    if type(text) ~= 'string' then
+        text = tostring(text)
+    end
     private.data[self].value:setText(text)
 end
 
@@ -92,6 +103,10 @@ end
 ---@param alpha number
 function public:setTextColor(red, green, blue, alpha)
     private.data[self].value:setColor(red, green, blue, alpha)
+end
+
+function public:getLevel()
+    return FramePublic.getLevel(self) + 1
 end
 
 --=========
@@ -106,12 +121,12 @@ private.suffix = {
     icon = 'Icon',
     value = 'String'
 }
-private.default_width = 0.006
-private.default_height = 0.003
-private.default_icon_size = 0.0025
+private.default_width = 0.05
+private.default_height = 0.01
+private.default_icon_size = 0.0093
 private.icon_ratio = private.default_icon_size / private.default_height
 private.default_font = 'fonts\\nim_____.ttf'
-private.default_font_size = 0.008
+private.default_font_size = 0.006
 
 -- Frame type
 do
@@ -152,14 +167,16 @@ function private.newData(self)
         background = BlzGetFrameByName(private.frame_type_name..private.suffix.background, 0),
         icon = BlzGetFrameByName(private.frame_type_name..private.suffix.icon, 0),
 
-        value = SimpleText.new(),
     }
+    priv.value = SimpleText.new()
     private.data[self] = priv
 
     priv.value:setParent(self)
-    priv.value:setSize(private.default_width - private.default_icon_size)
     priv.value:setPoint(FRAMEPOINT_RIGHT, FRAMEPOINT_RIGHT, 0, 0)
     priv.value:setAlignment(TEXT_JUSTIFY_CENTER, TEXT_JUSTIFY_MIDDLE)
+
+    self:setSize(private.default_width, private.default_height)
+    self:setLevel(1)
 end
 
 return static

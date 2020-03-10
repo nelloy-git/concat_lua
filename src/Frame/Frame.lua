@@ -88,6 +88,13 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
+    if type(width) ~= 'number' then
+        Log.error(self, '\"width\" must be a number', 2)
+    end
+    if type(height) ~= 'number' then
+        Log.error(self, '\"height\" must be a number', 2)
+    end
+
     local priv = private.data[self]
 
     if priv.width ~= width or priv.height ~= height then

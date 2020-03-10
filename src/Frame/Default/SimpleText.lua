@@ -53,8 +53,10 @@ function public:setText(text)
     local priv = private.data[self]
     text = text or ''
 
+    print('set:', text)
     priv.text = text
-    BlzFrameSetText(priv.text_handle, priv.color..text..'|r')
+    --BlzFrameSetText(priv.text_handle, priv.color..text..'|r')
+    BlzFrameSetText(priv.text_handle, text)
 end
 
 ---@param red number | nil
@@ -117,7 +119,7 @@ private.text_type:setChildrens({text_string})
 ---@param self SimpleText
 function private.newData(self)
     local priv = {
-        text_handle = BlzGetFrameByName('SimpleTextTexture', 0),
+        text_handle = BlzGetFrameByName('SimpleTextString', 0),
 
         font = private.default_font,
         font_size = private.default_font_size,

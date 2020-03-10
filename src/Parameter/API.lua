@@ -23,6 +23,7 @@ ParameterAPI.ParamType = Data.Type
 
 ParameterAPI.isPhysic = Data.isParamPhysic
 ParameterAPI.isMagic = Data.isParamMagic
+ParameterAPI.isPercent = Data.isParamPercent
 ParameterAPI.getShortName = Data.getShortName
 ParameterAPI.getFullName = Data.getFullName
 ParameterAPI.getIcon = Data.getIcon

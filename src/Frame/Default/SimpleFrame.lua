@@ -41,7 +41,6 @@ function override.new(frame_type, child_instance)
 
     local instance = child_instance or Class.allocate(SimpleFrame)
     instance = Frame.new(frame_type, instance)
-    private.newData(instance, frame_type)
 
     return instance
 end

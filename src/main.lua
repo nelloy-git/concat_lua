@@ -45,6 +45,8 @@ if not IsCompiletime() then
     InterfaceAPI.Equip:setUnitEquipment(u:getEquipment())
 
     local param_table = ParamTable.new()
+    param_table:setBackground()
+    param_table:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, 0, 0)
     param_table:setUnit(u:getParameters())
 
     --local targ = TargetUnit.new(u2:getObj())

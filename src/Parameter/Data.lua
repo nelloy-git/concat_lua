@@ -59,6 +59,20 @@ function Data.isParamType(param)
     return false
 end
 
+Data.PercentType = {
+    [Data.Type.PDmgReduc] = true,
+    [Data.Type.MDmgReduc] = true,
+    [Data.Type.Dodge] = true,
+    [Data.Type.CritDmg] = true,
+    [Data.Type.CdReduc] = true,
+    [Data.Type.CritCh] = true,
+}
+
+---@return boolean
+function Data.isParamPercent(param)
+    return Data.PercentType[param] or false
+end
+
 Data.PhysicType = {
     [Data.Type.PDmg] = true,
     [Data.Type.ASpd] = true,
@@ -70,7 +84,7 @@ Data.PhysicType = {
 
 ---@return boolean
 function Data.isParamPhysic(param)
-    return Data.MagicType[param] or false
+    return Data.PhysicType[param] or false
 end
 
 Data.MagicType = {
