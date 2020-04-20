@@ -12,10 +12,10 @@ local InterfaceIconValue = require('Interface.Frame.IconValue')
 local Screen = require('Frame.Screen')
 ---@type InterfaceFrameButtonClass
 local Button = require('Interface.Frame.Button')
----@type InterfaceAbilityCastingBarClass
---local CastingBar = require('Interface.Ability.CastingBar')
----@type InterfaceAbilityBarClass
---local AbilityBar = require('Interface.Ability.Bar')
+---@type InterfaceAbilityOldCastingBarClass
+--local CastingBar = require('Interface.AbilityOld.CastingBar')
+---@type InterfaceAbilityOldBarClass
+--local AbilityOldBar = require('Interface.AbilityOld.Bar')
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')
 ---@type InterfaceItemSlotClass

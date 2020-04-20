@@ -4,31 +4,31 @@
 
 local Class = require('Utils.Class.Class')
 
----@type AbilityTarget
-local AbilityTarget = require('Ability.Target.Target')
+---@type AbilityOldTarget
+local AbilityOldTarget = require('AbilityOld.Target.Target')
 
 --=======
 -- Class
 --=======
 
-local AbilityTargetNone = Class.new('AbilityTargetNone', AbilityTarget)
----@class AbilityTargetNone
-local public = AbilityTargetNone.public
----@class AbilityTargetNoneClass
-local static = AbilityTargetNone.static
----@type AbilityTargetNoneClass
-local override = AbilityTargetNone.override
+local AbilityOldTargetNone = Class.new('AbilityOldTargetNone', AbilityOldTarget)
+---@class AbilityOldTargetNone
+local public = AbilityOldTargetNone.public
+---@class AbilityOldTargetNoneClass
+local static = AbilityOldTargetNone.static
+---@type AbilityOldTargetNoneClass
+local override = AbilityOldTargetNone.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance AbilityTargetNone | nil
----@return AbilityTargetNone
+---@param child_instance AbilityOldTargetNone | nil
+---@return AbilityOldTargetNone
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(AbilityTargetNone)
-    instance = AbilityTarget.new(instance)
+    local instance = child_instance or Class.allocate(AbilityOldTargetNone)
+    instance = AbilityOldTarget.new(instance)
 
     return instance
 end

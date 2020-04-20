@@ -358,51 +358,51 @@ function ConvertOsKeyType(i) end
 
 ---@param i integer
 ---@return abilityintegerfield
-function ConvertAbilityIntegerField(i) end
+function ConvertAbilityOldIntegerField(i) end
 
 ---@param i integer
 ---@return abilityrealfield
-function ConvertAbilityRealField(i) end
+function ConvertAbilityOldRealField(i) end
 
 ---@param i integer
 ---@return abilitybooleanfield
-function ConvertAbilityBooleanField(i) end
+function ConvertAbilityOldBooleanField(i) end
 
 ---@param i integer
 ---@return abilitystringfield
-function ConvertAbilityStringField(i) end
+function ConvertAbilityOldStringField(i) end
 
 ---@param i integer
 ---@return abilityintegerlevelfield
-function ConvertAbilityIntegerLevelField(i) end
+function ConvertAbilityOldIntegerLevelField(i) end
 
 ---@param i integer
 ---@return abilityreallevelfield
-function ConvertAbilityRealLevelField(i) end
+function ConvertAbilityOldRealLevelField(i) end
 
 ---@param i integer
 ---@return abilitybooleanlevelfield
-function ConvertAbilityBooleanLevelField(i) end
+function ConvertAbilityOldBooleanLevelField(i) end
 
 ---@param i integer
 ---@return abilitystringlevelfield
-function ConvertAbilityStringLevelField(i) end
+function ConvertAbilityOldStringLevelField(i) end
 
 ---@param i integer
 ---@return abilityintegerlevelarrayfield
-function ConvertAbilityIntegerLevelArrayField(i) end
+function ConvertAbilityOldIntegerLevelArrayField(i) end
 
 ---@param i integer
 ---@return abilityreallevelarrayfield
-function ConvertAbilityRealLevelArrayField(i) end
+function ConvertAbilityOldRealLevelArrayField(i) end
 
 ---@param i integer
 ---@return abilitybooleanlevelarrayfield
-function ConvertAbilityBooleanLevelArrayField(i) end
+function ConvertAbilityOldBooleanLevelArrayField(i) end
 
 ---@param i integer
 ---@return abilitystringlevelarrayfield
-function ConvertAbilityStringLevelArrayField(i) end
+function ConvertAbilityOldStringLevelArrayField(i) end
 
 ---@param i integer
 ---@return unitintegerfield
@@ -505,11 +505,11 @@ function UnitId2String(unitId) end
 -- Not currently working correctly...
 ---@param abilityIdString string
 ---@return integer
-function AbilityId(abilityIdString) end
+function AbilityOldId(abilityIdString) end
 
 ---@param abilityId integer
 ---@return string
-function AbilityId2String(abilityId) end
+function AbilityOldId2String(abilityId) end
 
 
 -- Looks up the "name" field for any object (unit, item, ability)
@@ -1516,741 +1516,741 @@ OSKEY_OEM_CLEAR                      = ConvertOsKeyType(0xFE) ---@type oskeytype
 -- Instanced Object Operation API s
 --===================================================
 
--- Ability
-ABILITY_IF_BUTTON_POSITION_NORMAL_X        = ConvertAbilityIntegerField(FourCC('abpx')) ---@type abilityintegerfield
-ABILITY_IF_BUTTON_POSITION_NORMAL_Y        = ConvertAbilityIntegerField(FourCC('abpy')) ---@type abilityintegerfield
-ABILITY_IF_BUTTON_POSITION_ACTIVATED_X     = ConvertAbilityIntegerField(FourCC('aubx')) ---@type abilityintegerfield
-ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y     = ConvertAbilityIntegerField(FourCC('auby')) ---@type abilityintegerfield
-ABILITY_IF_BUTTON_POSITION_RESEARCH_X      = ConvertAbilityIntegerField(FourCC('arpx')) ---@type abilityintegerfield
-ABILITY_IF_BUTTON_POSITION_RESEARCH_Y      = ConvertAbilityIntegerField(FourCC('arpy')) ---@type abilityintegerfield
-ABILITY_IF_MISSILE_SPEED                   = ConvertAbilityIntegerField(FourCC('amsp')) ---@type abilityintegerfield
-ABILITY_IF_TARGET_ATTACHMENTS              = ConvertAbilityIntegerField(FourCC('atac')) ---@type abilityintegerfield
-ABILITY_IF_CASTER_ATTACHMENTS              = ConvertAbilityIntegerField(FourCC('acac')) ---@type abilityintegerfield
-ABILITY_IF_PRIORITY                        = ConvertAbilityIntegerField(FourCC('apri')) ---@type abilityintegerfield
-ABILITY_IF_LEVELS                          = ConvertAbilityIntegerField(FourCC('alev')) ---@type abilityintegerfield
-ABILITY_IF_REQUIRED_LEVEL                  = ConvertAbilityIntegerField(FourCC('arlv')) ---@type abilityintegerfield
-ABILITY_IF_LEVEL_SKIP_REQUIREMENT          = ConvertAbilityIntegerField(FourCC('alsk')) ---@type abilityintegerfield
+-- AbilityOld
+ABILITY_IF_BUTTON_POSITION_NORMAL_X        = ConvertAbilityOldIntegerField(FourCC('abpx')) ---@type abilityintegerfield
+ABILITY_IF_BUTTON_POSITION_NORMAL_Y        = ConvertAbilityOldIntegerField(FourCC('abpy')) ---@type abilityintegerfield
+ABILITY_IF_BUTTON_POSITION_ACTIVATED_X     = ConvertAbilityOldIntegerField(FourCC('aubx')) ---@type abilityintegerfield
+ABILITY_IF_BUTTON_POSITION_ACTIVATED_Y     = ConvertAbilityOldIntegerField(FourCC('auby')) ---@type abilityintegerfield
+ABILITY_IF_BUTTON_POSITION_RESEARCH_X      = ConvertAbilityOldIntegerField(FourCC('arpx')) ---@type abilityintegerfield
+ABILITY_IF_BUTTON_POSITION_RESEARCH_Y      = ConvertAbilityOldIntegerField(FourCC('arpy')) ---@type abilityintegerfield
+ABILITY_IF_MISSILE_SPEED                   = ConvertAbilityOldIntegerField(FourCC('amsp')) ---@type abilityintegerfield
+ABILITY_IF_TARGET_ATTACHMENTS              = ConvertAbilityOldIntegerField(FourCC('atac')) ---@type abilityintegerfield
+ABILITY_IF_CASTER_ATTACHMENTS              = ConvertAbilityOldIntegerField(FourCC('acac')) ---@type abilityintegerfield
+ABILITY_IF_PRIORITY                        = ConvertAbilityOldIntegerField(FourCC('apri')) ---@type abilityintegerfield
+ABILITY_IF_LEVELS                          = ConvertAbilityOldIntegerField(FourCC('alev')) ---@type abilityintegerfield
+ABILITY_IF_REQUIRED_LEVEL                  = ConvertAbilityOldIntegerField(FourCC('arlv')) ---@type abilityintegerfield
+ABILITY_IF_LEVEL_SKIP_REQUIREMENT          = ConvertAbilityOldIntegerField(FourCC('alsk')) ---@type abilityintegerfield
 
-ABILITY_BF_HERO_ABILITY                    = ConvertAbilityBooleanField(FourCC('aher')) ---@type abilitybooleanfield
-ABILITY_BF_ITEM_ABILITY                    = ConvertAbilityBooleanField(FourCC('aite')) ---@type abilitybooleanfield
-ABILITY_BF_CHECK_DEPENDENCIES              = ConvertAbilityBooleanField(FourCC('achd')) ---@type abilitybooleanfield
+ABILITY_BF_HERO_ABILITY                    = ConvertAbilityOldBooleanField(FourCC('aher')) ---@type abilitybooleanfield
+ABILITY_BF_ITEM_ABILITY                    = ConvertAbilityOldBooleanField(FourCC('aite')) ---@type abilitybooleanfield
+ABILITY_BF_CHECK_DEPENDENCIES              = ConvertAbilityOldBooleanField(FourCC('achd')) ---@type abilitybooleanfield
 
-ABILITY_RF_ARF_MISSILE_ARC                    = ConvertAbilityRealField(FourCC('amac')) ---@type abilityrealfield
+ABILITY_RF_ARF_MISSILE_ARC                    = ConvertAbilityOldRealField(FourCC('amac')) ---@type abilityrealfield
 
-ABILITY_SF_NAME                             = ConvertAbilityStringField(FourCC('anam')) ---@type abilitystringfield
-ABILITY_SF_ICON_ACTIVATED                   = ConvertAbilityStringField(FourCC('auar')) ---@type abilitystringfield
-ABILITY_SF_ICON_RESEARCH                    = ConvertAbilityStringField(FourCC('arar')) ---@type abilitystringfield
-ABILITY_SF_EFFECT_SOUND                     = ConvertAbilityStringField(FourCC('aefs')) ---@type abilitystringfield
-ABILITY_SF_EFFECT_SOUND_LOOPING             = ConvertAbilityStringField(FourCC('aefl')) ---@type abilitystringfield
+ABILITY_SF_NAME                             = ConvertAbilityOldStringField(FourCC('anam')) ---@type abilitystringfield
+ABILITY_SF_ICON_ACTIVATED                   = ConvertAbilityOldStringField(FourCC('auar')) ---@type abilitystringfield
+ABILITY_SF_ICON_RESEARCH                    = ConvertAbilityOldStringField(FourCC('arar')) ---@type abilitystringfield
+ABILITY_SF_EFFECT_SOUND                     = ConvertAbilityOldStringField(FourCC('aefs')) ---@type abilitystringfield
+ABILITY_SF_EFFECT_SOUND_LOOPING             = ConvertAbilityOldStringField(FourCC('aefl')) ---@type abilitystringfield
 
-ABILITY_ILF_MANA_COST                         = ConvertAbilityIntegerLevelField(FourCC('amcs')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_WAVES                   = ConvertAbilityIntegerLevelField(FourCC('Hbz1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SHARDS                  = ConvertAbilityIntegerLevelField(FourCC('Hbz3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_UNITS_TELEPORTED        = ConvertAbilityIntegerLevelField(FourCC('Hmt1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_COUNT_HWE2          = ConvertAbilityIntegerLevelField(FourCC('Hwe2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_IMAGES                  = ConvertAbilityIntegerLevelField(FourCC('Omi1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_UAN1     = ConvertAbilityIntegerLevelField(FourCC('Uan1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MORPHING_FLAGS                    = ConvertAbilityIntegerLevelField(FourCC('Eme2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_STRENGTH_BONUS_NRG5               = ConvertAbilityIntegerLevelField(FourCC('Nrg5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DEFENSE_BONUS_NRG6                = ConvertAbilityIntegerLevelField(FourCC('Nrg6')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_TARGETS_HIT             = ConvertAbilityIntegerLevelField(FourCC('Ocl2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_TYPE_OFS1               = ConvertAbilityIntegerLevelField(FourCC('Ofs1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_OSF2     = ConvertAbilityIntegerLevelField(FourCC('Osf2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_EFN1     = ConvertAbilityIntegerLevelField(FourCC('Efn1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_HRE1     = ConvertAbilityIntegerLevelField(FourCC('Hre1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_STACK_FLAGS                       = ConvertAbilityIntegerLevelField(FourCC('Hca4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MINIMUM_NUMBER_OF_UNITS           = ConvertAbilityIntegerLevelField(FourCC('Ndp2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_NDP3      = ConvertAbilityIntegerLevelField(FourCC('Ndp3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_UNITS_CREATED_NRC2      = ConvertAbilityIntegerLevelField(FourCC('Nrc2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SHIELD_LIFE                       = ConvertAbilityIntegerLevelField(FourCC('Ams3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_LOSS_AMS4                    = ConvertAbilityIntegerLevelField(FourCC('Ams4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GOLD_PER_INTERVAL_BGM1            = ConvertAbilityIntegerLevelField(FourCC('Bgm1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_NUMBER_OF_MINERS              = ConvertAbilityIntegerLevelField(FourCC('Bgm3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_CARGO_CAPACITY                    = ConvertAbilityIntegerLevelField(FourCC('Car1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_CREEP_LEVEL_DEV3          = ConvertAbilityIntegerLevelField(FourCC('Dev3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_CREEP_LEVEL_DEV1              = ConvertAbilityIntegerLevelField(FourCC('Dev1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GOLD_PER_INTERVAL_EGM1            = ConvertAbilityIntegerLevelField(FourCC('Egm1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DEFENSE_REDUCTION                 = ConvertAbilityIntegerLevelField(FourCC('Fae1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_TYPE_FLA1               = ConvertAbilityIntegerLevelField(FourCC('Fla1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_FLARE_COUNT                       = ConvertAbilityIntegerLevelField(FourCC('Fla3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_GOLD                          = ConvertAbilityIntegerLevelField(FourCC('Gld1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MINING_CAPACITY                   = ConvertAbilityIntegerLevelField(FourCC('Gld3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_CORPSES_GYD1    = ConvertAbilityIntegerLevelField(FourCC('Gyd1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DAMAGE_TO_TREE                    = ConvertAbilityIntegerLevelField(FourCC('Har1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_LUMBER_CAPACITY                   = ConvertAbilityIntegerLevelField(FourCC('Har2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GOLD_CAPACITY                     = ConvertAbilityIntegerLevelField(FourCC('Har3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DEFENSE_INCREASE_INF2             = ConvertAbilityIntegerLevelField(FourCC('Inf2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_INTERACTION_TYPE                  = ConvertAbilityIntegerLevelField(FourCC('Neu2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GOLD_COST_NDT1                    = ConvertAbilityIntegerLevelField(FourCC('Ndt1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_LUMBER_COST_NDT2                  = ConvertAbilityIntegerLevelField(FourCC('Ndt2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_TYPE_NDT3               = ConvertAbilityIntegerLevelField(FourCC('Ndt3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_STACKING_TYPE_POI4                = ConvertAbilityIntegerLevelField(FourCC('Poi4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_STACKING_TYPE_POA5                = ConvertAbilityIntegerLevelField(FourCC('Poa5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_CREEP_LEVEL_PLY1          = ConvertAbilityIntegerLevelField(FourCC('Ply1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_CREEP_LEVEL_POS1          = ConvertAbilityIntegerLevelField(FourCC('Pos1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MOVEMENT_UPDATE_FREQUENCY_PRG1    = ConvertAbilityIntegerLevelField(FourCC('Prg1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ATTACK_UPDATE_FREQUENCY_PRG2      = ConvertAbilityIntegerLevelField(FourCC('Prg2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_LOSS_PRG6                    = ConvertAbilityIntegerLevelField(FourCC('Prg6')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNITS_SUMMONED_TYPE_ONE           = ConvertAbilityIntegerLevelField(FourCC('Rai1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNITS_SUMMONED_TYPE_TWO           = ConvertAbilityIntegerLevelField(FourCC('Rai2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_UNITS_SUMMONED                = ConvertAbilityIntegerLevelField(FourCC('Ucb5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ALLOW_WHEN_FULL_REJ3              = ConvertAbilityIntegerLevelField(FourCC('Rej3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_UNITS_CHARGED_TO_CASTER   = ConvertAbilityIntegerLevelField(FourCC('Rpb5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_UNITS_AFFECTED            = ConvertAbilityIntegerLevelField(FourCC('Rpb6')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DEFENSE_INCREASE_ROA2             = ConvertAbilityIntegerLevelField(FourCC('Roa2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_UNITS_ROA7                    = ConvertAbilityIntegerLevelField(FourCC('Roa7')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ROOTED_WEAPONS                    = ConvertAbilityIntegerLevelField(FourCC('Roo1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UPROOTED_WEAPONS                  = ConvertAbilityIntegerLevelField(FourCC('Roo2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UPROOTED_DEFENSE_TYPE             = ConvertAbilityIntegerLevelField(FourCC('Roo4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ACCUMULATION_STEP                 = ConvertAbilityIntegerLevelField(FourCC('Sal2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_OWLS                    = ConvertAbilityIntegerLevelField(FourCC('Esn4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_STACKING_TYPE_SPO4                = ConvertAbilityIntegerLevelField(FourCC('Spo4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_UNITS                   = ConvertAbilityIntegerLevelField(FourCC('Sod1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SPIDER_CAPACITY                   = ConvertAbilityIntegerLevelField(FourCC('Spa1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_INTERVALS_BEFORE_CHANGING_TREES   = ConvertAbilityIntegerLevelField(FourCC('Wha2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_AGILITY_BONUS                     = ConvertAbilityIntegerLevelField(FourCC('Iagi')) ---@type abilityintegerlevelfield
-ABILITY_ILF_INTELLIGENCE_BONUS                = ConvertAbilityIntegerLevelField(FourCC('Iint')) ---@type abilityintegerlevelfield
-ABILITY_ILF_STRENGTH_BONUS_ISTR               = ConvertAbilityIntegerLevelField(FourCC('Istr')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ATTACK_BONUS                      = ConvertAbilityIntegerLevelField(FourCC('Iatt')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DEFENSE_BONUS_IDEF                = ConvertAbilityIntegerLevelField(FourCC('Idef')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMON_1_AMOUNT                   = ConvertAbilityIntegerLevelField(FourCC('Isn1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMON_2_AMOUNT                   = ConvertAbilityIntegerLevelField(FourCC('Isn2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_EXPERIENCE_GAINED                 = ConvertAbilityIntegerLevelField(FourCC('Ixpg')) ---@type abilityintegerlevelfield
-ABILITY_ILF_HIT_POINTS_GAINED_IHPG            = ConvertAbilityIntegerLevelField(FourCC('Ihpg')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_POINTS_GAINED_IMPG           = ConvertAbilityIntegerLevelField(FourCC('Impg')) ---@type abilityintegerlevelfield
-ABILITY_ILF_HIT_POINTS_GAINED_IHP2            = ConvertAbilityIntegerLevelField(FourCC('Ihp2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_POINTS_GAINED_IMP2           = ConvertAbilityIntegerLevelField(FourCC('Imp2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DAMAGE_BONUS_DICE                 = ConvertAbilityIntegerLevelField(FourCC('Idic')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ARMOR_PENALTY_IARP                = ConvertAbilityIntegerLevelField(FourCC('Iarp')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ENABLED_ATTACK_INDEX_IOB5         = ConvertAbilityIntegerLevelField(FourCC('Iob5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_LEVELS_GAINED                     = ConvertAbilityIntegerLevelField(FourCC('Ilev')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_LIFE_GAINED                   = ConvertAbilityIntegerLevelField(FourCC('Ilif')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_MANA_GAINED                   = ConvertAbilityIntegerLevelField(FourCC('Iman')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GOLD_GIVEN                        = ConvertAbilityIntegerLevelField(FourCC('Igol')) ---@type abilityintegerlevelfield
-ABILITY_ILF_LUMBER_GIVEN                      = ConvertAbilityIntegerLevelField(FourCC('Ilum')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_TYPE_IFA1               = ConvertAbilityIntegerLevelField(FourCC('Ifa1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_CREEP_LEVEL_ICRE          = ConvertAbilityIntegerLevelField(FourCC('Icre')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MOVEMENT_SPEED_BONUS              = ConvertAbilityIntegerLevelField(FourCC('Imvb')) ---@type abilityintegerlevelfield
-ABILITY_ILF_HIT_POINTS_REGENERATED_PER_SECOND = ConvertAbilityIntegerLevelField(FourCC('Ihpr')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SIGHT_RANGE_BONUS                 = ConvertAbilityIntegerLevelField(FourCC('Isib')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DAMAGE_PER_DURATION               = ConvertAbilityIntegerLevelField(FourCC('Icfd')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_USED_PER_SECOND              = ConvertAbilityIntegerLevelField(FourCC('Icfm')) ---@type abilityintegerlevelfield
-ABILITY_ILF_EXTRA_MANA_REQUIRED               = ConvertAbilityIntegerLevelField(FourCC('Icfx')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_RADIUS_IDET             = ConvertAbilityIntegerLevelField(FourCC('Idet')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_LOSS_PER_UNIT_IDIM           = ConvertAbilityIntegerLevelField(FourCC('Idim')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DAMAGE_TO_SUMMONED_UNITS_IDID     = ConvertAbilityIntegerLevelField(FourCC('Idid')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_IREC      = ConvertAbilityIntegerLevelField(FourCC('Irec')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DELAY_AFTER_DEATH_SECONDS         = ConvertAbilityIntegerLevelField(FourCC('Ircd')) ---@type abilityintegerlevelfield
-ABILITY_ILF_RESTORED_LIFE                     = ConvertAbilityIntegerLevelField(FourCC('irc2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_RESTORED_MANA__1_FOR_CURRENT      = ConvertAbilityIntegerLevelField(FourCC('irc3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_HIT_POINTS_RESTORED               = ConvertAbilityIntegerLevelField(FourCC('Ihps')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MANA_POINTS_RESTORED              = ConvertAbilityIntegerLevelField(FourCC('Imps')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_ITPM      = ConvertAbilityIntegerLevelField(FourCC('Itpm')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_CAD1     = ConvertAbilityIntegerLevelField(FourCC('Cad1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_TERRAIN_DEFORMATION_DURATION_MS   = ConvertAbilityIntegerLevelField(FourCC('Wrs3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_UNITS                     = ConvertAbilityIntegerLevelField(FourCC('Uds1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_TYPE_DET1               = ConvertAbilityIntegerLevelField(FourCC('Det1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GOLD_COST_PER_STRUCTURE           = ConvertAbilityIntegerLevelField(FourCC('Nsp1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_LUMBER_COST_PER_USE               = ConvertAbilityIntegerLevelField(FourCC('Nsp2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DETECTION_TYPE_NSP3               = ConvertAbilityIntegerLevelField(FourCC('Nsp3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SWARM_UNITS             = ConvertAbilityIntegerLevelField(FourCC('Uls1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_SWARM_UNITS_PER_TARGET        = ConvertAbilityIntegerLevelField(FourCC('Uls3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_NBA2     = ConvertAbilityIntegerLevelField(FourCC('Nba2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_CREEP_LEVEL_NCH1          = ConvertAbilityIntegerLevelField(FourCC('Nch1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ATTACKS_PREVENTED                 = ConvertAbilityIntegerLevelField(FourCC('Nsi1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_TARGETS_EFK3    = ConvertAbilityIntegerLevelField(FourCC('Efk3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_ESV1     = ConvertAbilityIntegerLevelField(FourCC('Esv1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_CORPSES_EXH1    = ConvertAbilityIntegerLevelField(FourCC('exh1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ITEM_CAPACITY                     = ConvertAbilityIntegerLevelField(FourCC('inv1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_NUMBER_OF_TARGETS_SPL2    = ConvertAbilityIntegerLevelField(FourCC('spl2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ALLOW_WHEN_FULL_IRL3              = ConvertAbilityIntegerLevelField(FourCC('irl3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_DISPELLED_UNITS           = ConvertAbilityIntegerLevelField(FourCC('idc3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_LURES                   = ConvertAbilityIntegerLevelField(FourCC('imo1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NEW_TIME_OF_DAY_HOUR              = ConvertAbilityIntegerLevelField(FourCC('ict1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NEW_TIME_OF_DAY_MINUTE            = ConvertAbilityIntegerLevelField(FourCC('ict2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_UNITS_CREATED_MEC1      = ConvertAbilityIntegerLevelField(FourCC('mec1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MINIMUM_SPELLS                    = ConvertAbilityIntegerLevelField(FourCC('spb3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_SPELLS                    = ConvertAbilityIntegerLevelField(FourCC('spb4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DISABLED_ATTACK_INDEX             = ConvertAbilityIntegerLevelField(FourCC('gra3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ENABLED_ATTACK_INDEX_GRA4         = ConvertAbilityIntegerLevelField(FourCC('gra4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAXIMUM_ATTACKS                   = ConvertAbilityIntegerLevelField(FourCC('gra5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_BUILDING_TYPES_ALLOWED_NPR1       = ConvertAbilityIntegerLevelField(FourCC('Npr1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_BUILDING_TYPES_ALLOWED_NSA1       = ConvertAbilityIntegerLevelField(FourCC('Nsa1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ATTACK_MODIFICATION               = ConvertAbilityIntegerLevelField(FourCC('Iaa1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_COUNT_NPA5          = ConvertAbilityIntegerLevelField(FourCC('Npa5')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UPGRADE_LEVELS                    = ConvertAbilityIntegerLevelField(FourCC('Igl1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_NDO2     = ConvertAbilityIntegerLevelField(FourCC('Ndo2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_BEASTS_PER_SECOND                 = ConvertAbilityIntegerLevelField(FourCC('Nst1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_TARGET_TYPE                       = ConvertAbilityIntegerLevelField(FourCC('Ncl2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_OPTIONS                           = ConvertAbilityIntegerLevelField(FourCC('Ncl3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ARMOR_PENALTY_NAB3                = ConvertAbilityIntegerLevelField(FourCC('Nab3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_WAVE_COUNT_NHS6                   = ConvertAbilityIntegerLevelField(FourCC('Nhs6')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_CREEP_LEVEL_NTM3              = ConvertAbilityIntegerLevelField(FourCC('Ntm3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MISSILE_COUNT                     = ConvertAbilityIntegerLevelField(FourCC('Ncs3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SPLIT_ATTACK_COUNT                = ConvertAbilityIntegerLevelField(FourCC('Nlm3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_GENERATION_COUNT                  = ConvertAbilityIntegerLevelField(FourCC('Nlm6')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ROCK_RING_COUNT                   = ConvertAbilityIntegerLevelField(FourCC('Nvc1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_WAVE_COUNT_NVC2                   = ConvertAbilityIntegerLevelField(FourCC('Nvc2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_PREFER_HOSTILES_TAU1              = ConvertAbilityIntegerLevelField(FourCC('Tau1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_PREFER_FRIENDLIES_TAU2            = ConvertAbilityIntegerLevelField(FourCC('Tau2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_MAX_UNITS_TAU3                    = ConvertAbilityIntegerLevelField(FourCC('Tau3')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NUMBER_OF_PULSES                  = ConvertAbilityIntegerLevelField(FourCC('Tau4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPE_HWE1           = ConvertAbilityIntegerLevelField(FourCC('Hwe1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_UIN4                = ConvertAbilityIntegerLevelField(FourCC('Uin4')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_OSF1                = ConvertAbilityIntegerLevelField(FourCC('Osf1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPE_EFNU           = ConvertAbilityIntegerLevelField(FourCC('Efnu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPE_NBAU           = ConvertAbilityIntegerLevelField(FourCC('Nbau')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPE_NTOU           = ConvertAbilityIntegerLevelField(FourCC('Ntou')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPE_ESVU           = ConvertAbilityIntegerLevelField(FourCC('Esvu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPES               = ConvertAbilityIntegerLevelField(FourCC('Nef1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SUMMONED_UNIT_TYPE_NDOU           = ConvertAbilityIntegerLevelField(FourCC('Ndou')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ALTERNATE_FORM_UNIT_EMEU          = ConvertAbilityIntegerLevelField(FourCC('Emeu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_PLAGUE_WARD_UNIT_TYPE             = ConvertAbilityIntegerLevelField(FourCC('Aplu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ALLOWED_UNIT_TYPE_BTL1            = ConvertAbilityIntegerLevelField(FourCC('Btl1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_NEW_UNIT_TYPE                     = ConvertAbilityIntegerLevelField(FourCC('Cha1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_RESULTING_UNIT_TYPE_ENT1          = ConvertAbilityIntegerLevelField(FourCC('ent1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_CORPSE_UNIT_TYPE                  = ConvertAbilityIntegerLevelField(FourCC('Gydu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_ALLOWED_UNIT_TYPE_LOA1            = ConvertAbilityIntegerLevelField(FourCC('Loa1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNIT_TYPE_FOR_LIMIT_CHECK         = ConvertAbilityIntegerLevelField(FourCC('Raiu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_WARD_UNIT_TYPE_STAU               = ConvertAbilityIntegerLevelField(FourCC('Stau')) ---@type abilityintegerlevelfield
-ABILITY_ILF_EFFECT_ABILITY                    = ConvertAbilityIntegerLevelField(FourCC('Iobu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_CONVERSION_UNIT                   = ConvertAbilityIntegerLevelField(FourCC('Ndc2')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNIT_TO_PRESERVE                  = ConvertAbilityIntegerLevelField(FourCC('Nsl1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNIT_TYPE_ALLOWED                 = ConvertAbilityIntegerLevelField(FourCC('Chl1')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SWARM_UNIT_TYPE                   = ConvertAbilityIntegerLevelField(FourCC('Ulsu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_RESULTING_UNIT_TYPE_COAU          = ConvertAbilityIntegerLevelField(FourCC('coau')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNIT_TYPE_EXHU                    = ConvertAbilityIntegerLevelField(FourCC('exhu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_WARD_UNIT_TYPE_HWDU               = ConvertAbilityIntegerLevelField(FourCC('hwdu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_LURE_UNIT_TYPE                    = ConvertAbilityIntegerLevelField(FourCC('imou')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UNIT_TYPE_IPMU                    = ConvertAbilityIntegerLevelField(FourCC('ipmu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_FACTORY_UNIT_ID                   = ConvertAbilityIntegerLevelField(FourCC('Nsyu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_SPAWN_UNIT_ID_NFYU                = ConvertAbilityIntegerLevelField(FourCC('Nfyu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_DESTRUCTIBLE_ID                   = ConvertAbilityIntegerLevelField(FourCC('Nvcu')) ---@type abilityintegerlevelfield
-ABILITY_ILF_UPGRADE_TYPE                      = ConvertAbilityIntegerLevelField(FourCC('Iglu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_COST                         = ConvertAbilityOldIntegerLevelField(FourCC('amcs')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_WAVES                   = ConvertAbilityOldIntegerLevelField(FourCC('Hbz1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SHARDS                  = ConvertAbilityOldIntegerLevelField(FourCC('Hbz3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_UNITS_TELEPORTED        = ConvertAbilityOldIntegerLevelField(FourCC('Hmt1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_COUNT_HWE2          = ConvertAbilityOldIntegerLevelField(FourCC('Hwe2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_IMAGES                  = ConvertAbilityOldIntegerLevelField(FourCC('Omi1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_UAN1     = ConvertAbilityOldIntegerLevelField(FourCC('Uan1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MORPHING_FLAGS                    = ConvertAbilityOldIntegerLevelField(FourCC('Eme2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_STRENGTH_BONUS_NRG5               = ConvertAbilityOldIntegerLevelField(FourCC('Nrg5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DEFENSE_BONUS_NRG6                = ConvertAbilityOldIntegerLevelField(FourCC('Nrg6')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_TARGETS_HIT             = ConvertAbilityOldIntegerLevelField(FourCC('Ocl2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_TYPE_OFS1               = ConvertAbilityOldIntegerLevelField(FourCC('Ofs1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_OSF2     = ConvertAbilityOldIntegerLevelField(FourCC('Osf2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_EFN1     = ConvertAbilityOldIntegerLevelField(FourCC('Efn1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_HRE1     = ConvertAbilityOldIntegerLevelField(FourCC('Hre1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_STACK_FLAGS                       = ConvertAbilityOldIntegerLevelField(FourCC('Hca4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MINIMUM_NUMBER_OF_UNITS           = ConvertAbilityOldIntegerLevelField(FourCC('Ndp2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_NDP3      = ConvertAbilityOldIntegerLevelField(FourCC('Ndp3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_UNITS_CREATED_NRC2      = ConvertAbilityOldIntegerLevelField(FourCC('Nrc2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SHIELD_LIFE                       = ConvertAbilityOldIntegerLevelField(FourCC('Ams3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_LOSS_AMS4                    = ConvertAbilityOldIntegerLevelField(FourCC('Ams4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GOLD_PER_INTERVAL_BGM1            = ConvertAbilityOldIntegerLevelField(FourCC('Bgm1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_NUMBER_OF_MINERS              = ConvertAbilityOldIntegerLevelField(FourCC('Bgm3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_CARGO_CAPACITY                    = ConvertAbilityOldIntegerLevelField(FourCC('Car1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_CREEP_LEVEL_DEV3          = ConvertAbilityOldIntegerLevelField(FourCC('Dev3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_CREEP_LEVEL_DEV1              = ConvertAbilityOldIntegerLevelField(FourCC('Dev1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GOLD_PER_INTERVAL_EGM1            = ConvertAbilityOldIntegerLevelField(FourCC('Egm1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DEFENSE_REDUCTION                 = ConvertAbilityOldIntegerLevelField(FourCC('Fae1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_TYPE_FLA1               = ConvertAbilityOldIntegerLevelField(FourCC('Fla1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_FLARE_COUNT                       = ConvertAbilityOldIntegerLevelField(FourCC('Fla3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_GOLD                          = ConvertAbilityOldIntegerLevelField(FourCC('Gld1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MINING_CAPACITY                   = ConvertAbilityOldIntegerLevelField(FourCC('Gld3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_CORPSES_GYD1    = ConvertAbilityOldIntegerLevelField(FourCC('Gyd1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DAMAGE_TO_TREE                    = ConvertAbilityOldIntegerLevelField(FourCC('Har1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_LUMBER_CAPACITY                   = ConvertAbilityOldIntegerLevelField(FourCC('Har2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GOLD_CAPACITY                     = ConvertAbilityOldIntegerLevelField(FourCC('Har3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DEFENSE_INCREASE_INF2             = ConvertAbilityOldIntegerLevelField(FourCC('Inf2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_INTERACTION_TYPE                  = ConvertAbilityOldIntegerLevelField(FourCC('Neu2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GOLD_COST_NDT1                    = ConvertAbilityOldIntegerLevelField(FourCC('Ndt1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_LUMBER_COST_NDT2                  = ConvertAbilityOldIntegerLevelField(FourCC('Ndt2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_TYPE_NDT3               = ConvertAbilityOldIntegerLevelField(FourCC('Ndt3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_STACKING_TYPE_POI4                = ConvertAbilityOldIntegerLevelField(FourCC('Poi4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_STACKING_TYPE_POA5                = ConvertAbilityOldIntegerLevelField(FourCC('Poa5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_CREEP_LEVEL_PLY1          = ConvertAbilityOldIntegerLevelField(FourCC('Ply1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_CREEP_LEVEL_POS1          = ConvertAbilityOldIntegerLevelField(FourCC('Pos1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MOVEMENT_UPDATE_FREQUENCY_PRG1    = ConvertAbilityOldIntegerLevelField(FourCC('Prg1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ATTACK_UPDATE_FREQUENCY_PRG2      = ConvertAbilityOldIntegerLevelField(FourCC('Prg2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_LOSS_PRG6                    = ConvertAbilityOldIntegerLevelField(FourCC('Prg6')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNITS_SUMMONED_TYPE_ONE           = ConvertAbilityOldIntegerLevelField(FourCC('Rai1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNITS_SUMMONED_TYPE_TWO           = ConvertAbilityOldIntegerLevelField(FourCC('Rai2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_UNITS_SUMMONED                = ConvertAbilityOldIntegerLevelField(FourCC('Ucb5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ALLOW_WHEN_FULL_REJ3              = ConvertAbilityOldIntegerLevelField(FourCC('Rej3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_UNITS_CHARGED_TO_CASTER   = ConvertAbilityOldIntegerLevelField(FourCC('Rpb5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_UNITS_AFFECTED            = ConvertAbilityOldIntegerLevelField(FourCC('Rpb6')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DEFENSE_INCREASE_ROA2             = ConvertAbilityOldIntegerLevelField(FourCC('Roa2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_UNITS_ROA7                    = ConvertAbilityOldIntegerLevelField(FourCC('Roa7')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ROOTED_WEAPONS                    = ConvertAbilityOldIntegerLevelField(FourCC('Roo1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UPROOTED_WEAPONS                  = ConvertAbilityOldIntegerLevelField(FourCC('Roo2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UPROOTED_DEFENSE_TYPE             = ConvertAbilityOldIntegerLevelField(FourCC('Roo4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ACCUMULATION_STEP                 = ConvertAbilityOldIntegerLevelField(FourCC('Sal2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_OWLS                    = ConvertAbilityOldIntegerLevelField(FourCC('Esn4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_STACKING_TYPE_SPO4                = ConvertAbilityOldIntegerLevelField(FourCC('Spo4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_UNITS                   = ConvertAbilityOldIntegerLevelField(FourCC('Sod1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SPIDER_CAPACITY                   = ConvertAbilityOldIntegerLevelField(FourCC('Spa1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_INTERVALS_BEFORE_CHANGING_TREES   = ConvertAbilityOldIntegerLevelField(FourCC('Wha2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_AGILITY_BONUS                     = ConvertAbilityOldIntegerLevelField(FourCC('Iagi')) ---@type abilityintegerlevelfield
+ABILITY_ILF_INTELLIGENCE_BONUS                = ConvertAbilityOldIntegerLevelField(FourCC('Iint')) ---@type abilityintegerlevelfield
+ABILITY_ILF_STRENGTH_BONUS_ISTR               = ConvertAbilityOldIntegerLevelField(FourCC('Istr')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ATTACK_BONUS                      = ConvertAbilityOldIntegerLevelField(FourCC('Iatt')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DEFENSE_BONUS_IDEF                = ConvertAbilityOldIntegerLevelField(FourCC('Idef')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMON_1_AMOUNT                   = ConvertAbilityOldIntegerLevelField(FourCC('Isn1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMON_2_AMOUNT                   = ConvertAbilityOldIntegerLevelField(FourCC('Isn2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_EXPERIENCE_GAINED                 = ConvertAbilityOldIntegerLevelField(FourCC('Ixpg')) ---@type abilityintegerlevelfield
+ABILITY_ILF_HIT_POINTS_GAINED_IHPG            = ConvertAbilityOldIntegerLevelField(FourCC('Ihpg')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_POINTS_GAINED_IMPG           = ConvertAbilityOldIntegerLevelField(FourCC('Impg')) ---@type abilityintegerlevelfield
+ABILITY_ILF_HIT_POINTS_GAINED_IHP2            = ConvertAbilityOldIntegerLevelField(FourCC('Ihp2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_POINTS_GAINED_IMP2           = ConvertAbilityOldIntegerLevelField(FourCC('Imp2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DAMAGE_BONUS_DICE                 = ConvertAbilityOldIntegerLevelField(FourCC('Idic')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ARMOR_PENALTY_IARP                = ConvertAbilityOldIntegerLevelField(FourCC('Iarp')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ENABLED_ATTACK_INDEX_IOB5         = ConvertAbilityOldIntegerLevelField(FourCC('Iob5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_LEVELS_GAINED                     = ConvertAbilityOldIntegerLevelField(FourCC('Ilev')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_LIFE_GAINED                   = ConvertAbilityOldIntegerLevelField(FourCC('Ilif')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_MANA_GAINED                   = ConvertAbilityOldIntegerLevelField(FourCC('Iman')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GOLD_GIVEN                        = ConvertAbilityOldIntegerLevelField(FourCC('Igol')) ---@type abilityintegerlevelfield
+ABILITY_ILF_LUMBER_GIVEN                      = ConvertAbilityOldIntegerLevelField(FourCC('Ilum')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_TYPE_IFA1               = ConvertAbilityOldIntegerLevelField(FourCC('Ifa1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_CREEP_LEVEL_ICRE          = ConvertAbilityOldIntegerLevelField(FourCC('Icre')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MOVEMENT_SPEED_BONUS              = ConvertAbilityOldIntegerLevelField(FourCC('Imvb')) ---@type abilityintegerlevelfield
+ABILITY_ILF_HIT_POINTS_REGENERATED_PER_SECOND = ConvertAbilityOldIntegerLevelField(FourCC('Ihpr')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SIGHT_RANGE_BONUS                 = ConvertAbilityOldIntegerLevelField(FourCC('Isib')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DAMAGE_PER_DURATION               = ConvertAbilityOldIntegerLevelField(FourCC('Icfd')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_USED_PER_SECOND              = ConvertAbilityOldIntegerLevelField(FourCC('Icfm')) ---@type abilityintegerlevelfield
+ABILITY_ILF_EXTRA_MANA_REQUIRED               = ConvertAbilityOldIntegerLevelField(FourCC('Icfx')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_RADIUS_IDET             = ConvertAbilityOldIntegerLevelField(FourCC('Idet')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_LOSS_PER_UNIT_IDIM           = ConvertAbilityOldIntegerLevelField(FourCC('Idim')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DAMAGE_TO_SUMMONED_UNITS_IDID     = ConvertAbilityOldIntegerLevelField(FourCC('Idid')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_IREC      = ConvertAbilityOldIntegerLevelField(FourCC('Irec')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DELAY_AFTER_DEATH_SECONDS         = ConvertAbilityOldIntegerLevelField(FourCC('Ircd')) ---@type abilityintegerlevelfield
+ABILITY_ILF_RESTORED_LIFE                     = ConvertAbilityOldIntegerLevelField(FourCC('irc2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_RESTORED_MANA__1_FOR_CURRENT      = ConvertAbilityOldIntegerLevelField(FourCC('irc3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_HIT_POINTS_RESTORED               = ConvertAbilityOldIntegerLevelField(FourCC('Ihps')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MANA_POINTS_RESTORED              = ConvertAbilityOldIntegerLevelField(FourCC('Imps')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_UNITS_ITPM      = ConvertAbilityOldIntegerLevelField(FourCC('Itpm')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_CORPSES_RAISED_CAD1     = ConvertAbilityOldIntegerLevelField(FourCC('Cad1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_TERRAIN_DEFORMATION_DURATION_MS   = ConvertAbilityOldIntegerLevelField(FourCC('Wrs3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_UNITS                     = ConvertAbilityOldIntegerLevelField(FourCC('Uds1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_TYPE_DET1               = ConvertAbilityOldIntegerLevelField(FourCC('Det1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GOLD_COST_PER_STRUCTURE           = ConvertAbilityOldIntegerLevelField(FourCC('Nsp1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_LUMBER_COST_PER_USE               = ConvertAbilityOldIntegerLevelField(FourCC('Nsp2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DETECTION_TYPE_NSP3               = ConvertAbilityOldIntegerLevelField(FourCC('Nsp3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SWARM_UNITS             = ConvertAbilityOldIntegerLevelField(FourCC('Uls1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_SWARM_UNITS_PER_TARGET        = ConvertAbilityOldIntegerLevelField(FourCC('Uls3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_NBA2     = ConvertAbilityOldIntegerLevelField(FourCC('Nba2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_CREEP_LEVEL_NCH1          = ConvertAbilityOldIntegerLevelField(FourCC('Nch1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ATTACKS_PREVENTED                 = ConvertAbilityOldIntegerLevelField(FourCC('Nsi1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_TARGETS_EFK3    = ConvertAbilityOldIntegerLevelField(FourCC('Efk3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_ESV1     = ConvertAbilityOldIntegerLevelField(FourCC('Esv1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_CORPSES_EXH1    = ConvertAbilityOldIntegerLevelField(FourCC('exh1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ITEM_CAPACITY                     = ConvertAbilityOldIntegerLevelField(FourCC('inv1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_NUMBER_OF_TARGETS_SPL2    = ConvertAbilityOldIntegerLevelField(FourCC('spl2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ALLOW_WHEN_FULL_IRL3              = ConvertAbilityOldIntegerLevelField(FourCC('irl3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_DISPELLED_UNITS           = ConvertAbilityOldIntegerLevelField(FourCC('idc3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_LURES                   = ConvertAbilityOldIntegerLevelField(FourCC('imo1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NEW_TIME_OF_DAY_HOUR              = ConvertAbilityOldIntegerLevelField(FourCC('ict1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NEW_TIME_OF_DAY_MINUTE            = ConvertAbilityOldIntegerLevelField(FourCC('ict2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_UNITS_CREATED_MEC1      = ConvertAbilityOldIntegerLevelField(FourCC('mec1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MINIMUM_SPELLS                    = ConvertAbilityOldIntegerLevelField(FourCC('spb3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_SPELLS                    = ConvertAbilityOldIntegerLevelField(FourCC('spb4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DISABLED_ATTACK_INDEX             = ConvertAbilityOldIntegerLevelField(FourCC('gra3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ENABLED_ATTACK_INDEX_GRA4         = ConvertAbilityOldIntegerLevelField(FourCC('gra4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAXIMUM_ATTACKS                   = ConvertAbilityOldIntegerLevelField(FourCC('gra5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_BUILDING_TYPES_ALLOWED_NPR1       = ConvertAbilityOldIntegerLevelField(FourCC('Npr1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_BUILDING_TYPES_ALLOWED_NSA1       = ConvertAbilityOldIntegerLevelField(FourCC('Nsa1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ATTACK_MODIFICATION               = ConvertAbilityOldIntegerLevelField(FourCC('Iaa1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_COUNT_NPA5          = ConvertAbilityOldIntegerLevelField(FourCC('Npa5')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UPGRADE_LEVELS                    = ConvertAbilityOldIntegerLevelField(FourCC('Igl1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_SUMMONED_UNITS_NDO2     = ConvertAbilityOldIntegerLevelField(FourCC('Ndo2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_BEASTS_PER_SECOND                 = ConvertAbilityOldIntegerLevelField(FourCC('Nst1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_TARGET_TYPE                       = ConvertAbilityOldIntegerLevelField(FourCC('Ncl2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_OPTIONS                           = ConvertAbilityOldIntegerLevelField(FourCC('Ncl3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ARMOR_PENALTY_NAB3                = ConvertAbilityOldIntegerLevelField(FourCC('Nab3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_WAVE_COUNT_NHS6                   = ConvertAbilityOldIntegerLevelField(FourCC('Nhs6')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_CREEP_LEVEL_NTM3              = ConvertAbilityOldIntegerLevelField(FourCC('Ntm3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MISSILE_COUNT                     = ConvertAbilityOldIntegerLevelField(FourCC('Ncs3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SPLIT_ATTACK_COUNT                = ConvertAbilityOldIntegerLevelField(FourCC('Nlm3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_GENERATION_COUNT                  = ConvertAbilityOldIntegerLevelField(FourCC('Nlm6')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ROCK_RING_COUNT                   = ConvertAbilityOldIntegerLevelField(FourCC('Nvc1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_WAVE_COUNT_NVC2                   = ConvertAbilityOldIntegerLevelField(FourCC('Nvc2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_PREFER_HOSTILES_TAU1              = ConvertAbilityOldIntegerLevelField(FourCC('Tau1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_PREFER_FRIENDLIES_TAU2            = ConvertAbilityOldIntegerLevelField(FourCC('Tau2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_MAX_UNITS_TAU3                    = ConvertAbilityOldIntegerLevelField(FourCC('Tau3')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NUMBER_OF_PULSES                  = ConvertAbilityOldIntegerLevelField(FourCC('Tau4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPE_HWE1           = ConvertAbilityOldIntegerLevelField(FourCC('Hwe1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_UIN4                = ConvertAbilityOldIntegerLevelField(FourCC('Uin4')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_OSF1                = ConvertAbilityOldIntegerLevelField(FourCC('Osf1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPE_EFNU           = ConvertAbilityOldIntegerLevelField(FourCC('Efnu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPE_NBAU           = ConvertAbilityOldIntegerLevelField(FourCC('Nbau')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPE_NTOU           = ConvertAbilityOldIntegerLevelField(FourCC('Ntou')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPE_ESVU           = ConvertAbilityOldIntegerLevelField(FourCC('Esvu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPES               = ConvertAbilityOldIntegerLevelField(FourCC('Nef1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SUMMONED_UNIT_TYPE_NDOU           = ConvertAbilityOldIntegerLevelField(FourCC('Ndou')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ALTERNATE_FORM_UNIT_EMEU          = ConvertAbilityOldIntegerLevelField(FourCC('Emeu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_PLAGUE_WARD_UNIT_TYPE             = ConvertAbilityOldIntegerLevelField(FourCC('Aplu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ALLOWED_UNIT_TYPE_BTL1            = ConvertAbilityOldIntegerLevelField(FourCC('Btl1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_NEW_UNIT_TYPE                     = ConvertAbilityOldIntegerLevelField(FourCC('Cha1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_RESULTING_UNIT_TYPE_ENT1          = ConvertAbilityOldIntegerLevelField(FourCC('ent1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_CORPSE_UNIT_TYPE                  = ConvertAbilityOldIntegerLevelField(FourCC('Gydu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_ALLOWED_UNIT_TYPE_LOA1            = ConvertAbilityOldIntegerLevelField(FourCC('Loa1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNIT_TYPE_FOR_LIMIT_CHECK         = ConvertAbilityOldIntegerLevelField(FourCC('Raiu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_WARD_UNIT_TYPE_STAU               = ConvertAbilityOldIntegerLevelField(FourCC('Stau')) ---@type abilityintegerlevelfield
+ABILITY_ILF_EFFECT_ABILITY                    = ConvertAbilityOldIntegerLevelField(FourCC('Iobu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_CONVERSION_UNIT                   = ConvertAbilityOldIntegerLevelField(FourCC('Ndc2')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNIT_TO_PRESERVE                  = ConvertAbilityOldIntegerLevelField(FourCC('Nsl1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNIT_TYPE_ALLOWED                 = ConvertAbilityOldIntegerLevelField(FourCC('Chl1')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SWARM_UNIT_TYPE                   = ConvertAbilityOldIntegerLevelField(FourCC('Ulsu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_RESULTING_UNIT_TYPE_COAU          = ConvertAbilityOldIntegerLevelField(FourCC('coau')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNIT_TYPE_EXHU                    = ConvertAbilityOldIntegerLevelField(FourCC('exhu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_WARD_UNIT_TYPE_HWDU               = ConvertAbilityOldIntegerLevelField(FourCC('hwdu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_LURE_UNIT_TYPE                    = ConvertAbilityOldIntegerLevelField(FourCC('imou')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UNIT_TYPE_IPMU                    = ConvertAbilityOldIntegerLevelField(FourCC('ipmu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_FACTORY_UNIT_ID                   = ConvertAbilityOldIntegerLevelField(FourCC('Nsyu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_SPAWN_UNIT_ID_NFYU                = ConvertAbilityOldIntegerLevelField(FourCC('Nfyu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_DESTRUCTIBLE_ID                   = ConvertAbilityOldIntegerLevelField(FourCC('Nvcu')) ---@type abilityintegerlevelfield
+ABILITY_ILF_UPGRADE_TYPE                      = ConvertAbilityOldIntegerLevelField(FourCC('Iglu')) ---@type abilityintegerlevelfield
 
-ABILITY_RLF_CASTING_TIME                                      = ConvertAbilityRealLevelField(FourCC('acas')) ---@type abilityreallevelfield
-ABILITY_RLF_DURATION_NORMAL                                   = ConvertAbilityRealLevelField(FourCC('adur')) ---@type abilityreallevelfield
-ABILITY_RLF_DURATION_HERO                                     = ConvertAbilityRealLevelField(FourCC('ahdu')) ---@type abilityreallevelfield
-ABILITY_RLF_COOLDOWN                                          = ConvertAbilityRealLevelField(FourCC('acdn')) ---@type abilityreallevelfield
-ABILITY_RLF_AREA_OF_EFFECT                                    = ConvertAbilityRealLevelField(FourCC('aare')) ---@type abilityreallevelfield
-ABILITY_RLF_CAST_RANGE                                        = ConvertAbilityRealLevelField(FourCC('aran')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_HBZ2                                       = ConvertAbilityRealLevelField(FourCC('Hbz2')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_REDUCTION_HBZ4                           = ConvertAbilityRealLevelField(FourCC('Hbz4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_HBZ5                            = ConvertAbilityRealLevelField(FourCC('Hbz5')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_DAMAGE_PER_WAVE                           = ConvertAbilityRealLevelField(FourCC('Hbz6')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_REGENERATION_INCREASE                        = ConvertAbilityRealLevelField(FourCC('Hab1')) ---@type abilityreallevelfield
-ABILITY_RLF_CASTING_DELAY                                     = ConvertAbilityRealLevelField(FourCC('Hmt2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_OWW1                            = ConvertAbilityRealLevelField(FourCC('Oww1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_OWW2                       = ConvertAbilityRealLevelField(FourCC('Oww2')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE                         = ConvertAbilityRealLevelField(FourCC('Ocr1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2                            = ConvertAbilityRealLevelField(FourCC('Ocr2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_OCR3                                 = ConvertAbilityRealLevelField(FourCC('Ocr3')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_EVADE_OCR4                              = ConvertAbilityRealLevelField(FourCC('Ocr4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_PERCENT_OMI2                         = ConvertAbilityRealLevelField(FourCC('Omi2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_TAKEN_PERCENT_OMI3                         = ConvertAbilityRealLevelField(FourCC('Omi3')) ---@type abilityreallevelfield
-ABILITY_RLF_ANIMATION_DELAY                                   = ConvertAbilityRealLevelField(FourCC('Omi4')) ---@type abilityreallevelfield
-ABILITY_RLF_TRANSITION_TIME                                   = ConvertAbilityRealLevelField(FourCC('Owk1')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_OWK2              = ConvertAbilityRealLevelField(FourCC('Owk2')) ---@type abilityreallevelfield
-ABILITY_RLF_BACKSTAB_DAMAGE                                   = ConvertAbilityRealLevelField(FourCC('Owk3')) ---@type abilityreallevelfield
-ABILITY_RLF_AMOUNT_HEALED_DAMAGED_UDC1                        = ConvertAbilityRealLevelField(FourCC('Udc1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_CONVERTED_TO_MANA                            = ConvertAbilityRealLevelField(FourCC('Udp1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_CONVERTED_TO_LIFE                            = ConvertAbilityRealLevelField(FourCC('Udp2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_UAU1              = ConvertAbilityRealLevelField(FourCC('Uau1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_REGENERATION_INCREASE_PERCENT                = ConvertAbilityRealLevelField(FourCC('Uau2')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_EVADE_EEV1                              = ConvertAbilityRealLevelField(FourCC('Eev1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_INTERVAL                               = ConvertAbilityRealLevelField(FourCC('Eim1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_DRAINED_PER_SECOND_EIM2                      = ConvertAbilityRealLevelField(FourCC('Eim2')) ---@type abilityreallevelfield
-ABILITY_RLF_BUFFER_MANA_REQUIRED                              = ConvertAbilityRealLevelField(FourCC('Eim3')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_MANA_DRAINED                                  = ConvertAbilityRealLevelField(FourCC('Emb1')) ---@type abilityreallevelfield
-ABILITY_RLF_BOLT_DELAY                                        = ConvertAbilityRealLevelField(FourCC('Emb2')) ---@type abilityreallevelfield
-ABILITY_RLF_BOLT_LIFETIME                                     = ConvertAbilityRealLevelField(FourCC('Emb3')) ---@type abilityreallevelfield
-ABILITY_RLF_ALTITUDE_ADJUSTMENT_DURATION                      = ConvertAbilityRealLevelField(FourCC('Eme3')) ---@type abilityreallevelfield
-ABILITY_RLF_LANDING_DELAY_TIME                                = ConvertAbilityRealLevelField(FourCC('Eme4')) ---@type abilityreallevelfield
-ABILITY_RLF_ALTERNATE_FORM_HIT_POINT_BONUS                    = ConvertAbilityRealLevelField(FourCC('Eme5')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVE_SPEED_BONUS_INFO_PANEL_ONLY                  = ConvertAbilityRealLevelField(FourCC('Ncr5')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_BONUS_INFO_PANEL_ONLY                = ConvertAbilityRealLevelField(FourCC('Ncr6')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_REGENERATION_RATE_PER_SECOND                 = ConvertAbilityRealLevelField(FourCC('ave5')) ---@type abilityreallevelfield
-ABILITY_RLF_STUN_DURATION_USL1                                = ConvertAbilityRealLevelField(FourCC('Usl1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_DAMAGE_STOLEN_PERCENT                      = ConvertAbilityRealLevelField(FourCC('Uav1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_UCS1                                       = ConvertAbilityRealLevelField(FourCC('Ucs1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_DAMAGE_UCS2                                   = ConvertAbilityRealLevelField(FourCC('Ucs2')) ---@type abilityreallevelfield
-ABILITY_RLF_DISTANCE_UCS3                                     = ConvertAbilityRealLevelField(FourCC('Ucs3')) ---@type abilityreallevelfield
-ABILITY_RLF_FINAL_AREA_UCS4                                   = ConvertAbilityRealLevelField(FourCC('Ucs4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_UIN1                                       = ConvertAbilityRealLevelField(FourCC('Uin1')) ---@type abilityreallevelfield
-ABILITY_RLF_DURATION                                          = ConvertAbilityRealLevelField(FourCC('Uin2')) ---@type abilityreallevelfield
-ABILITY_RLF_IMPACT_DELAY                                      = ConvertAbilityRealLevelField(FourCC('Uin3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_TARGET_OCL1                            = ConvertAbilityRealLevelField(FourCC('Ocl1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_REDUCTION_PER_TARGET                       = ConvertAbilityRealLevelField(FourCC('Ocl3')) ---@type abilityreallevelfield
-ABILITY_RLF_EFFECT_DELAY_OEQ1                                 = ConvertAbilityRealLevelField(FourCC('Oeq1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_TO_BUILDINGS                    = ConvertAbilityRealLevelField(FourCC('Oeq2')) ---@type abilityreallevelfield
-ABILITY_RLF_UNITS_SLOWED_PERCENT                              = ConvertAbilityRealLevelField(FourCC('Oeq3')) ---@type abilityreallevelfield
-ABILITY_RLF_FINAL_AREA_OEQ4                                   = ConvertAbilityRealLevelField(FourCC('Oeq4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_EER1                            = ConvertAbilityRealLevelField(FourCC('Eer1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_TO_ATTACKERS                         = ConvertAbilityRealLevelField(FourCC('Eah1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_HEALED                                       = ConvertAbilityRealLevelField(FourCC('Etq1')) ---@type abilityreallevelfield
-ABILITY_RLF_HEAL_INTERVAL                                     = ConvertAbilityRealLevelField(FourCC('Etq2')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_REDUCTION_ETQ3                           = ConvertAbilityRealLevelField(FourCC('Etq3')) ---@type abilityreallevelfield
-ABILITY_RLF_INITIAL_IMMUNITY_DURATION                         = ConvertAbilityRealLevelField(FourCC('Etq4')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_LIFE_DRAINED_PER_SECOND_PERCENT               = ConvertAbilityRealLevelField(FourCC('Udd1')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_REDUCTION_UDD2                           = ConvertAbilityRealLevelField(FourCC('Udd2')) ---@type abilityreallevelfield
-ABILITY_RLF_ARMOR_DURATION                                    = ConvertAbilityRealLevelField(FourCC('Ufa1')) ---@type abilityreallevelfield
-ABILITY_RLF_ARMOR_BONUS_UFA2                                  = ConvertAbilityRealLevelField(FourCC('Ufa2')) ---@type abilityreallevelfield
-ABILITY_RLF_AREA_OF_EFFECT_DAMAGE                             = ConvertAbilityRealLevelField(FourCC('Ufn1')) ---@type abilityreallevelfield
-ABILITY_RLF_SPECIFIC_TARGET_DAMAGE_UFN2                       = ConvertAbilityRealLevelField(FourCC('Ufn2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_HFA1                                 = ConvertAbilityRealLevelField(FourCC('Hfa1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_ESF1                                 = ConvertAbilityRealLevelField(FourCC('Esf1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_INTERVAL_ESF2                              = ConvertAbilityRealLevelField(FourCC('Esf2')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_REDUCTION_ESF3                           = ConvertAbilityRealLevelField(FourCC('Esf3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_PERCENT                              = ConvertAbilityRealLevelField(FourCC('Ear1')) ---@type abilityreallevelfield
-ABILITY_RLF_DEFENSE_BONUS_HAV1                                = ConvertAbilityRealLevelField(FourCC('Hav1')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINT_BONUS                                   = ConvertAbilityRealLevelField(FourCC('Hav2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_HAV3                                 = ConvertAbilityRealLevelField(FourCC('Hav3')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_HAV4                       = ConvertAbilityRealLevelField(FourCC('Hav4')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_BASH                                    = ConvertAbilityRealLevelField(FourCC('Hbh1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_MULTIPLIER_HBH2                            = ConvertAbilityRealLevelField(FourCC('Hbh2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_HBH3                                 = ConvertAbilityRealLevelField(FourCC('Hbh3')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_MISS_HBH4                               = ConvertAbilityRealLevelField(FourCC('Hbh4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_HTB1                                       = ConvertAbilityRealLevelField(FourCC('Htb1')) ---@type abilityreallevelfield
-ABILITY_RLF_AOE_DAMAGE                                        = ConvertAbilityRealLevelField(FourCC('Htc1')) ---@type abilityreallevelfield
-ABILITY_RLF_SPECIFIC_TARGET_DAMAGE_HTC2                       = ConvertAbilityRealLevelField(FourCC('Htc2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_HTC3             = ConvertAbilityRealLevelField(FourCC('Htc3')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_HTC4               = ConvertAbilityRealLevelField(FourCC('Htc4')) ---@type abilityreallevelfield
-ABILITY_RLF_ARMOR_BONUS_HAD1                                  = ConvertAbilityRealLevelField(FourCC('Had1')) ---@type abilityreallevelfield
-ABILITY_RLF_AMOUNT_HEALED_DAMAGED_HHB1                        = ConvertAbilityRealLevelField(FourCC('Hhb1')) ---@type abilityreallevelfield
-ABILITY_RLF_EXTRA_DAMAGE_HCA1                                 = ConvertAbilityRealLevelField(FourCC('Hca1')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_HCA2                        = ConvertAbilityRealLevelField(FourCC('Hca2')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_HCA3                          = ConvertAbilityRealLevelField(FourCC('Hca3')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_OAE1              = ConvertAbilityRealLevelField(FourCC('Oae1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_OAE2                = ConvertAbilityRealLevelField(FourCC('Oae2')) ---@type abilityreallevelfield
-ABILITY_RLF_REINCARNATION_DELAY                               = ConvertAbilityRealLevelField(FourCC('Ore1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_OSH1                                       = ConvertAbilityRealLevelField(FourCC('Osh1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_DAMAGE_OSH2                               = ConvertAbilityRealLevelField(FourCC('Osh2')) ---@type abilityreallevelfield
-ABILITY_RLF_DISTANCE_OSH3                                     = ConvertAbilityRealLevelField(FourCC('Osh3')) ---@type abilityreallevelfield
-ABILITY_RLF_FINAL_AREA_OSH4                                   = ConvertAbilityRealLevelField(FourCC('Osh4')) ---@type abilityreallevelfield
-ABILITY_RLF_GRAPHIC_DELAY_NFD1                                = ConvertAbilityRealLevelField(FourCC('Nfd1')) ---@type abilityreallevelfield
-ABILITY_RLF_GRAPHIC_DURATION_NFD2                             = ConvertAbilityRealLevelField(FourCC('Nfd2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_NFD3                                       = ConvertAbilityRealLevelField(FourCC('Nfd3')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DAMAGE_AMS1                         = ConvertAbilityRealLevelField(FourCC('Ams1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_AMS2                       = ConvertAbilityRealLevelField(FourCC('Ams2')) ---@type abilityreallevelfield
-ABILITY_RLF_AURA_DURATION                                     = ConvertAbilityRealLevelField(FourCC('Apl1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_APL2                            = ConvertAbilityRealLevelField(FourCC('Apl2')) ---@type abilityreallevelfield
-ABILITY_RLF_DURATION_OF_PLAGUE_WARD                           = ConvertAbilityRealLevelField(FourCC('Apl3')) ---@type abilityreallevelfield
-ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED                  = ConvertAbilityRealLevelField(FourCC('Oar1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_DAMAGE_INCREASE_AKB1                       = ConvertAbilityRealLevelField(FourCC('Akb1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_LOSS_ADM1                                    = ConvertAbilityRealLevelField(FourCC('Adm1')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DAMAGE_ADM2                         = ConvertAbilityRealLevelField(FourCC('Adm2')) ---@type abilityreallevelfield
-ABILITY_RLF_EXPANSION_AMOUNT                                  = ConvertAbilityRealLevelField(FourCC('Bli1')) ---@type abilityreallevelfield
-ABILITY_RLF_INTERVAL_DURATION_BGM2                            = ConvertAbilityRealLevelField(FourCC('Bgm2')) ---@type abilityreallevelfield
-ABILITY_RLF_RADIUS_OF_MINING_RING                             = ConvertAbilityRealLevelField(FourCC('Bgm4')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_BLO1                = ConvertAbilityRealLevelField(FourCC('Blo1')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_BLO2              = ConvertAbilityRealLevelField(FourCC('Blo2')) ---@type abilityreallevelfield
-ABILITY_RLF_SCALING_FACTOR                                    = ConvertAbilityRealLevelField(FourCC('Blo3')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_PER_SECOND_CAN1                        = ConvertAbilityRealLevelField(FourCC('Can1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_HIT_POINTS                                    = ConvertAbilityRealLevelField(FourCC('Can2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_DEV2                            = ConvertAbilityRealLevelField(FourCC('Dev2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_UPDATE_FREQUENCY_CHD1                    = ConvertAbilityRealLevelField(FourCC('Chd1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_UPDATE_FREQUENCY_CHD2                      = ConvertAbilityRealLevelField(FourCC('Chd2')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DAMAGE_CHD3                         = ConvertAbilityRealLevelField(FourCC('Chd3')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_CRI1             = ConvertAbilityRealLevelField(FourCC('Cri1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_CRI2               = ConvertAbilityRealLevelField(FourCC('Cri2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_REDUCTION_CRI3                             = ConvertAbilityRealLevelField(FourCC('Cri3')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_MISS_CRS                                = ConvertAbilityRealLevelField(FourCC('Crs1')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_RADIUS_DDA1                           = ConvertAbilityRealLevelField(FourCC('Dda1')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_AMOUNT_DDA2                           = ConvertAbilityRealLevelField(FourCC('Dda2')) ---@type abilityreallevelfield
-ABILITY_RLF_PARTIAL_DAMAGE_RADIUS                             = ConvertAbilityRealLevelField(FourCC('Dda3')) ---@type abilityreallevelfield
-ABILITY_RLF_PARTIAL_DAMAGE_AMOUNT                             = ConvertAbilityRealLevelField(FourCC('Dda4')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_DAMAGE_FACTOR_SDS1                       = ConvertAbilityRealLevelField(FourCC('Sds1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_DAMAGE_UCO5                                   = ConvertAbilityRealLevelField(FourCC('Uco5')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVE_SPEED_BONUS_UCO6                             = ConvertAbilityRealLevelField(FourCC('Uco6')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_TAKEN_PERCENT_DEF1                         = ConvertAbilityRealLevelField(FourCC('Def1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_PERCENT_DEF2                         = ConvertAbilityRealLevelField(FourCC('Def2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_DEF3                        = ConvertAbilityRealLevelField(FourCC('Def3')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_DEF4                          = ConvertAbilityRealLevelField(FourCC('Def4')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_DEF5                       = ConvertAbilityRealLevelField(FourCC('Def5')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_DEFLECT                                 = ConvertAbilityRealLevelField(FourCC('Def6')) ---@type abilityreallevelfield
-ABILITY_RLF_DEFLECT_DAMAGE_TAKEN_PIERCING                     = ConvertAbilityRealLevelField(FourCC('Def7')) ---@type abilityreallevelfield
-ABILITY_RLF_DEFLECT_DAMAGE_TAKEN_SPELLS                       = ConvertAbilityRealLevelField(FourCC('Def8')) ---@type abilityreallevelfield
-ABILITY_RLF_RIP_DELAY                                         = ConvertAbilityRealLevelField(FourCC('Eat1')) ---@type abilityreallevelfield
-ABILITY_RLF_EAT_DELAY                                         = ConvertAbilityRealLevelField(FourCC('Eat2')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_GAINED_EAT3                            = ConvertAbilityRealLevelField(FourCC('Eat3')) ---@type abilityreallevelfield
-ABILITY_RLF_AIR_UNIT_LOWER_DURATION                           = ConvertAbilityRealLevelField(FourCC('Ens1')) ---@type abilityreallevelfield
-ABILITY_RLF_AIR_UNIT_HEIGHT                                   = ConvertAbilityRealLevelField(FourCC('Ens2')) ---@type abilityreallevelfield
-ABILITY_RLF_MELEE_ATTACK_RANGE                                = ConvertAbilityRealLevelField(FourCC('Ens3')) ---@type abilityreallevelfield
-ABILITY_RLF_INTERVAL_DURATION_EGM2                            = ConvertAbilityRealLevelField(FourCC('Egm2')) ---@type abilityreallevelfield
-ABILITY_RLF_EFFECT_DELAY_FLA2                                 = ConvertAbilityRealLevelField(FourCC('Fla2')) ---@type abilityreallevelfield
-ABILITY_RLF_MINING_DURATION                                   = ConvertAbilityRealLevelField(FourCC('Gld2')) ---@type abilityreallevelfield
-ABILITY_RLF_RADIUS_OF_GRAVESTONES                             = ConvertAbilityRealLevelField(FourCC('Gyd2')) ---@type abilityreallevelfield
-ABILITY_RLF_RADIUS_OF_CORPSES                                 = ConvertAbilityRealLevelField(FourCC('Gyd3')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_GAINED_HEA1                            = ConvertAbilityRealLevelField(FourCC('Hea1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_INCREASE_PERCENT_INF1                      = ConvertAbilityRealLevelField(FourCC('Inf1')) ---@type abilityreallevelfield
-ABILITY_RLF_AUTOCAST_RANGE                                    = ConvertAbilityRealLevelField(FourCC('Inf3')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_REGEN_RATE                                   = ConvertAbilityRealLevelField(FourCC('Inf4')) ---@type abilityreallevelfield
-ABILITY_RLF_GRAPHIC_DELAY_LIT1                                = ConvertAbilityRealLevelField(FourCC('Lit1')) ---@type abilityreallevelfield
-ABILITY_RLF_GRAPHIC_DURATION_LIT2                             = ConvertAbilityRealLevelField(FourCC('Lit2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_LSH1                            = ConvertAbilityRealLevelField(FourCC('Lsh1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_GAINED                                       = ConvertAbilityRealLevelField(FourCC('Mbt1')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_GAINED_MBT2                            = ConvertAbilityRealLevelField(FourCC('Mbt2')) ---@type abilityreallevelfield
-ABILITY_RLF_AUTOCAST_REQUIREMENT                              = ConvertAbilityRealLevelField(FourCC('Mbt3')) ---@type abilityreallevelfield
-ABILITY_RLF_WATER_HEIGHT                                      = ConvertAbilityRealLevelField(FourCC('Mbt4')) ---@type abilityreallevelfield
-ABILITY_RLF_ACTIVATION_DELAY_MIN1                             = ConvertAbilityRealLevelField(FourCC('Min1')) ---@type abilityreallevelfield
-ABILITY_RLF_INVISIBILITY_TRANSITION_TIME                      = ConvertAbilityRealLevelField(FourCC('Min2')) ---@type abilityreallevelfield
-ABILITY_RLF_ACTIVATION_RADIUS                                 = ConvertAbilityRealLevelField(FourCC('Neu1')) ---@type abilityreallevelfield
-ABILITY_RLF_AMOUNT_REGENERATED                                = ConvertAbilityRealLevelField(FourCC('Arm1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_POI1                            = ConvertAbilityRealLevelField(FourCC('Poi1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_POI2                          = ConvertAbilityRealLevelField(FourCC('Poi2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POI3                        = ConvertAbilityRealLevelField(FourCC('Poi3')) ---@type abilityreallevelfield
-ABILITY_RLF_EXTRA_DAMAGE_POA1                                 = ConvertAbilityRealLevelField(FourCC('Poa1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_POA2                            = ConvertAbilityRealLevelField(FourCC('Poa2')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_POA3                          = ConvertAbilityRealLevelField(FourCC('Poa3')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POA4                        = ConvertAbilityRealLevelField(FourCC('Poa4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_AMPLIFICATION                              = ConvertAbilityRealLevelField(FourCC('Pos2')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_STOMP_PERCENT                           = ConvertAbilityRealLevelField(FourCC('War1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_WAR2                                 = ConvertAbilityRealLevelField(FourCC('War2')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_RADIUS_WAR3                           = ConvertAbilityRealLevelField(FourCC('War3')) ---@type abilityreallevelfield
-ABILITY_RLF_HALF_DAMAGE_RADIUS_WAR4                           = ConvertAbilityRealLevelField(FourCC('War4')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DAMAGE_PRG3                         = ConvertAbilityRealLevelField(FourCC('Prg3')) ---@type abilityreallevelfield
-ABILITY_RLF_UNIT_PAUSE_DURATION                               = ConvertAbilityRealLevelField(FourCC('Prg4')) ---@type abilityreallevelfield
-ABILITY_RLF_HERO_PAUSE_DURATION                               = ConvertAbilityRealLevelField(FourCC('Prg5')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_GAINED_REJ1                            = ConvertAbilityRealLevelField(FourCC('Rej1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_POINTS_GAINED_REJ2                           = ConvertAbilityRealLevelField(FourCC('Rej2')) ---@type abilityreallevelfield
-ABILITY_RLF_MINIMUM_LIFE_REQUIRED                             = ConvertAbilityRealLevelField(FourCC('Rpb3')) ---@type abilityreallevelfield
-ABILITY_RLF_MINIMUM_MANA_REQUIRED                             = ConvertAbilityRealLevelField(FourCC('Rpb4')) ---@type abilityreallevelfield
-ABILITY_RLF_REPAIR_COST_RATIO                                 = ConvertAbilityRealLevelField(FourCC('Rep1')) ---@type abilityreallevelfield
-ABILITY_RLF_REPAIR_TIME_RATIO                                 = ConvertAbilityRealLevelField(FourCC('Rep2')) ---@type abilityreallevelfield
-ABILITY_RLF_POWERBUILD_COST                                   = ConvertAbilityRealLevelField(FourCC('Rep3')) ---@type abilityreallevelfield
-ABILITY_RLF_POWERBUILD_RATE                                   = ConvertAbilityRealLevelField(FourCC('Rep4')) ---@type abilityreallevelfield
-ABILITY_RLF_NAVAL_RANGE_BONUS                                 = ConvertAbilityRealLevelField(FourCC('Rep5')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_INCREASE_PERCENT_ROA1                      = ConvertAbilityRealLevelField(FourCC('Roa1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_REGENERATION_RATE                            = ConvertAbilityRealLevelField(FourCC('Roa3')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_REGEN                                        = ConvertAbilityRealLevelField(FourCC('Roa4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_INCREASE                                   = ConvertAbilityRealLevelField(FourCC('Nbr1')) ---@type abilityreallevelfield
-ABILITY_RLF_SALVAGE_COST_RATIO                                = ConvertAbilityRealLevelField(FourCC('Sal1')) ---@type abilityreallevelfield
-ABILITY_RLF_IN_FLIGHT_SIGHT_RADIUS                            = ConvertAbilityRealLevelField(FourCC('Esn1')) ---@type abilityreallevelfield
-ABILITY_RLF_HOVERING_SIGHT_RADIUS                             = ConvertAbilityRealLevelField(FourCC('Esn2')) ---@type abilityreallevelfield
-ABILITY_RLF_HOVERING_HEIGHT                                   = ConvertAbilityRealLevelField(FourCC('Esn3')) ---@type abilityreallevelfield
-ABILITY_RLF_DURATION_OF_OWLS                                  = ConvertAbilityRealLevelField(FourCC('Esn5')) ---@type abilityreallevelfield
-ABILITY_RLF_FADE_DURATION                                     = ConvertAbilityRealLevelField(FourCC('Shm1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAY_NIGHT_DURATION                                = ConvertAbilityRealLevelField(FourCC('Shm2')) ---@type abilityreallevelfield
-ABILITY_RLF_ACTION_DURATION                                   = ConvertAbilityRealLevelField(FourCC('Shm3')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SLO1                        = ConvertAbilityRealLevelField(FourCC('Slo1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_SLO2                          = ConvertAbilityRealLevelField(FourCC('Slo2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_SPO1                            = ConvertAbilityRealLevelField(FourCC('Spo1')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SPO2                        = ConvertAbilityRealLevelField(FourCC('Spo2')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_SPO3                          = ConvertAbilityRealLevelField(FourCC('Spo3')) ---@type abilityreallevelfield
-ABILITY_RLF_ACTIVATION_DELAY_STA1                             = ConvertAbilityRealLevelField(FourCC('Sta1')) ---@type abilityreallevelfield
-ABILITY_RLF_DETECTION_RADIUS_STA2                             = ConvertAbilityRealLevelField(FourCC('Sta2')) ---@type abilityreallevelfield
-ABILITY_RLF_DETONATION_RADIUS                                 = ConvertAbilityRealLevelField(FourCC('Sta3')) ---@type abilityreallevelfield
-ABILITY_RLF_STUN_DURATION_STA4                                = ConvertAbilityRealLevelField(FourCC('Sta4')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_BONUS_PERCENT                        = ConvertAbilityRealLevelField(FourCC('Uhf1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_UHF2                            = ConvertAbilityRealLevelField(FourCC('Uhf2')) ---@type abilityreallevelfield
-ABILITY_RLF_LUMBER_PER_INTERVAL                               = ConvertAbilityRealLevelField(FourCC('Wha1')) ---@type abilityreallevelfield
-ABILITY_RLF_ART_ATTACHMENT_HEIGHT                             = ConvertAbilityRealLevelField(FourCC('Wha3')) ---@type abilityreallevelfield
-ABILITY_RLF_TELEPORT_AREA_WIDTH                               = ConvertAbilityRealLevelField(FourCC('Wrp1')) ---@type abilityreallevelfield
-ABILITY_RLF_TELEPORT_AREA_HEIGHT                              = ConvertAbilityRealLevelField(FourCC('Wrp2')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_STOLEN_PER_ATTACK                            = ConvertAbilityRealLevelField(FourCC('Ivam')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_IDAM                                 = ConvertAbilityRealLevelField(FourCC('Idam')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_HIT_UNITS_PERCENT                       = ConvertAbilityRealLevelField(FourCC('Iob2')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_HIT_HEROS_PERCENT                       = ConvertAbilityRealLevelField(FourCC('Iob3')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_HIT_SUMMONS_PERCENT                     = ConvertAbilityRealLevelField(FourCC('Iob4')) ---@type abilityreallevelfield
-ABILITY_RLF_DELAY_FOR_TARGET_EFFECT                           = ConvertAbilityRealLevelField(FourCC('Idel')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_PERCENT_OF_NORMAL                    = ConvertAbilityRealLevelField(FourCC('Iild')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_RECEIVED_MULTIPLIER                        = ConvertAbilityRealLevelField(FourCC('Iilw')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_REGENERATION_BONUS_AS_FRACTION_OF_NORMAL     = ConvertAbilityRealLevelField(FourCC('Imrp')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_INCREASE_ISPI                      = ConvertAbilityRealLevelField(FourCC('Ispi')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_IDPS                            = ConvertAbilityRealLevelField(FourCC('Idps')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_DAMAGE_INCREASE_CAC1                       = ConvertAbilityRealLevelField(FourCC('Cac1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_COR1                            = ConvertAbilityRealLevelField(FourCC('Cor1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_INCREASE_ISX1                        = ConvertAbilityRealLevelField(FourCC('Isx1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_WRS1                                       = ConvertAbilityRealLevelField(FourCC('Wrs1')) ---@type abilityreallevelfield
-ABILITY_RLF_TERRAIN_DEFORMATION_AMPLITUDE                     = ConvertAbilityRealLevelField(FourCC('Wrs2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_CTC1                                       = ConvertAbilityRealLevelField(FourCC('Ctc1')) ---@type abilityreallevelfield
-ABILITY_RLF_EXTRA_DAMAGE_TO_TARGET                            = ConvertAbilityRealLevelField(FourCC('Ctc2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_CTC3                     = ConvertAbilityRealLevelField(FourCC('Ctc3')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_CTC4                       = ConvertAbilityRealLevelField(FourCC('Ctc4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_CTB1                                       = ConvertAbilityRealLevelField(FourCC('Ctb1')) ---@type abilityreallevelfield
-ABILITY_RLF_CASTING_DELAY_SECONDS                             = ConvertAbilityRealLevelField(FourCC('Uds2')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_LOSS_PER_UNIT_DTN1                           = ConvertAbilityRealLevelField(FourCC('Dtn1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_TO_SUMMONED_UNITS_DTN2                     = ConvertAbilityRealLevelField(FourCC('Dtn2')) ---@type abilityreallevelfield
-ABILITY_RLF_TRANSITION_TIME_SECONDS                           = ConvertAbilityRealLevelField(FourCC('Ivs1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_DRAINED_PER_SECOND_NMR1                      = ConvertAbilityRealLevelField(FourCC('Nmr1')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_REDUCE_DAMAGE_PERCENT                   = ConvertAbilityRealLevelField(FourCC('Ssk1')) ---@type abilityreallevelfield
-ABILITY_RLF_MINIMUM_DAMAGE                                    = ConvertAbilityRealLevelField(FourCC('Ssk2')) ---@type abilityreallevelfield
-ABILITY_RLF_IGNORED_DAMAGE                                    = ConvertAbilityRealLevelField(FourCC('Ssk3')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_DEALT                                 = ConvertAbilityRealLevelField(FourCC('Hfs1')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_INTERVAL                              = ConvertAbilityRealLevelField(FourCC('Hfs2')) ---@type abilityreallevelfield
-ABILITY_RLF_HALF_DAMAGE_DEALT                                 = ConvertAbilityRealLevelField(FourCC('Hfs3')) ---@type abilityreallevelfield
-ABILITY_RLF_HALF_DAMAGE_INTERVAL                              = ConvertAbilityRealLevelField(FourCC('Hfs4')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_REDUCTION_HFS5                           = ConvertAbilityRealLevelField(FourCC('Hfs5')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_DAMAGE_HFS6                               = ConvertAbilityRealLevelField(FourCC('Hfs6')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_PER_HIT_POINT                                = ConvertAbilityRealLevelField(FourCC('Nms1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_ABSORBED_PERCENT                           = ConvertAbilityRealLevelField(FourCC('Nms2')) ---@type abilityreallevelfield
-ABILITY_RLF_WAVE_DISTANCE                                     = ConvertAbilityRealLevelField(FourCC('Uim1')) ---@type abilityreallevelfield
-ABILITY_RLF_WAVE_TIME_SECONDS                                 = ConvertAbilityRealLevelField(FourCC('Uim2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DEALT_UIM3                                 = ConvertAbilityRealLevelField(FourCC('Uim3')) ---@type abilityreallevelfield
-ABILITY_RLF_AIR_TIME_SECONDS_UIM4                             = ConvertAbilityRealLevelField(FourCC('Uim4')) ---@type abilityreallevelfield
-ABILITY_RLF_UNIT_RELEASE_INTERVAL_SECONDS                     = ConvertAbilityRealLevelField(FourCC('Uls2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_RETURN_FACTOR                              = ConvertAbilityRealLevelField(FourCC('Uls4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_RETURN_THRESHOLD                           = ConvertAbilityRealLevelField(FourCC('Uls5')) ---@type abilityreallevelfield
-ABILITY_RLF_RETURNED_DAMAGE_FACTOR                            = ConvertAbilityRealLevelField(FourCC('Uts1')) ---@type abilityreallevelfield
-ABILITY_RLF_RECEIVED_DAMAGE_FACTOR                            = ConvertAbilityRealLevelField(FourCC('Uts2')) ---@type abilityreallevelfield
-ABILITY_RLF_DEFENSE_BONUS_UTS3                                = ConvertAbilityRealLevelField(FourCC('Uts3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_NBA1                                 = ConvertAbilityRealLevelField(FourCC('Nba1')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DURATION_SECONDS_NBA3               = ConvertAbilityRealLevelField(FourCC('Nba3')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_PER_SUMMONED_HITPOINT                        = ConvertAbilityRealLevelField(FourCC('Cmg2')) ---@type abilityreallevelfield
-ABILITY_RLF_CHARGE_FOR_CURRENT_LIFE                           = ConvertAbilityRealLevelField(FourCC('Cmg3')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_DRAINED                                = ConvertAbilityRealLevelField(FourCC('Ndr1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_POINTS_DRAINED                               = ConvertAbilityRealLevelField(FourCC('Ndr2')) ---@type abilityreallevelfield
-ABILITY_RLF_DRAIN_INTERVAL_SECONDS                            = ConvertAbilityRealLevelField(FourCC('Ndr3')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_TRANSFERRED_PER_SECOND                       = ConvertAbilityRealLevelField(FourCC('Ndr4')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_TRANSFERRED_PER_SECOND                       = ConvertAbilityRealLevelField(FourCC('Ndr5')) ---@type abilityreallevelfield
-ABILITY_RLF_BONUS_LIFE_FACTOR                                 = ConvertAbilityRealLevelField(FourCC('Ndr6')) ---@type abilityreallevelfield
-ABILITY_RLF_BONUS_LIFE_DECAY                                  = ConvertAbilityRealLevelField(FourCC('Ndr7')) ---@type abilityreallevelfield
-ABILITY_RLF_BONUS_MANA_FACTOR                                 = ConvertAbilityRealLevelField(FourCC('Ndr8')) ---@type abilityreallevelfield
-ABILITY_RLF_BONUS_MANA_DECAY                                  = ConvertAbilityRealLevelField(FourCC('Ndr9')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_MISS_PERCENT                            = ConvertAbilityRealLevelField(FourCC('Nsi2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_MODIFIER                           = ConvertAbilityRealLevelField(FourCC('Nsi3')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_MODIFIER                             = ConvertAbilityRealLevelField(FourCC('Nsi4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_TDG1                            = ConvertAbilityRealLevelField(FourCC('Tdg1')) ---@type abilityreallevelfield
-ABILITY_RLF_MEDIUM_DAMAGE_RADIUS_TDG2                         = ConvertAbilityRealLevelField(FourCC('Tdg2')) ---@type abilityreallevelfield
-ABILITY_RLF_MEDIUM_DAMAGE_PER_SECOND                          = ConvertAbilityRealLevelField(FourCC('Tdg3')) ---@type abilityreallevelfield
-ABILITY_RLF_SMALL_DAMAGE_RADIUS_TDG4                          = ConvertAbilityRealLevelField(FourCC('Tdg4')) ---@type abilityreallevelfield
-ABILITY_RLF_SMALL_DAMAGE_PER_SECOND                           = ConvertAbilityRealLevelField(FourCC('Tdg5')) ---@type abilityreallevelfield
-ABILITY_RLF_AIR_TIME_SECONDS_TSP1                             = ConvertAbilityRealLevelField(FourCC('Tsp1')) ---@type abilityreallevelfield
-ABILITY_RLF_MINIMUM_HIT_INTERVAL_SECONDS                      = ConvertAbilityRealLevelField(FourCC('Tsp2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_NBF5                            = ConvertAbilityRealLevelField(FourCC('Nbf5')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_RANGE                                     = ConvertAbilityRealLevelField(FourCC('Ebl1')) ---@type abilityreallevelfield
-ABILITY_RLF_MINIMUM_RANGE                                     = ConvertAbilityRealLevelField(FourCC('Ebl2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_TARGET_EFK1                            = ConvertAbilityRealLevelField(FourCC('Efk1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_TOTAL_DAMAGE                              = ConvertAbilityRealLevelField(FourCC('Efk2')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_SPEED_ADJUSTMENT                          = ConvertAbilityRealLevelField(FourCC('Efk4')) ---@type abilityreallevelfield
-ABILITY_RLF_DECAYING_DAMAGE                                   = ConvertAbilityRealLevelField(FourCC('Esh1')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_FACTOR_ESH2                        = ConvertAbilityRealLevelField(FourCC('Esh2')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_FACTOR_ESH3                          = ConvertAbilityRealLevelField(FourCC('Esh3')) ---@type abilityreallevelfield
-ABILITY_RLF_DECAY_POWER                                       = ConvertAbilityRealLevelField(FourCC('Esh4')) ---@type abilityreallevelfield
-ABILITY_RLF_INITIAL_DAMAGE_ESH5                               = ConvertAbilityRealLevelField(FourCC('Esh5')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_LIFE_ABSORBED                             = ConvertAbilityRealLevelField(FourCC('abs1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAXIMUM_MANA_ABSORBED                             = ConvertAbilityRealLevelField(FourCC('abs2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_INCREASE_BSK1                      = ConvertAbilityRealLevelField(FourCC('bsk1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_INCREASE_BSK2                        = ConvertAbilityRealLevelField(FourCC('bsk2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_TAKEN_INCREASE                             = ConvertAbilityRealLevelField(FourCC('bsk3')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_PER_UNIT                                     = ConvertAbilityRealLevelField(FourCC('dvm1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_PER_UNIT                                     = ConvertAbilityRealLevelField(FourCC('dvm2')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_PER_BUFF                                     = ConvertAbilityRealLevelField(FourCC('dvm3')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_PER_BUFF                                     = ConvertAbilityRealLevelField(FourCC('dvm4')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DAMAGE_DVM5                         = ConvertAbilityRealLevelField(FourCC('dvm5')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_FAK1                                 = ConvertAbilityRealLevelField(FourCC('fak1')) ---@type abilityreallevelfield
-ABILITY_RLF_MEDIUM_DAMAGE_FACTOR_FAK2                         = ConvertAbilityRealLevelField(FourCC('fak2')) ---@type abilityreallevelfield
-ABILITY_RLF_SMALL_DAMAGE_FACTOR_FAK3                          = ConvertAbilityRealLevelField(FourCC('fak3')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_RADIUS_FAK4                           = ConvertAbilityRealLevelField(FourCC('fak4')) ---@type abilityreallevelfield
-ABILITY_RLF_HALF_DAMAGE_RADIUS_FAK5                           = ConvertAbilityRealLevelField(FourCC('fak5')) ---@type abilityreallevelfield
-ABILITY_RLF_EXTRA_DAMAGE_PER_SECOND                           = ConvertAbilityRealLevelField(FourCC('liq1')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_LIQ2                     = ConvertAbilityRealLevelField(FourCC('liq2')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_LIQ3                       = ConvertAbilityRealLevelField(FourCC('liq3')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_FACTOR                               = ConvertAbilityRealLevelField(FourCC('mim1')) ---@type abilityreallevelfield
-ABILITY_RLF_UNIT_DAMAGE_PER_MANA_POINT                        = ConvertAbilityRealLevelField(FourCC('mfl1')) ---@type abilityreallevelfield
-ABILITY_RLF_HERO_DAMAGE_PER_MANA_POINT                        = ConvertAbilityRealLevelField(FourCC('mfl2')) ---@type abilityreallevelfield
-ABILITY_RLF_UNIT_MAXIMUM_DAMAGE                               = ConvertAbilityRealLevelField(FourCC('mfl3')) ---@type abilityreallevelfield
-ABILITY_RLF_HERO_MAXIMUM_DAMAGE                               = ConvertAbilityRealLevelField(FourCC('mfl4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_COOLDOWN                                   = ConvertAbilityRealLevelField(FourCC('mfl5')) ---@type abilityreallevelfield
-ABILITY_RLF_DISTRIBUTED_DAMAGE_FACTOR_SPL1                    = ConvertAbilityRealLevelField(FourCC('spl1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_REGENERATED                                  = ConvertAbilityRealLevelField(FourCC('irl1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_REGENERATED                                  = ConvertAbilityRealLevelField(FourCC('irl2')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_LOSS_PER_UNIT_IDC1                           = ConvertAbilityRealLevelField(FourCC('idc1')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DAMAGE_IDC2                         = ConvertAbilityRealLevelField(FourCC('idc2')) ---@type abilityreallevelfield
-ABILITY_RLF_ACTIVATION_DELAY_IMO2                             = ConvertAbilityRealLevelField(FourCC('imo2')) ---@type abilityreallevelfield
-ABILITY_RLF_LURE_INTERVAL_SECONDS                             = ConvertAbilityRealLevelField(FourCC('imo3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_ISR1                                 = ConvertAbilityRealLevelField(FourCC('isr1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_REDUCTION_ISR2                             = ConvertAbilityRealLevelField(FourCC('isr2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_IPV1                                 = ConvertAbilityRealLevelField(FourCC('ipv1')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_STEAL_AMOUNT                                 = ConvertAbilityRealLevelField(FourCC('ipv2')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_RESTORED_FACTOR                              = ConvertAbilityRealLevelField(FourCC('ast1')) ---@type abilityreallevelfield
-ABILITY_RLF_MANA_RESTORED_FACTOR                              = ConvertAbilityRealLevelField(FourCC('ast2')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACH_DELAY                                      = ConvertAbilityRealLevelField(FourCC('gra1')) ---@type abilityreallevelfield
-ABILITY_RLF_REMOVE_DELAY                                      = ConvertAbilityRealLevelField(FourCC('gra2')) ---@type abilityreallevelfield
-ABILITY_RLF_HERO_REGENERATION_DELAY                           = ConvertAbilityRealLevelField(FourCC('Nsa2')) ---@type abilityreallevelfield
-ABILITY_RLF_UNIT_REGENERATION_DELAY                           = ConvertAbilityRealLevelField(FourCC('Nsa3')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_NSA4                       = ConvertAbilityRealLevelField(FourCC('Nsa4')) ---@type abilityreallevelfield
-ABILITY_RLF_HIT_POINTS_PER_SECOND_NSA5                        = ConvertAbilityRealLevelField(FourCC('Nsa5')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_TO_SUMMONED_UNITS_IXS1                     = ConvertAbilityRealLevelField(FourCC('Ixs1')) ---@type abilityreallevelfield
-ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_IXS2                       = ConvertAbilityRealLevelField(FourCC('Ixs2')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DURATION                            = ConvertAbilityRealLevelField(FourCC('Npa6')) ---@type abilityreallevelfield
-ABILITY_RLF_SHIELD_COOLDOWN_TIME                              = ConvertAbilityRealLevelField(FourCC('Nse1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_NDO1                            = ConvertAbilityRealLevelField(FourCC('Ndo1')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_UNIT_DURATION_SECONDS_NDO3               = ConvertAbilityRealLevelField(FourCC('Ndo3')) ---@type abilityreallevelfield
-ABILITY_RLF_MEDIUM_DAMAGE_RADIUS_FLK1                         = ConvertAbilityRealLevelField(FourCC('flk1')) ---@type abilityreallevelfield
-ABILITY_RLF_SMALL_DAMAGE_RADIUS_FLK2                          = ConvertAbilityRealLevelField(FourCC('flk2')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_AMOUNT_FLK3                           = ConvertAbilityRealLevelField(FourCC('flk3')) ---@type abilityreallevelfield
-ABILITY_RLF_MEDIUM_DAMAGE_AMOUNT                              = ConvertAbilityRealLevelField(FourCC('flk4')) ---@type abilityreallevelfield
-ABILITY_RLF_SMALL_DAMAGE_AMOUNT                               = ConvertAbilityRealLevelField(FourCC('flk5')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_HBN1             = ConvertAbilityRealLevelField(FourCC('Hbn1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_HBN2               = ConvertAbilityRealLevelField(FourCC('Hbn2')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_MANA_DRAINED_UNITS                            = ConvertAbilityRealLevelField(FourCC('fbk1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_RATIO_UNITS_PERCENT                        = ConvertAbilityRealLevelField(FourCC('fbk2')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_MANA_DRAINED_HEROS                            = ConvertAbilityRealLevelField(FourCC('fbk3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_RATIO_HEROS_PERCENT                        = ConvertAbilityRealLevelField(FourCC('fbk4')) ---@type abilityreallevelfield
-ABILITY_RLF_SUMMONED_DAMAGE                                   = ConvertAbilityRealLevelField(FourCC('fbk5')) ---@type abilityreallevelfield
-ABILITY_RLF_DISTRIBUTED_DAMAGE_FACTOR_NCA1                    = ConvertAbilityRealLevelField(FourCC('nca1')) ---@type abilityreallevelfield
-ABILITY_RLF_INITIAL_DAMAGE_PXF1                               = ConvertAbilityRealLevelField(FourCC('pxf1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_PXF2                            = ConvertAbilityRealLevelField(FourCC('pxf2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PER_SECOND_MLS1                            = ConvertAbilityRealLevelField(FourCC('mls1')) ---@type abilityreallevelfield
-ABILITY_RLF_BEAST_COLLISION_RADIUS                            = ConvertAbilityRealLevelField(FourCC('Nst2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_AMOUNT_NST3                                = ConvertAbilityRealLevelField(FourCC('Nst3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_RADIUS                                     = ConvertAbilityRealLevelField(FourCC('Nst4')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_DELAY                                      = ConvertAbilityRealLevelField(FourCC('Nst5')) ---@type abilityreallevelfield
-ABILITY_RLF_FOLLOW_THROUGH_TIME                               = ConvertAbilityRealLevelField(FourCC('Ncl1')) ---@type abilityreallevelfield
-ABILITY_RLF_ART_DURATION                                      = ConvertAbilityRealLevelField(FourCC('Ncl4')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NAB1             = ConvertAbilityRealLevelField(FourCC('Nab1')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_NAB2               = ConvertAbilityRealLevelField(FourCC('Nab2')) ---@type abilityreallevelfield
-ABILITY_RLF_PRIMARY_DAMAGE                                    = ConvertAbilityRealLevelField(FourCC('Nab4')) ---@type abilityreallevelfield
-ABILITY_RLF_SECONDARY_DAMAGE                                  = ConvertAbilityRealLevelField(FourCC('Nab5')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_INTERVAL_NAB6                              = ConvertAbilityRealLevelField(FourCC('Nab6')) ---@type abilityreallevelfield
-ABILITY_RLF_GOLD_COST_FACTOR                                  = ConvertAbilityRealLevelField(FourCC('Ntm1')) ---@type abilityreallevelfield
-ABILITY_RLF_LUMBER_COST_FACTOR                                = ConvertAbilityRealLevelField(FourCC('Ntm2')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVE_SPEED_BONUS_NEG1                             = ConvertAbilityRealLevelField(FourCC('Neg1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_BONUS_NEG2                                 = ConvertAbilityRealLevelField(FourCC('Neg2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_AMOUNT_NCS1                                = ConvertAbilityRealLevelField(FourCC('Ncs1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_INTERVAL_NCS2                              = ConvertAbilityRealLevelField(FourCC('Ncs2')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_DAMAGE_NCS4                                   = ConvertAbilityRealLevelField(FourCC('Ncs4')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NCS5                       = ConvertAbilityRealLevelField(FourCC('Ncs5')) ---@type abilityreallevelfield
-ABILITY_RLF_EFFECT_DURATION                                   = ConvertAbilityRealLevelField(FourCC('Ncs6')) ---@type abilityreallevelfield
-ABILITY_RLF_SPAWN_INTERVAL_NSY1                               = ConvertAbilityRealLevelField(FourCC('Nsy1')) ---@type abilityreallevelfield
-ABILITY_RLF_SPAWN_UNIT_DURATION                               = ConvertAbilityRealLevelField(FourCC('Nsy3')) ---@type abilityreallevelfield
-ABILITY_RLF_SPAWN_UNIT_OFFSET                                 = ConvertAbilityRealLevelField(FourCC('Nsy4')) ---@type abilityreallevelfield
-ABILITY_RLF_LEASH_RANGE_NSY5                                  = ConvertAbilityRealLevelField(FourCC('Nsy5')) ---@type abilityreallevelfield
-ABILITY_RLF_SPAWN_INTERVAL_NFY1                               = ConvertAbilityRealLevelField(FourCC('Nfy1')) ---@type abilityreallevelfield
-ABILITY_RLF_LEASH_RANGE_NFY2                                  = ConvertAbilityRealLevelField(FourCC('Nfy2')) ---@type abilityreallevelfield
-ABILITY_RLF_CHANCE_TO_DEMOLISH                                = ConvertAbilityRealLevelField(FourCC('Nde1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_MULTIPLIER_BUILDINGS                       = ConvertAbilityRealLevelField(FourCC('Nde2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_MULTIPLIER_UNITS                           = ConvertAbilityRealLevelField(FourCC('Nde3')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_MULTIPLIER_HEROES                          = ConvertAbilityRealLevelField(FourCC('Nde4')) ---@type abilityreallevelfield
-ABILITY_RLF_BONUS_DAMAGE_MULTIPLIER                           = ConvertAbilityRealLevelField(FourCC('Nic1')) ---@type abilityreallevelfield
-ABILITY_RLF_DEATH_DAMAGE_FULL_AMOUNT                          = ConvertAbilityRealLevelField(FourCC('Nic2')) ---@type abilityreallevelfield
-ABILITY_RLF_DEATH_DAMAGE_FULL_AREA                            = ConvertAbilityRealLevelField(FourCC('Nic3')) ---@type abilityreallevelfield
-ABILITY_RLF_DEATH_DAMAGE_HALF_AMOUNT                          = ConvertAbilityRealLevelField(FourCC('Nic4')) ---@type abilityreallevelfield
-ABILITY_RLF_DEATH_DAMAGE_HALF_AREA                            = ConvertAbilityRealLevelField(FourCC('Nic5')) ---@type abilityreallevelfield
-ABILITY_RLF_DEATH_DAMAGE_DELAY                                = ConvertAbilityRealLevelField(FourCC('Nic6')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_AMOUNT_NSO1                                = ConvertAbilityRealLevelField(FourCC('Nso1')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PERIOD                                     = ConvertAbilityRealLevelField(FourCC('Nso2')) ---@type abilityreallevelfield
-ABILITY_RLF_DAMAGE_PENALTY                                    = ConvertAbilityRealLevelField(FourCC('Nso3')) ---@type abilityreallevelfield
-ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NSO4             = ConvertAbilityRealLevelField(FourCC('Nso4')) ---@type abilityreallevelfield
-ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_NSO5               = ConvertAbilityRealLevelField(FourCC('Nso5')) ---@type abilityreallevelfield
-ABILITY_RLF_SPLIT_DELAY                                       = ConvertAbilityRealLevelField(FourCC('Nlm2')) ---@type abilityreallevelfield
-ABILITY_RLF_MAX_HITPOINT_FACTOR                               = ConvertAbilityRealLevelField(FourCC('Nlm4')) ---@type abilityreallevelfield
-ABILITY_RLF_LIFE_DURATION_SPLIT_BONUS                         = ConvertAbilityRealLevelField(FourCC('Nlm5')) ---@type abilityreallevelfield
-ABILITY_RLF_WAVE_INTERVAL                                     = ConvertAbilityRealLevelField(FourCC('Nvc3')) ---@type abilityreallevelfield
-ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NVC4                       = ConvertAbilityRealLevelField(FourCC('Nvc4')) ---@type abilityreallevelfield
-ABILITY_RLF_FULL_DAMAGE_AMOUNT_NVC5                           = ConvertAbilityRealLevelField(FourCC('Nvc5')) ---@type abilityreallevelfield
-ABILITY_RLF_HALF_DAMAGE_FACTOR                                = ConvertAbilityRealLevelField(FourCC('Nvc6')) ---@type abilityreallevelfield
-ABILITY_RLF_INTERVAL_BETWEEN_PULSES                           = ConvertAbilityRealLevelField(FourCC('Tau5')) ---@type abilityreallevelfield
+ABILITY_RLF_CASTING_TIME                                      = ConvertAbilityOldRealLevelField(FourCC('acas')) ---@type abilityreallevelfield
+ABILITY_RLF_DURATION_NORMAL                                   = ConvertAbilityOldRealLevelField(FourCC('adur')) ---@type abilityreallevelfield
+ABILITY_RLF_DURATION_HERO                                     = ConvertAbilityOldRealLevelField(FourCC('ahdu')) ---@type abilityreallevelfield
+ABILITY_RLF_COOLDOWN                                          = ConvertAbilityOldRealLevelField(FourCC('acdn')) ---@type abilityreallevelfield
+ABILITY_RLF_AREA_OF_EFFECT                                    = ConvertAbilityOldRealLevelField(FourCC('aare')) ---@type abilityreallevelfield
+ABILITY_RLF_CAST_RANGE                                        = ConvertAbilityOldRealLevelField(FourCC('aran')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_HBZ2                                       = ConvertAbilityOldRealLevelField(FourCC('Hbz2')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_REDUCTION_HBZ4                           = ConvertAbilityOldRealLevelField(FourCC('Hbz4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_HBZ5                            = ConvertAbilityOldRealLevelField(FourCC('Hbz5')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_DAMAGE_PER_WAVE                           = ConvertAbilityOldRealLevelField(FourCC('Hbz6')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_REGENERATION_INCREASE                        = ConvertAbilityOldRealLevelField(FourCC('Hab1')) ---@type abilityreallevelfield
+ABILITY_RLF_CASTING_DELAY                                     = ConvertAbilityOldRealLevelField(FourCC('Hmt2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_OWW1                            = ConvertAbilityOldRealLevelField(FourCC('Oww1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_OWW2                       = ConvertAbilityOldRealLevelField(FourCC('Oww2')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_CRITICAL_STRIKE                         = ConvertAbilityOldRealLevelField(FourCC('Ocr1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_MULTIPLIER_OCR2                            = ConvertAbilityOldRealLevelField(FourCC('Ocr2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_OCR3                                 = ConvertAbilityOldRealLevelField(FourCC('Ocr3')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_EVADE_OCR4                              = ConvertAbilityOldRealLevelField(FourCC('Ocr4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_PERCENT_OMI2                         = ConvertAbilityOldRealLevelField(FourCC('Omi2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_TAKEN_PERCENT_OMI3                         = ConvertAbilityOldRealLevelField(FourCC('Omi3')) ---@type abilityreallevelfield
+ABILITY_RLF_ANIMATION_DELAY                                   = ConvertAbilityOldRealLevelField(FourCC('Omi4')) ---@type abilityreallevelfield
+ABILITY_RLF_TRANSITION_TIME                                   = ConvertAbilityOldRealLevelField(FourCC('Owk1')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_OWK2              = ConvertAbilityOldRealLevelField(FourCC('Owk2')) ---@type abilityreallevelfield
+ABILITY_RLF_BACKSTAB_DAMAGE                                   = ConvertAbilityOldRealLevelField(FourCC('Owk3')) ---@type abilityreallevelfield
+ABILITY_RLF_AMOUNT_HEALED_DAMAGED_UDC1                        = ConvertAbilityOldRealLevelField(FourCC('Udc1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_CONVERTED_TO_MANA                            = ConvertAbilityOldRealLevelField(FourCC('Udp1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_CONVERTED_TO_LIFE                            = ConvertAbilityOldRealLevelField(FourCC('Udp2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_UAU1              = ConvertAbilityOldRealLevelField(FourCC('Uau1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_REGENERATION_INCREASE_PERCENT                = ConvertAbilityOldRealLevelField(FourCC('Uau2')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_EVADE_EEV1                              = ConvertAbilityOldRealLevelField(FourCC('Eev1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_INTERVAL                               = ConvertAbilityOldRealLevelField(FourCC('Eim1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_DRAINED_PER_SECOND_EIM2                      = ConvertAbilityOldRealLevelField(FourCC('Eim2')) ---@type abilityreallevelfield
+ABILITY_RLF_BUFFER_MANA_REQUIRED                              = ConvertAbilityOldRealLevelField(FourCC('Eim3')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_MANA_DRAINED                                  = ConvertAbilityOldRealLevelField(FourCC('Emb1')) ---@type abilityreallevelfield
+ABILITY_RLF_BOLT_DELAY                                        = ConvertAbilityOldRealLevelField(FourCC('Emb2')) ---@type abilityreallevelfield
+ABILITY_RLF_BOLT_LIFETIME                                     = ConvertAbilityOldRealLevelField(FourCC('Emb3')) ---@type abilityreallevelfield
+ABILITY_RLF_ALTITUDE_ADJUSTMENT_DURATION                      = ConvertAbilityOldRealLevelField(FourCC('Eme3')) ---@type abilityreallevelfield
+ABILITY_RLF_LANDING_DELAY_TIME                                = ConvertAbilityOldRealLevelField(FourCC('Eme4')) ---@type abilityreallevelfield
+ABILITY_RLF_ALTERNATE_FORM_HIT_POINT_BONUS                    = ConvertAbilityOldRealLevelField(FourCC('Eme5')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVE_SPEED_BONUS_INFO_PANEL_ONLY                  = ConvertAbilityOldRealLevelField(FourCC('Ncr5')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_BONUS_INFO_PANEL_ONLY                = ConvertAbilityOldRealLevelField(FourCC('Ncr6')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_REGENERATION_RATE_PER_SECOND                 = ConvertAbilityOldRealLevelField(FourCC('ave5')) ---@type abilityreallevelfield
+ABILITY_RLF_STUN_DURATION_USL1                                = ConvertAbilityOldRealLevelField(FourCC('Usl1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_DAMAGE_STOLEN_PERCENT                      = ConvertAbilityOldRealLevelField(FourCC('Uav1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_UCS1                                       = ConvertAbilityOldRealLevelField(FourCC('Ucs1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_DAMAGE_UCS2                                   = ConvertAbilityOldRealLevelField(FourCC('Ucs2')) ---@type abilityreallevelfield
+ABILITY_RLF_DISTANCE_UCS3                                     = ConvertAbilityOldRealLevelField(FourCC('Ucs3')) ---@type abilityreallevelfield
+ABILITY_RLF_FINAL_AREA_UCS4                                   = ConvertAbilityOldRealLevelField(FourCC('Ucs4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_UIN1                                       = ConvertAbilityOldRealLevelField(FourCC('Uin1')) ---@type abilityreallevelfield
+ABILITY_RLF_DURATION                                          = ConvertAbilityOldRealLevelField(FourCC('Uin2')) ---@type abilityreallevelfield
+ABILITY_RLF_IMPACT_DELAY                                      = ConvertAbilityOldRealLevelField(FourCC('Uin3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_TARGET_OCL1                            = ConvertAbilityOldRealLevelField(FourCC('Ocl1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_REDUCTION_PER_TARGET                       = ConvertAbilityOldRealLevelField(FourCC('Ocl3')) ---@type abilityreallevelfield
+ABILITY_RLF_EFFECT_DELAY_OEQ1                                 = ConvertAbilityOldRealLevelField(FourCC('Oeq1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_TO_BUILDINGS                    = ConvertAbilityOldRealLevelField(FourCC('Oeq2')) ---@type abilityreallevelfield
+ABILITY_RLF_UNITS_SLOWED_PERCENT                              = ConvertAbilityOldRealLevelField(FourCC('Oeq3')) ---@type abilityreallevelfield
+ABILITY_RLF_FINAL_AREA_OEQ4                                   = ConvertAbilityOldRealLevelField(FourCC('Oeq4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_EER1                            = ConvertAbilityOldRealLevelField(FourCC('Eer1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_TO_ATTACKERS                         = ConvertAbilityOldRealLevelField(FourCC('Eah1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_HEALED                                       = ConvertAbilityOldRealLevelField(FourCC('Etq1')) ---@type abilityreallevelfield
+ABILITY_RLF_HEAL_INTERVAL                                     = ConvertAbilityOldRealLevelField(FourCC('Etq2')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_REDUCTION_ETQ3                           = ConvertAbilityOldRealLevelField(FourCC('Etq3')) ---@type abilityreallevelfield
+ABILITY_RLF_INITIAL_IMMUNITY_DURATION                         = ConvertAbilityOldRealLevelField(FourCC('Etq4')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_LIFE_DRAINED_PER_SECOND_PERCENT               = ConvertAbilityOldRealLevelField(FourCC('Udd1')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_REDUCTION_UDD2                           = ConvertAbilityOldRealLevelField(FourCC('Udd2')) ---@type abilityreallevelfield
+ABILITY_RLF_ARMOR_DURATION                                    = ConvertAbilityOldRealLevelField(FourCC('Ufa1')) ---@type abilityreallevelfield
+ABILITY_RLF_ARMOR_BONUS_UFA2                                  = ConvertAbilityOldRealLevelField(FourCC('Ufa2')) ---@type abilityreallevelfield
+ABILITY_RLF_AREA_OF_EFFECT_DAMAGE                             = ConvertAbilityOldRealLevelField(FourCC('Ufn1')) ---@type abilityreallevelfield
+ABILITY_RLF_SPECIFIC_TARGET_DAMAGE_UFN2                       = ConvertAbilityOldRealLevelField(FourCC('Ufn2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_HFA1                                 = ConvertAbilityOldRealLevelField(FourCC('Hfa1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_ESF1                                 = ConvertAbilityOldRealLevelField(FourCC('Esf1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_INTERVAL_ESF2                              = ConvertAbilityOldRealLevelField(FourCC('Esf2')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_REDUCTION_ESF3                           = ConvertAbilityOldRealLevelField(FourCC('Esf3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_PERCENT                              = ConvertAbilityOldRealLevelField(FourCC('Ear1')) ---@type abilityreallevelfield
+ABILITY_RLF_DEFENSE_BONUS_HAV1                                = ConvertAbilityOldRealLevelField(FourCC('Hav1')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINT_BONUS                                   = ConvertAbilityOldRealLevelField(FourCC('Hav2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_HAV3                                 = ConvertAbilityOldRealLevelField(FourCC('Hav3')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_HAV4                       = ConvertAbilityOldRealLevelField(FourCC('Hav4')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_BASH                                    = ConvertAbilityOldRealLevelField(FourCC('Hbh1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_MULTIPLIER_HBH2                            = ConvertAbilityOldRealLevelField(FourCC('Hbh2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_HBH3                                 = ConvertAbilityOldRealLevelField(FourCC('Hbh3')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_MISS_HBH4                               = ConvertAbilityOldRealLevelField(FourCC('Hbh4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_HTB1                                       = ConvertAbilityOldRealLevelField(FourCC('Htb1')) ---@type abilityreallevelfield
+ABILITY_RLF_AOE_DAMAGE                                        = ConvertAbilityOldRealLevelField(FourCC('Htc1')) ---@type abilityreallevelfield
+ABILITY_RLF_SPECIFIC_TARGET_DAMAGE_HTC2                       = ConvertAbilityOldRealLevelField(FourCC('Htc2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_HTC3             = ConvertAbilityOldRealLevelField(FourCC('Htc3')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_HTC4               = ConvertAbilityOldRealLevelField(FourCC('Htc4')) ---@type abilityreallevelfield
+ABILITY_RLF_ARMOR_BONUS_HAD1                                  = ConvertAbilityOldRealLevelField(FourCC('Had1')) ---@type abilityreallevelfield
+ABILITY_RLF_AMOUNT_HEALED_DAMAGED_HHB1                        = ConvertAbilityOldRealLevelField(FourCC('Hhb1')) ---@type abilityreallevelfield
+ABILITY_RLF_EXTRA_DAMAGE_HCA1                                 = ConvertAbilityOldRealLevelField(FourCC('Hca1')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_HCA2                        = ConvertAbilityOldRealLevelField(FourCC('Hca2')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_HCA3                          = ConvertAbilityOldRealLevelField(FourCC('Hca3')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_OAE1              = ConvertAbilityOldRealLevelField(FourCC('Oae1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_OAE2                = ConvertAbilityOldRealLevelField(FourCC('Oae2')) ---@type abilityreallevelfield
+ABILITY_RLF_REINCARNATION_DELAY                               = ConvertAbilityOldRealLevelField(FourCC('Ore1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_OSH1                                       = ConvertAbilityOldRealLevelField(FourCC('Osh1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_DAMAGE_OSH2                               = ConvertAbilityOldRealLevelField(FourCC('Osh2')) ---@type abilityreallevelfield
+ABILITY_RLF_DISTANCE_OSH3                                     = ConvertAbilityOldRealLevelField(FourCC('Osh3')) ---@type abilityreallevelfield
+ABILITY_RLF_FINAL_AREA_OSH4                                   = ConvertAbilityOldRealLevelField(FourCC('Osh4')) ---@type abilityreallevelfield
+ABILITY_RLF_GRAPHIC_DELAY_NFD1                                = ConvertAbilityOldRealLevelField(FourCC('Nfd1')) ---@type abilityreallevelfield
+ABILITY_RLF_GRAPHIC_DURATION_NFD2                             = ConvertAbilityOldRealLevelField(FourCC('Nfd2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_NFD3                                       = ConvertAbilityOldRealLevelField(FourCC('Nfd3')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DAMAGE_AMS1                         = ConvertAbilityOldRealLevelField(FourCC('Ams1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_AMS2                       = ConvertAbilityOldRealLevelField(FourCC('Ams2')) ---@type abilityreallevelfield
+ABILITY_RLF_AURA_DURATION                                     = ConvertAbilityOldRealLevelField(FourCC('Apl1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_APL2                            = ConvertAbilityOldRealLevelField(FourCC('Apl2')) ---@type abilityreallevelfield
+ABILITY_RLF_DURATION_OF_PLAGUE_WARD                           = ConvertAbilityOldRealLevelField(FourCC('Apl3')) ---@type abilityreallevelfield
+ABILITY_RLF_AMOUNT_OF_HIT_POINTS_REGENERATED                  = ConvertAbilityOldRealLevelField(FourCC('Oar1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_DAMAGE_INCREASE_AKB1                       = ConvertAbilityOldRealLevelField(FourCC('Akb1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_LOSS_ADM1                                    = ConvertAbilityOldRealLevelField(FourCC('Adm1')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DAMAGE_ADM2                         = ConvertAbilityOldRealLevelField(FourCC('Adm2')) ---@type abilityreallevelfield
+ABILITY_RLF_EXPANSION_AMOUNT                                  = ConvertAbilityOldRealLevelField(FourCC('Bli1')) ---@type abilityreallevelfield
+ABILITY_RLF_INTERVAL_DURATION_BGM2                            = ConvertAbilityOldRealLevelField(FourCC('Bgm2')) ---@type abilityreallevelfield
+ABILITY_RLF_RADIUS_OF_MINING_RING                             = ConvertAbilityOldRealLevelField(FourCC('Bgm4')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_INCREASE_PERCENT_BLO1                = ConvertAbilityOldRealLevelField(FourCC('Blo1')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_INCREASE_PERCENT_BLO2              = ConvertAbilityOldRealLevelField(FourCC('Blo2')) ---@type abilityreallevelfield
+ABILITY_RLF_SCALING_FACTOR                                    = ConvertAbilityOldRealLevelField(FourCC('Blo3')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_PER_SECOND_CAN1                        = ConvertAbilityOldRealLevelField(FourCC('Can1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_HIT_POINTS                                    = ConvertAbilityOldRealLevelField(FourCC('Can2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_DEV2                            = ConvertAbilityOldRealLevelField(FourCC('Dev2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_UPDATE_FREQUENCY_CHD1                    = ConvertAbilityOldRealLevelField(FourCC('Chd1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_UPDATE_FREQUENCY_CHD2                      = ConvertAbilityOldRealLevelField(FourCC('Chd2')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DAMAGE_CHD3                         = ConvertAbilityOldRealLevelField(FourCC('Chd3')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_CRI1             = ConvertAbilityOldRealLevelField(FourCC('Cri1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_CRI2               = ConvertAbilityOldRealLevelField(FourCC('Cri2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_REDUCTION_CRI3                             = ConvertAbilityOldRealLevelField(FourCC('Cri3')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_MISS_CRS                                = ConvertAbilityOldRealLevelField(FourCC('Crs1')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_RADIUS_DDA1                           = ConvertAbilityOldRealLevelField(FourCC('Dda1')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_AMOUNT_DDA2                           = ConvertAbilityOldRealLevelField(FourCC('Dda2')) ---@type abilityreallevelfield
+ABILITY_RLF_PARTIAL_DAMAGE_RADIUS                             = ConvertAbilityOldRealLevelField(FourCC('Dda3')) ---@type abilityreallevelfield
+ABILITY_RLF_PARTIAL_DAMAGE_AMOUNT                             = ConvertAbilityOldRealLevelField(FourCC('Dda4')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_DAMAGE_FACTOR_SDS1                       = ConvertAbilityOldRealLevelField(FourCC('Sds1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_DAMAGE_UCO5                                   = ConvertAbilityOldRealLevelField(FourCC('Uco5')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVE_SPEED_BONUS_UCO6                             = ConvertAbilityOldRealLevelField(FourCC('Uco6')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_TAKEN_PERCENT_DEF1                         = ConvertAbilityOldRealLevelField(FourCC('Def1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_PERCENT_DEF2                         = ConvertAbilityOldRealLevelField(FourCC('Def2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_DEF3                        = ConvertAbilityOldRealLevelField(FourCC('Def3')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_DEF4                          = ConvertAbilityOldRealLevelField(FourCC('Def4')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_DEF5                       = ConvertAbilityOldRealLevelField(FourCC('Def5')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_DEFLECT                                 = ConvertAbilityOldRealLevelField(FourCC('Def6')) ---@type abilityreallevelfield
+ABILITY_RLF_DEFLECT_DAMAGE_TAKEN_PIERCING                     = ConvertAbilityOldRealLevelField(FourCC('Def7')) ---@type abilityreallevelfield
+ABILITY_RLF_DEFLECT_DAMAGE_TAKEN_SPELLS                       = ConvertAbilityOldRealLevelField(FourCC('Def8')) ---@type abilityreallevelfield
+ABILITY_RLF_RIP_DELAY                                         = ConvertAbilityOldRealLevelField(FourCC('Eat1')) ---@type abilityreallevelfield
+ABILITY_RLF_EAT_DELAY                                         = ConvertAbilityOldRealLevelField(FourCC('Eat2')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_GAINED_EAT3                            = ConvertAbilityOldRealLevelField(FourCC('Eat3')) ---@type abilityreallevelfield
+ABILITY_RLF_AIR_UNIT_LOWER_DURATION                           = ConvertAbilityOldRealLevelField(FourCC('Ens1')) ---@type abilityreallevelfield
+ABILITY_RLF_AIR_UNIT_HEIGHT                                   = ConvertAbilityOldRealLevelField(FourCC('Ens2')) ---@type abilityreallevelfield
+ABILITY_RLF_MELEE_ATTACK_RANGE                                = ConvertAbilityOldRealLevelField(FourCC('Ens3')) ---@type abilityreallevelfield
+ABILITY_RLF_INTERVAL_DURATION_EGM2                            = ConvertAbilityOldRealLevelField(FourCC('Egm2')) ---@type abilityreallevelfield
+ABILITY_RLF_EFFECT_DELAY_FLA2                                 = ConvertAbilityOldRealLevelField(FourCC('Fla2')) ---@type abilityreallevelfield
+ABILITY_RLF_MINING_DURATION                                   = ConvertAbilityOldRealLevelField(FourCC('Gld2')) ---@type abilityreallevelfield
+ABILITY_RLF_RADIUS_OF_GRAVESTONES                             = ConvertAbilityOldRealLevelField(FourCC('Gyd2')) ---@type abilityreallevelfield
+ABILITY_RLF_RADIUS_OF_CORPSES                                 = ConvertAbilityOldRealLevelField(FourCC('Gyd3')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_GAINED_HEA1                            = ConvertAbilityOldRealLevelField(FourCC('Hea1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_INCREASE_PERCENT_INF1                      = ConvertAbilityOldRealLevelField(FourCC('Inf1')) ---@type abilityreallevelfield
+ABILITY_RLF_AUTOCAST_RANGE                                    = ConvertAbilityOldRealLevelField(FourCC('Inf3')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_REGEN_RATE                                   = ConvertAbilityOldRealLevelField(FourCC('Inf4')) ---@type abilityreallevelfield
+ABILITY_RLF_GRAPHIC_DELAY_LIT1                                = ConvertAbilityOldRealLevelField(FourCC('Lit1')) ---@type abilityreallevelfield
+ABILITY_RLF_GRAPHIC_DURATION_LIT2                             = ConvertAbilityOldRealLevelField(FourCC('Lit2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_LSH1                            = ConvertAbilityOldRealLevelField(FourCC('Lsh1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_GAINED                                       = ConvertAbilityOldRealLevelField(FourCC('Mbt1')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_GAINED_MBT2                            = ConvertAbilityOldRealLevelField(FourCC('Mbt2')) ---@type abilityreallevelfield
+ABILITY_RLF_AUTOCAST_REQUIREMENT                              = ConvertAbilityOldRealLevelField(FourCC('Mbt3')) ---@type abilityreallevelfield
+ABILITY_RLF_WATER_HEIGHT                                      = ConvertAbilityOldRealLevelField(FourCC('Mbt4')) ---@type abilityreallevelfield
+ABILITY_RLF_ACTIVATION_DELAY_MIN1                             = ConvertAbilityOldRealLevelField(FourCC('Min1')) ---@type abilityreallevelfield
+ABILITY_RLF_INVISIBILITY_TRANSITION_TIME                      = ConvertAbilityOldRealLevelField(FourCC('Min2')) ---@type abilityreallevelfield
+ABILITY_RLF_ACTIVATION_RADIUS                                 = ConvertAbilityOldRealLevelField(FourCC('Neu1')) ---@type abilityreallevelfield
+ABILITY_RLF_AMOUNT_REGENERATED                                = ConvertAbilityOldRealLevelField(FourCC('Arm1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_POI1                            = ConvertAbilityOldRealLevelField(FourCC('Poi1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_POI2                          = ConvertAbilityOldRealLevelField(FourCC('Poi2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POI3                        = ConvertAbilityOldRealLevelField(FourCC('Poi3')) ---@type abilityreallevelfield
+ABILITY_RLF_EXTRA_DAMAGE_POA1                                 = ConvertAbilityOldRealLevelField(FourCC('Poa1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_POA2                            = ConvertAbilityOldRealLevelField(FourCC('Poa2')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_POA3                          = ConvertAbilityOldRealLevelField(FourCC('Poa3')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_POA4                        = ConvertAbilityOldRealLevelField(FourCC('Poa4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_AMPLIFICATION                              = ConvertAbilityOldRealLevelField(FourCC('Pos2')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_STOMP_PERCENT                           = ConvertAbilityOldRealLevelField(FourCC('War1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_WAR2                                 = ConvertAbilityOldRealLevelField(FourCC('War2')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_RADIUS_WAR3                           = ConvertAbilityOldRealLevelField(FourCC('War3')) ---@type abilityreallevelfield
+ABILITY_RLF_HALF_DAMAGE_RADIUS_WAR4                           = ConvertAbilityOldRealLevelField(FourCC('War4')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DAMAGE_PRG3                         = ConvertAbilityOldRealLevelField(FourCC('Prg3')) ---@type abilityreallevelfield
+ABILITY_RLF_UNIT_PAUSE_DURATION                               = ConvertAbilityOldRealLevelField(FourCC('Prg4')) ---@type abilityreallevelfield
+ABILITY_RLF_HERO_PAUSE_DURATION                               = ConvertAbilityOldRealLevelField(FourCC('Prg5')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_GAINED_REJ1                            = ConvertAbilityOldRealLevelField(FourCC('Rej1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_POINTS_GAINED_REJ2                           = ConvertAbilityOldRealLevelField(FourCC('Rej2')) ---@type abilityreallevelfield
+ABILITY_RLF_MINIMUM_LIFE_REQUIRED                             = ConvertAbilityOldRealLevelField(FourCC('Rpb3')) ---@type abilityreallevelfield
+ABILITY_RLF_MINIMUM_MANA_REQUIRED                             = ConvertAbilityOldRealLevelField(FourCC('Rpb4')) ---@type abilityreallevelfield
+ABILITY_RLF_REPAIR_COST_RATIO                                 = ConvertAbilityOldRealLevelField(FourCC('Rep1')) ---@type abilityreallevelfield
+ABILITY_RLF_REPAIR_TIME_RATIO                                 = ConvertAbilityOldRealLevelField(FourCC('Rep2')) ---@type abilityreallevelfield
+ABILITY_RLF_POWERBUILD_COST                                   = ConvertAbilityOldRealLevelField(FourCC('Rep3')) ---@type abilityreallevelfield
+ABILITY_RLF_POWERBUILD_RATE                                   = ConvertAbilityOldRealLevelField(FourCC('Rep4')) ---@type abilityreallevelfield
+ABILITY_RLF_NAVAL_RANGE_BONUS                                 = ConvertAbilityOldRealLevelField(FourCC('Rep5')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_INCREASE_PERCENT_ROA1                      = ConvertAbilityOldRealLevelField(FourCC('Roa1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_REGENERATION_RATE                            = ConvertAbilityOldRealLevelField(FourCC('Roa3')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_REGEN                                        = ConvertAbilityOldRealLevelField(FourCC('Roa4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_INCREASE                                   = ConvertAbilityOldRealLevelField(FourCC('Nbr1')) ---@type abilityreallevelfield
+ABILITY_RLF_SALVAGE_COST_RATIO                                = ConvertAbilityOldRealLevelField(FourCC('Sal1')) ---@type abilityreallevelfield
+ABILITY_RLF_IN_FLIGHT_SIGHT_RADIUS                            = ConvertAbilityOldRealLevelField(FourCC('Esn1')) ---@type abilityreallevelfield
+ABILITY_RLF_HOVERING_SIGHT_RADIUS                             = ConvertAbilityOldRealLevelField(FourCC('Esn2')) ---@type abilityreallevelfield
+ABILITY_RLF_HOVERING_HEIGHT                                   = ConvertAbilityOldRealLevelField(FourCC('Esn3')) ---@type abilityreallevelfield
+ABILITY_RLF_DURATION_OF_OWLS                                  = ConvertAbilityOldRealLevelField(FourCC('Esn5')) ---@type abilityreallevelfield
+ABILITY_RLF_FADE_DURATION                                     = ConvertAbilityOldRealLevelField(FourCC('Shm1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAY_NIGHT_DURATION                                = ConvertAbilityOldRealLevelField(FourCC('Shm2')) ---@type abilityreallevelfield
+ABILITY_RLF_ACTION_DURATION                                   = ConvertAbilityOldRealLevelField(FourCC('Shm3')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SLO1                        = ConvertAbilityOldRealLevelField(FourCC('Slo1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_SLO2                          = ConvertAbilityOldRealLevelField(FourCC('Slo2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_SPO1                            = ConvertAbilityOldRealLevelField(FourCC('Spo1')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_SPO2                        = ConvertAbilityOldRealLevelField(FourCC('Spo2')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_SPO3                          = ConvertAbilityOldRealLevelField(FourCC('Spo3')) ---@type abilityreallevelfield
+ABILITY_RLF_ACTIVATION_DELAY_STA1                             = ConvertAbilityOldRealLevelField(FourCC('Sta1')) ---@type abilityreallevelfield
+ABILITY_RLF_DETECTION_RADIUS_STA2                             = ConvertAbilityOldRealLevelField(FourCC('Sta2')) ---@type abilityreallevelfield
+ABILITY_RLF_DETONATION_RADIUS                                 = ConvertAbilityOldRealLevelField(FourCC('Sta3')) ---@type abilityreallevelfield
+ABILITY_RLF_STUN_DURATION_STA4                                = ConvertAbilityOldRealLevelField(FourCC('Sta4')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_BONUS_PERCENT                        = ConvertAbilityOldRealLevelField(FourCC('Uhf1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_UHF2                            = ConvertAbilityOldRealLevelField(FourCC('Uhf2')) ---@type abilityreallevelfield
+ABILITY_RLF_LUMBER_PER_INTERVAL                               = ConvertAbilityOldRealLevelField(FourCC('Wha1')) ---@type abilityreallevelfield
+ABILITY_RLF_ART_ATTACHMENT_HEIGHT                             = ConvertAbilityOldRealLevelField(FourCC('Wha3')) ---@type abilityreallevelfield
+ABILITY_RLF_TELEPORT_AREA_WIDTH                               = ConvertAbilityOldRealLevelField(FourCC('Wrp1')) ---@type abilityreallevelfield
+ABILITY_RLF_TELEPORT_AREA_HEIGHT                              = ConvertAbilityOldRealLevelField(FourCC('Wrp2')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_STOLEN_PER_ATTACK                            = ConvertAbilityOldRealLevelField(FourCC('Ivam')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_IDAM                                 = ConvertAbilityOldRealLevelField(FourCC('Idam')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_HIT_UNITS_PERCENT                       = ConvertAbilityOldRealLevelField(FourCC('Iob2')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_HIT_HEROS_PERCENT                       = ConvertAbilityOldRealLevelField(FourCC('Iob3')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_HIT_SUMMONS_PERCENT                     = ConvertAbilityOldRealLevelField(FourCC('Iob4')) ---@type abilityreallevelfield
+ABILITY_RLF_DELAY_FOR_TARGET_EFFECT                           = ConvertAbilityOldRealLevelField(FourCC('Idel')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_PERCENT_OF_NORMAL                    = ConvertAbilityOldRealLevelField(FourCC('Iild')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_RECEIVED_MULTIPLIER                        = ConvertAbilityOldRealLevelField(FourCC('Iilw')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_REGENERATION_BONUS_AS_FRACTION_OF_NORMAL     = ConvertAbilityOldRealLevelField(FourCC('Imrp')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_INCREASE_ISPI                      = ConvertAbilityOldRealLevelField(FourCC('Ispi')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_IDPS                            = ConvertAbilityOldRealLevelField(FourCC('Idps')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_DAMAGE_INCREASE_CAC1                       = ConvertAbilityOldRealLevelField(FourCC('Cac1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_COR1                            = ConvertAbilityOldRealLevelField(FourCC('Cor1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_INCREASE_ISX1                        = ConvertAbilityOldRealLevelField(FourCC('Isx1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_WRS1                                       = ConvertAbilityOldRealLevelField(FourCC('Wrs1')) ---@type abilityreallevelfield
+ABILITY_RLF_TERRAIN_DEFORMATION_AMPLITUDE                     = ConvertAbilityOldRealLevelField(FourCC('Wrs2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_CTC1                                       = ConvertAbilityOldRealLevelField(FourCC('Ctc1')) ---@type abilityreallevelfield
+ABILITY_RLF_EXTRA_DAMAGE_TO_TARGET                            = ConvertAbilityOldRealLevelField(FourCC('Ctc2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_CTC3                     = ConvertAbilityOldRealLevelField(FourCC('Ctc3')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_CTC4                       = ConvertAbilityOldRealLevelField(FourCC('Ctc4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_CTB1                                       = ConvertAbilityOldRealLevelField(FourCC('Ctb1')) ---@type abilityreallevelfield
+ABILITY_RLF_CASTING_DELAY_SECONDS                             = ConvertAbilityOldRealLevelField(FourCC('Uds2')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_LOSS_PER_UNIT_DTN1                           = ConvertAbilityOldRealLevelField(FourCC('Dtn1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_TO_SUMMONED_UNITS_DTN2                     = ConvertAbilityOldRealLevelField(FourCC('Dtn2')) ---@type abilityreallevelfield
+ABILITY_RLF_TRANSITION_TIME_SECONDS                           = ConvertAbilityOldRealLevelField(FourCC('Ivs1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_DRAINED_PER_SECOND_NMR1                      = ConvertAbilityOldRealLevelField(FourCC('Nmr1')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_REDUCE_DAMAGE_PERCENT                   = ConvertAbilityOldRealLevelField(FourCC('Ssk1')) ---@type abilityreallevelfield
+ABILITY_RLF_MINIMUM_DAMAGE                                    = ConvertAbilityOldRealLevelField(FourCC('Ssk2')) ---@type abilityreallevelfield
+ABILITY_RLF_IGNORED_DAMAGE                                    = ConvertAbilityOldRealLevelField(FourCC('Ssk3')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_DEALT                                 = ConvertAbilityOldRealLevelField(FourCC('Hfs1')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_INTERVAL                              = ConvertAbilityOldRealLevelField(FourCC('Hfs2')) ---@type abilityreallevelfield
+ABILITY_RLF_HALF_DAMAGE_DEALT                                 = ConvertAbilityOldRealLevelField(FourCC('Hfs3')) ---@type abilityreallevelfield
+ABILITY_RLF_HALF_DAMAGE_INTERVAL                              = ConvertAbilityOldRealLevelField(FourCC('Hfs4')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_REDUCTION_HFS5                           = ConvertAbilityOldRealLevelField(FourCC('Hfs5')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_DAMAGE_HFS6                               = ConvertAbilityOldRealLevelField(FourCC('Hfs6')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_PER_HIT_POINT                                = ConvertAbilityOldRealLevelField(FourCC('Nms1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_ABSORBED_PERCENT                           = ConvertAbilityOldRealLevelField(FourCC('Nms2')) ---@type abilityreallevelfield
+ABILITY_RLF_WAVE_DISTANCE                                     = ConvertAbilityOldRealLevelField(FourCC('Uim1')) ---@type abilityreallevelfield
+ABILITY_RLF_WAVE_TIME_SECONDS                                 = ConvertAbilityOldRealLevelField(FourCC('Uim2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DEALT_UIM3                                 = ConvertAbilityOldRealLevelField(FourCC('Uim3')) ---@type abilityreallevelfield
+ABILITY_RLF_AIR_TIME_SECONDS_UIM4                             = ConvertAbilityOldRealLevelField(FourCC('Uim4')) ---@type abilityreallevelfield
+ABILITY_RLF_UNIT_RELEASE_INTERVAL_SECONDS                     = ConvertAbilityOldRealLevelField(FourCC('Uls2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_RETURN_FACTOR                              = ConvertAbilityOldRealLevelField(FourCC('Uls4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_RETURN_THRESHOLD                           = ConvertAbilityOldRealLevelField(FourCC('Uls5')) ---@type abilityreallevelfield
+ABILITY_RLF_RETURNED_DAMAGE_FACTOR                            = ConvertAbilityOldRealLevelField(FourCC('Uts1')) ---@type abilityreallevelfield
+ABILITY_RLF_RECEIVED_DAMAGE_FACTOR                            = ConvertAbilityOldRealLevelField(FourCC('Uts2')) ---@type abilityreallevelfield
+ABILITY_RLF_DEFENSE_BONUS_UTS3                                = ConvertAbilityOldRealLevelField(FourCC('Uts3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_NBA1                                 = ConvertAbilityOldRealLevelField(FourCC('Nba1')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DURATION_SECONDS_NBA3               = ConvertAbilityOldRealLevelField(FourCC('Nba3')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_PER_SUMMONED_HITPOINT                        = ConvertAbilityOldRealLevelField(FourCC('Cmg2')) ---@type abilityreallevelfield
+ABILITY_RLF_CHARGE_FOR_CURRENT_LIFE                           = ConvertAbilityOldRealLevelField(FourCC('Cmg3')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_DRAINED                                = ConvertAbilityOldRealLevelField(FourCC('Ndr1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_POINTS_DRAINED                               = ConvertAbilityOldRealLevelField(FourCC('Ndr2')) ---@type abilityreallevelfield
+ABILITY_RLF_DRAIN_INTERVAL_SECONDS                            = ConvertAbilityOldRealLevelField(FourCC('Ndr3')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_TRANSFERRED_PER_SECOND                       = ConvertAbilityOldRealLevelField(FourCC('Ndr4')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_TRANSFERRED_PER_SECOND                       = ConvertAbilityOldRealLevelField(FourCC('Ndr5')) ---@type abilityreallevelfield
+ABILITY_RLF_BONUS_LIFE_FACTOR                                 = ConvertAbilityOldRealLevelField(FourCC('Ndr6')) ---@type abilityreallevelfield
+ABILITY_RLF_BONUS_LIFE_DECAY                                  = ConvertAbilityOldRealLevelField(FourCC('Ndr7')) ---@type abilityreallevelfield
+ABILITY_RLF_BONUS_MANA_FACTOR                                 = ConvertAbilityOldRealLevelField(FourCC('Ndr8')) ---@type abilityreallevelfield
+ABILITY_RLF_BONUS_MANA_DECAY                                  = ConvertAbilityOldRealLevelField(FourCC('Ndr9')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_MISS_PERCENT                            = ConvertAbilityOldRealLevelField(FourCC('Nsi2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_MODIFIER                           = ConvertAbilityOldRealLevelField(FourCC('Nsi3')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_MODIFIER                             = ConvertAbilityOldRealLevelField(FourCC('Nsi4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_TDG1                            = ConvertAbilityOldRealLevelField(FourCC('Tdg1')) ---@type abilityreallevelfield
+ABILITY_RLF_MEDIUM_DAMAGE_RADIUS_TDG2                         = ConvertAbilityOldRealLevelField(FourCC('Tdg2')) ---@type abilityreallevelfield
+ABILITY_RLF_MEDIUM_DAMAGE_PER_SECOND                          = ConvertAbilityOldRealLevelField(FourCC('Tdg3')) ---@type abilityreallevelfield
+ABILITY_RLF_SMALL_DAMAGE_RADIUS_TDG4                          = ConvertAbilityOldRealLevelField(FourCC('Tdg4')) ---@type abilityreallevelfield
+ABILITY_RLF_SMALL_DAMAGE_PER_SECOND                           = ConvertAbilityOldRealLevelField(FourCC('Tdg5')) ---@type abilityreallevelfield
+ABILITY_RLF_AIR_TIME_SECONDS_TSP1                             = ConvertAbilityOldRealLevelField(FourCC('Tsp1')) ---@type abilityreallevelfield
+ABILITY_RLF_MINIMUM_HIT_INTERVAL_SECONDS                      = ConvertAbilityOldRealLevelField(FourCC('Tsp2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_NBF5                            = ConvertAbilityOldRealLevelField(FourCC('Nbf5')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_RANGE                                     = ConvertAbilityOldRealLevelField(FourCC('Ebl1')) ---@type abilityreallevelfield
+ABILITY_RLF_MINIMUM_RANGE                                     = ConvertAbilityOldRealLevelField(FourCC('Ebl2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_TARGET_EFK1                            = ConvertAbilityOldRealLevelField(FourCC('Efk1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_TOTAL_DAMAGE                              = ConvertAbilityOldRealLevelField(FourCC('Efk2')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_SPEED_ADJUSTMENT                          = ConvertAbilityOldRealLevelField(FourCC('Efk4')) ---@type abilityreallevelfield
+ABILITY_RLF_DECAYING_DAMAGE                                   = ConvertAbilityOldRealLevelField(FourCC('Esh1')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_FACTOR_ESH2                        = ConvertAbilityOldRealLevelField(FourCC('Esh2')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_FACTOR_ESH3                          = ConvertAbilityOldRealLevelField(FourCC('Esh3')) ---@type abilityreallevelfield
+ABILITY_RLF_DECAY_POWER                                       = ConvertAbilityOldRealLevelField(FourCC('Esh4')) ---@type abilityreallevelfield
+ABILITY_RLF_INITIAL_DAMAGE_ESH5                               = ConvertAbilityOldRealLevelField(FourCC('Esh5')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_LIFE_ABSORBED                             = ConvertAbilityOldRealLevelField(FourCC('abs1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAXIMUM_MANA_ABSORBED                             = ConvertAbilityOldRealLevelField(FourCC('abs2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_INCREASE_BSK1                      = ConvertAbilityOldRealLevelField(FourCC('bsk1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_INCREASE_BSK2                        = ConvertAbilityOldRealLevelField(FourCC('bsk2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_TAKEN_INCREASE                             = ConvertAbilityOldRealLevelField(FourCC('bsk3')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_PER_UNIT                                     = ConvertAbilityOldRealLevelField(FourCC('dvm1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_PER_UNIT                                     = ConvertAbilityOldRealLevelField(FourCC('dvm2')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_PER_BUFF                                     = ConvertAbilityOldRealLevelField(FourCC('dvm3')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_PER_BUFF                                     = ConvertAbilityOldRealLevelField(FourCC('dvm4')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DAMAGE_DVM5                         = ConvertAbilityOldRealLevelField(FourCC('dvm5')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_FAK1                                 = ConvertAbilityOldRealLevelField(FourCC('fak1')) ---@type abilityreallevelfield
+ABILITY_RLF_MEDIUM_DAMAGE_FACTOR_FAK2                         = ConvertAbilityOldRealLevelField(FourCC('fak2')) ---@type abilityreallevelfield
+ABILITY_RLF_SMALL_DAMAGE_FACTOR_FAK3                          = ConvertAbilityOldRealLevelField(FourCC('fak3')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_RADIUS_FAK4                           = ConvertAbilityOldRealLevelField(FourCC('fak4')) ---@type abilityreallevelfield
+ABILITY_RLF_HALF_DAMAGE_RADIUS_FAK5                           = ConvertAbilityOldRealLevelField(FourCC('fak5')) ---@type abilityreallevelfield
+ABILITY_RLF_EXTRA_DAMAGE_PER_SECOND                           = ConvertAbilityOldRealLevelField(FourCC('liq1')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_LIQ2                     = ConvertAbilityOldRealLevelField(FourCC('liq2')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_LIQ3                       = ConvertAbilityOldRealLevelField(FourCC('liq3')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_FACTOR                               = ConvertAbilityOldRealLevelField(FourCC('mim1')) ---@type abilityreallevelfield
+ABILITY_RLF_UNIT_DAMAGE_PER_MANA_POINT                        = ConvertAbilityOldRealLevelField(FourCC('mfl1')) ---@type abilityreallevelfield
+ABILITY_RLF_HERO_DAMAGE_PER_MANA_POINT                        = ConvertAbilityOldRealLevelField(FourCC('mfl2')) ---@type abilityreallevelfield
+ABILITY_RLF_UNIT_MAXIMUM_DAMAGE                               = ConvertAbilityOldRealLevelField(FourCC('mfl3')) ---@type abilityreallevelfield
+ABILITY_RLF_HERO_MAXIMUM_DAMAGE                               = ConvertAbilityOldRealLevelField(FourCC('mfl4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_COOLDOWN                                   = ConvertAbilityOldRealLevelField(FourCC('mfl5')) ---@type abilityreallevelfield
+ABILITY_RLF_DISTRIBUTED_DAMAGE_FACTOR_SPL1                    = ConvertAbilityOldRealLevelField(FourCC('spl1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_REGENERATED                                  = ConvertAbilityOldRealLevelField(FourCC('irl1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_REGENERATED                                  = ConvertAbilityOldRealLevelField(FourCC('irl2')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_LOSS_PER_UNIT_IDC1                           = ConvertAbilityOldRealLevelField(FourCC('idc1')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DAMAGE_IDC2                         = ConvertAbilityOldRealLevelField(FourCC('idc2')) ---@type abilityreallevelfield
+ABILITY_RLF_ACTIVATION_DELAY_IMO2                             = ConvertAbilityOldRealLevelField(FourCC('imo2')) ---@type abilityreallevelfield
+ABILITY_RLF_LURE_INTERVAL_SECONDS                             = ConvertAbilityOldRealLevelField(FourCC('imo3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_ISR1                                 = ConvertAbilityOldRealLevelField(FourCC('isr1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_REDUCTION_ISR2                             = ConvertAbilityOldRealLevelField(FourCC('isr2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_IPV1                                 = ConvertAbilityOldRealLevelField(FourCC('ipv1')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_STEAL_AMOUNT                                 = ConvertAbilityOldRealLevelField(FourCC('ipv2')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_RESTORED_FACTOR                              = ConvertAbilityOldRealLevelField(FourCC('ast1')) ---@type abilityreallevelfield
+ABILITY_RLF_MANA_RESTORED_FACTOR                              = ConvertAbilityOldRealLevelField(FourCC('ast2')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACH_DELAY                                      = ConvertAbilityOldRealLevelField(FourCC('gra1')) ---@type abilityreallevelfield
+ABILITY_RLF_REMOVE_DELAY                                      = ConvertAbilityOldRealLevelField(FourCC('gra2')) ---@type abilityreallevelfield
+ABILITY_RLF_HERO_REGENERATION_DELAY                           = ConvertAbilityOldRealLevelField(FourCC('Nsa2')) ---@type abilityreallevelfield
+ABILITY_RLF_UNIT_REGENERATION_DELAY                           = ConvertAbilityOldRealLevelField(FourCC('Nsa3')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_NSA4                       = ConvertAbilityOldRealLevelField(FourCC('Nsa4')) ---@type abilityreallevelfield
+ABILITY_RLF_HIT_POINTS_PER_SECOND_NSA5                        = ConvertAbilityOldRealLevelField(FourCC('Nsa5')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_TO_SUMMONED_UNITS_IXS1                     = ConvertAbilityOldRealLevelField(FourCC('Ixs1')) ---@type abilityreallevelfield
+ABILITY_RLF_MAGIC_DAMAGE_REDUCTION_IXS2                       = ConvertAbilityOldRealLevelField(FourCC('Ixs2')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DURATION                            = ConvertAbilityOldRealLevelField(FourCC('Npa6')) ---@type abilityreallevelfield
+ABILITY_RLF_SHIELD_COOLDOWN_TIME                              = ConvertAbilityOldRealLevelField(FourCC('Nse1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_NDO1                            = ConvertAbilityOldRealLevelField(FourCC('Ndo1')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_UNIT_DURATION_SECONDS_NDO3               = ConvertAbilityOldRealLevelField(FourCC('Ndo3')) ---@type abilityreallevelfield
+ABILITY_RLF_MEDIUM_DAMAGE_RADIUS_FLK1                         = ConvertAbilityOldRealLevelField(FourCC('flk1')) ---@type abilityreallevelfield
+ABILITY_RLF_SMALL_DAMAGE_RADIUS_FLK2                          = ConvertAbilityOldRealLevelField(FourCC('flk2')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_AMOUNT_FLK3                           = ConvertAbilityOldRealLevelField(FourCC('flk3')) ---@type abilityreallevelfield
+ABILITY_RLF_MEDIUM_DAMAGE_AMOUNT                              = ConvertAbilityOldRealLevelField(FourCC('flk4')) ---@type abilityreallevelfield
+ABILITY_RLF_SMALL_DAMAGE_AMOUNT                               = ConvertAbilityOldRealLevelField(FourCC('flk5')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_HBN1             = ConvertAbilityOldRealLevelField(FourCC('Hbn1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_HBN2               = ConvertAbilityOldRealLevelField(FourCC('Hbn2')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_MANA_DRAINED_UNITS                            = ConvertAbilityOldRealLevelField(FourCC('fbk1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_RATIO_UNITS_PERCENT                        = ConvertAbilityOldRealLevelField(FourCC('fbk2')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_MANA_DRAINED_HEROS                            = ConvertAbilityOldRealLevelField(FourCC('fbk3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_RATIO_HEROS_PERCENT                        = ConvertAbilityOldRealLevelField(FourCC('fbk4')) ---@type abilityreallevelfield
+ABILITY_RLF_SUMMONED_DAMAGE                                   = ConvertAbilityOldRealLevelField(FourCC('fbk5')) ---@type abilityreallevelfield
+ABILITY_RLF_DISTRIBUTED_DAMAGE_FACTOR_NCA1                    = ConvertAbilityOldRealLevelField(FourCC('nca1')) ---@type abilityreallevelfield
+ABILITY_RLF_INITIAL_DAMAGE_PXF1                               = ConvertAbilityOldRealLevelField(FourCC('pxf1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_PXF2                            = ConvertAbilityOldRealLevelField(FourCC('pxf2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PER_SECOND_MLS1                            = ConvertAbilityOldRealLevelField(FourCC('mls1')) ---@type abilityreallevelfield
+ABILITY_RLF_BEAST_COLLISION_RADIUS                            = ConvertAbilityOldRealLevelField(FourCC('Nst2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_AMOUNT_NST3                                = ConvertAbilityOldRealLevelField(FourCC('Nst3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_RADIUS                                     = ConvertAbilityOldRealLevelField(FourCC('Nst4')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_DELAY                                      = ConvertAbilityOldRealLevelField(FourCC('Nst5')) ---@type abilityreallevelfield
+ABILITY_RLF_FOLLOW_THROUGH_TIME                               = ConvertAbilityOldRealLevelField(FourCC('Ncl1')) ---@type abilityreallevelfield
+ABILITY_RLF_ART_DURATION                                      = ConvertAbilityOldRealLevelField(FourCC('Ncl4')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NAB1             = ConvertAbilityOldRealLevelField(FourCC('Nab1')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_NAB2               = ConvertAbilityOldRealLevelField(FourCC('Nab2')) ---@type abilityreallevelfield
+ABILITY_RLF_PRIMARY_DAMAGE                                    = ConvertAbilityOldRealLevelField(FourCC('Nab4')) ---@type abilityreallevelfield
+ABILITY_RLF_SECONDARY_DAMAGE                                  = ConvertAbilityOldRealLevelField(FourCC('Nab5')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_INTERVAL_NAB6                              = ConvertAbilityOldRealLevelField(FourCC('Nab6')) ---@type abilityreallevelfield
+ABILITY_RLF_GOLD_COST_FACTOR                                  = ConvertAbilityOldRealLevelField(FourCC('Ntm1')) ---@type abilityreallevelfield
+ABILITY_RLF_LUMBER_COST_FACTOR                                = ConvertAbilityOldRealLevelField(FourCC('Ntm2')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVE_SPEED_BONUS_NEG1                             = ConvertAbilityOldRealLevelField(FourCC('Neg1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_BONUS_NEG2                                 = ConvertAbilityOldRealLevelField(FourCC('Neg2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_AMOUNT_NCS1                                = ConvertAbilityOldRealLevelField(FourCC('Ncs1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_INTERVAL_NCS2                              = ConvertAbilityOldRealLevelField(FourCC('Ncs2')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_DAMAGE_NCS4                                   = ConvertAbilityOldRealLevelField(FourCC('Ncs4')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NCS5                       = ConvertAbilityOldRealLevelField(FourCC('Ncs5')) ---@type abilityreallevelfield
+ABILITY_RLF_EFFECT_DURATION                                   = ConvertAbilityOldRealLevelField(FourCC('Ncs6')) ---@type abilityreallevelfield
+ABILITY_RLF_SPAWN_INTERVAL_NSY1                               = ConvertAbilityOldRealLevelField(FourCC('Nsy1')) ---@type abilityreallevelfield
+ABILITY_RLF_SPAWN_UNIT_DURATION                               = ConvertAbilityOldRealLevelField(FourCC('Nsy3')) ---@type abilityreallevelfield
+ABILITY_RLF_SPAWN_UNIT_OFFSET                                 = ConvertAbilityOldRealLevelField(FourCC('Nsy4')) ---@type abilityreallevelfield
+ABILITY_RLF_LEASH_RANGE_NSY5                                  = ConvertAbilityOldRealLevelField(FourCC('Nsy5')) ---@type abilityreallevelfield
+ABILITY_RLF_SPAWN_INTERVAL_NFY1                               = ConvertAbilityOldRealLevelField(FourCC('Nfy1')) ---@type abilityreallevelfield
+ABILITY_RLF_LEASH_RANGE_NFY2                                  = ConvertAbilityOldRealLevelField(FourCC('Nfy2')) ---@type abilityreallevelfield
+ABILITY_RLF_CHANCE_TO_DEMOLISH                                = ConvertAbilityOldRealLevelField(FourCC('Nde1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_MULTIPLIER_BUILDINGS                       = ConvertAbilityOldRealLevelField(FourCC('Nde2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_MULTIPLIER_UNITS                           = ConvertAbilityOldRealLevelField(FourCC('Nde3')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_MULTIPLIER_HEROES                          = ConvertAbilityOldRealLevelField(FourCC('Nde4')) ---@type abilityreallevelfield
+ABILITY_RLF_BONUS_DAMAGE_MULTIPLIER                           = ConvertAbilityOldRealLevelField(FourCC('Nic1')) ---@type abilityreallevelfield
+ABILITY_RLF_DEATH_DAMAGE_FULL_AMOUNT                          = ConvertAbilityOldRealLevelField(FourCC('Nic2')) ---@type abilityreallevelfield
+ABILITY_RLF_DEATH_DAMAGE_FULL_AREA                            = ConvertAbilityOldRealLevelField(FourCC('Nic3')) ---@type abilityreallevelfield
+ABILITY_RLF_DEATH_DAMAGE_HALF_AMOUNT                          = ConvertAbilityOldRealLevelField(FourCC('Nic4')) ---@type abilityreallevelfield
+ABILITY_RLF_DEATH_DAMAGE_HALF_AREA                            = ConvertAbilityOldRealLevelField(FourCC('Nic5')) ---@type abilityreallevelfield
+ABILITY_RLF_DEATH_DAMAGE_DELAY                                = ConvertAbilityOldRealLevelField(FourCC('Nic6')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_AMOUNT_NSO1                                = ConvertAbilityOldRealLevelField(FourCC('Nso1')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PERIOD                                     = ConvertAbilityOldRealLevelField(FourCC('Nso2')) ---@type abilityreallevelfield
+ABILITY_RLF_DAMAGE_PENALTY                                    = ConvertAbilityOldRealLevelField(FourCC('Nso3')) ---@type abilityreallevelfield
+ABILITY_RLF_MOVEMENT_SPEED_REDUCTION_PERCENT_NSO4             = ConvertAbilityOldRealLevelField(FourCC('Nso4')) ---@type abilityreallevelfield
+ABILITY_RLF_ATTACK_SPEED_REDUCTION_PERCENT_NSO5               = ConvertAbilityOldRealLevelField(FourCC('Nso5')) ---@type abilityreallevelfield
+ABILITY_RLF_SPLIT_DELAY                                       = ConvertAbilityOldRealLevelField(FourCC('Nlm2')) ---@type abilityreallevelfield
+ABILITY_RLF_MAX_HITPOINT_FACTOR                               = ConvertAbilityOldRealLevelField(FourCC('Nlm4')) ---@type abilityreallevelfield
+ABILITY_RLF_LIFE_DURATION_SPLIT_BONUS                         = ConvertAbilityOldRealLevelField(FourCC('Nlm5')) ---@type abilityreallevelfield
+ABILITY_RLF_WAVE_INTERVAL                                     = ConvertAbilityOldRealLevelField(FourCC('Nvc3')) ---@type abilityreallevelfield
+ABILITY_RLF_BUILDING_DAMAGE_FACTOR_NVC4                       = ConvertAbilityOldRealLevelField(FourCC('Nvc4')) ---@type abilityreallevelfield
+ABILITY_RLF_FULL_DAMAGE_AMOUNT_NVC5                           = ConvertAbilityOldRealLevelField(FourCC('Nvc5')) ---@type abilityreallevelfield
+ABILITY_RLF_HALF_DAMAGE_FACTOR                                = ConvertAbilityOldRealLevelField(FourCC('Nvc6')) ---@type abilityreallevelfield
+ABILITY_RLF_INTERVAL_BETWEEN_PULSES                           = ConvertAbilityOldRealLevelField(FourCC('Tau5')) ---@type abilityreallevelfield
 
-ABILITY_BLF_PERCENT_BONUS_HAB2            = ConvertAbilityBooleanLevelField(FourCC('Hab2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_USE_TELEPORT_CLUSTERING_HMT3  = ConvertAbilityBooleanLevelField(FourCC('Hmt3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_NEVER_MISS_OCR5               = ConvertAbilityBooleanLevelField(FourCC('Ocr5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_EXCLUDE_ITEM_DAMAGE           = ConvertAbilityBooleanLevelField(FourCC('Ocr6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_BACKSTAB_DAMAGE               = ConvertAbilityBooleanLevelField(FourCC('Owk4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_INHERIT_UPGRADES_UAN3         = ConvertAbilityBooleanLevelField(FourCC('Uan3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_MANA_CONVERSION_AS_PERCENT    = ConvertAbilityBooleanLevelField(FourCC('Udp3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_LIFE_CONVERSION_AS_PERCENT    = ConvertAbilityBooleanLevelField(FourCC('Udp4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_LEAVE_TARGET_ALIVE            = ConvertAbilityBooleanLevelField(FourCC('Udp5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_PERCENT_BONUS_UAU3            = ConvertAbilityBooleanLevelField(FourCC('Uau3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_DAMAGE_IS_PERCENT_RECEIVED    = ConvertAbilityBooleanLevelField(FourCC('Eah2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_MELEE_BONUS                   = ConvertAbilityBooleanLevelField(FourCC('Ear2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_RANGED_BONUS                  = ConvertAbilityBooleanLevelField(FourCC('Ear3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_FLAT_BONUS                    = ConvertAbilityBooleanLevelField(FourCC('Ear4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_NEVER_MISS_HBH5               = ConvertAbilityBooleanLevelField(FourCC('Hbh5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_PERCENT_BONUS_HAD2            = ConvertAbilityBooleanLevelField(FourCC('Had2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CAN_DEACTIVATE                = ConvertAbilityBooleanLevelField(FourCC('Hds1')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_RAISED_UNITS_ARE_INVULNERABLE = ConvertAbilityBooleanLevelField(FourCC('Hre2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_PERCENTAGE_OAR2               = ConvertAbilityBooleanLevelField(FourCC('Oar2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_SUMMON_BUSY_UNITS             = ConvertAbilityBooleanLevelField(FourCC('Btl2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CREATES_BLIGHT                = ConvertAbilityBooleanLevelField(FourCC('Bli2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_EXPLODES_ON_DEATH             = ConvertAbilityBooleanLevelField(FourCC('Sds6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ALWAYS_AUTOCAST_FAE2          = ConvertAbilityBooleanLevelField(FourCC('Fae2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_REGENERATE_ONLY_AT_NIGHT      = ConvertAbilityBooleanLevelField(FourCC('Mbt5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_SHOW_SELECT_UNIT_BUTTON       = ConvertAbilityBooleanLevelField(FourCC('Neu3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_SHOW_UNIT_INDICATOR           = ConvertAbilityBooleanLevelField(FourCC('Neu4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CHARGE_OWNING_PLAYER          = ConvertAbilityBooleanLevelField(FourCC('Ans6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_PERCENTAGE_ARM2               = ConvertAbilityBooleanLevelField(FourCC('Arm2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_TARGET_IS_INVULNERABLE        = ConvertAbilityBooleanLevelField(FourCC('Pos3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_TARGET_IS_MAGIC_IMMUNE        = ConvertAbilityBooleanLevelField(FourCC('Pos4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_KILL_ON_CASTER_DEATH          = ConvertAbilityBooleanLevelField(FourCC('Ucb6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_NO_TARGET_REQUIRED_REJ4       = ConvertAbilityBooleanLevelField(FourCC('Rej4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ACCEPTS_GOLD                  = ConvertAbilityBooleanLevelField(FourCC('Rtn1')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ACCEPTS_LUMBER                = ConvertAbilityBooleanLevelField(FourCC('Rtn2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_PREFER_HOSTILES_ROA5          = ConvertAbilityBooleanLevelField(FourCC('Roa5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_PREFER_FRIENDLIES_ROA6        = ConvertAbilityBooleanLevelField(FourCC('Roa6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ROOTED_TURNING                = ConvertAbilityBooleanLevelField(FourCC('Roo3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ALWAYS_AUTOCAST_SLO3          = ConvertAbilityBooleanLevelField(FourCC('Slo3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_HIDE_BUTTON                   = ConvertAbilityBooleanLevelField(FourCC('Ihid')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_USE_TELEPORT_CLUSTERING_ITP2  = ConvertAbilityBooleanLevelField(FourCC('Itp2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS       = ConvertAbilityBooleanLevelField(FourCC('Eth1')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_DOES_NOT_BLOCK_BUILDINGS      = ConvertAbilityBooleanLevelField(FourCC('Eth2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_AUTO_ACQUIRE_ATTACK_TARGETS   = ConvertAbilityBooleanLevelField(FourCC('Gho1')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS_GHO2  = ConvertAbilityBooleanLevelField(FourCC('Gho2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_DO_NOT_BLOCK_BUILDINGS        = ConvertAbilityBooleanLevelField(FourCC('Gho3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_INCLUDE_RANGED_DAMAGE         = ConvertAbilityBooleanLevelField(FourCC('Ssk4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_INCLUDE_MELEE_DAMAGE          = ConvertAbilityBooleanLevelField(FourCC('Ssk5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_MOVE_TO_PARTNER               = ConvertAbilityBooleanLevelField(FourCC('coa2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CAN_BE_DISPELLED              = ConvertAbilityBooleanLevelField(FourCC('cyc1')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_IGNORE_FRIENDLY_BUFFS         = ConvertAbilityBooleanLevelField(FourCC('dvm6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_DROP_ITEMS_ON_DEATH           = ConvertAbilityBooleanLevelField(FourCC('inv2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CAN_USE_ITEMS                 = ConvertAbilityBooleanLevelField(FourCC('inv3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CAN_GET_ITEMS                 = ConvertAbilityBooleanLevelField(FourCC('inv4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CAN_DROP_ITEMS                = ConvertAbilityBooleanLevelField(FourCC('inv5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_REPAIRS_ALLOWED               = ConvertAbilityBooleanLevelField(FourCC('liq4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_CASTER_ONLY_SPLASH            = ConvertAbilityBooleanLevelField(FourCC('mfl6')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_NO_TARGET_REQUIRED_IRL4       = ConvertAbilityBooleanLevelField(FourCC('irl4')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_DISPEL_ON_ATTACK              = ConvertAbilityBooleanLevelField(FourCC('irl5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_AMOUNT_IS_RAW_VALUE           = ConvertAbilityBooleanLevelField(FourCC('ipv3')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_SHARED_SPELL_COOLDOWN         = ConvertAbilityBooleanLevelField(FourCC('spb2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_SLEEP_ONCE                    = ConvertAbilityBooleanLevelField(FourCC('sla1')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ALLOW_ON_ANY_PLAYER_SLOT      = ConvertAbilityBooleanLevelField(FourCC('sla2')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_DISABLE_OTHER_ABILITIES       = ConvertAbilityBooleanLevelField(FourCC('Ncl5')) ---@type abilitybooleanlevelfield
-ABILITY_BLF_ALLOW_BOUNTY                  = ConvertAbilityBooleanLevelField(FourCC('Ntm4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PERCENT_BONUS_HAB2            = ConvertAbilityOldBooleanLevelField(FourCC('Hab2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_USE_TELEPORT_CLUSTERING_HMT3  = ConvertAbilityOldBooleanLevelField(FourCC('Hmt3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_NEVER_MISS_OCR5               = ConvertAbilityOldBooleanLevelField(FourCC('Ocr5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_EXCLUDE_ITEM_DAMAGE           = ConvertAbilityOldBooleanLevelField(FourCC('Ocr6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_BACKSTAB_DAMAGE               = ConvertAbilityOldBooleanLevelField(FourCC('Owk4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_INHERIT_UPGRADES_UAN3         = ConvertAbilityOldBooleanLevelField(FourCC('Uan3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_MANA_CONVERSION_AS_PERCENT    = ConvertAbilityOldBooleanLevelField(FourCC('Udp3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_LIFE_CONVERSION_AS_PERCENT    = ConvertAbilityOldBooleanLevelField(FourCC('Udp4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_LEAVE_TARGET_ALIVE            = ConvertAbilityOldBooleanLevelField(FourCC('Udp5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PERCENT_BONUS_UAU3            = ConvertAbilityOldBooleanLevelField(FourCC('Uau3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_DAMAGE_IS_PERCENT_RECEIVED    = ConvertAbilityOldBooleanLevelField(FourCC('Eah2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_MELEE_BONUS                   = ConvertAbilityOldBooleanLevelField(FourCC('Ear2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_RANGED_BONUS                  = ConvertAbilityOldBooleanLevelField(FourCC('Ear3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_FLAT_BONUS                    = ConvertAbilityOldBooleanLevelField(FourCC('Ear4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_NEVER_MISS_HBH5               = ConvertAbilityOldBooleanLevelField(FourCC('Hbh5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PERCENT_BONUS_HAD2            = ConvertAbilityOldBooleanLevelField(FourCC('Had2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CAN_DEACTIVATE                = ConvertAbilityOldBooleanLevelField(FourCC('Hds1')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_RAISED_UNITS_ARE_INVULNERABLE = ConvertAbilityOldBooleanLevelField(FourCC('Hre2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PERCENTAGE_OAR2               = ConvertAbilityOldBooleanLevelField(FourCC('Oar2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_SUMMON_BUSY_UNITS             = ConvertAbilityOldBooleanLevelField(FourCC('Btl2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CREATES_BLIGHT                = ConvertAbilityOldBooleanLevelField(FourCC('Bli2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_EXPLODES_ON_DEATH             = ConvertAbilityOldBooleanLevelField(FourCC('Sds6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ALWAYS_AUTOCAST_FAE2          = ConvertAbilityOldBooleanLevelField(FourCC('Fae2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_REGENERATE_ONLY_AT_NIGHT      = ConvertAbilityOldBooleanLevelField(FourCC('Mbt5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_SHOW_SELECT_UNIT_BUTTON       = ConvertAbilityOldBooleanLevelField(FourCC('Neu3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_SHOW_UNIT_INDICATOR           = ConvertAbilityOldBooleanLevelField(FourCC('Neu4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CHARGE_OWNING_PLAYER          = ConvertAbilityOldBooleanLevelField(FourCC('Ans6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PERCENTAGE_ARM2               = ConvertAbilityOldBooleanLevelField(FourCC('Arm2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_TARGET_IS_INVULNERABLE        = ConvertAbilityOldBooleanLevelField(FourCC('Pos3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_TARGET_IS_MAGIC_IMMUNE        = ConvertAbilityOldBooleanLevelField(FourCC('Pos4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_KILL_ON_CASTER_DEATH          = ConvertAbilityOldBooleanLevelField(FourCC('Ucb6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_NO_TARGET_REQUIRED_REJ4       = ConvertAbilityOldBooleanLevelField(FourCC('Rej4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ACCEPTS_GOLD                  = ConvertAbilityOldBooleanLevelField(FourCC('Rtn1')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ACCEPTS_LUMBER                = ConvertAbilityOldBooleanLevelField(FourCC('Rtn2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PREFER_HOSTILES_ROA5          = ConvertAbilityOldBooleanLevelField(FourCC('Roa5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_PREFER_FRIENDLIES_ROA6        = ConvertAbilityOldBooleanLevelField(FourCC('Roa6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ROOTED_TURNING                = ConvertAbilityOldBooleanLevelField(FourCC('Roo3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ALWAYS_AUTOCAST_SLO3          = ConvertAbilityOldBooleanLevelField(FourCC('Slo3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_HIDE_BUTTON                   = ConvertAbilityOldBooleanLevelField(FourCC('Ihid')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_USE_TELEPORT_CLUSTERING_ITP2  = ConvertAbilityOldBooleanLevelField(FourCC('Itp2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS       = ConvertAbilityOldBooleanLevelField(FourCC('Eth1')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_DOES_NOT_BLOCK_BUILDINGS      = ConvertAbilityOldBooleanLevelField(FourCC('Eth2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_AUTO_ACQUIRE_ATTACK_TARGETS   = ConvertAbilityOldBooleanLevelField(FourCC('Gho1')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_IMMUNE_TO_MORPH_EFFECTS_GHO2  = ConvertAbilityOldBooleanLevelField(FourCC('Gho2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_DO_NOT_BLOCK_BUILDINGS        = ConvertAbilityOldBooleanLevelField(FourCC('Gho3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_INCLUDE_RANGED_DAMAGE         = ConvertAbilityOldBooleanLevelField(FourCC('Ssk4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_INCLUDE_MELEE_DAMAGE          = ConvertAbilityOldBooleanLevelField(FourCC('Ssk5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_MOVE_TO_PARTNER               = ConvertAbilityOldBooleanLevelField(FourCC('coa2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CAN_BE_DISPELLED              = ConvertAbilityOldBooleanLevelField(FourCC('cyc1')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_IGNORE_FRIENDLY_BUFFS         = ConvertAbilityOldBooleanLevelField(FourCC('dvm6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_DROP_ITEMS_ON_DEATH           = ConvertAbilityOldBooleanLevelField(FourCC('inv2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CAN_USE_ITEMS                 = ConvertAbilityOldBooleanLevelField(FourCC('inv3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CAN_GET_ITEMS                 = ConvertAbilityOldBooleanLevelField(FourCC('inv4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CAN_DROP_ITEMS                = ConvertAbilityOldBooleanLevelField(FourCC('inv5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_REPAIRS_ALLOWED               = ConvertAbilityOldBooleanLevelField(FourCC('liq4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_CASTER_ONLY_SPLASH            = ConvertAbilityOldBooleanLevelField(FourCC('mfl6')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_NO_TARGET_REQUIRED_IRL4       = ConvertAbilityOldBooleanLevelField(FourCC('irl4')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_DISPEL_ON_ATTACK              = ConvertAbilityOldBooleanLevelField(FourCC('irl5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_AMOUNT_IS_RAW_VALUE           = ConvertAbilityOldBooleanLevelField(FourCC('ipv3')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_SHARED_SPELL_COOLDOWN         = ConvertAbilityOldBooleanLevelField(FourCC('spb2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_SLEEP_ONCE                    = ConvertAbilityOldBooleanLevelField(FourCC('sla1')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ALLOW_ON_ANY_PLAYER_SLOT      = ConvertAbilityOldBooleanLevelField(FourCC('sla2')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_DISABLE_OTHER_ABILITIES       = ConvertAbilityOldBooleanLevelField(FourCC('Ncl5')) ---@type abilitybooleanlevelfield
+ABILITY_BLF_ALLOW_BOUNTY                  = ConvertAbilityOldBooleanLevelField(FourCC('Ntm4')) ---@type abilitybooleanlevelfield
 
-ABILITY_SLF_ICON_NORMAL                    = ConvertAbilityStringLevelField(FourCC('aart')) ---@type abilitystringlevelfield
-ABILITY_SLF_CASTER                         = ConvertAbilityStringLevelField(FourCC('acat')) ---@type abilitystringlevelfield
-ABILITY_SLF_TARGET                         = ConvertAbilityStringLevelField(FourCC('atat')) ---@type abilitystringlevelfield
-ABILITY_SLF_SPECIAL                        = ConvertAbilityStringLevelField(FourCC('asat')) ---@type abilitystringlevelfield
-ABILITY_SLF_EFFECT                         = ConvertAbilityStringLevelField(FourCC('aeat')) ---@type abilitystringlevelfield
-ABILITY_SLF_AREA_EFFECT                    = ConvertAbilityStringLevelField(FourCC('aaea')) ---@type abilitystringlevelfield
-ABILITY_SLF_LIGHTNING_EFFECTS              = ConvertAbilityStringLevelField(FourCC('alig')) ---@type abilitystringlevelfield
-ABILITY_SLF_MISSILE_ART                    = ConvertAbilityStringLevelField(FourCC('amat')) ---@type abilitystringlevelfield
-ABILITY_SLF_TOOLTIP_LEARN                  = ConvertAbilityStringLevelField(FourCC('aret')) ---@type abilitystringlevelfield
-ABILITY_SLF_TOOLTIP_LEARN_EXTENDED         = ConvertAbilityStringLevelField(FourCC('arut')) ---@type abilitystringlevelfield
-ABILITY_SLF_TOOLTIP_NORMAL                 = ConvertAbilityStringLevelField(FourCC('atp1')) ---@type abilitystringlevelfield
-ABILITY_SLF_TOOLTIP_TURN_OFF               = ConvertAbilityStringLevelField(FourCC('aut1')) ---@type abilitystringlevelfield
-ABILITY_SLF_TOOLTIP_NORMAL_EXTENDED        = ConvertAbilityStringLevelField(FourCC('aub1')) ---@type abilitystringlevelfield
-ABILITY_SLF_TOOLTIP_TURN_OFF_EXTENDED      = ConvertAbilityStringLevelField(FourCC('auu1')) ---@type abilitystringlevelfield
-ABILITY_SLF_NORMAL_FORM_UNIT_EME1          = ConvertAbilityStringLevelField(FourCC('Eme1')) ---@type abilitystringlevelfield
-ABILITY_SLF_SPAWNED_UNITS                  = ConvertAbilityStringLevelField(FourCC('Ndp1')) ---@type abilitystringlevelfield
-ABILITY_SLF_ABILITY_FOR_UNIT_CREATION      = ConvertAbilityStringLevelField(FourCC('Nrc1')) ---@type abilitystringlevelfield
-ABILITY_SLF_NORMAL_FORM_UNIT_MIL1          = ConvertAbilityStringLevelField(FourCC('Mil1')) ---@type abilitystringlevelfield
-ABILITY_SLF_ALTERNATE_FORM_UNIT_MIL2       = ConvertAbilityStringLevelField(FourCC('Mil2')) ---@type abilitystringlevelfield
-ABILITY_SLF_BASE_ORDER_ID_ANS5             = ConvertAbilityStringLevelField(FourCC('Ans5')) ---@type abilitystringlevelfield
-ABILITY_SLF_MORPH_UNITS_GROUND             = ConvertAbilityStringLevelField(FourCC('Ply2')) ---@type abilitystringlevelfield
-ABILITY_SLF_MORPH_UNITS_AIR                = ConvertAbilityStringLevelField(FourCC('Ply3')) ---@type abilitystringlevelfield
-ABILITY_SLF_MORPH_UNITS_AMPHIBIOUS         = ConvertAbilityStringLevelField(FourCC('Ply4')) ---@type abilitystringlevelfield
-ABILITY_SLF_MORPH_UNITS_WATER              = ConvertAbilityStringLevelField(FourCC('Ply5')) ---@type abilitystringlevelfield
-ABILITY_SLF_UNIT_TYPE_ONE                  = ConvertAbilityStringLevelField(FourCC('Rai3')) ---@type abilitystringlevelfield
-ABILITY_SLF_UNIT_TYPE_TWO                  = ConvertAbilityStringLevelField(FourCC('Rai4')) ---@type abilitystringlevelfield
-ABILITY_SLF_UNIT_TYPE_SOD2                 = ConvertAbilityStringLevelField(FourCC('Sod2')) ---@type abilitystringlevelfield
-ABILITY_SLF_SUMMON_1_UNIT_TYPE             = ConvertAbilityStringLevelField(FourCC('Ist1')) ---@type abilitystringlevelfield
-ABILITY_SLF_SUMMON_2_UNIT_TYPE             = ConvertAbilityStringLevelField(FourCC('Ist2')) ---@type abilitystringlevelfield
-ABILITY_SLF_RACE_TO_CONVERT                = ConvertAbilityStringLevelField(FourCC('Ndc1')) ---@type abilitystringlevelfield
-ABILITY_SLF_PARTNER_UNIT_TYPE              = ConvertAbilityStringLevelField(FourCC('coa1')) ---@type abilitystringlevelfield
-ABILITY_SLF_PARTNER_UNIT_TYPE_ONE          = ConvertAbilityStringLevelField(FourCC('dcp1')) ---@type abilitystringlevelfield
-ABILITY_SLF_PARTNER_UNIT_TYPE_TWO          = ConvertAbilityStringLevelField(FourCC('dcp2')) ---@type abilitystringlevelfield
-ABILITY_SLF_REQUIRED_UNIT_TYPE             = ConvertAbilityStringLevelField(FourCC('tpi1')) ---@type abilitystringlevelfield
-ABILITY_SLF_CONVERTED_UNIT_TYPE            = ConvertAbilityStringLevelField(FourCC('tpi2')) ---@type abilitystringlevelfield
-ABILITY_SLF_SPELL_LIST                     = ConvertAbilityStringLevelField(FourCC('spb1')) ---@type abilitystringlevelfield
-ABILITY_SLF_BASE_ORDER_ID_SPB5             = ConvertAbilityStringLevelField(FourCC('spb5')) ---@type abilitystringlevelfield
-ABILITY_SLF_BASE_ORDER_ID_NCL6             = ConvertAbilityStringLevelField(FourCC('Ncl6')) ---@type abilitystringlevelfield
-ABILITY_SLF_ABILITY_UPGRADE_1              = ConvertAbilityStringLevelField(FourCC('Neg3')) ---@type abilitystringlevelfield
-ABILITY_SLF_ABILITY_UPGRADE_2              = ConvertAbilityStringLevelField(FourCC('Neg4')) ---@type abilitystringlevelfield
-ABILITY_SLF_ABILITY_UPGRADE_3              = ConvertAbilityStringLevelField(FourCC('Neg5')) ---@type abilitystringlevelfield
-ABILITY_SLF_ABILITY_UPGRADE_4              = ConvertAbilityStringLevelField(FourCC('Neg6')) ---@type abilitystringlevelfield
-ABILITY_SLF_SPAWN_UNIT_ID_NSY2             = ConvertAbilityStringLevelField(FourCC('Nsy2')) ---@type abilitystringlevelfield
+ABILITY_SLF_ICON_NORMAL                    = ConvertAbilityOldStringLevelField(FourCC('aart')) ---@type abilitystringlevelfield
+ABILITY_SLF_CASTER                         = ConvertAbilityOldStringLevelField(FourCC('acat')) ---@type abilitystringlevelfield
+ABILITY_SLF_TARGET                         = ConvertAbilityOldStringLevelField(FourCC('atat')) ---@type abilitystringlevelfield
+ABILITY_SLF_SPECIAL                        = ConvertAbilityOldStringLevelField(FourCC('asat')) ---@type abilitystringlevelfield
+ABILITY_SLF_EFFECT                         = ConvertAbilityOldStringLevelField(FourCC('aeat')) ---@type abilitystringlevelfield
+ABILITY_SLF_AREA_EFFECT                    = ConvertAbilityOldStringLevelField(FourCC('aaea')) ---@type abilitystringlevelfield
+ABILITY_SLF_LIGHTNING_EFFECTS              = ConvertAbilityOldStringLevelField(FourCC('alig')) ---@type abilitystringlevelfield
+ABILITY_SLF_MISSILE_ART                    = ConvertAbilityOldStringLevelField(FourCC('amat')) ---@type abilitystringlevelfield
+ABILITY_SLF_TOOLTIP_LEARN                  = ConvertAbilityOldStringLevelField(FourCC('aret')) ---@type abilitystringlevelfield
+ABILITY_SLF_TOOLTIP_LEARN_EXTENDED         = ConvertAbilityOldStringLevelField(FourCC('arut')) ---@type abilitystringlevelfield
+ABILITY_SLF_TOOLTIP_NORMAL                 = ConvertAbilityOldStringLevelField(FourCC('atp1')) ---@type abilitystringlevelfield
+ABILITY_SLF_TOOLTIP_TURN_OFF               = ConvertAbilityOldStringLevelField(FourCC('aut1')) ---@type abilitystringlevelfield
+ABILITY_SLF_TOOLTIP_NORMAL_EXTENDED        = ConvertAbilityOldStringLevelField(FourCC('aub1')) ---@type abilitystringlevelfield
+ABILITY_SLF_TOOLTIP_TURN_OFF_EXTENDED      = ConvertAbilityOldStringLevelField(FourCC('auu1')) ---@type abilitystringlevelfield
+ABILITY_SLF_NORMAL_FORM_UNIT_EME1          = ConvertAbilityOldStringLevelField(FourCC('Eme1')) ---@type abilitystringlevelfield
+ABILITY_SLF_SPAWNED_UNITS                  = ConvertAbilityOldStringLevelField(FourCC('Ndp1')) ---@type abilitystringlevelfield
+ABILITY_SLF_ABILITY_FOR_UNIT_CREATION      = ConvertAbilityOldStringLevelField(FourCC('Nrc1')) ---@type abilitystringlevelfield
+ABILITY_SLF_NORMAL_FORM_UNIT_MIL1          = ConvertAbilityOldStringLevelField(FourCC('Mil1')) ---@type abilitystringlevelfield
+ABILITY_SLF_ALTERNATE_FORM_UNIT_MIL2       = ConvertAbilityOldStringLevelField(FourCC('Mil2')) ---@type abilitystringlevelfield
+ABILITY_SLF_BASE_ORDER_ID_ANS5             = ConvertAbilityOldStringLevelField(FourCC('Ans5')) ---@type abilitystringlevelfield
+ABILITY_SLF_MORPH_UNITS_GROUND             = ConvertAbilityOldStringLevelField(FourCC('Ply2')) ---@type abilitystringlevelfield
+ABILITY_SLF_MORPH_UNITS_AIR                = ConvertAbilityOldStringLevelField(FourCC('Ply3')) ---@type abilitystringlevelfield
+ABILITY_SLF_MORPH_UNITS_AMPHIBIOUS         = ConvertAbilityOldStringLevelField(FourCC('Ply4')) ---@type abilitystringlevelfield
+ABILITY_SLF_MORPH_UNITS_WATER              = ConvertAbilityOldStringLevelField(FourCC('Ply5')) ---@type abilitystringlevelfield
+ABILITY_SLF_UNIT_TYPE_ONE                  = ConvertAbilityOldStringLevelField(FourCC('Rai3')) ---@type abilitystringlevelfield
+ABILITY_SLF_UNIT_TYPE_TWO                  = ConvertAbilityOldStringLevelField(FourCC('Rai4')) ---@type abilitystringlevelfield
+ABILITY_SLF_UNIT_TYPE_SOD2                 = ConvertAbilityOldStringLevelField(FourCC('Sod2')) ---@type abilitystringlevelfield
+ABILITY_SLF_SUMMON_1_UNIT_TYPE             = ConvertAbilityOldStringLevelField(FourCC('Ist1')) ---@type abilitystringlevelfield
+ABILITY_SLF_SUMMON_2_UNIT_TYPE             = ConvertAbilityOldStringLevelField(FourCC('Ist2')) ---@type abilitystringlevelfield
+ABILITY_SLF_RACE_TO_CONVERT                = ConvertAbilityOldStringLevelField(FourCC('Ndc1')) ---@type abilitystringlevelfield
+ABILITY_SLF_PARTNER_UNIT_TYPE              = ConvertAbilityOldStringLevelField(FourCC('coa1')) ---@type abilitystringlevelfield
+ABILITY_SLF_PARTNER_UNIT_TYPE_ONE          = ConvertAbilityOldStringLevelField(FourCC('dcp1')) ---@type abilitystringlevelfield
+ABILITY_SLF_PARTNER_UNIT_TYPE_TWO          = ConvertAbilityOldStringLevelField(FourCC('dcp2')) ---@type abilitystringlevelfield
+ABILITY_SLF_REQUIRED_UNIT_TYPE             = ConvertAbilityOldStringLevelField(FourCC('tpi1')) ---@type abilitystringlevelfield
+ABILITY_SLF_CONVERTED_UNIT_TYPE            = ConvertAbilityOldStringLevelField(FourCC('tpi2')) ---@type abilitystringlevelfield
+ABILITY_SLF_SPELL_LIST                     = ConvertAbilityOldStringLevelField(FourCC('spb1')) ---@type abilitystringlevelfield
+ABILITY_SLF_BASE_ORDER_ID_SPB5             = ConvertAbilityOldStringLevelField(FourCC('spb5')) ---@type abilitystringlevelfield
+ABILITY_SLF_BASE_ORDER_ID_NCL6             = ConvertAbilityOldStringLevelField(FourCC('Ncl6')) ---@type abilitystringlevelfield
+ABILITY_SLF_ABILITY_UPGRADE_1              = ConvertAbilityOldStringLevelField(FourCC('Neg3')) ---@type abilitystringlevelfield
+ABILITY_SLF_ABILITY_UPGRADE_2              = ConvertAbilityOldStringLevelField(FourCC('Neg4')) ---@type abilitystringlevelfield
+ABILITY_SLF_ABILITY_UPGRADE_3              = ConvertAbilityOldStringLevelField(FourCC('Neg5')) ---@type abilitystringlevelfield
+ABILITY_SLF_ABILITY_UPGRADE_4              = ConvertAbilityOldStringLevelField(FourCC('Neg6')) ---@type abilitystringlevelfield
+ABILITY_SLF_SPAWN_UNIT_ID_NSY2             = ConvertAbilityOldStringLevelField(FourCC('Nsy2')) ---@type abilitystringlevelfield
 
 -- Item
 ITEM_IF_LEVEL                 = ConvertItemIntegerField(FourCC('ilev')) ---@type itemintegerfield
@@ -3690,13 +3690,13 @@ function GetOrderTargetUnit() end
 -- EVENT_PLAYER_UNIT_SPELL_FINISH
 -- EVENT_PLAYER_UNIT_SPELL_ENDCAST
 ---@return unit
-function GetSpellAbilityUnit() end
+function GetSpellAbilityOldUnit() end
 
 ---@return integer
-function GetSpellAbilityId() end
+function GetSpellAbilityOldId() end
 
 ---@return ability
-function GetSpellAbility() end
+function GetSpellAbilityOld() end
 
 ---@return location
 function GetSpellTargetLoc() end
@@ -4508,23 +4508,23 @@ function SelectHeroSkill(whichHero, abilcode) end
 ---@param whichUnit unit
 ---@param abilcode integer
 ---@return integer
-function GetUnitAbilityLevel(whichUnit, abilcode) end
+function GetUnitAbilityOldLevel(whichUnit, abilcode) end
 
 ---@param whichUnit unit
 ---@param abilcode integer
 ---@return integer
-function DecUnitAbilityLevel(whichUnit, abilcode) end
+function DecUnitAbilityOldLevel(whichUnit, abilcode) end
 
 ---@param whichUnit unit
 ---@param abilcode integer
 ---@return integer
-function IncUnitAbilityLevel(whichUnit, abilcode) end
+function IncUnitAbilityOldLevel(whichUnit, abilcode) end
 
 ---@param whichUnit unit
 ---@param abilcode integer
 ---@param level integer
 ---@return integer
-function SetUnitAbilityLevel(whichUnit, abilcode, level) end
+function SetUnitAbilityOldLevel(whichUnit, abilcode, level) end
 
 ---@param whichHero unit
 ---@param x number
@@ -4876,18 +4876,18 @@ function UnitRemoveType(whichUnit, whichUnitType) end
 ---@param whichUnit unit
 ---@param abilityId integer
 ---@return boolean
-function UnitAddAbility(whichUnit, abilityId) end
+function UnitAddAbilityOld(whichUnit, abilityId) end
 
 ---@param whichUnit unit
 ---@param abilityId integer
 ---@return boolean
-function UnitRemoveAbility(whichUnit, abilityId) end
+function UnitRemoveAbilityOld(whichUnit, abilityId) end
 
 ---@param whichUnit unit
 ---@param permanent boolean
 ---@param abilityId integer
 ---@return boolean
-function UnitMakeAbilityPermanent(whichUnit, permanent, abilityId) end
+function UnitMakeAbilityOldPermanent(whichUnit, permanent, abilityId) end
 
 ---@param whichUnit unit
 ---@param removePositive boolean
@@ -5414,7 +5414,7 @@ function CripplePlayer(whichPlayer, toWhichPlayers, flag) end
 ---@param whichPlayer player
 ---@param abilid integer
 ---@param avail boolean
-function SetPlayerAbilityAvailable(whichPlayer, abilid, avail) end
+function SetPlayerAbilityOldAvailable(whichPlayer, abilid, avail) end
 
 
 ---@param whichPlayer player
@@ -5907,9 +5907,9 @@ function SaveUnitHandle(table, parentKey, childKey, whichUnit) end
 ---@param table hashtable
 ---@param parentKey integer
 ---@param childKey integer
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@return boolean
-function SaveAbilityHandle(table, parentKey, childKey, whichAbility) end
+function SaveAbilityOldHandle(table, parentKey, childKey, whichAbilityOld) end
 
 ---@param table hashtable
 ---@param parentKey integer
@@ -6209,7 +6209,7 @@ function LoadUnitHandle(table, parentKey, childKey) end
 ---@param parentKey integer
 ---@param childKey integer
 ---@return ability
-function LoadAbilityHandle(table, parentKey, childKey) end
+function LoadAbilityOldHandle(table, parentKey, childKey) end
 
 ---@param table hashtable
 ---@param parentKey integer
@@ -7880,23 +7880,23 @@ function SetLightningColor(whichBolt, r, g, b, a) end
 ---@param t effecttype
 ---@param index integer
 ---@return string
-function GetAbilityEffect(abilityString, t, index) end
+function GetAbilityOldEffect(abilityString, t, index) end
 
 ---@param abilityId integer
 ---@param t effecttype
 ---@param index integer
 ---@return string
-function GetAbilityEffectById(abilityId, t, index) end
+function GetAbilityOldEffectById(abilityId, t, index) end
 
 ---@param abilityString string
 ---@param t soundtype
 ---@return string
-function GetAbilitySound(abilityString, t) end
+function GetAbilityOldSound(abilityString, t) end
 
 ---@param abilityId integer
 ---@param t soundtype
 ---@return string
-function GetAbilitySoundById(abilityId, t) end
+function GetAbilityOldSoundById(abilityId, t) end
 
 
 --============================================================================
@@ -8202,110 +8202,110 @@ function BlzGetTriggerPlayerMouseButton() end
 ---@param abilCode integer
 ---@param tooltip string
 ---@param level integer
-function BlzSetAbilityTooltip(abilCode, tooltip, level) end
+function BlzSetAbilityOldTooltip(abilCode, tooltip, level) end
 
 ---@param abilCode integer
 ---@param tooltip string
 ---@param level integer
-function BlzSetAbilityActivatedTooltip(abilCode, tooltip, level) end
+function BlzSetAbilityOldActivatedTooltip(abilCode, tooltip, level) end
 
 ---@param abilCode integer
 ---@param extendedTooltip string
 ---@param level integer
-function BlzSetAbilityExtendedTooltip(abilCode, extendedTooltip, level) end
+function BlzSetAbilityOldExtendedTooltip(abilCode, extendedTooltip, level) end
 
 ---@param abilCode integer
 ---@param extendedTooltip string
 ---@param level integer
-function BlzSetAbilityActivatedExtendedTooltip(abilCode, extendedTooltip, level) end
+function BlzSetAbilityOldActivatedExtendedTooltip(abilCode, extendedTooltip, level) end
 
 ---@param abilCode integer
 ---@param researchTooltip string
 ---@param level integer
-function BlzSetAbilityResearchTooltip(abilCode, researchTooltip, level) end
+function BlzSetAbilityOldResearchTooltip(abilCode, researchTooltip, level) end
 
 ---@param abilCode integer
 ---@param researchExtendedTooltip string
 ---@param level integer
-function BlzSetAbilityResearchExtendedTooltip(abilCode, researchExtendedTooltip, level) end
+function BlzSetAbilityOldResearchExtendedTooltip(abilCode, researchExtendedTooltip, level) end
 
 ---@param abilCode integer
 ---@param level integer
 ---@return string
-function BlzGetAbilityTooltip(abilCode, level) end
+function BlzGetAbilityOldTooltip(abilCode, level) end
 
 ---@param abilCode integer
 ---@param level integer
 ---@return string
-function BlzGetAbilityActivatedTooltip(abilCode, level) end
+function BlzGetAbilityOldActivatedTooltip(abilCode, level) end
 
 ---@param abilCode integer
 ---@param level integer
 ---@return string
-function BlzGetAbilityExtendedTooltip(abilCode, level) end
+function BlzGetAbilityOldExtendedTooltip(abilCode, level) end
 
 ---@param abilCode integer
 ---@param level integer
 ---@return string
-function BlzGetAbilityActivatedExtendedTooltip(abilCode, level) end
+function BlzGetAbilityOldActivatedExtendedTooltip(abilCode, level) end
 
 ---@param abilCode integer
 ---@param level integer
 ---@return string
-function BlzGetAbilityResearchTooltip(abilCode, level) end
+function BlzGetAbilityOldResearchTooltip(abilCode, level) end
 
 ---@param abilCode integer
 ---@param level integer
 ---@return string
-function BlzGetAbilityResearchExtendedTooltip(abilCode, level) end
+function BlzGetAbilityOldResearchExtendedTooltip(abilCode, level) end
 
 ---@param abilCode integer
 ---@param iconPath string
-function BlzSetAbilityIcon(abilCode, iconPath) end
+function BlzSetAbilityOldIcon(abilCode, iconPath) end
 
 ---@param abilCode integer
 ---@return string
-function BlzGetAbilityIcon(abilCode) end
+function BlzGetAbilityOldIcon(abilCode) end
 
 ---@param abilCode integer
 ---@param iconPath string
-function BlzSetAbilityActivatedIcon(abilCode, iconPath) end
+function BlzSetAbilityOldActivatedIcon(abilCode, iconPath) end
 
 ---@param abilCode integer
 ---@return string
-function BlzGetAbilityActivatedIcon(abilCode) end
+function BlzGetAbilityOldActivatedIcon(abilCode) end
 
 ---@param abilCode integer
 ---@return integer
-function BlzGetAbilityPosX(abilCode) end
+function BlzGetAbilityOldPosX(abilCode) end
 
 ---@param abilCode integer
 ---@return integer
-function BlzGetAbilityPosY(abilCode) end
+function BlzGetAbilityOldPosY(abilCode) end
 
 ---@param abilCode integer
 ---@param x integer
-function BlzSetAbilityPosX(abilCode, x) end
+function BlzSetAbilityOldPosX(abilCode, x) end
 
 ---@param abilCode integer
 ---@param y integer
-function BlzSetAbilityPosY(abilCode, y) end
+function BlzSetAbilityOldPosY(abilCode, y) end
 
 ---@param abilCode integer
 ---@return integer
-function BlzGetAbilityActivatedPosX(abilCode) end
+function BlzGetAbilityOldActivatedPosX(abilCode) end
 
 ---@param abilCode integer
 ---@return integer
-function BlzGetAbilityActivatedPosY(abilCode) end
+function BlzGetAbilityOldActivatedPosY(abilCode) end
 
 ---@param abilCode integer
 ---@param x integer
-function BlzSetAbilityActivatedPosX(abilCode, x) end
+function BlzSetAbilityOldActivatedPosX(abilCode, x) end
 
 ---@param abilCode integer
 ---@param y integer
-function BlzSetAbilityActivatedPosY(abilCode, y) end
+function BlzSetAbilityOldActivatedPosY(abilCode, y) end
 
 ---@param whichUnit unit
 ---@return integer
@@ -8524,13 +8524,13 @@ function BlzSetUnitArmor(whichUnit, armorAmount) end
 ---@param whichUnit unit
 ---@param abilId integer
 ---@param flag boolean
-function BlzUnitHideAbility(whichUnit, abilId, flag) end
+function BlzUnitHideAbilityOld(whichUnit, abilId, flag) end
 
 ---@param whichUnit unit
 ---@param abilId integer
 ---@param flag boolean
 ---@param hideUI boolean
-function BlzUnitDisableAbility(whichUnit, abilId, flag, hideUI) end
+function BlzUnitDisableAbilityOld(whichUnit, abilId, flag, hideUI) end
 
 ---@param whichUnit unit
 function BlzUnitCancelTimedLife(whichUnit) end
@@ -8553,45 +8553,45 @@ function BlzGetUnitCollisionSize(whichUnit) end
 ---@param abilId integer
 ---@param level integer
 ---@return integer
-function BlzGetAbilityManaCost(abilId, level) end
+function BlzGetAbilityOldManaCost(abilId, level) end
 
 ---@param abilId integer
 ---@param level integer
 ---@return number
-function BlzGetAbilityCooldown(abilId, level) end
+function BlzGetAbilityOldCooldown(abilId, level) end
 
 ---@param whichUnit unit
 ---@param abilId integer
 ---@param level integer
 ---@param cooldown number
-function BlzSetUnitAbilityCooldown(whichUnit, abilId, level, cooldown) end
+function BlzSetUnitAbilityOldCooldown(whichUnit, abilId, level, cooldown) end
 
 ---@param whichUnit unit
 ---@param abilId integer
 ---@param level integer
 ---@return number
-function BlzGetUnitAbilityCooldown(whichUnit, abilId, level) end
+function BlzGetUnitAbilityOldCooldown(whichUnit, abilId, level) end
 
 ---@param whichUnit unit
 ---@param abilId integer
 ---@return number
-function BlzGetUnitAbilityCooldownRemaining(whichUnit, abilId) end
+function BlzGetUnitAbilityOldCooldownRemaining(whichUnit, abilId) end
 
 ---@param whichUnit unit
 ---@param abilCode integer
-function BlzEndUnitAbilityCooldown(whichUnit, abilCode) end
+function BlzEndUnitAbilityOldCooldown(whichUnit, abilCode) end
 
 ---@param whichUnit unit
 ---@param abilId integer
 ---@param level integer
 ---@return integer
-function BlzGetUnitAbilityManaCost(whichUnit, abilId, level) end
+function BlzGetUnitAbilityOldManaCost(whichUnit, abilId, level) end
 
 ---@param whichUnit unit
 ---@param abilId integer
 ---@param level integer
 ---@param manaCost integer
-function BlzSetUnitAbilityManaCost(whichUnit, abilId, level, manaCost) end
+function BlzSetUnitAbilityOldManaCost(whichUnit, abilId, level, manaCost) end
 
 ---@param whichUnit unit
 ---@return number
@@ -9014,12 +9014,12 @@ function BlzResetSpecialEffectMatrix(whichEffect) end
 ---@param whichUnit unit
 ---@param abilId integer
 ---@return ability
-function BlzGetUnitAbility(whichUnit, abilId) end
+function BlzGetUnitAbilityOld(whichUnit, abilId) end
 
 ---@param whichUnit unit
 ---@param index integer
 ---@return ability
-function BlzGetUnitAbilityByIndex(whichUnit, index) end
+function BlzGetUnitAbilityOldByIndex(whichUnit, index) end
 
 ---@param whichPlayer player
 ---@param recipient integer
@@ -9051,235 +9051,235 @@ function BlzBitXor(x, y) end
 
 
 -- Intanced Object Operations
--- Ability
----@param whichAbility ability
+-- AbilityOld
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanfield
 ---@return boolean
-function BlzGetAbilityBooleanField(whichAbility, whichField) end
+function BlzGetAbilityOldBooleanField(whichAbilityOld, whichField) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerfield
 ---@return integer
-function BlzGetAbilityIntegerField(whichAbility, whichField) end
+function BlzGetAbilityOldIntegerField(whichAbilityOld, whichField) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityrealfield
 ---@return number
-function BlzGetAbilityRealField(whichAbility, whichField) end
+function BlzGetAbilityOldRealField(whichAbilityOld, whichField) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringfield
 ---@return string
-function BlzGetAbilityStringField(whichAbility, whichField) end
+function BlzGetAbilityOldStringField(whichAbilityOld, whichField) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanlevelfield
 ---@param level integer
 ---@return boolean
-function BlzGetAbilityBooleanLevelField(whichAbility, whichField, level) end
+function BlzGetAbilityOldBooleanLevelField(whichAbilityOld, whichField, level) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerlevelfield
 ---@param level integer
 ---@return integer
-function BlzGetAbilityIntegerLevelField(whichAbility, whichField, level) end
+function BlzGetAbilityOldIntegerLevelField(whichAbilityOld, whichField, level) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityreallevelfield
 ---@param level integer
 ---@return number
-function BlzGetAbilityRealLevelField(whichAbility, whichField, level) end
+function BlzGetAbilityOldRealLevelField(whichAbilityOld, whichField, level) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringlevelfield
 ---@param level integer
 ---@return string
-function BlzGetAbilityStringLevelField(whichAbility, whichField, level) end
+function BlzGetAbilityOldStringLevelField(whichAbilityOld, whichField, level) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@return boolean
-function BlzGetAbilityBooleanLevelArrayField(whichAbility, whichField, level, index) end
+function BlzGetAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, index) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@return integer
-function BlzGetAbilityIntegerLevelArrayField(whichAbility, whichField, level, index) end
+function BlzGetAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, index) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@return number
-function BlzGetAbilityRealLevelArrayField(whichAbility, whichField, level, index) end
+function BlzGetAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, index) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@return string
-function BlzGetAbilityStringLevelArrayField(whichAbility, whichField, level, index) end
+function BlzGetAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, index) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanfield
 ---@param value boolean
 ---@return boolean
-function BlzSetAbilityBooleanField(whichAbility, whichField, value) end
+function BlzSetAbilityOldBooleanField(whichAbilityOld, whichField, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerfield
 ---@param value integer
 ---@return boolean
-function BlzSetAbilityIntegerField(whichAbility, whichField, value) end
+function BlzSetAbilityOldIntegerField(whichAbilityOld, whichField, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityrealfield
 ---@param value number
 ---@return boolean
-function BlzSetAbilityRealField(whichAbility, whichField, value) end
+function BlzSetAbilityOldRealField(whichAbilityOld, whichField, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringfield
 ---@param value string
 ---@return boolean
-function BlzSetAbilityStringField(whichAbility, whichField, value) end
+function BlzSetAbilityOldStringField(whichAbilityOld, whichField, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanlevelfield
 ---@param level integer
 ---@param value boolean
 ---@return boolean
-function BlzSetAbilityBooleanLevelField(whichAbility, whichField, level, value) end
+function BlzSetAbilityOldBooleanLevelField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerlevelfield
 ---@param level integer
 ---@param value integer
 ---@return boolean
-function BlzSetAbilityIntegerLevelField(whichAbility, whichField, level, value) end
+function BlzSetAbilityOldIntegerLevelField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityreallevelfield
 ---@param level integer
 ---@param value number
 ---@return boolean
-function BlzSetAbilityRealLevelField(whichAbility, whichField, level, value) end
+function BlzSetAbilityOldRealLevelField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringlevelfield
 ---@param level integer
 ---@param value string
 ---@return boolean
-function BlzSetAbilityStringLevelField(whichAbility, whichField, level, value) end
+function BlzSetAbilityOldStringLevelField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value boolean
 ---@return boolean
-function BlzSetAbilityBooleanLevelArrayField(whichAbility, whichField, level, index, value) end
+function BlzSetAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, index, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value integer
 ---@return boolean
-function BlzSetAbilityIntegerLevelArrayField(whichAbility, whichField, level, index, value) end
+function BlzSetAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, index, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value number
 ---@return boolean
-function BlzSetAbilityRealLevelArrayField(whichAbility, whichField, level, index, value) end
+function BlzSetAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, index, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value string
 ---@return boolean
-function BlzSetAbilityStringLevelArrayField(whichAbility, whichField, level, index, value) end
+function BlzSetAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, index, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param value boolean
 ---@return boolean
-function BlzAddAbilityBooleanLevelArrayField(whichAbility, whichField, level, value) end
+function BlzAddAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param value integer
 ---@return boolean
-function BlzAddAbilityIntegerLevelArrayField(whichAbility, whichField, level, value) end
+function BlzAddAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param value number
 ---@return boolean
-function BlzAddAbilityRealLevelArrayField(whichAbility, whichField, level, value) end
+function BlzAddAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param value string
 ---@return boolean
-function BlzAddAbilityStringLevelArrayField(whichAbility, whichField, level, value) end
+function BlzAddAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param value boolean
 ---@return boolean
-function BlzRemoveAbilityBooleanLevelArrayField(whichAbility, whichField, level, value) end
+function BlzRemoveAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param value integer
 ---@return boolean
-function BlzRemoveAbilityIntegerLevelArrayField(whichAbility, whichField, level, value) end
+function BlzRemoveAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param value number
 ---@return boolean
-function BlzRemoveAbilityRealLevelArrayField(whichAbility, whichField, level, value) end
+function BlzRemoveAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, value) end
 
----@param whichAbility ability
+---@param whichAbilityOld ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param value string
 ---@return boolean
-function BlzRemoveAbilityStringLevelArrayField(whichAbility, whichField, level, value) end
+function BlzRemoveAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, value) end
 
 
 -- Item
 ---@param whichItem item
 ---@param index integer
 ---@return ability
-function BlzGetItemAbilityByIndex(whichItem, index) end
+function BlzGetItemAbilityOldByIndex(whichItem, index) end
 
 ---@param whichItem item
 ---@param abilCode integer
 ---@return ability
-function BlzGetItemAbility(whichItem, abilCode) end
+function BlzGetItemAbilityOld(whichItem, abilCode) end
 
 ---@param whichItem item
 ---@param abilCode integer
 ---@return boolean
-function BlzItemAddAbility(whichItem, abilCode) end
+function BlzItemAddAbilityOld(whichItem, abilCode) end
 
 ---@param whichItem item
 ---@param whichField itembooleanfield
@@ -9328,7 +9328,7 @@ function BlzSetItemStringField(whichItem, whichField, value) end
 ---@param whichItem item
 ---@param abilCode integer
 ---@return boolean
-function BlzItemRemoveAbility(whichItem, abilCode) end
+function BlzItemRemoveAbilityOld(whichItem, abilCode) end
 
 
 -- Unit

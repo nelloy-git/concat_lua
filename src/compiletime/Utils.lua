@@ -175,7 +175,7 @@ end
 
 local ABIL_ID = 'AM##'
 ---@return string
-function WeUtils.nextAbilityId()
+function WeUtils.nextAbilityOldId()
     ABIL_ID = nextId(ABIL_ID)
     return ABIL_ID
 end

@@ -22,9 +22,9 @@ local ParamType = ParameterAPI.ParamType
 local ValueType = ParameterAPI.ValueType
 ---@type SmartTimerClass
 local SmartTimer = require('Timer.SmartTimer')
----@type AbilityAPI
---local AbilityAPI = require('Ability.API')
---local getActiveCasts = AbilityAPI.getActiveCasts
+---@type AbilityOldAPI
+--local AbilityOldAPI = require('AbilityOld.API')
+--local getActiveCasts = AbilityOldAPI.getActiveCasts
 
 --==============
 -- Pick up item

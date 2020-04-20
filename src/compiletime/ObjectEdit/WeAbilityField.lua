@@ -13,13 +13,13 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local WeAbilityField = Class.new('WeAbilityField', WeField)
----@class WeAbilityField
-local public = WeAbilityField.public
----@class WeAbilityFieldClass
-local static = WeAbilityField.static
----@type WeAbilityFieldClass
-local override = WeAbilityField.override
+local WeAbilityOldField = Class.new('WeAbilityOldField', WeField)
+---@class WeAbilityOldField
+local public = WeAbilityOldField.public
+---@class WeAbilityOldFieldClass
+local static = WeAbilityOldField.static
+---@type WeAbilityOldFieldClass
+local override = WeAbilityOldField.override
 local private = {}
 
 --========
@@ -32,10 +32,10 @@ local private = {}
 ---@param name string
 ---@param require_level boolean
 ---@param test_data_func WeFieldTestDataFunc | nil
----@param child_data WeAbilityField | nil
+---@param child_data WeAbilityOldField | nil
 ---@return WeField
 function override.new(field_id, data_type, abil_data_id, name, require_level, test_data_func, child_data)
-    local instance = child_data or Class.allocate(WeAbilityField)
+    local instance = child_data or Class.allocate(WeAbilityOldField)
     instance = WeField.new(field_id, data_type, name, test_data_func, instance)
     private.newData(instance, abil_data_id, require_level, test_data_func)
 
@@ -78,7 +78,7 @@ end
 -- Private
 --=========
 
----@param self WeAbilityField
+---@param self WeAbilityOldField
 ---@param data any
 ---@param lvl number
 ---@return boolean
@@ -118,7 +118,7 @@ function private.checkType(self, data, lvl)
     return true
 end
 
----@param self WeAbilityField
+---@param self WeAbilityOldField
 ---@param abil_data_id integer
 function private.newData(self, abil_data_id, require_level, test_data_func)
     local priv = {
@@ -129,9 +129,9 @@ function private.newData(self, abil_data_id, require_level, test_data_func)
     private[self] = priv
 end
 
----@param self WeAbilityField
+---@param self WeAbilityOldField
 function private.freeData(self)
     private[self] = nil
 end
 
-return WeAbilityField.static
+return WeAbilityOldField.static

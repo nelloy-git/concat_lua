@@ -32,7 +32,7 @@ function InterfaceAPI.init()
     InterfaceAPI.Bag = Interface.getBag()
     InterfaceAPI.Equip = Interface.getEquipment()
     InterfaceAPI.CastingBar = Interface.CastingBar
-    InterfaceAPI.AbilityBar = Interface.AbilityBar
+    InterfaceAPI.AbilityOldBar = Interface.AbilityOldBar
 
     --BlzHideOriginFrames(true)
     local game_handle = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)

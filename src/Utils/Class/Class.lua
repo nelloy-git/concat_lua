@@ -5,7 +5,7 @@ local ClassPublic = require('Utils.Class.Public')
 local ClassInstance = require('Utils.Class.Instance')
 local ClassOverride = require('Utils.Class.Override')
 
-local ClassAPI = {}
+ClassAPI = {}
 
 ---@type fun(name:string, vararg:any):Class
 ClassAPI.new = ClassDeclare.register

@@ -4,9 +4,9 @@
 
 local Class = require('Utils.Class.Class')
 
----@type AbilityAPI
-local AbilityAPI = require('Ability.API')
-local Ability = AbilityAPI.Ability
+---@type AbilityOldAPI
+local AbilityOldAPI = require('AbilityOld.API')
+local AbilityOld = AbilityOldAPI.AbilityOld
 
 --=======
 -- Class
@@ -40,15 +40,15 @@ end
 -- Public
 --========
 
----@param ability_type AbilityType
+---@param ability_type AbilityOldTypeOld
 ---@param pos number
 function public:set(ability_type, pos)
     local priv = private.data[self]
-    priv.abil[pos] = Ability.new(priv.owner, ability_type)
+    priv.abil[pos] = AbilityOld.new(priv.owner, ability_type)
 end
 
 ---@param pos number
----@return Ability | nil
+---@return AbilityOld | nil
 function public:get(pos)
     return private.data[self].abil[pos]
 end
