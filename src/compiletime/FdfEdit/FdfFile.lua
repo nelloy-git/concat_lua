@@ -3,7 +3,7 @@
 --=========
 
 local Log = require('Utils.Log')
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type FdfObjectClass
 local FdfObject = require('compiletime.FdfEdit.FdfObject')
@@ -110,7 +110,7 @@ private.metatable = {
 
         local toc = assert(io.open(private.full_dst_path..priv.name..'.toc', "w"))
         toc:write(private.dst_path..priv.name..".fdf\n")
-        toc.close()
+        toc:close()
     end
 }
 

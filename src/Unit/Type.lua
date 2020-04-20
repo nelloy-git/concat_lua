@@ -3,7 +3,7 @@
 --=========
 
 local Log = require('Utils.Log')
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type CompiletimeDataClass
 local CompiletimeData = require('Utils.CompiletimeData')

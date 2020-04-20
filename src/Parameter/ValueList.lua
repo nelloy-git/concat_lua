@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type ParameterData
 local Data = require('Parameter.Data')

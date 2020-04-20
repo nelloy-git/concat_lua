@@ -4,7 +4,7 @@ local log_all_changes = false
 -- Include
 --=========
 
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 local Log = require('Utils.Log')
 
 ---@type WeUtils
@@ -118,9 +118,10 @@ private.metadata = {
 ---@param path string
 ---@return string
 function private.newContent(path)
-    return string.char(2)..string.char(0)..string.char(0)..string.char(0)..  -- file version
-           string.char(0)..string.char(0)..string.char(0)..string.char(0)..  -- object tables
-           string.char(0)..string.char(0)..string.char(0)..string.char(0)    -- changes count
+    local char = string.char
+    return char(2)..char(0)..char(0)..char(0)..  -- file version
+           char(0)..char(0)..char(0)..char(0)..  -- object tables
+           char(0)..char(0)..char(0)..char(0)    -- changes count
 end
 
 return WeFile.static

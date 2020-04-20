@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type ControllerDetectorClass
 local Grid = require('Class.Controller.Grid')

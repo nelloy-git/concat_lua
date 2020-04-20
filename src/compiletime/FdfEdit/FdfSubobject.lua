@@ -3,7 +3,7 @@
 --=========
 
 local Log = require('Utils.Log')
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type FdfObject
 local FdfObject = require('compiletime.FdfEdit.FdfObject')

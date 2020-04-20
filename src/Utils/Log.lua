@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 --=======
 -- Class
@@ -75,6 +75,19 @@ end
 --=========
 
 local fmt = string.format
+local function getRootDir()
+    ---@type string
+    local src = GetSrcDir()
+
+    local pos = src:find(package.config:sub(1,1))
+    local last = pos
+    while (pos) do
+        last = pos
+        pos = src:find(package.config:sub(1,1), pos + 1)
+    end
+
+    return src:sub(1, last - 1)
+end
 
 if IsCompiletime() then
     private.show = {}
@@ -85,6 +98,8 @@ if IsCompiletime() then
     private.write = {}
     private.write.autosave = true
     private.write.file_name = 'log.txt'
+    private.write.log_dir = getRootDir()..package.config:sub(1,1).."Log"
+    print(private.write.log_dir)
     private.write.file = assert(io.open(GetSrcDir()..package.config:sub(1,1)..private.write.file_name, "w"))
     private.write[static.Err] = true
     private.write[static.Wrn] = true

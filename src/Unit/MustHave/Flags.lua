@@ -1,4 +1,4 @@
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type Unit
 local Unit = require('Unit.Unit')

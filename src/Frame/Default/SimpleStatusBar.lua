@@ -3,7 +3,7 @@
 --=========
 
 local Log = require('Utils.Log')
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 
 ---@type FrameClass
 local Frame = require('Frame.Frame')

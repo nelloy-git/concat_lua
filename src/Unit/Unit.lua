@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.Class')
+local Class = require('Utils.Class.API')
 local Log = require('Utils.Log')
 
 ---@type UnitObjClass
