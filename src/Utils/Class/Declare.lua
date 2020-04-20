@@ -34,9 +34,16 @@ function ClassDeclare.register(name, ...)
     local class = {}
     ClassName.register(class, name)
     ClassParent.register(class, ...)
-    class.static = ClassStatic.register(class)
-    class.public = ClassPublic.register(class)
-    class.override = ClassOverride.register(class)
+    local static = ClassStatic.register(class)
+    local public = ClassPublic.register(class)
+    local override = ClassOverride.register(class)
+
+    ---@type fun(self:any):any
+    class.static = function(self) return static end
+    ---@type fun(self:any):any
+    class.public = function(self) return public end
+    ---@type fun(self:any):any
+    class.override = function(self) return override end
 
     setmetatable(class, class_metatable)
     return class

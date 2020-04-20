@@ -4,20 +4,20 @@
 
 local Class = require('Utils.Class.API')
 
----@type AbilityTarget
-local AbilityTarget = require('Ability.Target.Target')
+---@type AbilityOldTarget
+local AbilityOldTarget = require('AbilityOld.Target.Target')
 
 --=======
 -- Class
 --=======
 
-local AbilityTargetItem = Class.new('AbilityTargetItem', AbilityTarget)
----@class AbilityTargetItem
-local public = AbilityTargetItem.public
----@class AbilityTargetItemClass
-local static = AbilityTargetItem.static
----@type AbilityTargetItemClass
-local override = AbilityTargetItem.override
+local AbilityOldTargetItem = Class.new('AbilityOldTargetItem', AbilityOldTarget)
+---@class AbilityOldTargetItem
+local public = AbilityOldTargetItem.public
+---@class AbilityOldTargetItemClass
+local static = AbilityOldTargetItem.static
+---@type AbilityOldTargetItemClass
+local override = AbilityOldTargetItem.override
 local private = {}
 
 --=========
@@ -25,11 +25,11 @@ local private = {}
 --=========
 
 ---@param item_obj item
----@param child_instance AbilityTargetItem | nil
----@return AbilityTargetItem
+---@param child_instance AbilityOldTargetItem | nil
+---@return AbilityOldTargetItem
 function override.new(item_obj, child_instance)
-    local instance = child_instance or Class.allocate(AbilityTargetItem)
-    instance = AbilityTarget.new(instance)
+    local instance = child_instance or Class.allocate(AbilityOldTargetItem)
+    instance = AbilityOldTarget.new(instance)
     private.newData(instance, item_obj)
 
     return instance
@@ -67,7 +67,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityTargetItem
+---@param self AbilityOldTargetItem
 ---@param item_obj item
 function private.newData(self, item_obj)
     local priv = {

@@ -8,24 +8,24 @@ local Class = require('Utils.Class.API')
 -- Class
 --=======
 
-local AbilityTarget = Class.new('AbilityTarget')
----@class AbilityTarget
-local public = AbilityTarget.public
----@class AbilityTargetClass
-local static = AbilityTarget.static
----@type AbilityTargetClass
-local override = AbilityTarget.override
+local AbilityOldTarget = Class.new('AbilityOldTarget')
+---@class AbilityOldTarget
+local public = AbilityOldTarget.public
+---@class AbilityOldTargetClass
+local static = AbilityOldTarget.static
+---@type AbilityOldTargetClass
+local override = AbilityOldTarget.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance AbilityTarget
----@return AbilityTarget
+---@param child_instance AbilityOldTarget
+---@return AbilityOldTarget
 function override.new(child_instance)
     if not child_instance then
-        Log.error(AbilityTarget, 'can not create instance of abstract class.', 2)
+        Log.error(AbilityOldTarget, 'can not create instance of abstract class.', 2)
     end
     return child_instance
 end

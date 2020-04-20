@@ -2,43 +2,43 @@
 -- Include
 --=========
 
----@type AbilityTypeClass
-local Type = require('Ability.Type')
----@type AbilityClass
-local Ability = require('Ability.Ability')
-require('Ability.MustHave.Casting')
-require('Ability.MustHave.Cooldown')
+---@type AbilityOldTypeOldClass
+local Type = require('AbilityOld.Type')
+---@type AbilityOldClass
+local AbilityOld = require('AbilityOld.AbilityOld')
+require('AbilityOld.MustHave.Casting')
+require('AbilityOld.MustHave.Cooldown')
 
 --=============
 --     API
 --=============
 
----@class AbilityAPI
-local AbilityAPI = {}
+---@class AbilityOldAPI
+local AbilityOldAPI = {}
 
 -- Enums
-AbilityAPI.TargetingType = Type.TargetingType
+AbilityOldAPI.TargetingType = Type.TargetingType
 
 -- Classes
-AbilityAPI.Type = Type
-AbilityAPI.Ability = Ability
+AbilityOldAPI.Type = Type
+AbilityOldAPI.AbilityOld = AbilityOld
 
 -- Casting
-AbilityAPI.getCastingPeriod = Ability.getCastingPeriod
-AbilityAPI.getCastingAbility = Ability.getCastingAbility
-AbilityAPI.getCastingTarget = Ability.getCastingTarget
-AbilityAPI.getCastingTimeLeft = Ability.getCastingTimeLeft
-AbilityAPI.getCastingTimeFull = Ability.getCastingTimeFull
-AbilityAPI.cancelCastingAbility = Ability.cancelCastingAbility
-AbilityAPI.interruptCastingAbility = Ability.interruptCastingAbility
-AbilityAPI.finishCastingAbility = Ability.finishCastingAbility
-AbilityAPI.extraPeriodForCastingAbility = Ability.extraPeriodForCastingAbility
+AbilityOldAPI.getCastingPeriod = AbilityOld.getCastingPeriod
+AbilityOldAPI.getCastingAbilityOld = AbilityOld.getCastingAbilityOld
+AbilityOldAPI.getCastingTarget = AbilityOld.getCastingTarget
+AbilityOldAPI.getCastingTimeLeft = AbilityOld.getCastingTimeLeft
+AbilityOldAPI.getCastingTimeFull = AbilityOld.getCastingTimeFull
+AbilityOldAPI.cancelCastingAbilityOld = AbilityOld.cancelCastingAbilityOld
+AbilityOldAPI.interruptCastingAbilityOld = AbilityOld.interruptCastingAbilityOld
+AbilityOldAPI.finishCastingAbilityOld = AbilityOld.finishCastingAbilityOld
+AbilityOldAPI.extraPeriodForCastingAbilityOld = AbilityOld.extraPeriodForCastingAbilityOld
 
 -- Targets
-AbilityAPI.TargetNone = require('Ability.Target.None')
-AbilityAPI.TargetPoint = require('Ability.Target.Point')
-AbilityAPI.TargetUnit = require('Ability.Target.Unit')
-AbilityAPI.TargetDestructable = require('Ability.Target.Destructable')
-AbilityAPI.TargetItem = require('Ability.Target.Item')
+AbilityOldAPI.TargetNone = require('AbilityOld.Target.None')
+AbilityOldAPI.TargetPoint = require('AbilityOld.Target.Point')
+AbilityOldAPI.TargetUnit = require('AbilityOld.Target.Unit')
+AbilityOldAPI.TargetDestructable = require('AbilityOld.Target.Destructable')
+AbilityOldAPI.TargetItem = require('AbilityOld.Target.Item')
 
-return AbilityAPI
+return AbilityOldAPI

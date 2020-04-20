@@ -4,8 +4,8 @@
 
 local Class = require('Utils.Class.API')
 
----@type AbilityClass
-local Ability = require('Ability.Ability')
+---@type AbilityOldClass
+local AbilityOld = require('AbilityOld.AbilityOld')
 ---@type TimerClass
 local Timer = require('Timer.Timer')
 
@@ -13,12 +13,12 @@ local Timer = require('Timer.Timer')
 -- Class
 --=======
 
----@type Ability
-local public = Class.getPublic(Ability)
----@type AbilityClass
-local static = Ability
----@type AbilityClass
-local override = Class.getOverride(Ability)
+---@type AbilityOld
+local public = Class.getPublic(AbilityOld)
+---@type AbilityOldClass
+local static = AbilityOld
+---@type AbilityOldClass
+local override = Class.getOverride(AbilityOld)
 local private = {}
 
 --=========
@@ -31,8 +31,8 @@ function static.getCastingPeriod()
 end
 
 ---@param caster Unit
----@return Ability | nil
-function static.getCastingAbility(caster)
+---@return AbilityOld | nil
+function static.getCastingAbilityOld(caster)
     if not private.is_casting[caster] then
         return nil
     end
@@ -40,7 +40,7 @@ function static.getCastingAbility(caster)
 end
 
 ---@param caster Unit
----@return AbilityTarget | nil
+---@return AbilityOldTarget | nil
 function static.getCastingTarget(caster)
     if not private.is_casting[caster] then
         return nil
@@ -69,7 +69,7 @@ end
 
 ---@param caster Unit
 ---@return boolean
-function static.cancelCastingAbility(caster)
+function static.cancelCastingAbilityOld(caster)
     local data = private.is_casting[caster]
     if data then
         data.ability:getType():cancel(caster, data.target, data.ability:getLevel())
@@ -81,7 +81,7 @@ end
 
 ---@param caster Unit
 ---@return boolean
-function static.interruptCastingAbility(caster)
+function static.interruptCastingAbilityOld(caster)
     local data = private.is_casting[caster]
     if data then
         data.ability:getType():interrupt(caster, data.target, data.ability:getLevel())
@@ -93,7 +93,7 @@ end
 
 ---@param caster Unit
 ---@return boolean
-function static.finishCastingAbility(caster)
+function static.finishCastingAbilityOld(caster)
     local data = private.is_casting[caster]
     if data then
         data.ability:getType():finish(caster, data.target, data.ability:getLevel())
@@ -105,7 +105,7 @@ end
 
 ---@param caster Unit
 ---@return boolean
-function static.extraPeriodForCastingAbility(caster)
+function static.extraPeriodForCastingAbilityOld(caster)
     local data = private.is_casting[caster]
     if data then
         data.ability:getType():casting(caster, data.target, data.ability:getLevel())
@@ -119,7 +119,7 @@ end
 -- Public
 --========
 
----@param target AbilityTarget
+---@param target AbilityOldTarget
 ---@return boolean
 function public:use(target)
     local caster = self:getOwner()
@@ -156,7 +156,7 @@ function public:use(target)
 
     if not abil_type:start(caster, target, lvl) then
         -- TODO callback
-        print('Ability has not started.')
+        print('AbilityOld has not started.')
         return false
     end
 
@@ -190,7 +190,7 @@ function private.timerLoop()
     end
 end
 
----@param self Ability
+---@param self AbilityOld
 function private.newData(self, target, casting_time)
     local data = {
         ability = self,

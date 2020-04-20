@@ -4,20 +4,20 @@
 
 local Class = require('Utils.Class.API')
 
----@type AbilityTarget
-local AbilityTarget = require('Ability.Target.Target')
+---@type AbilityOldTarget
+local AbilityOldTarget = require('AbilityOld.Target.Target')
 
 --=======
 -- Class
 --=======
 
-local AbilityTargetPoint = Class.new('AbilityTargetPoint', AbilityTarget)
----@class AbilityTargetPoint
-local public = AbilityTargetPoint.public
----@class AbilityTargetPointClass
-local static = AbilityTargetPoint.static
----@type AbilityTargetPointClass
-local override = AbilityTargetPoint.override
+local AbilityOldTargetPoint = Class.new('AbilityOldTargetPoint', AbilityOldTarget)
+---@class AbilityOldTargetPoint
+local public = AbilityOldTargetPoint.public
+---@class AbilityOldTargetPointClass
+local static = AbilityOldTargetPoint.static
+---@type AbilityOldTargetPointClass
+local override = AbilityOldTargetPoint.override
 local private = {}
 
 --=========
@@ -26,11 +26,11 @@ local private = {}
 
 ---@param x number
 ---@param y number
----@param child_instance AbilityTargetPoint | nil
----@return AbilityTargetPoint
+---@param child_instance AbilityOldTargetPoint | nil
+---@return AbilityOldTargetPoint
 function override.new(x, y, child_instance)
-    local instance = child_instance or Class.allocate(AbilityTargetPoint)
-    instance = AbilityTarget.new(instance)
+    local instance = child_instance or Class.allocate(AbilityOldTargetPoint)
+    instance = AbilityOldTarget.new(instance)
     private.newData(instance, x, y)
 
     return instance
@@ -64,7 +64,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityTargetPoint
+---@param self AbilityOldTargetPoint
 ---@param x number
 ---@param y number
 function private.newData(self, x, y)

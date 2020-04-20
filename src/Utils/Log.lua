@@ -10,11 +10,11 @@ local Class = require('Utils.Class.API')
 
 local Logger = Class.new('Logger')
 ---@class Logger
-local public = Logger.public
+local public = Logger:public()
 ---@class LoggerClass
-local static = Logger.static
+local static = Logger:static()
 ---@type LoggerClass
-local override = Logger.override
+local override = Logger:override()
 local private = {}
 
 --=========
