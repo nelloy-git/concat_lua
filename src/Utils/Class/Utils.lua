@@ -1,3 +1,4 @@
+---@class ClassUtils
 local ClassUtils = {}
 
 function ClassUtils.deepcopy(orig, copies)

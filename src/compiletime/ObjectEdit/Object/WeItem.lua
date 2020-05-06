@@ -3,7 +3,7 @@
 --=========
 
 local Class = require('Utils.Class.API')
-local Log = require('Utils.Log')
+
 
 ---@type WeObjectClass
 local WeObject = require('compiletime.ObjectEdit.WeObject')
@@ -41,7 +41,7 @@ function override.new(id, base_id, name, child_instance)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then
-        private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
+        private.we_file = WeObjectFile.new(private.file_dst)
     end
     private.we_file:addObject(instance)
 

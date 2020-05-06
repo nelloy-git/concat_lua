@@ -2446,16 +2446,16 @@ end
 ---@param t effecttype
 ---@param index integer
 ---@return string
-function GetAbilityOldEffectBJ(abilcode, t, index)
-	return GetAbilityOldEffectById(abilcode, t, index)
+function GetAbilityEffectBJ(abilcode, t, index)
+	return GetAbilityEffectById(abilcode, t, index)
 end
 
 --===========================================================================
 ---@param abilcode integer
 ---@param t soundtype
 ---@return string
-function GetAbilityOldSoundBJ(abilcode, t)
-	return GetAbilityOldSoundById(abilcode, t)
+function GetAbilitySoundBJ(abilcode, t)
+	return GetAbilitySoundById(abilcode, t)
 end
 
 
@@ -3240,16 +3240,16 @@ end
 ---@param abilcode integer
 ---@param whichUnit unit
 ---@return integer
-function DecUnitAbilityOldLevelSwapped(abilcode, whichUnit)
-	return DecUnitAbilityOldLevel(whichUnit, abilcode)
+function DecUnitAbilityLevelSwapped(abilcode, whichUnit)
+	return DecUnitAbilityLevel(whichUnit, abilcode)
 end
 
 --===========================================================================
 ---@param abilcode integer
 ---@param whichUnit unit
 ---@return integer
-function IncUnitAbilityOldLevelSwapped(abilcode, whichUnit)
-	return IncUnitAbilityOldLevel(whichUnit, abilcode)
+function IncUnitAbilityLevelSwapped(abilcode, whichUnit)
+	return IncUnitAbilityLevel(whichUnit, abilcode)
 end
 
 --===========================================================================
@@ -3257,16 +3257,16 @@ end
 ---@param whichUnit unit
 ---@param level integer
 ---@return integer
-function SetUnitAbilityOldLevelSwapped(abilcode, whichUnit, level)
-	return SetUnitAbilityOldLevel(whichUnit, abilcode, level)
+function SetUnitAbilityLevelSwapped(abilcode, whichUnit, level)
+	return SetUnitAbilityLevel(whichUnit, abilcode, level)
 end
 
 --===========================================================================
 ---@param abilcode integer
 ---@param whichUnit unit
 ---@return integer
-function GetUnitAbilityOldLevelSwapped(abilcode, whichUnit)
-	return GetUnitAbilityOldLevel(whichUnit, abilcode)
+function GetUnitAbilityLevelSwapped(abilcode, whichUnit)
+	return GetUnitAbilityLevel(whichUnit, abilcode)
 end
 
 --===========================================================================
@@ -3274,7 +3274,7 @@ end
 ---@param buffcode integer
 ---@return boolean
 function UnitHasBuffBJ(whichUnit, buffcode)
-	return (GetUnitAbilityOldLevel(whichUnit, buffcode) > 0)
+	return (GetUnitAbilityLevel(whichUnit, buffcode) > 0)
 end
 
 --===========================================================================
@@ -3282,7 +3282,7 @@ end
 ---@param whichUnit unit
 ---@return boolean
 function UnitRemoveBuffBJ(buffcode, whichUnit)
-	return UnitRemoveAbilityOld(whichUnit, buffcode)
+	return UnitRemoveAbility(whichUnit, buffcode)
 end
 
 --===========================================================================
@@ -4643,16 +4643,16 @@ end
 ---@param abilityId integer
 ---@param whichUnit unit
 ---@return boolean
-function UnitRemoveAbilityOldBJ(abilityId, whichUnit)
-	return UnitRemoveAbilityOld(whichUnit, abilityId)
+function UnitRemoveAbilityBJ(abilityId, whichUnit)
+	return UnitRemoveAbility(whichUnit, abilityId)
 end
 
 --===========================================================================
 ---@param abilityId integer
 ---@param whichUnit unit
 ---@return boolean
-function UnitAddAbilityOldBJ(abilityId, whichUnit)
-	return UnitAddAbilityOld(whichUnit, abilityId)
+function UnitAddAbilityBJ(abilityId, whichUnit)
+	return UnitAddAbility(whichUnit, abilityId)
 end
 
 --===========================================================================
@@ -4676,8 +4676,8 @@ end
 ---@param abilityId integer
 ---@param whichUnit unit
 ---@return boolean
-function UnitMakeAbilityOldPermanentBJ(permanent, abilityId, whichUnit)
-	return UnitMakeAbilityOldPermanent(whichUnit, permanent, abilityId)
+function UnitMakeAbilityPermanentBJ(permanent, abilityId, whichUnit)
+	return UnitMakeAbilityPermanent(whichUnit, permanent, abilityId)
 end
 
 --===========================================================================
@@ -8642,8 +8642,8 @@ end
 ---@param avail boolean
 ---@param abilid integer
 ---@param whichPlayer player
-function SetPlayerAbilityOldAvailableBJ(avail, abilid, whichPlayer)
-	SetPlayerAbilityOldAvailable(whichPlayer, abilid, avail)
+function SetPlayerAbilityAvailableBJ(avail, abilid, whichPlayer)
+	SetPlayerAbilityAvailable(whichPlayer, abilid, avail)
 end
 
 
@@ -8936,13 +8936,13 @@ function SaveUnitHandleBJ(whichUnit, key, missionKey, table)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param key integer
 ---@param missionKey integer
 ---@param table hashtable
 ---@return boolean
-function SaveAbilityOldHandleBJ(whichAbilityOld, key, missionKey, table)
-	return SaveAbilityOldHandle(table, missionKey, key, whichAbilityOld)
+function SaveAbilityHandleBJ(whichAbility, key, missionKey, table)
+	return SaveAbilityHandle(table, missionKey, key, whichAbility)
 end
 
 --===========================================================================
@@ -9421,8 +9421,8 @@ end
 ---@param missionKey integer
 ---@param table hashtable
 ---@return ability
-function LoadAbilityOldHandleBJ(key, missionKey, table)
-	return LoadAbilityOldHandle(table, missionKey, key)
+function LoadAbilityHandleBJ(key, missionKey, table)
+	return LoadAbilityHandle(table, missionKey, key)
 end
 
 --===========================================================================
@@ -10299,7 +10299,7 @@ end
 --===========================================================================
 ---@param abilcode integer
 ---@return string
-function GetAbilityOldName(abilcode)
+function GetAbilityName(abilcode)
 	return GetObjectName(abilcode)
 end
 
@@ -10788,8 +10788,8 @@ function MeleeStartingUnitsHuman(whichPlayer, startLoc, doHeroes, doCamera, doPr
 	end
 	
 	if (townHall ~= nil) then
-		UnitAddAbilityOldBJ(FourCC('Amic'), townHall)
-		UnitMakeAbilityOldPermanentBJ(true, FourCC('Amic'), townHall)
+		UnitAddAbilityBJ(FourCC('Amic'), townHall)
+		UnitMakeAbilityPermanentBJ(true, FourCC('Amic'), townHall)
 	end
 	
 	if (doHeroes) then
@@ -12967,200 +12967,200 @@ function BlzIsLastInstanceObjectFunctionSuccessful()
 	return bj_lastInstObjFuncSuccessful
 end
 
--- AbilityOld
+-- Ability
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitybooleanfield
 ---@param value boolean
-function BlzSetAbilityOldBooleanFieldBJ(whichAbilityOld, whichField, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldBooleanField(whichAbilityOld, whichField, value)
+function BlzSetAbilityBooleanFieldBJ(whichAbility, whichField, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityBooleanField(whichAbility, whichField, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityintegerfield
 ---@param value integer
-function BlzSetAbilityOldIntegerFieldBJ(whichAbilityOld, whichField, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldIntegerField(whichAbilityOld, whichField, value)
+function BlzSetAbilityIntegerFieldBJ(whichAbility, whichField, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityIntegerField(whichAbility, whichField, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityrealfield
 ---@param value number
-function BlzSetAbilityOldRealFieldBJ(whichAbilityOld, whichField, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldRealField(whichAbilityOld, whichField, value)
+function BlzSetAbilityRealFieldBJ(whichAbility, whichField, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityRealField(whichAbility, whichField, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitystringfield
 ---@param value string
-function BlzSetAbilityOldStringFieldBJ(whichAbilityOld, whichField, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldStringField(whichAbilityOld, whichField, value)
+function BlzSetAbilityStringFieldBJ(whichAbility, whichField, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityStringField(whichAbility, whichField, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitybooleanlevelfield
 ---@param level integer
 ---@param value boolean
-function BlzSetAbilityOldBooleanLevelFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldBooleanLevelField(whichAbilityOld, whichField, level, value)
+function BlzSetAbilityBooleanLevelFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityBooleanLevelField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityintegerlevelfield
 ---@param level integer
 ---@param value integer
-function BlzSetAbilityOldIntegerLevelFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldIntegerLevelField(whichAbilityOld, whichField, level, value)
+function BlzSetAbilityIntegerLevelFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityIntegerLevelField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityreallevelfield
 ---@param level integer
 ---@param value number
-function BlzSetAbilityOldRealLevelFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldRealLevelField(whichAbilityOld, whichField, level, value)
+function BlzSetAbilityRealLevelFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitystringlevelfield
 ---@param level integer
 ---@param value string
-function BlzSetAbilityOldStringLevelFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldStringLevelField(whichAbilityOld, whichField, level, value)
+function BlzSetAbilityStringLevelFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value boolean
-function BlzSetAbilityOldBooleanLevelArrayFieldBJ(whichAbilityOld, whichField, level, index, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, index, value)
+function BlzSetAbilityBooleanLevelArrayFieldBJ(whichAbility, whichField, level, index, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityBooleanLevelArrayField(whichAbility, whichField, level, index, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value integer
-function BlzSetAbilityOldIntegerLevelArrayFieldBJ(whichAbilityOld, whichField, level, index, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, index, value)
+function BlzSetAbilityIntegerLevelArrayFieldBJ(whichAbility, whichField, level, index, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityIntegerLevelArrayField(whichAbility, whichField, level, index, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value number
-function BlzSetAbilityOldRealLevelArrayFieldBJ(whichAbilityOld, whichField, level, index, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, index, value)
+function BlzSetAbilityRealLevelArrayFieldBJ(whichAbility, whichField, level, index, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityRealLevelArrayField(whichAbility, whichField, level, index, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param index integer
 ---@param value string
-function BlzSetAbilityOldStringLevelArrayFieldBJ(whichAbilityOld, whichField, level, index, value)
-	bj_lastInstObjFuncSuccessful = BlzSetAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, index, value)
+function BlzSetAbilityStringLevelArrayFieldBJ(whichAbility, whichField, level, index, value)
+	bj_lastInstObjFuncSuccessful = BlzSetAbilityStringLevelArrayField(whichAbility, whichField, level, index, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param value boolean
-function BlzAddAbilityOldBooleanLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzAddAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzAddAbilityBooleanLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzAddAbilityBooleanLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param value integer
-function BlzAddAbilityOldIntegerLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzAddAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzAddAbilityIntegerLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzAddAbilityIntegerLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param value number
-function BlzAddAbilityOldRealLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzAddAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzAddAbilityRealLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzAddAbilityRealLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param value string
-function BlzAddAbilityOldStringLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzAddAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzAddAbilityStringLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzAddAbilityStringLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitybooleanlevelarrayfield
 ---@param level integer
 ---@param value boolean
-function BlzRemoveAbilityOldBooleanLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityOldBooleanLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzRemoveAbilityBooleanLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityBooleanLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityintegerlevelarrayfield
 ---@param level integer
 ---@param value integer
-function BlzRemoveAbilityOldIntegerLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityOldIntegerLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzRemoveAbilityIntegerLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityIntegerLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilityreallevelarrayfield
 ---@param level integer
 ---@param value number
-function BlzRemoveAbilityOldRealLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityOldRealLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzRemoveAbilityRealLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityRealLevelArrayField(whichAbility, whichField, level, value)
 end
 
 --===========================================================================
----@param whichAbilityOld ability
+---@param whichAbility ability
 ---@param whichField abilitystringlevelarrayfield
 ---@param level integer
 ---@param value string
-function BlzRemoveAbilityOldStringLevelArrayFieldBJ(whichAbilityOld, whichField, level, value)
-	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityOldStringLevelArrayField(whichAbilityOld, whichField, level, value)
+function BlzRemoveAbilityStringLevelArrayFieldBJ(whichAbility, whichField, level, value)
+	bj_lastInstObjFuncSuccessful = BlzRemoveAbilityStringLevelArrayField(whichAbility, whichField, level, value)
 end
 
 -- Item
 --=============================================================
 ---@param whichItem item
 ---@param abilCode integer
-function BlzItemAddAbilityOldBJ(whichItem, abilCode)
-	bj_lastInstObjFuncSuccessful = BlzItemAddAbilityOld(whichItem, abilCode)
+function BlzItemAddAbilityBJ(whichItem, abilCode)
+	bj_lastInstObjFuncSuccessful = BlzItemAddAbility(whichItem, abilCode)
 end
 
 --===========================================================================
 ---@param whichItem item
 ---@param abilCode integer
-function BlzItemRemoveAbilityOldBJ(whichItem, abilCode)
-	bj_lastInstObjFuncSuccessful = BlzItemRemoveAbilityOld(whichItem, abilCode)
+function BlzItemRemoveAbilityBJ(whichItem, abilCode)
+	bj_lastInstObjFuncSuccessful = BlzItemRemoveAbility(whichItem, abilCode)
 end
 
 --===========================================================================

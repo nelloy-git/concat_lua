@@ -11,20 +11,20 @@ local FrameAPI = require('Frame.API')
 local SimpleFrameType = FrameAPI.SimpleFrameType
 local SimpleFrame = FrameAPI.SimpleFrame
 local FramePublic = Class.getPublic(FrameAPI.Frame)
----@type InterfaceAbilityOldSlotClass
-local AbilityOldSlot = require('Interface.AbilityOld.Slot')
+---@type InterfaceAbilitySlotClass
+local AbilitySlot = require('Interface.Ability.Slot')
 
 --=======
 -- Class
 --=======
 
-local InterfaceAbilityOldBar = Class.new('InterfaceAbilityOldBar', SimpleFrame)
----@class InterfaceAbilityOldBar
-local public = InterfaceAbilityOldBar.public
----@class InterfaceAbilityOldBarClass
-local static = InterfaceAbilityOldBar.static
----@type InterfaceAbilityOldBarClass
-local override = InterfaceAbilityOldBar.override
+local InterfaceAbilityBar = Class.new('InterfaceAbilityBar', SimpleFrame)
+---@class InterfaceAbilityBar : SimpleFrame
+local public = InterfaceAbilityBar.public
+---@class InterfaceAbilityBarClass : SimpleFrameClass
+local static = InterfaceAbilityBar.static
+---@type InterfaceAbilityBarClass
+local override = InterfaceAbilityBar.override
 local private = {}
 
 --=========
@@ -33,10 +33,10 @@ local private = {}
 
 ---@param cols number
 ---@param rows number
----@param child_instance InterfaceAbilityOldBar | nil
----@return InterfaceAbilityOldBar
+---@param child_instance InterfaceAbilityBar | nil
+---@return InterfaceAbilityBar
 function override.new(cols, rows, child_instance)
-    local instance = child_instance or Class.allocate(InterfaceAbilityOldBar)
+    local instance = child_instance or Class.allocate(InterfaceAbilityBar)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance, cols, rows)
@@ -77,7 +77,7 @@ function public:load(unit)
     for i = 1, priv.size do
         local abil = unit_abils:get(i)
 
-        priv.slot[i]:setAbilityOld(abil)
+        priv.slot[i]:setAbility(abil)
         priv.slot[i]:setVisible(true)
         --priv.tooltip[i]:setItem(item, unit)
     end
@@ -106,7 +106,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.background_type = SimpleFrameType.new('InterfaceAbilityOldBarBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceAbilityBarBackground', true)
 private.background_type:setWidth(0.3)
 private.background_type:setHeight(0.04)
 private.background_type:setTexture(Import.InventoryBackground)
@@ -118,7 +118,7 @@ private.border_ratio = 1 / 16
 private.space_ratio = 1 / 64
 --private.tooltip_width = 0.2
 
----@param self InterfaceAbilityOldBar
+---@param self InterfaceAbilityBar
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -151,7 +151,7 @@ function private.update(self)
     end
 end
 
----@param self InterfaceAbilityOldBar
+---@param self InterfaceAbilityBar
 function private.newData(self, cols, rows)
     local priv = {
         loaded = nil,
@@ -165,7 +165,7 @@ function private.newData(self, cols, rows)
     private.data[self] = priv
 
     for i = 1, priv.size do
-        priv.slot[i] = AbilityOldSlot.new()
+        priv.slot[i] = AbilitySlot.new()
         priv.slot[i]:setParent(self)
         priv.slot[i]:setLevel(self:getLevel() + 2)
 
@@ -175,6 +175,5 @@ function private.newData(self, cols, rows)
         --priv.slot[i]:setTooltip(priv.tooltip[i])
     end
 end
-
 
 return static

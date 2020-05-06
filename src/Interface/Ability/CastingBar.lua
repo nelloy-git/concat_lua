@@ -13,23 +13,23 @@ local SimpleStatusBar = FrameAPI.SimpleStatusBar
 -- Class
 --=======
 
-local InterfaceAbilityOldCastingBar = Class.new('InterfaceAbilityOldCastingBar')
----@class InterfaceAbilityOldCastingBar
-local public = InterfaceAbilityOldCastingBar.public
----@class InterfaceAbilityOldCastingBarClass
-local static = InterfaceAbilityOldCastingBar.static
----@type InterfaceAbilityOldCastingBarClass
-local override = InterfaceAbilityOldCastingBar.override
+local InterfaceAbilityCastingBar = Class.new('InterfaceAbilityCastingBar')
+---@class InterfaceAbilityCastingBar
+local public = InterfaceAbilityCastingBar.public
+---@class InterfaceAbilityCastingBarClass
+local static = InterfaceAbilityCastingBar.static
+---@type InterfaceAbilityCastingBarClass
+local override = InterfaceAbilityCastingBar.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance InterfaceAbilityOldCastingBar | nil
----@return InterfaceAbilityOldCastingBar
+---@param child_instance InterfaceAbilityCastingBar | nil
+---@return InterfaceAbilityCastingBar
 function override.new(max_bars, child_instance)
-    local instance = child_instance or Class.allocate(InterfaceAbilityOldCastingBar)
+    local instance = child_instance or Class.allocate(InterfaceAbilityCastingBar)
     private.newData(instance, max_bars)
 
     return instance
@@ -85,7 +85,7 @@ private.bar_type = SimpleStatusBarType.new('CastingBar', true)
 private.bar_type:setWidth(0.2)
 private.bar_type:setHeight(0.04)
 
----@param self InterfaceAbilityOldCastingBar
+---@param self InterfaceAbilityCastingBar
 function private.newData(self, max_bars)
     local priv = {
         max_bars = max_bars,

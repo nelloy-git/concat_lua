@@ -1,9 +1,10 @@
+---@class ClassName
 local ClassName = {}
 
 local class2name = {}
 local name2class = {}
 
----@param class Class
+---@param class table
 ---@param name string
 function ClassName.register(class, name)
     if name2class[name] then
@@ -14,14 +15,14 @@ function ClassName.register(class, name)
     name2class[name] = class
 end
 
----@param class Class
+---@param class table
 ---@return string
 function ClassName.getName(class)
     return class2name[class]
 end
 
 ---@param name string
----@return Class
+---@return table
 function ClassName.getClass(name)
     return name2class[name]
 end

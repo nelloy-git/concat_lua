@@ -43,7 +43,7 @@ local private = {}
 ---@return InterfaceFrameBag
 function override.new(child_instance)
     if child_instance and not Class.type(child_instance, InterfaceFrameBag) then
-        Log.error(InterfaceFrameBag, '\"child_instance\" must be InterfaceFrameBag or nil', 2)
+        Logger.error(InterfaceFrameBag, '\"child_instance\" must be InterfaceFrameBag or nil', 2)
     end
 
     local instance = child_instance or Class.allocate(InterfaceFrameBag)
@@ -62,7 +62,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log(Log.Wrn, self, 'Autosizing frame. Disabled function.', 2)
+    Logger(Logger.Wrn, self, 'Autosizing frame. Disabled function.', 2)
 end
 
 ---@param level number
@@ -198,7 +198,7 @@ function private.setItemSlot(self, pos, item)
     local priv = private.data[self]
 
     if pos < 1 or pos > priv.max_size then
-        Log.error(self, 'wrong item position.', 2)
+        Logger.error(self, 'wrong item position.', 2)
     end
 
     local icon

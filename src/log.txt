@@ -1,4 +1,0 @@
-<<<<<<< HEAD
-[1.000] {Msg} WeFile: сreated WeUnit_392b70 "Footman" with id 'x##$' based on 'hfoo'[1.000] {Msg} WeFile: сreated WeItem_fe1988 "Item" with id 'IM#$' based on 'rhe2'
-=======
->>>>>>> 2f74f5b8aac9d38b177b889d9b575a2f950e7ae4

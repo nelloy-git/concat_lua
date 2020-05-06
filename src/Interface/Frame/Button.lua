@@ -36,7 +36,7 @@ local private = {}
 ---@return InterfaceFrameButton
 function override.new(child_instance)
     if child_instance and not Class.type(child_instance, InterfaceFrameButton) then
-        Log.error(InterfaceFrameButton, '\"child_instance\" must be InterfaceFrameButton or nil', 2)
+        Logger.error(InterfaceFrameButton, '\"child_instance\" must be InterfaceFrameButton or nil', 2)
     end
 
     local instance = child_instance or Class.allocate(InterfaceFrameButton)

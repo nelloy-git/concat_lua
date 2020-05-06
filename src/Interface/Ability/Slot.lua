@@ -22,23 +22,23 @@ local FramePublic = Class.getPublic(FrameAPI.Frame)
 -- Class
 --=======
 
-local InterfaceAbilityOldSlot = Class.new('InterfaceAbilityOldSlot', SimpleFrame)
----@class InterfaceAbilityOldSlot : SimpleFrame
-local public = InterfaceAbilityOldSlot.public
----@class InterfaceAbilityOldSlotClass : SimpleFrameClass
-local static = InterfaceAbilityOldSlot.static
----@type InterfaceAbilityOldSlotClass
-local override = InterfaceAbilityOldSlot.override
+local InterfaceAbilitySlot = Class.new('InterfaceAbilitySlot', SimpleFrame)
+---@class InterfaceAbilitySlot : SimpleFrame
+local public = InterfaceAbilitySlot.public
+---@class InterfaceAbilitySlotClass : SimpleFrameClass
+local static = InterfaceAbilitySlot.static
+---@type InterfaceAbilitySlotClass
+local override = InterfaceAbilitySlot.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance InterfaceAbilityOldSlot | nil
----@return InterfaceAbilityOldSlot
+---@param child_instance InterfaceAbilitySlot | nil
+---@return InterfaceAbilitySlot
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(InterfaceAbilityOldSlot)
+    local instance = child_instance or Class.allocate(InterfaceAbilitySlot)
     instance = SimpleFrame.new(private.background_type, instance)
 
     private.newData(instance)
@@ -62,8 +62,8 @@ function public:setHeight(height)
     private.update(self)
 end
 
----@param abil AbilityOldTypeOld
-function public:setAbilityOld(abil)
+---@param abil AbilityType
+function public:setAbility(abil)
     local priv = private.data[self]
     priv.abil = abil
 
@@ -97,9 +97,9 @@ function public:updateCooldown()
         return
     end
 
-    ---@type AbilityOld
+    ---@type Ability
     local abil = priv.abil
-    ---@type AbilityOldTypeOld
+    ---@type AbilityType
     local abil_type = abil:getType()
 
     local cur_cd = abil:getCooldownTimeLeft()
@@ -136,37 +136,37 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.border_ratio = 1 / 16
 private.hotkey_ratio = 1 / 8
 
-private.background_type = SimpleFrameType.new('InterfaceAbilityOldSlotBackground', true)
+private.background_type = SimpleFrameType.new('InterfaceAbilitySlotBackground', true)
 private.background_type:setWidth(0.035)
 private.background_type:setHeight(0.035)
 private.background_type:setTexture(Import.Icon.Empty)
 
-private.border_type = SimpleFrameType.new('InterfaceAbilityOldSlotBorder', true)
+private.border_type = SimpleFrameType.new('InterfaceAbilitySlotBorder', true)
 private.border_type:setWidth(0.040)
 private.border_type:setHeight(0.040)
 private.border_type:setTexture(Import.Icon.SlotBorder)
 
-private.icon_type = SimpleButtonType.new('InterfaceAbilityOldSlotIcon', true)
+private.icon_type = SimpleButtonType.new('InterfaceAbilitySlotIcon', true)
 private.icon_type:setWidth(0.035)
 private.icon_type:setHeight(0.035)
 private.icon_type:setTexture('')
 
-private.text_background_type = SimpleFrameType.new('InterfaceaAbilityOldSlotHotkeyBackground', true)
+private.text_background_type = SimpleFrameType.new('InterfaceaAbilitySlotHotkeyBackground', true)
 private.text_background_type:setWidth(0.005)
 private.text_background_type:setHeight(0.005)
 private.text_background_type:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
 
-private.text_type = SimpleTextType.new('InterfaceAbilityOldSlotHotkey', true)
+private.text_type = SimpleTextType.new('InterfaceAbilitySlotHotkey', true)
 private.text_type:setWidth(0.005)
 private.text_type:setHeight(0.005)
 
-private.cooldown_type = SimpleStatusBarType.new('InterfaceAbilityOldSlotCooldown', true)
+private.cooldown_type = SimpleStatusBarType.new('InterfaceAbilitySlotCooldown', true)
 private.cooldown_type:setWidth(0.035)
 private.cooldown_type:setHeight(0.035)
 private.cooldown_type:setBackground(Import.HalfTransparentTexture)
 private.cooldown_type:setBar(Import.HalfTransparentTexture)
 
----@param self InterfaceAbilityOldSlot
+---@param self InterfaceAbilitySlot
 function private.update(self)
     local priv = private.data[self]
     local width = self:getWidth()
@@ -208,7 +208,7 @@ function private.update(self)
     priv.charges:setHeight(private.hotkey_ratio * height)
 end
 
----@param self InterfaceAbilityOldSlot
+---@param self InterfaceAbilitySlot
 function private.newData(self)
     local priv = {
         border = SimpleFrame.new(private.border_type),

@@ -1,6 +1,6 @@
 local ClassName = require('Utils.Class.Name')
 
----@type any
+---@class ClassParent
 local ClassParent = {}
 
 local fmt = string.format
@@ -18,7 +18,7 @@ local function isInList(elem, list)
 end
 
 local ClassStatic
----@param class Class
+---@param class table
 function ClassParent.register(class, ...)
     ClassStatic = ClassStatic or require('Utils.Class.Static')
     local vararg = {...}
@@ -51,14 +51,14 @@ function ClassParent.register(class, ...)
     class2parents[class] = parents
 end
 
----@param class Class
----@return Class[]
+---@param class table
+---@return table[]
 function ClassParent.getList(class)
     return class2parents_list[class]
 end
 
----@param child Class
----@param parent Class
+---@param child table
+---@param parent table
 ---@return boolean
 function ClassParent.isChild(child, parent)
     return child == parent or class2parents[child][parent] or false

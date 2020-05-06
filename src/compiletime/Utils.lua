@@ -175,7 +175,7 @@ end
 
 local ABIL_ID = 'AM##'
 ---@return string
-function WeUtils.nextAbilityOldId()
+function WeUtils.nextAbilityId()
     ABIL_ID = nextId(ABIL_ID)
     return ABIL_ID
 end
@@ -235,7 +235,7 @@ function WeUtils.ID2str(id)
     elseif type(id) == 'string' and string.len(id) == 4 then
         return id
     end
-    Log(Log.Err, "ID2str function", string.format("got %s", id))
+    Logger(Logger.Err, "ID2str function", string.format("got %s", id))
     return nil
 end
 

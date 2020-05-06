@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Log = require('Utils.Log')
+
 local Class = require('Utils.Class.API')
 
 ---@type WeObjectClass
@@ -41,7 +41,7 @@ function override.new(id, base_id, name, child_instance)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then
-        private.we_file = WeObjectFile.new(private.file_src, private.file_dst)
+        private.we_file = WeObjectFile.new(private.file_dst)
     end
     private.we_file:addObject(instance)
 
@@ -146,7 +146,7 @@ static.Field.CategorizationSpecial = WeField.new("uspe", 'bool', "Categorization
 static.Field.CollisionSize = WeField.new("ucol", 'real', "CollisionSize")
 static.Field.DeathTimeseconds = WeField.new("udtm", 'real', "DeathTimeseconds")
 static.Field.DeathType = WeField.new("udea", 'int', "DeathType")
-static.Field.DefaultActiveAbilityOld = WeField.new("udaa", 'string', "DefaultActiveAbilityOld")
+static.Field.DefaultActiveAbility = WeField.new("udaa", 'string', "DefaultActiveAbility")
 static.Field.DefenseBase = WeField.new("udef", 'int', "DefenseBase")
 static.Field.DefenseUpgradeBonus = WeField.new("udup", 'int', "DefenseUpgradeBonus")
 static.Field.DependencyEquivalents = WeField.new("udep", 'string', "DependencyEquivalents")

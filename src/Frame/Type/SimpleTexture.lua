@@ -30,15 +30,15 @@ local private = {}
 ---@return SimpleTextureType
 function override.new(uniq_name, separate_file, child_instance)
     if FrameType.isExist(uniq_name) then
-        Log.error(SimpleTextureType, '\"uniq_name\" must be unique.', 2)
+        Logger.error(SimpleTextureType, '\"uniq_name\" must be unique.', 2)
     end
 
     if type(separate_file) ~= 'boolean' then
-        Log.error(SimpleTextureType, '\"separate_file\" must be boolean.', 2)
+        Logger.error(SimpleTextureType, '\"separate_file\" must be boolean.', 2)
     end
 
     if child_instance and not Class.type(child_instance, SimpleTextureType) then
-        Log.error(SimpleTextureType, '\"child_instance\" must be SimpleTextureType or nil.', 2)
+        Logger.error(SimpleTextureType, '\"child_instance\" must be SimpleTextureType or nil.', 2)
     end
 
     local instance = child_instance or Class.allocate(SimpleTextureType)

@@ -3,7 +3,7 @@
 --=========
 
 local Class = require('Utils.Class.API')
-local Log = require('Utils.Log')
+
 
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')
@@ -28,16 +28,21 @@ WeFieldClass = static
 --========
 
 ---@alias WeFieldTestDataFunc fun(field:WeField, data:any):boolean
----@alias WeFieldDataType string | "'bool'" | "'int'" | "'real'" | "'unreal'" | "'string'"
 
----@type WeFieldDataType[]
-static.DataType = {
-    bool = 'bool',
-    int = 'int',
-    real = 'real',
-    unreal = 'unreal',
-    string = 'string'
-}
+---@alias WeFieldDataType string
+
+---@type WeFieldDataType
+static.DataType = {}
+---@type WeFieldDataType
+static.DataType.bool = 'bool'
+---@type WeFieldDataType
+static.DataType.int = 'int'
+---@type WeFieldDataType
+static.DataType.real = 'real'
+---@type WeFieldDataType
+static.DataType.unreal = 'unreal'
+---@type WeFieldDataType
+static.DataType.string = 'string'
 
 ---@param field_id string | number
 ---@param data_type WeFieldDataType

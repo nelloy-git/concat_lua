@@ -83,7 +83,7 @@ function public:setUnit(unit)
 
         priv.used = priv.used + 1
         if priv.used > priv.max then
-            Log.error(self, 'got max parameters count.', 2)
+            Logger.error(self, 'got max parameters count.', 2)
         end
 
         ---@type InterfaceParameterLine
@@ -122,7 +122,7 @@ function public:setItem(item, unit)
         if res ~= unit_params:getResult(param) then
             priv.used = priv.used + 1
             if priv.used > priv.max then
-                Log.error(self, 'got max parameters count.', 2)
+                Logger.error(self, 'got max parameters count.', 2)
             end
 
             ---@type InterfaceParameterLine

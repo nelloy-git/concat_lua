@@ -8,24 +8,24 @@ local Class = require('Utils.Class.API')
 -- Class
 --=======
 
-local AbilityOldTarget = Class.new('AbilityOldTarget')
----@class AbilityOldTarget
-local public = AbilityOldTarget.public
----@class AbilityOldTargetClass
-local static = AbilityOldTarget.static
----@type AbilityOldTargetClass
-local override = AbilityOldTarget.override
+local AbilityTarget = Class.new('AbilityTarget')
+---@class AbilityTarget
+local public = AbilityTarget.public
+---@class AbilityTargetClass
+local static = AbilityTarget.static
+---@type AbilityTargetClass
+local override = AbilityTarget.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child_instance AbilityOldTarget
----@return AbilityOldTarget
+---@param child_instance AbilityTarget
+---@return AbilityTarget
 function override.new(child_instance)
     if not child_instance then
-        Log.error(AbilityOldTarget, 'can not create instance of abstract class.', 2)
+        Logger.error(AbilityTarget, 'can not create instance of abstract class.', 2)
     end
     return child_instance
 end
@@ -37,13 +37,13 @@ end
 --- Virtual function
 ---@return number
 function public:getX()
-    Log.error(self, 'can not call virtual function.', 2)
+    Logger.error(self, 'can not call virtual function.', 2)
 end
 
 --- Virtual function
 ---@return number
 function public:getY()
-    Log.error(self, 'can not call virtual function.', 2)
+    Logger.error(self, 'can not call virtual function.', 2)
 end
 
 ---@param caster Unit
@@ -62,7 +62,7 @@ end
 ---@param order number
 ---@return boolean
 function public:order(unit, order)
-    Log.error(self, 'can not call virtual function.', 2)
+    Logger.error(self, 'can not call virtual function.', 2)
 end
 
 --=========

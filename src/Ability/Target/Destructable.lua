@@ -4,20 +4,20 @@
 
 local Class = require('Utils.Class.API')
 
----@type AbilityOldTarget
-local AbilityOldTarget = require('AbilityOld.Target.Target')
+---@type AbilityTarget
+local AbilityTarget = require('Ability.Target.Target')
 
 --=======
 -- Class
 --=======
 
-local AbilityOldTargetDestructable = Class.new('AbilityOldTargetDestructable', AbilityOldTarget)
----@class AbilityOldTargetDestructable
-local public = AbilityOldTargetDestructable.public
----@class AbilityOldTargetDestructableClass
-local static = AbilityOldTargetDestructable.static
----@type AbilityOldTargetDestructableClass
-local override = AbilityOldTargetDestructable.override
+local AbilityTargetDestructable = Class.new('AbilityTargetDestructable', AbilityTarget)
+---@class AbilityTargetDestructable
+local public = AbilityTargetDestructable.public
+---@class AbilityTargetDestructableClass
+local static = AbilityTargetDestructable.static
+---@type AbilityTargetDestructableClass
+local override = AbilityTargetDestructable.override
 local private = {}
 
 --=========
@@ -25,11 +25,11 @@ local private = {}
 --=========
 
 ---@param destr_obj destructable
----@param child_instance AbilityOldTargetDestructable | nil
----@return AbilityOldTargetDestructable
+---@param child_instance AbilityTargetDestructable | nil
+---@return AbilityTargetDestructable
 function override.new(destr_obj, child_instance)
-    local instance = child_instance or Class.allocate(AbilityOldTargetDestructable)
-    instance = AbilityOldTarget.new(instance)
+    local instance = child_instance or Class.allocate(AbilityTargetDestructable)
+    instance = AbilityTarget.new(instance)
     private.newData(instance, destr_obj)
 
     return instance
@@ -67,7 +67,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityOldTargetDestructable
+---@param self AbilityTargetDestructable
 ---@param destr_obj destructable
 function private.newData(self, destr_obj)
     local priv = {

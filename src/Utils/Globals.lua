@@ -1,7 +1,13 @@
 local Globals = {}
 
-Log = require('Utils.Log')
---require('Utils.Class.API')
+---@type LoggerClass
+Logger = require('Utils.Logger')
+Logger.init()
+
+Log = setmetatable({}, {__call = Logger.log})
+Log.Err = Logger.LogType.Err
+Log.Wrn = Logger.LogType.Wrn
+Log.Msg = Logger.LogType.Msg
 
 local savety_run_enable = true
 ---@param func fun
@@ -11,7 +17,7 @@ function savetyRun(func, ...)
         if success then
             return result
         else
-            Log.error('savetyRun', result, 2)
+            Logger.error('savetyRun', result, 2)
             return nil
         end
     else
@@ -28,7 +34,7 @@ function ID(id)
     elseif type(id) == 'number' and math.fmod(id, 1) == 0 then
         return id
     end
-    Log.error("ID function", string.format("got %s", id), 2)
+    Logger.error("ID function", string.format("got %s", id), 2)
     return nil
 end
 
@@ -41,7 +47,7 @@ function ID2str(id)
     elseif type(id) == 'string' and string.len(id) == 4 then
         return id
     end
-    Log(Log.Err, "ID2str function", string.format("got %s", id))
+    Logger(Logger.Err, "ID2str function", string.format("got %s", id))
     return nil
 end
 

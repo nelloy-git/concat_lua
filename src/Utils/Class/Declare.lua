@@ -5,6 +5,7 @@ local ClassOverride = require('Utils.Class.Override')
 local ClassPublic = require('Utils.Class.Public')
 local ClassInstance = require('Utils.Class.Instance')
 
+---@class ClassDeclare
 local ClassDeclare = {}
 
 local rawset = rawset
@@ -24,31 +25,30 @@ local class_metatable = {
 }
 
 ---@param name string
----@return Class
+---@return table
 function ClassDeclare.register(name, ...)
     if type(name) ~= 'string' then
         error('class name can be string only.', 2)
     end
 
-    ---@class Class
     local class = {}
     ClassName.register(class, name)
     ClassParent.register(class, ...)
-    local static = ClassStatic.register(class)
-    local public = ClassPublic.register(class)
-    local override = ClassOverride.register(class)
-
-    ---@type fun(self:any):any
-    class.static = function(self) return static end
-    ---@type fun(self:any):any
-    class.public = function(self) return public end
-    ---@type fun(self:any):any
-    class.override = function(self) return override end
+    class.static = ClassStatic.register(class)
+    class.public = ClassPublic.register(class)
+    class.override = ClassOverride.register(class)
 
     setmetatable(class, class_metatable)
     return class
 end
 
+---@param value1 any
+---@param value2 any
+---@return boolean
+---@overload fun(value:any):string
+---@overload fun(child_class:any, parent_class:any):boolean
+---@overload fun(child_instance:any, parent_class:any):boolean
+---@overload fun(child_instance:any, parent_instance:any):boolean
 function ClassDeclare.type(value1, value2)
     if not value2 then
         if ClassName.isClass(value1) or ClassInstance.isInstance(value1) then

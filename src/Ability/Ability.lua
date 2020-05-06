@@ -1,55 +1,102 @@
-local AbilityAPI = {}
+--=========
+-- Include
+--=========
 
-local data = {}
+---@type ClassAPI
+local Class = require('Utils.Class.API')
 
----@param self Ability
+---@type AbilityTypeClass
+local AbilityType = require('Ability.Type')
+---@type TimerClass
+local Timer = require('Timer.Timer')
+
+--=======
+-- Class
+--=======
+
+local Ability = Class.new('Ability')
+---@class Ability
+local public = Ability.public
+---@class AbilityClass
+local static = Ability.static
+---@type AbilityClass
+local override = Ability.override
+local private = {}
+
+--=========
+-- Static
+--=========
+
+---@param owner Unit
 ---@param ability_type AbilityType
----@return nil
----@overload fun(self:Ability):AbilityType
-local function abilType(self, ability_type)
-    if ability_type == nil then
-        return data[self].ability_type
-    end
-    data[self].ability_type = ability_type
+---@param child_instance Ability | nil
+---@return Ability
+function override.new(owner, ability_type, child_instance)
+    local instance = child_instance or Class.allocate(Ability)
+    private.newData(instance, owner, ability_type)
+
+    return instance
 end
 
----@param self Ability
----@return unit
-local function abilOwner(self)
-    return data[self].owner
+--========
+-- Public
+--========
+
+---@param lvl number
+function public:setLevel(lvl)
+    private.data[self].lvl = lvl
 end
 
----@param self Ability
+---@return string
+function public:getName()
+    local priv = private.data[self]
+    return priv.ability_type:getName(priv.owner, priv.lvl)
+end
+
+---@return string
+function public:getDescription()
+    local priv = private.data[self]
+    return priv.ability_type:getDescription(priv.owner, priv.lvl)
+end
+
+---@return string
+function public:getIcon()
+    local priv = private.data[self]
+    return priv.ability_type:getIcon(priv.owner, priv.lvl)
+end
+
 ---@return number
-local function getAbilityLevel(self)
-    return data[self].lvl
+function public:getLevel()
+    return private.data[self].lvl
 end
+
+---@return AbilityType
+function public:getType()
+    return private.data[self].ability_type
+end
+
+---@return Unit
+function public:getOwner()
+    return private.data[self].owner
+end
+
+--=========
+-- Private
+--=========
+
+private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self Ability
-local function getAbilityName(self)
-    local type = getAbilityType(self)
-    local owner = getAbilityOwner(self)
-    local lvl = getAbilityLevel(self)
-    type:getName(owner, lvl)
-end
-
+---@param owner Unit
 ---@param ability_type AbilityType
----@param owner unit
-function AbilityAPI.new(ability_type, owner)
-    ---@class Ability
-    local Ability = {
-        getType = getAbilityType,
-        getOwner = getAbilityOwner,
-
-        getName = function(self) return self:getType(). end,
-    }
-
-    data[Ability] = {
+function private.newData(self, owner, ability_type)
+    local priv = {
+        owner = owner,
         ability_type = ability_type,
-        owner = owner
-    }
 
-    return Ability
+        lvl = 1,
+    }
+    private.data[self] = priv
 end
 
-return AbilityAPI
+return static

@@ -46,8 +46,8 @@ end
 
 function public:enable(flag)
     local priv = private.data[self]
-    --UnitAddAbilityOld(unit, ID('Abun'))
-    --UnitRemoveAbilityOld(unit, ID('Amov'))
+    --UnitAddAbility(unit, ID('Abun'))
+    --UnitRemoveAbility(unit, ID('Amov'))
     priv.enable = flag
     priv.unit_controller:enable(flag)
 end

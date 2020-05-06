@@ -30,15 +30,15 @@ local private = {}
 ---@return SimpleStatusBarType
 function override.new(uniq_name, separate_file, child_instance)
     if FrameType.isExist(uniq_name) then
-        Log.error(SimpleStatusBarType, '\"uniq_name\" must be unique.', 2)
+        Logger.error(SimpleStatusBarType, '\"uniq_name\" must be unique.', 2)
     end
 
     if type(separate_file) ~= 'boolean' then
-        Log.error(SimpleStatusBarType, '\"separate_file\" must be boolean.', 2)
+        Logger.error(SimpleStatusBarType, '\"separate_file\" must be boolean.', 2)
     end
 
     if child_instance and not Class.type(child_instance, SimpleStatusBarType) then
-        Log.error(SimpleStatusBarType, '\"child_instance\" must be SimpleStatusBarType or nil.', 2)
+        Logger.error(SimpleStatusBarType, '\"child_instance\" must be SimpleStatusBarType or nil.', 2)
     end
 
     local instance = child_instance or Class.allocate(SimpleStatusBarType)

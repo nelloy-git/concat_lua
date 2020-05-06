@@ -46,7 +46,7 @@ local private = {}
 ---@return InterfaceFrameEquipment
 function override.new(child_instance)
     if child_instance and not Class.type(child_instance, InterfaceFrameEquipment) then
-        Log.error(InterfaceFrameEquipment, '\"child_instance\" must be InterfaceFrameEquipment or nil', 2)
+        Logger.error(InterfaceFrameEquipment, '\"child_instance\" must be InterfaceFrameEquipment or nil', 2)
     end
 
     local instance = child_instance or Class.allocate(InterfaceFrameEquipment)
@@ -65,7 +65,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log(Log.Wrn, self, 'Autosizing frame. Disabled function.', 2)
+    Logger(Logger.Wrn, self, 'Autosizing frame. Disabled function.', 2)
 end
 
 ---@param level number
@@ -90,7 +90,7 @@ function public:setUnitEquipment(unit_equip)
     priv.unit_equip = unit_equip
 
     if not unit_equip then
-        Log.error(self, 'got nil.', 2)
+        Logger.error(self, 'got nil.', 2)
     end
 
     for _, item_type in pairs(ItemType) do

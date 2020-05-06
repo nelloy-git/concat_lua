@@ -15,15 +15,15 @@ ParamAPI = require('Parameter.API')
 ---@type InterfaceFrameParamTableClass
 local ParamTable = require('Interface.Frame.ParamTable')
 
----@type AbilityOldAPI
-local AbilityOldAPI = require('AbilityOld.API')
-local AbilityOld = AbilityOldAPI.AbilityOld
-local TargetUnit = AbilityOldAPI.TargetUnit
+---@type AbilityAPI
+local AbilityAPI = require('Ability.API')
+local Ability = AbilityAPI.Ability
+local TargetUnit = AbilityAPI.TargetUnit
 
-ExampleAbilityOld = require('AbilityOld.Example')
+ExampleAbility = require('Ability.Example')
 
 require('Event.Item')
---require('Event.AbilityOld')
+--require('Event.Ability')
 --require('Event.Interface')
 
 footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
@@ -37,7 +37,7 @@ if not IsCompiletime() then
 
     u2 = Unit.new(footman_type, Player(1), 0, 0)
 
-    u:getAbilities():set(ExampleAbilityOld, 1)
+    u:getAbilities():set(ExampleAbility, 1)
     local abil = u:getAbilities():get(1)
     abil:setMaxCharges(3)
 
@@ -53,7 +53,7 @@ if not IsCompiletime() then
     --print(targ:getObj())
     --abil:use(targ)
 
-    --UnitAddAbilityOld(u:getObj(), ExampleAbilityOld:getId())
+    --UnitAddAbility(u:getObj(), ExampleAbility:getId())
     --u2:destroy()
     --u2.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
 

@@ -102,7 +102,7 @@ function private.newData(self, uniq_name, item_class)
 
     if IsCompiletime() then
         if private.CompiletimeData:get(uniq_name) then
-            Log.error(ItemModelType, 'name is not unique.', 3)
+            Logger.error(ItemModelType, 'name is not unique.', 3)
         end
         priv.we_item = private.createWc3Item(uniq_name, item_class)
         private.CompiletimeData:set(uniq_name, priv.we_item:getId())
@@ -156,7 +156,7 @@ end)
 
 function private.createWc3Item(name, item_class)
     if not private.isClass(item_class) then
-        Log.error(ItemModelType, 'unknown ItemModelClassificationEnum.', 4)
+        Logger.error(ItemModelType, 'unknown ItemModelClassificationEnum.', 4)
     end
 
     ---@type ObjectEdit

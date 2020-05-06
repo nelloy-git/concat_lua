@@ -2,14 +2,12 @@
 -- Include
 --=========
 
----@type ParameterUnitClass
-local Unit = require('Parameter.Unit')
----@type ParameterItemClass
-local Item = require('Parameter.Item')
 ---@type ParameterValueClass
 local Value = require('Parameter.Value')
+---@type ParameterValueListClass
+local ValueList = require('Parameter.ValueList')
 ---@type ParameterData
-local Data = require('Parameter.Data')
+local ParamData = require('Parameter.Data')
 
 --=============
 --     API
@@ -18,20 +16,18 @@ local Data = require('Parameter.Data')
 ---@class ParameterAPI
 local ParameterAPI = {}
 
-ParameterAPI.ValueType = Value.ValuePos
-ParameterAPI.ParamType = Data.Type
+ParameterAPI.ValueList = ValueList
+ParameterAPI.ValueType = Value.ValueType
+ParameterAPI.ParamType = ParamData.Type
 
-ParameterAPI.isPhysic = Data.isParamPhysic
-ParameterAPI.isMagic = Data.isParamMagic
-ParameterAPI.isPercent = Data.isParamPercent
-ParameterAPI.getShortName = Data.getShortName
-ParameterAPI.getFullName = Data.getFullName
-ParameterAPI.getIcon = Data.getIcon
-ParameterAPI.getTooltip = Data.getTooltip
-ParameterAPI.mathParameter = Data.mathParam
-
-ParameterAPI.Unit = Unit
-ParameterAPI.Item = Item
+ParameterAPI.isPhysic = ParamData.isParamPhysic
+ParameterAPI.isMagic = ParamData.isParamMagic
+ParameterAPI.isPercent = ParamData.isParamPercent
+ParameterAPI.getShortName = ParamData.getShortName
+ParameterAPI.getFullName = ParamData.getFullName
+ParameterAPI.getIcon = ParamData.getIcon
+ParameterAPI.getTooltip = ParamData.getTooltip
+ParameterAPI.mathParameter = ParamData.mathParam
 
 --=========
 -- Example

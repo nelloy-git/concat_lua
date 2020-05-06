@@ -1,5 +1,6 @@
 local ClassParent = require('Utils.Class.Parent')
 
+---@class ClassStatic
 local ClassStatic = {}
 
 local rawget = rawget
@@ -39,7 +40,7 @@ local static_meta = {
     end,
 }
 
----@param class Class
+---@param class table
 ---@return table
 function ClassStatic.register(class)
     local static = {}
@@ -50,14 +51,14 @@ function ClassStatic.register(class)
     return static
 end
 
----@param class Class
+---@param class table
 ---@return table
 function ClassStatic.getStatic(class)
     return class2static[class]
 end
 
 ---@param static table
----@return Class
+---@return table
 function ClassStatic.getClass(static)
     return static2class[static]
 end

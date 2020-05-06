@@ -1,7 +1,8 @@
 {
     "Lua.workspace.ignoreDir": [
         ".vscode",
-        "dst",
+        "builder",
+        "dst"
     ],
     "Lua.workspace.library": {
         "./lib": true,
@@ -19,10 +20,9 @@
         "CompileFinal",
         "CompiletimeFinalToRuntime",
     ],
-    "Lua.develop.enable": false,
-    "Lua.completion.enable": true,
     "files.associations": {
         "chrono": "cpp"
     },
     "Lua.awakened.cat": true,
+    "Lua.workspace.ignoreSubmodules": false,
 }

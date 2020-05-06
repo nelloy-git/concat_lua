@@ -1,30 +1,41 @@
+---@type BuilderUtils
+local Utils = require('utils')
+
 local is_compiletime = true
 local src_dir = ''
 local dst_dir = ''
 local runtime_modules_path = 'runtime_modules.txt'
 local compiletime_modules_path = 'compiletime_modules.txt'
-local sep = package.config:sub(1,1)
 local finalize = {
     functions = {},
     args = {}
 }
 
+local sep = package.config:sub(1,1)
 
-local replace_compiletime = {
-    path = {},
-    original = {},
-    result = {}
-}
+local compiletime_packages = {}
+local runtime_packages = {}
+local loading_packages = {}
+
+local inside_compiletime_function = false
+local 
+package_func_code = [[
+package_files['%s'] = function()
+    %s
+end
+]]
 
 ---@return boolean
 function IsCompiletime()
     return is_compiletime
 end
 
+---@return string
 function GetSrcDir()
     return src_dir
 end
 
+---@return string
 function GetDstDir()
     return dst_dir
 end
@@ -43,28 +54,11 @@ function CompiletimeFinalToRuntime(func, ...)
     table.insert(finalize.args, {...})
 end
 
-local compiletime_packages = {}
-local runtime_packages = {}
-local loading_packages = {}
-
-local inside_compiletime_function = false
-local package_func_code = [[
-package_files['%s'] = function()
-    %s
-end
-]]
-
-local function getBuilderDir()
-    local builder_path = debug.getinfo(2, "S").source:sub(2)
-
-    local pos = builder_path:find(package.config:sub(1,1))
-    local last = pos
-    while (pos) do
-        last = pos
-        pos = builder_path:find(package.config:sub(1,1), pos + 1)
+local function runFinalize()
+    local count = #finalize.functions
+    for i = 1, count do
+        finalize.functions[count + 1 - i](table.unpack(finalize.args[count + 1 - i]))
     end
-
-    return builder_path:sub(1, last - 1)
 end
 
 ---@param package_name string
@@ -79,46 +73,40 @@ local function path2name(path)
     return path:sub(1, #path - 4)
 end
 
-local function file_exists(file)
-    local f = io.open(file, "rb")
-    if f then
-        f:close()
+local replace_compiletime = {
+    path = {},
+    original = {},
+    result = {}
+}
+
+local function replaceCompiletime()
+    for i = 1, #replace_compiletime.path do
+        local path = replace_compiletime.path[i]
+        local original = replace_compiletime.original[i]:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
+        local result = Utils.toString(replace_compiletime.result[i])
+
+        runtime_packages[path] = string.gsub(runtime_packages[path], original, result, 1)
     end
-    return f ~= nil
 end
 
-local function readFile(path)
-    if not file_exists(path) then
-        local info = debug.getinfo(2, 'lS')
-        error(string.format('Can not find file. %s:%s', info.source, info.currentline), 3)
-    end
-
-    local lines = {}
-    for line in io.lines(path) do 
-      lines[#lines + 1] = line
-    end
-
-    local str = table.concat(lines, '\n')
-    return str
+---@param file_path string
+---@param line number
+---@return string
+local function searchCompiletimeInFile(file_path, line)
+    local pos = Utils.findLinePos(runtime_packages[file_path], line)
+    local postfix = runtime_packages[file_path]:sub(pos + 1)
+    return postfix:match('[^%a]Compiletime%b()'):sub(2)
 end
 
-local function writeFile(str, path)
-    local f = io.open(path, "w")
-    f:write(str)
-    f:close()
-end
-
-local function appendFile(str, path)
-    local f = io.open(path, "a+")
-    f:write(str)
-    f:close()
-end
-
+---@param result any
+---@return boolean
 local function checkCompiletimeResult(result)
     local res_type = type(result)
     if res_type == 'string' or res_type == 'number' or res_type == 'nil' then
         return true
-    elseif res_type == 'table' then
+    end
+
+    if res_type == 'table' then
         for k,v in pairs(result) do
             if not checkCompiletimeResult(k) or not checkCompiletimeResult(v) then
                 return false
@@ -126,49 +114,8 @@ local function checkCompiletimeResult(result)
         end
         return true
     end
+
     return false
-end
-
-local function compiletimeToString(val)
-    local t = type(val)
-    if t == 'string' then
-        val = val:gsub('\'', '\\\'')
-        val = val:gsub('%%', '%%%%')
-        return '\''..val..'\''
-    elseif t == 'number' then
-        return tostring(val)
-    elseif t == 'nil' then
-        return 'nil1'
-    elseif t == 'boolean' then
-        if val then
-            return 'true'
-        else
-            return 'false'
-        end
-    elseif t == 'table' then
-        local res = '{'
-        for k, v in pairs(val) do
-            res = res..string.format('[%s] = %s,', compiletimeToString(k), compiletimeToString(v))
-        end
-        return res..'}'
-    end
-end
-
-local function replaceCompiletime()
-    for i = 1, #replace_compiletime.path do
-        local path = replace_compiletime.path[i]
-        local original = replace_compiletime.original[i]:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
-        local result = compiletimeToString(replace_compiletime.result[i])
-
-        runtime_packages[path] = string.gsub(runtime_packages[path], original, result, 1)
-    end
-end
-
-local function runFinalize()
-    local count = #finalize.functions
-    for i = 1, count do
-        finalize.functions[count + 1 - i](table.unpack(finalize.args[count + 1 - i]))
-    end
 end
 
 local function optimize(str)
@@ -178,39 +125,11 @@ local function optimize(str)
     return str
 end
 
----@param src string
----@param dst string
-local function Compile(src, dst)
-    print(src, dst)
-    package.path = package.path .. ';' .. src .. sep .. "?.lua"
-
-    src_dir = src..sep
-    dst_dir = dst..sep
-
-    -- Run lua code.
-    require('war3map')
-    -- Run final functions list.
-    runFinalize()
-    -- Replace Compiletime functions with their values.
-    replaceCompiletime()
-
-    -- Concat files
-    local res = runtime_packages[name2path('war3map')]
-    runtime_packages[name2path('war3map')] = nil
-    for k, v in pairs(runtime_packages) do
-        res = string.format(package_func_code,
-                            path2name(k), v:gsub('\n', '\n\t'))..'\n'..res
-    end
-
-    local runtime_code = readFile(getBuilderDir()..package.config:sub(1,1)..'runtime_code.lua')
-    res = runtime_code..'\n'..res
-
-    -- Save file
-    res = optimize(res)
-    writeFile(res, dst_dir..sep..'war3map.lua')
-end
-
 local original_require = _G.require
+local compiletime_log = Utils.getCurDir()..sep..compiletime_modules_path
+Utils.clearFile(compiletime_log)
+local runtime_log = Utils.getCurDir()..sep..runtime_modules_path
+Utils.clearFile(runtime_log)
 function require(package_name)
     if not type(package_name) == 'string' then
         error('require function got non string value.', 2)
@@ -221,26 +140,22 @@ function require(package_name)
     end
 
     local path = name2path(package_name)
+    local log_path
+    local packages_list
     if inside_compiletime_function then
-        if not compiletime_packages[path] then
-            local log_path = getBuilderDir()..package.config:sub(1,1)..compiletime_modules_path
-            if file_exists(path) then
-                appendFile(path..'\n', log_path)
-            else
-                writeFile(path..'\n', log_path)
-            end
-            compiletime_packages[path] = readFile(path)
-        end
+        log_path = compiletime_log
+        packages_list = compiletime_packages
     else
-        if not runtime_packages[path] then
-            local log_path = getBuilderDir()..package.config:sub(1,1)..runtime_modules_path
-            if file_exists(path) then
-                appendFile(path..'\n', log_path)
-            else
-                writeFile(path..'\n', log_path)
-            end
-            runtime_packages[path] = readFile(path)
+        log_path = runtime_log
+        packages_list = runtime_packages
+    end
+
+    if not packages_list[path] then
+        if not Utils.fileExists(path) then
+            error('Can not find file.', 2)
         end
+        Utils.appendFile(path..'\n', log_path)
+        packages_list[path] = Utils.readFile(path)
     end
 
     loading_packages[package_name] = true
@@ -266,24 +181,16 @@ function Compiletime(body, ...)
     end
 
     if not checkCompiletimeResult(res) then
-        error('compiletime function can return only string, number or table with strings, numbers and tables. %s:%s', 2)
+        error('Compiletime function can return only string, number or table with strings, numbers and tables. %s:%s', 2)
     end
 
     local info = debug.getinfo(2, 'lSn')
-    local path = src_dir..info.source:sub(4, #info.source)
+    local path = info.source:sub(2, #info.source)
     local line = info.currentline
-    if runtime_packages[path] then
-        local ln = 1
-        local pos = 0
-        for i = 1, line - 1 do
-            pos = string.find(runtime_packages[path], '\n', pos + 1)
-            ln = ln + 1
-        end
-        local postfix = runtime_packages[path]:sub(pos + 1)
-        local original = postfix:match('[^%a]Compiletime%b()'):sub(2)
 
+    if runtime_packages[path] then
         table.insert(replace_compiletime.path, path)
-        table.insert(replace_compiletime.original, original)
+        table.insert(replace_compiletime.original, searchCompiletimeInFile(path, line))
         table.insert(replace_compiletime.result, res or 'nil')
     end
 
@@ -291,4 +198,43 @@ function Compiletime(body, ...)
     return res
 end
 
-Compile(arg[1], arg[2])
+---@param code_src string
+---@param map_dst string
+---@param map_data string
+local function Build(code_src, map_dst, map_data)
+    -- Adds code_src to package searching list.
+    package.path = package.path..';'..code_src..sep.."?.lua"
+
+    src_dir = code_src..sep
+    dst_dir = map_dst..sep
+
+    -- Copy map data to dst
+    Utils.copyDir(map_data, map_dst)
+
+    -- Run lua code.
+    local success, result = pcall(require, 'main')
+    if not success then
+        print(result)
+        return
+    end
+    -- Run final functions list.
+    runFinalize()
+    -- Replace Compiletime functions with their values.
+    replaceCompiletime()
+
+    -- Adds runtime code.
+    local res = Utils.readFile(Utils.getCurDir()..sep..'runtime_code.lua')..'\n'
+    -- Concat parts.
+    for k, v in pairs(runtime_packages) do
+        local package = string.format(package_func_code,
+                                      path2name(k), v:gsub('\n', '\n\t'))
+        res = res..package
+    end
+
+    -- Optimaze file size.
+    res = optimize(res)
+    -- Save
+    Utils.writeFile(res, dst_dir..sep..'war3map.lua')
+end
+
+Build(arg[1], arg[2], arg[3])

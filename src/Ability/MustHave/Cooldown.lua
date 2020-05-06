@@ -4,8 +4,8 @@
 
 local Class = require('Utils.Class.API')
 
----@type AbilityOldClass
-local AbilityOld = require('AbilityOld.AbilityOld')
+---@type AbilityClass
+local Ability = require('Ability.Ability')
 ---@type TimerClass
 local Timer = require('Timer.Timer')
 
@@ -13,12 +13,12 @@ local Timer = require('Timer.Timer')
 -- Class
 --=======
 
----@type AbilityOld
-local public = Class.getPublic(AbilityOld)
----@type AbilityOldClass
-local static = AbilityOld
----@type AbilityOldClass
-local override = Class.getOverride(AbilityOld)
+---@type Ability
+local public = Class.getPublic(Ability)
+---@type AbilityClass
+local static = Ability
+---@type AbilityClass
+local override = Class.getOverride(Ability)
 local private = {}
 
 --=========
@@ -101,7 +101,7 @@ function private.timerLoop()
     end
 end
 
----@param self AbilityOld
+---@param self Ability
 function private.checkChargesCooldown(self, priv)
 
     if priv.charges < priv.max_charges then
@@ -120,7 +120,7 @@ function private.checkChargesCooldown(self, priv)
     private.on_cooldown[self] = nil
 end
 
----@param self AbilityOld
+---@param self Ability
 function private.newData(self)
     local priv = {
         charges = 1,

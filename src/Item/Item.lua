@@ -10,15 +10,17 @@ local Import = require('Resources.Import')
 local ItemModel = require('Item.Model')
 ---@type ParameterAPI
 local ParameterAPI = require('Parameter.API')
+---@type ItemObj
+local ItemObj = require('Object.Item')
 
 --=======
 -- Class
 --=======
 
-local Item = Class.new('Item')
----@class Item
+local Item = Class.new('Item', ItemObj)
+---@class Item : ItemObj
 local public = Item.public
----@class ItemClass
+---@class ItemClass : ItemObjClass
 local static = Item.static
 ---@type ItemClass
 local override = Item.override
@@ -28,73 +30,12 @@ local private = {}
 -- Static
 --=========
 
----@alias ItemTypeEnum number
-
----@type ItemTypeEnum[]
-static.Type = {}
----@type ItemTypeEnum
-static.Type.BAG = 1
----@type ItemTypeEnum
-static.Type.BELT = 2
----@type ItemTypeEnum
-static.Type.BOOTS = 3
----@type ItemTypeEnum
-static.Type.CHEST = 4
----@type ItemTypeEnum
-static.Type.EARRING = 5
----@type ItemTypeEnum
-static.Type.HANDS = 6
----@type ItemTypeEnum
-static.Type.HEAD = 7
----@type ItemTypeEnum
-static.Type.LEGS = 8
----@type ItemTypeEnum
-static.Type.WEAPON = 9
----@type ItemTypeEnum
-static.Type.NECKLACE = 10
----@type ItemTypeEnum
-static.Type.RING = 11
----@type ItemTypeEnum
-static.Type.OFFHAND = 12
----@type ItemTypeEnum
-static.Type.SHOULDERS = 13
----@type ItemTypeEnum
-static.Type.USABLE = 14
----@type ItemTypeEnum
-static.Type.MISCELLANEOUS = 15
-
----@param item_type ItemTypeEnum
----@param child_instance Item | nil
 ---@return Item
-function override.new(item_type, child_instance)
-    local instance = child_instance or Class.allocate(Item)
-    private.newData(instance, item_type)
+function override.new()
+    local instance = Class.allocate(Item)
+    private.newData(instance)
 
     return instance
-end
-
----@param obj_or_id item | number
----@return Item | nil
-function static.getInstance(obj_or_id)
-    if type(obj_or_id) == 'number' then
-        return private.id2item[obj_or_id]
-    end
-    local model = ItemModel.getInstance(obj_or_id)
-    if model then
-        return private.model2item[model]
-    end
-end
-
----@param item_type ItemTypeEnum
----@return boolean
-function static.isTypeEquipable(item_type)
-    return private.Equipable[item_type]
-end
-
----@param item_type ItemTypeEnum
----@return string
-function static.getTypeIcon(item_type)
-    return private.TypeIcon[item_type]
 end
 
 --========
@@ -104,11 +45,6 @@ end
 ---@param name string
 function public:setName(name)
     private.data[self].name = name
-end
-
----@param item_type ItemTypeEnum
-function public:setType(item_type)
-    private.data[self].item_type = item_type
 end
 
 ---@param icon string

@@ -1,57 +1,57 @@
-local Log = require('Utils.Log')
+
 
 ---@class ParameterData
-local Data = {}
+local ParamData = {}
 
 ---@alias ParameterTypeEnum number
 
 ---@type table<string,ParameterTypeEnum>
-Data.Type = {}
+ParamData.Type = {}
 ---@type ParameterTypeEnum
-Data.Type.PDmg = 1
+ParamData.Type.PDmg = 1
 ---@type ParameterTypeEnum
-Data.Type.ASpd = 2
+ParamData.Type.ASpd = 2
 ---@type ParameterTypeEnum
-Data.Type.Armor = 3
+ParamData.Type.Armor = 3
 ---@type ParameterTypeEnum
-Data.Type.PDmgReduc = 4
+ParamData.Type.PDmgReduc = 4
 ---@type ParameterTypeEnum
-Data.Type.MDmg = 5
+ParamData.Type.MDmg = 5
 ---@type ParameterTypeEnum
-Data.Type.CSpd = 6
+ParamData.Type.CSpd = 6
 ---@type ParameterTypeEnum
-Data.Type.Resist = 7
+ParamData.Type.Resist = 7
 ---@type ParameterTypeEnum
-Data.Type.MDmgReduc = 8
+ParamData.Type.MDmgReduc = 8
 ---@type ParameterTypeEnum
-Data.Type.Dodge = 9
+ParamData.Type.Dodge = 9
 ---@type ParameterTypeEnum
-Data.Type.CritCh = 10
+ParamData.Type.CritCh = 10
 ---@type ParameterTypeEnum
-Data.Type.CritDmg = 11
+ParamData.Type.CritDmg = 11
 ---@type ParameterTypeEnum
-Data.Type.CdReduc = 12
+ParamData.Type.CdReduc = 12
 ---@type ParameterTypeEnum
-Data.Type.Health = 13
+ParamData.Type.Health = 13
 ---@type ParameterTypeEnum
-Data.Type.Regen = 14
+ParamData.Type.Regen = 14
 ---@type ParameterTypeEnum
-Data.Type.Mana = 15
+ParamData.Type.Mana = 15
 ---@type ParameterTypeEnum
-Data.Type.Recov = 16
+ParamData.Type.Recov = 16
 ---@type ParameterTypeEnum
-Data.Type.Str = 17
+ParamData.Type.Str = 17
 ---@type ParameterTypeEnum
-Data.Type.Agi = 18
+ParamData.Type.Agi = 18
 ---@type ParameterTypeEnum
-Data.Type.Int = 19
+ParamData.Type.Int = 19
 ---@type ParameterTypeEnum
-Data.Type.MS = 20
+ParamData.Type.MS = 20
 
 ---@param param any
 ---@return boolean
-function Data.isParamType(param)
-    for _, p in pairs(Data.Type) do
+function ParamData.isParamType(param)
+    for _, p in pairs(ParamData.Type) do
         if param == p then
             return true
         end
@@ -59,146 +59,146 @@ function Data.isParamType(param)
     return false
 end
 
-Data.PercentType = {
-    [Data.Type.PDmgReduc] = true,
-    [Data.Type.MDmgReduc] = true,
-    [Data.Type.Dodge] = true,
-    [Data.Type.CritDmg] = true,
-    [Data.Type.CdReduc] = true,
-    [Data.Type.CritCh] = true,
+ParamData.PercentType = {
+    [ParamData.Type.PDmgReduc] = true,
+    [ParamData.Type.MDmgReduc] = true,
+    [ParamData.Type.Dodge] = true,
+    [ParamData.Type.CritDmg] = true,
+    [ParamData.Type.CdReduc] = true,
+    [ParamData.Type.CritCh] = true,
 }
 
 ---@return boolean
-function Data.isParamPercent(param)
-    return Data.PercentType[param] or false
+function ParamData.isParamPercent(param)
+    return ParamData.PercentType[param] or false
 end
 
-Data.PhysicType = {
-    [Data.Type.PDmg] = true,
-    [Data.Type.ASpd] = true,
-    [Data.Type.Armor] = true,
-    [Data.Type.PDmgReduc] = true,
-    [Data.Type.Health] = true,
-    [Data.Type.Regen] = true,
+ParamData.PhysicType = {
+    [ParamData.Type.PDmg] = true,
+    [ParamData.Type.ASpd] = true,
+    [ParamData.Type.Armor] = true,
+    [ParamData.Type.PDmgReduc] = true,
+    [ParamData.Type.Health] = true,
+    [ParamData.Type.Regen] = true,
 }
 
 ---@return boolean
-function Data.isParamPhysic(param)
-    return Data.PhysicType[param] or false
+function ParamData.isParamPhysic(param)
+    return ParamData.PhysicType[param] or false
 end
 
-Data.MagicType = {
-    [Data.Type.MDmg] = true,
-    [Data.Type.CSpd] = true,
-    [Data.Type.Resist] = true,
-    [Data.Type.MDmgReduc] = true,
-    [Data.Type.Mana] = true,
-    [Data.Type.Recov] = true,
+ParamData.MagicType = {
+    [ParamData.Type.MDmg] = true,
+    [ParamData.Type.CSpd] = true,
+    [ParamData.Type.Resist] = true,
+    [ParamData.Type.MDmgReduc] = true,
+    [ParamData.Type.Mana] = true,
+    [ParamData.Type.Recov] = true,
 }
 
 ---@return boolean
-function Data.isParamMagic(param)
-    return Data.MagicType[param] or false
+function ParamData.isParamMagic(param)
+    return ParamData.MagicType[param] or false
 end
 
-Data.ShortName = {
-    [Data.Type.PDmg] = 'PDmg',
-    [Data.Type.ASpd] = 'ASpd',
-    [Data.Type.Armor] = 'PDef',
-    [Data.Type.PDmgReduc] = 'PReduc',
-    [Data.Type.MDmg] = 'MDmg',
-    [Data.Type.CSpd] = 'CSpd',
-    [Data.Type.Resist] = 'Resist',
-    [Data.Type.MDmgReduc] = 'MReduc',
-    [Data.Type.Dodge] = 'Dodge',
-    [Data.Type.CritCh] = 'CritCh',
-    [Data.Type.CritDmg] = 'CritDmg',
-    [Data.Type.CdReduc] = 'CDReduc',
-    [Data.Type.Health] = 'HP',
-    [Data.Type.Regen] = 'Regen',
-    [Data.Type.Mana] = 'MP',
-    [Data.Type.Recov] = 'Recov',
-    [Data.Type.Str] = 'Str',
-    [Data.Type.Agi] = 'Agi',
-    [Data.Type.Int] = 'Int',
-    [Data.Type.MS] = 'MS',
+ParamData.ShortName = {
+    [ParamData.Type.PDmg] = 'PDmg',
+    [ParamData.Type.ASpd] = 'ASpd',
+    [ParamData.Type.Armor] = 'PDef',
+    [ParamData.Type.PDmgReduc] = 'PReduc',
+    [ParamData.Type.MDmg] = 'MDmg',
+    [ParamData.Type.CSpd] = 'CSpd',
+    [ParamData.Type.Resist] = 'Resist',
+    [ParamData.Type.MDmgReduc] = 'MReduc',
+    [ParamData.Type.Dodge] = 'Dodge',
+    [ParamData.Type.CritCh] = 'CritCh',
+    [ParamData.Type.CritDmg] = 'CritDmg',
+    [ParamData.Type.CdReduc] = 'CDReduc',
+    [ParamData.Type.Health] = 'HP',
+    [ParamData.Type.Regen] = 'Regen',
+    [ParamData.Type.Mana] = 'MP',
+    [ParamData.Type.Recov] = 'Recov',
+    [ParamData.Type.Str] = 'Str',
+    [ParamData.Type.Agi] = 'Agi',
+    [ParamData.Type.Int] = 'Int',
+    [ParamData.Type.MS] = 'MS',
 }
 ---@param param ParameterTypeEnum
 ---@return string
-function Data.getShortName(param)
-    if not Data.isParamType(param) then
+function ParamData.getShortName(param)
+    if not ParamData.isParamType(param) then
         Log.error('ParameterData', 'unknown ParameterTypeEnum.', 2)
     end
-    return Data.ShortName[param]
+    return ParamData.ShortName[param]
 end
 
-Data.FullName = {
-    [Data.Type.PDmg] = 'Physical damage',
-    [Data.Type.ASpd] = 'Attack speed',
-    [Data.Type.Armor] = 'Armor',
-    [Data.Type.PDmgReduc] = 'Physical damage reduction',
-    [Data.Type.MDmg] = 'Magical damage',
-    [Data.Type.CSpd] = 'Casting time reduction',
-    [Data.Type.Resist] = 'Resistance',
-    [Data.Type.MDmgReduc] = 'Magical damage reduction',
-    [Data.Type.Dodge] = 'Dodge chance',
-    [Data.Type.CritCh] = 'Critical strike chance',
-    [Data.Type.CritDmg] = 'Critical strike damage',
-    [Data.Type.CdReduc] = 'Cooldown reduction',
-    [Data.Type.Health] = 'Health',
-    [Data.Type.Regen] = 'Regeneration',
-    [Data.Type.Mana] = 'Mana',
-    [Data.Type.Recov] = 'Recovery',
-    [Data.Type.Str] = 'Strength',
-    [Data.Type.Agi] = 'Agility',
-    [Data.Type.Int] = 'Intelligence',
-    [Data.Type.MS] = 'Move speed',
+ParamData.FullName = {
+    [ParamData.Type.PDmg] = 'Physical damage',
+    [ParamData.Type.ASpd] = 'Attack speed',
+    [ParamData.Type.Armor] = 'Armor',
+    [ParamData.Type.PDmgReduc] = 'Physical damage reduction',
+    [ParamData.Type.MDmg] = 'Magical damage',
+    [ParamData.Type.CSpd] = 'Casting time reduction',
+    [ParamData.Type.Resist] = 'Resistance',
+    [ParamData.Type.MDmgReduc] = 'Magical damage reduction',
+    [ParamData.Type.Dodge] = 'Dodge chance',
+    [ParamData.Type.CritCh] = 'Critical strike chance',
+    [ParamData.Type.CritDmg] = 'Critical strike damage',
+    [ParamData.Type.CdReduc] = 'Cooldown reduction',
+    [ParamData.Type.Health] = 'Health',
+    [ParamData.Type.Regen] = 'Regeneration',
+    [ParamData.Type.Mana] = 'Mana',
+    [ParamData.Type.Recov] = 'Recovery',
+    [ParamData.Type.Str] = 'Strength',
+    [ParamData.Type.Agi] = 'Agility',
+    [ParamData.Type.Int] = 'Intelligence',
+    [ParamData.Type.MS] = 'Move speed',
 }
 ---@param param ParameterTypeEnum
 ---@return string
-function Data.getFullName(param)
-    if not Data.isParamType(param) then
+function ParamData.getFullName(param)
+    if not ParamData.isParamType(param) then
         Log.error('ParameterData', 'unknown ParameterTypeEnum.', 2)
     end
-    return Data.FullName[param]
+    return ParamData.FullName[param]
 end
 
 local Icon
 local _ = Compiletime(function()
     Icon = require('Resources.Icon')
 end)
-Data.Icon = {
-    [Data.Type.PDmg] = Compiletime(Icon.BTNSteelMelee),
-    [Data.Type.ASpd] = Compiletime(Icon.BTNCommand),
-    [Data.Type.Armor] = Compiletime(Icon.BTNDefend),
-    [Data.Type.PDmgReduc] = Compiletime(Icon.BTNHumanArmorUpThree),
-    [Data.Type.MDmg] = Compiletime(Icon.BTNAdvancedStrengthOfTheMoon),
-    [Data.Type.CSpd] = Compiletime(Icon.BTNBansheeMaster),
-    [Data.Type.Resist] = Compiletime(Icon.BTNResistantSkin),
-    [Data.Type.MDmgReduc] = Compiletime(Icon.BTNLightningShield),
-    [Data.Type.Dodge] = Compiletime(Icon.BTNEvasion),
-    [Data.Type.CritCh] = Compiletime(Icon.BTNCriticalStrike),
-    [Data.Type.CritDmg] = Compiletime(Icon.BTNDeathPact),
-    [Data.Type.CdReduc] = Compiletime(Icon.BTNDispelMagic),
-    [Data.Type.Health] = Compiletime(Icon.BTNHealthStone),
-    [Data.Type.Regen] = Compiletime(Icon.BTNRegenerate),
-    [Data.Type.Mana] = Compiletime(Icon.BTNManaStone),
-    [Data.Type.Recov] = Compiletime(Icon.BTNBrilliance),
-    [Data.Type.Str] = Compiletime(Icon.BTNStrenghtAttribute),
-    [Data.Type.Agi] = Compiletime(Icon.BTNAgilityAttribute),
-    [Data.Type.Int] = Compiletime(Icon.BTNIntelligenceAttribute),
-    [Data.Type.MS] = Compiletime(Icon.BTNBootsOfSpeed),
+ParamData.Icon = {
+    [ParamData.Type.PDmg] = Compiletime(Icon.BTNSteelMelee),
+    [ParamData.Type.ASpd] = Compiletime(Icon.BTNCommand),
+    [ParamData.Type.Armor] = Compiletime(Icon.BTNDefend),
+    [ParamData.Type.PDmgReduc] = Compiletime(Icon.BTNHumanArmorUpThree),
+    [ParamData.Type.MDmg] = Compiletime(Icon.BTNAdvancedStrengthOfTheMoon),
+    [ParamData.Type.CSpd] = Compiletime(Icon.BTNBansheeMaster),
+    [ParamData.Type.Resist] = Compiletime(Icon.BTNResistantSkin),
+    [ParamData.Type.MDmgReduc] = Compiletime(Icon.BTNLightningShield),
+    [ParamData.Type.Dodge] = Compiletime(Icon.BTNEvasion),
+    [ParamData.Type.CritCh] = Compiletime(Icon.BTNCriticalStrike),
+    [ParamData.Type.CritDmg] = Compiletime(Icon.BTNDeathPact),
+    [ParamData.Type.CdReduc] = Compiletime(Icon.BTNDispelMagic),
+    [ParamData.Type.Health] = Compiletime(Icon.BTNHealthStone),
+    [ParamData.Type.Regen] = Compiletime(Icon.BTNRegenerate),
+    [ParamData.Type.Mana] = Compiletime(Icon.BTNManaStone),
+    [ParamData.Type.Recov] = Compiletime(Icon.BTNBrilliance),
+    [ParamData.Type.Str] = Compiletime(Icon.BTNStrenghtAttribute),
+    [ParamData.Type.Agi] = Compiletime(Icon.BTNAgilityAttribute),
+    [ParamData.Type.Int] = Compiletime(Icon.BTNIntelligenceAttribute),
+    [ParamData.Type.MS] = Compiletime(Icon.BTNBootsOfSpeed),
 }
 ---@param param ParameterTypeEnum
 ---@return string
-function Data.getIcon(param)
-    if not Data.isParamType(param) then
+function ParamData.getIcon(param)
+    if not ParamData.isParamType(param) then
         Log.error('ParameterData', 'unknown ParameterTypeEnum.', 2)
     end
-    return Data.Icon[param]
+    return ParamData.Icon[param]
 end
 
-Data.Const = {
+ParamData.Const = {
     max_value = 10^10,
 
     min_pdmg_attack = 0.85,
@@ -222,104 +222,104 @@ Data.Const = {
 }
 
 local fmt = string.format
-Data.Tooltip = {
-    [Data.Type.PDmg] = fmt('Physical damage of unit attacks and most of physical abilities. Attacks randomly deals %.0f-%.0f%% of this value as physical damage.', 100 * Data.Const.min_pdmg_attack, 100 * Data.Const.max_pdmg_attack),
-    [Data.Type.ASpd] = 'The frequency with which units attack is measured in attack speed. Base attacks per second multiplied by attack speed.',
-    [Data.Type.Armor] = 'Physical damage is reduced by this value. Works after physical damage reduction.',
-    [Data.Type.PDmgReduc] = fmt('Physical damage is reduced by this value. Works before armor. Formula: %.0f * rating / (100 + rating) %%.', 100 * Data.Const.max_pdmg_reduc),
-    [Data.Type.MDmg] = fmt('Magical damage of unit attacks and most of magical abilities. Attacks randomly deals %.0f-%.0f%% of this value as magical damage.', 100 * Data.Const.min_mdmg_attack, 100 * Data.Const.max_mdmg_attack),
-    [Data.Type.CSpd] = 'Casting speed of abilities is multiplied by this value.',
-    [Data.Type.Resist] = 'Magical damage is reduced by this value. Works after magical damage reduction.',
-    [Data.Type.MDmgReduc] = fmt('Magical damage is reduced by this value. Works before resist. Formula: %.0f * (rating / (100 + rating)) %%.', 100 * Data.Const.max_mdmg_reduc),
-    [Data.Type.Dodge] = fmt('Chance to avoid incoming damage. Formula: %.0f * (rating / (100 + rating) %%.', 100 * Data.Const.max_dodge_ch),
-    [Data.Type.CritCh] = fmt('Chance to increase damage by critical damage value. Formula: %d * (rating / (100 + rating)', 100 * Data.Const.max_crit_ch),
-    [Data.Type.CritDmg] = 'Critical attacks and abilities deals bonus damage based on this value.',
-    [Data.Type.CdReduc] = fmt('Abilities cooldown reduced by this value. Formula: %d * (rating / (100 + rating)',100 * Data.Const.max_cd_reduc),
-    [Data.Type.Health] = 'Maximum health.',
-    [Data.Type.Regen] = 'Health restoration per second.',
-    [Data.Type.Mana] = 'Maximum mana.',
-    [Data.Type.Recov] = 'Mana restoration per second',
-    [Data.Type.Str] = fmt('Some spell effects depends on this value. Every point of strength increases attack damage by %.2f, armor by %.2f and health by %.2f.', Data.Const.pdmg_per_str, Data.Const.armor_per_str, Data.Const.hp_per_str),
-    [Data.Type.Agi] = fmt('Some spell effects depends on this value. Every point of agility increases attack speed by %.2f, casting time reduction by %.2f and dodge chance by %.2f.', Data.Const.aspd_per_agi, Data.Const.cspd_per_agi, Data.Const.dodge_per_agi),
-    [Data.Type.Int] = fmt('Some spell effects depends on this value. Every point of intelligence increases spell damage by %.2f, cooldown reduction by %.2f and mana by %.2f.', Data.Const.mdmg_per_int, Data.Const.mp_per_int, Data.Const.cdr_per_int),
-    [Data.Type.MS] = 'Move speed',
+ParamData.Tooltip = {
+    [ParamData.Type.PDmg] = fmt('Physical damage of unit attacks and most of physical abilities. Attacks randomly deals %.0f-%.0f%% of this value as physical damage.', 100 * ParamData.Const.min_pdmg_attack, 100 * ParamData.Const.max_pdmg_attack),
+    [ParamData.Type.ASpd] = 'The frequency with which units attack is measured in attack speed. Base attacks per second multiplied by attack speed.',
+    [ParamData.Type.Armor] = 'Physical damage is reduced by this value. Works after physical damage reduction.',
+    [ParamData.Type.PDmgReduc] = fmt('Physical damage is reduced by this value. Works before armor. Formula: %.0f * rating / (100 + rating) %%.', 100 * ParamData.Const.max_pdmg_reduc),
+    [ParamData.Type.MDmg] = fmt('Magical damage of unit attacks and most of magical abilities. Attacks randomly deals %.0f-%.0f%% of this value as magical damage.', 100 * ParamData.Const.min_mdmg_attack, 100 * ParamData.Const.max_mdmg_attack),
+    [ParamData.Type.CSpd] = 'Casting speed of abilities is multiplied by this value.',
+    [ParamData.Type.Resist] = 'Magical damage is reduced by this value. Works after magical damage reduction.',
+    [ParamData.Type.MDmgReduc] = fmt('Magical damage is reduced by this value. Works before resist. Formula: %.0f * (rating / (100 + rating)) %%.', 100 * ParamData.Const.max_mdmg_reduc),
+    [ParamData.Type.Dodge] = fmt('Chance to avoid incoming damage. Formula: %.0f * (rating / (100 + rating) %%.', 100 * ParamData.Const.max_dodge_ch),
+    [ParamData.Type.CritCh] = fmt('Chance to increase damage by critical damage value. Formula: %d * (rating / (100 + rating)', 100 * ParamData.Const.max_crit_ch),
+    [ParamData.Type.CritDmg] = 'Critical attacks and abilities deals bonus damage based on this value.',
+    [ParamData.Type.CdReduc] = fmt('Abilities cooldown reduced by this value. Formula: %d * (rating / (100 + rating)',100 * ParamData.Const.max_cd_reduc),
+    [ParamData.Type.Health] = 'Maximum health.',
+    [ParamData.Type.Regen] = 'Health restoration per second.',
+    [ParamData.Type.Mana] = 'Maximum mana.',
+    [ParamData.Type.Recov] = 'Mana restoration per second',
+    [ParamData.Type.Str] = fmt('Some spell effects depends on this value. Every point of strength increases attack damage by %.2f, armor by %.2f and health by %.2f.', ParamData.Const.pdmg_per_str, ParamData.Const.armor_per_str, ParamData.Const.hp_per_str),
+    [ParamData.Type.Agi] = fmt('Some spell effects depends on this value. Every point of agility increases attack speed by %.2f, casting time reduction by %.2f and dodge chance by %.2f.', ParamData.Const.aspd_per_agi, ParamData.Const.cspd_per_agi, ParamData.Const.dodge_per_agi),
+    [ParamData.Type.Int] = fmt('Some spell effects depends on this value. Every point of intelligence increases spell damage by %.2f, cooldown reduction by %.2f and mana by %.2f.', ParamData.Const.mdmg_per_int, ParamData.Const.mp_per_int, ParamData.Const.cdr_per_int),
+    [ParamData.Type.MS] = 'Move speed',
 }
 ---@param param ParameterTypeEnum
 ---@return string
-function Data.getTooltip(param)
-    if not Data.isParamType(param) then
+function ParamData.getTooltip(param)
+    if not ParamData.isParamType(param) then
         Log.error('ParameterData', 'unknown ParameterTypeEnum.', 2)
     end
-    return Data.Tooltip[param]
+    return ParamData.Tooltip[param]
 end
 
-Data.MinValue = {
-    [Data.Type.PDmg] = 0,
-    [Data.Type.ASpd] = 0,
-    [Data.Type.Armor] = -Data.Const.max_value,
-    [Data.Type.PDmgReduc] = -Data.Const.max_pdmg_reduc,
-    [Data.Type.MDmg] = 0,
-    [Data.Type.CSpd] = 0,
-    [Data.Type.Resist] = -Data.Const.max_value,
-    [Data.Type.MDmgReduc] = -Data.Const.max_mdmg_reduc,
-    [Data.Type.Dodge] = 0,
-    [Data.Type.CritCh] = 0,
-    [Data.Type.CritDmg] = 0.25,
-    [Data.Type.CdReduc] = -Data.Const.max_cd_reduc,
-    [Data.Type.Health] = 5,
-    [Data.Type.Regen] = -Data.Const.max_value,
-    [Data.Type.Mana] = 5,
-    [Data.Type.Recov] = -Data.Const.max_value,
-    [Data.Type.Str] = -Data.Const.max_value,
-    [Data.Type.Agi] = -Data.Const.max_value,
-    [Data.Type.Int] = -Data.Const.max_value,
-    [Data.Type.MS] = 1,
+ParamData.MinValue = {
+    [ParamData.Type.PDmg] = 0,
+    [ParamData.Type.ASpd] = 0,
+    [ParamData.Type.Armor] = -ParamData.Const.max_value,
+    [ParamData.Type.PDmgReduc] = -ParamData.Const.max_pdmg_reduc,
+    [ParamData.Type.MDmg] = 0,
+    [ParamData.Type.CSpd] = 0,
+    [ParamData.Type.Resist] = -ParamData.Const.max_value,
+    [ParamData.Type.MDmgReduc] = -ParamData.Const.max_mdmg_reduc,
+    [ParamData.Type.Dodge] = 0,
+    [ParamData.Type.CritCh] = 0,
+    [ParamData.Type.CritDmg] = 0.25,
+    [ParamData.Type.CdReduc] = -ParamData.Const.max_cd_reduc,
+    [ParamData.Type.Health] = 5,
+    [ParamData.Type.Regen] = -ParamData.Const.max_value,
+    [ParamData.Type.Mana] = 5,
+    [ParamData.Type.Recov] = -ParamData.Const.max_value,
+    [ParamData.Type.Str] = -ParamData.Const.max_value,
+    [ParamData.Type.Agi] = -ParamData.Const.max_value,
+    [ParamData.Type.Int] = -ParamData.Const.max_value,
+    [ParamData.Type.MS] = 1,
 }
 
-Data.MaxValue = {
-    [Data.Type.PDmg] = Data.Const.max_value,
-    [Data.Type.ASpd] = Data.Const.max_value,
-    [Data.Type.Armor] = Data.Const.max_value,
-    [Data.Type.PDmgReduc] = Data.Const.max_pdmg_reduc,
-    [Data.Type.MDmg] = Data.Const.max_value,
-    [Data.Type.CSpd] = Data.Const.max_value,
-    [Data.Type.Resist] = Data.Const.max_value,
-    [Data.Type.MDmgReduc] = Data.Const.max_mdmg_reduc,
-    [Data.Type.Dodge] = Data.Const.max_dodge_ch,
-    [Data.Type.CritCh] = Data.Const.max_crit_ch,
-    [Data.Type.CritDmg] = Data.Const.max_value,
-    [Data.Type.CdReduc] = Data.Const.max_cd_reduc,
-    [Data.Type.Health] = Data.Const.max_value,
-    [Data.Type.Regen] = Data.Const.max_value,
-    [Data.Type.Mana] = Data.Const.max_value,
-    [Data.Type.Recov] = Data.Const.max_value,
-    [Data.Type.Str] = Data.Const.max_value,
-    [Data.Type.Agi] = Data.Const.max_value,
-    [Data.Type.Int] = Data.Const.max_value,
-    [Data.Type.MS] = 512,
+ParamData.MaxValue = {
+    [ParamData.Type.PDmg] = ParamData.Const.max_value,
+    [ParamData.Type.ASpd] = ParamData.Const.max_value,
+    [ParamData.Type.Armor] = ParamData.Const.max_value,
+    [ParamData.Type.PDmgReduc] = ParamData.Const.max_pdmg_reduc,
+    [ParamData.Type.MDmg] = ParamData.Const.max_value,
+    [ParamData.Type.CSpd] = ParamData.Const.max_value,
+    [ParamData.Type.Resist] = ParamData.Const.max_value,
+    [ParamData.Type.MDmgReduc] = ParamData.Const.max_mdmg_reduc,
+    [ParamData.Type.Dodge] = ParamData.Const.max_dodge_ch,
+    [ParamData.Type.CritCh] = ParamData.Const.max_crit_ch,
+    [ParamData.Type.CritDmg] = ParamData.Const.max_value,
+    [ParamData.Type.CdReduc] = ParamData.Const.max_cd_reduc,
+    [ParamData.Type.Health] = ParamData.Const.max_value,
+    [ParamData.Type.Regen] = ParamData.Const.max_value,
+    [ParamData.Type.Mana] = ParamData.Const.max_value,
+    [ParamData.Type.Recov] = ParamData.Const.max_value,
+    [ParamData.Type.Str] = ParamData.Const.max_value,
+    [ParamData.Type.Agi] = ParamData.Const.max_value,
+    [ParamData.Type.Int] = ParamData.Const.max_value,
+    [ParamData.Type.MS] = 512,
 }
 
-Data.DefaultValue = {
-    [Data.Type.PDmg] = 1,
-    [Data.Type.ASpd] = 1,
-    [Data.Type.Armor] = 0,
-    [Data.Type.PDmgReduc] = 0,
-    [Data.Type.MDmg] = 0,
-    [Data.Type.CSpd] = 0,
-    [Data.Type.Resist] = 0,
-    [Data.Type.MDmgReduc] = 0,
-    [Data.Type.Dodge] = 0,
-    [Data.Type.CritCh] = 0,
-    [Data.Type.CritDmg] = 0,
-    [Data.Type.CdReduc] = 0,
-    [Data.Type.Health] = 500,
-    [Data.Type.Regen] = 0,
-    [Data.Type.Mana] = 0,
-    [Data.Type.Recov] = 0,
-    [Data.Type.Str] = 0,
-    [Data.Type.Agi] = 0,
-    [Data.Type.Int] = 0,
-    [Data.Type.MS] = 256,
+ParamData.DefaultValue = {
+    [ParamData.Type.PDmg] = 1,
+    [ParamData.Type.ASpd] = 1,
+    [ParamData.Type.Armor] = 0,
+    [ParamData.Type.PDmgReduc] = 0,
+    [ParamData.Type.MDmg] = 0,
+    [ParamData.Type.CSpd] = 0,
+    [ParamData.Type.Resist] = 0,
+    [ParamData.Type.MDmgReduc] = 0,
+    [ParamData.Type.Dodge] = 0,
+    [ParamData.Type.CritCh] = 0,
+    [ParamData.Type.CritDmg] = 0,
+    [ParamData.Type.CdReduc] = 0,
+    [ParamData.Type.Health] = 500,
+    [ParamData.Type.Regen] = 0,
+    [ParamData.Type.Mana] = 0,
+    [ParamData.Type.Recov] = 0,
+    [ParamData.Type.Str] = 0,
+    [ParamData.Type.Agi] = 0,
+    [ParamData.Type.Int] = 0,
+    [ParamData.Type.MS] = 256,
 }
 
 ---@param base number
@@ -353,35 +353,35 @@ local function mathRating(base, mult, additive, min, max)
     end
 end
 
-Data.Math = {
-    [Data.Type.PDmg] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.PDmg], Data.MaxValue[Data.Type.PDmg]) end,
-    [Data.Type.ASpd] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.ASpd], Data.MaxValue[Data.Type.ASpd]) end,
-    [Data.Type.Armor] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Armor], Data.MaxValue[Data.Type.Armor]) end,
-    [Data.Type.PDmgReduc] = function(base, mult, additiv) return mathRating(base, mult, additiv, Data.MinValue[Data.Type.PDmgReduc], Data.MaxValue[Data.Type.PDmgReduc]) end,
-    [Data.Type.MDmg] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.MDmg], Data.MaxValue[Data.Type.MDmg]) end,
-    [Data.Type.CSpd] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.CSpd], Data.MaxValue[Data.Type.CSpd]) end,
-    [Data.Type.Resist] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Resist], Data.MaxValue[Data.Type.Resist]) end,
-    [Data.Type.MDmgReduc] = function(base, mult, additiv) return mathRating(base, mult, additiv, Data.MinValue[Data.Type.MDmgReduc], Data.MaxValue[Data.Type.MDmgReduc]) end,
-    [Data.Type.Dodge] = function(base, mult, additiv) return mathRating(base, mult, additiv, Data.MinValue[Data.Type.Dodge], Data.MaxValue[Data.Type.Dodge]) end,
-    [Data.Type.CritCh] = function(base, mult, additiv) return mathRating(base, mult, additiv, Data.MinValue[Data.Type.CritCh], Data.MaxValue[Data.Type.CritCh]) end,
-    [Data.Type.CritDmg] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.CritDmg], Data.MaxValue[Data.Type.CritDmg]) end,
-    [Data.Type.CdReduc] = function(base, mult, additiv) return mathRating(base, mult, additiv, Data.MinValue[Data.Type.CdReduc], Data.MaxValue[Data.Type.CdReduc]) end,
-    [Data.Type.Health] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Health], Data.MaxValue[Data.Type.Health]) end,
-    [Data.Type.Regen] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Regen], Data.MaxValue[Data.Type.Regen]) end,
-    [Data.Type.Mana] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Mana], Data.MaxValue[Data.Type.Mana]) end,
-    [Data.Type.Recov] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Recov], Data.MaxValue[Data.Type.Recov]) end,
-    [Data.Type.Str] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Str], Data.MaxValue[Data.Type.Str]) end,
-    [Data.Type.Agi] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Agi], Data.MaxValue[Data.Type.Agi]) end,
-    [Data.Type.Int] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.Int], Data.MaxValue[Data.Type.Int]) end,
-    [Data.Type.MS] = function(base, mult, additiv) return mathLinear(base, mult, additiv, Data.MinValue[Data.Type.MS], Data.MaxValue[Data.Type.MS]) end,
+ParamData.Math = {
+    [ParamData.Type.PDmg] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.PDmg], ParamData.MaxValue[ParamData.Type.PDmg]) end,
+    [ParamData.Type.ASpd] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.ASpd], ParamData.MaxValue[ParamData.Type.ASpd]) end,
+    [ParamData.Type.Armor] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Armor], ParamData.MaxValue[ParamData.Type.Armor]) end,
+    [ParamData.Type.PDmgReduc] = function(base, mult, additiv) return mathRating(base, mult, additiv, ParamData.MinValue[ParamData.Type.PDmgReduc], ParamData.MaxValue[ParamData.Type.PDmgReduc]) end,
+    [ParamData.Type.MDmg] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.MDmg], ParamData.MaxValue[ParamData.Type.MDmg]) end,
+    [ParamData.Type.CSpd] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.CSpd], ParamData.MaxValue[ParamData.Type.CSpd]) end,
+    [ParamData.Type.Resist] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Resist], ParamData.MaxValue[ParamData.Type.Resist]) end,
+    [ParamData.Type.MDmgReduc] = function(base, mult, additiv) return mathRating(base, mult, additiv, ParamData.MinValue[ParamData.Type.MDmgReduc], ParamData.MaxValue[ParamData.Type.MDmgReduc]) end,
+    [ParamData.Type.Dodge] = function(base, mult, additiv) return mathRating(base, mult, additiv, ParamData.MinValue[ParamData.Type.Dodge], ParamData.MaxValue[ParamData.Type.Dodge]) end,
+    [ParamData.Type.CritCh] = function(base, mult, additiv) return mathRating(base, mult, additiv, ParamData.MinValue[ParamData.Type.CritCh], ParamData.MaxValue[ParamData.Type.CritCh]) end,
+    [ParamData.Type.CritDmg] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.CritDmg], ParamData.MaxValue[ParamData.Type.CritDmg]) end,
+    [ParamData.Type.CdReduc] = function(base, mult, additiv) return mathRating(base, mult, additiv, ParamData.MinValue[ParamData.Type.CdReduc], ParamData.MaxValue[ParamData.Type.CdReduc]) end,
+    [ParamData.Type.Health] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Health], ParamData.MaxValue[ParamData.Type.Health]) end,
+    [ParamData.Type.Regen] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Regen], ParamData.MaxValue[ParamData.Type.Regen]) end,
+    [ParamData.Type.Mana] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Mana], ParamData.MaxValue[ParamData.Type.Mana]) end,
+    [ParamData.Type.Recov] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Recov], ParamData.MaxValue[ParamData.Type.Recov]) end,
+    [ParamData.Type.Str] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Str], ParamData.MaxValue[ParamData.Type.Str]) end,
+    [ParamData.Type.Agi] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Agi], ParamData.MaxValue[ParamData.Type.Agi]) end,
+    [ParamData.Type.Int] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.Int], ParamData.MaxValue[ParamData.Type.Int]) end,
+    [ParamData.Type.MS] = function(base, mult, additiv) return mathLinear(base, mult, additiv, ParamData.MinValue[ParamData.Type.MS], ParamData.MaxValue[ParamData.Type.MS]) end,
 }
 
 ---@param param ParameterTypeEnum
 ---@param base number
 ---@param mult number
 ---@param addit number
-function Data.mathParam(param, base, mult, addit)
-    return Data.Math[param](base, mult, addit)
+function ParamData.mathParam(param, base, mult, addit)
+    return ParamData.Math[param](base, mult, addit)
 end
 
-return Data
+return ParamData

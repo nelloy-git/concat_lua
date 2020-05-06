@@ -1,5 +1,6 @@
 local ClassStatic = require('Utils.Class.Static')
 
+---@class ClassOverride
 local ClassOverride = {}
 
 local rawget = rawget
@@ -34,7 +35,7 @@ function ClassOverride.register(class)
     return override
 end
 
----@param class Class
+---@param class table
 ---@return table
 function ClassOverride.get(class)
     class = ClassStatic.getClass(class) or class

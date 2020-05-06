@@ -36,7 +36,6 @@ function override.new(id, x, y, child_instance)
 
     local obj = CreateItem(ID(id), x, y)
     instance = Object.new(obj, RemoveItem, instance)
-    --instance = Object.new(obj, function() end, instance)
 
     return instance
 end

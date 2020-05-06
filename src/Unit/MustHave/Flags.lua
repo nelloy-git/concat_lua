@@ -21,13 +21,13 @@ function public:enableMove(flag)
     local priv = private.getData(self)
     if flag then
         if priv.disable_move_refs == 0 then
-            Log.error(self, 'move is already enabled.', 2)
+            Logger.error(self, 'move is already enabled.', 2)
         end
 
         priv.disable_move_refs = priv.disable_move_refs - 1
 
         if priv.disable_move_refs == 0 then
-            UnitAddAbilityOld(self:getObj(), ID('Amov'))
+            UnitAddAbility(self:getObj(), ID('Amov'))
             SetUnitPathing(self:getObj(), true)
         end
 
@@ -37,7 +37,7 @@ function public:enableMove(flag)
     priv.disable_move_refs = priv.disable_move_refs + 1
 
     if priv.disable_move_refs == 1 then
-        UnitRemoveAbilityOld(self:getObj(), ID('Amov'))
+        UnitRemoveAbility(self:getObj(), ID('Amov'))
         SetUnitPathing(self:getObj(), false)
     end
 end
@@ -46,13 +46,13 @@ function public:enableAttack(flag)
     local priv = private.getData(self)
     if flag then
         if priv.disable_attack_refs == 0 then
-            Log.error(self, 'attack is already enabled.', 2)
+            Logger.error(self, 'attack is already enabled.', 2)
         end
 
         priv.disable_attack_refs = priv.disable_attack_refs - 1
 
         if priv.disable_attack_refs == 0 then
-            UnitRemoveAbilityOld(self:getObj(), ID('Abun'))
+            UnitRemoveAbility(self:getObj(), ID('Abun'))
         end
 
         return
@@ -61,7 +61,7 @@ function public:enableAttack(flag)
     priv.disable_attack_refs = priv.disable_attack_refs + 1
 
     if priv.disable_attack_refs == 1 then
-        UnitAddAbilityOld(self:getObj(), ID('Abun'))
+        UnitAddAbility(self:getObj(), ID('Abun'))
     end
 end
 

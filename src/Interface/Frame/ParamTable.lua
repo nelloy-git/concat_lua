@@ -46,7 +46,7 @@ local private = {}
 ---@return InterfaceFrameParamTable
 function override.new(child_instance)
     if child_instance and not Class.type(child_instance, InterfaceFrameParamTable) then
-        Log.error(InterfaceFrameParamTable, '\"child_instance\" must be InterfaceFrameParamTable or nil', 2)
+        Logger.error(InterfaceFrameParamTable, '\"child_instance\" must be InterfaceFrameParamTable or nil', 2)
     end
 
     local instance = child_instance or Class.allocate(InterfaceFrameParamTable)
@@ -64,7 +64,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log(Log.Wrn, self, 'Autosizing frame. Disabled function.', 2)
+    Logger(Logger.Wrn, self, 'Autosizing frame. Disabled function.', 2)
 end
 
 ---@param level number

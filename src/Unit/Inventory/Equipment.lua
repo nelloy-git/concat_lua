@@ -54,7 +54,7 @@ function public:equip(item)
     end
 
     if priv.slot[item_type] then
-        Log.error(self, 'slot is not empty.', 2)
+        Logger.error(self, 'slot is not empty.', 2)
     end
 
     private.applyParams(priv.owner, item, true)

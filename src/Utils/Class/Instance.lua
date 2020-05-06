@@ -3,6 +3,7 @@ local ClassParent = require('Utils.Class.Parent')
 local ClassPublic = require('Utils.Class.Public')
 local ClassUtils = require('Utils.Class.Utils')
 
+---@class ClassInstance
 local ClassInstance = {}
 
 local instance2class = {}
@@ -32,10 +33,9 @@ instance_metatable = {
     end,
 }
 
----@param class Class
----@return Instance
+---@param class table
+---@return table
 function ClassInstance.allocate(class)
-    ---@class Instance
     local instance = {}
     local parents = ClassParent.getList(class)
 
@@ -58,10 +58,15 @@ function ClassInstance.allocate(class)
     return instance
 end
 
+---@param instance table
+---@rettrn table
 function ClassInstance.getClass(instance)
     return instance2class[instance]
 end
 
+
+---@param instance table
+---@rettrn boolean
 function ClassInstance.isInstance(instance)
     if instance2class[instance] then
         return true

@@ -2,6 +2,7 @@ local ClassParent = require('Utils.Class.Parent')
 local ClassStatic = require('Utils.Class.Static')
 local ClassUtils = require('Utils.Class.Utils')
 
+---@class ClassPublic
 local ClassPublic = {}
 
 local rawset = rawset
@@ -25,7 +26,7 @@ local public_meta = {
     end
 }
 
----@param class Class
+---@param class table
 ---@return table
 function ClassPublic.register(class)
     local public = {}
@@ -36,7 +37,7 @@ function ClassPublic.register(class)
     return public
 end
 
----@param class Class
+---@param class table
 ---@return table
 function ClassPublic.get(class)
     class = ClassStatic.getClass(class) or class

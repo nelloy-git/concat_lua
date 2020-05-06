@@ -2,22 +2,22 @@
 -- Include
 --=========
 
----@type AbilityOldAPI
-local AbilityOld = require('AbilityOld.API')
-local TargetingType = AbilityOld.TargetingType
+---@type AbilityAPI
+local Ability = require('Ability.API')
+local TargetingType = Ability.TargetingType
 
 --=========
--- AbilityOld
+-- Ability
 --=========
 
--- AbilityOld type for using in casting system.
-local ExampleAbilityOld = AbilityOld.Type.new(TargetingType.UnitOrPoint)
+-- Ability type for using in casting system.
+local ExampleAbility = Ability.Type.new(TargetingType.UnitOrPoint)
 
 ---@param caster Unit
----@param target AbilityOldTarget
+---@param target AbilityTarget
 ---@param lvl number
 ---@return boolean
-function ExampleAbilityOld:start(caster, target, lvl)
+function ExampleAbility:start(caster, target, lvl)
     local targ_unit = target:getObj()
     local t = 'Point'
     if targ_unit then
@@ -28,27 +28,27 @@ function ExampleAbilityOld:start(caster, target, lvl)
     return true
 end
 
-function ExampleAbilityOld:finish(caster, target, lvl)
+function ExampleAbility:finish(caster, target, lvl)
     print('Finished')
 end
 
-function ExampleAbilityOld:cancel(caster, target, lvl)
+function ExampleAbility:cancel(caster, target, lvl)
     print('Canceled')
 end
 
-function ExampleAbilityOld:getIcon(owner, lvl)
+function ExampleAbility:getIcon(owner, lvl)
     return "ReplaceableTextures\\\\CommandButtons\\\\BTNCharm.blp"
 end
 
-function ExampleAbilityOld:getCooldown()
+function ExampleAbility:getCooldown()
     return 5
 end
 
-function ExampleAbilityOld:getCastingTime(caster, target, lvl)
+function ExampleAbility:getCastingTime(caster, target, lvl)
     return 3
 end
 
-function ExampleAbilityOld:getRange(caster, lvl)
+function ExampleAbility:getRange(caster, lvl)
     return 1000
 end
 
@@ -58,4 +58,4 @@ end
 
 
 
-return ExampleAbilityOld
+return ExampleAbility

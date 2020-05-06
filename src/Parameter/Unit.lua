@@ -14,7 +14,7 @@ local ValueList = require('Parameter.ValueList')
 local ValueListPublic = Class.getPublic(ValueList)
 ---@type ParameterValueClass
 local ParamValue = require('Parameter.Value')
-local ValueType = ParamValue.ValuePos
+local ValueType = ParamValue.ValueType
 ---@type fun(unit:unit, param:ParameterTypeEnum, value:number)
 local ParameterUnitApply = require('Parameter.UnitApply')
 

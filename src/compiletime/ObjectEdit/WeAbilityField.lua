@@ -13,13 +13,13 @@ local WeUtils = require('compiletime.Utils')
 -- Class
 --=======
 
-local WeAbilityOldField = Class.new('WeAbilityOldField', WeField)
----@class WeAbilityOldField
-local public = WeAbilityOldField.public
----@class WeAbilityOldFieldClass
-local static = WeAbilityOldField.static
----@type WeAbilityOldFieldClass
-local override = WeAbilityOldField.override
+local WeAbilityField = Class.new('WeAbilityField', WeField)
+---@class WeAbilityField
+local public = WeAbilityField.public
+---@class WeAbilityFieldClass
+local static = WeAbilityField.static
+---@type WeAbilityFieldClass
+local override = WeAbilityField.override
 local private = {}
 
 --========
@@ -32,10 +32,10 @@ local private = {}
 ---@param name string
 ---@param require_level boolean
 ---@param test_data_func WeFieldTestDataFunc | nil
----@param child_data WeAbilityOldField | nil
+---@param child_data WeAbilityField | nil
 ---@return WeField
 function override.new(field_id, data_type, abil_data_id, name, require_level, test_data_func, child_data)
-    local instance = child_data or Class.allocate(WeAbilityOldField)
+    local instance = child_data or Class.allocate(WeAbilityField)
     instance = WeField.new(field_id, data_type, name, test_data_func, instance)
     private.newData(instance, abil_data_id, require_level, test_data_func)
 
@@ -78,7 +78,7 @@ end
 -- Private
 --=========
 
----@param self WeAbilityOldField
+---@param self WeAbilityField
 ---@param data any
 ---@param lvl number
 ---@return boolean
@@ -101,24 +101,24 @@ function private.checkType(self, data, lvl)
     end
 
     if not res then
-        Log.error(string.format('Field %s', self:getName()), string.format('wrong data type. Got %s. Need %s.', type(data), data_type), 3)
+        Logger.error(string.format('Field %s', self:getName()), string.format('wrong data type. Got %s. Need %s.', type(data), data_type), 3)
         return
     end
 
     if lvl == 0 and priv.require_level then
-        Log.error(string.format('Field %s', self:getName()), 'requires level.', 3)
+        Logger.error(string.format('Field %s', self:getName()), 'requires level.', 3)
         return
     end
 
     if lvl ~= 0 and not priv.require_level then
-        Log.error(string.format('Field %s', self:getName()), 'does not require level.', 3)
+        Logger.error(string.format('Field %s', self:getName()), 'does not require level.', 3)
         return
     end
 
     return true
 end
 
----@param self WeAbilityOldField
+---@param self WeAbilityField
 ---@param abil_data_id integer
 function private.newData(self, abil_data_id, require_level, test_data_func)
     local priv = {
@@ -129,9 +129,9 @@ function private.newData(self, abil_data_id, require_level, test_data_func)
     private[self] = priv
 end
 
----@param self WeAbilityOldField
+---@param self WeAbilityField
 function private.freeData(self)
     private[self] = nil
 end
 
-return WeAbilityOldField.static
+return WeAbilityField.static
