@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type Import
 local Import = require('Resources.Import')

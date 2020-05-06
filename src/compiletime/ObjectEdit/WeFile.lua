@@ -4,7 +4,7 @@ local log_all_changes = false
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')

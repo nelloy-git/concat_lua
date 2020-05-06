@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type Import
 local Import = require('Resources.Import')
@@ -135,7 +135,7 @@ private.model2item = setmetatable({},  {__mode = 'kv'})
 
 private.cur_id = 1
 private.id2item = setmetatable({},  {__mode = 'v'})
-
+--[[
 private.Equipable = {
     [static.Type.BAG] = true,
     [static.Type.BELT] = true,
@@ -171,7 +171,7 @@ private.TypeIcon = {
     [static.Type.USABLE] = '',
     [static.Type.MISCELLANEOUS] = '',
 }
-
+]]
 ---@param item Item
 ---@return number
 function private.newId(item)

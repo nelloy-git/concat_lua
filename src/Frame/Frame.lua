@@ -3,7 +3,7 @@
 --=========
 
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type FrameObjClass
 local FrameObj = require('Object.Frame')

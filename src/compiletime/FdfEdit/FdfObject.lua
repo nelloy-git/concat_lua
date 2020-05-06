@@ -3,7 +3,7 @@
 --=========
 
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type FdfFieldClass
 local FdfField = require('compiletime.FdfEdit.FdfField')

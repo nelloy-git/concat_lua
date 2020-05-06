@@ -3,7 +3,7 @@
 --=========
 
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type ActionClass
 local Action = require('Utils.Action')
@@ -49,7 +49,7 @@ end
 ---@param action Action
 function public:remove(action)
     if action:getOwner() ~= self then
-        Log.error(self, 'list is not an owner of removing action.', 2)
+        Log.error(self, 'list does not have this action.', 2)
     end
 
     local list = private.data[self].list

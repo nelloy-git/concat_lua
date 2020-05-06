@@ -3,19 +3,19 @@
 --=========
 
 ---@type AbilityTypeClass
-local Type = require('Ability.Type')
+--local Type = require('Ability.Type')
 ---@type AbilityClass
-local Ability = require('Ability.Ability')
-require('Ability.MustHave.Casting')
-require('Ability.MustHave.Cooldown')
+--local Ability = require('Ability.Ability')
+--require('Ability.MustHave.Casting')
+--require('Ability.MustHave.Cooldown')
 
 --=============
 --     API
 --=============
-
 ---@class AbilityAPI
 local AbilityAPI = {}
 
+--[[
 -- Enums
 AbilityAPI.TargetingType = Type.TargetingType
 
@@ -40,5 +40,5 @@ AbilityAPI.TargetPoint = require('Ability.Target.Point')
 AbilityAPI.TargetUnit = require('Ability.Target.Unit')
 AbilityAPI.TargetDestructable = require('Ability.Target.Destructable')
 AbilityAPI.TargetItem = require('Ability.Target.Item')
-
+]]
 return AbilityAPI

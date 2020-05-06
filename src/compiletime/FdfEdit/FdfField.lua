@@ -3,7 +3,7 @@
 --=========
 
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type WeUtils
 local WeUtils = require('compiletime.Utils')

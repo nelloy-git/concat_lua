@@ -2,8 +2,7 @@
 -- Include
 --=========
 
----@type ClassAPI
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 ---@type TimeClass
 local Time = require('Utils.Time')
 

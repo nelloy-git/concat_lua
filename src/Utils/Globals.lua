@@ -1,5 +1,8 @@
 local Globals = {}
 
+Lib = require('Utils.Lib')
+Lib.Class = 'Libs.Class.API'
+
 ---@type LoggerClass
 Logger = require('Utils.Logger')
 Logger.init()

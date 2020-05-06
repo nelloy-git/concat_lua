@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 --=======
 -- Class
@@ -48,7 +48,7 @@ end
 
 ---@param caster Unit
 ---@return number
-function public:getRange(caster)
+function public:getDistance(caster)
     return ((caster:getX() - self:getX())^2 + (caster:getY() - self:getY())^2)^0.5
 end
 
