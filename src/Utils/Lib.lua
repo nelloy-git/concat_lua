@@ -2,6 +2,20 @@ local Lib = {}
 
 initialized = {}
 
+<<<<<<< HEAD
+=======
+---@param api_modname string
+---@return any
+function Lib.load(api_modname)
+    local API = require(api_modname)
+    if not initialized[api_modname] then
+        API.init()
+        initialized[api_modname] = true
+    end
+    return API
+end
+
+>>>>>>> dccbc94cb8067c95cd6fbfe913e7d6a1187f4402
 local sep = package.config:sub(1,1)
 function Lib.getSelf()
     ---@type string
