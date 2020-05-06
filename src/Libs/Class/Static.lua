@@ -1,4 +1,4 @@
-local ClassParent = require('Utils.Class.Parent')
+local ClassParent = require(__ClassLib..'Parent')
 
 ---@class ClassStatic
 local ClassStatic = {}

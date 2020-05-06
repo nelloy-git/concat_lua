@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 
 ---@type ActionListClass
@@ -145,7 +145,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.border_ratio = 1/32
 private.space = 0.001
 private.slot_size = Button.getDefaultSize()
-
+--[[
 private.SlotCol = {
     [ItemType.BAG] = 2,
     [ItemType.BELT] = 1,
@@ -177,7 +177,7 @@ private.SlotRow = {
     [ItemType.OFFHAND] = 1,
     [ItemType.SHOULDERS] = 3,
 }
-
+]]
 ---@param self InterfaceFrameEquipment
 function private.updatePositions(self)
     local priv = private.data[self]

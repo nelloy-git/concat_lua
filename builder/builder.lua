@@ -1,4 +1,19 @@
----@type BuilderUtils
+
+local sep = package.config:sub(1,1)
+
+local function getCurDir()
+    local full_path = debug.getinfo(2, "S").source:sub(2)
+    local pos = full_path:find(sep)
+    local last = pos
+    while (pos) do
+        last = pos
+        pos = full_path:find(sep, pos + 1)
+    end
+
+    return full_path:sub(1, last - 1)
+end
+
+package.path = package.path..';'..getCurDir()..sep.."?.lua"
 local Utils = require('utils')
 
 local is_compiletime = true
@@ -223,7 +238,7 @@ local function Build(code_src, map_dst, map_data)
     replaceCompiletime()
 
     -- Adds runtime code.
-    local res = Utils.readFile(Utils.getCurDir()..sep..'runtime_code.lua')..'\n'
+    local res = Utils.readFile(getCurDir()..sep..'runtime_code.lua')..'\n'
     -- Concat parts.
     for k, v in pairs(runtime_packages) do
         local package = string.format(package_func_code,

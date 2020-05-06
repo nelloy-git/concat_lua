@@ -3,7 +3,7 @@
 --=========
 
 ---@type ClassAPI
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type AbilityClass
 local Ability = require('Ability.Ability')
@@ -133,7 +133,7 @@ function public:use(target)
         return false
     end
 
-    if abil_type:getRange(caster, lvl) < target:getRange(caster) then
+    if abil_type:getRange(caster, lvl) < target:getDistance(caster) then
         -- TODO callback
         print('Out of range')
         return false

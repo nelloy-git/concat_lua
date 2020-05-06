@@ -1,6 +1,6 @@
-local ClassParent = require('Utils.Class.Parent')
-local ClassStatic = require('Utils.Class.Static')
-local ClassUtils = require('Utils.Class.Utils')
+local ClassParent = require(__ClassLib..'Parent')
+local ClassStatic = require(__ClassLib..'Static')
+local ClassUtils = require(__ClassLib..'Utils')
 
 ---@class ClassPublic
 local ClassPublic = {}

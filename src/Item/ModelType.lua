@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type CompiletimeDataClass
 local CompiletimeData = require('Utils.CompiletimeData')

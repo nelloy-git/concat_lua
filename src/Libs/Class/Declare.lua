@@ -1,9 +1,9 @@
-local ClassName = require('Utils.Class.Name')
-local ClassParent = require('Utils.Class.Parent')
-local ClassStatic = require('Utils.Class.Static')
-local ClassOverride = require('Utils.Class.Override')
-local ClassPublic = require('Utils.Class.Public')
-local ClassInstance = require('Utils.Class.Instance')
+local ClassName = require(__ClassLib..'Name')
+local ClassParent = require(__ClassLib..'Parent')
+local ClassStatic = require(__ClassLib..'Static')
+local ClassOverride = require(__ClassLib..'Override')
+local ClassPublic = require(__ClassLib..'Public')
+local ClassInstance = require(__ClassLib..'Instance')
 
 ---@class ClassDeclare
 local ClassDeclare = {}
@@ -25,7 +25,7 @@ local class_metatable = {
 }
 
 ---@param name string
----@return table
+---@return any
 function ClassDeclare.register(name, ...)
     if type(name) ~= 'string' then
         error('class name can be string only.', 2)

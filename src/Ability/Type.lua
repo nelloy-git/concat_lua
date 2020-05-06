@@ -2,9 +2,7 @@
 -- Include
 --=========
 
-
----@type ClassAPI
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 --=======
 -- Class
@@ -23,34 +21,9 @@ local private = {}
 -- Static
 --========
 
----@alias AbilityTargetingTypeEnum number
-
----@type table<string, AbilityTargetingTypeEnum>
-static.TargetingType = {}
----@type AbilityTargetingTypeEnum
-static.TargetingType.None = 1
----@type AbilityTargetingTypeEnum
-static.TargetingType.Point = 2
----@type AbilityTargetingTypeEnum
-static.TargetingType.Unit = 3
----@type AbilityTargetingTypeEnum
-static.TargetingType.UnitOrPoint = 4
----@type AbilityTargetingTypeEnum
-static.TargetingType.PointWithArea = 5
----@type AbilityTargetingTypeEnum
-static.TargetingType.UnitWithArea = 6
----@type AbilityTargetingTypeEnum
-static.TargetingType.UnitOrPointWithArea = 7
-
----@param target_type AbilityTargetingTypeEnum
 ---@return AbilityType
-function override.new(target_type, child_instance)
-    if not private.isTargetType(target_type) then
-        Log.error(AbilityType, 'unknown AbilityTargetingTypeEnum.', 2)
-    end
-
+function override.new(child_instance)
     local instance = child_instance or Class.allocate(AbilityType)
-    private.newData(instance, target_type)
 
     return instance
 end
@@ -163,13 +136,16 @@ end
 ---@param owner Unit
 ---@param lvl number
 ---@return number
-function public:getRange(owner, lvl)
-    return private.default_range
+function public:getMaxCharges(owner, lvl)
+    return private.default_max_charges
 end
 
----@return AbilityTarget
-function public:getTargetType()
-    return private.data[self].target_type
+--- Virtual function
+---@param owner Unit
+---@param lvl number
+---@return number
+function public:getRange(owner, lvl)
+    return private.default_range
 end
 
 --=========
@@ -184,27 +160,7 @@ private.default_casting_time = 1
 private.default_cooldown = 0
 private.default_mana_cost = 0
 private.default_charges_cost = 1
+private.default_max_charges = 1
 private.default_range = 1000000
-
----@param target_type any
----@return boolean
-function private.isTargetType(target_type)
-    for _, v in pairs(static.TargetingType) do
-        if target_type == v then
-            return true
-        end
-    end
-    return false
-end
-
----@param self AbilityType
----@param target_type AbilityTargetingTypeEnum
-function private.newData(self, target_type)
-    local priv = {
-        target_type = target_type
-    }
-
-    private.data[self] = priv
-end
 
 return static

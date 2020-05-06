@@ -24,5 +24,4 @@
         "chrono": "cpp"
     },
     "Lua.awakened.cat": true,
-    "Lua.workspace.ignoreSubmodules": false,
 }

@@ -6,11 +6,11 @@ local sep = package.config:sub(1,1)
 ---@param full_path string
 ---@return string
 local function removeFilename(full_path)
-    local pos = full_path:find(package.config:sub(1,1))
+    local pos = full_path:find(sep)
     local last = pos
     while (pos) do
         last = pos
-        pos = full_path:find(package.config:sub(1,1), pos + 1)
+        pos = full_path:find(sep, pos + 1)
     end
 
     return full_path:sub(1, last - 1)
@@ -18,6 +18,9 @@ end
 
 ---@return string
 function Utils.getCurDir()
+    if sep == '/' then
+        return '.'
+    end
     local full_path = debug.getinfo(2, "S").source:sub(2)
     return removeFilename(full_path)
 end
@@ -77,17 +80,20 @@ end
 ---@param src string
 ---@param dst string
 function Utils.copyDir(src, dst)
+    if not Utils.isDir(dst) then
+        os.execute('mkdir '..dst)
+    end
+
     local list = Utils.scanDir(src)
     for i = 1, #list do
         ---@type string
         local name = list[i]
         if Utils.isDir(src..sep..name) then
-            if not Utils.isDir(dst..sep..name) then
-                os.execute('mkdir '..dst..sep..name)
-            end
             Utils.copyDir(src..sep..name, dst..sep..name)
         else
-            Utils.copyFile(src..sep..name, dst..sep..name)
+            if Utils.fileExists(src..sep..name) then
+                Utils.copyFile(src..sep..name, dst..sep..name)
+            end
         end
     end
 end

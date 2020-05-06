@@ -1,7 +1,11 @@
-local ClassName = require('Utils.Class.Name')
+local ClassName = require(__ClassLib..'Name')
 
 ---@class ClassParent
 local ClassParent = {}
+local ClassStatic
+function ClassParent.init()
+    ClassStatic = ClassStatic or require(__ClassLib..'Static')
+end
 
 local fmt = string.format
 
@@ -17,10 +21,8 @@ local function isInList(elem, list)
     return false
 end
 
-local ClassStatic
 ---@param class table
 function ClassParent.register(class, ...)
-    ClassStatic = ClassStatic or require('Utils.Class.Static')
     local vararg = {...}
 
     local parents_list = {}

@@ -1,4 +1,4 @@
-local ClassStatic = require('Utils.Class.Static')
+local ClassStatic = require(__ClassLib..'Static')
 
 ---@class ClassOverride
 local ClassOverride = {}

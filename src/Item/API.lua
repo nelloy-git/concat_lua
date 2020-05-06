@@ -15,14 +15,14 @@ local ItemModel = require('Item.Model')
 local ItemAPI = {}
 
 -- Enums
-ItemAPI.ItemType = Item.Type
+--ItemAPI.ItemType = Item.Type
 
 -- Classes
 ItemAPI.Item = Item
 ItemAPI.ItemModel = ItemModel
 
 -- Utils
-ItemAPI.isTypeEquipable = Item.isTypeEquipable
-ItemAPI.getTypeIcon = Item.getTypeIcon
+--ItemAPI.isTypeEquipable = Item.isTypeEquipable
+--ItemAPI.getTypeIcon = Item.getTypeIcon
 
 return ItemAPI

@@ -3,7 +3,7 @@
 --=========
 
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 local fmt = string.format
 
 ---@type SimpleFrameClass

@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require('Utils.Class.API')
+local Class = require(Lib.Class)
 
 ---@type InterfaceFrameIconValueClass
 local IconValue = require('Interface.Frame.IconValue')

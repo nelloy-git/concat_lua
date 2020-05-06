@@ -20,7 +20,7 @@ local AbilityAPI = require('Ability.API')
 local Ability = AbilityAPI.Ability
 local TargetUnit = AbilityAPI.TargetUnit
 
-ExampleAbility = require('Ability.Example')
+--ExampleAbility = require('Ability.Example')
 
 require('Event.Item')
 --require('Event.Ability')
