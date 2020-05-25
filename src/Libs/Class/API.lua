@@ -1,7 +1,6 @@
-ClassAPI = {}
+local ClassLibAPI = {}
 
 __ClassLib = Compiletime(Lib.getSelf())
-Log.error(__ClassLib)
 
 ---@type ClassDeclare
 local ClassDeclare = require(__ClassLib..'Declare')
@@ -17,16 +16,16 @@ local ClassInstance = require(__ClassLib..'Instance')
 ---@type ClassOverride
 local ClassOverride = require(__ClassLib..'Override')
 
-ClassAPI.new = ClassDeclare.register
-ClassAPI.allocate = ClassInstance.allocate
-ClassAPI.isClass = ClassName.isClass
-ClassAPI.isInstance = ClassInstance.isInstance
-ClassAPI.getClass = ClassInstance.getClass
-ClassAPI.isChild = ClassParent.isChild
-ClassAPI.getPublic = ClassPublic.get
-ClassAPI.getOverride = ClassOverride.get
-ClassAPI.type = ClassDeclare.type
+ClassLibAPI.new = ClassDeclare.register
+ClassLibAPI.allocate = ClassInstance.allocate
+ClassLibAPI.isClass = ClassName.isClass
+ClassLibAPI.isInstance = ClassInstance.isInstance
+ClassLibAPI.getClass = ClassInstance.getClass
+ClassLibAPI.isChild = ClassParent.isChild
+ClassLibAPI.getPublic = ClassPublic.get
+ClassLibAPI.getOverride = ClassOverride.get
+ClassLibAPI.type = ClassDeclare.type
 
 __ClassLib = nil
 
-return ClassAPI
+return ClassLibAPI

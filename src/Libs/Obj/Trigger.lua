@@ -4,19 +4,17 @@
 
 local Class = require(Lib.Class)
 
----@type Object
-local Object = require('Object.Object')
-
-local ID = ID
+---@type Obj
+local Obj = require(__TimerLib..'Obj')
 
 --=======
 -- Class
 --=======
 
-local TriggerObj = Class.new('TriggerObj', Object)
----@class TriggerObj : Object
+local TriggerObj = Class.new('TriggerObj', Obj)
+---@class TriggerObj : Obj
 local public = TriggerObj.public
----@class TriggerObjClass : ObjectClass
+---@class TriggerObjClass : ObjClass
 local static = TriggerObj.static
 ---@type TriggerObjClass
 local override = TriggerObj.override
@@ -32,7 +30,7 @@ function override.new(child_instance)
     local instance = child_instance or Class.allocate(TriggerObj)
 
     local obj = CreateTrigger()
-    instance = Object.new(obj, DestroyTrigger, instance)
+    instance = Obj.new(obj, DestroyTrigger, instance)
 
     return instance
 end

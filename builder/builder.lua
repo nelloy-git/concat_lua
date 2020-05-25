@@ -26,8 +26,6 @@ local finalize = {
     args = {}
 }
 
-local sep = package.config:sub(1,1)
-
 local compiletime_packages = {}
 local runtime_packages = {}
 local loading_packages = {}
@@ -74,6 +72,7 @@ local function runFinalize()
     for i = 1, count do
         finalize.functions[count + 1 - i](table.unpack(finalize.args[count + 1 - i]))
     end
+    print('Compilation done.')
 end
 
 ---@param package_name string
@@ -110,7 +109,13 @@ end
 local function searchCompiletimeInFile(file_path, line)
     local pos = Utils.findLinePos(runtime_packages[file_path], line)
     local postfix = runtime_packages[file_path]:sub(pos + 1)
-    return postfix:match('[^%a]Compiletime%b()'):sub(2)
+    --print('==========================')
+    --print(file_path)
+    --print('--------------------------')
+    --print(postfix)
+    --print('--------------------------')
+    --print(postfix:match('Compiletime%b()'))
+    return postfix:match('Compiletime%b()')--:sub(2)
 end
 
 ---@param result any
@@ -145,6 +150,8 @@ local compiletime_log = Utils.getCurDir()..sep..compiletime_modules_path
 Utils.clearFile(compiletime_log)
 local runtime_log = Utils.getCurDir()..sep..runtime_modules_path
 Utils.clearFile(runtime_log)
+
+---@return any
 function require(package_name)
     if not type(package_name) == 'string' then
         error('require function got non string value.', 2)
@@ -210,6 +217,7 @@ function Compiletime(body, ...)
     end
 
     inside_compiletime_function = false
+
     return res
 end
 

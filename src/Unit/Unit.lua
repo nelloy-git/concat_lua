@@ -4,9 +4,9 @@
 
 local Class = require(Lib.Class)
 
-
----@type UnitObjClass
-local UnitObj = require('Object.Unit')
+---@type ObjLib
+local ObjLib = require(Lib.Obj)
+local UnitObj = ObjLib.Unit
 ---@type ParameterAPI
 local ParamAPI = require('Parameter.API')
 local Param = ParamAPI.ParamType
@@ -21,9 +21,9 @@ local InventoryAPI = require('Unit.Inventory.API')
 --=======
 
 local Unit = Class.new('Unit', UnitObj)
----@class Unit : UnitObj
+---@class Unit2 : UnitObj
 local public = Unit.public
----@class UnitClass : UnitObjClass
+---@class UnitClass2 : UnitObjClass
 local static = Unit.static
 ---@type UnitClass
 local override = Unit.override

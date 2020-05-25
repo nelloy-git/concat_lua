@@ -4,19 +4,20 @@
 
 local Class = require(Lib.Class)
 
----@type ActionClass
-local Action = require('Utils.Action')
----@type TriggerObjClass
-local TriggerObj = require('Object.Trigger')
+---@type UtilsLib
+local UtilsLib = require(Lib.Utils)
+local Obj = UtilsLib.Obj
+local Action = UtilsLib.Action
+local checkType = UtilsLib.Functions.checkType
 
 --=======
 -- Class
 --=======
 
-local Trigger = Class.new('Trigger', TriggerObj)
----@class Trigger
+local Trigger = Class.new('Trigger', Obj)
+---@class Trigger : Obj
 local public = Trigger.public
----@class TriggerClass
+---@class TriggerClass : ObjClass
 local static = Trigger.static
 ---@type TriggerClass
 local override = Trigger.override
@@ -29,9 +30,12 @@ local private = {}
 ---@param child_instance Trigger | nil
 ---@return Trigger
 function override.new(child_instance)
-    local instance = child_instance or Class.allocate(Trigger)
-    instance = TriggerObj.new(instance)
+    if child_instance then
+        checkType(child_instance, Trigger, 'child_instance')
+    end
 
+    local instance = child_instance or Class.allocate(Trigger)
+    instance = Obj.new(CreateTrigger(), DestroyTrigger, instance)
     private.newData(instance)
 
     return instance

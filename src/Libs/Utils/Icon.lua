@@ -1,4 +1,5 @@
-Icon = {
+---@class Icon
+local Icon = {
     BTN3M1 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M1.blp",
     BTN3M2 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M2.blp",
     BTN3M3 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M3.blp",

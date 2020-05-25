@@ -2,8 +2,14 @@
 -- Include
 --=========
 
-
 local Class = require(Lib.Class)
+
+---@type LoggerClass
+local Logger = require(__UtilsLib..'Logger')
+local Log = Logger.getDefault()
+---@type UtilsFunctions
+local Functions = require(__UtilsLib..'Functions')
+local checkType = Functions.checkType
 
 --=======
 -- Class
@@ -29,9 +35,12 @@ local private = {}
 ---@param child_instance Action | nil
 ---@return Action
 function override.new(callback, owner, child_instance)
-    if type(callback) ~= 'function' then
-        Log.error(Action, 'got nil callback.', 2)
+    checkType(callback, 'function', 'callback')
+    checkType(owner, 'player', 'owner')
+    if child_instance then
+        checkType(child_instance, 'Action', 'child_instance')
     end
+
     local instance = child_instance or Class.allocate(Action)
     private.newData(instance, callback, owner)
 
@@ -48,7 +57,7 @@ function public:run(...)
         if success then
             return result
         else
-            Log(Log.Err, '', result)
+            Log:err(result)
         end
     else
         return private.data[self].callback(...)

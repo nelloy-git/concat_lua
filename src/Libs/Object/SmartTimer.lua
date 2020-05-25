@@ -5,19 +5,21 @@
 
 local Class = require(Lib.Class)
 
----@type TimerObjClass
-local TimerObj = require('Timer.Timer')
----@type SmartTimerActionClass
-local SmartTimerAction = require('Timer.SmartTimerAction')
+---@type UtilsLib
+local UtilsLib = require(Lib.Utils)
+local Obj = UtilsLib.Obj
+local Action = UtilsLib.Action
+local checkType = UtilsLib.Functions.checkType
+local Log = UtilsLib.DefaultLogger
 
 --=======
 -- Class
 --=======
 
-local SmartTimer = Class.new('SmartTimer', TimerObj)
----@class SmartTimer : Timer
+local SmartTimer = Class.new('SmartTimer', Obj)
+---@class SmartTimer : Obj
 local public = SmartTimer.public
----@class SmartTimerClass : TimerClass
+---@class SmartTimerClass : ObjClass
 local static = SmartTimer.static
 ---@type SmartTimerClass
 local override = SmartTimer.override
@@ -31,21 +33,21 @@ local private = {}
 ---@param child_instance SmartTimer | nil
 ---@return SmartTimer
 function override.new(precision, child_instance)
+    checkType(precision, 'number', 'precision')
+    if child_instance then
+        checkType(child_instance, SmartTimer, 'child_instance')
+    end
+
     if precision < private.minimum_period then
-        Log(Log.Wrn, SmartTimer, string.format('too high precision. Changed %.4f -> %.4f', precision, private.minimum_period))
+        Log:wrn(SmartTimer..string.format(' got too high precision. Changed %.4f -> %.4f', precision, private.minimum_period))
         precision = private.minimum_period
     end
 
     local instance = child_instance or Class.allocate(SmartTimer)
-    instance = TimerObj.new(instance)
+    instance = Obj.new(CreateTimer(), private.destroyRawTimer, instance)
     private.newData(instance, precision)
 
     return instance
-end
-
----@return SmartTimer
-function static.getGlobalTimer()
-    return private.glTimer
 end
 
 --========
@@ -64,27 +66,29 @@ end
 
 ---@param delay number
 ---@param callback Callback
----@return SmartTimerAction
+---@return Action
 function public:addAction(delay, callback)
     local priv = private.data[self]
     delay = math.max(delay, priv.precision)
 
-    local timeout = priv.cur_time + delay
-    local action = SmartTimerAction.new(timeout, callback, self)
-    local pos = private.findPos(priv.actions, timeout, 1, #priv.actions)
-    table.insert(priv.actions, pos, action)
+    local data = {
+        time = priv.cur_time + delay,
+        action = Action.new(callback, self)
+    }
+    local pos = private.findPos(priv.actions_list, data.time, 1, #priv.actions_list)
+    table.insert(priv.actions_list, pos, data)
 
-    return action
+    return data.action
 end
 
----@param action SmartTimerAction
+---@param action Action
 ---@return boolean
 function public:removeAction(action)
     local priv = private.data[self]
 
-    for i = 1, #priv.actions do
-        if priv.actions[i] == action then
-            table.remove(priv.actions, i)
+    for i = 1, #priv.actions_list do
+        if priv.actions_list[i].action == action then
+            table.remove(priv.actions_list, i)
             return true
         end
     end
@@ -106,7 +110,7 @@ function private.newData(self, precision)
         cur_time = 0,
         precision = precision,
 
-        actions = {}
+        actions_list = {}
     }
     private.data[self] = priv
 
@@ -117,36 +121,33 @@ function private.runActions(priv)
     priv.cur_time = priv.cur_time + priv.precision
 
     local cur_time = priv.cur_time
-    while #priv.actions > 0 do
-        local action = table.remove(priv.actions, 1)
+    while #priv.actions_list > 0 do
+        local cur_data = priv.actions_list[1]
 
-        local success = action:tryRun(cur_time)
-        if not success then
-            table.insert(priv.actions, 1, action)
+        if cur_data.time <= cur_time then
+            cur_data.action:run()
+            table.remove(priv.actions_list, 1)
+        else
             break
         end
     end
 end
 
----@param actions TimerAction[]
+---@param actions_list TimerAction[]
 ---@param time number
 ---@param first integer
 ---@param len integer
 ---@return number
-function private.findPos(actions, time, first, len)
+function private.findPos(actions_list, time, first, len)
     if len == 0 then return first end
 
     local half_len, d = math.modf(len / 2)
     local pos = first + half_len
-    if actions[pos]:getTime() > time then
-        return private.findPos(actions, time, first, half_len)
+    if actions_list[pos].time > time then
+        return private.findPos(actions_list, time, first, half_len)
     else
-        return private.findPos(actions, time, first + half_len + 2 * d, half_len)
+        return private.findPos(actions_list, time, first + half_len + 2 * d, half_len)
     end
-end
-
-if not IsCompiletime() then
-    private.glTimer = static.new(private.minimum_period)
 end
 
 return static

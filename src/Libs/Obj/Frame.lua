@@ -4,19 +4,17 @@
 
 local Class = require(Lib.Class)
 
----@type Object
-local Object = require('Object.Object')
-
-local ID = ID
+---@type Obj
+local Object = require(__TimerLib..'Obj')
 
 --=======
 -- Class
 --=======
 
 local FrameObj = Class.new('FrameObj', Object)
----@class FrameObj : Object
+---@class FrameObj : Obj
 local public = FrameObj.public
----@class FrameObjClass : ObjectClass
+---@class FrameObjClass : ObjClass
 local static = FrameObj.static
 ---@type FrameObjClass
 local override = FrameObj.override
@@ -25,11 +23,6 @@ local private = {}
 --=========
 -- Static
 --=========
-
-local gameui
-if not IsCompiletime() then
-    gameui = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
-end
 
 ---@param name string
 ---@param is_simple boolean

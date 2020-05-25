@@ -32,13 +32,13 @@ function public:setFacing(angle, time)
     SetUnitFacingTimed(self:getObj(), angle, time or 0)
 end
 
----@param target_x number
----@param target_y number
----@param time number|nil
-function Unit:setFacingTo(target_x, target_y, time)
-    local x = self:getX()
-    local y = self:getY()
-    local angle = 180 + (180 / math.pi) * math.atan(y - target_y, x - target_x)
+---@param x number
+---@param y number
+---@param time number | nil
+function Unit:setFacingTo(x, y, time)
+    local self_x = GetUnitX(self:getObj())
+    local self_y = GetUnitY(self:getObj())
+    local angle = 180 + (180 / math.pi) * math.atan(self_y - y, self_x - x)
     SetUnitFacingTimed(self:getObj(), angle, time or 0)
 end
 

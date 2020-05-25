@@ -15,6 +15,10 @@ do
         end
 
         if not loaded_packages[package_name] then
+            if not package_files[package_name] then
+                error('Can not find module '..package_name, 2)
+            end
+
             loading_packages[package_name] = true
             loaded_packages[package_name] = package_files[package_name]() or true
             loading_packages[package_name] = nil

@@ -1,4 +1,14 @@
+---@type ParameterDefines
+local Defines = require(__ParameterLib..'Defines')
 
+local ApplyUnit = {}
+
+function ApplyUnit.set(param, base, mult, addit)
+    
+end
+
+function ApplyUnit.PhysicalDamage()
+end
 
 ---@type ParameterData
 local Data = require('Parameter.Data')

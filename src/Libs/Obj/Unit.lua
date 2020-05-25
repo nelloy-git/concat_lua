@@ -4,19 +4,17 @@
 
 local Class = require(Lib.Class)
 
----@type Object
-local Object = require('Object.Object')
-
-local ID = ID
+---@type Obj
+local Obj = require(__TimerLib..'Obj')
 
 --=======
 -- Class
 --=======
 
-local UnitObj = Class.new('UnitObj', Object)
----@class UnitObj : Object
+local UnitObj = Class.new('UnitObj', Obj)
+---@class UnitObj : Obj
 local public = UnitObj.public
----@class UnitObjClass : ObjectClass
+---@class UnitObjClass : ObjClass
 local static = UnitObj.static
 ---@type UnitObjClass
 local override = UnitObj.override
@@ -27,7 +25,7 @@ local private = {}
 --=========
 
 ---@param player player
----@param unit_id number | string
+---@param unit_id number
 ---@param x number
 ---@param y number
 ---@param face number
@@ -36,8 +34,8 @@ local private = {}
 function override.new(player, unit_id, x, y, face, child_instance)
     local instance = child_instance or Class.allocate(UnitObj)
 
-    local obj = CreateUnit(player, ID(unit_id), x, y, face)
-    instance = Object.new(obj, RemoveUnit, instance)
+    local obj = CreateUnit(player, unit_id, x, y, face)
+    instance = Obj.new(obj, RemoveUnit, instance)
 
     return instance
 end
