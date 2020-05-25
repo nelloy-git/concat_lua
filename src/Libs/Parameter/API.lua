@@ -34,6 +34,10 @@ ParameterLibAPI.Regeneration = Defines.Regeneration
 ParameterLibAPI.Mana = Defines.Mana
 ---@type Parameter
 ParameterLibAPI.MoveSpeed = Defines.MoveSpeed
+---@type Parameter[]
+ParameterLibAPI.AllParameters = Defines.AllParameters
+---@type ParameterValueListClass
+ParameterLibAPI.Container = require(__ParameterLib..'ValueList')
 
 __ParameterLib = nil
 return ParameterLibAPI

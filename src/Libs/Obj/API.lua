@@ -9,8 +9,6 @@ ObjLibAPI.Object = require(__TimerLib..'Obj')
 ObjLibAPI.Frame = require(__TimerLib..'Frame')
 ---@type ItemObjClass
 ObjLibAPI.Item = require(__TimerLib..'Item')
----@type TimerObjClass
-ObjLibAPI.Timer = require(__TimerLib..'Timer')
 ---@type TriggerObjClass
 ObjLibAPI.Trigger = require(__TimerLib..'Trigger')
 ---@type UnitObjClass

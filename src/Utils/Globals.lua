@@ -1,5 +1,7 @@
 require('Libs.Libs')
 
+require(Lib.Parameter)
+
 ---@type ObjectLib
 local ObjectLib = require(Lib.Object)
 if not IsCompiletime() then

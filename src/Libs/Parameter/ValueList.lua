@@ -4,20 +4,22 @@
 
 local Class = require(Lib.Class)
 
----@type ParameterData
-local Data = require('Parameter.Data')
-local Param = Data.Type
----@type ParameterValueClass
-local ParamValue = require('Parameter.Value')
-local ValueType = ParamValue.ValueType
+---@type UtilsLib
+local UtilsLib = require(Lib.Utils)
+local checkType = UtilsLib.Functions.checkType
 
-local fmt = string.format
+---@type ParameterClass
+local Parameter = require(__ParameterLib..'Parameter')
+---@type ParameterDefines
+local Defines = require(__ParameterLib..'Defines')
+---@type ParameterValueClass
+local Value = require(__ParameterLib..'Value')
 
 --=======
 -- Class
 --=======
 
-local ParameterValueList = Class.new('ParameterValueList')
+local ParameterValueList = Class.new('ParameterValuesList')
 ---@class ParameterValueList
 local public = ParameterValueList.public
 ---@class ParameterValueListClass
@@ -30,14 +32,9 @@ local private = {}
 -- Static
 --========
 
----@param child_instance ParameterValueList | nil
 ---@return ParameterValueList
-function override.new(child_instance)
-    if child_instance and not Class.type(child_instance, ParameterValueList) then
-        Logger.error(ParameterValueList, '\"child_instance\" must be ParameterValueList or nil', 2)
-    end
-
-    local instance = child_instance or Class.allocate(ParameterValueList)
+function override.new()
+    local instance = Class.allocate(ParameterValueList)
     private.newData(instance)
 
     return instance
@@ -47,35 +44,76 @@ end
 -- Public
 --========
 
----@param param ParameterTypeEnum
----@param value_type ParameterValueTypeEnum
+---@param param Parameter
 ---@param value number
-function public:set(param, value_type, value)
-    if not Data.isParamType(param) then
-        Logger.error(self, 'unknown parameter type.', 2)
-    end
-    private.data[self].value[param]:set(value_type, value)
+function public:addBase(param, value)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    param_value:addBase(value)
 end
 
----@param param ParameterTypeEnum
----@param value_type ParameterValueTypeEnum
+---@param param Parameter
 ---@param value number
-function public:add(param, value_type, value)
-    if not Data.isParamType(param) then
-        Logger.error(self, 'unknown parameter type.', 2)
-    end
-    private.data[self].value[param]:add(value_type, value)
+function public:addMult(param, value)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    param_value:addMult(value)
 end
 
----@param param ParameterTypeEnum
----@param value_type ParameterValueTypeEnum
+---@param param Parameter
+---@param value number
+function public:addAddit(param, value)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    param_value:addAddit(value)
+end
+
+---@param param Parameter
 ---@return number
-function public:get(param, value_type)
-    if not Data.isParamType(param) then
-        Logger.error(self, 'unknown parameter type.', 2)
-    end
-    return private.data[self].value[param]:get(value_type)
+function public:getBase(param)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    return param_value:getBase()
 end
+
+---@param param Parameter
+---@return number
+function public:getMult(param)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    return param_value:getMult()
+end
+
+---@param param Parameter
+---@return number
+function public:getAddit(param)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    return param_value:getAddit()
+end
+
+---@param param Parameter
+---@return number
+function public:getResult(param)
+    checkType(param, Parameter, 'param')
+
+    ---@type ParameterValue
+    local param_value = private.data[self].values[param]
+    return param_value:getResult()
+end
+
 
 --=========
 -- Private
@@ -86,17 +124,13 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param self ParameterValueList
 function private.newData(self)
     local priv = {
-        value = {}
+        values = {}
     }
     private.data[self] = priv
 
-    for _, param_type in pairs(Param) do
-        local value = ParamValue.new()
-        value:set(ValueType.BASE, 0)
-        value:set(ValueType.MULT, 0)
-        value:set(ValueType.ADDIT, 0)
-
-        priv.value[param_type] = value
+    for i = 1, #Defines.AllParameters do
+        local param = Defines.AllParameters[i]
+        priv.values[param] = Value.new(param)
     end
 end
 

@@ -3,6 +3,7 @@ Lib = {}
 Lib.Class = 'Libs.Class.API'
 Lib.Utils = 'Libs.Utils.API'
 Lib.Object = 'Libs.Object.API'
+Lib.Parameter = 'Libs.Parameter.API'
 
 function Lib.getSelf()
     local sep = '\\'

@@ -2,7 +2,6 @@
 -- Include
 --=========
 
----@type ClassAPI
 local Class = require(Lib.Class)
 
 ---@type AbilityTypeClass

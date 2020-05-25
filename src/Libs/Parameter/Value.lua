@@ -4,13 +4,18 @@
 
 local Class = require(Lib.Class)
 
+---@type UtilsLib
+local UtilsLib = require(Lib.Utils)
+local checkType = UtilsLib.Functions.checkType
+
+---@type ParameterClass
+local Parameter = require(__ParameterLib..'Parameter')
 
 --=======
 -- Class
 --=======
 
 local ParameterValue = Class.new('ParameterValue')
-
 ---@class ParameterValue
 local public = ParameterValue.public
 ---@class ParameterValueClass
@@ -24,55 +29,72 @@ local private = {}
 -- Static
 --========
 
----@alias ParameterValueTypeEnum number
-
----@type table<string,ParameterValueTypeEnum>
-static.ValueType = {}
----@type ParameterValueTypeEnum
-static.ValueType.BASE = 1
----@type ParameterValueTypeEnum
-static.ValueType.MULT = 2
----@type ParameterValueTypeEnum
-static.ValueType.ADDIT = 3
-
+---@param param Parameter
 ---@return ParameterValue
-function override.new()
+function override.new(param)
+    checkType(param, Parameter, 'param')
+
     local instance = Class.allocate(ParameterValue)
-    private.newData(instance)
+    private.newData(instance, param)
 
     return instance
 end
-
 
 --========
 -- Public
 --========
 
----@param value_type ParameterValueTypeEnum
----@param value number
-function public:set(value_type, value)
-    if not private.isValueType(value_type) then
-        Log.error(self, 'unknown ParameterValueTypeEnum', 2)
-    end
-    private.data[self][value_type] = value
+---@return Parameter
+function public:getParameter()
+    return private.data[self].param
 end
 
----@param value_type ParameterValueTypeEnum
 ---@param value number
-function public:add(value_type, value)
-    if not private.isValueType(value_type) then
-        Log.error(self, 'unknown ParameterValueTypeEnum', 2)
-    end
-    private.data[self][value_type] = private.data[self][value_type] + value
+function public:addBase(value)
+    local priv = private.data[self]
+    priv.base = priv.base + value
+    priv.is_res_ready = false
 end
 
----@param value_type ParameterValueTypeEnum
+---@param value number
+function public:addMult(value)
+    local priv = private.data[self]
+    priv.mult = priv.mult + value
+    priv.is_res_ready = false
+end
+
+---@param value number
+function public:addAddit(value)
+    local priv = private.data[self]
+    priv.addit = priv.addit + value
+    priv.is_res_ready = false
+end
+
 ---@return number
-function public:get(value_type)
-    if not private.isValueType(value_type) then
-        Log.error(self, 'unknown ParameterValueTypeEnum', 2)
+function public:getBase()
+    return private.data[self].base
+end
+
+---@return number
+function public:getMult()
+    return private.data[self].mult
+end
+
+---@return number
+function public:getAddit()
+    return private.data[self].addit
+end
+
+---@return number
+function public:getResult()
+    local priv = private.data[self]
+
+    if not priv.is_res_ready then
+        priv.res = priv.base * priv.mult + priv.addit
+        priv.is_res_ready = true
     end
-    return private.data[self][value_type]
+
+    return priv.res
 end
 
 --=========
@@ -81,33 +103,19 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-function private.isValueType(value_type)
-    for _, v in pairs(static.ValueType) do
-        if value_type == v then
-            return true
-        end
-    end
-    return false
-end
-
-private.default_value = {
-    [static.ValueType.BASE] = 0,
-    [static.ValueType.MULT] = 1,
-    [static.ValueType.ADDIT] = 0,
-}
-
 ---@param self ParameterValue
-function private.newData(self)
-    local priv = {}
-    for _, value_type in pairs(static.ValueType) do
-        priv[value_type] = private.default_value[value_type]
-    end
+---@param param Parameter
+function private.newData(self, param)
+    local priv = {
+        param = param,
+        base = param:getDefault(),
+        mult = 1,
+        addit = 0,
+        res = param:getDefault(),
+        is_res_ready = true,
+    }
 
-    private.data[self] = setmetatable(priv, private.metatable)
+    private.data[self] = priv
 end
-
-private.metatable = {
-    __gc = function(priv) end
-}
 
 return static

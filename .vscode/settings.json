@@ -9,9 +9,6 @@
         //"./src": true
     },
     "Lua.workspace.preloadFileSize": 5000,
-    "Lua.diagnostics.disable": [
-        "lowercase-global"
-    ],
     "Lua.diagnostics.globals": [
         "Compiletime",
         "IsCompiletime",
