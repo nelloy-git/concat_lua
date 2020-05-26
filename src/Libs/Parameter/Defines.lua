@@ -1,10 +1,11 @@
+local lib_modname = Lib.current().modname
 ---@type UtilsLib
-local UtilsLib = require(Lib.Utils)
----@type ParameterClass
-local Parameter = require(__ParameterLib..'Parameter')
+local UtilsLib = Lib.current().depencies.UtilsLib
 
 ---@class ParameterDefines
 local Defines = {}
+---@type ParameterClass
+local Parameter = require(lib_modname..'.Parameter')
 
 Defines.AllParameters = {}
 

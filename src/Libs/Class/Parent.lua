@@ -1,10 +1,12 @@
-local ClassName = require(__ClassLib..'Name')
+local modname = Lib.current().modname
+
+local ClassName = require(modname..'.Name')
 
 ---@class ClassParent
 local ClassParent = {}
 local ClassStatic
 function ClassParent.init()
-    ClassStatic = ClassStatic or require(__ClassLib..'Static')
+    ClassStatic = ClassStatic or require(modname..'.Static')
 end
 
 local fmt = string.format

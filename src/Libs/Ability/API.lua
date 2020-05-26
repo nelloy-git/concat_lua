@@ -1,19 +1,37 @@
---=========
--- Include
---=========
+---@class AbilityLib
+local AbilityLibAPI = {}
+local modname = Compiletime(Lib.getModname())
+Lib.start(modname)
 
----@type AbilityTypeClass
---local Type = require('Ability.Type')
+--===========
+-- Depencies
+--===========
+
+Lib.current().depencies = {
+    Class = require(LibList.Class),
+    Object = require(LibList.Object),
+    UtilsLib = require(LibList.Utils)
+}
+
+--=====
+-- API
+--=====
+
 ---@type AbilityClass
---local Ability = require('Ability.Ability')
---require('Ability.MustHave.Casting')
---require('Ability.MustHave.Cooldown')
+AbilityLibAPI.Ability = require(modname..'.Ability')
+---@type AbilityTypeClass
+AbilityLibAPI.Type = require(modname..'.Type')
 
---=============
---     API
---=============
----@class AbilityAPI
-local AbilityAPI = {}
+---@type AbilityTargetDestructableClass
+AbilityLibAPI.TargetDestructable = require(modname..'.Target.Destructable')
+---@type AbilityTargetItemClass
+AbilityLibAPI.TargetItem = require(modname..'.Target.Item')
+---@type AbilityTargetNoneClass
+AbilityLibAPI.TargetNone = require(modname..'.Target.None')
+---@type AbilityTargetPointClass
+AbilityLibAPI.TargetPoint = require(modname..'.Target.Point')
+---@type AbilityTargetUnitClass
+AbilityLibAPI.TargetUnit = require(modname..'.Target.Unit')
 
 --[[
 -- Enums
@@ -41,4 +59,7 @@ AbilityAPI.TargetUnit = require('Ability.Target.Unit')
 AbilityAPI.TargetDestructable = require('Ability.Target.Destructable')
 AbilityAPI.TargetItem = require('Ability.Target.Item')
 ]]
-return AbilityAPI
+
+Lib.finish()
+
+return AbilityLibAPI

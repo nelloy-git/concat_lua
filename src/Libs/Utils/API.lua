@@ -1,19 +1,34 @@
 ---@class UtilsLib
 local UtilsLibAPI = {}
-__UtilsLib = Compiletime(Lib.getSelf())
+local modname = Compiletime(Lib.getModname())
+Lib.start(modname)
+
+--===========
+-- Depencies
+--===========
+
+
+Lib.current().depencies = {
+    Class = require(LibList.Class),
+}
+
+--=====
+-- API
+--=====
 
 ---@type LoggerClass
-UtilsLibAPI.Logger = require(__UtilsLib..'Logger')
+UtilsLibAPI.Logger = require(modname..'.Logger')
 UtilsLibAPI.DefaultLogger = UtilsLibAPI.Logger.getDefault()
 ---@type ObjClass
-UtilsLibAPI.Obj = require(__UtilsLib..'Obj')
+UtilsLibAPI.Obj = require(modname..'.Obj')
 ---@type ActionClass
-UtilsLibAPI.Action = require(__UtilsLib..'Action')
+UtilsLibAPI.Action = require(modname..'.Action')
 ---@type UtilsFunctions
-UtilsLibAPI.Functions = require(__UtilsLib..'Functions')
+UtilsLibAPI.Functions = require(modname..'.Functions')
 
 -- Compiletime only
-Compiletime(function() UtilsLibAPI.Icon = require(__UtilsLib..'Icon') end)
+Compiletime(function() UtilsLibAPI.Icon = require(modname..'.Icon') end)
 
-__UtilsLib = nil
+Lib.finish()
+
 return UtilsLibAPI

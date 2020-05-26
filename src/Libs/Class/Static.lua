@@ -1,4 +1,6 @@
-local ClassParent = require(__ClassLib..'Parent')
+local modname = Lib.current().modname
+
+local ClassParent = require(modname..'.Parent')
 
 ---@class ClassStatic
 local ClassStatic = {}

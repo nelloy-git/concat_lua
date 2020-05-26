@@ -1,9 +1,11 @@
-local ClassName = require(__ClassLib..'Name')
-local ClassParent = require(__ClassLib..'Parent')
-local ClassStatic = require(__ClassLib..'Static')
-local ClassOverride = require(__ClassLib..'Override')
-local ClassPublic = require(__ClassLib..'Public')
-local ClassInstance = require(__ClassLib..'Instance')
+local modname = Lib.current().modname
+
+local ClassName = require(modname..'.Name')
+local ClassParent = require(modname..'.Parent')
+local ClassStatic = require(modname..'.Static')
+local ClassOverride = require(modname..'.Override')
+local ClassPublic = require(modname..'.Public')
+local ClassInstance = require(modname..'.Instance')
 
 ---@class ClassDeclare
 local ClassDeclare = {}

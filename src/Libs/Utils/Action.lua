@@ -2,13 +2,14 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local Class = Lib.current().depencies.Class
 
 ---@type LoggerClass
-local Logger = require(__UtilsLib..'Logger')
+local Logger = require(lib_modname..'.Logger')
 local Log = Logger.getDefault()
 ---@type UtilsFunctions
-local Functions = require(__UtilsLib..'Functions')
+local Functions = require(lib_modname..'.Functions')
 local checkType = Functions.checkType
 
 --=======

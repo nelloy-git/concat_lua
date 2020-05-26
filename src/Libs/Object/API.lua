@@ -1,13 +1,30 @@
 ---@class ObjectLib
 local ObjectLib = {}
-__ObjectLib = Compiletime(Lib.getSelf())
+local modname = Compiletime(Lib.getModname())
+Lib.start(modname)
+
+--===========
+-- Depencies
+--===========
+
+Lib.current().depencies = {
+    Class = require(LibList.Class),
+    UtilsLib = require(LibList.Utils)
+}
+
+--=====
+-- API
+--=====
 
 ---@type SimpleTimerClass
-ObjectLib.SimpleTimer = require(__ObjectLib..'SimpleTimer')
+ObjectLib.SimpleTimer = require(modname..'.SimpleTimer')
 ---@type SmartTimerClass
-ObjectLib.SmartTimer = require(__ObjectLib..'SmartTimer')
+ObjectLib.SmartTimer = require(modname..'.SmartTimer')
 ---@type TriggerClass
-ObjectLib.Trigger = require(__ObjectLib..'Trigger')
+ObjectLib.Trigger = require(modname..'.Trigger')
+---@type UnitClass
+ObjectLib.Unit = require(modname..'.Unit')
 
-__ObjectLib = nil
+Lib.finish()
+
 return ObjectLib

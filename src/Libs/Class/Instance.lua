@@ -1,7 +1,9 @@
-local ClassName = require(__ClassLib..'Name')
-local ClassParent = require(__ClassLib..'Parent')
-local ClassPublic = require(__ClassLib..'Public')
-local ClassUtils = require(__ClassLib..'Utils')
+local modname = Lib.current().modname
+
+local ClassName = require(modname..'.Name')
+local ClassParent = require(modname..'.Parent')
+local ClassPublic = require(modname..'.Public')
+local ClassUtils = require(modname..'.Utils')
 
 ---@class ClassInstance
 local ClassInstance = {}

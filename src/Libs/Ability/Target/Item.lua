@@ -2,19 +2,25 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
+
+local Class = depencies.Class
+---@type UtilsLib
+local UtilsLib = depencies.UtilsLib
+local checkType = UtilsLib.Functions.checkType
 
 ---@type AbilityTarget
-local AbilityTarget = require('Ability.Target.Target')
+local AbilityTarget = require(lib_modname..'.Target.Target')
 
 --=======
 -- Class
 --=======
 
 local AbilityTargetItem = Class.new('AbilityTargetItem', AbilityTarget)
----@class AbilityTargetItem
+---@class AbilityTargetItem : AbilityTarget
 local public = AbilityTargetItem.public
----@class AbilityTargetItemClass
+---@class AbilityTargetItemClass : AbilityTargetClass
 local static = AbilityTargetItem.static
 ---@type AbilityTargetItemClass
 local override = AbilityTargetItem.override
@@ -24,13 +30,18 @@ local private = {}
 -- Static
 --=========
 
----@param item_obj item
+---@param item item
 ---@param child_instance AbilityTargetItem | nil
 ---@return AbilityTargetItem
-function override.new(item_obj, child_instance)
+function override.new(item, child_instance)
+    checkType(item, 'item', 'item')
+    if child_instance then
+        checkType(child_instance, AbilityTargetItem, 'child_instance')
+    end
+
     local instance = child_instance or Class.allocate(AbilityTargetItem)
     instance = AbilityTarget.new(instance)
-    private.newData(instance, item_obj)
+    private.newData(instance, item)
 
     return instance
 end
@@ -41,24 +52,24 @@ end
 
 ---@return number
 function public:getX()
-    return GetItemX(private.data[self].item_obj)
+    return GetItemX(private.data[self].item)
 end
 
 ---@return number
 function public:getY()
-    return GetItemY(private.data[self].item_obj)
+    return GetItemY(private.data[self].item)
 end
 
 ---@return item
-function public:getObj()
-    return private.data[self].item_obj
+function public:getItem()
+    return private.data[self].item
 end
 
----@param unit Unit
+---@param unit unit
 ---@param order number
 ---@return boolean
 function public:order(unit, order)
-    return IssueTargetOrderById(unit:getObj(), order, private.data[self].item_obj)
+    return IssueTargetOrderById(unit, order, private.data[self].item)
 end
 
 --=========
@@ -68,10 +79,10 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityTargetItem
----@param item_obj item
-function private.newData(self, item_obj)
+---@param item item
+function private.newData(self, item)
     local priv = {
-        item_obj = item_obj
+        item = item
     }
     private.data[self] = priv
 end

@@ -2,14 +2,16 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
 
+local Class = depencies.Class
 ---@type UtilsLib
-local UtilsLib = require(Lib.Utils)
+local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
 
 ---@type ParameterClass
-local Parameter = require(__ParameterLib..'Parameter')
+local Parameter = require(lib_modname..'.Parameter')
 
 --=======
 -- Class

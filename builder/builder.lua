@@ -77,6 +77,9 @@ end
 
 ---@param package_name string
 local function name2path(package_name)
+    if type(package_name) ~= 'string'  then
+        error('wront package name type.', 3)
+    end
     return src_dir..package_name:gsub('%.', sep)..'.lua'
 end
 

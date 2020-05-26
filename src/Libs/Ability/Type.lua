@@ -2,7 +2,10 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
+
+local Class = depencies.Class
 
 --=======
 -- Class
@@ -33,14 +36,14 @@ end
 --========
 
 --- Virtual function
----@param caster Unit
----@param target AbilityTarget
+---@param caster unit
+---@param target AbilityTargetPoint
 ---@param lvl number
 function public:targeting(caster, target, lvl)
 end
 
 --- Virtual function
----@param caster Unit
+---@param caster unit
 ---@param target AbilityTarget
 ---@param lvl number
 ---@return boolean
@@ -49,35 +52,35 @@ function public:start(caster, target, lvl)
 end
 
 --- Virtual function
----@param caster Unit
+---@param caster unit
 ---@param target AbilityTarget
 ---@param lvl number
 function public:casting(caster, target, lvl)
 end
 
 --- Virtual function
----@param caster Unit
+---@param caster unit
 ---@param target AbilityTarget
 ---@param lvl number
 function public:cancel(caster, target, lvl)
 end
 
 --- Virtual function
----@param caster Unit
+---@param caster unit
 ---@param target AbilityTarget
 ---@param lvl number
 function public:interrupt(caster, target, lvl)
 end
 
 --- Virtual function
----@param caster Unit
+---@param caster unit
 ---@param target AbilityTarget
 ---@param lvl number
 function public:finish(caster, target, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return string
 function public:getName(owner, lvl)
@@ -85,7 +88,7 @@ function public:getName(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return string
 function public:getIcon(owner, lvl)
@@ -93,7 +96,7 @@ function public:getIcon(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return string
 function public:getDescription(owner, lvl)
@@ -101,7 +104,7 @@ function public:getDescription(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return number
 function public:getCastingTime(owner, lvl)
@@ -109,7 +112,7 @@ function public:getCastingTime(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return number
 function public:getCooldown(owner, lvl)
@@ -117,7 +120,7 @@ function public:getCooldown(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return number
 function public:getManaCost(owner, lvl)
@@ -125,7 +128,7 @@ function public:getManaCost(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return number
 function public:getChargesCost(owner, lvl)
@@ -133,7 +136,7 @@ function public:getChargesCost(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return number
 function public:getMaxCharges(owner, lvl)
@@ -141,7 +144,7 @@ function public:getMaxCharges(owner, lvl)
 end
 
 --- Virtual function
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@return number
 function public:getRange(owner, lvl)

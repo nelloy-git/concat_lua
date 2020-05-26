@@ -2,10 +2,11 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
 
----@type UtilsLib
-local UtilsLib = require(Lib.Utils)
+local Class = depencies.Class
+local UtilsLib = depencies.UtilsLib
 local Obj = UtilsLib.Obj
 local checkType = UtilsLib.Functions.checkType
 
@@ -26,23 +27,24 @@ local private = {}
 -- Static
 --=========
 
----@param id number
----@param owner player
+---@param unit_id number
 ---@param x number
 ---@param y number
+---@param owner player
 ---@param child_instance Unit | nil
 ---@return Unit
-function override.new(id, owner, x, y, child_instance)
-    checkType(id, 'number', 'id')
-    checkType(owner, 'player', 'owner')
+function override.new(unit_id, x, y, owner, child_instance)
+    checkType(unit_id, 'number', 'unit_id')
     checkType(x, 'number', 'x')
     checkType(y, 'number', 'y')
+    checkType(owner, 'player', 'owner')
     if child_instance then
         checkType(child_instance, Unit, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Unit)
-    private.newData(instance)
+    instance = Obj.new(CreateUnit(owner, unit_id, x, y, 0), RemoveUnit, instance)
+    private.newData(instance, owner)
 
     return instance
 end
@@ -77,8 +79,14 @@ function public:setY(y)
 end
 
 ---@param z number
-function public:setZ(z)
-    SetUnitFlyHeight(self:getObj(), z, 1000000)
+---@param rate number | nil
+function public:setZ(z, rate)
+    SetUnitFlyHeight(self:getObj(), z, rate or 0)
+end
+
+---@return player
+function public:getOwner()
+    return private.data[self].owner
 end
 
 --=========
@@ -88,8 +96,9 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self Unit
-function private.newData(self)
+function private.newData(self, owner)
     local priv = {
+        owner = owner
     }
     private.data[self] = priv
 end

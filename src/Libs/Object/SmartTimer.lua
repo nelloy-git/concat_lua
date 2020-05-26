@@ -2,11 +2,11 @@
 -- Include
 --=========
 
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
 
-local Class = require(Lib.Class)
-
----@type UtilsLib
-local UtilsLib = require(Lib.Utils)
+local Class = depencies.Class
+local UtilsLib = depencies.UtilsLib
 local Obj = UtilsLib.Obj
 local Action = UtilsLib.Action
 local checkType = UtilsLib.Functions.checkType

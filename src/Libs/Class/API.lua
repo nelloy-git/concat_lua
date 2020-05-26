@@ -1,20 +1,28 @@
 local ClassLibAPI = {}
+local modname = Compiletime(Lib.getModname())
+Lib.start(modname)
 
-__ClassLib = Compiletime(Lib.getSelf())
+--===========
+-- Depencies
+--===========
+
+--=====
+-- API
+--=====
 
 ---@type ClassDeclare
-local ClassDeclare = require(__ClassLib..'Declare')
+local ClassDeclare = require(modname..'.Declare')
 ---@type ClassName
-local ClassName = require(__ClassLib..'Name')
+local ClassName = require(modname..'.Name')
 ---@type ClassParent
-local ClassParent = require(__ClassLib..'Parent')
+local ClassParent = require(modname..'.Parent')
 ClassParent.init()
 ---@type ClassPublic
-local ClassPublic = require(__ClassLib..'Public')
+local ClassPublic = require(modname..'.Public')
 ---@type ClassInstance
-local ClassInstance = require(__ClassLib..'Instance')
+local ClassInstance = require(modname..'.Instance')
 ---@type ClassOverride
-local ClassOverride = require(__ClassLib..'Override')
+local ClassOverride = require(modname..'.Override')
 
 ClassLibAPI.new = ClassDeclare.register
 ClassLibAPI.allocate = ClassInstance.allocate
@@ -26,6 +34,6 @@ ClassLibAPI.getPublic = ClassPublic.get
 ClassLibAPI.getOverride = ClassOverride.get
 ClassLibAPI.type = ClassDeclare.type
 
-__ClassLib = nil
+Lib.finish()
 
 return ClassLibAPI

@@ -2,10 +2,11 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local depencies = Lib.current().depencies
 
+local Class = depencies.Class
 ---@type UtilsLib
-local UtilsLib = require(Lib.Utils)
+local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
 
 --=======

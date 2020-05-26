@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local Class = Lib.current().depencies.Class
 
 local fmt = string.format
 

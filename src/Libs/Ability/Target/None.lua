@@ -2,19 +2,25 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
+
+local Class = depencies.Class
+---@type UtilsLib
+local UtilsLib = depencies.UtilsLib
+local checkType = UtilsLib.Functions.checkType
 
 ---@type AbilityTarget
-local AbilityTarget = require('Ability.Target.Target')
+local AbilityTarget = require(lib_modname..'.Target.Target')
 
 --=======
 -- Class
 --=======
 
 local AbilityTargetNone = Class.new('AbilityTargetNone', AbilityTarget)
----@class AbilityTargetNone
+---@class AbilityTargetNone : AbilityTarget
 local public = AbilityTargetNone.public
----@class AbilityTargetNoneClass
+---@class AbilityTargetNoneClass AbilityTargetClass
 local static = AbilityTargetNone.static
 ---@type AbilityTargetNoneClass
 local override = AbilityTargetNone.override
@@ -27,6 +33,10 @@ local private = {}
 ---@param child_instance AbilityTargetNone | nil
 ---@return AbilityTargetNone
 function override.new(child_instance)
+    if child_instance then
+        checkType(child_instance, AbilityTargetNone, 'child_instance')
+    end
+
     local instance = child_instance or Class.allocate(AbilityTargetNone)
     instance = AbilityTarget.new(instance)
 

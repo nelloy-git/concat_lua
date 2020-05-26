@@ -1,9 +1,10 @@
-require('Libs.Libs')
+require('Libs.Lib')
 
-require(Lib.Parameter)
+require(LibList.Parameter)
+require(LibList.Ability)
 
 ---@type ObjectLib
-local ObjectLib = require(Lib.Object)
+local ObjectLib = require(LibList.Object)
 if not IsCompiletime() then
     glTimer = ObjectLib.SmartTimer.new(0.03125)
 end

@@ -2,19 +2,25 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
+
+local Class = depencies.Class
+---@type UtilsLib
+local UtilsLib = depencies.UtilsLib
+local checkType = UtilsLib.Functions.checkType
 
 ---@type AbilityTarget
-local AbilityTarget = require('Ability.Target.Target')
+local AbilityTarget = require(lib_modname..'.Target.Target')
 
 --=======
 -- Class
 --=======
 
 local AbilityTargetPoint = Class.new('AbilityTargetPoint', AbilityTarget)
----@class AbilityTargetPoint
+---@class AbilityTargetPoint : AbilityTarget
 local public = AbilityTargetPoint.public
----@class AbilityTargetPointClass
+---@class AbilityTargetPointClass : AbilityTargetClass
 local static = AbilityTargetPoint.static
 ---@type AbilityTargetPointClass
 local override = AbilityTargetPoint.override
@@ -29,6 +35,12 @@ local private = {}
 ---@param child_instance AbilityTargetPoint | nil
 ---@return AbilityTargetPoint
 function override.new(x, y, child_instance)
+    checkType(x, 'number', 'x')
+    checkType(y, 'number', 'y')
+    if child_instance then
+        checkType(child_instance, AbilityTargetPoint, 'child_instance')
+    end
+
     local instance = child_instance or Class.allocate(AbilityTargetPoint)
     instance = AbilityTarget.new(instance)
     private.newData(instance, x, y)
@@ -50,12 +62,12 @@ function public:getY()
     return private.data[self].y
 end
 
----@param unit Unit
+---@param unit unit
 ---@param order number
 ---@return boolean
 function public:order(unit, order)
     local priv = private.data[self]
-    return IssuePointOrderById(unit:getObj(), order, priv.x, priv.y)
+    return IssuePointOrderById(unit, order, priv.x, priv.y)
 end
 
 --=========

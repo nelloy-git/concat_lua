@@ -2,7 +2,14 @@
 -- Include
 --=========
 
-local Class = require(Lib.Class)
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
+
+local Class = depencies.Class
+---@type UtilsLib
+local UtilsLib = depencies.UtilsLib
+local checkType = UtilsLib.Functions.checkType
+local Log = UtilsLib.DefaultLogger
 
 --=======
 -- Class
@@ -24,8 +31,10 @@ local private = {}
 ---@param child_instance AbilityTarget
 ---@return AbilityTarget
 function override.new(child_instance)
-    if not child_instance then
-        Logger.error(AbilityTarget, 'can not create instance of abstract class.', 2)
+    if child_instance then
+        checkType(child_instance, AbilityTarget, 'child_instance')
+    else
+        Log:err('Can not create instance of abstract class.', 2)
     end
     return child_instance
 end
@@ -37,32 +46,27 @@ end
 --- Virtual function
 ---@return number
 function public:getX()
-    Logger.error(self, 'can not call virtual function.', 2)
+    Log:err('Can not call virtual function.', 2)
 end
 
 --- Virtual function
 ---@return number
 function public:getY()
-    Logger.error(self, 'can not call virtual function.', 2)
+    Log:err('Can not call virtual function.', 2)
 end
 
----@param caster Unit
+---@param caster unit
 ---@return number
 function public:getDistance(caster)
-    return ((caster:getX() - self:getX())^2 + (caster:getY() - self:getY())^2)^0.5
-end
-
----@return any
-function public:getObj()
-    return nil
+    return ((GetUnitX(caster) - self:getX())^2 + (GetUnitY(caster) - self:getY())^2)^0.5
 end
 
 --- Virtual function
----@param unit Unit
+---@param unit unit
 ---@param order number
 ---@return boolean
 function public:order(unit, order)
-    Logger.error(self, 'can not call virtual function.', 2)
+    Log:err(self, 'can not call virtual function.', 2)
 end
 
 --=========

@@ -1,9 +1,23 @@
 ---@class ParameterLib
 local ParameterLibAPI = {}
-__ParameterLib = Compiletime(Lib.getSelf())
+local modname = Compiletime(Lib.getModname())
+Lib.start(modname)
+
+--===========
+-- Depencies
+--===========
+
+Lib.current().depencies = {
+    Class = require(LibList.Class),
+    UtilsLib = require(LibList.Utils)
+}
+
+--=====
+-- API
+--=====
 
 ---@type ParameterDefines
-local Defines = require(__ParameterLib..'Defines')
+local Defines = require(modname..'.Defines')
 ---@type Parameter
 ParameterLibAPI.PhysicalDamage = Defines.PhysicalDamage
 ---@type Parameter
@@ -37,7 +51,8 @@ ParameterLibAPI.MoveSpeed = Defines.MoveSpeed
 ---@type Parameter[]
 ParameterLibAPI.AllParameters = Defines.AllParameters
 ---@type ParameterValueListClass
-ParameterLibAPI.Container = require(__ParameterLib..'ValueList')
+ParameterLibAPI.Container = require(modname..'.ValueList')
 
-__ParameterLib = nil
+Lib.finish()
+
 return ParameterLibAPI
