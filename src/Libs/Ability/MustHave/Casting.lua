@@ -147,7 +147,6 @@ function public:use(target)
     end
 
     local charges_cost = abil_type:getChargesCost(caster, lvl)
-    print(charges_cost, self:getCharges())
     if charges_cost > self:getCharges() then
         -- TODO callback
         print('Out of charges.')
