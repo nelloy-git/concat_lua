@@ -37,13 +37,6 @@ end
 
 --- Virtual function
 ---@param caster unit
----@param target AbilityTargetPoint
----@param lvl number
-function public:targeting(caster, target, lvl)
-end
-
---- Virtual function
----@param caster unit
 ---@param target AbilityTarget
 ---@param lvl number
 ---@return boolean

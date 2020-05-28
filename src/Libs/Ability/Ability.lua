@@ -103,6 +103,8 @@ function public:use(target)
         started = false,
     }
 
+    flags.started = abil_type:start(caster, target, lvl)
+
     return flags
 end
 
@@ -126,9 +128,9 @@ function private.newData(self, owner, ability_type, lvl)
         lvl = lvl,
 
         cur_target = nil,
-        casting_end_time = nil,
+        casting_end_time = 0,
 
-        charges = nil,
+        charges = 0,
     }
     private.data[self] = priv
 end
