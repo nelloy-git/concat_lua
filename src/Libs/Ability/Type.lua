@@ -6,6 +6,9 @@ local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
+---@type UtilsLib
+local UtilsLib = depencies.UtilsLib
+local checkType = UtilsLib.Functions.checkType
 
 --=======
 -- Class
@@ -26,6 +29,10 @@ local private = {}
 
 ---@return AbilityType
 function override.new(child_instance)
+    if child_instance then
+        checkType(child_instance, AbilityType, 'child_instance')
+    end
+
     local instance = child_instance or Class.allocate(AbilityType)
 
     return instance
@@ -35,128 +42,65 @@ end
 -- Public
 --========
 
---- Virtual function
----@param caster unit
----@param target AbilityTarget
----@param lvl number
+--- Virtual function.
+--- Return true if check is successfull. Cooldown and charges are built in system.
+---@param abil Ability
 ---@return boolean
-function public:start(caster, target, lvl)
-    return true
+function public:checkConditions(abil)
+end
+
+--- Virtual function.
+--- Return true if started successfully.
+---@param abil Ability
+function public:onStart(abil)
 end
 
 --- Virtual function
----@param caster unit
----@param target AbilityTarget
----@param lvl number
-function public:casting(caster, target, lvl)
+---@param abil Ability
+function public:onCasting(abil)
 end
 
 --- Virtual function
----@param caster unit
----@param target AbilityTarget
----@param lvl number
-function public:cancel(caster, target, lvl)
+---@param abil Ability
+function public:onCancel(abil)
 end
 
 --- Virtual function
----@param caster unit
----@param target AbilityTarget
----@param lvl number
-function public:interrupt(caster, target, lvl)
+---@param abil Ability
+function public:onInterrupt(abil)
 end
 
 --- Virtual function
----@param caster unit
----@param target AbilityTarget
----@param lvl number
-function public:finish(caster, target, lvl)
+---@param abil Ability
+function public:onFinish(abil)
 end
 
 --- Virtual function
----@param owner unit
----@param lvl number
----@return string
-function public:getName(owner, lvl)
-    return private.data[self].name
-end
-
---- Virtual function
----@param owner unit
----@param lvl number
----@return string
-function public:getIcon(owner, lvl)
-    return private.default_icon
-end
-
---- Virtual function
----@param owner unit
----@param lvl number
----@return string
-function public:getDescription(owner, lvl)
-    return private.default_description
-end
-
---- Virtual function
----@param owner unit
----@param lvl number
+--- Must return full casting time of the ability.
+---@param abil Ability
 ---@return number
-function public:getCastingTime(owner, lvl)
-    return private.default_casting_time
+function public:getCastingTime(abil)
 end
 
 --- Virtual function
----@param owner unit
----@param lvl number
+--- Must return full cooldown of one ability charge.
+---@param abil Ability
 ---@return number
-function public:getCooldown(owner, lvl)
-    return private.default_cooldown
+function public:getCooldown(abil)
 end
 
 --- Virtual function
----@param owner unit
----@param lvl number
+--- Must return maximum number of charges for ability.
+---@param abil Ability
 ---@return number
-function public:getManaCost(owner, lvl)
-    return private.default_mana_cost
+function public:getMaxCharges(abil)
 end
 
 --- Virtual function
----@param owner unit
----@param lvl number
+--- Must return number of charges consumed for use.
+---@param abil Ability
 ---@return number
-function public:getChargesCost(owner, lvl)
-    return private.default_charges_cost
+function public:getChargesForUse(abil)
 end
-
---- Virtual function
----@param owner unit
----@param lvl number
----@return number
-function public:getMaxCharges(owner, lvl)
-    return private.default_max_charges
-end
-
---- Virtual function
----@param owner unit
----@param lvl number
----@return number
-function public:getRange(owner, lvl)
-    return private.default_range
-end
-
---=========
--- Private
---=========
-
-private.data = setmetatable({}, {__mode = 'k'})
-
-private.default_icon = ''
-private.default_description = ''
-private.default_casting_time = 1
-private.default_cooldown = 0
-private.default_mana_cost = 0
-private.default_charges_cost = 1
-private.default_max_charges = 1
-private.default_range = 1000000
 
 return static

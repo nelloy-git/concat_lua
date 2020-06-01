@@ -63,19 +63,24 @@ end
 -- Public
 --========
 
----@param lvl number
-function public:setLevel(lvl)
-    private.data[self].lvl = lvl
-end
-
 ---@return number
 function public:getLevel()
     return private.data[self].lvl
 end
 
+---@param lvl number
+function public:setLevel(lvl)
+    private.data[self].lvl = lvl
+end
+
 ---@return unit
 function public:getOwner()
     return private.data[self].owner
+end
+
+---@return AbilityTarget
+function public:getTarget()
+    return private.data[self].cur_target
 end
 
 ---@return AbilityType
@@ -84,7 +89,7 @@ function public:getType()
 end
 
 ---@param target AbilityTarget
----@return AbilityCastingFlags
+---@return boolean
 function public:use(target)
     local priv = private.data[self]
 
@@ -95,31 +100,22 @@ function public:use(target)
     ---@type number
     local lvl = priv.lvl
 
-    local charges_cost = abil_type:getChargesCost(caster, lvl)
-    local mana_cost = abil_type:getManaCost(caster, lvl)
-    ---@type AbilityCastingFlags
-    local flags = {
-        already_casting = private.casting_list[self] ~= nil,
-        no_charges = charges_cost > priv.charges,
-        no_mana = mana_cost > GetUnitState(caster, UNIT_STATE_MANA),
-        out_of_range = abil_type:getRange(caster, lvl) < target:getDistance(caster),
-        started = false,
-    }
-
-    if not flags.already_casting and
-       not flags.no_charges and
-       not flags.no_mana and
-       not flags.out_of_range then
-        flags.started = abil_type:start(caster, target, lvl)
-        if flags.started then
-            private.casting_list[self] = priv
-
-            priv.charges = priv.charges - charges_cost
-            SetUnitState(caster, UNIT_STATE_MANA, GetUnitState(caster, UNIT_STATE_MANA) - mana_cost)
-        end
+    if not abil_type:checkConditions(self) then
+        return false
     end
 
-    return flags
+    if abil_type:getChargesForUse(self) < priv.charges then
+        return false
+    end
+
+    abil_type:onStart(self)
+    priv.charges = priv.charges - priv.ability_type:getChargesPerUse(self)
+    priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
+    priv.cooldown_end_time = private.cooldown_current_time + abil_type:getCooldown(self)
+    private.casting_list[self] = priv
+    private.cooldown_list[self] = priv
+
+    return true
 end
 
 --=========
@@ -145,6 +141,7 @@ function private.newData(self, owner, ability_type, lvl)
         casting_end_time = 0,
 
         charges = 0,
+        cooldown_end_time = 0,
     }
     private.data[self] = priv
 end
@@ -157,18 +154,33 @@ function private.castingLoop()
     for abil, priv in pairs(private.casting_list) do
         ---@type AbilityType
         local abil_type = priv.ability_type
+
         if priv.casting_end_time <= cur_time then
-            abil_type:finish(priv.owner, priv.cur_target, priv.lvl)
+            abil_type:onFinish(abil)
             private.casting_list[abil] = nil
         else
-            abil_type:casting(priv.owner, priv.cur_target, priv.lvl)
+            abil_type:onCasting(abil)
         end
     end
 end
 
 private.cooldown_current_time = 0
 function private.cooldownLoop()
+    local cur_time = private.cooldown_current_time + 0.05
+    private.cooldown_current_time = cur_time
+
     for abil, priv in pairs(private.casting_list) do
+        ---@type AbilityType
+        local abil_type = priv.ability_type
+
+        if priv.charges >= abil_type:getMaxCharges(abil) then
+            private.cooldown_list[abil] = nil
+        end
+
+        if priv.cooldown_end_time <= cur_time then
+            priv.charges = priv.charges + 1
+            priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getCooldown(abil)
+        end
     end
 end
 
