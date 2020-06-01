@@ -27,7 +27,7 @@ UtilsLibAPI.Action = require(modname..'.Action')
 UtilsLibAPI.Functions = require(modname..'.Functions')
 
 -- Compiletime only
-Compiletime(function() UtilsLibAPI.Icon = require(modname..'.Icon') end)
+local _ = Compiletime(function() UtilsLibAPI.Icon = require(modname..'.Icon') end)
 
 Lib.finish()
 

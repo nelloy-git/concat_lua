@@ -94,16 +94,30 @@ function public:use(target)
     local abil_type = priv.ability_type
     ---@type number
     local lvl = priv.lvl
+
+    local charges_cost = abil_type:getChargesCost(caster, lvl)
+    local mana_cost = abil_type:getManaCost(caster, lvl)
     ---@type AbilityCastingFlags
     local flags = {
-        already_casting = true,
-        no_charges = abil_type:getChargesCost(caster, lvl) > priv.charges,
-        no_mana = abil_type:getManaCost(caster, lvl) > GetUnitState(caster, UNIT_STATE_MANA),
+        already_casting = private.casting_list[self] ~= nil,
+        no_charges = charges_cost > priv.charges,
+        no_mana = mana_cost > GetUnitState(caster, UNIT_STATE_MANA),
         out_of_range = abil_type:getRange(caster, lvl) < target:getDistance(caster),
         started = false,
     }
 
-    flags.started = abil_type:start(caster, target, lvl)
+    if not flags.already_casting and
+       not flags.no_charges and
+       not flags.no_mana and
+       not flags.out_of_range then
+        flags.started = abil_type:start(caster, target, lvl)
+        if flags.started then
+            private.casting_list[self] = priv
+
+            priv.charges = priv.charges - charges_cost
+            SetUnitState(caster, UNIT_STATE_MANA, GetUnitState(caster, UNIT_STATE_MANA) - mana_cost)
+        end
+    end
 
     return flags
 end
@@ -118,7 +132,7 @@ private.casting_list = setmetatable({}, {__mode = 'kv'})
 private.cooldown_list = setmetatable({}, {__mode = 'kv'})
 
 ---@param self Ability
----@param owner Unit
+---@param owner unit
 ---@param lvl number
 ---@param ability_type AbilityType
 function private.newData(self, owner, ability_type, lvl)
