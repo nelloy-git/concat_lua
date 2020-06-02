@@ -103,7 +103,7 @@ function public:updateCooldown()
     local abil_type = abil:getType()
 
     local cur_cd = abil:getCooldownTimeLeft()
-    local full_cd = abil_type:getCooldown(abil:getOwner(), abil:getLevel())
+    local full_cd = abil_type:getChargeCooldown(abil:getOwner(), abil:getLevel())
     local ratio = cur_cd / full_cd
 
     if cur_cd > 0 then

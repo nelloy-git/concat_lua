@@ -88,17 +88,18 @@ function public:getType()
     return private.data[self].ability_type
 end
 
+---@return number
+function public:getCharges()
+    return private.data[self].charges
+end
+
 ---@param target AbilityTarget
 ---@return boolean
 function public:use(target)
     local priv = private.data[self]
-
-    ---@type unit
-    local caster = priv.owner
+    priv.cur_target = target
     ---@type AbilityType
     local abil_type = priv.ability_type
-    ---@type number
-    local lvl = priv.lvl
 
     if not abil_type:checkConditions(self) then
         return false
@@ -111,7 +112,7 @@ function public:use(target)
     abil_type:onStart(self)
     priv.charges = priv.charges - priv.ability_type:getChargesPerUse(self)
     priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
-    priv.cooldown_end_time = private.cooldown_current_time + abil_type:getCooldown(self)
+    priv.cooldown_end_time = private.cooldown_current_time + abil_type:getChargeCooldown(self)
     private.casting_list[self] = priv
     private.cooldown_list[self] = priv
 
@@ -179,7 +180,7 @@ function private.cooldownLoop()
 
         if priv.cooldown_end_time <= cur_time then
             priv.charges = priv.charges + 1
-            priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getCooldown(abil)
+            priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getChargeCooldown(abil)
         end
     end
 end
