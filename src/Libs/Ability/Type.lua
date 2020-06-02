@@ -86,7 +86,7 @@ end
 --- Must return full cooldown of one ability charge.
 ---@param abil Ability
 ---@return number
-function public:getCooldown(abil)
+function public:getChargeCooldown(abil)
 end
 
 --- Virtual function
@@ -101,6 +101,24 @@ end
 ---@param abil Ability
 ---@return number
 function public:getChargesForUse(abil)
+end
+
+--- Virtual function
+---@param abil Ability
+---@return string
+function public:getName(abil)
+end
+
+--- Virtual function
+---@param abil Ability
+---@return string
+function public:getIcon(abil)
+end
+
+--- Virtual function
+---@param abil Ability
+---@return string
+function public:getTooltip(abil)
 end
 
 return static

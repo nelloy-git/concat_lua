@@ -142,7 +142,6 @@ end
 function public:use(target)
     local priv = private.data[self]
     priv.cur_target = target
-
     ---@type AbilityType
     local abil_type = priv.ability_type
 
@@ -231,7 +230,7 @@ function private.cooldownLoop()
         -- Add charge
         if priv.cooldown_end_time <= cur_time then
             priv.charges = priv.charges + 1
-            priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getCooldown(abil)
+            priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getChargeCooldown(abil)
         end
     end
 end
