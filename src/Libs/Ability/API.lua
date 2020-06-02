@@ -17,10 +17,12 @@ Lib.current().depencies = {
 -- API
 --=====
 
----@type AbilityClass
-AbilityLibAPI.Ability = require(modname..'.Ability')
+---@type AbilitiesContainerClass
+AbilityLibAPI.Container = require(modname..'.Container')
 ---@type AbilityTypeClass
 AbilityLibAPI.Type = require(modname..'.Type')
+---@type AbilityType
+AbilityLibAPI.TestType = require(modname..'.TestType')
 
 ---@type AbilityTargetDestructableClass
 AbilityLibAPI.TargetDestructable = require(modname..'.Target.Destructable')

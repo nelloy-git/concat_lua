@@ -5,10 +5,9 @@
 local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
-local Class = require(Lib.Class)
-
+local Class = depencies.Class
 ---@type UtilsLib
-local UtilsLib = require(Lib.Utils)
+local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
 local Log = UtilsLib.DefaultLogger
 
@@ -33,19 +32,22 @@ local private = {}
 --=========
 
 ---@param owner unit
----@param size number
 ---@param child_instance AbilitiesContainer | nil
 ---@return AbilitiesContainer
-function override.new(owner, size, child_instance)
-    checkType(size, 'number', 'size')
+function static.new(owner, child_instance)
+    checkType(owner, 'unit', 'owner')
     if child_instance then
         checkType(child_instance, AbilitiesContainer, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(AbilitiesContainer)
-    private.newData(instance, size, owner)
+    private.newData(instance, owner)
 
     return instance
+end
+
+function static.get(owner)
+    return private.owners[owner]
 end
 
 --========
@@ -55,30 +57,13 @@ end
 ---@param pos number
 ---@return Ability | nil
 function public:get(pos)
-    local priv = private.data[self]
-
-    if pos < 1 or pos > priv.size then
-        Log:wrn(tostring(self)..': selected position ('..pos..') is not allowed. Returned \'nil\'.')
-    end
-
-    return priv.list[pos]
+    return private.data[self].list[pos]
 end
 
 ---@param abil_type AbilityType
 function public:set(pos, abil_type)
     local priv = private.data[self]
-
-    if pos < 1 or pos > priv.size then
-        Log:wrn(tostring(self)..': selected position ('..pos..') is not allowed.')
-        return
-    end
-
     priv.list[pos] = Ability.new(priv.owner, abil_type)
-end
-
----@return number
-function public:getSize()
-    return private.data[self].size
 end
 
 --=========
@@ -86,17 +71,17 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.owners = setmetatable({}, {__mode = 'kv'})
 
 ---@param self AbilitiesContainer
----@param size number
 ---@param owner unit
-function private.newData(self, size, owner)
+function private.newData(self, owner)
     local priv = {
-        size = size,
         owner = owner,
         list = {}
     }
     private.data[self] = priv
+    private.owners[owner] = self
 end
 
 return static

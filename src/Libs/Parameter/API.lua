@@ -9,7 +9,8 @@ Lib.start(modname)
 
 Lib.current().depencies = {
     Class = require(LibList.Class),
-    UtilsLib = require(LibList.Utils)
+    UtilsLib = require(LibList.Utils),
+    ObjectLib = require(LibList.Object)
 }
 
 --=====
@@ -52,6 +53,8 @@ ParameterLibAPI.MoveSpeed = Defines.MoveSpeed
 ParameterLibAPI.AllParameters = Defines.AllParameters
 ---@type ParameterValueListClass
 ParameterLibAPI.Container = require(modname..'.ValueList')
+---@type UnitParameterContainerClass
+ParameterLibAPI.UnitContainer = require(modname..'.UnitContainer')
 
 Lib.finish()
 

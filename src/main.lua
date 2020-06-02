@@ -1,4 +1,25 @@
 require('Utils.Globals')
+
+---@type ParameterLib
+local ParameterAPI = require(LibList.Parameter)
+---@type AbilityLib
+local AbilityAPI = require(LibList.Ability)
+---@type ObjectLib
+local ObjectLib = require(LibList.Object)
+
+if IsCompiletime() then
+    return
+end
+
+local u = ObjectLib.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
+
+local param_container = ParameterAPI.UnitContainer.new(u:getObj())
+
+local test_abil_type = AbilityAPI.TestType
+local abil_container = AbilityAPI.Container.new(u:getObj())
+abil_container:set(1, test_abil_type)
+--local abil = abil_container:get(1):use(AbilityAPI.TargetNone.new())
+
 --[[
 ---@type UnitAPI
 local UnitAPI = require('Unit.API')

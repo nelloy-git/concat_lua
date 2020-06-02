@@ -35,8 +35,12 @@ local private = {}
 --========
 
 ---@return ParameterValueList
-function override.new()
-    local instance = Class.allocate(ParameterValueList)
+function override.new(child_instance)
+    if child_instance then
+        checkType(child_instance, ParameterValueList, 'child_instance')
+    end
+
+    local instance = child_instance or Class.allocate(ParameterValueList)
     private.newData(instance)
 
     return instance
@@ -49,8 +53,6 @@ end
 ---@param param Parameter
 ---@param value number
 function public:addBase(param, value)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     param_value:addBase(value)
@@ -59,8 +61,6 @@ end
 ---@param param Parameter
 ---@param value number
 function public:addMult(param, value)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     param_value:addMult(value)
@@ -69,8 +69,6 @@ end
 ---@param param Parameter
 ---@param value number
 function public:addAddit(param, value)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     param_value:addAddit(value)
@@ -79,8 +77,6 @@ end
 ---@param param Parameter
 ---@return number
 function public:getBase(param)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     return param_value:getBase()
@@ -89,8 +85,6 @@ end
 ---@param param Parameter
 ---@return number
 function public:getMult(param)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     return param_value:getMult()
@@ -99,8 +93,6 @@ end
 ---@param param Parameter
 ---@return number
 function public:getAddit(param)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     return param_value:getAddit()
@@ -109,8 +101,6 @@ end
 ---@param param Parameter
 ---@return number
 function public:getResult(param)
-    checkType(param, Parameter, 'param')
-
     ---@type ParameterValue
     local param_value = private.data[self].values[param]
     return param_value:getResult()
