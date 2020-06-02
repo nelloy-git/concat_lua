@@ -29,13 +29,6 @@ local static = Ability.static
 local override = Ability.override
 local private = {}
 
----@class AbilityCastingFlags
----@field already_casting boolean
----@field no_charges boolean
----@field no_mana boolean
----@field out_of_range boolean
----@field started boolean
-
 --=========
 -- Static
 --=========
@@ -59,9 +52,31 @@ function override.new(owner, ability_type, lvl, child_instance)
     return instance
 end
 
+---@param unit unit
+---@return Ability | nil
+function static.getCastingAbility(unit)
+    return private.caster_list[unit]
+end
+
 --========
 -- Public
 --========
+
+function public:cancel()
+    local priv = private.data[self]
+
+    priv.ability_type:onCancel(self)
+    private.casting_list[self] = nil
+    private.caster_list[priv.owner] = nil
+end
+
+function public:interrupt()
+    local priv = private.data[self]
+
+    priv.ability_type:onInterrupt(self)
+    private.casting_list[self] = nil
+    private.caster_list[priv.owner] = nil
+end
 
 ---@return number
 function public:getLevel()
@@ -88,17 +103,48 @@ function public:getType()
     return private.data[self].ability_type
 end
 
+---@return number
+function public:getCastingTimeLeft()
+    local t = private.data[self].casting_end_time - private.casting_current_time
+    if t < 0 then t = 0 end
+    return t
+end
+
+---@param casting_time number
+function public:setCastingTime(casting_time)
+    private.data[self].casting_end_time = private.casting_current_time + casting_time
+end
+
+---@return number
+function public:getChargesLeft()
+    return private.data[self].charges
+end
+
+---@param charges number
+function public:setCharges(charges)
+    private.data[self].charges = charges
+end
+
+---@return number
+function public:getCooldownTimeLeft()
+    local t = private.data[self].cooldown_end_time - private.cooldown_current_time
+    if t < 0 then t = 0 end
+    return t
+end
+
+---@param cooldown number
+function public:setCooldownTime(cooldown)
+    private.data[self].cooldown_end_time = private.cooldown_current_time + cooldown
+end
+
 ---@param target AbilityTarget
 ---@return boolean
 function public:use(target)
     local priv = private.data[self]
+    priv.cur_target = target
 
-    ---@type unit
-    local caster = priv.owner
     ---@type AbilityType
     local abil_type = priv.ability_type
-    ---@type number
-    local lvl = priv.lvl
 
     if not abil_type:checkConditions(self) then
         return false
@@ -112,6 +158,7 @@ function public:use(target)
     priv.charges = priv.charges - priv.ability_type:getChargesPerUse(self)
     priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
     priv.cooldown_end_time = private.cooldown_current_time + abil_type:getCooldown(self)
+    private.caster_list[priv.owner] = self
     private.casting_list[self] = priv
     private.cooldown_list[self] = priv
 
@@ -124,6 +171,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
+private.caster_list = setmetatable({}, {__mode = 'kv'})
 private.casting_list = setmetatable({}, {__mode = 'kv'})
 private.cooldown_list = setmetatable({}, {__mode = 'kv'})
 
@@ -158,6 +206,8 @@ function private.castingLoop()
         if priv.casting_end_time <= cur_time then
             abil_type:onFinish(abil)
             private.casting_list[abil] = nil
+            private.caster_list[priv.owner] = nil
+            priv.cur_target = nil
         else
             abil_type:onCasting(abil)
         end
@@ -169,14 +219,16 @@ function private.cooldownLoop()
     local cur_time = private.cooldown_current_time + 0.05
     private.cooldown_current_time = cur_time
 
-    for abil, priv in pairs(private.casting_list) do
+    for abil, priv in pairs(private.cooldown_list) do
         ---@type AbilityType
         local abil_type = priv.ability_type
 
+        -- Cancel cooldown if has max charges.
         if priv.charges >= abil_type:getMaxCharges(abil) then
             private.cooldown_list[abil] = nil
         end
 
+        -- Add charge
         if priv.cooldown_end_time <= cur_time then
             priv.charges = priv.charges + 1
             priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getCooldown(abil)

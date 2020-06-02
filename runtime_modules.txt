@@ -22,6 +22,11 @@ src/Libs/Parameter/Parameter.lua
 src/Libs/Parameter/ValueList.lua
 src/Libs/Parameter/Value.lua
 src/Libs/Ability/API.lua
+src/Libs/Object/API.lua
+src/Libs/Object/SimpleTimer.lua
+src/Libs/Object/SmartTimer.lua
+src/Libs/Object/Trigger.lua
+src/Libs/Object/Unit.lua
 src/Libs/Ability/Ability.lua
 src/Libs/Ability/Type.lua
 src/Libs/Ability/Target/Destructable.lua
@@ -30,7 +35,3 @@ src/Libs/Ability/Target/Item.lua
 src/Libs/Ability/Target/None.lua
 src/Libs/Ability/Target/Point.lua
 src/Libs/Ability/Target/Unit.lua
-src/Libs/Object/API.lua
-src/Libs/Object/SimpleTimer.lua
-src/Libs/Object/SmartTimer.lua
-src/Libs/Object/Trigger.lua
