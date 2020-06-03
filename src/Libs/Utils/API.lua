@@ -1,7 +1,7 @@
 ---@class UtilsLib
 local UtilsLibAPI = {}
-local modname = Compiletime(Lib.getModname())
-Lib.start(modname)
+local lib_modname = Compiletime(Lib.getModname())
+Lib.start(lib_modname)
 
 --===========
 -- Depencies
@@ -17,17 +17,35 @@ Lib.current().depencies = {
 --=====
 
 ---@type LoggerClass
-UtilsLibAPI.Logger = require(modname..'.Logger')
+UtilsLibAPI.Logger = require(lib_modname..'.Logger')
 UtilsLibAPI.DefaultLogger = UtilsLibAPI.Logger.getDefault()
----@type ObjClass
-UtilsLibAPI.Obj = require(modname..'.Obj')
 ---@type ActionClass
-UtilsLibAPI.Action = require(modname..'.Action')
+UtilsLibAPI.Action = require(lib_modname..'.Action')
 ---@type UtilsFunctions
-UtilsLibAPI.Functions = require(modname..'.Functions')
+UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 
+--=========
+-- Handles
+--=========
+
+---@type DestructableClass
+UtilsLibAPI.Destructable = require(lib_modname..'.Handle.Destructable')
+---@type ItemClass
+UtilsLibAPI.Item = require(lib_modname..'.Handle.Item')
+---@type SmartTimerClass
+UtilsLibAPI.SmartTimer = require(lib_modname..'.Handle.SmartTimer')
+---@type TimerClass
+UtilsLibAPI.Timer = require(lib_modname..'.Handle.Timer')
+---@type TriggerClass
+UtilsLibAPI.Trigger = require(lib_modname..'.Handle.Trigger')
+---@type UnitClass
+UtilsLibAPI.Unit = require(lib_modname..'.Handle.Unit')
+
+--==================
 -- Compiletime only
-local _ = Compiletime(function() UtilsLibAPI.Icon = require(modname..'.Icon') end)
+--==================
+
+local _ = Compiletime(function() UtilsLibAPI.Icon = require(lib_modname..'.Icon') end)
 
 Lib.finish()
 

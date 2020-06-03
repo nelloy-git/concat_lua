@@ -4,14 +4,14 @@ require('Utils.Globals')
 local ParameterAPI = require(LibList.Parameter)
 ---@type AbilityLib
 local AbilityAPI = require(LibList.Ability)
----@type ObjectLib
-local ObjectLib = require(LibList.Object)
+---@type UtilsLib
+local UtilsLib = require(LibList.Utils)
 
 if IsCompiletime() then
     return
 end
 
-local u = ObjectLib.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
+local u = UtilsLib.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 
 local param_container = ParameterAPI.UnitContainer.new(u:getObj())
 

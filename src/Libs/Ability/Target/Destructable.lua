@@ -65,13 +65,6 @@ function public:getDestructable()
     return private.data[self].destr
 end
 
----@param unit unit
----@param order number
----@return boolean
-function public:order(unit, order)
-    return IssueTargetOrderById(unit, order, private.data[self].destr)
-end
-
 --=========
 -- Private
 --=========

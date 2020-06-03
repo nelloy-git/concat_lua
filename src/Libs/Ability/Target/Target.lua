@@ -61,14 +61,6 @@ function public:getDistance(caster)
     return ((GetUnitX(caster) - self:getX())^2 + (GetUnitY(caster) - self:getY())^2)^0.5
 end
 
---- Virtual function
----@param unit unit
----@param order number
----@return boolean
-function public:order(unit, order)
-    Log:err(self, 'can not call virtual function.', 2)
-end
-
 --=========
 -- Private
 --=========

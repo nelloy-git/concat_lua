@@ -9,9 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
----@type ObjectLib
-local ObjectLib = depencies.Object
-local SimpleTimer = ObjectLib.SimpleTimer
+local Timer = UtilsLib.Timer
 
 ---@type AbilityTypeClass
 local AbilityType = require(lib_modname..'.Type')
@@ -236,10 +234,10 @@ function private.cooldownLoop()
 end
 
 if not IsCompiletime() then
-    private.cooldown_timer = SimpleTimer.new()
+    private.cooldown_timer = Timer.new()
     private.cooldown_timer:start(0.05, true, private.cooldownLoop)
 
-    private.casting_timer = SimpleTimer.new()
+    private.casting_timer = Timer.new()
     private.casting_timer:start(0.05, true, private.castingLoop)
 end
 

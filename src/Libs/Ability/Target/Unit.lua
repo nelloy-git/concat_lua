@@ -9,9 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
----@type ObjectLib
-local ObjectLib = depencies.Object
-local Unit = ObjectLib.Unit
+local Unit = UtilsLib.Unit
 
 ---@type AbilityTarget
 local AbilityTarget = require(lib_modname..'.Target.Target')
@@ -53,26 +51,19 @@ end
 -- Public
 --========
 
----@return number
-function public:getX()
-    return GetUnitX(private.data[self].unit)
-end
-
----@return number
-function public:getY()
-    return GetUnitY(private.data[self].unit)
-end
-
----@return unit
+---@return Unit
 function public:getUnit()
     return private.data[self].unit
 end
 
----@param unit unit
----@param order number
----@return boolean
-function public:order(unit, order)
-    return IssueTargetOrderById(unit, order, private.data[self].unit)
+---@return number
+function public:getX()
+    return self:getUnit():getX()
+end
+
+---@return number
+function public:getY()
+    return self:getUnit():getY()
 end
 
 --=========

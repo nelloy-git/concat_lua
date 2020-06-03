@@ -6,33 +6,33 @@ local Class = require(Lib.Class)
 
 ---@type Import
 local Import = require('Resources.Import')
----@type ItemModelClass
-local ItemModel = require('Item.Model')
+---@type Item2ModelClass
+local Item2Model = require('Item2.Model')
 ---@type ParameterAPI
 local ParameterAPI = require('Parameter.API')
----@type ItemObj
-local ItemObj = require('Object.Item')
+---@type Item2Obj
+local Item2Obj = require('Object.Item2')
 
 --=======
 -- Class
 --=======
 
-local Item = Class.new('Item', ItemObj)
----@class Item : ItemObj
-local public = Item.public
----@class ItemClass : ItemObjClass
-local static = Item.static
----@type ItemClass
-local override = Item.override
+local Item2 = Class.new('Item2', Item2Obj)
+---@class Item22 : Item2Obj
+local public = Item2.public
+---@class Item2Class2 : Item2ObjClass
+local static = Item2.static
+---@type Item2Class
+local override = Item2.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@return Item
+---@return Item2
 function override.new()
-    local instance = Class.allocate(Item)
+    local instance = Class.allocate(Item2)
     private.newData(instance)
 
     return instance
@@ -57,11 +57,11 @@ function public:setDescription(description)
     private.data[self].description = description
 end
 
----@param model ItemModel | nil
+---@param model Item2Model | nil
 function public:setModel(model)
     private.data[self].model = model
     if model then
-        private.model2item[model] = self
+        private.model2item2[model] = self
         model:setName(private.data[self].name)
     end
 end
@@ -76,9 +76,9 @@ function public:getName()
     return private.data[self].name
 end
 
----@return ItemTypeEnum
+---@return Item2TypeEnum
 function public:getType()
-    return private.data[self].item_type
+    return private.data[self].item2_type
 end
 
 ---@return string
@@ -101,12 +101,12 @@ function public:getDescription()
     return private.data[self].description
 end
 
----@return ItemModel
+---@return Item2Model
 function public:getModel()
     return private.data[self].model
 end
 
----@return ParameterItem
+---@return ParameterItem2
 function public:getParameters()
     return private.data[self].param
 end
@@ -131,10 +131,10 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.model2item = setmetatable({},  {__mode = 'kv'})
+private.model2item2 = setmetatable({},  {__mode = 'kv'})
 
 private.cur_id = 1
-private.id2item = setmetatable({},  {__mode = 'v'})
+private.id2item2 = setmetatable({},  {__mode = 'v'})
 --[[
 private.Equipable = {
     [static.Type.BAG] = true,
@@ -172,27 +172,27 @@ private.TypeIcon = {
     [static.Type.MISCELLANEOUS] = '',
 }
 ]]
----@param item Item
+---@param item2 Item2
 ---@return number
-function private.newId(item)
+function private.newId(item2)
     local id = private.cur_id
     private.cur_id = id + 1
 
-    private.id2item[id] = item
+    private.id2item2[id] = item2
     return id
 end
 
----@param self Item
-function private.newData(self, item_type)
+---@param self Item2
+function private.newData(self, item2_type)
     local priv = {
         name = 'Noname',
         description = 'Empty description',
-        item_type = item_type,
+        item2_type = item2_type,
         icon = 'ReplaceableTextures\\CommandButtons\\BTNHeroPaladin',
         id = private.newId(self),
 
         model = nil,
-        param = ParameterAPI.Item.new(),
+        param = ParameterAPI.Item2.new(),
 
         owner = nil,
     }

@@ -65,13 +65,6 @@ function public:getItem()
     return private.data[self].item
 end
 
----@param unit unit
----@param order number
----@return boolean
-function public:order(unit, order)
-    return IssueTargetOrderById(unit, order, private.data[self].item)
-end
-
 --=========
 -- Private
 --=========

@@ -6,20 +6,29 @@ local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
-local UtilsLib = depencies.UtilsLib
-local Obj = UtilsLib.Obj
-local Action = UtilsLib.Action
-local checkType = UtilsLib.Functions.checkType
-local Log = UtilsLib.DefaultLogger
+---@type ActionClass
+local Action = require(lib_modname..'.Action')
+---@type HandleClass
+local Handle = require(lib_modname..'.Handle.Handle')
+---@type UtilsFunctions
+local Functions = require(lib_modname..'.Functions')
+local checkType = Functions.checkType
+---@type LoggerClass
+local Logger = require(lib_modname..'.Logger')
+local Log = Logger.getDefault()
+
+local TimerStart = TimerStart
+local PauseTimer = PauseTimer
+local DestroyTimer = DestroyTimer
 
 --=======
 -- Class
 --=======
 
-local SmartTimer = Class.new('SmartTimer', Obj)
----@class SmartTimer : Obj
+local SmartTimer = Class.new('SmartTimer', Handle)
+---@class SmartTimer : Handle
 local public = SmartTimer.public
----@class SmartTimerClass : ObjClass
+---@class SmartTimerClass : HandleClass
 local static = SmartTimer.static
 ---@type SmartTimerClass
 local override = SmartTimer.override
@@ -44,7 +53,7 @@ function override.new(precision, child_instance)
     end
 
     local instance = child_instance or Class.allocate(SmartTimer)
-    instance = Obj.new(CreateTimer(), private.destroyRawTimer, instance)
+    instance = Handle.new(CreateTimer(), private.destroyRawTimer, instance)
     private.newData(instance, precision)
 
     return instance
@@ -114,7 +123,7 @@ function private.newData(self, precision)
     }
     private.data[self] = priv
 
-    TimerStart(self:getObj(), precision, true, function() private.runActions(priv) end)
+    TimerStart(self:getHandleData(), precision, true, function() private.runActions(priv) end)
 end
 
 function private.runActions(priv)
@@ -148,6 +157,11 @@ function private.findPos(actions_list, time, first, len)
     else
         return private.findPos(actions_list, time, first + half_len + 2 * d, half_len)
     end
+end
+
+function private.destroyTimerHandle(handle)
+    PauseTimer(handle)
+    DestroyTimer(handle)
 end
 
 return static

@@ -62,14 +62,6 @@ function public:getY()
     return private.data[self].y
 end
 
----@param unit unit
----@param order number
----@return boolean
-function public:order(unit, order)
-    local priv = private.data[self]
-    return IssuePointOrderById(unit, order, priv.x, priv.y)
-end
-
 --=========
 -- Private
 --=========

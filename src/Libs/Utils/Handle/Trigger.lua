@@ -6,19 +6,22 @@ local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
-local UtilsLib = depencies.UtilsLib
-local Obj = UtilsLib.Obj
-local Action = UtilsLib.Action
-local checkType = UtilsLib.Functions.checkType
+---@type HandleClass
+local Handle = require(lib_modname..'.Handle.Handle')
+---@type UtilsFunctions
+local Functions = require(lib_modname..'.Functions')
+local checkType = Functions.checkType
+---@type ActionClass
+local Action = require(lib_modname..'.Action')
 
 --=======
 -- Class
 --=======
 
-local Trigger = Class.new('Trigger', Obj)
----@class Trigger : Obj
+local Trigger = Class.new('Trigger', Handle)
+---@class Trigger : Handle
 local public = Trigger.public
----@class TriggerClass : ObjClass
+---@class TriggerClass : HandleClass
 local static = Trigger.static
 ---@type TriggerClass
 local override = Trigger.override
@@ -36,7 +39,7 @@ function override.new(child_instance)
     end
 
     local instance = child_instance or Class.allocate(Trigger)
-    instance = Obj.new(CreateTrigger(), DestroyTrigger, instance)
+    instance = Handle.new(CreateTrigger(), DestroyTrigger, instance)
     private.newData(instance)
 
     return instance
@@ -84,85 +87,85 @@ end
 
 ---Function executes trigger like event do.
 function public:execute()
-    TriggerExecute(self:getObj())
+    TriggerExecute(self:getHandleData())
 end
 
 ---@param var_name string
 ---@param opcode limitop
 ---@param limitval number
 function public:addVariableEvent(var_name, opcode, limitval)
-    TriggerRegisterVariableEvent(self:getObj(), var_name, opcode, limitval)
+    TriggerRegisterVariableEvent(self:getHandleData(), var_name, opcode, limitval)
 end
 
 ---@param timeout number
 ---@param periodic boolean
 function public:addTimerEvent(timeout, periodic)
-    TriggerRegisterTimerEvent(self:getObj(), timeout, periodic)
+    TriggerRegisterTimerEvent(self:getHandleData(), timeout, periodic)
 end
 
 ---@param timer timer
 function public:addTimerExpireEvent(timer)
-    TriggerRegisterTimerExpireEvent(self:getObj(), timer)
+    TriggerRegisterTimerExpireEvent(self:getHandleData(), timer)
 end
 
 ---@param game_state gamestate
 ---@param opcode limitop
 ---@param limitval number
 function public:addGameStateEvent(game_state, opcode, limitval)
-    TriggerRegisterGameStateEvent(self:getObj(), game_state, opcode, limitval)
+    TriggerRegisterGameStateEvent(self:getHandleData(), game_state, opcode, limitval)
 end
 
 ---@param dialog dialog
 function public:addDialogEvent(dialog)
-    TriggerRegisterDialogEvent(self:getObj(), dialog)
+    TriggerRegisterDialogEvent(self:getHandleData(), dialog)
 end
 
 ---@param button button
 function public:addDialogButtonEvent(button)
-    TriggerRegisterDialogButtonEvent(self:getObj(), button)
+    TriggerRegisterDialogButtonEvent(self:getHandleData(), button)
 end
 
 ---@param game_event gameevent
 function public:addGameEvent(game_event)
-    TriggerRegisterGameEvent(self:getObj(), game_event)
+    TriggerRegisterGameEvent(self:getHandleData(), game_event)
 end
 
 ---@param region region
 function public:addEnterRegion(region)
-    TriggerRegisterEnterRegion(self:getObj(), region)
+    TriggerRegisterEnterRegion(self:getHandleData(), region)
 end
 
 ---@param region region
 function public:addLeaveRegion(region)
-    TriggerRegisterLeaveRegion(self:getObj(), region)
+    TriggerRegisterLeaveRegion(self:getHandleData(), region)
 end
 
 ---@param trackable trackable
 function public:addTrackableHitEvent(trackable)
-    TriggerRegisterTrackableHitEvent(self:getObj(), trackable)
+    TriggerRegisterTrackableHitEvent(self:getHandleData(), trackable)
 end
 
 ---@param trackable trackable
 function public:addTrackableTrackEvent(trackable)
-    TriggerRegisterTrackableTrackEvent(self:getObj(), trackable)
+    TriggerRegisterTrackableTrackEvent(self:getHandleData(), trackable)
 end
 
 ---@param player_event_type playerevent
 ---@param player player
 function public:addPlayerEvent(player_event_type, player)
-    TriggerRegisterPlayerEvent(self:getObj(), player, player_event_type)
+    TriggerRegisterPlayerEvent(self:getHandleData(), player, player_event_type)
 end
 
 ---@param player_unit_event playerunitevent
 ---@param player player
 function public:addPlayerUnitEvent(player_unit_event, player)
-    TriggerRegisterPlayerUnitEvent(self:getObj(), player, player_unit_event, nil)
+    TriggerRegisterPlayerUnitEvent(self:getHandleData(), player, player_unit_event, nil)
 end
 
 ---@param player player
 ---@param alliancetype alliancetype
 function public:addPlayerAllianceChange(player, alliancetype)
-    TriggerRegisterPlayerAllianceChange(self:getObj(), player, alliancetype)
+    TriggerRegisterPlayerAllianceChange(self:getHandleData(), player, alliancetype)
 end
 
 ---@param player player
@@ -170,19 +173,19 @@ end
 ---@param opcode limitop
 ---@param limitval number
 function public:addPlayerStateEvent(player, player_state, opcode, limitval)
-    TriggerRegisterPlayerStateEvent(self:getObj(), player, player_state, opcode, limitval)
+    TriggerRegisterPlayerStateEvent(self:getHandleData(), player, player_state, opcode, limitval)
 end
 
 ---@param player player
 ---@param message string
 ---@param exact_match boolean
 function public:addPlayerChatEvent(player, message, exact_match)
-    TriggerRegisterPlayerChatEvent(self:getObj(), player, message, exact_match)
+    TriggerRegisterPlayerChatEvent(self:getHandleData(), player, message, exact_match)
 end
 
 ---@param widget widget
 function public:addDeathEvent(widget)
-    TriggerRegisterDeathEvent(self:getObj(), widget)
+    TriggerRegisterDeathEvent(self:getHandleData(), widget)
 end
 
 ---@param unit unit
@@ -190,32 +193,32 @@ end
 ---@param opcode limitop
 ---@param limitval number
 function public:addUnitStateEvent(unit, unit_state, opcode, limitval)
-    TriggerRegisterUnitStateEvent(self:getObj(), unit, unit_state, opcode, limitval)
+    TriggerRegisterUnitStateEvent(self:getHandleData(), unit, unit_state, opcode, limitval)
 end
 
 ---@param unit_event unitevent
 ---@param unit unit
 function public:addUnitEvent(unit_event, unit)
-    TriggerRegisterUnitEvent(self:getObj(), unit_event, unit)
+    TriggerRegisterUnitEvent(self:getHandleData(), unit_event, unit)
 end
 
 ---@param unit unit
 ---@param range number
 function public:addUnitInRange(unit, range)
-    TriggerRegisterUnitInRange(self:getObj(), unit, range)
+    TriggerRegisterUnitInRange(self:getHandleData(), unit, range)
 end
 
 ---@param frame framehandle
 ---@param frame_event frameeventtype
 function public:addFrameEvent(frame, frame_event)
-    BlzTriggerRegisterFrameEvent(self:getObj(), frame, frame_event)
+    BlzTriggerRegisterFrameEvent(self:getHandleData(), frame, frame_event)
 end
 
 ---@param player player
 ---@param prefix string
 ---@param from_server boolean
 function public:addPlayerSyncEvent(player, prefix, from_server)
-    BlzTriggerRegisterPlayerSyncEvent(self:getObj(), player, prefix, from_server)
+    BlzTriggerRegisterPlayerSyncEvent(self:getHandleData(), player, prefix, from_server)
 end
 
 ---@param player player
@@ -223,7 +226,7 @@ end
 ---@param meta_key integer
 ---@param key_down boolean
 function public:addPlayerKeyEvent(player, key, meta_key, key_down)
-    BlzTriggerRegisterPlayerKeyEvent(self:getObj(), player, key, meta_key, key_down)
+    BlzTriggerRegisterPlayerKeyEvent(self:getHandleData(), player, key, meta_key, key_down)
 end
 
 --=========
@@ -239,7 +242,7 @@ function private.newData(self)
     }
     private.data[self] = priv
 
-    TriggerAddAction(self:getObj(), function() private.runActions(priv.actions) end)
+    TriggerAddAction(self:getHandleData(), function() private.runActions(priv.actions) end)
 end
 
 ---@param actions Action[]
