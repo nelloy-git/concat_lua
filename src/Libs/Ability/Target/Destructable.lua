@@ -9,6 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
+local Destructable = UtilsLib.Destructable
 
 ---@type AbilityTarget
 local AbilityTarget = require(lib_modname..'.Target.Target')
@@ -30,11 +31,11 @@ local private = {}
 -- Static
 --=========
 
----@param destr destructable
+---@param destr Destructable
 ---@param child_instance AbilityTargetDestructable | nil
 ---@return AbilityTargetDestructable
 function override.new(destr, child_instance)
-    checkType(destr, 'destructable', 'destr')
+    checkType(destr, Destructable, 'destr')
     if child_instance then
         checkType(child_instance, AbilityTargetDestructable, 'child_instance')
     end

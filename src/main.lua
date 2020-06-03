@@ -13,10 +13,10 @@ end
 
 local u = UtilsLib.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 
-local param_container = ParameterAPI.UnitContainer.new(u:getObj())
+local param_container = ParameterAPI.UnitContainer.new(u:getHandleData())
 
 local test_abil_type = AbilityAPI.TestType
-local abil_container = AbilityAPI.Container.new(u:getObj())
+local abil_container = AbilityAPI.Container.new(u:getHandleData())
 abil_container:set(1, test_abil_type)
 --local abil = abil_container:get(1):use(AbilityAPI.TargetNone.new())
 
@@ -54,7 +54,7 @@ if not IsCompiletime() then
 
     u = Unit.new(footman_type, Player(0), -500, -500)
     u:getParameters():set(ParamAPI.ParamType.Mana, ParamAPI.ValueType.BASE,  500)
-    SetUnitManaPercentBJ(u:getObj(), 100)
+    SetUnitManaPercentBJ(u:getHandleData(), 100)
 
     u2 = Unit.new(footman_type, Player(1), 0, 0)
 
@@ -70,11 +70,11 @@ if not IsCompiletime() then
     param_table:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, 0, 0)
     param_table:setUnit(u:getParameters())
 
-    --local targ = TargetUnit.new(u2:getObj())
-    --print(targ:getObj())
+    --local targ = TargetUnit.new(u2:getHandleData())
+    --print(targ:getHandleData())
     --abil:use(targ)
 
-    --UnitAddAbility(u:getObj(), ExampleAbility:getId())
+    --UnitAddAbility(u:getHandleData(), ExampleAbility:getId())
     --u2:destroy()
     --u2.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
 
