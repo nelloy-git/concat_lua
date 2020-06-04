@@ -9,7 +9,8 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
-local Timer = UtilsLib.Timer
+local Timer = UtilsLib.Handle.Timer
+local Unit = UtilsLib.Handle.Unit
 
 ---@type AbilityTypeClass
 local AbilityType = require(lib_modname..'.Type')
@@ -31,13 +32,13 @@ local private = {}
 -- Static
 --=========
 
----@param owner unit
+---@param owner Unit
 ---@param ability_type AbilityType
 ---@param lvl number
 ---@param child_instance Ability | nil
 ---@return Ability
 function override.new(owner, ability_type, lvl, child_instance)
-    checkType(owner, 'unit', 'owner')
+    checkType(owner, Unit, 'owner')
     checkType(ability_type, AbilityType, 'ability_type')
     checkType(lvl, 'number', 'lvl')
     if child_instance then
@@ -50,10 +51,10 @@ function override.new(owner, ability_type, lvl, child_instance)
     return instance
 end
 
----@param unit unit
+---@param caster Unit
 ---@return Ability | nil
-function static.getCastingAbility(unit)
-    return private.caster_list[unit]
+function static.getCastingAbility(caster)
+    return private.caster_list[caster]
 end
 
 --========
@@ -86,7 +87,7 @@ function public:setLevel(lvl)
     private.data[self].lvl = lvl
 end
 
----@return unit
+---@return Unit
 function public:getOwner()
     return private.data[self].owner
 end
@@ -173,7 +174,7 @@ private.casting_list = setmetatable({}, {__mode = 'kv'})
 private.cooldown_list = setmetatable({}, {__mode = 'kv'})
 
 ---@param self Ability
----@param owner unit
+---@param owner Unit
 ---@param lvl number
 ---@param ability_type AbilityType
 function private.newData(self, owner, ability_type, lvl)

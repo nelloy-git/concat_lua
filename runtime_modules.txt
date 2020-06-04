@@ -18,9 +18,10 @@ src/Libs/Utils/Action.lua
 src/Libs/Utils/Functions.lua
 src/Libs/Utils/Handle/Destructable.lua
 src/Libs/Utils/Handle/Handle.lua
+src/Libs/Utils/Handle/SimpleFrame.lua
+src/Libs/Utils/Handle/Timer.lua
 src/Libs/Utils/Handle/Item.lua
 src/Libs/Utils/Handle/SmartTimer.lua
-src/Libs/Utils/Handle/Timer.lua
 src/Libs/Utils/Handle/Trigger.lua
 src/Libs/Utils/Handle/Unit.lua
 src/Libs/Parameter/Defines.lua

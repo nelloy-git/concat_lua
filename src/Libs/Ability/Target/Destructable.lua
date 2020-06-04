@@ -9,7 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
-local Destructable = UtilsLib.Destructable
+local Destructable = UtilsLib.Handle.Destructable
 
 ---@type AbilityTarget
 local AbilityTarget = require(lib_modname..'.Target.Target')
@@ -51,19 +51,19 @@ end
 -- Public
 --========
 
+---@return Destructable
+function public:getDestructable()
+    return private.data[self].destr
+end
+
 ---@return number
 function public:getX()
-    return GetDestructableX(private.data[self].destr)
+    return self:getDestructable():getX()
 end
 
 ---@return number
 function public:getY()
-    return GetDestructableY(private.data[self].destr)
-end
-
----@return destructable
-function public:getDestructable()
-    return private.data[self].destr
+    return self:getDestructable():getY()
 end
 
 --=========

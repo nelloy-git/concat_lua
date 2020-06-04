@@ -28,18 +28,21 @@ UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 -- Handles
 --=========
 
+UtilsLibAPI.Handle = {}
 ---@type DestructableClass
-UtilsLibAPI.Destructable = require(lib_modname..'.Handle.Destructable')
+UtilsLibAPI.Handle.Destructable = require(lib_modname..'.Handle.Destructable')
+---@type SimpleFrameClass
+UtilsLibAPI.Handle.SimpleFrame = require(lib_modname..'.Handle.SimpleFrame')
 ---@type ItemClass
-UtilsLibAPI.Item = require(lib_modname..'.Handle.Item')
+UtilsLibAPI.Handle.Item = require(lib_modname..'.Handle.Item')
 ---@type SmartTimerClass
-UtilsLibAPI.SmartTimer = require(lib_modname..'.Handle.SmartTimer')
+UtilsLibAPI.Handle.SmartTimer = require(lib_modname..'.Handle.SmartTimer')
 ---@type TimerClass
-UtilsLibAPI.Timer = require(lib_modname..'.Handle.Timer')
+UtilsLibAPI.Handle.Timer = require(lib_modname..'.Handle.Timer')
 ---@type TriggerClass
-UtilsLibAPI.Trigger = require(lib_modname..'.Handle.Trigger')
+UtilsLibAPI.Handle.Trigger = require(lib_modname..'.Handle.Trigger')
 ---@type UnitClass
-UtilsLibAPI.Unit = require(lib_modname..'.Handle.Unit')
+UtilsLibAPI.Handle.Unit = require(lib_modname..'.Handle.Unit')
 
 --==================
 -- Compiletime only

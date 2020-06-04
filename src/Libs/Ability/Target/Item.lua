@@ -9,6 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
+local Item = UtilsLib.Handle.Item
 
 ---@type AbilityTarget
 local AbilityTarget = require(lib_modname..'.Target.Target')
@@ -30,11 +31,11 @@ local private = {}
 -- Static
 --=========
 
----@param item item
+---@param item Item
 ---@param child_instance AbilityTargetItem | nil
 ---@return AbilityTargetItem
 function override.new(item, child_instance)
-    checkType(item, 'item', 'item')
+    checkType(item, Item, 'item')
     if child_instance then
         checkType(child_instance, AbilityTargetItem, 'child_instance')
     end
@@ -50,19 +51,19 @@ end
 -- Public
 --========
 
+---@return Item
+function public:getItem()
+    return private.data[self].item
+end
+
 ---@return number
 function public:getX()
-    return GetItemX(private.data[self].item)
+    return self:getItem():getX()
 end
 
 ---@return number
 function public:getY()
-    return GetItemY(private.data[self].item)
-end
-
----@return item
-function public:getItem()
-    return private.data[self].item
+    return self:getItem():getY()
 end
 
 --=========
@@ -72,7 +73,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityTargetItem
----@param item item
+---@param item Item
 function private.newData(self, item)
     local priv = {
         item = item

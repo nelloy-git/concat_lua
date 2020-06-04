@@ -9,7 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
-local Unit = UtilsLib.Unit
+local Unit = UtilsLib.Handle.Unit
 
 ---@type AbilityTarget
 local AbilityTarget = require(lib_modname..'.Target.Target')

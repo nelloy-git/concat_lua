@@ -2,25 +2,22 @@
 -- Include
 --=========
 
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
 
-local Class = require(Lib.Class)
-
----@type FdfFieldClass
-local FdfField = require('compiletime.FdfEdit.FdfField')
----@type WeUtils
-local WeUtils = require('compiletime.Utils')
+local Class = depencies.Class
 
 --=======
 -- Class
 --=======
 
-local FdfObject = Class.new('FdfObject')
----@class FdfObject
-local public = FdfObject.public
----@class FdfObjectClass
-local static = FdfObject.static
----@type FdfObjectClass
-local override = FdfObject.override
+local FdfFrame = Class.new('FdfFrame')
+---@class FdfFrame
+local public = FdfFrame.public
+---@class FdfFrameClass
+local static = FdfFrame.static
+---@type FdfFrameClass
+local override = FdfFrame.override
 local private = {}
 
 --=========
@@ -28,12 +25,12 @@ local private = {}
 --=========
 
 ---@param name string
----@param base_name string
----@param child_instance FdfObject | nil
----@return FdfObject
-function override.new(name, base_name, child_instance)
-    local instance = child_instance or Class.allocate(FdfObject)
-    private.newData(instance, name, base_name)
+---@param base_type string
+---@param child_instance FdfFrame | nil
+---@return FdfFrame
+function override.new(name, base_type, child_instance)
+    local instance = child_instance or Class.allocate(FdfFrame)
+    private.newData(instance, name, base_type)
 
     return instance
 end
@@ -48,8 +45,8 @@ function public:getName()
 end
 
 ---@return string
-function public:getBaseName()
-    return private.data[self].base_name
+function public:getBaseType()
+    return private.data[self].base_type
 end
 
 ---@param field FdfField
@@ -64,7 +61,7 @@ function public:setField(field, value)
     if not field:checkType(value) then
         local msg = string.format("check data failed. Field change ignored. Got: %s need: %s.\n%s",
                                   type(value), field:getType(), WeUtils.getErrorPos())
-        Log.error(FdfObject, msg, 2)
+        Log.error(FdfFrame, msg, 2)
     end
 
     priv.field[field] = value
@@ -83,7 +80,7 @@ end
 function public:serialize()
     local priv = private.data[self]
 
-    local res = string.format("Frame \"%s\" \"%s\" {\n", priv.base_name, priv.name)
+    local res = string.format("Frame \"%s\" \"%s\" {\n", priv.base_type, priv.name)
     for field, value in pairs(priv.field) do
         local field_serial = '    '..string.gsub(field:serialize(value), '\n', '\n    ')
         res = res..field_serial..'\n'
@@ -97,7 +94,7 @@ function public:toRuntime()
 
     local res = {
         name = priv.name,
-        base_name = priv.base_name,
+        base_type = priv.base_type,
         field = {},
     }
 
@@ -105,7 +102,7 @@ function public:toRuntime()
         if value == nil then
             res.field[field:getName()] = 'nil'
 
-        elseif Class.type(value, FdfObject) then
+        elseif Class.type(value, FdfFrame) then
             res.field[field:getName()] = value:toRuntime()
 
         elseif Class.type(value, 'table') then
@@ -133,12 +130,12 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self FdfObject
----@return FdfObjectPrivate
-function private.newData(self, name, base_name)
-    ---@class FdfObjectPrivate
+---@param self FdfFrame
+---@return FdfFramePrivate
+function private.newData(self, name, base_type)
+    ---@class FdfFramePrivate
     local priv = {
-        base_name = base_name,
+        base_type = base_type,
         name = name,
         field = {}
     }

@@ -9,7 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
-local Log = UtilsLib.DefaultLogger
+local Unit = UtilsLib.Handle.Unit
 
 ---@type AbilityClass
 local Ability = require(lib_modname..'.Ability')
@@ -31,11 +31,11 @@ local private = {}
 -- Static
 --=========
 
----@param owner unit
+---@param owner Unit
 ---@param child_instance AbilitiesContainer | nil
 ---@return AbilitiesContainer
 function static.new(owner, child_instance)
-    checkType(owner, 'unit', 'owner')
+    checkType(owner, Unit, 'owner')
     if child_instance then
         checkType(child_instance, AbilitiesContainer, 'child_instance')
     end
@@ -74,7 +74,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.owners = setmetatable({}, {__mode = 'kv'})
 
 ---@param self AbilitiesContainer
----@param owner unit
+---@param owner Unit
 function private.newData(self, owner)
     local priv = {
         owner = owner,

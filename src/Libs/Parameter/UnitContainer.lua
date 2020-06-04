@@ -9,6 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
+local Unit = UtilsLib.Handle.Unit
 
 ---@type ParameterValueListClass
 local ValueList = require(lib_modname..'.ValueList')
@@ -33,11 +34,11 @@ local private = {}
 -- Static
 --=========
 
----@param owner unit
+---@param owner Unit
 ---@param child_instance UnitParameterContainer | nil
 ---@return UnitParameterContainer
 function override.new(owner, child_instance)
-    checkType(owner, 'unit', 'owner')
+    checkType(owner, Unit, 'owner')
     if child_instance then
         checkType(child_instance, UnitParameterContainer, 'child_instance')
     end
@@ -49,7 +50,7 @@ function override.new(owner, child_instance)
     return instance
 end
 
----@param owner unit
+---@param owner Unit
 ---@return UnitParameterContainer | nil
 function static.getContainer(owner)
     return private.owners[owner]

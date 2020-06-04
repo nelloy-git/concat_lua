@@ -30,7 +30,7 @@ local private = {}
 -- Static
 --=========
 
---- Creates Handle instance and link it to the raw handle.
+--- Creates Handle instance and link it to the handle data.
 ---@param handle handle
 ---@param child_instance Handle | nil
 ---@return Handle

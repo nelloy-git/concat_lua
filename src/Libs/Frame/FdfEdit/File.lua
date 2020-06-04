@@ -2,8 +2,10 @@
 -- Include
 --=========
 
+local lib_modname = Lib.current().modname
+local depencies = Lib.current().depencies
 
-local Class = require(Lib.Class)
+local Class = depencies.Class
 
 ---@type FdfObjectClass
 local FdfObject = require('compiletime.FdfEdit.FdfObject')
