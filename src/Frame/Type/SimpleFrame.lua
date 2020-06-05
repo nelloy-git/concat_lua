@@ -11,13 +11,13 @@ local FrameType = require('Frame.Type')
 -- Class
 --=======
 
-local SimpleFrameType = Class.new('SimpleFrameType', FrameType)
----@class SimpleFrameType  : FrameType
-local public = SimpleFrameType.public
----@class SimpleFrameTypeClass : FrameTypeClass
-local static = SimpleFrameType.static
----@type SimpleFrameTypeClass
-local override = SimpleFrameType.override
+local SimpleFrameType1 = Class.new('SimpleFrameType1', FrameType)
+---@class SimpleFrameType1  : FrameType
+local public = SimpleFrameType1.public
+---@class SimpleFrameType1Class : FrameTypeClass
+local static = SimpleFrameType1.static
+---@type SimpleFrameType1Class
+local override = SimpleFrameType1.override
 local private = {}
 
 --=========
@@ -26,22 +26,22 @@ local private = {}
 
 ---@param uniq_name string
 ---@param separate_file boolean
----@param child_instance SimpleFrameType | nil
----@return SimpleFrameType
+---@param child_instance SimpleFrameType1 | nil
+---@return SimpleFrameType1
 function override.new(uniq_name, separate_file, child_instance)
     if FrameType.isExist(uniq_name) then
-        Logger.error(SimpleFrameType, '\"uniq_name\" must be unique.', 2)
+        Logger.error(SimpleFrameType1, '\"uniq_name\" must be unique.', 2)
     end
 
     if type(separate_file) ~= 'boolean' then
-        Logger.error(SimpleFrameType, '\"separate_file\" must be boolean.', 2)
+        Logger.error(SimpleFrameType1, '\"separate_file\" must be boolean.', 2)
     end
 
-    if child_instance and not Class.type(child_instance, SimpleFrameType) then
-        Logger.error(SimpleFrameType, '\"child_instance\" must be SimpleFrameType or nil.', 2)
+    if child_instance and not Class.type(child_instance, SimpleFrameType1) then
+        Logger.error(SimpleFrameType1, '\"child_instance\" must be SimpleFrameType1 or nil.', 2)
     end
 
-    local instance = child_instance or Class.allocate(SimpleFrameType)
+    local instance = child_instance or Class.allocate(SimpleFrameType1)
     instance = FrameType.new(uniq_name, private.createFdf, separate_file, instance)
     private.newData(instance)
 
@@ -129,7 +129,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self SimpleFrameType
+---@param self SimpleFrameType1
 function private.newData(self)
     local priv = {
         width = nil,

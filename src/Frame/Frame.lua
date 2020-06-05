@@ -5,41 +5,41 @@
 
 local Class = require(Lib.Class)
 
----@type FrameObjClass
-local FrameObj = require('Object.Frame')
----@type FrameType
-local FrameType = require('Frame.Type')
+---@type Frame1ObjClass
+local Frame1Obj = require('Object.Frame1')
+---@type Frame1Type
+local Frame1Type = require('Frame1.Type')
 
 --=======
 -- Class
 --=======
 
-local Frame = Class.new('Frame', FrameObj)
----@class Frame
-local public = Frame.public
----@class FrameClass
-local static = Frame.static
-local override = Frame.override
+local Frame1 = Class.new('Frame1', Frame1Obj)
+---@class Frame1
+local public = Frame1.public
+---@class Frame1Class
+local static = Frame1.static
+local override = Frame1.override
 local private = {}
 
 --========
 -- Static
 --========
 
----@param frame_type FrameType
----@param child_instance Frame | nil
----@return Frame
+---@param frame_type Frame1Type
+---@param child_instance Frame1 | nil
+---@return Frame1
 function override.new(frame_type, child_instance)
-    if not Class.type(frame_type, FrameType) then
-        Log.error(Frame, '\"frame_type\" must be FrameType.', 2)
+    if not Class.type(frame_type, Frame1Type) then
+        Log.error(Frame1, '\"frame_type\" must be Frame1Type.', 2)
     end
 
-    if child_instance and not Class.type(child_instance, Frame) then
-        Log.error(Frame, '\"child_instance\" must be Frame', 2)
+    if child_instance and not Class.type(child_instance, Frame1) then
+        Log.error(Frame1, '\"child_instance\" must be Frame1', 2)
     end
 
-    local instance = child_instance or Class.allocate(Frame)
-    instance = FrameObj.new(frame_type:getName(), true, instance)
+    local instance = child_instance or Class.allocate(Frame1)
+    instance = Frame1Obj.new(frame_type:getName(), true, instance)
     private.newData(instance, frame_type)
 
     return instance
@@ -62,13 +62,13 @@ function public:setPoint(point, parent_point, x, y)
         priv.x = x
         priv.y = y
 
-        BlzFrameClearAllPoints(self:getObj())
+        BlzFrame1ClearAllPoints(self:getObj())
         if priv.parent then
-            BlzFrameSetPoint(self:getObj(), point,
+            BlzFrame1SetPoint(self:getObj(), point,
                              priv.parent:getObj(), parent_point,
                              x, y)
         else
-            BlzFrameSetAbsPoint(self:getObj(), point,
+            BlzFrame1SetAbsPoint(self:getObj(), point,
                                 private.abs_point_x[parent_point] + x,
                                 private.abs_point_y[parent_point] + y)
         end
@@ -77,11 +77,11 @@ end
 
 function public:setAllPoints()
     local priv = private.data[self]
-    BlzFrameClearAllPoints(self:getObj())
+    BlzFrame1ClearAllPoints(self:getObj())
     if priv.parent then
-        BlzFrameSetAllPoints(self:getObj(), private.data[self].parent:getObj())
+        BlzFrame1SetAllPoints(self:getObj(), private.data[self].parent:getObj())
     else
-        BlzFrameSetAllPoints(self:getObj(), private.game_ui_frame)
+        BlzFrame1SetAllPoints(self:getObj(), private.game_ui_frame)
     end
 end
 
@@ -101,7 +101,7 @@ function public:setSize(width, height)
         priv.width = width
         priv.height = height
 
-        BlzFrameSetSize(self:getObj(), width, height)
+        BlzFrame1SetSize(self:getObj(), width, height)
     end
 end
 
@@ -111,7 +111,7 @@ function public:setParent(parent)
     if priv.parent ~= parent then
         priv.parent = parent
 
-        BlzFrameSetParent(self:getObj(), parent and parent:getObj())
+        BlzFrame1SetParent(self:getObj(), parent and parent:getObj())
         self:setLevel(parent and parent:getLevel() or 0)
         self:setPoint(priv.point, priv.parent_point, priv.x, priv.y)
     end
@@ -120,21 +120,21 @@ end
 ---@param level number
 function public:setLevel(level)
     private.data[self].level = level
-    BlzFrameSetLevel(self:getObj(), level)
+    BlzFrame1SetLevel(self:getObj(), level)
 end
 
 ---@param alpha number
 function public:setAlpha(alpha)
     private.data[self].alpha = alpha
-    BlzFrameSetAlpha(self:getObj(), alpha)
+    BlzFrame1SetAlpha(self:getObj(), alpha)
 end
 
 ---@param flag boolean
 function public:setVisible(flag)
-    BlzFrameSetVisible(self:getObj(), flag)
+    BlzFrame1SetVisible(self:getObj(), flag)
 end
 
----@return FrameType
+---@return Frame1Type
 function public:getType()
     return private.data[self].frame_type
 end
@@ -171,7 +171,7 @@ function public:getAbsY()
     end
 end
 
----@return Frame | nil
+---@return Frame1 | nil
 function public:getParent()
     return private.data[self].parent
 end
@@ -198,7 +198,7 @@ end
 
 ---@return boolean
 function public:isVisible()
-    return BlzFrameIsVisible(self:getObj())
+    return BlzFrame1IsVisible(self:getObj())
 end
 
 --=========
@@ -209,7 +209,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 if not IsCompiletime() then
-    private.game_ui_frame = BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0)
+    private.game_ui_frame = BlzGetOriginFrame1(ORIGIN_FRAME_GAME_UI, 0)
 
     private.abs_point_x = {
         [FRAMEPOINT_TOPLEFT] = 0,
@@ -236,8 +236,8 @@ if not IsCompiletime() then
     }
 end
 
----@param self Frame
----@param frame_type FrameType
+---@param self Frame1
+---@param frame_type Frame1Type
 ---@return table
 function private.newData(self, frame_type)
     local priv = {
@@ -253,7 +253,7 @@ function private.newData(self, frame_type)
     }
     private.data[self] = priv
 
-    BlzFrameSetLevel(self:getObj(), 0)
+    BlzFrame1SetLevel(self:getObj(), 0)
 end
 
 return static

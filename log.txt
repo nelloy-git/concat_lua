@@ -1,0 +1,2 @@
+[0.009] {Msg} Created new FdfFile 'Default' containg:
+    testFdf

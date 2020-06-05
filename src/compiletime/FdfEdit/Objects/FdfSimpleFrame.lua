@@ -13,13 +13,13 @@ local FdfField = require('compiletime.FdfEdit.FdfField')
 -- Class
 --=======
 
-local FdfSimpleFrame = Class.new('FdfSimpleFrame', FdfObject)
----@class FdfSimpleFrame
-local public = FdfSimpleFrame.public
----@class FdfSimpleFrameClass
-local static = FdfSimpleFrame.static
----@type FdfSimpleFrameClass
-local override = FdfSimpleFrame.override
+local FdfSimpleFrame1 = Class.new('FdfSimpleFrame1', FdfObject)
+---@class FdfSimpleFrame1
+local public = FdfSimpleFrame1.public
+---@class FdfSimpleFrame1Class
+local static = FdfSimpleFrame1.static
+---@type FdfSimpleFrame1Class
+local override = FdfSimpleFrame1.override
 local private = {}
 
 --=========
@@ -27,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_instance FdfSimpleFrame | nil
----@return FdfSimpleFrame
+---@param child_instance FdfSimpleFrame1 | nil
+---@return FdfSimpleFrame1
 function override.new(name, child_instance)
-    local instance = child_instance or Class.allocate(FdfSimpleFrame)
+    local instance = child_instance or Class.allocate(FdfSimpleFrame1)
     instance = FdfObject.new(name, 'SIMPLEFRAME', instance)
 
     return instance

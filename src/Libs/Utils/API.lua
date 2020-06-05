@@ -16,23 +16,27 @@ Lib.current().depencies = {
 -- API
 --=====
 
+---@type ActionClass
+UtilsLibAPI.Action = require(lib_modname..'.Action')
+---@type CompiletimeDataClass
+UtilsLibAPI.CompiletimeData = require(lib_modname..'.CompiletimeData')
+---@type UtilsFunctions
+UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 ---@type LoggerClass
 UtilsLibAPI.Logger = require(lib_modname..'.Logger')
 UtilsLibAPI.DefaultLogger = UtilsLibAPI.Logger.getDefault()
----@type ActionClass
-UtilsLibAPI.Action = require(lib_modname..'.Action')
----@type UtilsFunctions
-UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 
 --=========
 -- Handles
 --=========
 
 UtilsLibAPI.Handle = {}
+---@type HandleClass
+UtilsLibAPI.Handle.Base = require(lib_modname..'.Handle.Handle')
 ---@type DestructableClass
 UtilsLibAPI.Handle.Destructable = require(lib_modname..'.Handle.Destructable')
----@type SimpleFrameClass
-UtilsLibAPI.Handle.SimpleFrame = require(lib_modname..'.Handle.SimpleFrame')
+---@type FrameClass
+UtilsLibAPI.Handle.Frame = require(lib_modname..'.Handle.Frame')
 ---@type ItemClass
 UtilsLibAPI.Handle.Item = require(lib_modname..'.Handle.Item')
 ---@type SmartTimerClass

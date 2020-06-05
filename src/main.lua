@@ -6,6 +6,21 @@ local ParameterAPI = require(LibList.Parameter)
 local AbilityAPI = require(LibList.Ability)
 ---@type UtilsLib
 local UtilsLib = require(LibList.Utils)
+---@type FrameLib
+local FrameLib = require(LibList.Frame)
+
+local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEBUTTON')
+fdf:setParameter('Width', '0.039')
+fdf:setParameter('Height', '0.040')
+local subfdf = FrameLib.FdfFrame.new('testFdf2', 'SIMPLEBUTTON')
+subfdf:setParameter('Width', '0.039')
+subfdf:setParameter('Height', '0.040')
+local layer = FrameLib.FdfLayer.new('ARTWORK')
+local texture = FrameLib.FdfTexture.new('testTexture')
+texture:setParameter('File', '\"\"')
+layer:addTexture(texture)
+subfdf:addLayer(layer)
+fdf:addSubFrame(subfdf)
 
 if IsCompiletime() then
     return

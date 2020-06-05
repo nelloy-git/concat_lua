@@ -3,10 +3,10 @@ Lib = {}
 require('Libs.LibList')
 
 function Lib.getModname()
-    local sep = '\\'
-    if IsCompiletime() then
-        sep = package.config:sub(1,1)
+    if not IsCompiletime then
+        error('Lib.getModname() can be called in compiletime only.', 2)
     end
+    local sep = package.config:sub(1,1)
 
     ---@type string
     local path = debug.getinfo(2, "S").source:sub(2)
@@ -32,21 +32,20 @@ end
 
 ---@param modname string
 function Lib.start(modname)
+    if not modname then
+        error('modname is nil.', 2)
+    end
+
+
     local lib = {
         modname = modname,
         depencies = {}
     }
     table.insert(libs_stack, lib)
-
-    if IsCompiletime() then
-        print('Loading library '..libs_stack[#libs_stack]. modname)
-    end
 end
 
 function Lib.finish()
-    if IsCompiletime() then
-        print('Loaded library '..libs_stack[#libs_stack]. modname)
-    end
+    print('Loaded '..libs_stack[#libs_stack].modname)
     table.remove(libs_stack)
 end
 
