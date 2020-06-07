@@ -27,6 +27,10 @@ FrameLib.FdfTexture = require(lib_modname..'.FdfEdit.Texture')
 ---@type FdfLayerClass
 FrameLib.FdfLayer = require(lib_modname..'.FdfEdit.Layer')
 
+---@type SimpleBaseFrameClass
+FrameLib.SimpleBase = require(lib_modname..'.Frame.SimpleBase')
+---@type SimpleImageClass
+FrameLib.SimpleImage = require(lib_modname..'.Frame.SimpleImage')
 
 
 Lib.finish()

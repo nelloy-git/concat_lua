@@ -136,6 +136,7 @@ function Utils.toString(val)
     local t = type(val)
     if t == 'string' then
         val = val:gsub('\'', '\\\'')
+        val = val:gsub('\\', '\\\\')
         val = val:gsub('%%', '%%%%')
         return '\''..val..'\''
     elseif t == 'number' then

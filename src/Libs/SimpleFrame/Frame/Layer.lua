@@ -70,7 +70,7 @@ function public:getTexture(i)
 end
 
 ---@param i number
----@return BaseSimpleFrame
+---@return SimpleBaseFrame
 function public:getSubframe(i)
     return private.data[self].subframes[i]
 end
@@ -80,7 +80,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.BaseSimpleFrame = nil -- require(lib_modname..'.Frame.Base')
+private.SimpleBaseFrame = nil -- require(lib_modname..'.Frame.Base')
 
 ---@param self LayerSubrame
 ---@param fdf_layer FdfLayer
@@ -98,11 +98,11 @@ function private.newData(self, fdf_layer)
         priv.textures[i] = Texture.new(fdf_textures[i])
     end
 
-    private.BaseSimpleFrame = private.BaseSimpleFrame or require(lib_modname..'.Frame.Base')
+    private.SimpleBaseFrame = private.SimpleBaseFrame or require(lib_modname..'.Frame.Base')
     local fdf_subframes = fdf_layer:getSubframes()
     for i = 1, #fdf_subframes do
         priv.subframes[i] = Handle.getLinked(BlzGetFrameByName(fdf_subframes[i]:getName(), 0))
-        checkType(priv.subframes[i], private.BaseSimpleFrame, 'linked Handle')
+        checkType(priv.subframes[i], private.SimpleBaseFrame, 'linked Handle')
     end
 end
 

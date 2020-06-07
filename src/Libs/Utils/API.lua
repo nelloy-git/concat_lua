@@ -18,8 +18,6 @@ Lib.current().depencies = {
 
 ---@type ActionClass
 UtilsLibAPI.Action = require(lib_modname..'.Action')
----@type CompiletimeDataClass
-UtilsLibAPI.CompiletimeData = require(lib_modname..'.CompiletimeData')
 ---@type UtilsFunctions
 UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 ---@type LoggerClass

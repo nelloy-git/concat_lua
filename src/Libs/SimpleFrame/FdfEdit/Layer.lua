@@ -87,7 +87,7 @@ function public:getTextures()
     local priv = private.data[self]
     local copy = {}
     for i = 1, #priv.textures do
-        copy[i] = priv.textures
+        copy[i] = priv.textures[i]
     end
 
     return copy
@@ -107,7 +107,7 @@ function public:getSubframes()
     local priv = private.data[self]
     local copy = {}
     for i = 1, #priv.subframes do
-        copy[i] = priv.subframes
+        copy[i] = priv.subframes[i]
     end
 
     return copy

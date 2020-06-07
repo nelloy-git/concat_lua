@@ -12,8 +12,8 @@ local Frame = require('Frame.Frame')
 local FramePublic = Class.getPublic(Frame)
 ---@type SimpleFrameTypeClass
 local SimpleFrameType = require('Frame.Type.SimpleFrame')
----@type SimpleButtonTypeClass
-local SimpleButtonType = require('Frame.Type.SimpleButton')
+---@type SimpleButton1TypeClass
+local SimpleButton1Type = require('Frame.Type.SimpleButton1')
 ---@type TriggerClass
 local Trigger = require('Utils.Trigger')
 
@@ -21,44 +21,44 @@ local Trigger = require('Utils.Trigger')
 -- Class
 --=======
 
-local SimpleButton = Class.new('SimpleButton', Frame)
----@class SimpleButton : Frame
-local public = SimpleButton.public
----@class SimpleButtonClass : FrameClass
-local static = SimpleButton.static
----@type SimpleButtonClass
-local override = SimpleButton.override
+local SimpleButton1 = Class.new('SimpleButton1', Frame)
+---@class SimpleButton1 : Frame
+local public = SimpleButton1.public
+---@class SimpleButton1Class : FrameClass
+local static = SimpleButton1.static
+---@type SimpleButton1Class
+local override = SimpleButton1.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@alias SimpleMouseButtonCallback fun(instance:SimpleButton, player:player, button:mousebuttontype, event:SimpleButtonEvent)
----@alias SimpleButtonEvent number
+---@alias SimpleMouseButtonCallback fun(instance:SimpleButton1, player:player, button:mousebuttontype, event:SimpleButton1Event)
+---@alias SimpleButton1Event number
 
----@type table<string, SimpleButtonEvent>
+---@type table<string, SimpleButton1Event>
 static.ActionType = {}
----@type SimpleButtonEvent
+---@type SimpleButton1Event
 static.ActionType.MousePress = 1
----@type SimpleButtonEvent
+---@type SimpleButton1Event
 static.ActionType.MouseDown = 2
----@type SimpleButtonEvent
+---@type SimpleButton1Event
 static.ActionType.MouseUp = 3
 
----@param frame_type SimpleButtonType | nil
----@param child_instance SimpleButton | nil
----@return SimpleButton
+---@param frame_type SimpleButton1Type | nil
+---@param child_instance SimpleButton1 | nil
+---@return SimpleButton1
 function override.new(frame_type, child_instance)
-    if not Class.type(frame_type, SimpleButtonType) then
-        Log.error(SimpleButton, '\"frame_type\" must be SimpleButtonType', 2)
+    if not Class.type(frame_type, SimpleButton1Type) then
+        Log.error(SimpleButton1, '\"frame_type\" must be SimpleButton1Type', 2)
     end
 
-    if child_instance and not Class.type(child_instance, SimpleButton) then
-        Log.error(SimpleButton, '\"child_instance\" must be SimpleButton or nil', 2)
+    if child_instance and not Class.type(child_instance, SimpleButton1) then
+        Log.error(SimpleButton1, '\"child_instance\" must be SimpleButton1 or nil', 2)
     end
 
-    local instance = child_instance or Class.allocate(SimpleButton)
+    local instance = child_instance or Class.allocate(SimpleButton1)
     instance = Frame.new(frame_type, instance)
     private.newData(instance, frame_type)
 
@@ -110,14 +110,14 @@ function public:enableActions(flag)
     end
 end
 
----@param event SimpleButtonEvent
+---@param event SimpleButton1Event
 ---@param callback SimpleMouseButtonCallback
 ---@return Action | nil
 function public:addAction(event, callback)
     return private.data[self].actions[event]:add(callback)
 end
 
----@param event SimpleButtonEvent
+---@param event SimpleButton1Event
 ---@param action Action
 ---@return boolean
 function public:removeAction(event, action)
@@ -131,7 +131,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.active = setmetatable({}, {__mode = 'k'})
 
-private.detector_type = SimpleFrameType.new('SimpleButtonMouseDetector', true)
+private.detector_type = SimpleFrameType.new('SimpleButton1MouseDetector', true)
 
 function private.mouseDownCallback()
     local player = GetTriggerPlayer()
@@ -174,7 +174,7 @@ function private.mouseUpCallback()
     end
 end
 
----@param self SimpleButton
+---@param self SimpleButton1
 function private.newData(self)
     local priv = {
         detector = Frame.new(private.detector_type),

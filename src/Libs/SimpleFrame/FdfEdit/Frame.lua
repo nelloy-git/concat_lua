@@ -107,7 +107,7 @@ function public:getTextures()
     local priv = private.data[self]
     local copy = {}
     for i = 1, #priv.textures do
-        copy[i] = priv.textures
+        copy[i] = priv.textures[i]
     end
 
     return copy
@@ -127,7 +127,7 @@ function public:getLayers()
     local priv = private.data[self]
     local copy = {}
     for i = 1, #priv.layers do
-        copy[i] = priv.layers
+        copy[i] = priv.layers[i]
     end
 
     return copy
@@ -148,7 +148,7 @@ function public:getSubframes()
     local priv = private.data[self]
     local copy = {}
     for i = 1, #priv.subframes do
-        copy[i] = priv.subframes
+        copy[i] = priv.subframes[i]
     end
 
     return copy
@@ -164,10 +164,10 @@ function public:serialize()
         res = res..'    '..param..' '..value..',\n'
     end
     for i = 1, #priv.textures do
-        res = res..'\n'..priv.textures[i]:serialize():gsub('\n', '\n    ')..'\n'
+        res = res..'\n    '..priv.textures[i]:serialize():gsub('\n', '\n    ')..'\n'
     end
     for i = 1, #priv.layers do
-        res = res..'\n'..priv.layers[i]:serialize():gsub('\n', '\n    ')..'\n'
+        res = res..'\n    '..priv.layers[i]:serialize():gsub('\n', '\n    ')..'\n'
     end
     for i = 1, #priv.subframes do
         ---@type string

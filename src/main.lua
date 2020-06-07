@@ -9,24 +9,31 @@ local UtilsLib = require(LibList.Utils)
 ---@type FrameLib
 local FrameLib = require(LibList.Frame)
 
-local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEBUTTON')
+local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEFRAME')
 fdf:setParameter('Width', '0.039')
 fdf:setParameter('Height', '0.040')
-local subfdf = FrameLib.FdfFrame.new('testFdf2', 'SIMPLEBUTTON')
-subfdf:setParameter('Width', '0.039')
-subfdf:setParameter('Height', '0.040')
-local layer = FrameLib.FdfLayer.new('ARTWORK')
+--local subfdf = FrameLib.FdfFrame.new('testFdf2', 'SIMPLEBUTTON')
+--subfdf:setParameter('Width', '0.039')
+--subfdf:setParameter('Height', '0.040')
+--local layer = FrameLib.FdfLayer.new('ARTWORK')
 local texture = FrameLib.FdfTexture.new('testTexture')
 texture:setParameter('File', '\"\"')
-layer:addTexture(texture)
-subfdf:addLayer(layer)
-fdf:addSubFrame(subfdf)
+fdf:addTexture(texture)
+--subfdf:addLayer(layer)
+--fdf:addSubFrame(subfdf)
 
 if IsCompiletime() then
     return
 end
 
-local u = UtilsLib.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
+local test_frame = FrameLib.SimpleImage.new(fdf)
+test_frame:setX(0.4)
+test_frame:setY(0.3)
+test_frame:setWidth(0.1)
+test_frame:setHeight(0.1)
+test_frame:setTextureFile("ReplaceableTextures\\\\CommandButtons\\\\BTNBlackDragon.blp", 0, false)
+
+local u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 
 local param_container = ParameterAPI.UnitContainer.new(u:getHandleData())
 

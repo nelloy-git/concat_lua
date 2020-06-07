@@ -59,6 +59,13 @@ function public:getHandleData()
     return private.data[self].handle
 end
 
+---@param tex_file string
+---@param flag number
+---@param blend boolean
+function public:setTextureFile(tex_file, flag, blend)
+    BlzFrameSetTexture(private.data[self].handle, tex_file, flag, blend)
+end
+
 --=========
 -- Private
 --=========

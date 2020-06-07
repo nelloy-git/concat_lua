@@ -15,6 +15,11 @@ local Timer = UtilsLib.Handle.Timer
 
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
+---@type FdfLayerClass
+local FdfLayer = require(lib_modname..'.FdfEdit.Layer')
+---@type FdfTextureClass
+local FdfTexture = require(lib_modname..'.FdfEdit.Texture')
+
 ---@type LayerSubrameClass
 local Layer = require(lib_modname..'.Frame.Layer')
 ---@type TextureSubrameClass
@@ -24,13 +29,13 @@ local Texture = require(lib_modname..'.Frame.Texture')
 -- Class
 --=======
 
-local BaseSimpleFrame = Class.new('BaseSimpleFrame', Handle)
----@class BaseSimpleFrame : Handle
-local public = BaseSimpleFrame.public
----@class BaseSimpleFrameClass : HandleClass
-local static = BaseSimpleFrame.static
----@type BaseSimpleFrameClass
-local override = BaseSimpleFrame.override
+local SimpleBaseFrame = Class.new('SimpleBaseFrame', Handle)
+---@class SimpleBaseFrame : Handle
+local public = SimpleBaseFrame.public
+---@class SimpleBaseFrameClass : HandleClass
+local static = SimpleBaseFrame.static
+---@type SimpleBaseFrameClass
+local override = SimpleBaseFrame.override
 local private = {}
 
 --=========
@@ -38,15 +43,15 @@ local private = {}
 --=========
 
 ---@param fdf_frame FdfFrame
----@param child_instance BaseSimpleFrame | nil
----@return BaseSimpleFrame
+---@param child_instance SimpleBaseFrame | nil
+---@return SimpleBaseFrame
 function override.new(fdf_frame, child_instance)
     checkType(fdf_frame, FdfFrame, 'fdf_frame')
     if child_instance then
-        checkType(child_instance, BaseSimpleFrame, 'child_instance')
+        checkType(child_instance, SimpleBaseFrame, 'child_instance')
     end
 
-    local instance = child_instance or Class.allocate(BaseSimpleFrame)
+    local instance = child_instance or Class.allocate(SimpleBaseFrame)
     instance = Handle.new(BlzCreateSimpleFrame(fdf_frame:getName(), nil, 0, 0), BlzDestroyFrame, instance)
     private.newData(instance, fdf_frame)
 
@@ -70,7 +75,7 @@ function public:getLayer(i)
 end
 
 ---@param i number
----@return BaseSimpleFrame | nil
+---@return SimpleBaseFrame | nil
 function public:getSubframe(i)
     return private.data[self].subframes[i]
 end
@@ -150,33 +155,37 @@ end
 
 ---@param width number
 function public:setWidth(width)
+    private.data[self].width = width
     BlzFrameSetSize(self:getHandleData(), width, private.data[self].height)
 end
 
 ---@param height number
 function public:setHeight(height)
+    private.data[self].height = height
     BlzFrameSetSize(self:getHandleData(), private.data[self].width, height)
 end
 
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
+    private.data[self].width = width
+    private.data[self].height = height
     BlzFrameSetSize(self:getHandleData(), width, height)
 end
 
----@return BaseSimpleFrame | nil
+---@return SimpleBaseFrame | nil
 function public:getParent()
     return private.data[self].parent
 end
 
----@param parent BaseSimpleFrame | nil
+---@param parent SimpleBaseFrame | nil
 function public:setParent(parent)
     private.data[self].parent = parent
     local handle = self:getHandleData()
 
     local parent_handle
     if parent then
-        checkType(parent, BaseSimpleFrame, 'parent')
+        checkType(parent, SimpleBaseFrame, 'parent')
         parent_handle = parent:getHandleData()
     end
 
@@ -225,7 +234,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self BaseSimpleFrame
+---@param self SimpleBaseFrame
 ---@param fdf_frame FdfFrame
 function private.newData(self, fdf_frame)
     local priv = {
@@ -234,6 +243,8 @@ function private.newData(self, fdf_frame)
 
         x = 0,
         y = 0,
+        width = fdf_frame:getParameter('Width'),
+        height = fdf_frame:getParameter('Height'),
         parent = nil,
 
         level = 0,
@@ -248,18 +259,21 @@ function private.newData(self, fdf_frame)
 
     local fdf_textures = fdf_frame:getTextures()
     for i = 1, #fdf_textures do
+        checkType(fdf_textures[i], FdfTexture, 'fdf_textures['..tostring(i)..']')
         priv.textures[i] = Texture.new(fdf_textures[i])
     end
 
     local fdf_layers = fdf_frame:getLayers()
     for i = 1, #fdf_layers do
+        checkType(fdf_layers[i], FdfTexture, 'fdf_layers['..tostring(i)..']')
         priv.layers[i] = Layer.new(fdf_layers[i])
     end
 
     local fdf_subframes = fdf_frame:getSubframes()
     for i = 1, #fdf_subframes do
+        checkType(fdf_subframes[i], SimpleBaseFrame, 'fdf_subframes['..tostring(i)..']')
         priv.subframes[i] = Handle.getLinked(BlzGetFrameByName(fdf_subframes[i]:getName(), 0))
-        checkType(priv.subframes[i], private.BaseSimpleFrame, 'linked Handle')
+        checkType(priv.subframes[i], private.SimpleBaseFrame, 'linked Handle')
     end
 end
 
@@ -291,7 +305,7 @@ if not IsCompiletime() then
         local ui_pixel_width = cur_screen_height * 4 / 3
 
         private.screen_width = 0.8 * cur_screen_width / ui_pixel_width
-        private.screen_left_x = -(private.real_width - 0.8) / 2
+        private.screen_left_x = -(private.screen_width - 0.8) / 2
         private.real_ratio = cur_screen_width / cur_screen_height
 
         -- Update all frames.

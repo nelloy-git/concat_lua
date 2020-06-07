@@ -48,18 +48,22 @@ function static.init(static_filename)
     FdfFrame = require(lib_modname..'.FdfEdit.Frame')
     private.static_file = static.new(static_filename)
 
-    -- Clear previous files
-    if private.isFileExists(private.full_dst_path) then
-        local home = os.getenv('HOME')
-        if not home then --Windows
-            os.execute('del /q '..private.full_dst_path..'*')
-            os.execute('for /d %x in ('..private.full_dst_path..'*) do @rd /s /q \"%x\"')
-        else
-            os.execute('rm -r '..private.full_dst_path)
+    if IsCompiletime() then
+        -- Clear previous files
+        if private.isFileExists(private.full_dst_path) then
+            local home = os.getenv('HOME')
+            if not home then --Windows
+                os.execute('del /q '..private.full_dst_path..'*')
+                os.execute('for /d %x in ('..private.full_dst_path..'*) do @rd /s /q \"%x\"')
+            else
+                os.execute('rm -r '..private.full_dst_path)
+            end
         end
+        
+        CompileFinal(function() private.static_file:save() end)
+    else
+        BlzLoadTOCFile(private.dst_path..static_filename..'.toc')
     end
-
-    CompileFinal(function() private.static_file:save() end)
 end
 
 function static.getDefault()
@@ -117,9 +121,11 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-local sep = package.config:sub(1,1)
+local sep = Compiletime(package.config:sub(1,1))
 private.dst_path = 'GeneratedFdfFiles'..sep
-private.full_dst_path = GetDstDir()..sep..private.dst_path
+if IsCompiletime() then
+    private.full_dst_path = GetDstDir()..sep..private.dst_path
+end
 
 ---@param self FdfFile
 ---@param name string
