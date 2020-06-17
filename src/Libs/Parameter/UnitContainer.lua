@@ -9,6 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
+local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
 
 ---@type ParameterValueListClass
@@ -41,6 +42,11 @@ function override.new(owner, child_instance)
     checkType(owner, Unit, 'owner')
     if child_instance then
         checkType(child_instance, UnitParameterContainer, 'child_instance')
+    end
+
+    if private.owners[owner] then
+        Log:msg(tostring(UnitParameterContainer)..' container exists.')
+        return private.owners[owner]
     end
 
     local instance = child_instance or Class.allocate(UnitParameterContainer)

@@ -16,7 +16,6 @@ src/Libs/Utils/API.lua
 src/Libs/Utils/Action.lua
 src/Libs/Utils/Logger.lua
 src/Libs/Utils/Functions.lua
-src/Libs/Utils/CompiletimeData.lua
 src/Libs/Utils/Handle/Handle.lua
 src/Libs/Utils/Handle/Destructable.lua
 src/Libs/Utils/Handle/Frame.lua
@@ -46,3 +45,7 @@ src/Libs/SimpleFrame/FdfEdit/File.lua
 src/Libs/SimpleFrame/FdfEdit/Frame.lua
 src/Libs/SimpleFrame/FdfEdit/Texture.lua
 src/Libs/SimpleFrame/FdfEdit/Layer.lua
+src/Libs/SimpleFrame/Frame/SimpleBase.lua
+src/Libs/SimpleFrame/Frame/Layer.lua
+src/Libs/SimpleFrame/Frame/Texture.lua
+src/Libs/SimpleFrame/Frame/SimpleImage.lua
