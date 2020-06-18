@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+--region Include
 local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
@@ -13,12 +14,14 @@ local Functions = require(lib_modname..'.Functions')
 local checkType = Functions.checkType
 ---@type ActionClass
 local Action = require(lib_modname..'.Action')
+--endregion
 
 --=======
 -- Class
 --=======
 
 local Trigger = Class.new('Trigger', Handle)
+--region Class
 ---@class Trigger : Handle
 local public = Trigger.public
 ---@class TriggerClass : HandleClass
@@ -26,6 +29,7 @@ local static = Trigger.static
 ---@type TriggerClass
 local override = Trigger.override
 local private = {}
+--endregion
 
 --========
 -- Static

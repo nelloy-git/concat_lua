@@ -14,7 +14,7 @@ local function registerParam(short_name, full_name, icon,
                              min_value, max_value, default_value,
                              apply_to_unit_func)
 
-    local param = registerParam(short_name, full_name, icon,
+    local param = Parameter.new(short_name, full_name, icon,
                                 min_value, max_value, default_value)
     table.insert(Defines.AllParameters, param)
     Defines.ApplyToUnit[param] = apply_to_unit_func
@@ -39,7 +39,31 @@ local function applyHealth(unit, value)
 end
 
 local function applyRegen(unit, value)
+    BlzSetUnitRealField(unit, UNIT_RF_HIT_POINTS_REGENERATION_RATE, value)
 end
+
+local function applyMana(unit, value)
+    local percent_mana = GetUnitManaPercent(unit)
+    BlzSetUnitMaxMana(unit, math.floor(value))
+    SetUnitState(unit, UNIT_STATE_MANA, GetUnitState(unit, UNIT_STATE_MAX_MANA) * percent_mana * 0.01)
+end
+
+local function applyRecov(unit, value)
+    BlzSetUnitRealField(unit, UNIT_RF_MANA_REGENERATION, value)
+end
+
+local function applyMoveSpeed(unit, value)
+    if value <= 1 then
+        SetUnitTurnSpeed(unit, 0)
+    else
+        SetUnitTurnSpeed(unit, GetUnitDefaultTurnSpeed(unit))
+    end
+    SetUnitMoveSpeed(unit, value)
+end
+
+--============
+-- Parameters
+--============
 
 Defines.PhysicalDamage = registerParam('PDmg', 'Physical damage',
                                        Compiletime(UtilsLib.Icon.BTNSteelMelee),
@@ -91,37 +115,18 @@ Defines.Health = registerParam('HP', 'Health',
 
 Defines.Regeneration = registerParam('Regen', 'Regeneration',
                                      Compiletime(UtilsLib.Icon.BTNRegenerate),
-                                     0, 10^10, 0)
-Defines.ApplyToUnit[Defines.Regeneration] = function(unit, value)
-    BlzSetUnitRealField(unit, UNIT_RF_HIT_POINTS_REGENERATION_RATE, value)
-end
+                                     0, 10^10, 0, applyRegen)
 
 Defines.Mana = registerParam('MP', 'Mana',
                              Compiletime(UtilsLib.Icon.BTNManaStone),
-                             0, 10^10, 0)
-Defines.ApplyToUnit[Defines.Mana] = function(unit, value)
-    local percent_mana = GetUnitManaPercent(unit)
-    BlzSetUnitMaxMana(unit, math.floor(value))
-    SetUnitState(unit, UNIT_STATE_MANA, GetUnitState(unit, UNIT_STATE_MAX_MANA) * percent_mana * 0.01)
-end
+                             0, 10^10, 0, applyMana)
 
 Defines.Recovery = registerParam('Recov', 'Recovery',
                                  Compiletime(UtilsLib.Icon.BTNBlink),
-                                 0, 10^10, 0)
-Defines.ApplyToUnit[Defines.Recovery] = function(unit, value)
-    BlzSetUnitRealField(unit, UNIT_RF_MANA_REGENERATION, value)
-end
+                                 0, 10^10, 0, applyRecov)
 
 Defines.MoveSpeed = registerParam('MS', 'Move speed',
                                   Compiletime(UtilsLib.Icon.BTNBootsOfSpeed),
-                                  0, 500, 250)
-Defines.ApplyToUnit[Defines.MoveSpeed] = function(unit, value)
-    if value <= 1 then
-        SetUnitTurnSpeed(unit, 0)
-    else
-        SetUnitTurnSpeed(unit, GetUnitDefaultTurnSpeed(unit))
-    end
-    SetUnitMoveSpeed(unit, value)
-end
+                                  0, 500, 250, applyMoveSpeed)
 
 return Defines

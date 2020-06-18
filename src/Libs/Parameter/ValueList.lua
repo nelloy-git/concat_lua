@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+--region Include
 local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
@@ -16,12 +17,14 @@ local Parameter = require(lib_modname..'.Parameter')
 local Defines = require(lib_modname..'.Defines')
 ---@type ParameterValueClass
 local Value = require(lib_modname..'.Value')
+--endregion
 
 --=======
 -- Class
 --=======
 
 local ParameterValueList = Class.new('ParameterValuesList')
+--region Class
 ---@class ParameterValueList
 local public = ParameterValueList.public
 ---@class ParameterValueListClass
@@ -29,6 +32,7 @@ local static = ParameterValueList.static
 ---@type ParameterValueListClass
 local override = ParameterValueList.override
 local private = {}
+--endregion
 
 --========
 -- Static

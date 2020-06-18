@@ -2,18 +2,21 @@
 -- Include
 --=========
 
+--region Include
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
+--endregion
 
 --=======
 -- Class
 --=======
 
 local Parameter = Class.new('Parameter')
+--region Class
 ---@class Parameter
 local public = Parameter.public
 ---@class ParameterClass
@@ -21,6 +24,7 @@ local static = Parameter.static
 ---@type ParameterClass
 local override = Parameter.override
 local private = {}
+--endregion
 
 --=========
 -- Static

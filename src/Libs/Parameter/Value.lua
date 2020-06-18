@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+--region Include
 local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
@@ -12,12 +13,14 @@ local checkType = UtilsLib.Functions.checkType
 
 ---@type ParameterClass
 local Parameter = require(lib_modname..'.Parameter')
+--endregion
 
 --=======
 -- Class
 --=======
 
 local ParameterValue = Class.new('ParameterValue')
+--region Class
 ---@class ParameterValue
 local public = ParameterValue.public
 ---@class ParameterValueClass
@@ -25,7 +28,7 @@ local static = ParameterValue.static
 ---@type ParameterValueClass
 local override = ParameterValue.override
 local private = {}
-
+--endregion
 
 --========
 -- Static

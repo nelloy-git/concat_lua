@@ -1,12 +1,15 @@
 {
     "Class.new":{
-        "prefix": "createClass",
+        "prefix": "class",
         "body": [
             "--=========",
             "-- Include",
             "--=========",
             "",
-            "local Class = require(Lib.Class)",
+            "--region Include",
+            "local lib_modname = Lib.current().modname",
+            "local depencies = Lib.current().depencies",
+            "--endregion",
             "",
             "---@type UtilsLib",
             "local UtilsLib = require(Lib.Utils)",
@@ -17,6 +20,7 @@
             "--=======",
             "",
             "local ${1:className} = Class.new('${1:className}')",
+            "--region Class",
             "---@class ${1:className}",
             "local public = ${1:className}.public",
             "---@class ${1:className}Class",
@@ -24,6 +28,7 @@
             "---@type ${1:className}Class",
             "local override = ${1:className}.override",
             "local private = {}",
+            "--endregion",
             "",
             "--=========",
             "-- Static",

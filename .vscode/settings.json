@@ -22,4 +22,13 @@
     },
     "Lua.awakened.cat": true,
     "Lua.workspace.maxPreload": 500,
+    "maptz.regionfolder": {
+        "[lua]": {
+            "foldEnd": "--endregion",
+            "foldEndRegex": "[\\s]*--endregion",
+            "foldStart": "--region [NAME]",
+            "foldStartRegex": "[\\s]*--region[\\s]*(.*)"
+        }
+    
+    },
 }

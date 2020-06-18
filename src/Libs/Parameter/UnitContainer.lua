@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+--region Include
 local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
@@ -17,12 +18,14 @@ local ValueList = require(lib_modname..'.ValueList')
 local ValueListPublic = Class.getPublic(ValueList)
 ---@type ParameterDefines
 local Defines = require(lib_modname..'.Defines')
+--endregion
 
 --=======
 -- Class
 --=======
 
 local UnitParameterContainer = Class.new('UnitParameterContainer', ValueList)
+--region Class
 ---@class UnitParameterContainer : ParameterValueList
 local public = UnitParameterContainer.public
 ---@class UnitParameterContainerClass : ParameterValueListClass
@@ -30,6 +33,7 @@ local static = UnitParameterContainer.static
 ---@type UnitParameterContainerClass
 local override = UnitParameterContainer.override
 local private = {}
+--endregion
 
 --=========
 -- Static
