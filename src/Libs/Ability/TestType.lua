@@ -8,7 +8,7 @@ local Log = UtilsLib.DefaultLogger
 ---@type AbilityTypeClass
 local AbilityType = require(lib_modname..'.Type')
 
-local TestAbilityType = AbilityType.new()
+local TestAbilityType = AbilityType.new('TestAbilityType')
 
 function TestAbilityType:checkConditions(abil)
     Log:msg('checkConditions')

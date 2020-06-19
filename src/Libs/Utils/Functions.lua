@@ -13,12 +13,12 @@ local Log = Logger.getDefault()
 local debug = true
 
 ---@param var any
----@param type any
+---@param need_type any
 ---@param var_name string
 ---@param level number | nil
-function UtilsFunctions.checkType(var, type, var_name, level)
-    if not debug and not classType(var, type) then
-        Log:err('variable '..(var_name or '')..' is not of type '..tostring(type), level or 3)
+function UtilsFunctions.checkType(var, need_type, var_name, level)
+    if debug and not classType(var, need_type) then
+        Log:err('variable '..(var_name or '')..' is not of type '..tostring(need_type), level or 3)
     end
 end
 

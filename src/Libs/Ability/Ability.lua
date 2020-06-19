@@ -2,6 +2,7 @@
 -- Include
 --=========
 
+--region Include
 local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
@@ -14,12 +15,14 @@ local Unit = UtilsLib.Handle.Unit
 
 ---@type AbilityTypeClass
 local AbilityType = require(lib_modname..'.Type')
+--endregion
 
 --=======
 -- Class
 --=======
 
 local Ability = Class.new('Ability')
+--region Class
 ---@class Ability
 local public = Ability.public
 ---@class AbilityClass
@@ -27,6 +30,7 @@ local static = Ability.static
 ---@type AbilityClass
 local override = Ability.override
 local private = {}
+--endregion
 
 --=========
 -- Static
