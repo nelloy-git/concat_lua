@@ -76,7 +76,7 @@ function public:addBase(param, value)
     ValueListPublic.addBase(self, param, value)
     local result = self:getResult(param)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner, result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getHandleData(), result)
     end
 end
 
@@ -86,7 +86,7 @@ function public:addMult(param, value)
     ValueListPublic.addMult(self, param, value)
     local result = self:getResult(param)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner, result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getHandleData(), result)
     end
 end
 
@@ -96,7 +96,7 @@ function public:addAddit(param, value)
     ValueListPublic.addAddit(self, param, value)
     local result = self:getResult(param)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner, result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getHandleData(), result)
     end
 end
 

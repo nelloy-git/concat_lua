@@ -29,6 +29,9 @@ do
     function CompiletimeFinalToRuntime(func)
         return func()
     end
+
+    function CompileFinal()
+    end
 end
 
 function RunInitialization()

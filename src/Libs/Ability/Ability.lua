@@ -38,19 +38,17 @@ local private = {}
 
 ---@param owner Unit
 ---@param ability_type AbilityType
----@param lvl number
 ---@param child_instance Ability | nil
 ---@return Ability
 function override.new(owner, ability_type, lvl, child_instance)
     checkType(owner, Unit, 'owner')
     checkType(ability_type, AbilityType, 'ability_type')
-    checkType(lvl, 'number', 'lvl')
     if child_instance then
         checkType(child_instance, Ability, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Ability)
-    private.newData(instance, owner, ability_type, lvl)
+    private.newData(instance, owner, ability_type)
 
     return instance
 end
@@ -185,7 +183,7 @@ function private.newData(self, owner, ability_type, lvl)
     local priv = {
         owner = owner,
         ability_type = ability_type,
-        lvl = lvl,
+        lvl = 1,
 
         cur_target = nil,
         casting_end_time = 0,

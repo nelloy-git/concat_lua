@@ -35,7 +35,6 @@ local private = {}
 ---@param child_instance Handle | nil
 ---@return Handle
 function override.new(handle, destructor, child_instance)
-    checkType(handle, 'handle', 'handle')
     checkType(destructor, 'function', 'destructor')
     if child_instance then
         checkType(child_instance, Handle, 'child_instance')

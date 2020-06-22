@@ -35,10 +35,10 @@ test_frame:setTextureFile("ReplaceableTextures\\\\CommandButtons\\\\BTNBlackDrag
 
 local u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 
-local param_container = ParameterAPI.UnitContainer.new(u:getHandleData())
+local param_container = ParameterAPI.UnitContainer.new(u)
 
 local test_abil_type = AbilityAPI.TestType
-local abil_container = AbilityAPI.Container.new(u:getHandleData())
+local abil_container = AbilityAPI.Container.new(u)
 abil_container:set(1, test_abil_type)
 --local abil = abil_container:get(1):use(AbilityAPI.TargetNone.new())
 

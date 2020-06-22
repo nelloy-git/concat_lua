@@ -37,7 +37,6 @@ local private = {}
 ---@return Action
 function override.new(callback, owner, child_instance)
     checkType(callback, 'function', 'callback')
-    checkType(owner, 'player', 'owner')
     if child_instance then
         checkType(child_instance, 'Action', 'child_instance')
     end
