@@ -8,12 +8,24 @@ local depencies = Lib.current().depencies
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local Trigger = UtilsLib.Handle.Trigger
+---@type ParameterLib
+local ParameterLib = depencies.ParameterLib
+local PhysReduc = ParameterLib.PhysicalDamageReduction
+local Def = ParameterLib.Defence
+local MagicReduc = ParameterLib.MagicalDamageReduction
+local Resistance = ParameterLib.Resistance
 
 --========
 -- Module
 --========
 
 local DamageEvent = {}
+
+DamageEvent.phys_dmg_type = DAMAGE_TYPE_NORMAL
+DamageEvent.magic_dmg_type = DAMAGE_TYPE_MAGIC
+DamageEvent.true_dmg_type = DAMAGE_TYPE_UNKNOWN
+
+DamageEvent.actions = {}
 
 function DamageEvent.Init()
     if IsCompiletime() then
@@ -29,6 +41,10 @@ function DamageEvent.Init()
         local damager = GetEventDamageSource()
         local target = BlzGetEventDamageTarget()
         local dmg_type = BlzGetEventDamageType()
+
+        if dmg_type == DamageEvent.phys_dmg_type then
+            dmg = dmg * (1 - )
+        end
     end)
 end
 

@@ -1,4 +1,4 @@
----@class ParameterLib
+---@class DamageLib
 local DamageLibAPI = {}
 local modname = Compiletime(Lib.getModname())
 Lib.start(modname)
@@ -9,7 +9,8 @@ Lib.start(modname)
 
 Lib.current().depencies = {
     Class = require(LibList.Class),
-    UtilsLib = require(LibList.Utils)
+    UtilsLib = require(LibList.Utils),
+    ParameterLib = require(LibList.Parameter)
 }
 
 --=====
@@ -21,4 +22,4 @@ local Init = require(modname..'.Init')
 
 Lib.finish()
 
-return ParameterLibAPI
+return DamageLibAPI
