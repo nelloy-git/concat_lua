@@ -10,6 +10,10 @@ local Parameter = require(lib_modname..'.Parameter')
 Defines.AllParameters = {}
 Defines.ApplyToUnit = {}
 
+--=======
+-- Utils
+--=======
+
 local function registerParam(short_name, full_name, icon,
                              min_value, max_value, default_value,
                              apply_to_unit_func)

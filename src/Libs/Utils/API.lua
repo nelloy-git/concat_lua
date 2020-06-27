@@ -39,6 +39,8 @@ UtilsLibAPI.Handle.Frame = require(lib_modname..'.Handle.Frame')
 UtilsLibAPI.Handle.Item = require(lib_modname..'.Handle.Item')
 ---@type SmartTimerClass
 UtilsLibAPI.Handle.SmartTimer = require(lib_modname..'.Handle.SmartTimer')
+---@type TextTagClass
+UtilsLibAPI.Handle.TextTag = require(lib_modname..'.Handle.TextTag')
 ---@type TimerClass
 UtilsLibAPI.Handle.Timer = require(lib_modname..'.Handle.Timer')
 ---@type TriggerClass

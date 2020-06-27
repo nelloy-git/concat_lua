@@ -1,2 +1,0 @@
-[0.163] {Msg} Created new FdfFile 'Default' containg:
-    testFdf

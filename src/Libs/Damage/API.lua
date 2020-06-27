@@ -10,15 +10,21 @@ Lib.start(modname)
 Lib.current().depencies = {
     Class = require(LibList.Class),
     UtilsLib = require(LibList.Utils),
-    ParameterLib = require(LibList.Parameter)
 }
 
 --=====
 -- API
 --=====
 
-local Init = require(modname..'.Init')
-
+---@type DamageEvent
+local DamageEvent = require(modname..'.Event')
+DamageEvent.Init()
+DamageLibAPI.DamageType = DamageEvent.DamageType
+DamageLibAPI.addCallback = DamageEvent.addCallback
+DamageLibAPI.removeCallback = DamageEvent.removeCallback
+DamageLibAPI.damageUnit = DamageEvent.damageUnit
+---@type DamageShowText
+local DamageShowText = require(modname..'.ShowText')
 
 Lib.finish()
 

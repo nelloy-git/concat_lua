@@ -59,7 +59,7 @@ function public:addAction(callback)
     local priv = private.data[self]
 
     local action = Action.new(callback)
-    table.insert(priv.actions, #priv.actions + 1, action)
+    table.insert(priv.actions, action)
 
     return action
 end

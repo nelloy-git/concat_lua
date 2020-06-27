@@ -34,12 +34,20 @@ test_frame:setHeight(0.1)
 test_frame:setTextureFile("ReplaceableTextures\\\\CommandButtons\\\\BTNBlackDragon.blp", 0, false)
 
 local u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
-
 local param_container = ParameterAPI.UnitContainer.new(u)
+param_container:addBase(ParameterAPI.PhysicalDamage, 10)
+param_container:addBase(ParameterAPI.Defence, 10)
+param_container:addBase(ParameterAPI.Health, 1000)
 
-local test_abil_type = AbilityAPI.TestType
-local abil_container = AbilityAPI.Container.new(u)
-abil_container:set(1, test_abil_type)
+local u2 = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
+param_container = ParameterAPI.UnitContainer.new(u2)
+param_container:addBase(ParameterAPI.PhysicalDamage, 10)
+param_container:addBase(ParameterAPI.Defence, 10)
+param_container:addBase(ParameterAPI.Health, 1000)
+
+--local test_abil_type = AbilityAPI.TestType
+--local abil_container = AbilityAPI.Container.new(u)
+--abil_container:set(1, test_abil_type)
 --local abil = abil_container:get(1):use(AbilityAPI.TargetNone.new())
 
 --[[

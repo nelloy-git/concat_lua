@@ -95,7 +95,7 @@ function private.newData(self, handle, destructor)
         destructor = destructor
     }
     private.data[self] = priv
-    private.db[Handle] = self
+    private.db[handle] = self
 end
 
 return static

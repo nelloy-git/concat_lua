@@ -12,6 +12,8 @@ local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
 local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
+---@type DamageLib
+local DamageLib = depencies.DamageLib
 
 ---@type ParameterValueListClass
 local ValueList = require(lib_modname..'.ValueList')
@@ -62,8 +64,30 @@ end
 
 ---@param owner Unit
 ---@return UnitParameterContainer | nil
-function static.getContainer(owner)
+function static.get(owner)
     return private.owners[owner]
+end
+
+--=================
+-- Damage callback
+--=================
+
+local Def = Defines.Defence
+local PReduc = Defines.PhysicalDamageReduction
+local Res = Defines.Resistance
+local MReduc = Defines.MagicalDamageReduction
+
+---@type DamageEventCallback
+static.DamageCallback = function(dmg, dmg_type, target, damager)
+    local target_params = static.get(target)
+    if not target_params then return dmg end
+
+    if dmg_type == DamageLib.DamageType.Physical then
+        return dmg * (1 - target_params:getResult(PReduc)) - target_params:getResult(Def)
+    elseif dmg_type == DamageLib.DamageType.Magical then
+        return dmg * (1 - target_params:getResult(MReduc)) - target_params:getResult(Res)
+    end
+    return dmg
 end
 
 --========
@@ -105,9 +129,10 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.owners = setmetatable({}, {__mode = 'kv'})
+private.owners = setmetatable({}, {__mode = 'k'})
 
 ---@param self UnitParameterContainer
+---@param owner Unit
 function private.newData(self, owner)
     local priv = {
         owner = owner
