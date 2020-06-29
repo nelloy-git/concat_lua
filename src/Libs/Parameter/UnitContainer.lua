@@ -14,6 +14,7 @@ local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
 ---@type DamageLib
 local DamageLib = depencies.DamageLib
+local DamageType = DamageLib.DamageType
 
 ---@type ParameterValueListClass
 local ValueList = require(lib_modname..'.ValueList')
@@ -72,6 +73,7 @@ end
 -- Damage callback
 --=================
 
+local MDmg = Defines.MagicalDamage
 local Def = Defines.Defence
 local PReduc = Defines.PhysicalDamageReduction
 local Res = Defines.Resistance
@@ -82,11 +84,20 @@ static.DamageCallback = function(dmg, dmg_type, target, damager)
     local target_params = static.get(target)
     if not target_params then return dmg end
 
-    if dmg_type == DamageLib.DamageType.Physical then
-        return dmg * (1 - target_params:getResult(PReduc)) - target_params:getResult(Def)
-    elseif dmg_type == DamageLib.DamageType.Magical then
-        return dmg * (1 - target_params:getResult(MReduc)) - target_params:getResult(Res)
+    -- Add magic damage to attacks
+    if dmg_type == DamageType.PhysicalAttack then
+        local m_atk = target_params:getResult(MDmg)
+        local m_dmg = m_atk * (0.85 + 0.3 * math.random())
+        DamageLib.damageUnit(m_dmg, DamageType.MagicalAttack, target, damager, WEAPON_TYPE_WHOKNOWS)
     end
+
+    if dmg_type == DamageType.PhysicalAttack or dmg_type == DamageType.PhysicalSpell then
+        dmg = dmg * (1 - target_params:getResult(PReduc)) - target_params:getResult(Def)
+    elseif dmg_type == DamageType.MagicalAttack or dmg_type == DamageType.MagicalSpell then
+        dmg = dmg * (1 - target_params:getResult(MReduc)) - target_params:getResult(Res)
+    end
+
+    dmg = dmg > 0 and dmg or 0
     return dmg
 end
 

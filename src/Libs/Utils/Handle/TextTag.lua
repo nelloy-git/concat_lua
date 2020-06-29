@@ -39,7 +39,7 @@ function override.new(child_instance)
     end
 
     local instance = child_instance or Class.allocate(TextTag)
-    instance = Handle.new(CreateTextTag, DestroyTextTag, instance)
+    instance = Handle.new(CreateTextTag(), DestroyTextTag, instance)
 
     return instance
 end
@@ -61,14 +61,14 @@ function override.newTimed(text, size,
                            x, y, z,
                            x_vel, y_vel,
                            time)
-    local text_tag = override.new()
-    text_tag:setText(text, size)
-    text_tag:setColor(red, green, blue, alpha)
-    text_tag:setPos(x, y, z)
-    text_tag:setVelocity(x_vel, y_vel)
-    text_tag:setPermanent(false)
-    text_tag:setLifespan(time)
-    text_tag:setFadepoint(0)
+    local text_tag = CreateTextTag()
+    SetTextTagText(text_tag, text, size)
+    SetTextTagColor(text_tag, red, green, blue, alpha)
+    SetTextTagPos(text_tag, x, y, z)
+    SetTextTagVelocity(text_tag, x_vel, y_vel)
+    SetTextTagPermanent(text_tag, false)
+    SetTextTagLifespan(text_tag, time)
+    SetTextTagFadepoint(text_tag, 0)
 end
 
 ---@param text string
@@ -87,14 +87,15 @@ function override.newTimedForUnit(text, size,
                                    target, z,
                                    x_vel, y_vel,
                                    time)
-    local text_tag = override.new()
-    text_tag:setText(text, size)
-    text_tag:setColor(red, green, blue, alpha)
-    text_tag:setPos(target, z)
-    text_tag:setVelocity(x_vel, y_vel)
-    text_tag:setPermanent(false)
-    text_tag:setLifespan(time)
-    text_tag:setFadepoint(0)
+
+    local text_tag = CreateTextTag()
+    SetTextTagText(text_tag, text, size)
+    SetTextTagColor(text_tag, red, green, blue, alpha)
+    SetTextTagPosUnit(text_tag, target:getHandleData(), z)
+    SetTextTagVelocity(text_tag, x_vel, y_vel)
+    SetTextTagPermanent(text_tag, false)
+    SetTextTagLifespan(text_tag, time)
+    SetTextTagFadepoint(text_tag, 0)
 end
 
 --========

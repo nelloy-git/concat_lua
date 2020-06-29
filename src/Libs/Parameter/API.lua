@@ -12,6 +12,7 @@ Lib.current().depencies = {
     UtilsLib = require(LibList.Utils),
     DamageLib = require(LibList.DamageLib)
 }
+local depencies = Lib.current().depencies
 
 --=====
 -- API
@@ -60,7 +61,15 @@ ParameterLibAPI.UnitContainer = require(modname..'.UnitContainer')
 -- Register unit damage.
 --=======================
 
-Lib.current().depencies.DamageLib.addCallback(ParameterLibAPI.UnitContainer.DamageCallback)
+---@type DamageType
+local DamageType = depencies.DamageLib.DamageType
+---@type DamageCallbackPriority
+local Priority = depencies.DamageLib.CallbackPriority
+
+for _, dmg_type in pairs(DamageType) do
+    Lib.current().depencies.DamageLib.addCallback(ParameterLibAPI.UnitContainer.DamageCallback,
+                                                  dmg_type, Priority.Highest)
+end
 
 Lib.finish()
 

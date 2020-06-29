@@ -36,13 +36,13 @@ test_frame:setTextureFile("ReplaceableTextures\\\\CommandButtons\\\\BTNBlackDrag
 local u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 local param_container = ParameterAPI.UnitContainer.new(u)
 param_container:addBase(ParameterAPI.PhysicalDamage, 10)
-param_container:addBase(ParameterAPI.Defence, 10)
+param_container:addBase(ParameterAPI.Defence, 5)
 param_container:addBase(ParameterAPI.Health, 1000)
 
 local u2 = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 param_container = ParameterAPI.UnitContainer.new(u2)
 param_container:addBase(ParameterAPI.PhysicalDamage, 10)
-param_container:addBase(ParameterAPI.Defence, 10)
+param_container:addBase(ParameterAPI.Defence, 5)
 param_container:addBase(ParameterAPI.Health, 1000)
 
 --local test_abil_type = AbilityAPI.TestType
