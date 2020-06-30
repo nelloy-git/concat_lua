@@ -220,12 +220,11 @@ function public:setAlpha(alpha)
 end
 
 function public:getVisible()
-    return private.data[self].visible
+    return BlzFrameIsVisible(self:getHandleData())
 end
 
 ---@param visible boolean
 function public:setVisible(visible)
-    private.data[self].visible = visible
     BlzFrameSetVisible(self:getHandleData(), visible)
 end
 
@@ -269,7 +268,6 @@ function private.newData(self, fdf_frame)
 
         level = 0,
         alpha = 0,
-        visible = true,
 
         textures = {},
         layers = {},

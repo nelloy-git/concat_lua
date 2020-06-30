@@ -53,4 +53,7 @@ src\Libs\SimpleFrame\FdfEdit\Layer.lua
 src\Libs\SimpleFrame\Frame\SimpleBase.lua
 src\Libs\SimpleFrame\Frame\Layer.lua
 src\Libs\SimpleFrame\Frame\Texture.lua
+src\Libs\SimpleFrame\Frame\SimpleButton.lua
 src\Libs\SimpleFrame\Frame\SimpleImage.lua
+src\Libs\SimpleFrame\Frame\SimpleClicker.lua
+src\Libs\SimpleFrame\Frame\SimpleTracker.lua

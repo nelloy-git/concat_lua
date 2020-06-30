@@ -9,65 +9,26 @@ local UtilsLib = require(LibList.Utils)
 ---@type FrameLib
 local FrameLib = require(LibList.Frame)
 
-local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEFRAME')
-fdf:setParameter('Width', '0.039')
-fdf:setParameter('Height', '0.040')
---local subfdf = FrameLib.FdfFrame.new('testFdf2', 'SIMPLEBUTTON')
---subfdf:setParameter('Width', '0.039')
---subfdf:setParameter('Height', '0.040')
---local layer = FrameLib.FdfLayer.new('ARTWORK')
+local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEBUTTON')
+fdf:setParameter('Width', '0.03')
+fdf:setParameter('Height', '0.03')
+
 local texture = FrameLib.FdfTexture.new('testTexture')
 texture:setParameter('File', '\"\"')
 fdf:addTexture(texture)
---subfdf:addLayer(layer)
---fdf:addSubFrame(subfdf)
-
---[[
-local t1 = {a = 1, b = 2, c = 3}
-local t2 = {a = 1, b = 3, c = 5, d = 2}
-
-local mt = {
-    __pairs = function(self)
-        local k, v
-        local t = self
-        local list = {}
-        return function()
-            k, v = next(t, k)
-            if k == nil and t ~= t2 then
-                t = t2
-                k, v = next(t, k)
-            end
-
-            if k then
-                while list[k] do
-                    k, v = next(t, k)
-                    if not k then
-                        return
-                    end
-                end
-                list[k] = v
-            end
-            return k, v
-        end
-    end
-}
-
-setmetatable(t1, mt)
-for k, v in pairs(t1) do
-    print(k, v)
-end
-]]
 
 if IsCompiletime() then
     return
 end
 
-local test_frame = FrameLib.SimpleImage.new(fdf)
+local test_frame = FrameLib.SimpleButton.new(fdf)
 test_frame:setX(0.4)
 test_frame:setY(0.3)
-test_frame:setWidth(0.1)
-test_frame:setHeight(0.1)
+--test_frame:setWidth(0.1)
+--test_frame:setHeight(0.1)
 test_frame:setTextureFile("ReplaceableTextures\\\\CommandButtons\\\\BTNBlackDragon.blp", 0, false)
+test_frame:addMouseEnterAction(function() print('Enter') end)
+test_frame:addMouseLeaveAction(function() print('Leave') end)
 
 local u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 local param_container = ParameterAPI.UnitContainer.new(u)

@@ -63,6 +63,7 @@ function override.new(fdf_simpleframe, child_instance)
 
     local instance = child_instance or Class.allocate(SimpleTracker)
     instance = SimpleBaseFrame.new(fdf_simpleframe, instance)
+    private.newData(instance)
 
     return instance
 end
@@ -101,7 +102,7 @@ end
 
 function public:isMouseOver()
     local tooltip = SimpleBaseFramePublic.getTooltip(self)
-    return tooltip:isVisible()
+    return tooltip:getVisible()
 end
 
 ---@param callback SimpleFrameCallback
@@ -171,6 +172,7 @@ function private.newData(self)
         mouse_leave_actions = {}
     }
     private.data[self] = priv
+    SimpleBaseFramePublic.setTooltip(self, SimpleBaseFrame.new(private.FdfMouseDetector))
 end
 
 function private.detectMouseLoop()
