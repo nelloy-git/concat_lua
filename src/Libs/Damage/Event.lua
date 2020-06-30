@@ -101,7 +101,7 @@ end
 ---@param dmg_type DamageType
 ---@param priority DamageCallbackPriority
 ---@return Action
-function DamageEvent.addCallback(callback, dmg_type, priority)
+function DamageEvent.addAction(callback, dmg_type, priority)
     if not Defines.isDamageType(dmg_type) then
         Log:err('variable \'dmg_type\'('..tostring(dmg_type)..') is not of type DamageType', 2)
     end
@@ -118,7 +118,7 @@ end
 
 ---@param action Action
 ---@return boolean
-function DamageEvent.removeCallback(action)
+function DamageEvent.removeAction(action)
     for _, dmg_type in pairs(DamageType) do
         local callbacks = DamageEvent.Callbacks[dmg_type]
 

@@ -11,8 +11,12 @@ local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
 local Log = UtilsLib.DefaultLogger
 
----@type SimpleBaseFrameClass
-local SimpleBaseFrame = require(lib_modname..'.Frame.SimpleBase')
+---@type SimpleImageClass
+local SimpleImage = require(lib_modname..'.Frame.SimpleImage')
+---@type SimpleClickerClass
+local SimpleClicker = require(lib_modname..'.Frame.SimpleClicker')
+---@type SimpleTracker
+local SimpleTracker = require(lib_modname..'.Frame.SimpleTracker')
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 
@@ -20,10 +24,10 @@ local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 -- Class
 --=======
 
-local SimpleButton = Class.new('SimpleButton', SimpleBaseFrame)
----@class SimpleButton : SimpleBaseFrame
+local SimpleButton = Class.new('SimpleButton', SimpleImage, SimpleClicker, SimpleTracker)
+---@class SimpleButton : SimpleImage, SimpleClicker, SimpleTracker
 local public = SimpleButton.public
----@class SimpleButtonClass : SimpleBaseFrameClass
+---@class SimpleButtonClass : SimpleBaseFrameClass, SimpleClickerClass, SimpleTrackerClass
 local static = SimpleButton.static
 ---@type SimpleButtonClass
 local override = SimpleButton.override
@@ -37,7 +41,7 @@ local private = {}
 ---@param child_instance SimpleButton | nil
 ---@return SimpleButton
 function override.new(fdf_simplebutton, child_instance)
-    checkType(fdf_simplebutton, FdfFrame, 'fdf_simplebutton')
+    checkType(fdf_simplebutton, FdfFrame, 'fdf_simpleframe')
     if child_instance then
         checkType(child_instance, SimpleButton, 'child_instance')
     end
@@ -46,12 +50,10 @@ function override.new(fdf_simplebutton, child_instance)
         Log:err('fdf_frame has wrong base type.', 2)
     end
 
-    if #fdf_simplebutton:getTextures() ~= 1 then
-        Log:err('fdf_frame must have one texture subframe.', 2)
-    end
-
     local instance = child_instance or Class.allocate(SimpleButton)
-    instance = SimpleBaseFrame.new(fdf_simplebutton, instance)
+    instance = SimpleImage.new(fdf_simplebutton, instance)
+    instance = SimpleClicker.new(fdf_simplebutton, instance)
+    instance = SimpleTracker.new(fdf_simplebutton, instance)
 
     return instance
 end
@@ -59,13 +61,6 @@ end
 --========
 -- Public
 --========
-
----@param tex_file string
----@param flag number
----@param blend boolean
-function public:setTextureFile(tex_file, flag, blend)
-    self:getTexture(1):setTextureFile(tex_file, flag, blend)
-end
 
 --=========
 -- Private

@@ -42,6 +42,8 @@ local private = {}
 -- Static
 --=========
 
+---@alias SimpleFrameCallback fun(frame:SimpleBaseFrame)
+
 ---@param fdf_frame FdfFrame
 ---@param child_instance SimpleBaseFrame | nil
 ---@return SimpleBaseFrame
@@ -61,6 +63,11 @@ end
 --========
 -- Public
 --========
+
+---@return FdfFrame
+function public:getFdf()
+    return private.data[self].fdf
+end
 
 ---@param i number
 ---@return TextureSubrame | nil
@@ -228,6 +235,18 @@ function public:setUpdateResolutionCallback(callback)
     private.data[self].update_resolution_action = callback and Action.new(callback, self) or nil
 end
 
+---@return SimpleBaseFrame | nil
+function public:getTooltip()
+    return private.data[self].tooltip
+end
+
+---@param tooltip SimpleBaseFrame | nil
+function public:setTooltip(tooltip)
+    private.data[self].tooltip = tooltip
+    BlzFrameSetTooltip(self:getHandleData(), tooltip:getHandleData())
+    tooltip:setVisible(false)
+end
+
 --=========
 -- Private
 --=========
@@ -245,6 +264,7 @@ function private.newData(self, fdf_frame)
         y = 0,
         width = fdf_frame:getParameter('Width'),
         height = fdf_frame:getParameter('Height'),
+        tooltip = nil,
         parent = nil,
 
         level = 0,

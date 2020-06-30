@@ -22,6 +22,42 @@ fdf:addTexture(texture)
 --subfdf:addLayer(layer)
 --fdf:addSubFrame(subfdf)
 
+--[[
+local t1 = {a = 1, b = 2, c = 3}
+local t2 = {a = 1, b = 3, c = 5, d = 2}
+
+local mt = {
+    __pairs = function(self)
+        local k, v
+        local t = self
+        local list = {}
+        return function()
+            k, v = next(t, k)
+            if k == nil and t ~= t2 then
+                t = t2
+                k, v = next(t, k)
+            end
+
+            if k then
+                while list[k] do
+                    k, v = next(t, k)
+                    if not k then
+                        return
+                    end
+                end
+                list[k] = v
+            end
+            return k, v
+        end
+    end
+}
+
+setmetatable(t1, mt)
+for k, v in pairs(t1) do
+    print(k, v)
+end
+]]
+
 if IsCompiletime() then
     return
 end

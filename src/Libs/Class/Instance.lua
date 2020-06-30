@@ -41,17 +41,18 @@ function ClassInstance.allocate(class)
     local instance = {}
     local parents = ClassParent.getList(class)
 
-    for i = 1, #parents do
-        local cur = parents[#parents + 1 - i]
-        local cur_public = ClassPublic.get(cur)
-        local copy = deepcopy(cur_public)
-        for k,v in pairs(copy) do
-            instance[k] = v
-        end
-    end
+    --for i = 1, #parents do
+    --    local cur = parents[#parents + 1 - i]
+    --    local cur_public = ClassPublic.get(cur)
+    --    local copy = deepcopy(cur_public)
+    --    for k,v in pairs(copy) do
+    --        instance[k] = v
+    --    end
+    --end
 
-    local copy = deepcopy(ClassPublic.get(class))
-    for k,v in pairs(copy) do
+    local public = ClassPublic.get(class)
+    local copy = deepcopy(public)
+    for k,v in pairs(public) do
         instance[k] = v
     end
 

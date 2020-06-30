@@ -40,6 +40,40 @@ local static_meta = {
     __tostring = function(self)
         return tostring(static2class[self])
     end,
+
+    __pairs = function(self)
+        local class = static2class[self]
+        local parents = ClassParent.getList(class)
+
+        local k, v
+        local cur_pos = 0
+        local cur_table = self
+        local list = {}
+        local function getKeyValue()
+            k, v = next(cur_table, k)
+            if k ~= nil then
+                if list[k] ~= nil then
+                    getKeyValue()
+                end
+
+                if k ~= nil then
+                    list[k] = v
+                end
+
+                return k, v
+            else
+                cur_pos = cur_pos + 1
+                if cur_pos > #parents then
+                    return
+                end
+
+                cur_table = class2static[parents[cur_pos]]
+                return getKeyValue()
+            end
+        end
+
+        return getKeyValue
+    end
 }
 
 ---@param class table

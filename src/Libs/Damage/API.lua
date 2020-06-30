@@ -23,14 +23,14 @@ DamageLibAPI.DamageType = Defines.DamageType
 local DamageEvent = require(modname..'.Event')
 DamageEvent.Init()
 DamageLibAPI.CallbackPriority = DamageEvent.CallbackPriority
-DamageLibAPI.addCallback = DamageEvent.addCallback
-DamageLibAPI.removeCallback = DamageEvent.removeCallback
+DamageLibAPI.addCallback = DamageEvent.addAction
+DamageLibAPI.removeCallback = DamageEvent.removeAction
 DamageLibAPI.damageUnit = DamageEvent.damageUnit
 ---@type DamageShowText
 local DamageShowText = require(modname..'.ShowText')
 
 for _, dmg_type in pairs(Defines.DamageType) do
-    DamageEvent.addCallback(DamageShowText.DamageEvent,
+    DamageEvent.addAction(DamageShowText.DamageEvent,
                             dmg_type, DamageEvent.CallbackPriority.Lowest)
 end
 

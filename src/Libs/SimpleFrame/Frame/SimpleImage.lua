@@ -42,10 +42,6 @@ function override.new(fdf_simpleframe, child_instance)
         checkType(child_instance, SimpleImage, 'child_instance')
     end
 
-    if fdf_simpleframe:getBaseType() ~= 'SIMPLEFRAME' then
-        Log:err('fdf_frame has wrong base type.', 2)
-    end
-
     if #fdf_simpleframe:getTextures() ~= 1 then
         Log:err('fdf_frame must have one texture subframe.', 2)
     end

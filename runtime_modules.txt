@@ -22,8 +22,13 @@ src/Libs/Utils/Handle/Frame.lua
 src/Libs/Utils/Handle/Timer.lua
 src/Libs/Utils/Handle/Item.lua
 src/Libs/Utils/Handle/SmartTimer.lua
-src/Libs/Utils/Handle/Trigger.lua
+src/Libs/Utils/Handle/TextTag.lua
 src/Libs/Utils/Handle/Unit.lua
+src/Libs/Utils/Handle/Trigger.lua
+src/Libs/Damage/API.lua
+src/Libs/Damage/Defines.lua
+src/Libs/Damage/Event.lua
+src/Libs/Damage/ShowText.lua
 src/Libs/Parameter/Defines.lua
 src/Libs/Parameter/Parameter.lua
 src/Libs/Parameter/ValueList.lua
@@ -48,4 +53,7 @@ src/Libs/SimpleFrame/FdfEdit/Layer.lua
 src/Libs/SimpleFrame/Frame/SimpleBase.lua
 src/Libs/SimpleFrame/Frame/Layer.lua
 src/Libs/SimpleFrame/Frame/Texture.lua
+src/Libs/SimpleFrame/Frame/SimpleButton.lua
 src/Libs/SimpleFrame/Frame/SimpleImage.lua
+src/Libs/SimpleFrame/Frame/SimpleClicker.lua
+src/Libs/SimpleFrame/Frame/SimpleTracker.lua
