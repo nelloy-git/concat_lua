@@ -73,7 +73,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.owners = setmetatable({}, {__mode = 'kv'})
+private.owners = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilitiesContainer
 ---@param owner Unit

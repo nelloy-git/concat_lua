@@ -1,5 +1,4 @@
 src/main.lua
-src/Utils/Globals.lua
 src/Libs/Lib.lua
 src/Libs/LibList.lua
 src/Libs/Parameter/API.lua
@@ -57,3 +56,12 @@ src/Libs/SimpleFrame/Frame/SimpleButton.lua
 src/Libs/SimpleFrame/Frame/SimpleImage.lua
 src/Libs/SimpleFrame/Frame/SimpleClicker.lua
 src/Libs/SimpleFrame/Frame/SimpleTracker.lua
+src/Libs/Buff/API.lua
+src/Libs/Buff/Container.lua
+src/Libs/Buff/Buff.lua
+src/Libs/Buff/Type.lua
+src/Libs/Binary/API.lua
+src/Libs/Binary/UnitData.lua
+src/Libs/Binary/File.lua
+src/Libs/Binary/Data.lua
+src/Libs/Binary/UnitValuesDB.lua

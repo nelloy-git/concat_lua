@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 
 local Class = depencies.Class
 ---@type UtilsLib
-local UtilsLib = require(Lib.Utils)
+local UtilsLib = require(LibList.UtilsLib)
 local checkType = UtilsLib.Functions.checkType
 local Log = UtilsLib.DefaultLogger
 --endregion
@@ -56,11 +56,6 @@ end
 --========
 
 --- Virtual function.
----@param buff Buff
----@return boolean
-function public:checkConditions(buff) end
-
---- Virtual function.
 --- Return true if started successfully.
 ---@param buff Buff
 function public:onStart(buff) end
@@ -78,10 +73,8 @@ function public:onCancel(buff) end
 function public:onFinish(buff) end
 
 --- Virtual function
---- Must return maximum number of charges for buff.
 ---@param buff Buff
----@return number
-function public:getMaxCharges(buff) end
+function public:getDuration(buff) end
 
 --- Virtual function
 ---@param buff Buff

@@ -1,10 +1,12 @@
 LibList = {}
 
-LibList.Ability = 'Libs.Ability.API'
-LibList.Class = 'Libs.Class.API'
+LibList.AbilityLib = 'Libs.Ability.API'
+LibList.BinaryLib = 'Libs.Binary.API'
+LibList.BuffLib = 'Libs.Buff.API'
+LibList.ClassLib = 'Libs.Class.API'
 LibList.DamageLib = 'Libs.Damage.API'
-LibList.Frame = 'Libs.SimpleFrame.API'
-LibList.Parameter = 'Libs.Parameter.API'
-LibList.Utils = 'Libs.Utils.API'
+LibList.FrameLib = 'Libs.SimpleFrame.API'
+LibList.ParameterLib = 'Libs.Parameter.API'
+LibList.UtilsLib = 'Libs.Utils.API'
 
 return LibList

@@ -55,6 +55,11 @@ function override.new(source, target, buff_type, child_instance)
     return instance
 end
 
+---@return number
+function static.getDurationPeriod()
+    return private.duration_period
+end
+
 --========
 -- Public
 --========
@@ -62,103 +67,35 @@ end
 function public:cancel()
     local priv = private.data[self]
 
-    priv.ability_type:onCancel(self)
-    private.casting_list[self] = nil
-    private.caster_list[priv.owner] = nil
-end
-
-function public:interrupt()
-    local priv = private.data[self]
-
-    priv.ability_type:onInterrupt(self)
-    private.casting_list[self] = nil
-    private.caster_list[priv.owner] = nil
-end
-
----@return number
-function public:getLevel()
-    return private.data[self].lvl
-end
-
----@param lvl number
-function public:setLevel(lvl)
-    private.data[self].lvl = lvl
+    priv.buff_type:onCancel(self)
+    private.data[self] = nil
 end
 
 ---@return Unit
-function public:getOwner()
+function public:getSource()
     return private.data[self].owner
 end
 
----@return BuffTarget
+---@return Unit
 function public:getTarget()
     return private.data[self].cur_target
 end
 
 ---@return BuffType
 function public:getType()
-    return private.data[self].ability_type
+    return private.data[self].buff_type
+end
+
+---@param duration number
+function public:setDuration(duration)
+    private.data[self].end_time = private.duration_current_time + duration
 end
 
 ---@return number
-function public:getCastingTimeLeft()
-    local t = private.data[self].casting_end_time - private.casting_current_time
+function public:getDurationLeft()
+    local t = private.data[self].end_time - private.duration_current_time
     if t < 0 then t = 0 end
     return t
-end
-
----@param casting_time number
-function public:setCastingTime(casting_time)
-    private.data[self].casting_end_time = private.casting_current_time + casting_time
-end
-
----@return number
-function public:getChargesLeft()
-    return private.data[self].charges
-end
-
----@param charges number
-function public:setCharges(charges)
-    private.data[self].charges = charges
-end
-
----@return number
-function public:getCooldownTimeLeft()
-    local t = private.data[self].cooldown_end_time - private.cooldown_current_time
-    if t < 0 then t = 0 end
-    return t
-end
-
----@param cooldown number
-function public:setCooldownTime(cooldown)
-    private.data[self].cooldown_end_time = private.cooldown_current_time + cooldown
-end
-
----@param target BuffTarget
----@return boolean
-function public:use(target)
-    local priv = private.data[self]
-    priv.cur_target = target
-    ---@type BuffType
-    local abil_type = priv.ability_type
-
-    if not abil_type:checkConditions(self) then
-        return false
-    end
-
-    if abil_type:getChargesForUse(self) < priv.charges then
-        return false
-    end
-
-    abil_type:onStart(self)
-    priv.charges = priv.charges - priv.ability_type:getChargesForUse(self)
-    priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
-    priv.cooldown_end_time = private.cooldown_current_time + abil_type:getChargeCooldown(self)
-    private.caster_list[priv.owner] = self
-    private.casting_list[self] = priv
-    private.cooldown_list[self] = priv
-
-    return true
 end
 
 --=========
@@ -167,77 +104,43 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.caster_list = setmetatable({}, {__mode = 'kv'})
-private.casting_list = setmetatable({}, {__mode = 'kv'})
-private.cooldown_list = setmetatable({}, {__mode = 'kv'})
-
 ---@param self Buff
----@param owner Unit
----@param lvl number
----@param ability_type BuffType
-function private.newData(self, owner, ability_type, lvl)
+---@param source Unit
+---@param target Unit
+---@param buff_type BuffType
+function private.newData(self, source, target, buff_type)
     local priv = {
-        owner = owner,
-        ability_type = ability_type,
-        lvl = 1,
-
-        cur_target = nil,
-        casting_end_time = 0,
-
-        charges = 0,
-        cooldown_end_time = 0,
+        source = source,
+        target = target,
+        buff_type = buff_type,
     }
     private.data[self] = priv
+
+    priv.end_time = private.duration_current_time + buff_type:getDuration(self)
 end
 
-private.casting_current_time = 0
-function private.castingLoop()
-    local cur_time = private.casting_current_time + 0.05
-    private.casting_current_time = cur_time
+private.duration_current_time = 0
+private.duration_period = 0.05
+function private.durationLoop()
+    local cur_time = private.duration_current_time + private.duration_period
+    private.duration_period = cur_time
 
-    for abil, priv in pairs(private.casting_list) do
+    for buff, priv in pairs(private.data) do
         ---@type BuffType
-        local abil_type = priv.ability_type
+        local buff_type = priv.buff_type
 
-        if priv.casting_end_time <= cur_time then
-            abil_type:onFinish(abil)
-            private.casting_list[abil] = nil
-            private.caster_list[priv.owner] = nil
-            priv.cur_target = nil
+        if priv.end_time <= private.duration_current_time then
+            buff_type:onFinish(buff)
+            private.data[buff] = nil
         else
-            abil_type:onCasting(abil)
-        end
-    end
-end
-
-private.cooldown_current_time = 0
-function private.cooldownLoop()
-    local cur_time = private.cooldown_current_time + 0.05
-    private.cooldown_current_time = cur_time
-
-    for abil, priv in pairs(private.cooldown_list) do
-        ---@type BuffType
-        local abil_type = priv.ability_type
-
-        -- Cancel cooldown if has max charges.
-        if priv.charges >= abil_type:getMaxCharges(abil) then
-            private.cooldown_list[abil] = nil
-        end
-
-        -- Add charge
-        if priv.cooldown_end_time <= cur_time then
-            priv.charges = priv.charges + 1
-            priv.cooldown_end_time = priv.cooldown_end_time + abil_type:getChargeCooldown(abil)
+            buff_type:onTick(buff)
         end
     end
 end
 
 if not IsCompiletime() then
-    private.cooldown_timer = Timer.new()
-    private.cooldown_timer:start(0.05, true, private.cooldownLoop)
-
-    private.casting_timer = Timer.new()
-    private.casting_timer:start(0.05, true, private.castingLoop)
+    private.duration_timer = Timer.new()
+    private.duration_timer:start(private.duration_period, true, private.durationLoop)
 end
 
 return static

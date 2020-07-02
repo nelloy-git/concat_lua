@@ -9,7 +9,7 @@ Lib.start(lib_modname)
 
 
 Lib.current().depencies = {
-    Class = require(LibList.Class),
+    Class = require(LibList.ClassLib),
 }
 
 --=====

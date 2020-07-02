@@ -8,8 +8,8 @@ Lib.start(lib_modname)
 --===========
 
 Lib.current().depencies = {
-    Class = require(LibList.Class),
-    UtilsLib = require(LibList.Utils)
+    Class = require(LibList.ClassLib),
+    UtilsLib = require(LibList.UtilsLib)
 }
 
 --=====

@@ -1,5 +1,5 @@
----@class BuffLib
-local BuffLibAPI = {}
+---@class BinaryLib
+local BinaryLibAPI = {}
 local modname = Compiletime(Lib.getModname())
 Lib.start(modname)
 
@@ -16,11 +16,10 @@ Lib.current().depencies = {
 -- API
 --=====
 
----@type BuffsContainerClass
-BuffLibAPI.Container = require(modname..'.Container')
----@type BuffTypeClass
-BuffLibAPI.Type = require(modname..'.Type')
+---@type BinaryDataUnitClass
+BinaryLibAPI.Unit = require(modname..'.UnitData')
+BinaryLibAPI.UnitDB = require(modname..'.UnitValuesDB')
 
 Lib.finish()
 
-return BuffLibAPI
+return BinaryLibAPI

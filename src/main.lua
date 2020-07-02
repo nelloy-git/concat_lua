@@ -1,13 +1,20 @@
-require('Utils.Globals')
+require('Libs.Lib')
 
 ---@type ParameterLib
-local ParameterAPI = require(LibList.Parameter)
+local ParameterAPI = require(LibList.ParameterLib)
 ---@type AbilityLib
-local AbilityAPI = require(LibList.Ability)
+local AbilityAPI = require(LibList.AbilityLib)
 ---@type UtilsLib
-local UtilsLib = require(LibList.Utils)
+local UtilsLib = require(LibList.UtilsLib)
 ---@type FrameLib
-local FrameLib = require(LibList.Frame)
+local FrameLib = require(LibList.FrameLib)
+---@type BuffLib
+local BuffLib = require(LibList.BuffLib)
+---@type BinaryLib
+local BinaryLib = require(LibList.BinaryLib)
+
+local foo_type = BinaryLib.Unit.new(FourCC('hfoo'), FourCC('U001'), 'TestFootman')
+foo_type:setValue(BinaryLib.UnitDB.Name.value_id, BinaryLib.UnitDB.Name.value_type, 'TestFootman')
 
 local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEBUTTON')
 fdf:setParameter('Width', '0.03')
@@ -44,87 +51,3 @@ param_container = ParameterAPI.UnitContainer.new(u2)
 param_container:addBase(ParameterAPI.PhysicalDamage, 10)
 param_container:addBase(ParameterAPI.Defence, 5)
 param_container:addBase(ParameterAPI.Health, 1000)
-
---local test_abil_type = AbilityAPI.TestType
---local abil_container = AbilityAPI.Container.new(u)
---abil_container:set(1, test_abil_type)
---local abil = abil_container:get(1):use(AbilityAPI.TargetNone.new())
-
---[[
----@type UnitAPI
-local UnitAPI = require('Unit.API')
-local UnitType = UnitAPI.Type
-local UnitTypeClass = UnitAPI.UnitTypeClass
-local Unit = UnitAPI.Unit
-
----@type ItemAPI
-ItemAPI = require('Item.API')
----@type InterfaceAPI
-InterfaceAPI = require('Interface.API')
----@type ParameterAPI
-ParamAPI = require('Parameter.API')
----@type InterfaceFrameParamTableClass
-local ParamTable = require('Interface.Frame.ParamTable')
-
----@type AbilityAPI
-local AbilityAPI = require('Ability.API')
-local Ability = AbilityAPI.Ability
-local TargetUnit = AbilityAPI.TargetUnit
-
---ExampleAbility = require('Ability.Example')
-
-require('Event.Item')
---require('Event.Ability')
---require('Event.Interface')
-
-footman_type = UnitType.new('Footman', UnitTypeClass.UNIT)
-
-if not IsCompiletime() then
-    InterfaceAPI.init()
-
-    u = Unit.new(footman_type, Player(0), -500, -500)
-    u:getParameters():set(ParamAPI.ParamType.Mana, ParamAPI.ValueType.BASE,  500)
-    SetUnitManaPercentBJ(u:getHandleData(), 100)
-
-    u2 = Unit.new(footman_type, Player(1), 0, 0)
-
-    u:getAbilities():set(ExampleAbility, 1)
-    local abil = u:getAbilities():get(1)
-    abil:setMaxCharges(3)
-
-    InterfaceAPI.Bag:setUnitBag(u:getBag())
-    InterfaceAPI.Equip:setUnitEquipment(u:getEquipment())
-
-    local param_table = ParamTable.new()
-    param_table:setBackground()
-    param_table:setPoint(FRAMEPOINT_CENTER, FRAMEPOINT_CENTER, 0, 0)
-    param_table:setUnit(u:getParameters())
-
-    --local targ = TargetUnit.new(u2:getHandleData())
-    --print(targ:getHandleData())
-    --abil:use(targ)
-
-    --UnitAddAbility(u:getHandleData(), ExampleAbility:getId())
-    --u2:destroy()
-    --u2.Param:set(Param.ParamType.Health, Param.ValueType.BASE, 1000)
-
-    --u2 = nil
-
-    it = ItemAPI.Item.new(ItemAPI.ItemType.BELT)
-    it:getParameters():set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.BASE, 10)
-    it:getParameters():set(ParamAPI.ParamType.PDmg, ParamAPI.ValueType.MULT, 0.1)
-    it:getParameters():set(ParamAPI.ParamType.Armor, ParamAPI.ValueType.ADDIT, 5)
-
-    it_model = ItemAPI.ItemModel.new(0, 0)
-    it:setModel(it_model)
-    
-    --InterfaceAPI.setTarget(u, Player(0))
-
-    --it2 = ItemAPI.newItem(0, 0)
-    --it3 = ItemAPI.newItem(0, 0)
-
-    --ItemFrame.new(0.4, 0.3, 0.1, 0.1)
-end
-
-]]
---print(btn:getControlDisabledName())

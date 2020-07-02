@@ -59,6 +59,16 @@ function static.getCastingAbility(caster)
     return private.caster_list[caster]
 end
 
+---@return number
+function static.getCooldownPeriod()
+    return private.cooldown_period
+end
+
+---@return number
+function static.getCastingPeriod()
+    return private.casting_period
+end
+
 --========
 -- Public
 --========
@@ -195,8 +205,9 @@ function private.newData(self, owner, ability_type, lvl)
 end
 
 private.casting_current_time = 0
+private.casting_period = 0.05
 function private.castingLoop()
-    local cur_time = private.casting_current_time + 0.05
+    local cur_time = private.casting_current_time + private.casting_period
     private.casting_current_time = cur_time
 
     for abil, priv in pairs(private.casting_list) do
@@ -215,8 +226,9 @@ function private.castingLoop()
 end
 
 private.cooldown_current_time = 0
+private.cooldown_period = 0.05
 function private.cooldownLoop()
-    local cur_time = private.cooldown_current_time + 0.05
+    local cur_time = private.cooldown_current_time + private.cooldown_period
     private.cooldown_current_time = cur_time
 
     for abil, priv in pairs(private.cooldown_list) do
@@ -238,10 +250,10 @@ end
 
 if not IsCompiletime() then
     private.cooldown_timer = Timer.new()
-    private.cooldown_timer:start(0.05, true, private.cooldownLoop)
+    private.cooldown_timer:start(private.cooldown_period, true, private.cooldownLoop)
 
     private.casting_timer = Timer.new()
-    private.casting_timer:start(0.05, true, private.castingLoop)
+    private.casting_timer:start(private.casting_period, true, private.castingLoop)
 end
 
 return static

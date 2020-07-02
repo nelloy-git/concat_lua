@@ -189,7 +189,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self Frame1
+---@param self Frame
 ---@param is_simpleframe boolean
 function private.newData(self, is_simpleframe)
     local priv = {
