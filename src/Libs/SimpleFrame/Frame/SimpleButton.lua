@@ -15,8 +15,6 @@ local Log = UtilsLib.DefaultLogger
 local SimpleImage = require(lib_modname..'.Frame.SimpleImage')
 ---@type SimpleClickerClass
 local SimpleClicker = require(lib_modname..'.Frame.SimpleClicker')
----@type SimpleTracker
-local SimpleTracker = require(lib_modname..'.Frame.SimpleTracker')
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 
@@ -24,10 +22,10 @@ local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 -- Class
 --=======
 
-local SimpleButton = Class.new('SimpleButton', SimpleImage, SimpleClicker, SimpleTracker)
----@class SimpleButton : SimpleImage, SimpleClicker, SimpleTracker
+local SimpleButton = Class.new('SimpleButton', SimpleImage, SimpleClicker)
+---@class SimpleButton : SimpleClicker, SimpleImage
 local public = SimpleButton.public
----@class SimpleButtonClass : SimpleBaseFrameClass, SimpleClickerClass, SimpleTrackerClass
+---@class SimpleButtonClass : SimpleClickerClass, SimpleImageClass
 local static = SimpleButton.static
 ---@type SimpleButtonClass
 local override = SimpleButton.override
@@ -53,7 +51,6 @@ function override.new(fdf_simplebutton, child_instance)
     local instance = child_instance or Class.allocate(SimpleButton)
     instance = SimpleImage.new(fdf_simplebutton, instance)
     instance = SimpleClicker.new(fdf_simplebutton, instance)
-    instance = SimpleTracker.new(fdf_simplebutton, instance)
 
     return instance
 end

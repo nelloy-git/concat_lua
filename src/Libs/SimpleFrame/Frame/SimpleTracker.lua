@@ -10,6 +10,7 @@ local Class = depencies.Class
 local UtilsLib = depencies.UtilsLib
 local Action = UtilsLib.Action
 local checkType = UtilsLib.Functions.checkType
+local HandlePublic = Class.getPublic(UtilsLib.Handle.Base)
 local Log = UtilsLib.DefaultLogger
 local Timer = UtilsLib.Handle.Timer
 
@@ -116,20 +117,6 @@ function public:addMouseEnterAction(callback)
     return action
 end
 
----@param action Action
----@return boolean
-function public:removeMouseEnterAction(action)
-    local priv = private.data[self]
-
-    for i = 1, #priv.mouse_enter_actions do
-        if action == priv.mouse_enter_actions[i] then
-            table.remove(priv.mouse_enter_actions, i)
-            return true
-        end
-    end
-    return false
-end
-
 ---@param callback SimpleFrameCallback
 ---@return Action
 function public:addMouseLeaveAction(callback)
@@ -143,8 +130,15 @@ end
 
 ---@param action Action
 ---@return boolean
-function public:removeMouseLeaveAction(action)
+function public:removeAction(action)
     local priv = private.data[self]
+
+    for i = 1, #priv.mouse_enter_actions do
+        if action == priv.mouse_enter_actions[i] then
+            table.remove(priv.mouse_enter_actions, i)
+            return true
+        end
+    end
 
     for i = 1, #priv.mouse_leave_actions do
         if action == priv.mouse_leave_actions[i] then
@@ -152,7 +146,17 @@ function public:removeMouseLeaveAction(action)
             return true
         end
     end
+
     return false
+end
+
+function public:destroy()
+    local tooltip = self:getTooltip()
+    local tooltip_fdf = tooltip:getFdf()
+    if tooltip_fdf == private.FdfMouseDetector then
+        tooltip:destroy()
+    end
+    HandlePublic.destroy(self)
 end
 
 --=========
@@ -161,9 +165,10 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
+private.local_player = GetLocalPlayer and GetLocalPlayer() or nil
 private.FdfMouseDetector = FdfFrame.new('DefaultMouseDetector', 'SIMPLEFRAME')
 
----@param self SimpleBaseFrame
+---@param self SimpleTracker
 function private.newData(self)
     local priv = {
         mouse_is_inside = false,
