@@ -12,10 +12,10 @@ local Action = UtilsLib.Action
 local checkType = UtilsLib.Functions.checkType
 local Trigger = UtilsLib.Handle.Trigger
 
+---@type SimpleBaseFrameClass
+local SimpleBaseFrame = require(lib_modname..'.Frame.SimpleBase')
 ---@type SimpleTrackerClass
 local SimpleTracker = require(lib_modname..'.Frame.SimpleTracker')
----@type FdfFrameClass
-local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 
 --=======
 -- Class
@@ -51,18 +51,18 @@ function override.Init()
     inited = true
 end
 
----@param fdf_simplebutton FdfFrame
+---@param frame SimpleBaseFrame
 ---@param child_instance SimpleClicker | nil
 ---@return SimpleClicker
-function override.new(fdf_simplebutton, child_instance)
-    checkType(fdf_simplebutton, FdfFrame, 'fdf_simplebutton')
+function override.new(frame, child_instance)
+    checkType(frame, SimpleBaseFrame, 'fdf_simplebutton')
     if child_instance then
         checkType(child_instance, SimpleClicker, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(SimpleClicker)
-    instance = SimpleTracker.new(fdf_simplebutton, instance)
-    private.newData(instance)
+    instance = SimpleTracker.new(frame, instance)
+    private.newData(instance, frame)
 
     return instance
 end
@@ -125,7 +125,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.local_player = GetLocalPlayer and GetLocalPlayer() or nil
 
 ---@param self SimpleClicker
-function private.newData(self)
+function private.newData(self, frame)
     local priv = {
         is_left_down = false,
         is_right_down = false,

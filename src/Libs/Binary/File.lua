@@ -51,7 +51,7 @@ end
 ---@param data BinaryData
 function public:add(data)
     checkType(data, BinaryData, 'data')
-    table.insert(private.data[self].objects, data)
+    table.insert(private.data[self].data, data)
 end
 
 function public:save()

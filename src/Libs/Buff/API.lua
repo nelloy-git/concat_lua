@@ -20,6 +20,8 @@ Lib.current().depencies = {
 BuffLibAPI.Container = require(modname..'.Container')
 ---@type BuffTypeClass
 BuffLibAPI.Type = require(modname..'.Type')
+---@type BuffType
+BuffLibAPI.TestType = require(modname..'.TestType')
 
 Lib.finish()
 

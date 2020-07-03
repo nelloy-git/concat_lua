@@ -1,0 +1,3 @@
+[0.013] {Msg} Created new FdfFile 'Default' containg:
+    DefaultMouseDetector
+    testFdf

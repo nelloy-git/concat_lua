@@ -11,12 +11,10 @@ local UtilsLib = depencies.UtilsLib
 local Action = UtilsLib.Action
 local checkType = UtilsLib.Functions.checkType
 local HandlePublic = Class.getPublic(UtilsLib.Handle.Base)
-local Log = UtilsLib.DefaultLogger
 local Timer = UtilsLib.Handle.Timer
 
 ---@type SimpleBaseFrameClass
 local SimpleBaseFrame = require(lib_modname..'.Frame.SimpleBase')
-local SimpleBaseFramePublic = Class.getPublic(SimpleBaseFrame)
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 
@@ -24,7 +22,7 @@ local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 -- Class
 --=======
 
-local SimpleTracker = Class.new('SimpleTracker', SimpleBaseFrame)
+local SimpleTracker = Class.new('SimpleTracker')
 ---@class SimpleTracker : SimpleBaseFrame
 local public = SimpleTracker.public
 ---@class SimpleTrackerClass : SimpleBaseFrameClass
@@ -49,22 +47,17 @@ function override.Init(mouse_check_period)
     inited = true
 end
 
----@param fdf_simpleframe FdfFrame
+---@param frame SimpleBaseFrame
 ---@param child_instance SimpleTracker | nil
 ---@return SimpleTracker
-function override.new(fdf_simpleframe, child_instance)
-    checkType(fdf_simpleframe, FdfFrame, 'fdf_simpleframe')
+function override.new(frame, child_instance)
+    checkType(frame, SimpleBaseFrame, 'fdf_simpleframe')
     if child_instance then
         checkType(child_instance, SimpleTracker, 'child_instance')
     end
 
-    if #fdf_simpleframe:getTextures() ~= 1 then
-        Log:err('fdf_frame must have one texture subframe.', 2)
-    end
-
     local instance = child_instance or Class.allocate(SimpleTracker)
-    instance = SimpleBaseFrame.new(fdf_simpleframe, instance)
-    private.newData(instance)
+    private.newData(instance, frame)
 
     return instance
 end
@@ -73,36 +66,10 @@ end
 -- Public
 --========
 
----@param tooltip SimpleBaseFrame
-function public:setTooltip(tooltip)
-    -- Get real tooltip
-    local cur_tooltip = SimpleBaseFramePublic.getTooltip(self)
-    local cur_tooltip_fdf = cur_tooltip:getFdf()
-    if cur_tooltip_fdf == private.FdfMouseDetector then
-        cur_tooltip:destroy()
-    end
-
-    if not tooltip then
-        tooltip = SimpleBaseFrame.new(private.FdfMouseDetector)
-    end
-
-    SimpleBaseFramePublic.setTooltip(self, tooltip)
-end
-
----@return SimpleBaseFrame | nil
-function public:getTooltip()
-    -- Get real tooltip
-    local cur_tooltip = SimpleBaseFramePublic.getTooltip(self)
-    local cur_tooltip_fdf = cur_tooltip:getFdf()
-    -- FdfMouseDetector is hidden.
-    if cur_tooltip_fdf == private.FdfMouseDetector then
-        return nil
-    end
-    return cur_tooltip
-end
-
 function public:isMouseOver()
-    local tooltip = SimpleBaseFramePublic.getTooltip(self)
+    local priv = private.data[self]
+
+    local tooltip = priv.original_get_tooltip(priv.frame)
     return tooltip:getVisible()
 end
 
@@ -150,34 +117,75 @@ function public:removeAction(action)
     return false
 end
 
-function public:destroy()
-    local tooltip = self:getTooltip()
-    local tooltip_fdf = tooltip:getFdf()
-    if tooltip_fdf == private.FdfMouseDetector then
-        tooltip:destroy()
-    end
-    HandlePublic.destroy(self)
-end
-
 --=========
 -- Private
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.frame2tracker = setmetatable({}, {__mode = 'v'})
 
 private.local_player = GetLocalPlayer and GetLocalPlayer() or nil
 private.FdfMouseDetector = FdfFrame.new('DefaultMouseDetector', 'SIMPLEFRAME')
 
 ---@param self SimpleTracker
-function private.newData(self)
+---@param frame SimpleBaseFrame
+function private.newData(self, frame)
     local priv = {
+        frame = frame,
+        tracker = frame:getTooltip() or SimpleBaseFrame.new(private.FdfMouseDetector),
+        original_set_tooltip = frame.setTooltip,
+        original_get_tooltip = frame.getTooltip,
+
         mouse_is_inside = false,
 
         mouse_enter_actions = {},
         mouse_leave_actions = {}
     }
     private.data[self] = priv
-    SimpleBaseFramePublic.setTooltip(self, SimpleBaseFrame.new(private.FdfMouseDetector))
+    private.frame2tracker[frame] = self
+
+    if not frame:getTooltip() then
+        frame:setTooltip(priv.tracker)
+    end
+    frame.setTooltip = private.setFrameTooltip
+    frame.getTooltip = private.getFrameTooltip
+end
+
+---@param frame SimpleBaseFrame
+---@param tooltip SimpleBaseFrame
+function private.setFrameTooltip(frame, tooltip)
+    local self = private.frame2tracker[frame]
+    local priv = private.data[self]
+
+    -- Get real tooltip
+    local cur_tooltip = priv.original_get_tooltip(frame)
+    local cur_tooltip_fdf = cur_tooltip:getFdf()
+
+    if cur_tooltip_fdf == private.FdfMouseDetector then
+        cur_tooltip:destroy()
+    end
+
+    if not tooltip then
+        tooltip = SimpleBaseFrame.new(private.FdfMouseDetector)
+    end
+
+    priv.tracker = tooltip
+    private.data[self].original_set_tooltip(frame, tooltip)
+end
+
+---@param frame SimpleBaseFrame
+---@return SimpleBaseFrame | nil
+function private.getFrameTooltip(frame)
+    local tracker = private.frame2tracker[frame]
+
+    -- Get real tooltip
+    local cur_tooltip = private.data[tracker].original_get_tooltip(frame)
+    local cur_tooltip_fdf = cur_tooltip:getFdf()
+    -- FdfMouseDetector is hidden.
+    if cur_tooltip_fdf == private.FdfMouseDetector then
+        return nil
+    end
+    return cur_tooltip
 end
 
 function private.detectMouseLoop()

@@ -54,7 +54,8 @@ function override.new(fdf_frame, child_instance)
     end
 
     local instance = child_instance or Class.allocate(SimpleBaseFrame)
-    instance = Handle.new(BlzCreateSimpleFrame(fdf_frame:getName(), nil, 0, 0), BlzDestroyFrame, instance)
+    local handle = instance:getHandleData() or BlzCreateSimpleFrame(fdf_frame:getName(), nil, 0, 0)
+    instance = Handle.new(handle, BlzDestroyFrame, instance)
     private.newData(instance, fdf_frame)
 
     return instance

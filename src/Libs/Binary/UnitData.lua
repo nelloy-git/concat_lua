@@ -49,7 +49,7 @@ function override.new(id, base_id, name, child_instance)
     if child_instance then checkType(child_instance, BinaryDataUnit, 'child_instance') end
 
     local instance = child_instance or Class.allocate(BinaryDataUnit)
-    instance = BinaryData(id, base_id, name, instance)
+    instance = BinaryData.new(id, base_id, name, instance)
 
     private.file:add(instance)
 
@@ -66,7 +66,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 local sep = Compiletime(package.config:sub(1,1))
-private.file = BinaryFile.new(GetDstDir()..sep..'war3map.w3u')
+private.file = BinaryFile.new((GetDstDir and GetDstDir() or '')..sep..'war3map.w3u')
 CompileFinal(function() private.file:save() end)
 
 return static

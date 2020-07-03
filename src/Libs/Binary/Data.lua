@@ -51,29 +51,29 @@ end
 
 ---@return string
 function public:getId()
-    return private[self].id
+    return private.data[self].id
 end
 
 ---@return string
 function public:getBaseId()
-    return private[self].base_id
+    return private.data[self].base_id
 end
 
 ---@return string
 function public:getName()
-    return private[self].name
+    return private.data[self].name
 end
 
 ---@param value_id string
 ---@param value_type string | 'bool' | 'int' | 'real' | 'unreal' | 'string'
 ---@param value any
 function public:setValue(value_id, value_type, value)
-    if value_type ~= 'bool' or
-       value_type ~= 'int' or
-       value_type ~= 'real' or
-       value_type ~= 'unreal' or
-       value_type ~= 'string' then
-        Log:err('Unavailable \'value_type\'.', 2)
+    if not (value_type == 'bool' or
+       value_type == 'int' or
+       value_type == 'real' or
+       value_type == 'unreal' or
+       value_type == 'string') then
+        Log:err('Unavailable \'value_type\'. Got '..value_type, 2)
     end
     checkType(value_id, 'string', 'value_id')
     checkType(value, value_type, 'value')
@@ -100,8 +100,8 @@ function public:serialize()
     end
 
     -- Adds header
-    bytes = private.int2bytes(priv.base_id)..     -- Base (parent's) id
-            private.int2bytes(priv.id)..          -- New id
+    bytes = private.id2bytes(priv.base_id)..     -- Base (parent's) id
+            private.id2bytes(priv.id)..          -- New id
             private.int2bytes(changes_count)..    -- Changes count
             bytes
 
@@ -127,6 +127,14 @@ function private.newData(self, id, base_id, name)
         values = {}
     }
     private.data[self] = priv
+end
+
+function private.id2bytes(id)
+    local bytes = ''
+    for i = 0, 3 do
+        bytes = string.char(id >> (8 * i) & 0xFF)..bytes
+    end
+    return bytes
 end
 
 ---@param data integer

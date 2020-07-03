@@ -62,7 +62,6 @@ end
 function public:checkConditions(abil) end
 
 --- Virtual function.
---- Return true if started successfully.
 ---@param abil Ability
 function public:onStart(abil) end
 

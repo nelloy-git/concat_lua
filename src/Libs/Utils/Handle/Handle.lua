@@ -40,6 +40,10 @@ function override.new(handle, destructor, child_instance)
         checkType(child_instance, Handle, 'child_instance')
     end
 
+    if child_instance and private.data[child_instance] then
+        Log:err('Handle instance already has connected handle.', 2)
+    end
+
     if private.db[handle] then
         Log:err('handle data can have only one connected Handle instance.', 2)
     end
@@ -64,7 +68,7 @@ end
 --- Returns handle data.
 ---@return handle
 function public:getHandleData()
-    return private.data[self].handle
+    return private.data[self] and private.data[self].handle or nil
 end
 
 --- Destroy handle data.
@@ -85,7 +89,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.db = setmetatable({}, {__mode = 'kv'})
+private.db = setmetatable({}, {__mode = 'v'})
 
 ---@param self Handle
 ---@param handle handle

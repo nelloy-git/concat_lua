@@ -71,7 +71,9 @@ function public:getAll()
     local priv = private.data[self]
     local copy = {}
     for i = 1, #priv.list do
-        table.insert(copy, priv.list[i])
+        if priv.list[i]:getDurationLeft() > 0 then
+            table.insert(copy, priv.list[i])
+        end
     end
     return copy
 end

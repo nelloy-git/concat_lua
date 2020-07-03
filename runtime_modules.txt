@@ -60,6 +60,7 @@ src/Libs/Buff/API.lua
 src/Libs/Buff/Container.lua
 src/Libs/Buff/Buff.lua
 src/Libs/Buff/Type.lua
+src/Libs/Buff/TestType.lua
 src/Libs/Binary/API.lua
 src/Libs/Binary/UnitData.lua
 src/Libs/Binary/File.lua

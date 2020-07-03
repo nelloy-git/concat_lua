@@ -59,10 +59,12 @@ function static.init(static_filename)
                 os.execute('rm -r '..private.full_dst_path)
             end
         end
-        
+
         CompileFinal(function() private.static_file:save() end)
     else
-        BlzLoadTOCFile(private.dst_path..static_filename..'.toc')
+        if not BlzLoadTOCFile(private.dst_path..static_filename..'.toc') then
+            Log:err('Can not load '..private.dst_path..static_filename..'.toc')
+        end
     end
 end
 
@@ -109,7 +111,7 @@ function public:save()
     fdf:close()
 
     local toc = assert(io.open(private.full_dst_path..priv.name..'.toc', "w"))
-    toc:write(private.dst_path..priv.name..".fdf\n")
+    toc:write(private.dst_path..priv.name..".fdf\n\n\n")
     toc:close()
 
     Log:msg(log_msg)
@@ -122,6 +124,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 local sep = Compiletime(package.config:sub(1,1))
+if not IsCompiletime() then sep = '\\\\' end
 private.dst_path = 'GeneratedFdfFiles'..sep
 if IsCompiletime() then
     private.full_dst_path = GetDstDir()..sep..private.dst_path

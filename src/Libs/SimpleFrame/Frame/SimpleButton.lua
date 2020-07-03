@@ -22,7 +22,7 @@ local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 -- Class
 --=======
 
-local SimpleButton = Class.new('SimpleButton', SimpleImage, SimpleClicker)
+local SimpleButton = Class.new('SimpleButton', SimpleImage)
 ---@class SimpleButton : SimpleClicker, SimpleImage
 local public = SimpleButton.public
 ---@class SimpleButtonClass : SimpleClickerClass, SimpleImageClass
@@ -50,7 +50,7 @@ function override.new(fdf_simplebutton, child_instance)
 
     local instance = child_instance or Class.allocate(SimpleButton)
     instance = SimpleImage.new(fdf_simplebutton, instance)
-    instance = SimpleClicker.new(fdf_simplebutton, instance)
+    private.newData(instance)
 
     return instance
 end
@@ -60,7 +60,71 @@ end
 --========
 
 --=========
+-- Tracker
+--=========
+
+---@return boolean
+function public:isMouseOver()
+    return private.data[self].controller:isMouseOver()
+end
+
+---@param callback SimpleFrameCallback
+---@return Action
+function public:addMouseEnterAction(callback)
+    return private.data[self].controller:addMouseEnterAction(callback)
+end
+
+---@param callback SimpleFrameCallback
+---@return Action
+function public:addMouseLeaveAction(callback)
+    return private.data[self].controller:addMouseLeaveAction(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    return private.data[self].controller:removeAction(action)
+end
+
+---@param callback SimpleFrameCallback
+---@return Action
+function public:addMouseDownAction(mouse_btn, callback)
+    return private.data[self].controller:addMouseDownAction(mouse_btn, callback)
+end
+
+---@param callback SimpleFrameCallback
+---@return Action
+function public:addMouseUpAction(mouse_btn, callback)
+    return private.data[self].controller:addMouseUpAction(mouse_btn, callback)
+end
+
+---@param callback SimpleFrameCallback
+---@return Action
+function public:addMouseClickAction(mouse_btn, callback)
+    return private.data[self].controller:addMouseClickAction(mouse_btn, callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    return private.data[self].controller:removeAction(action)
+end
+
+
+--=========
+-- Clicker
+--=========
+
+
+--=========
 -- Private
 --=========
+
+private.data = setmetatable({}, {__mode = 'k'})
+
+function private.newData(self)
+    local priv = {controller = SimpleClicker.new(self)}
+    private.data[self] = priv
+end
 
 return static

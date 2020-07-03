@@ -30,9 +30,9 @@ FrameLib.FdfLayer = require(lib_modname..'.FdfEdit.Layer')
 FrameLib.SimpleBase = require(lib_modname..'.Frame.SimpleBase')
 ---@type SimpleButtonClass
 FrameLib.SimpleButton = require(lib_modname..'.Frame.SimpleButton')
-FrameLib.SimpleButton.Init()
 ---@type SimpleClickerClass
 FrameLib.SimpleClicker = require(lib_modname..'.Frame.SimpleClicker')
+FrameLib.SimpleClicker.Init()
 ---@type SimpleImageClass
 FrameLib.SimpleImage = require(lib_modname..'.Frame.SimpleImage')
 ---@type SimpleTrackerClass

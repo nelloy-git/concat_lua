@@ -13,7 +13,9 @@ local BuffLib = require(LibList.BuffLib)
 ---@type BinaryLib
 local BinaryLib = require(LibList.BinaryLib)
 
-local foo_type = BinaryLib.Unit.new(FourCC('hfoo'), FourCC('U001'), 'TestFootman')
+FourCC = FourCC or function(id) return string.unpack(">I4", id) end
+
+local foo_type = BinaryLib.Unit.new(FourCC('U001'), FourCC('hfoo'), 'TestFootman')
 foo_type:setValue(BinaryLib.UnitDB.Name.value_id, BinaryLib.UnitDB.Name.value_type, 'TestFootman')
 
 local fdf = FrameLib.FdfFrame.new('testFdf', 'SIMPLEBUTTON')
@@ -40,14 +42,17 @@ test_frame:addMouseDownAction(MOUSE_BUTTON_TYPE_LEFT, function() print('Down') e
 test_frame:addMouseUpAction(MOUSE_BUTTON_TYPE_LEFT, function() print('Up') end)
 test_frame:addMouseClickAction(MOUSE_BUTTON_TYPE_LEFT, function() print('Click') end)
 
-local u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
+local u = UtilsLib.Handle.Unit.new(foo_type:getId(), 0, 0, Player(0))
 local param_container = ParameterAPI.UnitContainer.new(u)
+local buff_container = BuffLib.Container.new(u)
 param_container:addBase(ParameterAPI.PhysicalDamage, 10)
 param_container:addBase(ParameterAPI.Defence, 5)
 param_container:addBase(ParameterAPI.Health, 1000)
 
-local u2 = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
-param_container = ParameterAPI.UnitContainer.new(u2)
-param_container:addBase(ParameterAPI.PhysicalDamage, 10)
-param_container:addBase(ParameterAPI.Defence, 5)
-param_container:addBase(ParameterAPI.Health, 1000)
+local u2 = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(1))
+local param_container2 = ParameterAPI.UnitContainer.new(u2)
+local buff_container2 = BuffLib.Container.new(u2)
+buff_container2:addBuff(BuffLib.TestType, u)
+param_container2:addBase(ParameterAPI.PhysicalDamage, 10)
+param_container2:addBase(ParameterAPI.Defence, 5)
+param_container2:addBase(ParameterAPI.Health, 1000)
