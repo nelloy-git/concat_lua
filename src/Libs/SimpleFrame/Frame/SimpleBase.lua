@@ -19,9 +19,13 @@ local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 local FdfLayer = require(lib_modname..'.FdfEdit.Layer')
 ---@type FdfTextureClass
 local FdfTexture = require(lib_modname..'.FdfEdit.Texture')
+---@type FdfStringClass
+local FdfString = require(lib_modname..'.FdfEdit.String')
 
 ---@type LayerSubrameClass
 local Layer = require(lib_modname..'.Frame.Layer')
+---@type StringSubrameClass
+local String = require(lib_modname..'.Frame.String')
 ---@type TextureSubrameClass
 local Texture = require(lib_modname..'.Frame.Texture')
 
@@ -77,9 +81,15 @@ function public:getTexture(i)
 end
 
 ---@param i number
+---@return StringSubrame | nil
+function public:getString(i)
+    return private.data[self].strings[i]
+end
+
+---@param name string
 ---@return LayerSubrame | nil
-function public:getLayer(i)
-    return private.data[self].layers[i]
+function public:getLayer(name)
+    return private.data[self].layers[name]
 end
 
 ---@param i number
@@ -271,6 +281,7 @@ function private.newData(self, fdf_frame)
         alpha = 0,
 
         textures = {},
+        strings = {},
         layers = {},
         subframes = {}
     }
@@ -282,17 +293,23 @@ function private.newData(self, fdf_frame)
         priv.textures[i] = Texture.new(fdf_textures[i])
     end
 
+    local fdf_strings = fdf_frame:getStrings()
+    for i = 1, #fdf_strings do
+        checkType(fdf_strings[i], FdfString, 'fdf_strings['..tostring(i)..']')
+        priv.strings[i] = String.new(fdf_strings[i])
+    end
+
     local fdf_layers = fdf_frame:getLayers()
     for i = 1, #fdf_layers do
-        checkType(fdf_layers[i], FdfTexture, 'fdf_layers['..tostring(i)..']')
-        priv.layers[i] = Layer.new(fdf_layers[i])
+        checkType(fdf_layers[i], FdfLayer, 'fdf_layers['..tostring(i)..']')
+        priv.layers[fdf_layers[i]:getBaseName()] = Layer.new(fdf_layers[i])
     end
 
     local fdf_subframes = fdf_frame:getSubframes()
     for i = 1, #fdf_subframes do
         checkType(fdf_subframes[i], SimpleBaseFrame, 'fdf_subframes['..tostring(i)..']')
         priv.subframes[i] = Handle.getLinked(BlzGetFrameByName(fdf_subframes[i]:getName(), 0))
-        checkType(priv.subframes[i], private.SimpleBaseFrame, 'linked Handle')
+        checkType(priv.subframes[i], private.SimpleBaseFrame, 'linked Handle['..tostring(i)..']')
     end
 end
 

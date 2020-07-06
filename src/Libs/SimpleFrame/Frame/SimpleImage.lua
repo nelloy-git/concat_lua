@@ -15,6 +15,8 @@ local Log = UtilsLib.DefaultLogger
 local SimpleBaseFrame = require(lib_modname..'.Frame.SimpleBase')
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
+---@type FdfLayerClass
+local FdfTexture = require(lib_modname..'.FdfEdit.Texture')
 
 --=======
 -- Class
@@ -37,7 +39,12 @@ local private = {}
 ---@param child_instance SimpleImage | nil
 ---@return SimpleImage
 function override.new(fdf_simpleframe, child_instance)
-    checkType(fdf_simpleframe, FdfFrame, 'fdf_simpleframe')
+    if fdf_simpleframe then
+        checkType(fdf_simpleframe, FdfFrame, 'fdf_simpleframe')
+    else
+        fdf_simpleframe = private.default_fdf
+    end
+
     if child_instance then
         checkType(child_instance, SimpleImage, 'child_instance')
     end
@@ -66,5 +73,16 @@ end
 --=========
 -- Private
 --=========
+
+private.default_fdf = FdfFrame.new('DefaultSimpleImage', 'SIMPLEFRAME')
+
+do
+    local fdf = private.default_fdf
+    fdf:setParameter('Width', '0.04')
+    fdf:setParameter('Height', '0.04')
+        local texture = FdfTexture.new('DefaultSimpleImageTexture')
+        texture:setParameter('File', '\"\"')
+        fdf:addTexture(texture)
+end
 
 return static

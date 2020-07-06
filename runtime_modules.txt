@@ -48,10 +48,13 @@ src/Libs/SimpleFrame/API.lua
 src/Libs/SimpleFrame/FdfEdit/File.lua
 src/Libs/SimpleFrame/FdfEdit/Frame.lua
 src/Libs/SimpleFrame/FdfEdit/Texture.lua
+src/Libs/SimpleFrame/FdfEdit/String.lua
 src/Libs/SimpleFrame/FdfEdit/Layer.lua
+src/Libs/SimpleFrame/Frame/SimpleBar.lua
 src/Libs/SimpleFrame/Frame/SimpleBase.lua
 src/Libs/SimpleFrame/Frame/Layer.lua
 src/Libs/SimpleFrame/Frame/Texture.lua
+src/Libs/SimpleFrame/Frame/String.lua
 src/Libs/SimpleFrame/Frame/SimpleButton.lua
 src/Libs/SimpleFrame/Frame/SimpleImage.lua
 src/Libs/SimpleFrame/Frame/SimpleClicker.lua

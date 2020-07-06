@@ -23,9 +23,13 @@ FrameLib.FdfFile.init('Default')
 FrameLib.FdfFrame = require(lib_modname..'.FdfEdit.Frame')
 ---@type FdfTextureClass
 FrameLib.FdfTexture = require(lib_modname..'.FdfEdit.Texture')
+---@type FdfStringClass
+FrameLib.FdfString = require(lib_modname..'.FdfEdit.String')
 ---@type FdfLayerClass
 FrameLib.FdfLayer = require(lib_modname..'.FdfEdit.Layer')
 
+---@type SimpleBarClass
+FrameLib.SimpleBar = require(lib_modname..'.Frame.SimpleBar')
 ---@type SimpleBaseFrameClass
 FrameLib.SimpleBase = require(lib_modname..'.Frame.SimpleBase')
 ---@type SimpleButtonClass

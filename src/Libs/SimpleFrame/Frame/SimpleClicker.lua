@@ -16,6 +16,7 @@ local Trigger = UtilsLib.Handle.Trigger
 local SimpleBaseFrame = require(lib_modname..'.Frame.SimpleBase')
 ---@type SimpleTrackerClass
 local SimpleTracker = require(lib_modname..'.Frame.SimpleTracker')
+local SimpleTrackerPublic = Class.getPublic(SimpleTracker)
 
 --=======
 -- Class
@@ -114,7 +115,7 @@ function public:removeAction(action)
     elseif private.removeAction(priv, action, MOUSE_BUTTON_TYPE_RIGHT) then
         return true
     end
-    return false
+    return SimpleTrackerPublic.removeAction(self, action)
 end
 
 --=========

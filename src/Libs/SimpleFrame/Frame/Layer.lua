@@ -13,8 +13,12 @@ local Handle = UtilsLib.Handle.Base
 
 ---@type FdfLayerClass
 local FdfLayer = require(lib_modname..'.FdfEdit.Layer')
+---@type FdfStringClass
+local FdfString = require(lib_modname..'.FdfEdit.String')
 ---@type TextureSubrameClass
 local Texture = require(lib_modname..'.Frame.Texture')
+---@type FdfStringClass
+local String = require(lib_modname..'.Frame.String')
 
 --=======
 -- Class
@@ -70,6 +74,12 @@ function public:getTexture(i)
 end
 
 ---@param i number
+---@return StringSubrame | nil
+function public:getString(i)
+    return private.data[self].strings[i]
+end
+
+---@param i number
 ---@return SimpleBaseFrame
 function public:getSubframe(i)
     return private.data[self].subframes[i]
@@ -89,6 +99,7 @@ function private.newData(self, fdf_layer)
         fdf = fdf_layer,
 
         textures = {},
+        strings = {},
         subframes = {}
     }
     private.data[self] = priv
@@ -98,7 +109,13 @@ function private.newData(self, fdf_layer)
         priv.textures[i] = Texture.new(fdf_textures[i])
     end
 
-    private.SimpleBaseFrame = private.SimpleBaseFrame or require(lib_modname..'.Frame.Base')
+    local fdf_strings = fdf_layer:getStrings()
+    for i = 1, #fdf_strings do
+        checkType(fdf_strings[i], FdfString, 'fdf_strings['..tostring(i)..']')
+        priv.strings[i] = String.new(fdf_strings[i])
+    end
+
+    private.SimpleBaseFrame = private.SimpleBaseFrame or require(lib_modname..'.Frame.SimpleBase')
     local fdf_subframes = fdf_layer:getSubframes()
     for i = 1, #fdf_subframes do
         priv.subframes[i] = Handle.getLinked(BlzGetFrameByName(fdf_subframes[i]:getName(), 0))

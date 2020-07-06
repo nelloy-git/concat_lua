@@ -70,11 +70,14 @@ end
 function public:getAll()
     local priv = private.data[self]
     local copy = {}
+    local new_list = {}
     for i = 1, #priv.list do
         if priv.list[i]:getDurationLeft() > 0 then
             table.insert(copy, priv.list[i])
+            table.insert(new_list, priv.list[i])
         end
     end
+    priv.list = new_list
     return copy
 end
 
@@ -83,11 +86,16 @@ end
 function public:getByType(buff_type)
     local priv = private.data[self]
     local copy = {}
+    local new_list = {}
     for i = 1, #priv.list do
-        if priv.list[i]:getType() == buff_type then
-            table.insert(copy, priv.list[i])
+        if priv.list[i]:getDurationLeft() > 0 then
+            table.insert(new_list, priv.list[i])
+            if priv.list[i]:getType() == buff_type then
+                table.insert(copy, priv.list[i])
+            end
         end
     end
+    priv.list = new_list
     return copy
 end
 

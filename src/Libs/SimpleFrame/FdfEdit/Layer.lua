@@ -14,6 +14,8 @@ local Log = UtilsLib.DefaultLogger
 local FdfFile = require(lib_modname..'.FdfEdit.File')
 ---@type FdfTextureClass
 local FdfTexture = require(lib_modname..'.FdfEdit.Texture')
+---@type FdfStringClass
+local FdfString = require(lib_modname..'.FdfEdit.String')
 
 --=======
 -- Class
@@ -93,6 +95,26 @@ function public:getTextures()
     return copy
 end
 
+--- Do nothing in runtime.
+---@param string FdfString
+function public:addString(string)
+    checkType(string, FdfString, 'string')
+
+    local priv = private.data[self]
+    table.insert(priv.strings, string)
+end
+
+---@return table
+function public:getStrings()
+    local priv = private.data[self]
+    local copy = {}
+    for i = 1, #priv.strings do
+        copy[i] = priv.strings[i]
+    end
+
+    return copy
+end
+
 ---@param subframe FdfLayer
 function public:addSubframe(subframe)
     checkType(subframe, FdfLayer, 'subframe')
@@ -147,6 +169,7 @@ function private.newData(self, base_type)
         base_type = base_type,
         params = {},
         textures = {},
+        strings = {},
         subframes = {},
     }
     private.data[self] = priv

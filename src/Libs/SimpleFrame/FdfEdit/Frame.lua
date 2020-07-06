@@ -9,12 +9,13 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkType = UtilsLib.Functions.checkType
-local CompiletimeData = UtilsLib.CompiletimeData
 local Log = UtilsLib.DefaultLogger
 ---@type FdfFileClass
 local FdfFile = require(lib_modname..'.FdfEdit.File')
 ---@type FdfTextureClass
 local FdfTexture = require(lib_modname..'.FdfEdit.Texture')
+---@type FdfStringClass
+local FdfString = require(lib_modname..'.FdfEdit.String')
 ---@type FdfLayerClass
 local FdfLayer = require(lib_modname..'.FdfEdit.Layer')
 
@@ -114,6 +115,26 @@ function public:getTextures()
 end
 
 --- Do nothing in runtime.
+---@param string FdfString
+function public:addString(string)
+    checkType(string, FdfString, 'string')
+
+    local priv = private.data[self]
+    table.insert(priv.strings, string)
+end
+
+---@return table
+function public:getStrings()
+    local priv = private.data[self]
+    local copy = {}
+    for i = 1, #priv.strings do
+        copy[i] = priv.strings[i]
+    end
+
+    return copy
+end
+
+--- Do nothing in runtime.
 ---@param layer FdfLayer
 function public:addLayer(layer)
     checkType(layer, FdfLayer, 'layer')
@@ -194,6 +215,7 @@ function private.newData(self, name, base_type, fdf_file)
         name = name,
         params = {},
         textures = {},
+        strings = {},
         layers = {},
         subframes = {},
 

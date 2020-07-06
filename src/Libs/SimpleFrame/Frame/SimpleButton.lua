@@ -44,10 +44,6 @@ function override.new(fdf_simplebutton, child_instance)
         checkType(child_instance, SimpleButton, 'child_instance')
     end
 
-    if fdf_simplebutton:getBaseType() ~= 'SIMPLEBUTTON' then
-        Log:err('fdf_frame has wrong base type.', 2)
-    end
-
     local instance = child_instance or Class.allocate(SimpleButton)
     instance = SimpleImage.new(fdf_simplebutton, instance)
     private.newData(instance)
@@ -58,10 +54,6 @@ end
 --========
 -- Public
 --========
-
---=========
--- Tracker
---=========
 
 ---@return boolean
 function public:isMouseOver()
@@ -78,12 +70,6 @@ end
 ---@return Action
 function public:addMouseLeaveAction(callback)
     return private.data[self].controller:addMouseLeaveAction(callback)
-end
-
----@param action Action
----@return boolean
-function public:removeAction(action)
-    return private.data[self].controller:removeAction(action)
 end
 
 ---@param callback SimpleFrameCallback
@@ -109,12 +95,6 @@ end
 function public:removeAction(action)
     return private.data[self].controller:removeAction(action)
 end
-
-
---=========
--- Clicker
---=========
-
 
 --=========
 -- Private
