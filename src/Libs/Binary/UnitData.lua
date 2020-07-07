@@ -15,7 +15,6 @@ local checkType = UtilsLib.Functions.checkType
 local BinaryFile = require(lib_modname..'.File')
 ---@type BinaryDataClass
 local BinaryData = require(lib_modname..'.Data')
-local BinaryDataPublic = Class.getPublic(BinaryData)
 --endregion
 
 --=======
@@ -37,19 +36,19 @@ local private = {}
 -- Static
 --=========
 
----@param id number
+---@param new_id number
 ---@param base_id number
 ---@param name string | nil
 ---@param child_instance BinaryDataUnit | nil
 ---@return BinaryDataUnit
-function override.new(id, base_id, name, child_instance)
-    checkType(id, 'number', 'id')
+function override.new(new_id, base_id, name, child_instance)
+    checkType(new_id, 'number', 'new_id')
     checkType(base_id, 'number', 'base_id')
     if name then checkType(name, 'string', 'name') end
     if child_instance then checkType(child_instance, BinaryDataUnit, 'child_instance') end
 
     local instance = child_instance or Class.allocate(BinaryDataUnit)
-    instance = BinaryData.new(id, base_id, name, instance)
+    instance = BinaryData.new(new_id, base_id, name, instance)
 
     private.file:add(instance)
 
