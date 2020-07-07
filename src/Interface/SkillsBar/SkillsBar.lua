@@ -146,6 +146,11 @@ function private.updateSize(self)
     end
 end
 
+private.color_health = '|cFFC00000'
+private.color_mana = '|cFF5050FF'
+private.color_charges = '|cFFC0C000'
+private.color_end = '|r'
+
 ---@param self InterfaceSkillsBar
 ---@param i number
 function private.updateData(self, i)
@@ -158,7 +163,10 @@ function private.updateData(self, i)
     priv.buttons[i]:setTextureFile(abil_type:getIcon(abil), 0, true)
     local name = abil_type:getName(abil)
     local description = abil_type:getTooltip(abil)
-    local resources = tostring(abil_type:getChargesForUse(abil))
+    local hp = private.color_health..tostring(abil_type:getHealthCost(abil))..private.color_end
+    local mp = private.color_mana..tostring(abil_type:getManaCost(abil))..private.color_end
+    local ch = private.color_charges..tostring(abil_type:getChargesForUse(abil))..private.color_end
+    local resources = tostring(hp..'/'..mp..'/'..ch)
     priv.tooltips[i]:set(name, description, resources)
 end
 

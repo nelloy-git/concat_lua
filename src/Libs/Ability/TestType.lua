@@ -54,6 +54,14 @@ function TestAbilityType:getChargesForUse(abil)
     return 1
 end
 
+function TestAbilityType:getManaCost(abil)
+    return 10
+end
+
+function TestAbilityType:getHealthCost(abil)
+    return 5
+end
+
 function TestAbilityType:getName(abil)
     return 'TestName'
 end

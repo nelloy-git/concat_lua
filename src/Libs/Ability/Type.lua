@@ -106,6 +106,18 @@ function public:getMaxCharges(abil) end
 function public:getChargesForUse(abil) end
 
 --- Virtual function
+--- Must return number of charges consumed for use.
+---@param abil Ability
+---@return number
+function public:getManaCost(abil) end
+
+--- Virtual function
+--- Must return number of charges consumed for use.
+---@param abil Ability
+---@return number
+function public:getHealthCost(abil) end
+
+--- Virtual function
 ---@param abil Ability
 ---@return string
 function public:getName(abil) end

@@ -98,6 +98,16 @@ function public:getOwner()
     return private.data[self].owner
 end
 
+---@return number
+function public:getMana()
+    return GetUnitState(self:getHandleData(), UNIT_STATE_MANA)
+end
+
+---@return number
+function public:getHealth()
+    return GetUnitState(self:getHandleData(), UNIT_STATE_LIFE)
+end
+
 --=========
 -- Private
 --=========

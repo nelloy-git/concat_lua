@@ -164,6 +164,14 @@ function public:use(target)
         return false
     end
 
+    if abil_type:getManaCost(self) < priv.owner:getMana() then
+        return false
+    end
+
+    if abil_type:getHealthCost(self) < priv.owner:getHealth() then
+        return false
+    end
+
     abil_type:onStart(self)
     priv.charges = priv.charges - priv.ability_type:getChargesForUse(self)
     priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
