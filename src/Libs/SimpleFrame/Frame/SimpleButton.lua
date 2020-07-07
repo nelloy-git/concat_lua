@@ -17,6 +17,8 @@ local SimpleImage = require(lib_modname..'.Frame.SimpleImage')
 local SimpleClicker = require(lib_modname..'.Frame.SimpleClicker')
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.FdfEdit.Frame')
+---@type FdfLayerClass
+local FdfTexture = require(lib_modname..'.FdfEdit.Texture')
 
 --=======
 -- Class
@@ -35,13 +37,21 @@ local private = {}
 -- Static
 --=========
 
----@param fdf_simplebutton FdfFrame
+---@param fdf_simplebutton FdfFrame | nil
 ---@param child_instance SimpleButton | nil
 ---@return SimpleButton
 function override.new(fdf_simplebutton, child_instance)
-    checkType(fdf_simplebutton, FdfFrame, 'fdf_simpleframe')
+    if fdf_simplebutton then
+        checkType(fdf_simplebutton, FdfFrame, 'fdf_simpleframe')
+    else
+        fdf_simplebutton = private.default_fdf
+    end
     if child_instance then
         checkType(child_instance, SimpleButton, 'child_instance')
+    end
+
+    if fdf_simplebutton:getBaseType() ~= 'SIMPLEBUTTON' then
+        Log:err('fdf_simplebutton has wrong base type.', 2)
     end
 
     local instance = child_instance or Class.allocate(SimpleButton)
@@ -101,6 +111,16 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+
+private.default_fdf = FdfFrame.new('DefaultSimpleButton', 'SIMPLEBUTTON')
+do
+    local fdf = private.default_fdf
+    fdf:setParameter('Width', '0.04')
+    fdf:setParameter('Height', '0.04')
+        local texture = FdfTexture.new('DefaultSimpleButtonTexture')
+        texture:setParameter('File', '\"\"')
+        fdf:addTexture(texture)
+end
 
 function private.newData(self)
     local priv = {controller = SimpleClicker.new(self)}

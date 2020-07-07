@@ -3589,9 +3589,9 @@ end
 ---@return integer
 function UnitInventoryCount(whichUnit)
 	---@type integer
-	index = 0
+	local index = 0
 	---@type integer
-	count = 0
+	local count = 0
 	
 	while true do
 		if (UnitItemInSlot(whichUnit, index) ~= nil) then

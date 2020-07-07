@@ -146,6 +146,9 @@ function public:serialize()
     for i = 1, #priv.textures do
         res = res..'\n'..priv.textures[i]:serialize():gsub('\n', '\n    ')..'\n'
     end
+    for i = 1, #priv.strings do
+        res = res..'\n'..priv.strings[i]:serialize():gsub('\n', '\n    ')..'\n'
+    end
     for i = 1, #priv.subframes do
         ---@type string
         local sub_res = priv.subframes[i]:serialize()

@@ -177,10 +177,18 @@ function public:setWidth(width)
     BlzFrameSetSize(self:getHandleData(), width, private.data[self].height)
 end
 
+function public:getWidth()
+    return private.data[self].width
+end
+
 ---@param height number
 function public:setHeight(height)
     private.data[self].height = height
     BlzFrameSetSize(self:getHandleData(), private.data[self].width, height)
+end
+
+function public:getHeight()
+    return private.data[self].height
 end
 
 ---@param width number
@@ -302,7 +310,7 @@ function private.newData(self, fdf_frame)
     local fdf_layers = fdf_frame:getLayers()
     for i = 1, #fdf_layers do
         checkType(fdf_layers[i], FdfLayer, 'fdf_layers['..tostring(i)..']')
-        priv.layers[fdf_layers[i]:getBaseName()] = Layer.new(fdf_layers[i])
+        priv.layers[fdf_layers[i]:getBaseType()] = Layer.new(fdf_layers[i])
     end
 
     local fdf_subframes = fdf_frame:getSubframes()

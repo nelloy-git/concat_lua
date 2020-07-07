@@ -7,7 +7,6 @@ Lib.start(lib_modname)
 -- Depencies
 --===========
 
-
 Lib.current().depencies = {
     Class = require(LibList.ClassLib),
 }
@@ -18,6 +17,8 @@ Lib.current().depencies = {
 
 ---@type ActionClass
 UtilsLibAPI.Action = require(lib_modname..'.Action')
+---@type DataSyncClass
+UtilsLibAPI.DataSync = require(lib_modname..'.DataSync')
 ---@type UtilsFunctions
 UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 ---@type LoggerClass

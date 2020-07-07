@@ -54,7 +54,7 @@ function override.new(fdf_simplebar, child_instance)
     end
 
     if fdf_simplebar:getBaseType() ~= 'SIMPLESTATUSBAR' then
-        Log:err('fdf_frame has wrong base type.', 2)
+        Log:err('fdf_simplebar has wrong base type.', 2)
     end
 
     local layers = fdf_simplebar:getLayers()

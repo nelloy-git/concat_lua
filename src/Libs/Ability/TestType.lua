@@ -51,20 +51,19 @@ function TestAbilityType:getMaxCharges(abil)
 end
 
 function TestAbilityType:getChargesForUse(abil)
-    Log:msg('getChargesForUse')
     return 1
 end
 
 function TestAbilityType:getName(abil)
-    Log:msg('getName')
+    return 'TestName'
 end
 
 function TestAbilityType:getIcon(abil)
-    Log:msg('getIcon')
+    return "ReplaceableTextures\\\\CommandButtons\\\\BTNAcidBomb.blp"
 end
 
 function TestAbilityType:getTooltip(abil)
-    Log:msg('getTooltip')
+    return 'TestTooltip'
 end
 
 
