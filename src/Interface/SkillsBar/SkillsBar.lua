@@ -146,6 +146,7 @@ function private.updateSize(self)
     end
 end
 
+private.color_name = '|cFFC0C000'
 private.color_health = '|cFFC00000'
 private.color_mana = '|cFF5050FF'
 private.color_charges = '|cFFC0C000'
@@ -161,7 +162,7 @@ function private.updateData(self, i)
     local abil_type = abil:getType()
 
     priv.buttons[i]:setTextureFile(abil_type:getIcon(abil), 0, true)
-    local name = abil_type:getName(abil)
+    local name = private.color_name..abil_type:getName(abil)..private.color_end
     local description = abil_type:getTooltip(abil)
     local hp = private.color_health..tostring(abil_type:getHealthCost(abil))..private.color_end
     local mp = private.color_mana..tostring(abil_type:getManaCost(abil))..private.color_end
