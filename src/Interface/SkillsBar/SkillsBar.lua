@@ -94,7 +94,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.default_fdf = FdfFrame.new('InterfaceSkillsBar', 'SIMPLEFRAME')
 do
     local fdf = private.default_fdf
-    fdf:setParameter('Width', '0.3')
+    fdf:setParameter('Width', '0.25')
     fdf:setParameter('Height', '0.05')
 end
 
@@ -132,7 +132,7 @@ function private.updateSize(self)
     local count = priv.count
     local w = self:getWidth()
     local h = self:getHeight()
-    local dist = (w - h) / count
+    local dist = (w - h) / (count - 1)
 
     for i = 1, count do
         local button = priv.buttons[i]
@@ -144,6 +144,17 @@ function private.updateSize(self)
         tooltip:setX(0)
         tooltip:setY(button:getHeight())
     end
+end
+
+---@param self InterfaceSkillsBar
+---@param prev_w number
+---@param prev_h number
+---@param new_w number
+---@param new_h number
+function private.autoPositioning(self, prev_w, prev_h, new_w, new_h)
+    self:setX(new_w - self:getWidth()/2)
+    self:setY(0)
+    print(self:getX(), self:getY())
 end
 
 private.color_name = '|cFFC0C000'

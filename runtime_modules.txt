@@ -11,6 +11,7 @@ src/Libs/Class/Override.lua
 src/Libs/Class/Public.lua
 src/Libs/Class/Utils.lua
 src/Libs/Class/Instance.lua
+src/Libs/Class/AllInOne.lua
 src/Libs/Utils/API.lua
 src/Libs/Utils/Action.lua
 src/Libs/Utils/Logger.lua
@@ -73,3 +74,4 @@ src/Libs/SimpleFrame/Frame/SimpleClicker.lua
 src/Libs/SimpleFrame/Frame/SimpleTracker.lua
 src/Interface/SkillsBar/SkillsBar.lua
 src/Interface/SkillsBar/SkillTooltip.lua
+src/Interface/HideDefaultUI.lua

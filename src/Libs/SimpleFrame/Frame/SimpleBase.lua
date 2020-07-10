@@ -65,6 +65,14 @@ function override.new(fdf_frame, child_instance)
     return instance
 end
 
+function override.getScreenWidth()
+    return private.screen_width
+end
+
+function override.getScreenHeight()
+    return private.screen_height
+end
+
 --========
 -- Public
 --========
@@ -96,6 +104,27 @@ end
 ---@return SimpleBaseFrame | nil
 function public:getSubframe(i)
     return private.data[self].subframes[i]
+end
+
+---@param x number
+---@param y number
+function public:setPos(x, y)
+    local priv = private.data[self]
+    priv.x = x
+    priv.y = y
+
+    local handle = self:getHandleData()
+    local parent = priv.parent
+
+    if parent then
+        local parent_handle = parent:getHandleData()
+        BlzFrameSetPoint(handle, FRAMEPOINT_BOTTOMLEFT,
+                         parent_handle, FRAMEPOINT_BOTTOMLEFT,
+                         x, y)
+    else
+        BlzFrameSetAbsPoint(handle, FRAMEPOINT_BOTTOMLEFT,
+                            private.screen_left_x + x, y)
+    end
 end
 
 --- Returns x offset from parent.
@@ -141,11 +170,11 @@ function public:getY()
 end
 
 ---@return number
-function public:getAbsX()
+function public:getAbsY()
     local priv = private.data[self]
 
     if priv.parent then
-        return priv.parent:getAbsX() + priv.y
+        return priv.parent:getAbsY() + priv.y
     else
         return priv.y
     end
@@ -247,8 +276,9 @@ function public:setVisible(visible)
     BlzFrameSetVisible(self:getHandleData(), visible)
 end
 
+---@alias ScreenResolutionUpdateCallback fun(self:SimpleBaseFrame, prev_w:number, prev_h:number, new_w:number, new_h:number)
 --- Override this function for resolution changed event.
----@param callback function | nil
+---@param callback ScreenResolutionUpdateCallback | nil
 function public:setUpdateResolutionCallback(callback)
     private.data[self].update_resolution_action = callback and Action.new(callback, self) or nil
 end
@@ -342,6 +372,8 @@ if not IsCompiletime() then
            cur_screen_height == private.screen_pixel_height then
             return
         end
+        local prev_width = private.screen_width
+        local prev_height = private.screen_height
 
         private.screen_pixel_width = cur_screen_width
         private.screen_pixel_height = cur_screen_height
@@ -353,9 +385,10 @@ if not IsCompiletime() then
         private.real_ratio = cur_screen_width / cur_screen_height
 
         -- Update all frames.
-        for _, priv in pairs(private.data) do
+        for frame, priv in pairs(private.data) do
             if priv.update_resolution_action then
-                priv.update_resolution_action:run()
+                priv.update_resolution_action:run(frame, prev_width, prev_height,
+                                                  private.screen_width, private.screen_height)
             end
         end
     end)

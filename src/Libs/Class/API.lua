@@ -34,6 +34,9 @@ ClassLibAPI.getPublic = ClassPublic.get
 ClassLibAPI.getOverride = ClassOverride.get
 ClassLibAPI.type = ClassDeclare.type
 
+require(modname..'.AllInOne')
+ClassLibAPI = ClassAPI
+
 Lib.finish()
 
 return ClassLibAPI
