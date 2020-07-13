@@ -74,4 +74,3 @@ src/Libs/SimpleFrame/Frame/SimpleClicker.lua
 src/Libs/SimpleFrame/Frame/SimpleTracker.lua
 src/Interface/SkillsBar/SkillsBar.lua
 src/Interface/SkillsBar/SkillTooltip.lua
-src/Interface/HideDefaultUI.lua

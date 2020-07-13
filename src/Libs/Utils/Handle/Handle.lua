@@ -91,6 +91,17 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.db = setmetatable({}, {__mode = 'v'})
 
+private.priv_meta = {
+    __gc = function(priv)
+        private.db[priv.handle] = nil
+        if priv.handle then
+            priv.destructor(priv.handle)
+        end
+        priv.handle = nil
+        priv.destructor = nil
+    end
+}
+
 ---@param self Handle
 ---@param handle handle
 function private.newData(self, handle, destructor)

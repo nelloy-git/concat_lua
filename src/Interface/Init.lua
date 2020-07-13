@@ -1,19 +1,18 @@
 local Interface = {}
 
----@type SimpleButton
-local SBtn = require(LibList.FrameLib).SimpleButton
+---@type FrameLib
+local FrameLib = require(LibList.FrameLib)
+local SBtn = FrameLib.SimpleButton
 ---@type InterfaceSkillsBarClass
 local SkillsBar = require('Interface.SkillsBar.SkillsBar')
 ---@type InterfaceSkillTooltipClass
 local SkillTooltip = require('Interface.SkillsBar.SkillTooltip')
 
-local HideDefaultUI = require('Interface.HideDefaultUI')
-
 if IsCompiletime() then
     return
 end
 
-HideDefaultUI.hide()
+--HideDefaultUI.hide()
 
 ---@param skills_bar InterfaceSkillsBar
 ---@param prev_w number
@@ -21,7 +20,11 @@ HideDefaultUI.hide()
 ---@param new_w number
 ---@param new_h number
 local function skillsBarAutoPositioning(skills_bar, prev_w, prev_h, new_w, new_h)
-    skills_bar:setPos(new_w - skills_bar:getWidth(), 0.3)
+    skills_bar:setPos((new_w - skills_bar:getWidth()) / 2, 0)
+
+    -- Minimap
+    local minimap = BlzGetFrameByName("MiniMapFrame", 0)
+    BlzFrameSetAbsPoint(minimap, FRAMEPOINT_BOTTOMLEFT, FrameLib.getScreenLeftX(), 0)
 end
 
 Interface.SkillsBar = SkillsBar.new(4)

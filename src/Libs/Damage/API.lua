@@ -31,7 +31,7 @@ local DamageShowText = require(modname..'.ShowText')
 
 for _, dmg_type in pairs(Defines.DamageType) do
     DamageEvent.addAction(DamageShowText.DamageEvent,
-                            dmg_type, DamageEvent.CallbackPriority.Lowest)
+                          dmg_type, DamageEvent.CallbackPriority.Lowest)
 end
 
 Lib.finish()

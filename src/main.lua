@@ -22,7 +22,7 @@ if IsCompiletime() then
     return
 end
 
-local u = UtilsLib.Handle.Unit.new(foo_type:getId(), 0, 0, Player(0))
+u = UtilsLib.Handle.Unit.new(foo_type:getId(), 0, 0, Player(0))
 local param_container = ParameterLib.UnitContainer.new(u)
 local buff_container = BuffLib.Container.new(u)
 local abil_container = AbilityLib.Container.new(u)
@@ -31,7 +31,7 @@ param_container:addBase(ParameterLib.PhysicalDamage, 10)
 param_container:addBase(ParameterLib.Defence, 5)
 param_container:addBase(ParameterLib.Health, 1000)
 
-local u2 = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(1))
+u2 = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(1))
 local param_container2 = ParameterLib.UnitContainer.new(u2)
 local buff_container2 = BuffLib.Container.new(u2)
 --buff_container2:addBuff(BuffLib.TestType, u)

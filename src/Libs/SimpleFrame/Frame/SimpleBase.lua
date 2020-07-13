@@ -65,10 +65,17 @@ function override.new(fdf_frame, child_instance)
     return instance
 end
 
+---@return number
+function override.getScreenLeftX()
+    return private.screen_left_x
+end
+
+---@return number
 function override.getScreenWidth()
     return private.screen_width
 end
 
+---@return number
 function override.getScreenHeight()
     return private.screen_height
 end

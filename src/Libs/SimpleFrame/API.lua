@@ -43,6 +43,9 @@ FrameLib.SimpleImage = require(lib_modname..'.Frame.SimpleImage')
 FrameLib.SimpleTracker = require(lib_modname..'.Frame.SimpleTracker')
 FrameLib.SimpleTracker.Init(0.1)
 
+FrameLib.getScreenLeftX = FrameLib.SimpleBase.getScreenLeftX
+FrameLib.getScreenWidth = FrameLib.SimpleBase.getScreenWidth
+FrameLib.getScreenHeight = FrameLib.SimpleBase.getScreenHeight
 
 Lib.finish()
 
