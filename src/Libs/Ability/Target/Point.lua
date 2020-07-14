@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 
 ---@type AbilityTarget
 local AbilityTarget = require(lib_modname..'.Target.Target')
@@ -35,10 +35,10 @@ local private = {}
 ---@param child_instance AbilityTargetPoint | nil
 ---@return AbilityTargetPoint
 function override.new(x, y, child_instance)
-    checkType(x, 'number', 'x')
-    checkType(y, 'number', 'y')
+    checkTypeErr(x, 'number', 'x')
+    checkTypeErr(y, 'number', 'y')
     if child_instance then
-        checkType(child_instance, AbilityTargetPoint, 'child_instance')
+        checkTypeErr(child_instance, AbilityTargetPoint, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(AbilityTargetPoint)

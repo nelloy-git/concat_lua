@@ -13,7 +13,7 @@ local SimpleBasePublic = Class.getPublic(FrameLib.SimpleBase)
 local SimpleButton = FrameLib.SimpleButton
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib)
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local DataSync = UtilsLib.DataSync
 local Log = UtilsLib.DefaultLogger
 
@@ -45,7 +45,7 @@ local private = {}
 ---@return InterfaceSkillsBar
 function override.new(count, child_instance)
     if child_instance then
-        checkType(child_instance, InterfaceSkillsBar, 'child_instance')
+        checkTypeErr(child_instance, InterfaceSkillsBar, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(InterfaceSkillsBar)

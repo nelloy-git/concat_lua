@@ -10,7 +10,7 @@ local Class = depencies.Class
 local Handle = require(lib_modname..'.Handle.Handle')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 
 
 --=======
@@ -36,11 +36,11 @@ local private = {}
 ---@param child_instance Item | nil
 ---@return Item
 function override.new(id, x, y, child_instance)
-    checkType(id, 'number', 'Item_id')
-    checkType(x, 'number', 'x')
-    checkType(y, 'number', 'y')
+    checkTypeErr(id, 'number', 'Item_id')
+    checkTypeErr(x, 'number', 'x')
+    checkTypeErr(y, 'number', 'y')
     if child_instance then
-        checkType(child_instance, Item, 'child_instance')
+        checkTypeErr(child_instance, Item, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Item)

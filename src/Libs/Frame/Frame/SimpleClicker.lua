@@ -9,7 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local Action = UtilsLib.Action
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Trigger = UtilsLib.Handle.Trigger
 
 ---@type SimpleBaseFrameClass
@@ -56,9 +56,9 @@ end
 ---@param child_instance SimpleClicker | nil
 ---@return SimpleClicker
 function override.new(frame, child_instance)
-    checkType(frame, SimpleBaseFrame, 'fdf_simplebutton')
+    checkTypeErr(frame, SimpleBaseFrame, 'fdf_simplebutton')
     if child_instance then
-        checkType(child_instance, SimpleClicker, 'child_instance')
+        checkTypeErr(child_instance, SimpleClicker, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(SimpleClicker)

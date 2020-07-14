@@ -8,10 +8,8 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
----@type FdfFrame
-local FdfFrame = 0 -- in init() require(lib_modname..'.FdfEdit.Frame')
 
 --=======
 -- Class
@@ -34,8 +32,8 @@ local private = {}
 ---@param child_instance FdfFile | nil
 ---@return FdfFile
 function override.new(name, child_instance)
-    checkType(name, 'string', 'name')
-    if child_instance then checkType(child_instance, FdfFile, 'child_instance') end
+    checkTypeErr(name, 'string', 'name')
+    if child_instance then checkTypeErr(child_instance, FdfFile, 'child_instance') end
 
     local instance = child_instance or Class.allocate(FdfFile)
     private.newData(instance, name)
@@ -45,7 +43,6 @@ end
 
 ---@param static_filename string
 function static.init(static_filename)
-    FdfFrame = require(lib_modname..'.FdfEdit.Frame')
     private.static_file = static.new(static_filename)
 
     if IsCompiletime() then

@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Handle = UtilsLib.Handle.Base
 
 ---@type FdfLayerClass
@@ -41,9 +41,9 @@ local private = {}
 ---@param child_instance LayerSubrame | nil
 ---@return LayerSubrame
 function override.new(fdf_layer, child_instance)
-    checkType(fdf_layer, FdfLayer, 'fdf_layer')
+    checkTypeErr(fdf_layer, FdfLayer, 'fdf_layer')
     if child_instance then
-        checkType(child_instance, LayerSubrame, 'child_instance')
+        checkTypeErr(child_instance, LayerSubrame, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(LayerSubrame)
@@ -111,7 +111,7 @@ function private.newData(self, fdf_layer)
 
     local fdf_strings = fdf_layer:getStrings()
     for i = 1, #fdf_strings do
-        checkType(fdf_strings[i], FdfString, 'fdf_strings['..tostring(i)..']')
+        checkTypeErr(fdf_strings[i], FdfString, 'fdf_strings['..tostring(i)..']')
         priv.strings[i] = String.new(fdf_strings[i])
     end
 
@@ -119,7 +119,7 @@ function private.newData(self, fdf_layer)
     local fdf_subframes = fdf_layer:getSubframes()
     for i = 1, #fdf_subframes do
         priv.subframes[i] = Handle.getLinked(BlzGetFrameByName(fdf_subframes[i]:getName(), 0))
-        checkType(priv.subframes[i], private.SimpleBaseFrame, 'linked Handle')
+        checkTypeErr(priv.subframes[i], private.SimpleBaseFrame, 'linked Handle')
     end
 end
 

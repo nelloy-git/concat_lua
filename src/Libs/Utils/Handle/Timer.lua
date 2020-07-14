@@ -10,7 +10,7 @@ local Class = depencies.Class
 local Handle = require(lib_modname..'.Handle.Handle')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 ---@type ActionClass
 local Action = require(lib_modname..'.Action')
 
@@ -40,7 +40,7 @@ local private = {}
 ---@return Timer
 function override.new(child_instance)
     if child_instance then
-        checkType(child_instance, Timer, 'child_instance')
+        checkTypeErr(child_instance, Timer, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Timer)

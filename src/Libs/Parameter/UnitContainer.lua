@@ -9,7 +9,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
 ---@type DamageLib
@@ -46,9 +46,9 @@ local private = {}
 ---@param child_instance UnitParameterContainer | nil
 ---@return UnitParameterContainer
 function override.new(owner, child_instance)
-    checkType(owner, Unit, 'owner')
+    checkTypeErr(owner, Unit, 'owner')
     if child_instance then
-        checkType(child_instance, UnitParameterContainer, 'child_instance')
+        checkTypeErr(child_instance, UnitParameterContainer, 'child_instance')
     end
 
     if private.owners[owner] then

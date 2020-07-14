@@ -10,7 +10,7 @@ local Logger = require(lib_modname..'.Logger')
 local Log = Logger.getDefault()
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 
 --=======
 -- Class
@@ -36,9 +36,9 @@ local private = {}
 ---@param child_instance Action | nil
 ---@return Action
 function override.new(callback, owner, child_instance)
-    checkType(callback, 'function', 'callback')
+    checkTypeErr(callback, 'function', 'callback')
     if child_instance then
-        checkType(child_instance, 'Action', 'child_instance')
+        checkTypeErr(child_instance, 'Action', 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Action)

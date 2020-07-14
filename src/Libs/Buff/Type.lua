@@ -9,7 +9,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib)
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 --endregion
 
@@ -36,9 +36,9 @@ local private = {}
 ---@param child_instance BuffType | nil
 ---@return BuffType
 function override.new(id, child_instance)
-    checkType(id, 'string', 'id')
+    checkTypeErr(id, 'string', 'id')
     if child_instance then
-        checkType(child_instance, BuffType, 'child_instance')
+        checkTypeErr(child_instance, BuffType, 'child_instance')
     end
 
     if private.instances[id] then

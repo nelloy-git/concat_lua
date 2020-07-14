@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
 --=======
@@ -34,10 +34,10 @@ local private = {}
 ---@param child_instance BinaryData | nil
 ---@return BinaryData
 function override.new(id, base_id, name, child_instance)
-    checkType(id, 'number', 'id')
-    checkType(base_id, 'number', 'base_id')
-    if name then checkType(name, 'string', 'name') end
-    if child_instance then checkType(child_instance, BinaryData, 'child_instance') end
+    checkTypeErr(id, 'number', 'id')
+    checkTypeErr(base_id, 'number', 'base_id')
+    if name then checkTypeErr(name, 'string', 'name') end
+    if child_instance then checkTypeErr(child_instance, BinaryData, 'child_instance') end
 
     local instance = child_instance or Class.allocate(BinaryData)
     private.newData(instance, id, base_id, name)
@@ -75,8 +75,8 @@ function public:setValue(value_id, value_type, value)
        value_type == 'string') then
         Log:err('Unavailable \'value_type\'. Got '..value_type, 2)
     end
-    checkType(value_id, 'string', 'value_id')
-    checkType(value, value_type, 'value')
+    checkTypeErr(value_id, 'string', 'value_id')
+    checkTypeErr(value, value_type, 'value')
 
     local priv = private.data[self]
     priv.values[value_id] = {value_type = value_type, value = value}

@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Destructable = UtilsLib.Handle.Destructable
 
 ---@type AbilityTarget
@@ -35,9 +35,9 @@ local private = {}
 ---@param child_instance AbilityTargetDestructable | nil
 ---@return AbilityTargetDestructable
 function override.new(destr, child_instance)
-    checkType(destr, Destructable, 'destr')
+    checkTypeErr(destr, Destructable, 'destr')
     if child_instance then
-        checkType(child_instance, AbilityTargetDestructable, 'child_instance')
+        checkTypeErr(child_instance, AbilityTargetDestructable, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(AbilityTargetDestructable)

@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 
 ---@type FdfStringClass
 local FdfString = require(lib_modname..'.FdfEdit.String')
@@ -34,9 +34,9 @@ local private = {}
 ---@param child_instance StringSubrame | nil
 ---@return StringSubrame
 function override.new(fdf_string, child_instance)
-    checkType(fdf_string, FdfString, 'fdf_string')
+    checkTypeErr(fdf_string, FdfString, 'fdf_string')
     if child_instance then
-        checkType(child_instance, StringSubrame, 'child_instance')
+        checkTypeErr(child_instance, StringSubrame, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(StringSubrame)

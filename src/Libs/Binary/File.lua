@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
 ---@type BinaryDataClass
@@ -35,8 +35,8 @@ local private = {}
 ---@param child_instance BinaryFile | nil
 ---@return BinaryFile
 function override.new(path, child_instance)
-    checkType(path, 'string', 'path')
-    if child_instance then checkType(child_instance, BinaryFile, 'child_instance') end
+    checkTypeErr(path, 'string', 'path')
+    if child_instance then checkTypeErr(child_instance, BinaryFile, 'child_instance') end
 
     local instance = child_instance or Class.allocate(BinaryFile)
     private.newData(instance, path)
@@ -50,7 +50,7 @@ end
 
 ---@param data BinaryData
 function public:add(data)
-    checkType(data, BinaryData, 'data')
+    checkTypeErr(data, BinaryData, 'data')
     table.insert(private.data[self].data, data)
 end
 

@@ -14,7 +14,7 @@ local Handle = require(lib_modname..'.Handle.Handle')
 local Timer = require(lib_modname..'.Handle.Timer')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 
 
 --=======
@@ -39,10 +39,10 @@ local private = {}
 ---@param child_instance Frame | nil
 ---@return Frame
 function override.new(type_name, is_simpleframe, child_instance)
-    checkType(type_name, 'string', 'type_name')
-    checkType(is_simpleframe, 'boolean', 'is_simpleframe')
+    checkTypeErr(type_name, 'string', 'type_name')
+    checkTypeErr(is_simpleframe, 'boolean', 'is_simpleframe')
     if child_instance then
-        checkType(child_instance, Frame, 'child_instance')
+        checkTypeErr(child_instance, Frame, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Frame)

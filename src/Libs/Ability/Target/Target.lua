@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
 --=======
@@ -32,7 +32,7 @@ local private = {}
 ---@return AbilityTarget
 function override.new(child_instance)
     if child_instance then
-        checkType(child_instance, AbilityTarget, 'child_instance')
+        checkTypeErr(child_instance, AbilityTarget, 'child_instance')
     else
         Log:err('Can not create instance of abstract class.', 2)
     end

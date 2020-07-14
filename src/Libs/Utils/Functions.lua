@@ -16,7 +16,7 @@ local debug = true
 ---@param need_type any
 ---@param var_name string
 ---@param level number | nil
-function UtilsFunctions.checkType(var, need_type, var_name, level)
+function UtilsFunctions.checkTypeErr(var, need_type, var_name, level)
     if not debug then
         return
     end
@@ -35,6 +35,25 @@ function UtilsFunctions.checkType(var, need_type, var_name, level)
     if not classType(var, need_type) then
         Log:err('variable \''..(var_name or '')..'\' is not of type '..tostring(need_type), level or 3)
     end
+end
+
+---@param var any
+---@param need_type any
+---@return boolean
+function UtilsFunctions.checkType(var, need_type)
+    local real_type = type(var)
+
+    if real_type == 'userdata' then
+        local wc3_type_string = tostring(var)
+        local pos = wc3_type_string:find(':')
+        local wc3_type = wc3_type_string:sub(1, pos - 1)
+        if wc3_type ~= need_type then
+            return false
+        end
+        return true
+    end
+
+    return classType(var, need_type)
 end
 
 return UtilsFunctions

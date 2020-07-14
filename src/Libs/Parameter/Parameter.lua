@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 --endregion
 
 --=======
@@ -39,12 +39,12 @@ local private = {}
 ---@return Parameter
 function override.new(short_name, full_name, icon,
                       min_value, max_value, default_value)
-    checkType(short_name, 'string', 'short_name')
-    checkType(full_name, 'string', 'full_name')
-    checkType(icon, 'string', 'icon')
-    checkType(min_value, 'number', 'min_value')
-    checkType(max_value, 'number', 'max_value')
-    checkType(default_value, 'number', 'default_value')
+    checkTypeErr(short_name, 'string', 'short_name')
+    checkTypeErr(full_name, 'string', 'full_name')
+    checkTypeErr(icon, 'string', 'icon')
+    checkTypeErr(min_value, 'number', 'min_value')
+    checkTypeErr(max_value, 'number', 'max_value')
+    checkTypeErr(default_value, 'number', 'default_value')
 
     local instance = Class.allocate(Parameter)
     private.newData(instance,

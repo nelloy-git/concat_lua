@@ -9,7 +9,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 
 ---@type BinaryFileClass
 local BinaryFile = require(lib_modname..'.File')
@@ -42,10 +42,10 @@ local private = {}
 ---@param child_instance BinaryDataUnit | nil
 ---@return BinaryDataUnit
 function override.new(new_id, base_id, name, child_instance)
-    checkType(new_id, 'number', 'new_id')
-    checkType(base_id, 'number', 'base_id')
-    if name then checkType(name, 'string', 'name') end
-    if child_instance then checkType(child_instance, BinaryDataUnit, 'child_instance') end
+    checkTypeErr(new_id, 'number', 'new_id')
+    checkTypeErr(base_id, 'number', 'base_id')
+    if name then checkTypeErr(name, 'string', 'name') end
+    if child_instance then checkTypeErr(child_instance, BinaryDataUnit, 'child_instance') end
 
     local instance = child_instance or Class.allocate(BinaryDataUnit)
     instance = BinaryData.new(new_id, base_id, name, instance)

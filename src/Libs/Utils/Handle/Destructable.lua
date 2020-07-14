@@ -10,7 +10,7 @@ local Class = depencies.Class
 local Handle = require(lib_modname..'.Handle.Handle')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 
 local GetDestructableX = GetDestructableX
 local GetDestructableY = GetDestructableY
@@ -42,15 +42,15 @@ local private = {}
 ---@param child_instance Destructable | nil
 ---@return Destructable
 function override.new(id, x, y, z, face, scale, variation, child_instance)
-    checkType(id, 'number', 'id')
-    checkType(x, 'number', 'x')
-    checkType(y, 'number', 'y')
-    checkType(z, 'number', 'z')
-    checkType(face, 'number', 'face')
-    checkType(scale, 'number', 'scale')
-    checkType(variation, 'number', 'variation')
+    checkTypeErr(id, 'number', 'id')
+    checkTypeErr(x, 'number', 'x')
+    checkTypeErr(y, 'number', 'y')
+    checkTypeErr(z, 'number', 'z')
+    checkTypeErr(face, 'number', 'face')
+    checkTypeErr(scale, 'number', 'scale')
+    checkTypeErr(variation, 'number', 'variation')
     if child_instance then
-        checkType(child_instance, Destrcutable, 'child_instance')
+        checkTypeErr(child_instance, Destrcutable, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Destrcutable)

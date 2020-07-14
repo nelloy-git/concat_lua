@@ -1,7 +1,2 @@
-[0.033] {Msg} Created new FdfFile 'Default' containg:
-    DefaultSimpleButton
-    DefaultSimpleImage
-    InterfaceSkillTooltip
-    InterfaceSkillsBar
-    DefaultSimpleBar
-    DefaultMouseDetector
+[0.013] {Msg} Created new FdfFile 'Default' containg:
+    FrameSimpleImage

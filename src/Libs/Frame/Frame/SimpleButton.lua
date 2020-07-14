@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
 ---@type SimpleImageClass
@@ -42,12 +42,12 @@ local private = {}
 ---@return SimpleButton
 function override.new(fdf_simplebutton, child_instance)
     if fdf_simplebutton then
-        checkType(fdf_simplebutton, FdfFrame, 'fdf_simpleframe')
+        checkTypeErr(fdf_simplebutton, FdfFrame, 'fdf_simpleframe')
     else
         fdf_simplebutton = private.default_fdf
     end
     if child_instance then
-        checkType(child_instance, SimpleButton, 'child_instance')
+        checkTypeErr(child_instance, SimpleButton, 'child_instance')
     end
 
     if fdf_simplebutton:getBaseType() ~= 'SIMPLEBUTTON' then

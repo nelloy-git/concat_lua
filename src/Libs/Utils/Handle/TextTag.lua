@@ -10,7 +10,7 @@ local Class = depencies.Class
 local Handle = require(lib_modname..'.Handle.Handle')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 ---@type UnitClass
 local Unit = require(lib_modname..'.Handle.Unit')
 
@@ -35,7 +35,7 @@ local private = {}
 ---@return TextTag
 function override.new(child_instance)
     if child_instance then
-        checkType(child_instance, TextTag, 'child_instance')
+        checkTypeErr(child_instance, TextTag, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(TextTag)

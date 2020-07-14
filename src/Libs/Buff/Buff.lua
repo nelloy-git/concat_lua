@@ -9,7 +9,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Timer = UtilsLib.Handle.Timer
 local Unit = UtilsLib.Handle.Unit
 
@@ -42,11 +42,11 @@ local private = {}
 ---@param child_instance Buff | nil
 ---@return Buff
 function override.new(source, target, buff_type, child_instance)
-    checkType(source, Unit, 'source')
-    checkType(target, Unit, 'target')
-    checkType(buff_type, BuffType, 'buff_type')
+    checkTypeErr(source, Unit, 'source')
+    checkTypeErr(target, Unit, 'target')
+    checkTypeErr(buff_type, BuffType, 'buff_type')
     if child_instance then
-        checkType(child_instance, Buff, 'child_instance')
+        checkTypeErr(child_instance, Buff, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Buff)

@@ -9,7 +9,7 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local Action = UtilsLib.Action
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local HandlePublic = Class.getPublic(UtilsLib.Handle.Base)
 local Timer = UtilsLib.Handle.Timer
 
@@ -51,9 +51,9 @@ end
 ---@param child_instance SimpleTracker | nil
 ---@return SimpleTracker
 function override.new(frame, child_instance)
-    checkType(frame, SimpleBaseFrame, 'fdf_simpleframe')
+    checkTypeErr(frame, SimpleBaseFrame, 'fdf_simpleframe')
     if child_instance then
-        checkType(child_instance, SimpleTracker, 'child_instance')
+        checkTypeErr(child_instance, SimpleTracker, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(SimpleTracker)

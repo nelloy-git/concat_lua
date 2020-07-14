@@ -14,7 +14,7 @@ local FdfTexture = FrameLib.FdfTexture
 local SimpleBase = FrameLib.SimpleBase
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib)
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 --endregion
 
@@ -41,7 +41,7 @@ local private = {}
 ---@return InterfaceSkillTooltip
 function override.new(child_instance)
     if child_instance then
-        checkType(child_instance, InterfaceSkillTooltip, 'child_instance')
+        checkTypeErr(child_instance, InterfaceSkillTooltip, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(InterfaceSkillTooltip)

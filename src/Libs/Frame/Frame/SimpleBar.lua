@@ -8,7 +8,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
 ---@type SimpleBaseFrameClass
@@ -44,13 +44,13 @@ local private = {}
 ---@return SimpleBar
 function override.new(fdf_simplebar, child_instance)
     if fdf_simplebar then
-        checkType(fdf_simplebar, FdfFrame, 'fdf_simplebar')
+        checkTypeErr(fdf_simplebar, FdfFrame, 'fdf_simplebar')
     else
         fdf_simplebar = private.default_fdf
     end
 
     if child_instance then
-        checkType(child_instance, SimpleBar, 'child_instance')
+        checkTypeErr(child_instance, SimpleBar, 'child_instance')
     end
 
     if fdf_simplebar:getBaseType() ~= 'SIMPLESTATUSBAR' then

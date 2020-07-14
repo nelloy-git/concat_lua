@@ -11,7 +11,7 @@ local Logger = require(lib_modname..'.Logger')
 local Log = Logger.getDefault()
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 
 --=======
 -- Class
@@ -35,9 +35,9 @@ local private = {}
 ---@param child_instance Handle | nil
 ---@return Handle
 function override.new(handle, destructor, child_instance)
-    checkType(destructor, 'function', 'destructor')
+    checkTypeErr(destructor, 'function', 'destructor')
     if child_instance then
-        checkType(child_instance, Handle, 'child_instance')
+        checkTypeErr(child_instance, Handle, 'child_instance')
     end
 
     if child_instance and private.data[child_instance] then

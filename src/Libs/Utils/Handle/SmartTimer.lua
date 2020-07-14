@@ -12,7 +12,7 @@ local Action = require(lib_modname..'.Action')
 local Handle = require(lib_modname..'.Handle.Handle')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 ---@type LoggerClass
 local Logger = require(lib_modname..'.Logger')
 local Log = Logger.getDefault()
@@ -42,9 +42,9 @@ local private = {}
 ---@param child_instance SmartTimer | nil
 ---@return SmartTimer
 function override.new(precision, child_instance)
-    checkType(precision, 'number', 'precision')
+    checkTypeErr(precision, 'number', 'precision')
     if child_instance then
-        checkType(child_instance, SmartTimer, 'child_instance')
+        checkTypeErr(child_instance, SmartTimer, 'child_instance')
     end
 
     if precision < private.minimum_period then

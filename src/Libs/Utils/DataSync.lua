@@ -12,7 +12,7 @@ local Class = depencies.Class
 local Action = require(lib_modname..'.Action')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 ---@type Logger
 local Log = require(lib_modname..'.Logger').getDefault()
 ---@type TriggerClass
@@ -54,9 +54,9 @@ end
 ---@param child_instance DataSync | nil
 ---@return DataSync
 function override.new(id, child_instance)
-    checkType(id, 'string', 'id')
+    checkTypeErr(id, 'string', 'id')
     if child_instance then
-        checkType(child_instance, DataSync, 'child_instance')
+        checkTypeErr(child_instance, DataSync, 'child_instance')
     end
 
     if private.ids[id] then

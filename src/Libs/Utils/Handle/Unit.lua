@@ -10,7 +10,7 @@ local Class = depencies.Class
 local Handle = require(lib_modname..'.Handle.Handle')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
-local checkType = Functions.checkType
+local checkTypeErr = Functions.checkTypeErr
 
 local GetUnitX = GetUnitX
 local GetUnitY = GetUnitY
@@ -43,12 +43,12 @@ local private = {}
 ---@param child_instance Unit | nil
 ---@return Unit
 function override.new(unit_id, x, y, owner, child_instance)
-    checkType(unit_id, 'number', 'unit_id')
-    checkType(x, 'number', 'x')
-    checkType(y, 'number', 'y')
-    checkType(owner, 'player', 'owner')
+    checkTypeErr(unit_id, 'number', 'unit_id')
+    checkTypeErr(x, 'number', 'x')
+    checkTypeErr(y, 'number', 'y')
+    checkTypeErr(owner, 'player', 'owner')
     if child_instance then
-        checkType(child_instance, Unit, 'child_instance')
+        checkTypeErr(child_instance, Unit, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(Unit)

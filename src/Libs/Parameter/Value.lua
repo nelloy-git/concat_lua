@@ -9,7 +9,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 
 ---@type ParameterClass
 local Parameter = require(lib_modname..'.Parameter')
@@ -37,7 +37,7 @@ local private = {}
 ---@param param Parameter
 ---@return ParameterValue
 function override.new(param)
-    checkType(param, Parameter, 'param')
+    checkTypeErr(param, Parameter, 'param')
 
     local instance = Class.allocate(ParameterValue)
     private.newData(instance, param)

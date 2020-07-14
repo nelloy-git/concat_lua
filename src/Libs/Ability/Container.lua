@@ -9,7 +9,7 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local checkType = UtilsLib.Functions.checkType
+local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Unit = UtilsLib.Handle.Unit
 
 ---@type AbilityClass
@@ -37,9 +37,9 @@ local private = {}
 ---@param child_instance AbilitiesContainer | nil
 ---@return AbilitiesContainer
 function static.new(owner, child_instance)
-    checkType(owner, Unit, 'owner')
+    checkTypeErr(owner, Unit, 'owner')
     if child_instance then
-        checkType(child_instance, AbilitiesContainer, 'child_instance')
+        checkTypeErr(child_instance, AbilitiesContainer, 'child_instance')
     end
 
     local instance = child_instance or Class.allocate(AbilitiesContainer)
