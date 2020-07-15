@@ -41,16 +41,16 @@ Interface.Chat:setPos(0, Interface.ChatEdit:getHeight())
 
 -- Free command buttons
 Interface.SkillsButtons = {}
-for i = 0, 11 do
-    local btn_handle = BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, i)
+
+for i = 5, 11 do
+    local btn_handle = BlzGetFrameByName("CommandButton_"..tonumber(i), 0)
     freeFrame(btn_handle)
     -- TODO change to BUTTON
     local btn = FrameLib.Frame.Normal.Image.new(btn_handle)
-    Interface.SkillsButtons[i + 1] = btn
     btn:setParent(Interface.Minimap)
-    --if i > 5 then
-        btn:setPos(-(i + 1) * btn:getWidth(), 0)
-    --end
+    btn:setPos(-(i - 4) * btn:getWidth(), 0)
+    
+    Interface.SkillsButtons[i - 4] = btn
 end
 
 -- Hide portrait

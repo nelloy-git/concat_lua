@@ -8,7 +8,7 @@
         "./lib": true,
         //"./src": true
     },
-    "Lua.workspace.preloadFileSize": 5000,
+    "Lua.workspace.preloadFileSize": 6000,
     "Lua.diagnostics.globals": [
         "Compiletime",
         "IsCompiletime",

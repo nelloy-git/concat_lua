@@ -60,8 +60,8 @@ src\Libs\Binary\UnitValuesDB.lua
 src\Interface\Init.lua
 src\Libs\Frame\API.lua
 src\Libs\Frame\Fdf\File.lua
-src\Libs\Frame\Fdf\Frame.lua
 src\Libs\Frame\Fdf\Frame\SimpleBase.lua
+src\Libs\Frame\Fdf\Frame.lua
 src\Libs\Frame\Fdf\Frame\SimpleFrame.lua
 src\Libs\Frame\Fdf\Frame\SimpleLayer.lua
 src\Libs\Frame\Fdf\Frame\SimpleString.lua
@@ -71,3 +71,7 @@ src\Libs\Frame\FrameBase.lua
 src\Libs\Frame\Screen.lua
 src\Libs\Frame\Simple\Image.lua
 src\Libs\Frame\Simple\Texture.lua
+src\Libs\Frame\Normal\Base.lua
+src\Libs\Frame\Fdf\Frame\NormalBase.lua
+src\Libs\Frame\Normal\Image.lua
+src\Libs\Frame\Fdf\Frame\NormalBackdrop.lua

@@ -8919,6 +8919,11 @@ function BlzFrameSetFont(frame, fileName, height, flags) end
 ---@param horz textaligntype
 function BlzFrameSetTextAlignment(frame, vert, horz) end
 
+---@param frame framehandle
+---@param index integer
+---@return framehandle
+function BlzFrameGetChild(frame, index) end
+
 ---@param whichTrigger trigger
 ---@param frame framehandle
 ---@param eventId frameeventtype
