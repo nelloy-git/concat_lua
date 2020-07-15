@@ -12,22 +12,32 @@ if IsCompiletime() then
     return
 end
 
---HideDefaultUI.hide()
+--================
+-- Free origin UI
+--================
 
----@param skills_bar InterfaceSkillsBar
----@param prev_w number
----@param prev_h number
----@param new_w number
----@param new_h number
-local function skillsBarAutoPositioning(skills_bar, prev_w, prev_h, new_w, new_h)
-    skills_bar:setPos((new_w - skills_bar:getWidth()) / 2, 0)
+local console_ui_backdrop = BlzGetFrameByName("ConsoleUIBackdrop", 0)
+BlzFrameSetAbsPoint(console_ui_backdrop, FRAMEPOINT_TOP, 0.4, 0)
 
-    -- Minimap
-    local minimap = BlzGetFrameByName("MiniMapFrame", 0)
-    BlzFrameSetAbsPoint(minimap, FRAMEPOINT_BOTTOMLEFT, FrameLib.getScreenLeftX(), 0)
+local function freeFrame(handle)
+    BlzFrameSetParent(handle, console_ui_backdrop)
+    BlzFrameClearAllPoints(handle)
 end
 
-Interface.SkillsBar = SkillsBar.new(4)
-Interface.SkillsBar:setUpdateResolutionCallback(skillsBarAutoPositioning)
+-- Free minimap
+freeFrame(BlzGetFrameByName("MiniMapFrame", 0))
+-- Free chat
+freeFrame(BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 7))
+-- Free chat edit
+freeFrame(BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11))
+-- Free command buttons
+for i = 0, 11 do
+    freeFrame(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, i))
+end
+
+-- Hide portrait
+BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0))
+-- Hide inventory
+BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_ITEM_BUTTON, 0))), false)
 
 return Interface

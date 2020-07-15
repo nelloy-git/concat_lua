@@ -238,7 +238,14 @@ local function Build(code_src, map_dst, map_data)
     Utils.copyDir(map_data, map_dst)
 
     -- Run lua code.
-    local success, result = pcall(require, 'main')
+    local success, result = pcall(require, 'init')
+    if not success then
+        print(result)
+        return
+    end
+
+    -- Run lua code.
+    success, result = pcall(require, 'main')
     if not success then
         print(result)
         return

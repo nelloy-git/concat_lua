@@ -39,4 +39,4 @@ param_container2:addBase(ParameterLib.PhysicalDamage, 10)
 param_container2:addBase(ParameterLib.Defence, 5)
 param_container2:addBase(ParameterLib.Health, 1000)
 
-Interface.SkillsBar:setSkill(1, abil_container:get(1))
+--Interface.SkillsBar:setSkill(1, abil_container:get(1))

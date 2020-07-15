@@ -34,7 +34,14 @@ do
     end
 end
 
-function RunInitialization()
+function RunInit()
+    local success, result = pcall(require, 'init')
+    if not success then
+        print(result)
+    end
+end
+
+function RunMain()
     local success, result = pcall(require, 'main')
     if not success then
         print(result)
@@ -50,25 +57,8 @@ function main()
     SetMapMusic("Music", true, 0)
     InitBlizzard()
 
-    BlzEnableUIAutoPosition(false)
-
-    BlzFrameSetAbsPoint(BlzGetFrameByName("ConsoleUI", 0), FRAMEPOINT_BOTTOM, 0.4, -0.18)
-    BlzFrameSetAllPoints(BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0), BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0))
-    BlzFrameSetVisible(BlzGetFrameByName("ConsoleUIBackdrop",0), false)
-
-    -- Hide inventory
-    BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_ITEM_BUTTON, 0))), false)
-
-    -- Hide portrait
-    BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0))
-
-    -- Free minimap    
-    local parent = BlzGetFrameByName("ConsoleUIBackdrop", 0)
-    local frame = BlzGetFrameByName("MiniMapFrame", 0)
-    BlzFrameSetParent(frame, parent)
-    BlzFrameClearAllPoints(frame)
-
-    TimerStart(CreateTimer(), 0.1, false, RunInitialization)
+    RunInit()
+    TimerStart(CreateTimer(), 0.1, false, RunMain)
 end
 
 function InitCustomPlayerSlots()
