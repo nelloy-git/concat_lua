@@ -12,32 +12,57 @@ if IsCompiletime() then
     return
 end
 
---================
--- Free origin UI
---================
+--===================
+-- Capture origin UI
+--===================
 
 local console_ui_backdrop = BlzGetFrameByName("ConsoleUIBackdrop", 0)
-BlzFrameSetAbsPoint(console_ui_backdrop, FRAMEPOINT_TOP, 0.4, 0)
-
 local function freeFrame(handle)
     BlzFrameSetParent(handle, console_ui_backdrop)
     BlzFrameClearAllPoints(handle)
 end
 
 -- Free minimap
-freeFrame(BlzGetFrameByName("MiniMapFrame", 0))
--- Free chat
-freeFrame(BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 7))
+local map_handle = BlzGetFrameByName("MiniMapFrame", 0)
+freeFrame(map_handle)
+Interface.Minimap = FrameLib.Frame.Normal.Image.new(map_handle)
+
 -- Free chat edit
-freeFrame(BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11))
+local chat_edit_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
+freeFrame(chat_edit_handle)
+Interface.ChatEdit = FrameLib.Frame.Normal.Image.new(chat_edit_handle)
+
+-- Free chat
+local chat_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 7)
+freeFrame(chat_handle)
+Interface.Chat = FrameLib.Frame.Normal.Image.new(chat_handle)
+Interface.Chat:setParent(Interface.ChatEdit)
+Interface.Chat:setPos(0, Interface.ChatEdit:getHeight())
+
 -- Free command buttons
+Interface.SkillsButtons = {}
 for i = 0, 11 do
-    freeFrame(BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, i))
+    local btn_handle = BlzGetOriginFrame(ORIGIN_FRAME_COMMAND_BUTTON, i)
+    freeFrame(btn_handle)
+    -- TODO change to BUTTON
+    local btn = FrameLib.Frame.Normal.Image.new(btn_handle)
+    Interface.SkillsButtons[i + 1] = btn
+    btn:setParent(Interface.Minimap)
+    --if i > 5 then
+        btn:setPos(-(i + 1) * btn:getWidth(), 0)
+    --end
 end
 
 -- Hide portrait
 BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0))
 -- Hide inventory
 BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_ITEM_BUTTON, 0))), false)
+
+
+FrameLib.Screen.addResolutionChangedAction(
+    function(prev_x0, prev_width, prev_height, new_x0, new_width, new_height)
+        Interface.Minimap:setPos(new_x0 + new_width - Interface.Minimap:getWidth(), 0)
+        Interface.ChatEdit:setPos(new_x0, 0)
+    end)
 
 return Interface

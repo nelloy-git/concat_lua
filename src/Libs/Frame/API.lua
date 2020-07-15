@@ -1,6 +1,7 @@
 ---@class FrameLib
 local FrameLib = {}
 local lib_modname = Compiletime(Lib.getModname())
+
 Lib.start(lib_modname)
 
 --===========
@@ -12,27 +13,36 @@ Lib.current().depencies = {
     UtilsLib = require(LibList.UtilsLib)
 }
 
+if not IsCompiletime() then
+    local is_v1_32_7 = BlzFrameGetChild and true or false
+    if not is_v1_32_7 then
+        Lib.current().depencies.UtilsLib.DefaultLogger:err('FrameLib need at least 1.32.7 patch.')
+        Lib.finish()
+        return nil
+    end
+end
+
 --=====
 -- API
 --=====
-
----@type FdfFileClass
-FrameLib.FdfFile = require(lib_modname..'.Fdf.File')
-FrameLib.FdfFile.init('Default')
----@type FdfFrameClass
-FrameLib.FdfFrame = require(lib_modname..'.Fdf.Frame')
 
 --============
 -- Categories
 --============
 
 FrameLib.Fdf = {}
+---@type FdfFileClass
+FrameLib.Fdf.File = require(lib_modname..'.Fdf.File')
+FrameLib.Fdf.File.init('Default')
+
 FrameLib.Fdf.Simple = {}
 FrameLib.Fdf.Normal = {}
 
 FrameLib.Frame = {}
 FrameLib.Frame.Simple = {}
 FrameLib.Frame.Normal = {}
+
+FrameLib.Screen = {}
 
 --=================
 -- FdfSimpleFrames
@@ -67,6 +77,11 @@ test:setHeight(0.05)
 test:addSubframe(layer)
 ]]
 
+--=================
+-- FdfNormalFrames
+--=================
+
+
 --==============
 -- SimpleFrames
 --==============
@@ -80,14 +95,37 @@ FrameLib.Frame.Simple.Image = require(lib_modname..'.Simple.Image')
 --[[
 if not IsCompiletime() then
     local test = FrameLib.Frame.Simple.Image.new()
-    test:setFile('', 0, true)
-    test:setPos(0.4, 0.3)
+    --test:setFile('', 0, true)
+    test:setPos(0.2, 0.3)
 end
 ]]
 
 --==============
 -- NormalFrames
 --==============
+
+---@type FrameNormalBaseClass
+FrameLib.Frame.Normal.Base = require(lib_modname..'.Normal.Base')
+---@type FrameNormalImageClass
+FrameLib.Frame.Normal.Image = require(lib_modname..'.Normal.Image')
+
+-- Example
+--[[
+if not IsCompiletime() then
+    local test = FrameLib.Frame.Normal.Image.new()
+    --test:setFile('', 0, true)
+    test:setPos(-0.1, 0.3)
+    test:setSize(0.04, 0.04)
+end
+]]
+
+--========
+-- Screen
+--========
+
+---@type FrameScreen
+local Screen = require(lib_modname..'.Screen')
+FrameLib.Screen.addResolutionChangedAction = Screen.addResolutionChangedAction
 
 Lib.finish()
 

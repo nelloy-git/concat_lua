@@ -37,30 +37,17 @@ local private = {}
 -- Static
 --=========
 
----@param fdf_frame FdfFrame
+---@param handle framehandle
+---@param fdf FdfFrame | nil
 ---@param child_instance FrameBase | nil
 ---@return FrameBase
----@overload fun(frame_handle:framehandle, child_instance:FrameBase) : FrameBase
-function override.new(fdf_frame, child_instance)
-    if not (checkType(fdf_frame, 'framehandle') or checkType(fdf_frame, FdfFrame)) then
-        Log:err('variable \'fdf_frame\'is not of type framehandle or '..tostring(FdfFrame), 2)
-    end
+function override.new(handle, fdf, child_instance)
+    checkTypeErr(handle, 'framehandle', 'handle')
     if child_instance then checkTypeErr(child_instance, FrameBase, 'child_instance') end
 
-    local handle
-    local destroy_func
-    if checkType(fdf_frame, 'framehandle') then
-        handle = fdf_frame
-        fdf_frame = nil
-        destroy_func = private.emptyDestroy
-    else
-        handle = BlzCreateSimpleFrame(fdf_frame:getName(), nil, 0, 0)
-        destroy_func = BlzDestroyFrame
-    end
-
     local instance = child_instance or Class.allocate(FrameBase)
-    instance = Handle.new(handle, destroy_func, instance)
-    private.newData(instance, fdf_frame)
+    instance = Handle.new(handle, BlzDestroyFrame, instance)
+    private.newData(instance, fdf)
 
     return instance
 end
@@ -78,6 +65,7 @@ end
 ---@param y number
 function public:setPos(x, y)
     local priv = private.data[self]
+
     priv.x = x
     priv.y = y
 
@@ -107,6 +95,7 @@ end
 ---@param height number
 function public:setSize(width, height)
     local priv = private.data[self]
+
     priv.width = width
     priv.height = height
     BlzFrameSetSize(self:getHandleData(), width, height)
@@ -131,6 +120,7 @@ end
 ---@param parent FrameBase | nil
 function public:setParent(parent)
     local priv = private.data[self]
+
     priv.parent = parent
 
     local handle = self:getHandleData()
@@ -147,7 +137,9 @@ end
 
 ---@param level number
 function public:setLevel(level)
-    private.data[self].level = level
+    local priv = private.data[self]
+
+    priv.level = level
     BlzFrameSetLevel(self:getHandleData(), level)
 end
 
@@ -211,39 +203,33 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self FrameBase
----@param fdf_frame FdfFrame
-function private.newData(self, fdf_frame)
+---@param fdf FdfFrame
+function private.newData(self, fdf)
+    local handle = self:getHandleData()
     local priv = {
-        fdf = fdf_frame,
-        update_resolution_action = nil,
+        fdf = fdf,
 
         x = 0,
         y = 0,
-        width = BlzFrameGetWidth(self:getHandleData()),
-        height = BlzFrameGetHeight(self:getHandleData()),
+        width = BlzFrameGetWidth(handle),
+        height = BlzFrameGetHeight(handle),
         tooltip = nil,
-        parent = nil,
+        parent = Handle.getLinked(BlzFrameGetParent(handle)),
 
         level = 0,
         alpha = 0,
 
-        textures = {},
-        strings = {},
-        layers = {},
         subframes = {}
     }
     private.data[self] = priv
 
     -- Creates FrameBase instances for subframes. Subframe class can be changed with public:setSubframeClass.
-    if fdf_frame then
-        for name, fdf in pairs(fdf_frame:getAllSubframes()) do
-            checkTypeErr(fdf, FdfFrame, 'fdf_subframes['..name..']')
-            priv.subframes[name] = static.new(BlzGetFrameByName(fdf:getName(), 0))
+    if fdf then
+        for name, subframe in pairs(fdf:getAllSubframes()) do
+            checkTypeErr(subframe, FdfFrame, 'fdf_subframes['..name..']')
+            priv.subframes[name] = static.new(BlzGetFrameByName(fdf:getName(), subframe, 0))
         end
     end
-end
-
-function private.emptyDestroy()
 end
 
 return static

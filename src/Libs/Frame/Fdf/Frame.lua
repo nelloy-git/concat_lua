@@ -79,11 +79,6 @@ function public:getInheritance()
     return private.data[self].inheritance
 end
 
----@return string
-function public:getParameter(parameter)
-    return private.data[self].params[parameter]
-end
-
 ---@return table
 function public:getAllParameters()
     local priv = private.data[self]
@@ -96,7 +91,6 @@ function public:getAllParameters()
     return copy
 end
 
---- Do nothing in runtime.
 ---@param parameter string
 ---@param value string
 function public:setParameter(parameter, value)
@@ -104,10 +98,21 @@ function public:setParameter(parameter, value)
     checkTypeErr(value, 'string', value)
 
     local priv = private.data[self]
+    if value == nil then value = private.empty_param_value end
     priv.params[parameter] = value
 end
 
---- Do nothing in runtime.
+---@return string
+function public:getParameter(parameter)
+    return private.data[self].params[parameter]
+end
+
+---@param parameter string
+function public:removeParameter(parameter)
+    checkTypeErr(parameter, 'string', parameter)
+    private.data[self].params[parameter] = nil
+end
+
 ---@param subframe FdfFrame
 function public:addSubframe(subframe)
     local priv = private.data[self]
@@ -135,7 +140,9 @@ function public:serialize()
     if priv.inheritance then res = res..' INHERITS '..priv.inheritance:getName() end
     res = res..' {\n'
     for param, value in pairs(priv.params) do
-        res = res..'    '..param..' '..value..',\n'
+        res = res..'    '..param
+        if value ~= private.empty_param_value then res = res..' '..value end
+        res = res..',\n'
     end
     for _, subframe in pairs(priv.subframes) do
         res = res..'\n    '..subframe:serialize():gsub('\n', '\n    ')..'\n'
@@ -149,6 +156,8 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 private.name = setmetatable({}, {__mode = 'k'})
+
+private.empty_param_value = 'NULL'
 
 ---@param self FdfFrame
 ---@return FdfFramePrivate
