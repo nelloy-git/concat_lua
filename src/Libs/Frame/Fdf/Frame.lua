@@ -120,6 +120,25 @@ function public:addSubframe(subframe)
     private.data[self].fdf_file:remove(subframe)
 end
 
+---@param name string
+---@return FdfFrame | nil
+function public:getSubframe(name)
+    local priv = private.data[self]
+    return priv.subframes[name]
+end
+
+---@param name string
+---@return FdfFrame | nil
+function public:removeSubframe(name)
+    local priv = private.data[self]
+    local subframe = priv.subframes[name]
+    priv.subframes[name] = nil
+    if subframe then
+        private.data[self].fdf_file:add(subframe)
+    end
+    return subframe
+end
+
 ---@return table
 function public:getAllSubframes()
     local priv = private.data[self]
