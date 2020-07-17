@@ -227,7 +227,7 @@ function private.newData(self, fdf)
     if fdf then
         for name, subframe in pairs(fdf:getAllSubframes()) do
             checkTypeErr(subframe, FdfFrame, 'fdf_subframes['..name..']')
-            priv.subframes[name] = static.new(BlzGetFrameByName(fdf:getName(), subframe, 0))
+            priv.subframes[name] = static.new(BlzGetFrameByName(subframe:getName(), 0))
         end
     end
 end

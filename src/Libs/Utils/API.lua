@@ -19,6 +19,7 @@ Lib.current().depencies = {
 UtilsLibAPI.Action = require(lib_modname..'.Action')
 ---@type DataSyncClass
 UtilsLibAPI.DataSync = require(lib_modname..'.DataSync')
+UtilsLibAPI.DataSync.Init()
 ---@type UtilsFunctions
 UtilsLibAPI.Functions = require(lib_modname..'.Functions')
 ---@type LoggerClass

@@ -1,3 +1,4 @@
-[0.013] {Msg} Created new FdfFile 'Default' containg:
-    FrameSimpleImage
+[0.015] {Msg} Created new FdfFile 'Default' containg:
+    FrameNormalButtonDefault
     FrameNormalImage
+    FrameSimpleImage

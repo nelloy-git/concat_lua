@@ -42,6 +42,7 @@ function Lib.start(modname)
         depencies = {}
     }
     table.insert(libs_stack, lib)
+    print('Loading '..modname)
 end
 
 function Lib.finish()

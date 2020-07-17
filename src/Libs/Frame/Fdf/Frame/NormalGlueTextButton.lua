@@ -20,7 +20,7 @@ local FdfNormalBackdrop = require(lib_modname..'.Fdf.Frame.NormalBackdrop')
 ---@type FdfNormalTextClass
 local FdfNormalText = require(lib_modname..'.Fdf.Frame.NormalText')
 ---@type FdfNormalHighlightClass
-local FdfNormalHighlight = require(lib_modname..'.Fdf.Frame.NormalHighFdfNormalHighlight')
+local FdfNormalHighlight = require(lib_modname..'.Fdf.Frame.NormalHighlight')
 
 --=======
 -- Class
@@ -156,7 +156,7 @@ function private.setControlSubframe(self, parameter, subframe)
         self:removeSubframe(name)
     end
 
-    self:setParameter(parameter, subframe:getName())
+    self:setParameter(parameter, '\"'..subframe:getName()..'\"')
     self:addSubframe(subframe)
 end
 

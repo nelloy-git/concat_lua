@@ -67,6 +67,7 @@ end
 ---@param action Action
 ---@return boolean
 function public:removeAction(action)
+    checkTypeErr(action, Action, 'action')
     local priv = private.data[self]
 
     for i = 1, #priv.actions do
@@ -98,6 +99,9 @@ end
 ---@param opcode limitop
 ---@param limitval number
 function public:addVariableEvent(var_name, opcode, limitval)
+    checkTypeErr(var_name, 'string', 'var_name')
+    checkTypeErr(opcode, 'limitop', 'opcode')
+    checkTypeErr(limitval, 'number', 'limitval')
     TriggerRegisterVariableEvent(self:getHandleData(), var_name, opcode, limitval)
 end
 

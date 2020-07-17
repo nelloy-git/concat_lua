@@ -71,7 +71,7 @@ private.fdf_texture_name = 'FrameNormalImageTexture'
 private.fdf = FdfNormalBackdrop.new(private.fdf_name)
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
-private.fdf:setBackground("ReplaceableTextures\\\\CommandButtons\\\\BTNAcidBomb.blp")
+private.fdf:setBackground("ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp")
 private.fdf:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
 private.fdf:setCornerSize(0.0125)
 private.fdf:setInsets(0.005, 0.005, 0.005, 0.005)

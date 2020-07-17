@@ -108,6 +108,10 @@ end
 FrameLib.Frame.Normal.Base = require(lib_modname..'.Normal.Base')
 ---@type FrameNormalImageClass
 FrameLib.Frame.Normal.Image = require(lib_modname..'.Normal.Image')
+---@type FrameNormalButtonClass
+FrameLib.Frame.Normal.Button = require(lib_modname..'.Normal.Button')
+---@type FrameNormalButtonDefaultClass
+FrameLib.Frame.Normal.ButtonDefault = require(lib_modname..'.Normal.ButtonDefault')
 
 -- Example
 --[[

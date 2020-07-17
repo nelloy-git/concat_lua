@@ -58,6 +58,14 @@ BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0))
 -- Hide inventory
 BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_ITEM_BUTTON, 0))), false)
 
+local btn = FrameLib.Frame.Normal.ButtonDefault.new()
+btn:setPos(0.4, 0.3)
+btn:setTexture("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp", 0, true)
+btn:setVisible(true)
+
+local img = FrameLib.Frame.Normal.Image.new()
+img:setPos(0.3, 0.3)
+
 
 FrameLib.Screen.addResolutionChangedAction(
     function(prev_x0, prev_width, prev_height, new_x0, new_width, new_height)

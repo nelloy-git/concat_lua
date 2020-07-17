@@ -23,6 +23,26 @@ local public_meta = {
         rawset(self, key, value)
     end,
 
+    __index = function(self, key)
+        local val = rawget(self, key)
+
+        if val ~= nil then
+            return val
+        end
+
+        local class = public2class[self]
+        local parents = ClassParent.getList(class)
+
+        for i = 1, #parents do
+            val = class2public[parents[i]][key]
+            if val ~= nil then
+                return val
+            end
+        end
+
+        return val
+    end,
+
     __tostring = function(self)
         return tostring(public2class[self])
     end,

@@ -45,7 +45,7 @@ function override.new(handle, destructor, child_instance)
     end
 
     if private.db[handle] then
-        Log:err('handle data can have only one connected Handle instance.', 2)
+        Log:err('handle data can have only one connected Handle instance. Old: '..tostring(private.db[handle])..' New: '..tostring(child_instance), 2)
     end
 
     local instance = child_instance or Class.allocate(Handle)
@@ -88,7 +88,7 @@ end
 -- Private
 --=========
 
-private.data = setmetatable({}, {__mode = 'k'})
+private.data = {}
 private.db = setmetatable({}, {__mode = 'v'})
 
 private.priv_meta = {

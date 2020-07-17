@@ -12,7 +12,6 @@ src/Libs/Class/Override.lua
 src/Libs/Class/Public.lua
 src/Libs/Class/Utils.lua
 src/Libs/Class/Instance.lua
-src/Libs/Class/AllInOne.lua
 src/Libs/Utils/API.lua
 src/Libs/Utils/Action.lua
 src/Libs/Utils/Logger.lua
@@ -75,3 +74,8 @@ src/Libs/Frame/Normal/Base.lua
 src/Libs/Frame/Fdf/Frame/NormalBase.lua
 src/Libs/Frame/Normal/Image.lua
 src/Libs/Frame/Fdf/Frame/NormalBackdrop.lua
+src/Libs/Frame/Normal/Button.lua
+src/Libs/Frame/Fdf/Frame/NormalHighlight.lua
+src/Libs/Frame/Fdf/Frame/NormalGlueTextButton.lua
+src/Libs/Frame/Fdf/Frame/NormalText.lua
+src/Libs/Frame/Normal/ButtonDefault.lua

@@ -43,6 +43,7 @@ local private = {}
 local inited = false
 function override.Init()
     if inited then return end
+    if IsCompiletime() then return end
 
     private.trigger = Trigger.new()
     private.trigger:addAction(private.runActions)
@@ -64,7 +65,7 @@ function override.new(id, child_instance)
     end
 
     local instance = child_instance or Class.allocate(DataSync)
-    private.newData(instance)
+    private.newData(instance, id)
 
     return instance
 end
