@@ -76,6 +76,6 @@ src/Libs/Frame/Normal/Image.lua
 src/Libs/Frame/Fdf/Frame/NormalBackdrop.lua
 src/Libs/Frame/Normal/Button.lua
 src/Libs/Frame/Fdf/Frame/NormalHighlight.lua
-src/Libs/Frame/Fdf/Frame/NormalGlueTextButton.lua
+src/Libs/Frame/Fdf/Frame/NormalButton.lua
 src/Libs/Frame/Fdf/Frame/NormalText.lua
 src/Libs/Frame/Normal/ButtonDefault.lua

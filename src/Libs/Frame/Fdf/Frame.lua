@@ -65,6 +65,11 @@ function public:getBaseType()
     return private.data[self].base_type
 end
 
+---@param base_type string
+function public:setBaseType(base_type)
+    private.data[self].base_type = base_type
+end
+
 ---@param fdf_frame FdfFrame | nil
 function public:setInheritance(fdf_frame)
     if fdf_frame then checkTypeErr(fdf_frame, FdfFrame, 'fdf_frame') end
@@ -92,10 +97,10 @@ function public:getAllParameters()
 end
 
 ---@param parameter string
----@param value string
+---@param value string | nil
 function public:setParameter(parameter, value)
     checkTypeErr(parameter, 'string', parameter)
-    checkTypeErr(value, 'string', value)
+    if value then checkTypeErr(value, 'string', value) end
 
     local priv = private.data[self]
     if value == nil then value = private.empty_param_value end

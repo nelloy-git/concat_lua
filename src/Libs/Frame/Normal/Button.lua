@@ -25,7 +25,7 @@ local FdfNormalBackdrop = require(lib_modname..'.Fdf.Frame.NormalBackdrop')
 ---@type FdfNormalHighlightClass
 local FdfNormalHighlight = require(lib_modname..'.Fdf.Frame.NormalHighlight')
 ---@type FdfNormalGlueTextButtonClass
-local FdfNormalGlueTextButton = require(lib_modname..'.Fdf.Frame.NormalGlueTextButton')
+local FdfNormalGlueTextButton = require(lib_modname..'.Fdf.Frame.NormalButton')
 ---@type FdfNormalTextClass
 local FdfNormalText = require(lib_modname..'.Fdf.Frame.NormalText')
 

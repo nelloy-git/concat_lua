@@ -61,6 +61,14 @@ function static.getLinked(handle)
     return private.db[handle]
 end
 
+--- Removes linked instance for handle.
+---@param handle handle
+function static.removeLinked(handle)
+    local linked = private.db[handle]
+    private.data[linked] = nil
+    private.db[handle] = nil
+end
+
 --========
 -- Public
 --========

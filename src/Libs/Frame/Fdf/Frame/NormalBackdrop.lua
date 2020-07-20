@@ -74,6 +74,15 @@ function public:setDecorateFileNames(flag)
     end
 end
 
+---@param flag boolean
+function public:setAllPoints(flag)
+    if flag then
+        self:setParameter('SetAllPoints')
+    else
+        self:removeParameter('SetAllPoints')
+    end
+end
+
 --- Fills the Frame with tiles of the texture. Without the background file is stretched
 ---@param flag boolean
 function public:setBackgroundTileMode(flag)

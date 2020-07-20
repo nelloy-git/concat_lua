@@ -49,7 +49,7 @@ function override.new(name, fdf_file, child_instance)
     if child_instance then checkTypeErr(child_instance, FdfNormalGlueTextButton, 'child_instance') end
 
     local instance = child_instance or Class.allocate(FdfNormalGlueTextButton)
-    instance = FdfNormalBase.new(name, 'GLUETEXTBUTTON', fdf_file, instance)
+    instance = FdfNormalBase.new(name, 'BUTTON', fdf_file, instance)
 
     return instance
 end
@@ -124,6 +124,10 @@ end
 function public:setControlMouseOver(fdf_highlight)
     checkTypeErr(fdf_highlight, FdfNormalHighlight, 'fdf_highlight')
     private.setControlSubframe(self, 'ControlMouseOverHighlight', fdf_highlight)
+
+    if self:getBaseType() ~= 'GLUETEXTBUTTON' then
+        self:setBaseType('GLUEBUTTON')
+    end
 end
 
 --- Glowing when mouse hovers.
@@ -131,6 +135,10 @@ end
 function public:setControlFocus(fdf_highlight)
     checkTypeErr(fdf_highlight, FdfNormalHighlight, 'fdf_highlight')
     private.setControlSubframe(self, 'ControlFocusHighlight', fdf_highlight)
+
+    if self:getBaseType() ~= 'GLUETEXTBUTTON' then
+        self:setBaseType('GLUEBUTTON')
+    end
 end
 
 --- Is used to markup the text on the buttom.
@@ -138,9 +146,9 @@ end
 function public:setText(fdf_text)
     checkTypeErr(fdf_text, FdfNormalText, 'fdf_text')
     private.setControlSubframe(self, 'ButtonText', fdf_text)
-end
 
--- TODO ControlMouseOverHightlight, ControlFocusHighlight, ButtonText
+    self:setBaseType('GLUETEXTBUTTON')
+end
 
 --=========
 -- Private

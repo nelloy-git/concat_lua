@@ -191,7 +191,7 @@ function public:setSubframeClass(name, class)
     end
 
     local subfame_handle = subframe:getHandleData()
-    subframe:destroy() -- was created with framehandle so destroy() wont remove handle data.
+    static.removeLinked(subfame_handle)
     subframe = class.new(subfame_handle)
     private.data[self].subframes[name] = subframe
 end

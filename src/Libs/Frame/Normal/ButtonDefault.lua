@@ -27,7 +27,7 @@ local FdfNormalBackdrop = require(lib_modname..'.Fdf.Frame.NormalBackdrop')
 ---@type FdfNormalHighlightClass
 local FdfNormalHighlight = require(lib_modname..'.Fdf.Frame.NormalHighlight')
 ---@type FdfNormalGlueTextButtonClass
-local FdfNormalGlueTextButton = require(lib_modname..'.Fdf.Frame.NormalGlueTextButton')
+local FdfNormalGlueTextButton = require(lib_modname..'.Fdf.Frame.NormalButton')
 ---@type FdfNormalTextClass
 local FdfNormalText = require(lib_modname..'.Fdf.Frame.NormalText')
 
@@ -54,10 +54,6 @@ function override.new()
     instance = FrameNormalButton.new(private.fdf, instance)
 
     instance:setSubframeClass(private.control_name, FrameNormalImage)
-
-    local b = instance:getSubframe(private.control_name)
-    local h = b:getHandleData()
-    print(BlzFrameGetName(h), GetHandleId(h))
     --instance:setSubframeClass(private.control_pushed_name, FrameNormalImage)
     --instance:setSubframeClass(private.control_disabled_name, FrameNormalImage)
 
@@ -96,7 +92,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.fdf_name = 'FrameNormalButtonDefault'
-private.control_name = 'FrameNormalButtonDefaultControl'
+private.control_name = 'FrameNormalButtonDefaultControlNormal'
 private.control_pushed_name = 'FrameNormalButtonDefaultControlPushed'
 private.control_disabled_name = 'FrameNormalButtonDefaultControlDisabled'
 private.control_mouseover_name = 'FrameNormalButtonDefaultControlMouseOver'
@@ -104,35 +100,38 @@ private.control_focus_name = 'FrameNormalButtonDefaultControlFocus'
 private.text_name = 'FrameNormalButtonDefaultText'
 
 private.icon = "ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp"
+private.icon_pushed = "ReplaceableTextures\\CommandButtons\\BTNAltarOfElders.blp"
 private.disbtn_icon = "ReplaceableTextures\\CommandButtonsDisabled\\DISBTNAcidBomb.blp"
+private.highlight_icon = "UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp"
+
+function private.createControl(name, icon)
+    local control = FdfNormalBackdrop.new(name)
+    control:setBackground(icon)
+    control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
+    control:setCornerSize(0.0125)
+    control:setInsets(0.005, 0.005, 0.005, 0.005)
+    control:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
+    return control
+end
+
+function private.createHighlight(name, path)
+    local highlight = FdfNormalHighlight.new(name)
+    highlight:setHighlightType('FILETEXTURE')
+    highlight:setAlphaFile("UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp")
+    highlight:setAlphaMode('ADD')
+    return highlight
+end
 
 private.fdf = FdfNormalGlueTextButton.new(private.fdf_name)
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setControlStyle(true, true, true)
-    private.control = FdfNormalBackdrop.new(private.control_name)
-    private.control:setBackground(private.icon)
-    private.control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
-    private.control:setCornerSize(0.0125)
-    private.control:setInsets(0.005, 0.005, 0.005, 0.005)
-    private.control:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
-private.fdf:setControl(private.control)
-
-    private.control_pushed = FdfNormalBackdrop.new(private.control_pushed_name)
-    private.control_pushed:setBackground(private.icon)
-    private.control_pushed:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
-    private.control_pushed:setCornerSize(0.0125)
-    private.control_pushed:setInsets(0.01, 0.01, 0.01, 0.01)
-    private.control_pushed:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
-private.fdf:setControlPushed(private.control_pushed)
-
-    private.control_disabled = FdfNormalBackdrop.new(private.control_disabled_name)
-    private.control_disabled:setBackground(private.disbtn_icon)
-    private.control_disabled:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
-    private.control_disabled:setCornerSize(0.0125)
-    private.control_disabled:setInsets(0.005, 0.005, 0.005, 0.005)
-    private.control_disabled:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
-private.fdf:setControlDisabled(private.control_disabled)
+private.fdf:setControl(private.createControl(private.control_name, private.icon))
+private.fdf:setControlPushed(private.createControl(private.control_pushed_name, private.icon_pushed))
+private.fdf:setControlDisabled(private.createControl(private.control_disabled_name, private.disbtn_icon))
+private.fdf:setControlMouseOver(private.createHighlight(private.control_mouseover_name, private.highlight_icon))
+private.fdf:setControlFocus(private.createHighlight(private.control_focus_name, private.highlight_icon))
+--private.fdf:setText()
 --
 --    private.control_mouse_over = FdfNormalHighlight.new(private.control_mouseover_name)
 --    -- TODO
