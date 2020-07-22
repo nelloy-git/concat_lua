@@ -76,7 +76,7 @@ end
 
 ---@param text string
 function public:setText(text)
-    self:setParameter('Text', text)
+    self:setParameter('Text', '\"'..text..'\"')
 end
 
 ---@param path string
@@ -86,8 +86,8 @@ function public:setFont(path, size)
                                                  path, size))
 end
 
----@param horz string | 'JUSTIFYCENTER' | 'JUSTIFYLEFT' | 'JUSTIFYRIGHT'
----@param vert string | 'JUSTIFYMIDDLE' | 'JUSTIFYTOP' | 'JUSTIFYBOTTOM'
+---@param horz string | "'JUSTIFYCENTER'" | "'JUSTIFYLEFT'" | "'JUSTIFYRIGHT'"
+---@param vert string | "'JUSTIFYMIDDLE'" | "'JUSTIFYTOP'" | "'JUSTIFYBOTTOM'"
 function public:setJustification(horz, vert)
     self:setParameter('FontJustificationH', horz)
     self:setParameter('FontJustificationV', vert)

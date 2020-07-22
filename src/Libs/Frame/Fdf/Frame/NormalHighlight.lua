@@ -62,9 +62,9 @@ function public:setDecorateFileNames(flag)
     end
 end
 
----@param t string | ''FILETEXTURE'' | ''SHADE''
+---@param t string | "'FILETEXTURE'" | "'SHADE'"
 function public:setHighlightType(t)
-    self:setParameter('HighlightType')
+    self:setParameter('HighlightType', '\"'..t..'\"')
 end
 
 ---@param path string
@@ -72,7 +72,7 @@ function public:setAlphaFile(path)
     self:setParameter('HighlightAlphaFile', '\"'..path..'\"')
 end
 
----@param mode string | ''ADD'' | ''BLEND''
+---@param mode string | "'ADD'" | "'BLEND'"
 function public:setAlphaMode(mode)
     self:setParameter('HighlightAlphaMode', '\"'..mode..'\"')
 end

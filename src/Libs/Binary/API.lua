@@ -1,7 +1,7 @@
 ---@class BinaryLib
 local BinaryLibAPI = {}
-local modname = Compiletime(Lib.getModname())
-Lib.start(modname)
+local libmodename = Compiletime(Lib.getModname())
+Lib.start(libmodename)
 
 --===========
 -- Depencies
@@ -16,9 +16,18 @@ Lib.current().depencies = {
 -- API
 --=====
 
+---@type BinaryUtils
+local Utils = require(libmodename..'.Utils')
+
 ---@type BinaryDataUnitClass
-BinaryLibAPI.Unit = require(modname..'.UnitData')
-BinaryLibAPI.UnitDB = require(modname..'.UnitValuesDB')
+BinaryLibAPI.Unit = require(libmodename..'.UnitData')
+BinaryLibAPI.UnitDB = require(libmodename..'.UnitValuesDB')
+BinaryLibAPI.getUnitId = Utils.nextUnitId
+BinaryLibAPI.getHeroId = Utils.nextHeroId
+---@type BinaryDataAbilityClass
+BinaryLibAPI.Ability = require(libmodename..'.AbilityData')
+BinaryLibAPI.AbilityDB = require(libmodename..'.AbilityValuesDB')
+BinaryLibAPI.getAbilityId = Utils.nextAbilityId
 
 Lib.finish()
 

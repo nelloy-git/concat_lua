@@ -9,7 +9,8 @@ Lib.start(modname)
 
 Lib.current().depencies = {
     Class = require(LibList.ClassLib),
-    UtilsLib = require(LibList.UtilsLib)
+    UtilsLib = require(LibList.UtilsLib),
+    BinaryLib = require(LibList.BinaryLib)
 }
 
 --=====

@@ -54,8 +54,9 @@ function override.new()
     instance = FrameNormalButton.new(private.fdf, instance)
 
     instance:setSubframeClass(private.control_name, FrameNormalImage)
-    --instance:setSubframeClass(private.control_pushed_name, FrameNormalImage)
-    --instance:setSubframeClass(private.control_disabled_name, FrameNormalImage)
+    instance:setSubframeClass(private.control_pushed_name, FrameNormalImage)
+    instance:setSubframeClass(private.control_disabled_name, FrameNormalImage)
+    --instance:setSubframeClass(private.control_mouseover_name, Fra)
 
     return instance
 end
@@ -103,6 +104,8 @@ private.icon = "ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp"
 private.icon_pushed = "ReplaceableTextures\\CommandButtons\\BTNAltarOfElders.blp"
 private.disbtn_icon = "ReplaceableTextures\\CommandButtonsDisabled\\DISBTNAcidBomb.blp"
 private.highlight_icon = "UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp"
+private.font = "fonts\\nim_____.ttf"
+private.font_size = 0.009
 
 function private.createControl(name, icon)
     local control = FdfNormalBackdrop.new(name)
@@ -122,6 +125,15 @@ function private.createHighlight(name, path)
     return highlight
 end
 
+function private.createText(name, font, size)
+    local text = FdfNormalText.new(name)
+    text:setText('Text')
+    text:setJustification('JUSTIFYCENTER', 'JUSTIFYMIDDLE')
+    text:setFont(font, size)
+    text:setColor(0, 0, 0, 1)
+    return text
+end
+
 private.fdf = FdfNormalGlueTextButton.new(private.fdf_name)
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
@@ -131,17 +143,6 @@ private.fdf:setControlPushed(private.createControl(private.control_pushed_name, 
 private.fdf:setControlDisabled(private.createControl(private.control_disabled_name, private.disbtn_icon))
 private.fdf:setControlMouseOver(private.createHighlight(private.control_mouseover_name, private.highlight_icon))
 private.fdf:setControlFocus(private.createHighlight(private.control_focus_name, private.highlight_icon))
---private.fdf:setText()
---
---    private.control_mouse_over = FdfNormalHighlight.new(private.control_mouseover_name)
---    -- TODO
---private.fdf:setControlMouseOver(private.control_mouse_over)
---
---    private.control_focus = FdfNormalHighlight.new(private.control_focus_name)
---    -- TODO
---private.fdf:setControlFocus(private.control_focus)
---
---    private.text = FdfNormalText.new(private.text_name)
---private.fdf:setText(private.text)
+private.fdf:setText(private.createText(private.text_name, private.font, private.font_size))
 
 return static

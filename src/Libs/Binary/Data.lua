@@ -2,7 +2,7 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
+local lib_modename = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
@@ -10,6 +10,9 @@ local Class = depencies.Class
 local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
+
+---@type BinaryUtils
+local BinaryUtils = require(lib_modename..'.Utils')
 
 --=======
 -- Class
@@ -94,15 +97,16 @@ function public:serialize()
         bytes = bytes..
                 value_id..
                 private.type_to_bytes[value_type]..
-                private.value_to_bytes[value_type](value)
+                private.value_to_bytes[value_type](value)..
+                '\0\0\0\0'
 
         changes_count = changes_count + 1
     end
 
     -- Adds header
-    bytes = private.id2bytes(priv.base_id)..     -- Base (parent's) id
-            private.id2bytes(priv.id)..          -- New id
-            private.int2bytes(changes_count)..    -- Changes count
+    bytes = BinaryUtils.id2byte(priv.base_id)..     -- Base (parent's) id
+            BinaryUtils.id2byte(priv.id)..          -- New id
+            BinaryUtils.int2byte(changes_count)..    -- Changes count
             bytes
 
     return bytes
@@ -129,83 +133,20 @@ function private.newData(self, id, base_id, name)
     private.data[self] = priv
 end
 
-function private.id2bytes(id)
-    local bytes = ''
-    for i = 0, 3 do
-        bytes = string.char(id >> (8 * i) & 0xFF)..bytes
-    end
-    return bytes
-end
-
----@param data integer
----@return string
-function private.int2bytes(data)
-    local bytes = ''
-    for i = 0, 3 do
-        bytes = bytes..string.char(data >> (8 * i) & 0xFF)
-    end
-    return bytes
-end
-
-local function grab_byte(v)
-      return math.floor(v / 256), string.char(math.floor(v) % 256)
-end
-
-local log2 = math.log(2)
-local frexp = math.frexp or function(x)
-	if x == 0 then return 0, 0 end
-	local e = math.floor(math.log(math.abs(x)) / log2 + 1)
-	return x / 2 ^ e, e
-end
-
----@param data number
----@return string
-function private.float2bytes(data)
-    local sign = 0
-    if data < 0 then
-      sign = 1
-      data = -data
-    end
-    local mantissa, exponent = frexp(data)
-    if data == 0 then
-       mantissa = 0
-       exponent = 0
-    else
-       mantissa = (mantissa * 2 - 1) * 8388608 -- math.ldexp(0.5, 24)
-       exponent = exponent + 126
-    end
-    local v, byte = "" -- convert to bytes
-    data, byte = grab_byte(mantissa)
-    v = v..byte -- 7:0
-    data, byte = grab_byte(data)
-    v = v..byte -- 15:8
-    data, byte = grab_byte(exponent * 128 + data)
-    v = v..byte -- 23:16
-    data, byte = grab_byte(sign * 128 + data)
-    v = v..byte -- 31:24
-    return v
-end
-
----@param data string
----@return string
-function private.str2bytes(data)
-    return data .. '\0'
-end
-
 private.type_to_bytes = {
-    bool = private.int2bytes(0),
-    int = private.int2bytes(0),
-    real = private.int2bytes(1),
-    unreal = private.int2bytes(2),
-    string = private.int2bytes(3),
+    bool = BinaryUtils.int2byte(0),
+    int = BinaryUtils.int2byte(0),
+    real = BinaryUtils.int2byte(1),
+    unreal = BinaryUtils.int2byte(2),
+    string = BinaryUtils.int2byte(3),
 }
 
 private.value_to_bytes = {
-    bool = private.int2bytes,
-    int = private.int2bytes,
-    real = private.float2bytes,
-    unreal = private.float2bytes,
-    string = private.str2bytes,
+    bool = BinaryUtils.int2byte,
+    int = BinaryUtils.int2byte,
+    real = BinaryUtils.float2byte,
+    unreal = BinaryUtils.float2byte,
+    string = BinaryUtils.str2byte,
 }
 
 return BinaryData.static

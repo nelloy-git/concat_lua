@@ -11,6 +11,10 @@ local Class = depencies.Class
 local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Unit = UtilsLib.Handle.Unit
+---@type BinaryLib
+local BinaryLib = depencies.BinaryLib
+local BinaryAbility = BinaryLib.Ability
+local BinaryAbilityDB = BinaryLib.AbilityDB
 
 ---@type AbilityClass
 local Ability = require(lib_modname..'.Ability')
@@ -84,6 +88,16 @@ function private.newData(self, owner)
     }
     private.data[self] = priv
     private.owners[owner] = self
+end
+
+FourCC = FourCC or function(id) return string.unpack(">I4", id) end
+for i = 0, (bj_MAX_PLAYERS or 24) - 1 do
+    local id = BinaryLib.getAbilityId()
+    local dummy_abil_bin = BinaryAbility.new(FourCC(id), FourCC('ANcl'), ('DummyAbilityP%d'):format(i))
+    dummy_abil_bin:setValue(BinaryAbilityDB.Name.value_id,
+                            BinaryAbilityDB.Name.value_type,
+                            BinaryAbilityDB.Name.extra_id,
+                            0, ('DummyAbilityP%d'):format(i))
 end
 
 return static

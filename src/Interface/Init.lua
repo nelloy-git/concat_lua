@@ -60,7 +60,7 @@ BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_
 
 local btn = FrameLib.Frame.Normal.ButtonDefault.new()
 btn:setPos(0.4, 0.3)
-btn:setTexture("ReplaceableTextures\\\\CommandButtons\\\\BTNAmulet.blp", 0, true)
+--btn:setTexture("ReplaceableTextures\\\\CommandButtons\\\\BTNAmulet.blp", 0, true)
 --btn:setVisible(true)
 
 local img = FrameLib.Frame.Normal.Image.new()

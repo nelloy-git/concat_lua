@@ -11,12 +11,17 @@ local BuffLib = require(LibList.BuffLib)
 ---@type BinaryLib
 local BinaryLib = require(LibList.BinaryLib)
 
-local Interface = require('Interface.Init')
+--local Interface = require('Interface.Init')
 
 FourCC = FourCC or function(id) return string.unpack(">I4", id) end
 
 local foo_type = BinaryLib.Unit.new(FourCC('U001'), FourCC('hfoo'), 'TestFootman')
-foo_type:setValue(BinaryLib.UnitDB.Name.value_id, BinaryLib.UnitDB.Name.value_type, 'TestFootman')
+foo_type:setValue(BinaryLib.UnitDB.Name.value_id,
+                  BinaryLib.UnitDB.Name.value_type,
+                  'TestFootman')
+foo_type:setValue(BinaryLib.UnitDB.IconGameInterface.value_id,
+                  BinaryLib.UnitDB.IconGameInterface.value_type,
+                  "ReplaceableTextures\\CommandButtons\\BTNAltarOfElders.blp")
 
 if IsCompiletime() then
     return
@@ -38,5 +43,9 @@ local buff_container2 = BuffLib.Container.new(u2)
 param_container2:addBase(ParameterLib.PhysicalDamage, 10)
 param_container2:addBase(ParameterLib.Defence, 5)
 param_container2:addBase(ParameterLib.Health, 1000)
+
+local f = ConvertUnitStringField(FourCC('uabi'))
+print(f)
+print('Result: '..BlzGetUnitStringField(u:getHandleData(), f))
 
 --Interface.SkillsBar:setSkill(1, abil_container:get(1))

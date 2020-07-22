@@ -56,7 +56,11 @@ function public:serialize(lvl, data)
     local abil_data_id_bytes = WeUtils.int2byte(priv.abil_data_id)
     local data_bytes = WeField.data2bytes(data, self:getDataType())
 
-	return change_id_bytes..data_type_bytes..lvl_bytes..abil_data_id_bytes..data_bytes
+    return change_id_bytes..
+           data_type_bytes..
+           lvl_bytes..
+           abil_data_id_bytes..
+           data_bytes
 end
 
 ---@return boolean
