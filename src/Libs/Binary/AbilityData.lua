@@ -12,12 +12,16 @@ local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
+---@type BinaryDataAbilityDB
+local AbilDB = require(lib_modename..'.AbilityValuesDB')
 ---@type BinaryFileClass
 local BinaryFile = require(lib_modename..'.File')
 ---@type BinaryDataClass
 local BinaryData = require(lib_modename..'.Data')
 ---@type BinaryUtils
 local BinaryUtils = require(lib_modename..'.Utils')
+
+local FourCC = function(id) return string.unpack(">I4", id) end
 --endregion
 
 --=======
@@ -62,6 +66,88 @@ end
 --========
 -- Public
 --========
+
+---@param value number
+function public:setLevels(value)
+    private.setValue(self, AbilDB.Levels, nil, 0, value)
+end
+
+---@param value string
+function public:setArtCaster(value)
+    private.setValue(self, AbilDB.ArtCaster, nil, 0, value)
+end
+
+---@param value string
+function public:setArtEffect(value)
+    private.setValue(self, AbilDB.ArtEffect, nil, 0, value)
+end
+
+---@param value string
+function public:setArtSpecial(value)
+    private.setValue(self, AbilDB.ArtSpecial, nil, 0, value)
+end
+
+---@param value string
+function public:setArtTarget(value)
+    private.setValue(self, AbilDB.ArtTarget, nil, 0, value)
+end
+
+-- ANcl
+
+---@param value number
+---@param lvl number
+function public:setArtDuration(value, lvl)
+    private.setValue(self, AbilDB.ANcl.ArtDuration, FourCC('ANcl'), lvl, value)
+end
+
+---@param value string
+---@param lvl number
+function public:setOrderId(value, lvl)
+    private.setValue(self, AbilDB.ANcl.OrderId, FourCC('ANcl'), lvl, value)
+end
+
+---@param value boolean
+---@param lvl number
+function public:setDisableOtherAbilities(value, lvl)
+    private.setValue(self, AbilDB.ANcl.DisableOtherAbilities, FourCC('ANcl'), lvl, value)
+end
+
+---@param value number
+---@param lvl number
+function public:setFollowThoughTime(value, lvl)
+    private.setValue(self, AbilDB.ANcl.FollowThoughTime, FourCC('ANcl'), lvl, value)
+end
+
+---@param visible boolean
+---@param target_image boolean
+---@param physical boolean
+---@param universal boolean
+---@param uniq boolean
+---@param lvl number
+function public:setOptions(visible, target_image, physical, universal, uniq, lvl)
+    local value = 0
+    value = visible and value + 1 or value
+    value = target_image and value + 2 or value
+    value = physical and value + 4 or value
+    value = universal and value + 8 or value
+    value = uniq and value + 16 or value
+    private.setValue(self, AbilDB.ANcl.Options, FourCC('ANcl'), lvl, value)
+end
+
+---@param target string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
+---@param lvl any
+function public:setTargetType(target, lvl)
+    local value = nil
+    value = target == 'None' and 0 or value
+    value = target == 'Unit' and 1 or value
+    value = target == 'Point' and 2 or value
+    value = target == 'PointOrUnit' and 3 or value
+    if value == nil then
+        Log:err('Unavailable target type.', 2)
+    end
+
+    private.setValue(self, AbilDB.ANcl.TargetType, FourCC('ANcl'), lvl, value)
+end
 
 ---@param value_id string
 ---@param value_type string | "'bool'" | "'int'" | "'real'" | "'unreal'" | "'string'"
@@ -137,6 +223,19 @@ function private.newData(self, lvls)
         values = {},
     }
     private.data[self] = priv
+end
+
+---@param self BinaryDataAbility
+---@param db table
+---@param avaliable_base_id number | nil
+---@param lvl number
+---@param value any
+function private.setValue(self, db, avaliable_base_id, lvl, value)
+    if avaliable_base_id and self:getBaseId() ~= avaliable_base_id then
+        Log:err('Function is not available for this basic ability.', 3)
+    end
+    checkTypeErr(lvl, 'number', 'lvl', 3)
+    self:setValue(db.value_id, db.value_type, db.extra_id, lvl, value)
 end
 
 private.type_to_bytes = {

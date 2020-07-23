@@ -1,3 +1,4 @@
+---@class BinaryDataUnitDB
 local UnitValueDB = {}
 
 UnitValueDB.AIPlacementRadius = {value_id = "uabr", value_type = 'real'}

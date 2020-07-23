@@ -73,6 +73,42 @@ end
 -- Public
 --========
 
+---@param target AbilityTarget
+---@return boolean
+function public:use(target)
+    local priv = private.data[self]
+    priv.cur_target = target
+
+    ---@type AbilityType
+    local abil_type = priv.ability_type
+
+    if not abil_type:checkConditions(self) then
+        return false
+    end
+
+    if abil_type:getChargesForUse(self) < priv.charges then
+        return false
+    end
+
+    if abil_type:getManaCost(self) < priv.owner:getMana() then
+        return false
+    end
+
+    if abil_type:getHealthCost(self) < priv.owner:getHealth() then
+        return false
+    end
+
+    abil_type:onStart(self)
+    priv.charges = priv.charges - priv.ability_type:getChargesForUse(self)
+    priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
+    priv.cooldown_end_time = private.cooldown_current_time + abil_type:getChargeCooldown(self)
+    private.caster_list[priv.owner] = self
+    private.casting_list[self] = priv
+    private.cooldown_list[self] = priv
+
+    return true
+end
+
 function public:cancel()
     local priv = private.data[self]
 
@@ -146,41 +182,6 @@ end
 ---@param cooldown number
 function public:setCooldownTime(cooldown)
     private.data[self].cooldown_end_time = private.cooldown_current_time + cooldown
-end
-
----@param target AbilityTarget
----@return boolean
-function public:use(target)
-    local priv = private.data[self]
-    priv.cur_target = target
-    ---@type AbilityType
-    local abil_type = priv.ability_type
-
-    if not abil_type:checkConditions(self) then
-        return false
-    end
-
-    if abil_type:getChargesForUse(self) < priv.charges then
-        return false
-    end
-
-    if abil_type:getManaCost(self) < priv.owner:getMana() then
-        return false
-    end
-
-    if abil_type:getHealthCost(self) < priv.owner:getHealth() then
-        return false
-    end
-
-    abil_type:onStart(self)
-    priv.charges = priv.charges - priv.ability_type:getChargesForUse(self)
-    priv.casting_end_time = private.casting_current_time + abil_type:getCastingTime(self)
-    priv.cooldown_end_time = private.cooldown_current_time + abil_type:getChargeCooldown(self)
-    private.caster_list[priv.owner] = self
-    private.casting_list[self] = priv
-    private.cooldown_list[self] = priv
-
-    return true
 end
 
 --=========

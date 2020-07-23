@@ -15,6 +15,8 @@ local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local BinaryFile = require(lib_modname..'.File')
 ---@type BinaryDataClass
 local BinaryData = require(lib_modname..'.Data')
+---@type BinaryDataUnitDB
+local UnitDB = require(lib_modname..'.UnitValuesDB')
 --endregion
 
 --=======
@@ -58,6 +60,38 @@ end
 --========
 -- Public
 --========
+
+---@param name string
+function public:setName(name)
+    local db_data = UnitDB.Name
+    self:setValue(db_data.value_id, db_data.value_type, name)
+end
+
+---@param icon string
+function public:setIconGameInterface(icon)
+    local db_data = UnitDB.IconGameInterface
+    self:setValue(db_data.value_id, db_data.value_type, icon)
+end
+
+---@param model string
+function public:setModelFile(model)
+    local db_data = UnitDB.ModelFile
+    self:setValue(db_data.value_id, db_data.value_type, model)
+end
+
+---@param id_list table
+function public:setNormalAbilities(id_list)
+    local abil_list = ''
+    for i = 1, #id_list do
+        abil_list = abil_list..id_list[i]..','
+    end
+    if #id_list > 0 then
+        abil_list = abil_list:sub(1, abil_list:len() - 1)
+    end
+
+    local db_data = UnitDB.NormalAbilities
+    self:setValue(db_data.value_id, db_data.value_type, abil_list)
+end
 
 --=========
 -- Private

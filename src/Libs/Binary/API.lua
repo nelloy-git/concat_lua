@@ -28,6 +28,7 @@ BinaryLibAPI.getHeroId = Utils.nextHeroId
 BinaryLibAPI.Ability = require(libmodename..'.AbilityData')
 BinaryLibAPI.AbilityDB = require(libmodename..'.AbilityValuesDB')
 BinaryLibAPI.getAbilityId = Utils.nextAbilityId
+BinaryLibAPI.getOrderId = Utils.nextOrderId
 
 Lib.finish()
 

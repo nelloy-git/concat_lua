@@ -17,6 +17,8 @@ Lib.current().depencies = {
 
 ---@type ActionClass
 UtilsLibAPI.Action = require(lib_modname..'.Action')
+---@type ActionListClass
+UtilsLibAPI.ActionList = require(lib_modname..'.ActionList')
 ---@type DataSyncClass
 UtilsLibAPI.DataSync = require(lib_modname..'.DataSync')
 UtilsLibAPI.DataSync.Init()

@@ -14,6 +14,8 @@ local Functions = require(lib_modname..'.Functions')
 local checkTypeErr = Functions.checkTypeErr
 ---@type ActionClass
 local Action = require(lib_modname..'.Action')
+---@type ActionListClass
+local ActionList = require(lib_modname..'.ActionList')
 --endregion
 
 --=======
@@ -56,38 +58,23 @@ end
 ---@param callback Callback
 ---@return Action
 function public:addAction(callback)
-    local priv = private.data[self]
-
-    local action = Action.new(callback)
-    table.insert(priv.actions, action)
-
-    return action
+    return private.data[self].action_list:add(callback)
 end
 
 ---@param action Action
 ---@return boolean
 function public:removeAction(action)
-    checkTypeErr(action, Action, 'action')
-    local priv = private.data[self]
-
-    for i = 1, #priv.actions do
-        if priv.actions[i] == action then
-            table.remove(priv.actions, i)
-            return true
-        end
-    end
-
-    return false
+    return private.data[self].action_list:remove(action)
 end
 
 ---@return number
 function public:countActions()
-    return #private.data[self].actions
+    return private.data[self].action_list:count()
 end
 
 ---Function removes all actions from trigger without removing trigger.
 function public:clearActions()
-    private.data[self].actions = {}
+    private.data[self].action_list:clear()
 end
 
 ---Function executes trigger like event do.
@@ -246,18 +233,11 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param self Trigger
 function private.newData(self)
     local priv = {
-        actions = {}
+        action_list = ActionList.new()
     }
     private.data[self] = priv
 
-    TriggerAddAction(self:getHandleData(), function() private.runActions(priv.actions) end)
-end
-
----@param actions Action[]
-function private.runActions(actions)
-    for i = 1, #actions do
-        actions[i]:run()
-    end
+    TriggerAddAction(self:getHandleData(), function() priv.action_list:run() end)
 end
 
 return static
