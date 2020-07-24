@@ -61,22 +61,34 @@ end
 -- Public
 --========
 
+---@param time number
+function public:setAnimationBlendTime(time)
+    local db = UnitDB.AnimationBlendTimeseconds
+    self:setValue(db.value_id, db.value_type, time)
+end
+
+---@param time number
+function public:setAnimationCastBackswing(time)
+    local db = UnitDB.AnimationCastBackswing
+    self:setValue(db.value_id, db.value_type, time)
+end
+
 ---@param name string
 function public:setName(name)
-    local db_data = UnitDB.Name
-    self:setValue(db_data.value_id, db_data.value_type, name)
+    local db = UnitDB.Name
+    self:setValue(db.value_id, db.value_type, name)
 end
 
 ---@param icon string
 function public:setIconGameInterface(icon)
-    local db_data = UnitDB.IconGameInterface
-    self:setValue(db_data.value_id, db_data.value_type, icon)
+    local db = UnitDB.IconGameInterface
+    self:setValue(db.value_id, db.value_type, icon)
 end
 
 ---@param model string
 function public:setModelFile(model)
-    local db_data = UnitDB.ModelFile
-    self:setValue(db_data.value_id, db_data.value_type, model)
+    local db = UnitDB.ModelFile
+    self:setValue(db.value_id, db.value_type, model)
 end
 
 ---@param id_list table
@@ -89,8 +101,8 @@ function public:setNormalAbilities(id_list)
         abil_list = abil_list:sub(1, abil_list:len() - 1)
     end
 
-    local db_data = UnitDB.NormalAbilities
-    self:setValue(db_data.value_id, db_data.value_type, abil_list)
+    local db = UnitDB.NormalAbilities
+    self:setValue(db.value_id, db.value_type, abil_list)
 end
 
 --=========
