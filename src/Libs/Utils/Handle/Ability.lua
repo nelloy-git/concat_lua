@@ -39,18 +39,20 @@ local private = {}
 ---@param child_instance Ability | nil
 ---@return Ability
 function override.new(owner, abil_id, child_instance)
+    checkTypeErr(owner, 'unit', 'owner')
+    checkTypeErr(abil_id, 'number', 'abil_id')
     if child_instance then checkTypeErr(child_instance, Ability, 'child_instance') end
 
     local handle = BlzGetUnitAbility(owner, abil_id)
     if handle ~= nil then
-        Log:err('Can not add second ability with the same ID.')
+        Log:err('Can not add second ability with the same ID to unit.')
     end
 
     local instance = child_instance or Class.allocate(Ability)
     UnitAddAbility(owner, abil_id)
     handle = BlzGetUnitAbility(owner, abil_id)
 
-    instance = Handle.new(handle, function(handle) UnitRemoveAbility(owner,) end, instance)
+    instance = Handle.new(handle, private.destroyAbilityHandle, instance)
 
     return instance
 end
@@ -67,6 +69,24 @@ end
 ---@return number
 function public:getId()
     return private.data[self].abil_id
+end
+
+--- Does not work.
+---@param icon string
+function public:setIconNormal(icon)
+    BlzSetAbilityStringField(self:getHandleData(), ABILITY_SF_ICON_ACTIVATED, icon)
+end
+
+---@param tooltip string
+---@param lvl number
+function public:setTooltipNormal(tooltip, lvl)
+    BlzSetAbilityStringLevelField(self:getHandleData(), ABILITY_SLF_TOOLTIP_NORMAL, lvl - 1, tooltip)
+end
+
+---@param tooltip string
+---@param lvl number
+function public:setTooltipNormalExtended(tooltip, lvl)
+    BlzSetAbilityStringLevelField(self:getHandleData(), ABILITY_SLF_TOOLTIP_NORMAL_EXTENDED, lvl - 1, tooltip)
 end
 
 --=========

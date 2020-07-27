@@ -21,7 +21,6 @@
         "chrono": "cpp"
     },
     "Lua.awakened.cat": true,
-    "Lua.workspace.maxPreload": 500,
     "maptz.regionfolder": {
         "[lua]": {
             "foldEnd": "--endregion",
