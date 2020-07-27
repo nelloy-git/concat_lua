@@ -33,20 +33,27 @@ local private = {}
 --========
 
 ---@param id string
+---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
+---@param is_area boolean
 ---@param child_instance AbilityType | nil
 ---@return AbilityType
-function override.new(id, child_instance)
+function override.new(id, target_type, is_area, child_instance)
     checkTypeErr(id, 'string', 'id')
-    if child_instance then
-        checkTypeErr(child_instance, AbilityType, 'child_instance')
+    checkTypeErr(target_type, 'string', 'target_type')
+    if not (target_type == 'None' or
+            target_type == 'Unit' or
+            target_type == 'Point' or
+            target_type == 'PointOrUnit') then
+        Log:err('Got wrong \"target_type\".')
     end
+    checkTypeErr(is_area, 'boolean', 'is_area')
+    if child_instance then checkTypeErr(child_instance, AbilityType, 'child_instance') end
 
     if private.instances[id] then
         Log:err(tostring(AbilityType)..' with this id already exists.', 2)
     end
 
     local instance = child_instance or Class.allocate(AbilityType)
-    private.instances[id] = instance
 
     return instance
 end
@@ -136,7 +143,23 @@ function public:getTooltip(abil) end
 -- Private
 --=========
 
+
 private.instances = {}
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self Ability
+---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
+---@param is_area boolean
+function private.newData(self, id, target_type, is_area)
+    local priv = {
+        id = id,
+        target_type = target_type,
+        is_area = is_area
+    }
+    private.data[self] = priv
+
+    private.instances[id] = self
+end
 
 CompileFinal(function()
     for id, instance in pairs(private.instances) do

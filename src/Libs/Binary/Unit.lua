@@ -16,7 +16,7 @@ local BinaryFile = require(lib_modname..'.File')
 ---@type BinaryDataClass
 local BinaryData = require(lib_modname..'.Data')
 ---@type BinaryDataUnitDB
-local UnitDB = require(lib_modname..'.UnitValuesDB')
+local UnitDB = require(lib_modname..'.UnitDB')
 --endregion
 
 --=======

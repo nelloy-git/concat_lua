@@ -12,8 +12,8 @@ local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
----@type BinaryDataAbilityDB
-local AbilDB = require(lib_modename..'.AbilityValuesDB')
+---@type BinaryAbilityDB
+local AbilDB = require(lib_modename..'.AbilityDB')
 ---@type BinaryFileClass
 local BinaryFile = require(lib_modename..'.File')
 ---@type BinaryDataClass
@@ -28,14 +28,14 @@ local FourCC = function(id) return string.unpack(">I4", id) end
 -- Class
 --=======
 
-local BinaryDataAbility = Class.new('BinaryDataAbility', BinaryData)
+local BinaryAbility = Class.new('BinaryAbility', BinaryData)
 --region Class
----@class BinaryDataAbility : BinaryData
-local public = BinaryDataAbility.public
----@class BinaryDataAbilityClass : BinaryDataClass
-local static = BinaryDataAbility.static
----@type BinaryDataAbilityClass
-local override = BinaryDataAbility.override
+---@class BinaryAbility : BinaryData
+local public = BinaryAbility.public
+---@class BinaryAbilityClass : BinaryDataClass
+local static = BinaryAbility.static
+---@type BinaryAbilityClass
+local override = BinaryAbility.override
 local private = {}
 --endregion
 
@@ -46,15 +46,15 @@ local private = {}
 ---@param new_id number
 ---@param base_id number
 ---@param name string | nil
----@param child_instance BinaryDataAbility | nil
----@return BinaryDataAbility
+---@param child_instance BinaryAbility | nil
+---@return BinaryAbility
 function override.new(new_id, base_id, name, child_instance)
     checkTypeErr(new_id, 'number', 'new_id')
     checkTypeErr(base_id, 'number', 'base_id')
     if name then checkTypeErr(name, 'string', 'name') end
-    if child_instance then checkTypeErr(child_instance, BinaryDataAbility, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, BinaryAbility, 'child_instance') end
 
-    local instance = child_instance or Class.allocate(BinaryDataAbility)
+    local instance = child_instance or Class.allocate(BinaryAbility)
     instance = BinaryData.new(new_id, base_id, name, instance)
     private.newData(instance)
 
@@ -216,7 +216,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self BinaryDataAbility
+---@param self BinaryAbility
 ---@param lvls number
 function private.newData(self, lvls)
     local priv = {
@@ -225,7 +225,7 @@ function private.newData(self, lvls)
     private.data[self] = priv
 end
 
----@param self BinaryDataAbility
+---@param self BinaryAbility
 ---@param db table
 ---@param avaliable_base_id number | nil
 ---@param lvl number

@@ -1,7 +1,7 @@
 ---@class AbilityLib
 local AbilityLibAPI = {}
-local modname = Compiletime(Lib.getModname())
-Lib.start(modname)
+local lib_modename = Compiletime(Lib.getModname())
+Lib.start(lib_modename)
 
 --===========
 -- Depencies
@@ -18,22 +18,24 @@ Lib.current().depencies = {
 --=====
 
 ---@type AbilitiesContainerClass
-AbilityLibAPI.Container = require(modname..'.Container')
+AbilityLibAPI.Container = require(lib_modename..'.Container')
 ---@type AbilityTypeClass
-AbilityLibAPI.Type = require(modname..'.Type')
+AbilityLibAPI.Type = require(lib_modename..'.Type')
 ---@type AbilityType
-AbilityLibAPI.TestType = require(modname..'.TestType')
+AbilityLibAPI.TestType = require(lib_modename..'.TestType')
 
 ---@type AbilityTargetDestructableClass
-AbilityLibAPI.TargetDestructable = require(modname..'.Target.Destructable')
+AbilityLibAPI.TargetDestructable = require(lib_modename..'.Target.Destructable')
 ---@type AbilityTargetItemClass
-AbilityLibAPI.TargetItem = require(modname..'.Target.Item')
+AbilityLibAPI.TargetItem = require(lib_modename..'.Target.Item')
 ---@type AbilityTargetNoneClass
-AbilityLibAPI.TargetNone = require(modname..'.Target.None')
+AbilityLibAPI.TargetNone = require(lib_modename..'.Target.None')
 ---@type AbilityTargetPointClass
-AbilityLibAPI.TargetPoint = require(modname..'.Target.Point')
+AbilityLibAPI.TargetPoint = require(lib_modename..'.Target.Point')
 ---@type AbilityTargetUnitClass
-AbilityLibAPI.TargetUnit = require(modname..'.Target.Unit')
+AbilityLibAPI.TargetUnit = require(lib_modename..'.Target.Unit')
+
+AbilityLibAPI.Test = require(lib_modename..'.Dummy.Type')
 
 Lib.finish()
 

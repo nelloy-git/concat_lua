@@ -20,13 +20,11 @@ Lib.current().depencies = {
 local Utils = require(libmodename..'.Utils')
 
 ---@type BinaryDataUnitClass
-BinaryLibAPI.Unit = require(libmodename..'.UnitData')
-BinaryLibAPI.UnitDB = require(libmodename..'.UnitValuesDB')
+BinaryLibAPI.Unit = require(libmodename..'.Unit')
 BinaryLibAPI.getUnitId = Utils.nextUnitId
 BinaryLibAPI.getHeroId = Utils.nextHeroId
----@type BinaryDataAbilityClass
-BinaryLibAPI.Ability = require(libmodename..'.AbilityData')
-BinaryLibAPI.AbilityDB = require(libmodename..'.AbilityValuesDB')
+---@type BinaryAbilityClass
+BinaryLibAPI.Ability = require(libmodename..'.Ability')
 BinaryLibAPI.getAbilityId = Utils.nextAbilityId
 BinaryLibAPI.getOrderId = Utils.nextOrderId
 

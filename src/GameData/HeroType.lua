@@ -31,7 +31,7 @@ local private = {}
 
 ---@param child_instance Unit | nil
 ---@return Unit
-function override.new(name, child_instance)
+function override.new(child_instance)
     if child_instance ~= nil then checkTypeErr(child_instance, HeroType, 'child_instance') end
 
     local instance = child_instance or Class.allocate(HeroType)

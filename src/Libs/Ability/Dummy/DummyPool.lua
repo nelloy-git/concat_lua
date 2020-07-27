@@ -11,16 +11,17 @@ local FourCC = function(id) return string.unpack(">I4", id) end
 -- Module
 --========
 
+---@class DummyAbilitiesPool
 local DummyAbilityPool = {}
 
-local pool_size = 8 * 6 * 3
+local pool_size = 180
 local pool = {}
 
 ---@param name string
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
 ---@param is_area boolean
 ---@param lvls number
----@return BinaryDataAbility
+---@return BinaryAbility
 local function createDummy(name, target_type, is_area, lvls)
     local id = FourCC(BinaryLib.getAbilityId())
     local base_id = FourCC('ANcl')  -- Channel ability.
@@ -42,7 +43,7 @@ local function createDummy(name, target_type, is_area, lvls)
     return data
 end
 
----@return BinaryDataAbility
+---@return BinaryAbility
 function DummyAbilityPool.pop()
     local dummy = table.remove(pool)
     if dummy == nil then
@@ -52,7 +53,7 @@ function DummyAbilityPool.pop()
     return dummy
 end
 
----@param abil BinaryDataAbility
+---@param abil BinaryAbility
 function DummyAbilityPool.push(abil)
     checkTypeErr(abil, BinaryLib.Ability, 'abil')
     if abil:getBaseId() ~= FourCC('ANcl') then
@@ -64,7 +65,7 @@ end
 
 for i = 1, pool_size do
     local dummy = createDummy(('DummyAbility%d'):format(i), 'None', false, 1)
-    table.insert(pool, dummy)
+    DummyAbilityPool.push(pool, dummy)
 end
 
 return DummyAbilityPool

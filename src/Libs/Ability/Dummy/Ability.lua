@@ -13,60 +13,40 @@ local ActionList = UtilsLib.ActionList
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Unit = UtilsLib.Handle.Unit
 
----@type AbilityClass
-local Ability = require(lib_modname..'.Ability')
----@type AbilityTypeClass
-local AbilityType = require(lib_modname..'.Type')
+---@type DummyAbilityType
+local DummyAbilityType = require(lib_modname..'.Dummy.Type')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local AbilitiesContainer = Class.new('AbilitiesContainer')
----@class AbilitiesContainer
-local public = AbilitiesContainer.public
----@class AbilitiesContainerClass
-local static = AbilitiesContainer.static
----@type AbilitiesContainerClass
-local override = AbilitiesContainer.override
+local DummyAbility = Class.new('DummyAbility')
+---@class DummyAbility
+local public = DummyAbility.public
+---@class DummyAbilityClass
+local static = DummyAbility.static
+---@type DummyAbilityClass
+local override = DummyAbility.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@alias SetAbilityCallback fun(container:AbilitiesContainer, pos:number, old:Ability, new:Ability)
-
 ---@param owner Unit
----@param child_instance AbilitiesContainer | nil
----@return AbilitiesContainer
-function static.new(owner, child_instance)
+---@param abil_type DummyAbilityType
+---@param child_instance DummyAbility | nil
+---@return DummyAbility
+function static.new(owner, abil_type, child_instance)
     checkTypeErr(owner, Unit, 'owner')
-    if child_instance then
-        checkTypeErr(child_instance, AbilitiesContainer, 'child_instance')
-    end
+    checkTypeErr(abil_type, DummyAbilityType, 'abil_type')
+    if child_instance then checkTypeErr(child_instance, DummyAbility, 'child_instance') end
 
-    local instance = child_instance or Class.allocate(AbilitiesContainer)
+    local instance = child_instance or Class.allocate(DummyAbility)
     private.newData(instance, owner)
 
     return instance
-end
-
-function static.get(owner)
-    return private.owners[owner]
-end
-
----@param callback SetAbilityCallback
----@return Action
-function static.addSetAbilityAction(callback)
-    return private.set_action_list:add(callback)
-end
-
----@param action Action
----@return boolean
-function static.removeSetAbilityAction(action)
-    return private.set_action_list:remove(action)
 end
 
 --========
@@ -82,7 +62,7 @@ end
 ---@param pos number
 ---@param abil_type AbilityType | nil
 function public:set(pos, abil_type)
-    if abil_type then checkTypeErr(abil_type, AbilityType, 'abil_type') end
+    if abil_type then checkTypeErr(abil_type, DummyAbilityType, 'abil_type') end
 
     local priv = private.data[self]
     local old = priv.list[pos]
@@ -101,7 +81,7 @@ private.owners = setmetatable({}, {__mode = 'k'})
 
 private.set_action_list = ActionList.new()
 
----@param self AbilitiesContainer
+---@param self DummyAbility
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {

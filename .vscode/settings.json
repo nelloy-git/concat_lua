@@ -31,4 +31,5 @@
         }
     
     },
+    "cmake.configureOnOpen": false,
 }

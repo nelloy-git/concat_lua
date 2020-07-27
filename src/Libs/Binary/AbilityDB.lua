@@ -1,4 +1,4 @@
----@class BinaryDataAbilityDB
+---@class BinaryAbilityDB
 local AbilityValuesDB = {}
 
 AbilityValuesDB.AnimationNames = {value_id = "aani", value_type = 'string', need_lvl = false, extra_id = 0}

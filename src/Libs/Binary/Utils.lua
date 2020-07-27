@@ -167,46 +167,48 @@ local function nextId(cur_id)
     return string.char(p4)..string.char(p3)..string.char(p2)..string.char(p1)
 end
 
+local FourCC = function(id) return string.unpack(">I4", id) end
+
 local UNIT_ID = 'x###'
 ---@return string
 function BinaryUtils.nextUnitId()
     UNIT_ID = nextId(UNIT_ID)
-    return UNIT_ID
+    return FourCC(UNIT_ID)
 end
 
 local HERO_ID = 'HM##'
 ---@return string
 function BinaryUtils.nextHeroId()
     HERO_ID = nextId(HERO_ID)
-    return HERO_ID
+    return FourCC(HERO_ID)
 end
 
 local ABIL_ID = 'AM##'
 ---@return string
 function BinaryUtils.nextAbilityId()
     ABIL_ID = nextId(ABIL_ID)
-    return ABIL_ID
+    return FourCC(ABIL_ID)
 end
 
 local BUFF_ID = 'BM##'
 ---@return string
 function BinaryUtils.nextBuffId()
     BUFF_ID = nextId(BUFF_ID)
-    return BUFF_ID
+    return FourCC(BUFF_ID)
 end
 
 local ITEM_ID = 'IM##'
 ---@return string
 function BinaryUtils.nextItemId()
     ITEM_ID = nextId(ITEM_ID)
-    return ITEM_ID
+    return FourCC(ITEM_ID)
 end
 
 local UPGR_ID = 'RM##'
 ---@return string
 function BinaryUtils.nextUpgradeId()
     UPGR_ID = nextId(UPGR_ID)
-    return UPGR_ID
+    return FourCC(UPGR_ID)
 end
 
 local current_pos = 0
