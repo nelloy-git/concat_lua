@@ -3,7 +3,7 @@ require('Libs.Lib')
 ---@type ParameterLib
 local ParameterLib = require(LibList.ParameterLib)
 ---@type AbilityLib
---local AbilityLib = require(LibList.AbilityLib)
+local AbilityLib = require(LibList.AbilityLib)
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib)
 ---@type BuffLib
@@ -17,12 +17,10 @@ if IsCompiletime() then
     return
 end
 
-u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
-local channel_id = FourCC('Ahea')
-local abil = UtilsLib.Handle.Ability.new(u:getHandleData(), channel_id)
-abil:setIconNormal("ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp", 1)
-abil:setTooltipNormal('TestAbil', 1)
-abil:setTooltipNormalExtended('TestTooltip', 1)
+u = UtilsLib.Handle.Unit.new(FourCC('Hpal'), 0, 0, Player(0))
+local channel_id = FourCC('AM#$')
+local abil = AbilityLib.DummyAbility.new(u, 'Q')
+--print(abil)
 local param_container = ParameterLib.UnitContainer.new(u)
 local buff_container = BuffLib.Container.new(u)
 --local abil_container = AbilityLib.Container.new(u)
@@ -38,9 +36,5 @@ local buff_container2 = BuffLib.Container.new(u2)
 param_container2:addBase(ParameterLib.PhysicalDamage, 10)
 param_container2:addBase(ParameterLib.Defence, 5)
 param_container2:addBase(ParameterLib.Health, 1000)
-
-local f = ConvertUnitStringField(FourCC('uabi'))
-print(f)
-print('Result: '..BlzGetUnitStringField(u:getHandleData(), f))
 
 --Interface.SkillsBar:setSkill(1, abil_container:get(1))

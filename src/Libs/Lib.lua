@@ -46,7 +46,7 @@ function Lib.start(modname)
 end
 
 function Lib.finish()
-    print('Loaded '..libs_stack[#libs_stack].modname)
+    --print('Loaded '..libs_stack[#libs_stack].modname)
     table.remove(libs_stack)
 end
 

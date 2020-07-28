@@ -9,6 +9,8 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
+local Ability = UtilsLib.Handle.Ability
+local AbilityPublic = Class.getPublic(Ability)
 local ActionList = UtilsLib.ActionList
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Unit = UtilsLib.Handle.Unit
@@ -21,10 +23,10 @@ local DummyAbilityType = require(lib_modname..'.Dummy.Type')
 -- Class
 --=======
 
-local DummyAbility = Class.new('DummyAbility')
----@class DummyAbility
+local DummyAbility = Class.new('DummyAbility', Ability)
+---@class DummyAbility : Ability
 local public = DummyAbility.public
----@class DummyAbilityClass
+---@class DummyAbilityClass : AbilityClass
 local static = DummyAbility.static
 ---@type DummyAbilityClass
 local override = DummyAbility.override
@@ -35,16 +37,18 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param abil_type DummyAbilityType
+---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param child_instance DummyAbility | nil
 ---@return DummyAbility
-function static.new(owner, abil_type, child_instance)
+function override.new(owner, hotkey, child_instance)
     checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(abil_type, DummyAbilityType, 'abil_type')
+    checkTypeErr(hotkey, 'string', 'hotkey')
     if child_instance then checkTypeErr(child_instance, DummyAbility, 'child_instance') end
 
+    local abil_type = DummyAbilityType.pop(hotkey)
     local instance = child_instance or Class.allocate(DummyAbility)
-    private.newData(instance, owner)
+    instance = Ability.new(owner:getHandleData(), abil_type:getId(), instance)
+    private.newData(instance, owner, abil_type, hotkey)
 
     return instance
 end
@@ -53,23 +57,25 @@ end
 -- Public
 --========
 
----@param pos number
----@return Ability | nil
-function public:get(pos)
-    return private.data[self].list[pos]
+---@param name string
+function public:setName(name)
+    BlzSetAbilityTooltip(private.data[self].abil_type:getId(), name, 0)
 end
 
----@param pos number
----@param abil_type AbilityType | nil
-function public:set(pos, abil_type)
-    if abil_type then checkTypeErr(abil_type, DummyAbilityType, 'abil_type') end
+---@param tooltip string
+function public:setTooltip(tooltip)
+    BlzSetAbilityExtendedTooltip(private.data[self].abil_type:getId(), tooltip, 0)
+end
 
+---@param icon string
+function public:setIcon(icon)
+    BlzSetAbilityIcon(private.data[self].abil_type:getId(), icon)
+end
+
+function public:destroy()
     local priv = private.data[self]
-    local old = priv.list[pos]
-    local new = Ability.new(priv.owner, abil_type)
-    priv.list[pos] = new
-
-    private.set_action_list:run(self, pos, old, new)
+    DummyAbilityType.push(priv.hotkay, priv.abil_type)
+    AbilityPublic.destroy()
 end
 
 --=========
@@ -77,19 +83,16 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.owners = setmetatable({}, {__mode = 'k'})
-
-private.set_action_list = ActionList.new()
 
 ---@param self DummyAbility
 ---@param owner Unit
-function private.newData(self, owner)
+function private.newData(self, owner, abil_type, hotkey)
     local priv = {
         owner = owner,
-        list = {}
+        abil_type = abil_type,
+        hotkey = hotkey
     }
     private.data[self] = priv
-    private.owners[owner] = self
 end
 
 return static

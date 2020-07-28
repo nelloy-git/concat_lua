@@ -13,22 +13,22 @@ local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Timer = UtilsLib.Handle.Timer
 local Unit = UtilsLib.Handle.Unit
 
----@type Ability2TypeClass
-local Ability2Type = require(lib_modname..'.Type')
+---@type AbilityDataTypeClass
+local AbilityDataType = require(lib_modname..'.Type')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local Ability2 = Class.new('Ability2')
+local AbilityData = Class.new('AbilityData')
 --region Class
----@class Ability2
-local public = Ability2.public
----@class Ability2Class
-local static = Ability2.static
----@type Ability2Class
-local override = Ability2.override
+---@class AbilityData
+local public = AbilityData.public
+---@class AbilityDataClass
+local static = AbilityData.static
+---@type AbilityDataClass
+local override = AbilityData.override
 local private = {}
 --endregion
 
@@ -37,25 +37,25 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param ability_type Ability2Type
----@param child_instance Ability2 | nil
----@return Ability2
+---@param ability_type AbilityDataType
+---@param child_instance AbilityData | nil
+---@return AbilityData
 function override.new(owner, ability_type, lvl, child_instance)
     checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(ability_type, Ability2Type, 'ability_type')
+    checkTypeErr(ability_type, AbilityDataType, 'ability_type')
     if child_instance then
-        checkTypeErr(child_instance, Ability2, 'child_instance')
+        checkTypeErr(child_instance, AbilityData, 'child_instance')
     end
 
-    local instance = child_instance or Class.allocate(Ability2)
+    local instance = child_instance or Class.allocate(AbilityData)
     private.newData(instance, owner, ability_type)
 
     return instance
 end
 
 ---@param caster Unit
----@return Ability2 | nil
-function static.getCastingAbility2(caster)
+---@return AbilityData | nil
+function static.getCastingAbilityData(caster)
     return private.caster_list[caster]
 end
 
@@ -73,13 +73,13 @@ end
 -- Public
 --========
 
----@param target Ability2Target
+---@param target AbilityTarget
 ---@return boolean
 function public:use(target)
     local priv = private.data[self]
     priv.cur_target = target
 
-    ---@type Ability2Type
+    ---@type AbilityDataType
     local abil_type = priv.ability_type
 
     if not abil_type:checkConditions(self) then
@@ -87,6 +87,10 @@ function public:use(target)
     end
 
     if abil_type:getChargesForUse(self) < priv.charges then
+        return false
+    end
+
+    if abil_type:getRange(self) < target:getDistance(priv.owner) then
         return false
     end
 
@@ -140,12 +144,12 @@ function public:getOwner()
     return private.data[self].owner
 end
 
----@return Ability2Target
+---@return AbilityTarget
 function public:getTarget()
     return private.data[self].cur_target
 end
 
----@return Ability2Type
+---@return AbilityDataType
 function public:getType()
     return private.data[self].ability_type
 end
@@ -194,10 +198,10 @@ private.caster_list = setmetatable({}, {__mode = 'kv'})
 private.casting_list = setmetatable({}, {__mode = 'kv'})
 private.cooldown_list = setmetatable({}, {__mode = 'kv'})
 
----@param self Ability2
+---@param self AbilityData
 ---@param owner Unit
 ---@param lvl number
----@param ability_type Ability2Type
+---@param ability_type AbilityDataType
 function private.newData(self, owner, ability_type, lvl)
     local priv = {
         owner = owner,
@@ -220,7 +224,7 @@ function private.castingLoop()
     private.casting_current_time = cur_time
 
     for abil, priv in pairs(private.casting_list) do
-        ---@type Ability2Type
+        ---@type AbilityDataType
         local abil_type = priv.ability_type
 
         if priv.casting_end_time <= cur_time then
@@ -241,7 +245,7 @@ function private.cooldownLoop()
     private.cooldown_current_time = cur_time
 
     for abil, priv in pairs(private.cooldown_list) do
-        ---@type Ability2Type
+        ---@type AbilityDataType
         local abil_type = priv.ability_type
 
         -- Cancel cooldown if has max charges.

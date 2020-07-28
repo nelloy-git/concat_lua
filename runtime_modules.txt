@@ -20,6 +20,7 @@ src/Libs/Utils/ActionList.lua
 src/Libs/Utils/Handle/Handle.lua
 src/Libs/Utils/DataSync.lua
 src/Libs/Utils/Handle/Trigger.lua
+src/Libs/Utils/Handle/Ability.lua
 src/Libs/Utils/Handle/Destructable.lua
 src/Libs/Utils/Handle/Frame.lua
 src/Libs/Utils/Handle/Timer.lua
@@ -49,13 +50,14 @@ src/Libs/Ability/Container.lua
 src/Libs/Ability/Ability.lua
 src/Libs/Ability/Type.lua
 src/Libs/Ability/TestType.lua
+src/Libs/Ability/Dummy/Ability.lua
+src/Libs/Ability/Dummy/Type.lua
 src/Libs/Ability/Target/Destructable.lua
 src/Libs/Ability/Target/Target.lua
 src/Libs/Ability/Target/Item.lua
 src/Libs/Ability/Target/None.lua
 src/Libs/Ability/Target/Point.lua
 src/Libs/Ability/Target/Unit.lua
-src/Libs/Ability/Dummy/Type.lua
 src/Libs/Buff/API.lua
 src/Libs/Buff/Container.lua
 src/Libs/Buff/Buff.lua

@@ -55,10 +55,10 @@ function public:getY()
     Log:err('Can not call virtual function.', 2)
 end
 
----@param caster unit
+---@param caster Unit
 ---@return number
 function public:getDistance(caster)
-    return ((GetUnitX(caster) - self:getX())^2 + (GetUnitY(caster) - self:getY())^2)^0.5
+    return ((caster:getX() - self:getX())^2 + (caster:getY() - self:getY())^2)^0.5
 end
 
 --=========

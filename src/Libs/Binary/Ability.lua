@@ -72,6 +72,25 @@ function public:setLevels(value)
     private.setValue(self, AbilDB.Levels, nil, 0, value)
 end
 
+---@param value boolean
+function public:setHero(value)
+    private.setValue(self, AbilDB.HeroAbility, nil, 0, value)
+end
+
+---@param value string
+function public:setHotkey(value)
+    checkTypeErr(value, 'string', 'value')
+    if string.len(value) > 1 then
+        Log:err('value length > 1.', 2)
+    end
+    private.setValue(self, AbilDB.HotkeyNormal, nil, 0, value)
+end
+
+function public:setButtonPositionNormal(x, y)
+    private.setValue(self, AbilDB.ButtonPositionNormalX, nil, 0, x)
+    private.setValue(self, AbilDB.ButtonPositionNormalY, nil, 0, y)
+end
+
 ---@param value string
 function public:setArtCaster(value)
     private.setValue(self, AbilDB.ArtCaster, nil, 0, value)
@@ -103,7 +122,7 @@ end
 ---@param value string
 ---@param lvl number
 function public:setOrderId(value, lvl)
-    private.setValue(self, AbilDB.ANcl.OrderId, FourCC('ANcl'), lvl, value)
+    private.setValue(self, AbilDB.ANcl.BaseOrderID, FourCC('ANcl'), lvl, value)
 end
 
 ---@param value boolean
@@ -115,7 +134,7 @@ end
 ---@param value number
 ---@param lvl number
 function public:setFollowThoughTime(value, lvl)
-    private.setValue(self, AbilDB.ANcl.FollowThoughTime, FourCC('ANcl'), lvl, value)
+    private.setValue(self, AbilDB.ANcl.FollowThroughTime, FourCC('ANcl'), lvl, value)
 end
 
 ---@param visible boolean
@@ -165,7 +184,11 @@ function public:setValue(value_id, value_type, extra_id, lvl, value)
     end
     checkTypeErr(extra_id, 'number', 'extra_id')
     checkTypeErr(lvl, 'number', 'lvl')
-    checkTypeErr(value, value_type, 'value')
+    checkTypeErr(value, private.real_value_type[value_type], 'value')
+
+    if value_type == 'bool' then
+        value = value and 1 or 0
+    end
 
     local priv = private.data[self]
     local value_data = priv.values[value_id] or {}
@@ -231,6 +254,9 @@ end
 ---@param lvl number
 ---@param value any
 function private.setValue(self, db, avaliable_base_id, lvl, value)
+    if db == nil then
+        Log:err('db == nil', 2)
+    end
     if avaliable_base_id and self:getBaseId() ~= avaliable_base_id then
         Log:err('Function is not available for this basic ability.', 3)
     end
@@ -252,6 +278,14 @@ private.value_to_bytes = {
     real = BinaryUtils.float2byte,
     unreal = BinaryUtils.float2byte,
     string = BinaryUtils.str2byte,
+}
+
+private.real_value_type = {
+    bool = 'boolean',
+    int = 'number',
+    real = 'number',
+    unreal = 'number',
+    string = 'string',
 }
 
 local sep = Compiletime(package.config:sub(1,1))

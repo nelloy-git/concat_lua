@@ -5,10 +5,10 @@ local depencies = Lib.current().depencies
 local UtilsLib = depencies.UtilsLib
 local Log = UtilsLib.DefaultLogger
 
----@type AbilityTypeClass
+---@type AbilityDataTypeClass
 local AbilityType = require(lib_modname..'.Type')
 
-local TestAbilityType = AbilityType.new('TestAbilityType')
+local TestAbilityType = AbilityType.new('TestAbilityType', 'None', false)
 
 function TestAbilityType:checkConditions(abil)
     Log:msg('checkConditions')
@@ -33,6 +33,14 @@ end
 
 function TestAbilityType:onFinish(abil)
     Log:msg('onFinish')
+end
+
+function TestAbilityType:getRange(abil)
+    return 500
+end
+
+function TestAbilityType:getArea(abil)
+    return 0
 end
 
 function TestAbilityType:getCastingTime(abil)
