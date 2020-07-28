@@ -74,7 +74,7 @@ end
 
 function public:destroy()
     local priv = private.data[self]
-    DummyAbilityType.push(priv.hotkay, priv.abil_type)
+    DummyAbilityType.push(priv.hotkey, priv.abil_type)
     AbilityPublic.destroy()
 end
 

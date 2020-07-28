@@ -11,16 +11,15 @@ local BuffLib = require(LibList.BuffLib)
 
 --local Interface = require('Interface.Init')
 
-FourCC = FourCC or function(id) return string.unpack(">I4", id) end
+local FourCC = FourCC or function(id) return string.unpack(">I4", id) end
 
 if IsCompiletime() then
     return
 end
 
-u = UtilsLib.Handle.Unit.new(FourCC('Hpal'), 0, 0, Player(0))
-local channel_id = FourCC('AM#$')
+u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
 local abil = AbilityLib.DummyAbility.new(u, 'Q')
---print(abil)
+
 local param_container = ParameterLib.UnitContainer.new(u)
 local buff_container = BuffLib.Container.new(u)
 --local abil_container = AbilityLib.Container.new(u)

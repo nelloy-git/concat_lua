@@ -58,16 +58,16 @@ function override.new(target_type, is_area, child_instance)
 
     instance:setLevels(1)
     instance:setHero(false)
-    --instance:setArtCaster('')
-    --instance:setArtEffect('')
-    --instance:setArtSpecial('')
-    --instance:setArtTarget('')
-    --instance:setDisableOtherAbilities(false, 0)
-    --instance:setFollowThoughTime(0, 0)
-    --instance:setArtDuration(0, 0)
-    instance:setOptions(true, is_area, false, false, false, 0)
-    --instance:setOrderId(order_id, 0)
-    --instance:setTargetType(target_type, 0)
+    instance:setArtCaster('')
+    instance:setArtEffect('')
+    instance:setArtSpecial('')
+    instance:setArtTarget('')
+    instance:setDisableOtherAbilities(false, 1)
+    instance:setFollowThoughTime(0, 1)
+    instance:setArtDuration(0, 1)
+    instance:setOptions(true, is_area, false, false, false, 1)
+    instance:setOrderId(order_id, 1)
+    instance:setTargetType(target_type, 1)
 
     return instance
 end
@@ -112,17 +112,16 @@ end
 
 private.channel_id = string.unpack('>I4', 'ANcl')
 
-private.pool_size_per_hotkey = 2
+private.pool_size_per_hotkey = 10
 
-private.pool = {
-    ['Q'] = {},
---    ['W'] = {},
---    ['E'] = {},
---    ['R'] = {},
---    ['T'] = {},
---    ['D'] = {},
---    ['F'] = {}
+private.hotkeys = {
+    'Q', 'W', 'E', 'R', 'T', 'D', 'F'
 }
+
+private.pool = {}
+for i = 1, #private.hotkeys do
+    private.pool[private.hotkeys[i]] = {}
+end
 
 private.pos = {
     ['Q'] = {x = 1, y = 1},
@@ -144,10 +143,11 @@ function private.id2Str(id)
     return s_id
 end
 
-for hotkey, _ in pairs(private.pool) do
+for i = 1, #private.hotkeys do
+    local hotkey = private.hotkeys[i]
     local dummy = static.new('None', false)
-    --dummy:setHotkey(hotkey)
-    --dummy:setButtonPositionNormal(private.pos[hotkey].x, private.pos[hotkey].y)
+    dummy:setHotkey(hotkey)
+    dummy:setButtonPositionNormal(private.pos[hotkey].x, private.pos[hotkey].y)
     static.push(hotkey, dummy)
 end
 
