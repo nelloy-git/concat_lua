@@ -3,7 +3,7 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
+local lib_modename = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
@@ -13,10 +13,12 @@ local ActionList = UtilsLib.ActionList
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Unit = UtilsLib.Handle.Unit
 
----@type AbilityClass
-local Ability = require(lib_modname..'.Ability')
----@type AbilityTypeClass
-local AbilityType = require(lib_modname..'.Type')
+---@type AbilityDataClass
+local AbilityData = require(lib_modename..'.Ability')
+---@type AbilityDataTypeClass
+local AbilityDataType = require(lib_modename..'.Type')
+---@type DummyAbility
+local DummyAbility = require(lib_modename..'Dummy.Ability')
 --endregion
 
 --=======
@@ -36,7 +38,7 @@ local private = {}
 -- Static
 --=========
 
----@alias SetAbilityCallback fun(container:AbilitiesContainer, pos:number, old:Ability, new:Ability)
+---@alias SetAbilityDataCallback fun(container:AbilitiesContainer, pos:number, old:AbilityData, new:AbilityData)
 
 ---@param owner Unit
 ---@param child_instance AbilitiesContainer | nil
@@ -57,39 +59,29 @@ function static.get(owner)
     return private.owners[owner]
 end
 
----@param callback SetAbilityCallback
----@return Action
-function static.addSetAbilityAction(callback)
-    return private.set_action_list:add(callback)
-end
-
----@param action Action
----@return boolean
-function static.removeSetAbilityAction(action)
-    return private.set_action_list:remove(action)
-end
-
 --========
 -- Public
 --========
 
----@param pos number
----@return Ability | nil
-function public:get(pos)
-    return private.data[self].list[pos]
+---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
+---@return AbilityData | nil
+function public:get(hotkey)
+    return private.data[self].hotkeys_data[hotkey]
 end
 
----@param pos number
----@param abil_type AbilityType | nil
-function public:set(pos, abil_type)
-    if abil_type then checkTypeErr(abil_type, AbilityType, 'abil_type') end
+---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
+---@param abil_type AbilityDataType | nil
+function public:set(hotkey, abil_type)
+    if abil_type then checkTypeErr(abil_type, AbilityDataType, 'abil_type') end
 
     local priv = private.data[self]
-    local old = priv.list[pos]
-    local new = Ability.new(priv.owner, abil_type)
-    priv.list[pos] = new
+    local old_dummy = priv.hotkeys_dummy
+    if old_dummy ~= nil then old_dummy:destroy() end
 
-    private.set_action_list:run(self, pos, old, new)
+    priv.hotkeys_dummy[hotkey] = DummyAbility.new(priv.owner, hotkey)
+    priv.hotkeys_data[hotkey] = AbilityData.new(priv.owner, abil_type)
+
+    private.linkDummy(priv.hotkeys_dummy[hotkey], priv.hotkeys_data[hotkey])
 end
 
 --=========
@@ -99,17 +91,24 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.owners = setmetatable({}, {__mode = 'k'})
 
-private.set_action_list = ActionList.new()
-
 ---@param self AbilitiesContainer
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {
         owner = owner,
-        list = {}
+
+        hotkeys_dummy = {},
+        hotkeys_data = {}
     }
     private.data[self] = priv
     private.owners[owner] = self
 end
+
+---@param dummy DummyAbility
+---@param abil AbilityData
+function private.linkDummy(dummy, abil)
+end
+
+--function 
 
 return static
