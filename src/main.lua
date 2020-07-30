@@ -18,8 +18,8 @@ if IsCompiletime() then
 end
 
 u = UtilsLib.Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
-local abil = AbilityLib.DummyAbility.new(u, 'Q')
-
+local abil_container = AbilityLib.DummyContainer.new(u)
+abil_container:set('Q', AbilityLib.TestType)
 local param_container = ParameterLib.UnitContainer.new(u)
 local buff_container = BuffLib.Container.new(u)
 --local abil_container = AbilityLib.Container.new(u)

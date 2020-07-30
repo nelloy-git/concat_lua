@@ -48,7 +48,7 @@ function override.new(owner, ability_type, lvl, child_instance)
     end
 
     local instance = child_instance or Class.allocate(AbilityData)
-    private.newData(instance, owner, ability_type)
+    private.newData(instance, owner, ability_type, lvl)
 
     return instance
 end
@@ -83,22 +83,27 @@ function public:use(target)
     local abil_type = priv.ability_type
 
     if not abil_type:checkConditions(self) then
+        print('User\'s conditions failed')
         return false
     end
 
     if abil_type:getChargesForUse(self) < priv.charges then
+        print('No charges')
         return false
     end
 
     if abil_type:getRange(self) < target:getDistance(priv.owner) then
+        print('Out of range')
         return false
     end
 
     if abil_type:getManaCost(self) < priv.owner:getMana() then
+        print('No mana')
         return false
     end
 
-    if abil_type:getHealthCost(self) < priv.owner:getHealth() then
+    if abil_type:getHealthCost(self) > priv.owner:getHealth() then
+        print('No health')
         return false
     end
 
@@ -206,7 +211,7 @@ function private.newData(self, owner, ability_type, lvl)
     local priv = {
         owner = owner,
         ability_type = ability_type,
-        lvl = 1,
+        lvl = lvl,
 
         cur_target = nil,
         casting_end_time = 0,

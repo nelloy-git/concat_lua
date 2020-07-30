@@ -60,6 +60,8 @@ function override.new(owner, abil_id, child_instance)
     
     instance = Handle.new(handle, private.destroyAbilityHandle, instance)
 
+    private.newData(instance, owner, abil_id)
+
     return instance
 end
 

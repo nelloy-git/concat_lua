@@ -18,7 +18,7 @@ local AbilityData = require(lib_modename..'.Ability')
 ---@type AbilityDataTypeClass
 local AbilityDataType = require(lib_modename..'.Type')
 ---@type DummyAbility
-local DummyAbility = require(lib_modename..'Dummy.Ability')
+local DummyAbility = require(lib_modename..'.Dummy.Ability')
 --endregion
 
 --=======
@@ -38,16 +38,12 @@ local private = {}
 -- Static
 --=========
 
----@alias SetAbilityDataCallback fun(container:AbilitiesContainer, pos:number, old:AbilityData, new:AbilityData)
-
 ---@param owner Unit
 ---@param child_instance AbilitiesContainer | nil
 ---@return AbilitiesContainer
-function static.new(owner, child_instance)
+function override.new(owner, child_instance)
     checkTypeErr(owner, Unit, 'owner')
-    if child_instance then
-        checkTypeErr(child_instance, AbilitiesContainer, 'child_instance')
-    end
+    if child_instance then checkTypeErr(child_instance, AbilitiesContainer, 'child_instance') end
 
     local instance = child_instance or Class.allocate(AbilitiesContainer)
     private.newData(instance, owner)
@@ -63,25 +59,30 @@ end
 -- Public
 --========
 
----@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@return AbilityData | nil
-function public:get(hotkey)
-    return private.data[self].hotkeys_data[hotkey]
+---@return Unit
+function public:getOwner()
+    return private.data[self].owner
 end
 
----@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
+---@param pos number
+---@return AbilityData | nil
+function public:get(pos)
+    return private.data[self].abil_data[pos]
+end
+
+---@param pos number
 ---@param abil_type AbilityDataType | nil
-function public:set(hotkey, abil_type)
+---@return AbilityData | nil
+function public:set(pos, abil_type)
     if abil_type then checkTypeErr(abil_type, AbilityDataType, 'abil_type') end
 
     local priv = private.data[self]
-    local old_dummy = priv.hotkeys_dummy
-    if old_dummy ~= nil then old_dummy:destroy() end
 
-    priv.hotkeys_dummy[hotkey] = DummyAbility.new(priv.owner, hotkey)
-    priv.hotkeys_data[hotkey] = AbilityData.new(priv.owner, abil_type)
+    local data = AbilityData.new(priv.owner, abil_type, 1)
+    local prev = priv.abil_data[pos]
+    priv.abil_data[pos] = data
 
-    private.linkDummy(priv.hotkeys_dummy[hotkey], priv.hotkeys_data[hotkey])
+    return prev
 end
 
 --=========
@@ -96,19 +97,11 @@ private.owners = setmetatable({}, {__mode = 'k'})
 function private.newData(self, owner)
     local priv = {
         owner = owner,
-
-        hotkeys_dummy = {},
-        hotkeys_data = {}
+        abil_data = {}
     }
+
     private.data[self] = priv
     private.owners[owner] = self
 end
-
----@param dummy DummyAbility
----@param abil AbilityData
-function private.linkDummy(dummy, abil)
-end
-
---function 
 
 return static

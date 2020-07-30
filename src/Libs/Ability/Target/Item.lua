@@ -36,9 +36,7 @@ local private = {}
 ---@return AbilityTargetItem
 function override.new(item, child_instance)
     checkTypeErr(item, Item, 'item')
-    if child_instance then
-        checkTypeErr(child_instance, AbilityTargetItem, 'child_instance')
-    end
+    if child_instance then checkTypeErr(child_instance, AbilityTargetItem, 'child_instance') end
 
     local instance = child_instance or Class.allocate(AbilityTargetItem)
     instance = AbilityTarget.new(instance)

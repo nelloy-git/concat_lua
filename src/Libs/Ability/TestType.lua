@@ -8,31 +8,31 @@ local Log = UtilsLib.DefaultLogger
 ---@type AbilityDataTypeClass
 local AbilityType = require(lib_modname..'.Type')
 
-local TestAbilityType = AbilityType.new('TestAbilityType', 'None', false)
+local TestAbilityType = AbilityType.new('TestAbilityType', 'Point', false)
 
 function TestAbilityType:checkConditions(abil)
-    Log:msg('checkConditions')
+    print('checkConditions')
     return true
 end
 
 function TestAbilityType:onStart(abil)
-    Log:msg('onStart')
+    print('onStart')
 end
 
 function TestAbilityType:onCasting(abil)
-    Log:msg('onCasting')
+    print('onCasting')
 end
 
 function TestAbilityType:onCancel(abil)
-    Log:msg('onCancel')
+    print('onCancel')
 end
 
 function TestAbilityType:onInterrupt(abil)
-    Log:msg('onInterrupt')
+    print('onInterrupt')
 end
 
 function TestAbilityType:onFinish(abil)
-    Log:msg('onFinish')
+    print('onFinish')
 end
 
 function TestAbilityType:getRange(abil)
@@ -44,17 +44,17 @@ function TestAbilityType:getArea(abil)
 end
 
 function TestAbilityType:getCastingTime(abil)
-    Log:msg('getCastingTime')
+    print('getCastingTime')
     return 3
 end
 
 function TestAbilityType:getChargeCooldown(abil)
-    Log:msg('getChargeCooldown')
+    print('getChargeCooldown')
     return 3
 end
 
 function TestAbilityType:getMaxCharges(abil)
-    Log:msg('getMaxCharges')
+    print('getMaxCharges')
     return 1
 end
 
@@ -63,7 +63,7 @@ function TestAbilityType:getChargesForUse(abil)
 end
 
 function TestAbilityType:getManaCost(abil)
-    return 10
+    return 0
 end
 
 function TestAbilityType:getHealthCost(abil)

@@ -36,9 +36,7 @@ local private = {}
 ---@return AbilityTargetDestructable
 function override.new(destr, child_instance)
     checkTypeErr(destr, Destructable, 'destr')
-    if child_instance then
-        checkTypeErr(child_instance, AbilityTargetDestructable, 'child_instance')
-    end
+    if child_instance then checkTypeErr(child_instance, AbilityTargetDestructable, 'child_instance') end
 
     local instance = child_instance or Class.allocate(AbilityTargetDestructable)
     instance = AbilityTarget.new(instance)

@@ -64,8 +64,9 @@ end
 -- Public
 --========
 
+---@param abil AbilityData
 ---@return string
-function public:getName()
+function public:getName(abil)
     return private.data[self].name
 end
 
@@ -164,12 +165,6 @@ private.virtual_functions['getManaCost'] = public.getManaCost
 ---@return number
 function public:getHealthCost(abil) end
 private.virtual_functions['getHealthCost'] = public.getHealthCost
-
---- Virtual function
----@param abil AbilityData
----@return string
-function public:getName(abil) end
-private.virtual_functions['getName'] = public.getName
 
 --- Virtual function
 ---@param abil AbilityData
