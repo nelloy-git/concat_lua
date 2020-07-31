@@ -60,6 +60,8 @@ function override.getById(id)
     return private.id[id]
 end
 
+static.TargetAllowed = {}
+
 --========
 -- Public
 --========
@@ -79,6 +81,10 @@ end
 
 ---@param area number
 function public:setArea(area)
+    BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_AREA_OF_EFFECT, 0, area)
+end
+
+function public:setTargetsAllowed()
 end
 
 ---@param name string

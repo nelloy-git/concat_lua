@@ -17,14 +17,14 @@ local Log = UtilsLib.DefaultLogger
 -- Class
 --=======
 
-local AbilityDataType2 = Class.new('AbilityDataType2')
+local AbilityDataType = Class.new('AbilityDataType')
 --region Class
----@class AbilityDataType2
-local public = AbilityDataType2.public
----@class AbilityDataType2Class
-local static = AbilityDataType2.static
----@type AbilityDataType2Class
-local override = AbilityDataType2.override
+---@class AbilityDataType
+local public = AbilityDataType.public
+---@class AbilityDataTypeClass
+local static = AbilityDataType.static
+---@type AbilityDataTypeClass
+local override = AbilityDataType.override
 local private = {}
 private.virtual_functions = {}
 --endregion
@@ -34,28 +34,18 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
----@param is_area boolean
----@param child_instance AbilityDataType2 | nil
----@return AbilityDataType2
-function override.new(name, target_type, is_area, child_instance)
+---@param child_instance AbilityDataType | nil
+---@return AbilityDataType
+function override.new(name, child_instance)
     checkTypeErr(name, 'string', 'id')
-    checkTypeErr(target_type, 'string', 'target_type')
-    if not (target_type == 'None' or
-            target_type == 'Unit' or
-            target_type == 'Point' or
-            target_type == 'PointOrUnit') then
-        Log:err('Got wrong \"target_type\".')
-    end
-    checkTypeErr(is_area, 'boolean', 'is_area')
-    if child_instance then checkTypeErr(child_instance, AbilityDataType2, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, AbilityDataType, 'child_instance') end
 
     if private.instances[name] then
-        Log:err(tostring(AbilityDataType2)..' with name \"'..name..'\" already exists.', 2)
+        Log:err(tostring(AbilityDataType)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(AbilityDataType2)
-    private.newData(instance, name, target_type, is_area)
+    local instance = child_instance or Class.allocate(AbilityDataType)
+    private.newData(instance, name)
 
     return instance
 end
@@ -64,25 +54,14 @@ end
 -- Public
 --========
 
----@param abil AbilityData
 ---@return string
-function public:getName(abil)
+function public:getName()
     return private.data[self].name
-end
-
----@return string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
-function public:getTargetType()
-    return private.data[self].target_type
-end
-
----@return boolean
-function public:isArea()
-    return private.data[self].is_area
 end
 
 --- Virtual function.
 --- Return true if check is successfull.
----@param abil AbilityData
+---@param abil AbilityDataInstance
 ---@return boolean
 function public:checkConditions(abil) end
 private.virtual_functions['checkConditions'] = public.checkConditions

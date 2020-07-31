@@ -82,5 +82,8 @@ function TestAbilityType:getTooltip(abil)
     return 'TestTooltip'
 end
 
+function TestAbilityType:getAvailableTargets(abil)
+end
+
 
 return TestAbilityType

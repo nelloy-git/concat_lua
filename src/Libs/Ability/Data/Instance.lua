@@ -3,7 +3,7 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
+local lib_modename = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
@@ -14,21 +14,23 @@ local Timer = UtilsLib.Handle.Timer
 local Unit = UtilsLib.Handle.Unit
 
 ---@type AbilityDataTypeClass
-local AbilityDataType = require(lib_modname..'.Type')
+local AbilityDataType = require(lib_modename..'.Data.Type')
+---@type AbilityDataCastingCatcherClass
+local AbilityDataCastingCatcher = require(lib_modename..'.Data.CastingCatcher')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local AbilityData = Class.new('AbilityData')
+local AbilityDataInstance = Class.new('AbilityDataInstance', AbilityDataCastingCatcher)
 --region Class
----@class AbilityData
-local public = AbilityData.public
----@class AbilityDataClass
-local static = AbilityData.static
----@type AbilityDataClass
-local override = AbilityData.override
+---@class AbilityDataInstance
+local public = AbilityDataInstance.public
+---@class AbilityDataInstanceClass
+local static = AbilityDataInstance.static
+---@type AbilityDataInstanceClass
+local override = AbilityDataInstance.override
 local private = {}
 --endregion
 
@@ -38,35 +40,20 @@ local private = {}
 
 ---@param owner Unit
 ---@param ability_type AbilityDataType
----@param child_instance AbilityData | nil
----@return AbilityData
+---@param child_instance AbilityDataInstance | nil
+---@return AbilityDataInstance
 function override.new(owner, ability_type, lvl, child_instance)
     checkTypeErr(owner, Unit, 'owner')
     checkTypeErr(ability_type, AbilityDataType, 'ability_type')
     if child_instance then
-        checkTypeErr(child_instance, AbilityData, 'child_instance')
+        checkTypeErr(child_instance, AbilityDataInstance, 'child_instance')
     end
 
-    local instance = child_instance or Class.allocate(AbilityData)
+    local instance = child_instance or Class.allocate(AbilityDataInstance)
+    instance = AbilityDataCastingCatcher.new(instance)
     private.newData(instance, owner, ability_type, lvl)
 
     return instance
-end
-
----@param caster Unit
----@return AbilityData | nil
-function static.getCastingAbilityData(caster)
-    return private.caster_list[caster]
-end
-
----@return number
-function static.getCooldownPeriod()
-    return private.cooldown_period
-end
-
----@return number
-function static.getCastingPeriod()
-    return private.casting_period
 end
 
 --========
@@ -74,7 +61,6 @@ end
 --========
 
 ---@param target AbilityTarget
----@return boolean
 function public:use(target)
     local priv = private.data[self]
     priv.cur_target = target
@@ -82,14 +68,11 @@ function public:use(target)
     ---@type AbilityDataType
     local abil_type = priv.ability_type
 
-    if not abil_type:checkConditions(self) then
-        print('User\'s conditions failed')
-        return false
-    end
-
-    if abil_type:getChargesForUse(self) < priv.charges then
-        print('No charges')
-        return false
+    if not ignore_charges then
+        if abil_type:getChargesForUse(self) < priv.charges then
+            print('No charges')
+            return false
+        end
     end
 
     if abil_type:getRange(self) < target:getDistance(priv.owner) then
@@ -104,6 +87,11 @@ function public:use(target)
 
     if abil_type:getHealthCost(self) > priv.owner:getHealth() then
         print('No health')
+        return false
+    end
+
+    if not abil_type:checkConditions(self) then
+        print('User\'s conditions failed')
         return false
     end
 
@@ -149,7 +137,7 @@ function public:getOwner()
     return private.data[self].owner
 end
 
----@return AbilityTarget
+---@return AbilityTarget | nil
 function public:getTarget()
     return private.data[self].cur_target
 end
@@ -203,7 +191,7 @@ private.caster_list = setmetatable({}, {__mode = 'kv'})
 private.casting_list = setmetatable({}, {__mode = 'kv'})
 private.cooldown_list = setmetatable({}, {__mode = 'kv'})
 
----@param self AbilityData
+---@param self AbilityDataInstance
 ---@param owner Unit
 ---@param lvl number
 ---@param ability_type AbilityDataType

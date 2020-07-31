@@ -62,10 +62,10 @@ AbilityValuesDB.TargetAttachmentPoint3 = {value_id = "ata3", value_type = 'strin
 AbilityValuesDB.TargetAttachmentPoint4 = {value_id = "ata4", value_type = 'string', need_lvl = false, extra_id = 0}
 AbilityValuesDB.TargetAttachmentPoint5 = {value_id = "ata5", value_type = 'string', need_lvl = false, extra_id = 0}
 
+AbilityValuesDB.TargetAttachments = {value_id = "atac", value_type = 'int', need_lvl = true, extra_id = 0}
 --- 'air', 'alive', 'allies', 'ancient', 'dead', 'debris', 'decoration', 'enemies', 'friend', 'ground', 'hero',
 --- 'invulnerable', 'item', 'mechanical', 'neutral', 'nonancient', 'none', 'nonhero', 'nonsapper', 'notself',
 --- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall'
-AbilityValuesDB.TargetAttachments = {value_id = "atac", value_type = 'int', need_lvl = true, extra_id = 0}
 AbilityValuesDB.TargetsAllowed = {value_id = "atar", value_type = 'string', need_lvl = true, extra_id = 0}
 AbilityValuesDB.TooltipLearn = {value_id = "aret", value_type = 'string', need_lvl = true, extra_id = 0}
 AbilityValuesDB.TooltipLearnExtended = {value_id = "arut", value_type = 'string', need_lvl = true, extra_id = 0}
