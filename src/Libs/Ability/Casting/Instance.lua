@@ -62,16 +62,6 @@ end
 -- Public
 --========
 
----@return Unit
-function public:getCatcher()
-    return private.data[self].catcher
-end
-
----@return AbilityTarget
-function public:getTarget()
-    return private.data[self].target
-end
-
 ---@param time_left number
 function public:setTimeLeft(time_left)
     private.data[self].finish_time = private.casting_current_time + time_left
@@ -82,28 +72,46 @@ function public:getTimeLeft()
     return private.data[self].finish_time - private.casting_current_time
 end
 
----@param casting_time number
-function public:start(casting_time)
-    self:getCatcher():onCastingStart(self)
-    private.casting_list[self] = private.datap[self]
+---@return number
+function public:getFullTime()
+    local priv = private.data[self]
+    return priv.finish_time - priv.start_time
 end
 
-function public:casting()
-    self:getCatcher():onCastingLoop(self)
+---@param casting_time number
+function public:start(casting_time)
+    local priv = private.data[self]
+    priv.start_time = private.casting_current_time
+    priv.finish_time = private.casting_current_time + casting_time
+    private.casting_list[self] = private.data[self]
+
+    priv.catcher:onCastingStart(priv.target)
 end
 
 function public:cancel()
-    self:getCatcher():onCastingCancel(self)
+    local priv = private.data[self]
+    priv.start_time = -1
+    priv.finish_time = -1
+
+    priv.catcher:onCastingCancel(private.data[self].target)
     private.casting_list[self] = nil
 end
 
 function public:interrupt()
-    self:getCatcher():onCastingInterrupt(self)
+    local priv = private.data[self]
+    priv.start_time = -1
+    priv.finish_time = -1
+
+    priv.catcher:onCastingInterrupt(private.data[self].target)
     private.casting_list[self] = nil
 end
 
 function public:finish()
-    self:getCatcher():onCastingFinish(self)
+    local priv = private.data[self]
+    priv.start_time = -1
+    priv.finish_time = -1
+    
+    priv.catcher:onCastingFinish(private.data[self].target)
     private.casting_list[self] = nil
 end
 
@@ -112,7 +120,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.casting_list = setmetatable({}, {__mode = 'kv'})
+private.casting_list = setmetatable({}, {__mode = 'k'})
 
 ---@param catcher AbilityCastingCatcher
 ---@param target AbilityTarget
@@ -121,6 +129,7 @@ function private.newData(self, catcher, target)
         catcher = catcher,
         target = target,
 
+        start_time = -1,
         finish_time = -1,
     }
     private.data[self] = priv
@@ -134,9 +143,13 @@ function private.castingLoop()
 
     for casting_data, priv in pairs(private.casting_list) do
         if priv.finish_time <= cur_time then
-            casting_data:finish()
+            priv.start_time = -1
+            priv.finish_time = -1
+            private.casting_list[casting_data] = nil
+
+            priv.catcher:onCastingFinish(priv.target)
         else
-            casting_data:casting()
+            priv.catcher:onCastingLoop(priv.target)
         end
     end
 end

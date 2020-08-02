@@ -46,24 +46,24 @@ end
 --========
 
 --- Virtual function.
----@param casting_data AbilityCastingInstance
-function public:onCastingStart(casting_data) end
+---@param target AbilityTarget
+function public:onCastingStart(target) end
 
 --- Virtual function
----@param casting_data AbilityCastingInstance
-function public:onCastingLoop(casting_data) end
+---@param target AbilityTarget
+function public:onCastingLoop(target) end
 
 --- Virtual function
----@param casting_data AbilityCastingInstance
-function public:onCastingCancel(casting_data) end
+---@param target AbilityTarget
+function public:onCastingCancel(target) end
 
 --- Virtual function
----@param casting_data AbilityCastingInstance
-function public:onCastingInterrupt(casting_data) end
+---@param target AbilityTarget
+function public:onCastingInterrupt(target) end
 
 --- Virtual function
----@param casting_data AbilityCastingInstance
-function public:onCastingFinish(casting_data) end
+---@param target AbilityTarget
+function public:onCastingFinish(target) end
 
 --=========
 -- Private
