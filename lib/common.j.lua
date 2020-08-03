@@ -8582,6 +8582,11 @@ function BlzGetUnitAbilityCooldownRemaining(whichUnit, abilId) end
 function BlzEndUnitAbilityCooldown(whichUnit, abilCode) end
 
 ---@param whichUnit unit
+---@param abilColde integer
+---@param cooldown number
+function BlzStartUnitAbilityCooldown(whichUnit, abilCode, cooldown) end
+
+---@param whichUnit unit
 ---@param abilId integer
 ---@param level integer
 ---@return integer

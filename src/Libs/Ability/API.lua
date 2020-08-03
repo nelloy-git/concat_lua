@@ -18,12 +18,12 @@ Lib.current().depencies = {
 --=====
 
 ---@type AbilitiesContainerClass
-AbilityLibAPI.Container = require(lib_modename..'.Container')
+--AbilityLibAPI.Container = require(lib_modename..'.Container')
 ---@type DummyAbilitiesContainerClass
-AbilityLibAPI.DummyContainer = require(lib_modename..'.DummyContainer')
+--AbilityLibAPI.DummyContainer = require(lib_modename..'.DummyContainer')
 
 ---@type AbilityDataTypeClass
-AbilityLibAPI.Type = require(lib_modename..'.Type')
+AbilityLibAPI.Type = require(lib_modename..'.Data.Type')
 ---@type AbilityDataType
 AbilityLibAPI.TestType = require(lib_modename..'.TestType')
 

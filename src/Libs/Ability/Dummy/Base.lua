@@ -16,21 +16,23 @@ local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
 
----@type DummyAbilityType
-local DummyAbilityType = require(lib_modname..'.Dummy.Type')
+---@type AbilityDummyType
+local AbilityDummyType = require(lib_modname..'.Dummy.Type')
+---@type AbilityCooldownChargesCatcherClass
+local AbilityCooldownChargesCatcher = require(lib_modname..'.Cooldown.ChargesCatcher')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local DummyAbility = Class.new('DummyAbility', Ability)
----@class DummyAbility : Ability
-local public = DummyAbility.public
----@class DummyAbilityClass : AbilityClass
-local static = DummyAbility.static
----@type DummyAbilityClass
-local override = DummyAbility.override
+local AbilityDummy = Class.new('AbilityDummy', Ability)
+---@class AbilityDummy : Ability
+local public = AbilityDummy.public
+---@class AbilityDummyClass : AbilityClass
+local static = AbilityDummy.static
+---@type AbilityDummyClass
+local override = AbilityDummy.override
 local private = {}
 
 --=========
@@ -39,15 +41,15 @@ local private = {}
 
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param child_instance DummyAbility | nil
----@return DummyAbility
+---@param child_instance AbilityDummy | nil
+---@return AbilityDummy
 function override.new(owner, hotkey, child_instance)
     checkTypeErr(owner, Unit, 'owner')
     checkTypeErr(hotkey, 'string', 'hotkey')
-    if child_instance then checkTypeErr(child_instance, DummyAbility, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, AbilityDummy, 'child_instance') end
 
-    local abil_type = DummyAbilityType.pop(hotkey)
-    local instance = child_instance or Class.allocate(DummyAbility)
+    local abil_type = AbilityDummyType.pop(hotkey)
+    local instance = child_instance or Class.allocate(AbilityDummy)
     instance = Ability.new(owner:getHandleData(), abil_type:getId(), instance)
     private.newData(instance, owner, abil_type, hotkey)
 
@@ -55,12 +57,10 @@ function override.new(owner, hotkey, child_instance)
 end
 
 ---@param id number
----@return DummyAbility | nil
+---@return AbilityDummy | nil
 function override.getById(id)
     return private.id[id]
 end
-
-static.TargetAllowed = {}
 
 --========
 -- Public
@@ -85,6 +85,7 @@ function public:setArea(area)
 end
 
 function public:setTargetsAllowed()
+    -- TODO
 end
 
 ---@param name string
@@ -107,9 +108,19 @@ function public:setManaCost(mana_cost)
     BlzSetUnitAbilityManaCost(self:getOwner(), self:getId(), 0, mana_cost)
 end
 
+---@param cooldown number
+function public:setCooldownRamaining(cooldown)
+    BlzStartUnitAbilityCooldown(self:getOwner(), self:getId(), 1, cooldown)
+end
+
+---@param cooldown number
+function public:setCooldown(cooldown)
+    BlzSetUnitAbilityCooldown(self:getOwner(), self:getId(), 0, cooldown)
+end
+
 function public:destroy()
     local priv = private.data[self]
-    DummyAbilityType.push(priv.hotkey, priv.abil_type)
+    AbilityDummyType.push(priv.hotkey, priv.abil_type)
     AbilityPublic.destroy()
 end
 
@@ -120,13 +131,13 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.id = setmetatable({}, {__mode = 'v'})
 
----@param self DummyAbility
+---@param self AbilityDummy
 ---@param owner Unit
 function private.newData(self, owner, abil_type, hotkey)
     local priv = {
         owner = owner,
         abil_type = abil_type,
-        hotkey = hotkey
+        hotkey = hotkey,
     }
 
     private.data[self] = priv

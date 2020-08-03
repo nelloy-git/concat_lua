@@ -67,6 +67,11 @@ function public:getTimeLeft()
     return private.data[self].finish_time - private.cooldown_current_time
 end
 
+---@return number
+function public:getFullTime()
+    return private.data[self].finish_time - private.data[self].start_time
+end
+
 ---@param cooldown_time number
 function public:start(cooldown_time)
     local priv = private.data[self]
@@ -82,7 +87,7 @@ function public:finish()
     priv.start_time = -1
     priv.finish_time = -1
 
-    self:getCatcher():onCastingFinish(self)
+    priv.catcher:onCooldownFinish()
     private.cooldown_list[self] = nil
 end
 
@@ -114,9 +119,13 @@ function private.cooldownLoop()
 
     for cooldown_data, priv in pairs(private.cooldown_list) do
         if priv.finish_time <= cur_time then
-            cooldown_data:finish()
+            priv.start_time = -1
+            priv.finish_time = -1
+            private.cooldown_list[cooldown_data] = nil
+
+            priv.catcher:onCooldownFinish()
         else
-            cooldown_data:casting()
+            priv.catcher:onCooldownLoop()
         end
     end
 end

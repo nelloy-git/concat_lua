@@ -110,7 +110,7 @@ function public:finish()
     local priv = private.data[self]
     priv.start_time = -1
     priv.finish_time = -1
-    
+
     priv.catcher:onCastingFinish(private.data[self].target)
     private.casting_list[self] = nil
 end

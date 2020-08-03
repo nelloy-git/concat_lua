@@ -45,17 +45,11 @@ end
 -- Public
 --========
 
---- Virtual function.
----@param casting_data AbilityCooldownInstance
-function public:onCooldownStart(casting_data) end
+function public:onCooldownStart() end
 
---- Virtual function
----@param casting_data AbilityCooldownInstance
-function public:onCooldownLoop(casting_data) end
+function public:onCooldownLoop() end
 
---- Virtual function
----@param casting_data AbilityCooldownInstance
-function public:onCooldownFinish(casting_data) end
+function public:onCooldownFinish() end
 
 --=========
 -- Private

@@ -11,17 +11,29 @@ local Class = depencies.Class
 local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
+
+---@type AbilityDataTypeCastingClass
+local AbilityDataTypeCasting = require(lib_modname..'.Data.Type.Casting')
+---@type AbilityDataTypeConditionClass
+local AbilityDataTypeCondition = require(lib_modname..'.Data.Type.Condition')
+---@type AbilityDataTypeCooldownClass
+local AbilityDataTypeCooldown = require(lib_modname..'.Data.Type.Cooldown')
+---@type AbilityDataTypeUIClass
+local AbilityDataTypeUI = require(lib_modname..'.Data.Type.UI')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local AbilityDataType = Class.new('AbilityDataType')
+local AbilityDataType = Class.new('AbilityDataType', AbilityDataTypeCasting,
+                                                     AbilityDataTypeCondition,
+                                                     AbilityDataTypeCooldown,
+                                                     AbilityDataTypeUI)
 --region Class
----@class AbilityDataType
+---@class AbilityDataType : AbilityDataTypeCooldown
 local public = AbilityDataType.public
----@class AbilityDataTypeClass
+---@class AbilityDataTypeClass : AbilityDataTypeCooldownClass
 local static = AbilityDataType.static
 ---@type AbilityDataTypeClass
 local override = AbilityDataType.override
@@ -45,7 +57,12 @@ function override.new(name, child_instance)
     end
 
     local instance = child_instance or Class.allocate(AbilityDataType)
-    private.newData(instance, name)
+    instance = AbilityDataTypeUI.new(name, instance)
+    instance = AbilityDataTypeCooldown.new(name, instance)
+    instance = AbilityDataTypeCondition.new(name, instance)
+    instance = AbilityDataTypeCasting.new(name, instance)
+
+    private.instances[instance] = name
 
     return instance
 end
@@ -66,125 +83,20 @@ end
 function public:checkConditions(abil) end
 private.virtual_functions['checkConditions'] = public.checkConditions
 
---- Virtual function.
----@param abil AbilityData
-function public:onStart(abil) end
-private.virtual_functions['onStart'] = public.onStart
-
---- Virtual function
----@param abil AbilityData
-function public:onCasting(abil) end
-private.virtual_functions['onCasting'] = public.onCasting
-
---- Virtual function
----@param abil AbilityData
-function public:onCancel(abil) end
-private.virtual_functions['onCancel'] = public.onCancel
-
---- Virtual function
----@param abil AbilityData
-function public:onInterrupt(abil) end
-private.virtual_functions['onInterrupt'] = public.onInterrupt
-
---- Virtual function
----@param abil AbilityData
-function public:onFinish(abil) end
-private.virtual_functions['onFinish'] = public.onFinish
-
---- Virtual function
----@param abil AbilityData
----@return number
-function public:getRange(abil) end
-private.virtual_functions['getRange'] = public.getRange
-
---- Virtual function
----@param abil AbilityData
----@return number
-function public:getArea(abil) end
-private.virtual_functions['getArea'] = public.getArea
-
---- Virtual function
---- Must return full casting time of the ability.
----@param abil AbilityData
----@return number
-function public:getCastingTime(abil) end
-private.virtual_functions['getCastingTime'] = public.getCastingTime
-
---- Virtual function
---- Must return full cooldown of one ability charge.
----@param abil AbilityData
----@return number
-function public:getChargeCooldown(abil) end
-private.virtual_functions['getChargeCooldown'] = public.getChargeCooldown
-
---- Virtual function
---- Must return maximum number of charges for ability.
----@param abil AbilityData
----@return number
-function public:getMaxCharges(abil) end
-private.virtual_functions['getMaxCharges'] = public.getMaxCharges
-
---- Virtual function
---- Must return number of charges consumed for use.
----@param abil AbilityData
----@return number
-function public:getChargesForUse(abil) end
-private.virtual_functions['getChargesForUse'] = public.getChargesForUse
-
---- Virtual function
---- Must return number of charges consumed for use.
----@param abil AbilityData
----@return number
-function public:getManaCost(abil) end
-private.virtual_functions['getManaCost'] = public.getManaCost
-
---- Virtual function
---- Must return number of charges consumed for use.
----@param abil AbilityData
----@return number
-function public:getHealthCost(abil) end
-private.virtual_functions['getHealthCost'] = public.getHealthCost
-
---- Virtual function
----@param abil AbilityData
----@return string
-function public:getIcon(abil) end
-private.virtual_functions['getIcon'] = public.getIcon
-
---- Virtual function
----@param abil AbilityData
----@return string
-function public:getTooltip(abil) end
-private.virtual_functions['getTooltip'] = public.getTooltip
-
 --=========
 -- Private
 --=========
 
-private.instances = {}
 private.data = setmetatable({}, {__mode = 'k'})
-
----@param self AbilityData
----@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
----@param is_area boolean
-function private.newData(self, name, target_type, is_area)
-    local priv = {
-        name = name,
-        target_type = target_type,
-        is_area = is_area
-    }
-    private.data[self] = priv
-
-    private.instances[name] = self
-end
+private.instances = setmetatable({}, {__mode = 'k'})
 
 CompileFinal(function()
-    for id, instance in pairs(private.instances) do
+    for instance, name in pairs(private.instances) do
         for field, value in pairs(public) do
             local func = private.virtual_functions[field]
             if func ~= nil then
                 if value == instance[field] then
-                    Log:err(id..': virtual function \"'..field..'\" must be overriden.', 1)
+                    Log:err(name..': virtual function \"'..field..'\" must be overriden.', 1)
                 end
             end
         end

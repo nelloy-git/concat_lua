@@ -6,9 +6,9 @@ local UtilsLib = depencies.UtilsLib
 local Log = UtilsLib.DefaultLogger
 
 ---@type AbilityDataTypeClass
-local AbilityType = require(lib_modname..'.Type')
+local AbilityType = require(lib_modname..'.Data.Type')
 
-local TestAbilityType = AbilityType.new('TestAbilityType', 'Point', false)
+local TestAbilityType = AbilityType.new('TestAbilityType')
 
 function TestAbilityType:checkConditions(abil)
     print('checkConditions')
@@ -58,10 +58,6 @@ function TestAbilityType:getMaxCharges(abil)
     return 1
 end
 
-function TestAbilityType:getChargesForUse(abil)
-    return 1
-end
-
 function TestAbilityType:getManaCost(abil)
     return 0
 end
@@ -82,8 +78,8 @@ function TestAbilityType:getTooltip(abil)
     return 'TestTooltip'
 end
 
-function TestAbilityType:getAvailableTargets(abil)
-end
+--function TestAbilityType:getAvailableTargets(abil)
+--end
 
 
 return TestAbilityType
