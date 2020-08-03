@@ -82,6 +82,14 @@ function public:start(cooldown_time)
     private.cooldown_list[self] = private.data[self]
 end
 
+function public:cancel()
+    local priv = private.data[self]
+    priv.start_time = -1
+    priv.finish_time = -1
+
+    private.cooldown_list[self] = nil
+end
+
 function public:finish()
     local priv = private.data[self]
     priv.start_time = -1

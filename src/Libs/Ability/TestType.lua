@@ -50,12 +50,11 @@ end
 
 function TestAbilityType:getChargeCooldown(abil)
     print('getChargeCooldown')
-    return 3
+    return 10
 end
 
 function TestAbilityType:getMaxCharges(abil)
-    print('getMaxCharges')
-    return 1
+    return 5
 end
 
 function TestAbilityType:getManaCost(abil)

@@ -10,10 +10,12 @@ local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local Trigger = UtilsLib.Handle.Trigger
 
 ---@type AbilityCooldownCatcherClass
 local AbilityCooldownCatcher = require(lib_modname..'.Cooldown.Catcher')
+---@type AbilityCooldownInstanceClass
+local AbilityCooldownInstance = require(lib_modname..'.Cooldown.Instance')
 ---@type AbilityDummyClass
 local AbilityDummy = require(lib_modname..'.Dummy.Base')
 --endregion
@@ -38,16 +40,17 @@ local private = {}
 --========
 
 ---@param abil_dummy AbilityDummy
+---@param abil_type_cooldown AbilityDataTypeCooldownClass
 ---@param child_instance AbilityDummy | nil
 ---@return AbilityDummyCharges
-function override.new(abil_dummy, child_instance)
+function override.new(abil_dummy, abil_type_cooldown, child_instance)
     checkTypeErr(abil_dummy, AbilityDummy, 'abil_dummy')
     if child_instance then checkTypeErr(child_instance, AbilityDummyCharges, 'child_instance') end
 
     local instance = child_instance or Class.allocate(AbilityDummyCharges)
     instance = AbilityCooldownCatcher.new(instance)
 
-    private.newData(instance, abil_dummy)
+    private.newData(instance, abil_dummy, abil_type_cooldown)
 
     return instance
 end
@@ -56,54 +59,58 @@ end
 -- Public
 --========
 
-function public:onCooldownLoop() end
-
-function public:onCooldownFinish() end
-
 ---@param charges number
 ---@param ignore_max boolean
 function public:setChargesLeft(charges, ignore_max)
     local priv = private.data[self]
 
-    if priv.max_charges <= charges and not ignore_max then
-    elseif charges == 0 then
+    private.updateData(self)
 
+    if charges >= priv.max_charges then
+        priv.charges = ignore_max and charges or priv.max_charges
+
+        priv.cooldown_data:cancel()
+        priv.abil_dummy:setCooldown(priv.charge_cooldown + 0.01)
+        priv.abil_dummy:setCooldownRemaining(0)
+    elseif charges <= 0 then
+        priv.charges = 0
+
+        if priv.cooldown_data:getTimeLeft() < 0 then
+            priv.cooldown_data:start(priv.charge_cooldown)
+        end
+        priv.abil_dummy:setCooldown(priv.charge_cooldown + 0.01)
+        priv.abil_dummy:setCooldownRemaining(priv.cooldown_data:getTimeLeft())
+    else
+        priv.charges = charges
+
+        if priv.cooldown_data:getTimeLeft() < 0 then
+            priv.cooldown_data:start(priv.charge_cooldown)
+        end
+        priv.abil_dummy:setCooldown(0.1)
+        priv.abil_dummy:setCooldownRemaining(0.1)
     end
 end
 
 ---@return number
 function public:getChargesLeft()
+    private.updateData(self)
     return private.data[self].charges
-end
-
-function public:setMaxCharges(max_charges, ignore_max)
-    local priv = private.data[self]
-
-    priv.max_charges = max_charges
-    if max_charges <= priv.charges and not ignore_max then
-        priv.charges = priv.max_charges
-        if priv.cooldown_data then priv.cooldown_data:finish() end
-    else
-        if not priv.cooldown_data then
-            priv.cooldown_data = AbilityCooldownInstance.new(self)
-            priv.cooldown_data:start(priv.charge_cooldown)
-        end
-    end
 end
 
 ---@return number
 function public:getChargesMax()
+    private.updateData(self)
     return private.data[self].max_charges
-end
-
----@param charge_cooldown number
-function public:setChargeCooldown(charge_cooldown)
-    private.data[self].charge_cooldown = charge_cooldown
 end
 
 ---@return number
 function public:getChargeCooldown()
+    private.updateData(self)
     return private.data[self].charge_cooldown
+end
+
+function public:onCooldownFinish()
+    self:setChargesLeft(self:getChargesLeft() + 1)
 end
 
 --=========
@@ -111,18 +118,50 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.dummy2instance = setmetatable({}, {__mode = 'kv'})
 
 ---@param self AbilityDummyCharges
 ---@param abil_dummy AbilityDummy
-function private.newData(self, abil_dummy)
+---@param abil_type_cooldown AbilityDataTypeCooldown
+function private.newData(self, abil_dummy, abil_type_cooldown)
+    local owner = abil_dummy:getOwner()
     local priv = {
-        max_charges = 1,
         charges = 1,
+        max_charges = abil_type_cooldown:getMaxCharges(owner),
+        charge_cooldown = abil_type_cooldown:getChargeCooldown(owner),
 
         abil_dummy = abil_dummy,
-        cooldown_data = nil
+        abil_type_cooldown = abil_type_cooldown,
+        cooldown_data = AbilityCooldownInstance.new(self)
     }
     private.data[self] = priv
+    private.dummy2instance[abil_dummy] = self
+end
+
+function private.updateData(self)
+    local priv = private.data[self]
+
+    local owner = priv.abil_dummy:getOwner()
+    -- Update maximum charges
+    priv.max_charges = priv.abil_type_cooldown:getMaxCharges(owner)
+    -- Update charge cooldown
+    priv.charge_cooldown = priv.abil_type_cooldown:getChargeCooldown(owner)
+end
+
+function private.onAbilityUse()
+    local abil_dummy = AbilityDummy.getLinked(GetSpellAbility())
+
+    ---@type AbilityDummyCharges
+    local self = private.dummy2instance[abil_dummy]
+    self:setChargesLeft(self:getChargesLeft() - 1)
+end
+
+if not IsCompiletime() then
+    local trigger = Trigger.new()
+    for i = 0, bj_MAX_PLAYER_SLOTS do
+        trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, Player(i))
+    end
+    trigger:addAction(private.onAbilityUse)
 end
 
 return static

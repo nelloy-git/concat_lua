@@ -66,6 +66,12 @@ end
 -- Public
 --========
 
+--- Override
+---@return Unit
+function public:getOwner()
+    return private.data[self].owner
+end
+
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
 function public:setTargetType(target_type)
     local value = nil
@@ -110,7 +116,16 @@ end
 
 ---@param cooldown number
 function public:setCooldownRamaining(cooldown)
-    BlzStartUnitAbilityCooldown(self:getOwner(), self:getId(), 1, cooldown)
+    if cooldown > 0 then
+        BlzStartUnitAbilityCooldown(self:getOwner(), self:getId(), 1, cooldown)
+    else
+        BlzEndUnitAbilityCooldown(self:getOwner(), self:getId())
+    end
+end
+
+---@return number
+function public:getCooldownRemaining()
+    return BlzGetUnitAbilityCooldownRemaining(self:getOwner(), self:getId())
 end
 
 ---@param cooldown number
