@@ -38,8 +38,6 @@ local private = {}
 -- Static
 --=========
 
----@alias AbilityDummyCallback fun(abil_dummy:AbilityDummy)
-
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param child_instance AbilityDummy | nil
@@ -161,7 +159,7 @@ function private.newData(self, owner, abil_dummy_type, hotkey)
         abil_dummy_type = abil_dummy_type,
         hotkey = hotkey,
 
-        effect_actions = ActionList.new()
+        effect_actions = ActionList.new(self)
     }
 
     private.data[self] = priv

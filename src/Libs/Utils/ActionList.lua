@@ -7,13 +7,14 @@ local lib_modname = Lib.current().modname
 local depencies = Lib.current().depencies
 
 local Class = depencies.Class
----@type HandleClass
-local Handle = require(lib_modname..'.Handle.Handle')
+---@type ActionClass
+local Action = require(lib_modname..'.Action')
 ---@type UtilsFunctions
 local Functions = require(lib_modname..'.Functions')
 local checkTypeErr = Functions.checkTypeErr
----@type ActionClass
-local Action = require(lib_modname..'.Action')
+---@type LoggerClass
+local Logger = require(lib_modname..'.Logger')
+local Log = Logger.getDefault()
 --endregion
 
 --=======
@@ -35,13 +36,15 @@ local private = {}
 -- Static
 --========
 
+---@param owner any
 ---@param child_instance ActionList | nil
 ---@return ActionList
-function override.new(child_instance)
+function override.new(owner, child_instance)
+    if owner == nil then Log:err('\"owner\" can not be nil.', 2) end
     if child_instance then checkTypeErr(child_instance, ActionList, 'child_instance') end
 
     local instance = child_instance or Class.allocate(ActionList)
-    private.newData(instance)
+    private.newData(instance, owner)
 
     return instance
 end
@@ -56,7 +59,7 @@ function public:add(callback)
     checkTypeErr(callback, 'function', 'callback')
     local priv = private.data[self]
 
-    local action = Action.new(callback, self)
+    local action = Action.new(callback, priv.owner)
     table.insert(priv.actions, action)
 
     return action
@@ -94,7 +97,7 @@ function public:run(...)
     local priv = private.data[self]
 
     for i = 1, #priv.actions do
-        priv.actions[i]:run(...)
+        priv.actions[i]:run(priv.owner, ...)
     end
 end
 
@@ -105,8 +108,10 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self ActionList
-function private.newData(self)
+---@param owner any
+function private.newData(self, owner)
     local priv = {
+        owner = owner,
         actions = {}
     }
     private.data[self] = priv

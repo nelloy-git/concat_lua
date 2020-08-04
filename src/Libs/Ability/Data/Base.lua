@@ -125,7 +125,7 @@ function private.newData(self, owner, abil_type, hotkey)
         abil_dummy = abil_dummy,
         abil_dummy_charges = abil_dummy_charges,
 
-        no_charges_actions = ActionList.new(),
+        no_charges_actions = ActionList.new(self),
     }
     private.data[self] = priv
 end

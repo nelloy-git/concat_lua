@@ -48,6 +48,10 @@ function TestAbilityType:getCastingTime(abil)
     return 3
 end
 
+function TestAbilityType:getChargesForUse()
+    return 1
+end
+
 function TestAbilityType:getChargeCooldown(abil)
     return 2
 end
