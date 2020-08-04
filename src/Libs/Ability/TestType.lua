@@ -15,23 +15,23 @@ function TestAbilityType:checkConditions(abil)
     return true
 end
 
-function TestAbilityType:onStart(abil)
+function TestAbilityType:onCastingStart(abil)
     print('onStart')
 end
 
-function TestAbilityType:onCasting(abil)
+function TestAbilityType:onCastingLoop(abil)
     print('onCasting')
 end
 
-function TestAbilityType:onCancel(abil)
+function TestAbilityType:onCastingCancel(abil)
     print('onCancel')
 end
 
-function TestAbilityType:onInterrupt(abil)
+function TestAbilityType:onCastingInterrupt(abil)
     print('onInterrupt')
 end
 
-function TestAbilityType:onFinish(abil)
+function TestAbilityType:onCastingFinish(abil)
     print('onFinish')
 end
 
@@ -49,11 +49,10 @@ function TestAbilityType:getCastingTime(abil)
 end
 
 function TestAbilityType:getChargeCooldown(abil)
-    print('getChargeCooldown')
-    return 10
+    return 2
 end
 
-function TestAbilityType:getMaxCharges(abil)
+function TestAbilityType:getChargesMax(abil)
     return 5
 end
 

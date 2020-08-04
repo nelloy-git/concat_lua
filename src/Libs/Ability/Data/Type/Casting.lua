@@ -84,7 +84,7 @@ private.virtual_functions['onCastingLoop'] = public.onCastingLoop
 ---@param caster Unit
 ---@param time_left number
 ---@param full_time number
-function public:onCancel(target, caster, time_left, full_time) end
+function public:onCastingCancel(target, caster, time_left, full_time) end
 private.virtual_functions['onCancel'] = public.onCancel
 
 --- Virtual function
@@ -92,7 +92,7 @@ private.virtual_functions['onCancel'] = public.onCancel
 ---@param caster Unit
 ---@param time_left number
 ---@param full_time number
-function public:onInterrupt(target, caster, time_left, full_time) end
+function public:onCastingInterrupt(target, caster, time_left, full_time) end
 private.virtual_functions['onInterrupt'] = public.onInterrupt
 
 --- Virtual function
@@ -100,7 +100,7 @@ private.virtual_functions['onInterrupt'] = public.onInterrupt
 ---@param caster Unit
 ---@param time_left number
 ---@param full_time number
-function public:onFinish(target, caster, time_left, full_time) end
+function public:onCastingFinish(target, caster, time_left, full_time) end
 private.virtual_functions['onFinish'] = public.onFinish
 
 --=========

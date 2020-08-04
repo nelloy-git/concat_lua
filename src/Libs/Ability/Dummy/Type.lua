@@ -26,7 +26,7 @@ local AbilityDummyType = Class.new('AbilityDummyType', BinaryAbility)
 local public = AbilityDummyType.public
 ---@class AbilityDummyTypeClass : BinaryAbilityClass
 local static = AbilityDummyType.static
----@type DummyAbilityClass
+---@type AbilityDummyType
 local override = AbilityDummyType.override
 local private = {}
 
@@ -36,8 +36,8 @@ local private = {}
 
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
 ---@param is_area boolean
----@param child_instance DummyAbility | nil
----@return DummyAbility
+---@param child_instance AbilityDummy | nil
+---@return AbilityDummy
 function override.new(target_type, is_area, child_instance)
     checkTypeErr(target_type, 'string', 'target_type')
     if not (target_type == 'None' or
@@ -81,7 +81,7 @@ function static.pop(hotkey)
     end
     local dummy = table.remove(list)
     if dummy == nil then
-        Log:err('DummyAbilityPool is empty.', 2)
+        Log:err('AbilityPoolDummy is empty. Can be increased with private.pool_size_per_hotkey', 2)
     end
 
     return dummy

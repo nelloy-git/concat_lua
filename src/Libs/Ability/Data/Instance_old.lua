@@ -280,7 +280,7 @@ function private.cooldownLoop()
         local abil_type = priv.ability_type
 
         -- Cancel cooldown if has max charges.
-        if priv.charges >= abil_type:getMaxCharges(abil) then
+        if priv.charges >= abil_type:getChargesMax(abil) then
             private.cooldown_list[abil] = nil
         end
 

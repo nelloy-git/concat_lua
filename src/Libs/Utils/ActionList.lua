@@ -53,6 +53,7 @@ end
 ---@param callback Callback
 ---@return Action
 function public:add(callback)
+    checkTypeErr(callback, 'function', 'callback')
     local priv = private.data[self]
 
     local action = Action.new(callback, self)

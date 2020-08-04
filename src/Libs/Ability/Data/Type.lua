@@ -78,7 +78,7 @@ end
 
 --- Virtual function.
 --- Return true if check is successfull.
----@param abil AbilityDataInstance
+---@param abil AbilityData
 ---@return boolean
 function public:checkConditions(abil) end
 private.virtual_functions['checkConditions'] = public.checkConditions

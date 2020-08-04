@@ -61,8 +61,14 @@ end
 --- Virtual function
 ---@param owner Unit
 ---@return number
-function public:getMaxCharges(owner) end
-private.virtual_functions['getMaxCharges'] = public.getMaxCharges
+function public:getChargesForUse(owner) end
+private.virtual_functions['getChargesForUse'] = public.getChargesForUse
+
+--- Virtual function
+---@param owner Unit
+---@return number
+function public:getChargesMax(owner) end
+private.virtual_functions['getChargesMax'] = public.getChargesMax
 
 --- Virtual function
 ---@param owner Unit

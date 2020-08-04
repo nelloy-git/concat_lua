@@ -45,23 +45,18 @@ end
 -- Public
 --========
 
---- Virtual function.
 ---@param target AbilityTarget
 function public:onCastingStart(target) end
 
---- Virtual function
 ---@param target AbilityTarget
 function public:onCastingLoop(target) end
 
---- Virtual function
 ---@param target AbilityTarget
 function public:onCastingCancel(target) end
 
---- Virtual function
 ---@param target AbilityTarget
 function public:onCastingInterrupt(target) end
 
---- Virtual function
 ---@param target AbilityTarget
 function public:onCastingFinish(target) end
 

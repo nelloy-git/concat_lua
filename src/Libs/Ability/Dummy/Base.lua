@@ -15,11 +15,10 @@ local ActionList = UtilsLib.ActionList
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
+local Trigger = UtilsLib.Handle.Trigger
 
 ---@type AbilityDummyType
 local AbilityDummyType = require(lib_modname..'.Dummy.Type')
----@type AbilityCooldownChargesCatcherClass
-local AbilityCooldownChargesCatcher = require(lib_modname..'.Cooldown.ChargesCatcher')
 --endregion
 
 --=======
@@ -39,6 +38,8 @@ local private = {}
 -- Static
 --=========
 
+---@alias AbilityDummyCallback fun(abil_dummy:AbilityDummy)
+
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param child_instance AbilityDummy | nil
@@ -48,18 +49,12 @@ function override.new(owner, hotkey, child_instance)
     checkTypeErr(hotkey, 'string', 'hotkey')
     if child_instance then checkTypeErr(child_instance, AbilityDummy, 'child_instance') end
 
-    local abil_type = AbilityDummyType.pop(hotkey)
+    local abil_dummy_type = AbilityDummyType.pop(hotkey)
     local instance = child_instance or Class.allocate(AbilityDummy)
-    instance = Ability.new(owner:getHandleData(), abil_type:getId(), instance)
-    private.newData(instance, owner, abil_type, hotkey)
+    instance = Ability.new(owner:getHandleData(), abil_dummy_type:getId(), instance)
+    private.newData(instance, owner, abil_dummy_type, hotkey)
 
     return instance
-end
-
----@param id number
----@return AbilityDummy | nil
-function override.getById(id)
-    return private.id[id]
 end
 
 --========
@@ -70,6 +65,18 @@ end
 ---@return Unit
 function public:getOwner()
     return private.data[self].owner
+end
+
+---@param callback AbilityDummyCallback
+---@return Action
+function public:addOnEffectAction(callback)
+    return private.data[self].effect_actions:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeOnEffectAction(action)
+    return private.data[self].effect_actions:remove(action)
 end
 
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
@@ -96,46 +103,47 @@ end
 
 ---@param name string
 function public:setName(name)
-    BlzSetAbilityTooltip(private.data[self].abil_type:getId(), name, 0)
+    BlzSetAbilityTooltip(private.data[self].abil_dummy_type:getId(), name, 0)
 end
 
 ---@param tooltip string
 function public:setTooltip(tooltip)
-    BlzSetAbilityExtendedTooltip(private.data[self].abil_type:getId(), tooltip, 0)
+    BlzSetAbilityExtendedTooltip(private.data[self].abil_dummy_type:getId(), tooltip, 0)
 end
 
 ---@param icon string
 function public:setIcon(icon)
-    BlzSetAbilityIcon(private.data[self].abil_type:getId(), icon)
+    BlzSetAbilityIcon(private.data[self].abil_dummy_type:getId(), icon)
 end
 
 ---@param mana_cost number
 function public:setManaCost(mana_cost)
-    BlzSetUnitAbilityManaCost(self:getOwner(), self:getId(), 0, mana_cost)
+    BlzSetUnitAbilityManaCost(self:getOwner():getHandleData(), self:getId(), 0, mana_cost)
 end
 
 ---@param cooldown number
-function public:setCooldownRamaining(cooldown)
+function public:setCooldownRemaining(cooldown)
     if cooldown > 0 then
-        BlzStartUnitAbilityCooldown(self:getOwner(), self:getId(), 1, cooldown)
+        BlzStartUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId(), cooldown)
     else
-        BlzEndUnitAbilityCooldown(self:getOwner(), self:getId())
+        BlzEndUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId())
     end
 end
 
 ---@return number
 function public:getCooldownRemaining()
-    return BlzGetUnitAbilityCooldownRemaining(self:getOwner(), self:getId())
+    return BlzGetUnitAbilityCooldownRemaining(self:getOwner():getHandleData(), self:getId())
 end
 
 ---@param cooldown number
 function public:setCooldown(cooldown)
-    BlzSetUnitAbilityCooldown(self:getOwner(), self:getId(), 0, cooldown)
+    --BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_COOLDOWN, 0, cooldown)
+    BlzSetUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId(), 0, cooldown)
 end
 
 function public:destroy()
     local priv = private.data[self]
-    AbilityDummyType.push(priv.hotkey, priv.abil_type)
+    AbilityDummyType.push(priv.hotkey, priv.abil_dummy_type)
     AbilityPublic.destroy()
 end
 
@@ -144,19 +152,33 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.id = setmetatable({}, {__mode = 'v'})
 
 ---@param self AbilityDummy
 ---@param owner Unit
-function private.newData(self, owner, abil_type, hotkey)
+function private.newData(self, owner, abil_dummy_type, hotkey)
     local priv = {
         owner = owner,
-        abil_type = abil_type,
+        abil_dummy_type = abil_dummy_type,
         hotkey = hotkey,
+
+        effect_actions = ActionList.new()
     }
 
     private.data[self] = priv
-    private.id[abil_type:getId()] = self
+end
+
+function private.onEffect()
+    ---@type AbilityDummy
+    local self = Ability.getLinked(GetSpellAbility())
+    private.data[self].effect_actions:run(self)
+end
+
+if not IsCompiletime() then
+    local trigger = Trigger.new()
+    for i = 0, bj_MAX_PLAYER_SLOTS do
+        trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, Player(i))
+    end
+    trigger:addAction(private.onEffect)
 end
 
 return static
