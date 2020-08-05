@@ -21,13 +21,13 @@ local checkTypeErr = UtilsLib.Functions.checkTypeErr
 -- Class
 --=======
 
-local AbilityDummyType = Class.new('AbilityDummyType', BinaryAbility)
----@class AbilityDummyType : BinaryAbility
-local public = AbilityDummyType.public
----@class AbilityDummyTypeClass : BinaryAbilityClass
-local static = AbilityDummyType.static
----@type AbilityDummyType
-local override = AbilityDummyType.override
+local AbilityDummyPool = Class.new('AbilityDummyPool', BinaryAbility)
+---@class AbilityDummyPool : BinaryAbility
+local public = AbilityDummyPool.public
+---@class AbilityDummyPoolClass : BinaryAbilityClass
+local static = AbilityDummyPool.static
+---@type AbilityDummyPool
+local override = AbilityDummyPool.override
 local private = {}
 
 --=========
@@ -47,9 +47,9 @@ function override.new(target_type, is_area, child_instance)
         Log:err('Got wrong \"target_type\".', 2)
     end
     checkTypeErr(is_area, 'boolean', 'is_area')
-    if child_instance then checkTypeErr(child_instance, AbilityDummyType, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, AbilityDummyPool, 'child_instance') end
 
-    local instance = child_instance or Class.allocate(AbilityDummyType)
+    local instance = child_instance or Class.allocate(AbilityDummyPool)
     local id = BinaryLib.getAbilityId()
     local order_id = BinaryLib.getOrderId()
     instance = BinaryAbility.new(id, private.channel_id, private.id2Str(id), instance)
@@ -91,7 +91,7 @@ end
 ---@param abil BinaryAbility
 function static.push(hotkey, abil)
     checkTypeErr(hotkey, 'string', 'hotkey')
-    checkTypeErr(abil, AbilityDummyType, 'abil')
+    checkTypeErr(abil, AbilityDummyPool, 'abil')
 
     local list = private.pool[hotkey]
     if list == nil then

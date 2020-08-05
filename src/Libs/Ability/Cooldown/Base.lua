@@ -9,25 +9,24 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
+local Action = UtilsLib.Action
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local Log = UtilsLib.DefaultLogger
 local Timer = UtilsLib.Handle.Timer
-
----@type AbilityCooldownCatcherClass
-local AbilityCooldownCatcher = require(lib_modname..'.Cooldown.Catcher')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local AbilityCooldownInstance = Class.new('AbilityCooldownInstance')
+local AbilityCooldown = Class.new('AbilityCooldown')
 --region Class
----@class AbilityCooldownInstance
-local public = AbilityCooldownInstance.public
----@class AbilityCooldownInstanceClass
-local static = AbilityCooldownInstance.static
----@type AbilityCooldownInstanceClass
-local override = AbilityCooldownInstance.override
+---@class AbilityCooldown
+local public = AbilityCooldown.public
+---@class AbilityCooldownClass
+local static = AbilityCooldown.static
+---@type AbilityCooldownClass
+local override = AbilityCooldown.override
 local private = {}
 --endregion
 
@@ -35,15 +34,15 @@ local private = {}
 -- Static
 --=========
 
----@param catcher AbilityCooldownCatcher
----@param child_instance AbilityCooldownInstance | nil
----@return AbilityCooldownInstance
-function override.new(catcher, child_instance)
-    checkTypeErr(catcher, AbilityCooldownCatcher, 'owner')
-    if child_instance then checkTypeErr(child_instance, AbilityCooldownInstance, 'child_instance') end
+---@alias AbilityCooldownCallback fun(abil_cd:AbilityCooldown)
 
-    local instance = child_instance or Class.allocate(AbilityCooldownInstance)
-    private.newData(instance, catcher)
+---@param child_instance AbilityCooldown | nil
+---@return AbilityCooldown
+function override.new(child_instance)
+    if child_instance then checkTypeErr(child_instance, AbilityCooldown, 'child_instance') end
+
+    local instance = child_instance or Class.allocate(AbilityCooldown)
+    private.newData(instance)
 
     return instance
 end
@@ -78,25 +77,41 @@ function public:start(cooldown_time)
     priv.start_time = private.cooldown_current_time
     priv.finish_time = private.cooldown_current_time + cooldown_time
 
-    priv.catcher:onCooldownStart()
-    private.cooldown_list[self] = private.data[self]
+    private.cooldown_list[self] = priv
 end
 
 function public:cancel()
     local priv = private.data[self]
+
     priv.start_time = -1
     priv.finish_time = -1
-
     private.cooldown_list[self] = nil
 end
 
 function public:finish()
     local priv = private.data[self]
+
     priv.start_time = -1
     priv.finish_time = -1
-
-    priv.catcher:onCooldownFinish()
     private.cooldown_list[self] = nil
+
+    if priv.finish_action then priv.finish_action:run(self) end
+end
+
+--===========
+-- Callbacks
+--===========
+
+---@param callback AbilityCooldownCallback | Action
+function public:setFinishAction(callback)
+    if type(callback) == 'function' then
+        private.data[self].finish_action = Action.new(callback, self)
+    elseif callback == nil or Class.type(callback, Action) then
+        local action = callback
+        private.data[self].finish_action = action
+    else
+        Log:err('variable \'callback\' is not of type AbilityCooldownCallback | Action', 2)
+    end
 end
 
 --=========
@@ -106,15 +121,12 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.cooldown_list = setmetatable({}, {__mode = 'kv'})
 
----@param catcher AbilityCooldownCatcher
----@param target AbilityTarget
-function private.newData(self, catcher, target)
+function private.newData(self)
     local priv = {
-        catcher = catcher,
-        target = target,
-
         start_time = -1,
         finish_time = -1,
+
+        finish_action = nil
     }
     private.data[self] = priv
 end
@@ -127,13 +139,7 @@ function private.cooldownLoop()
 
     for cooldown_data, priv in pairs(private.cooldown_list) do
         if priv.finish_time <= cur_time then
-            priv.start_time = -1
-            priv.finish_time = -1
-            private.cooldown_list[cooldown_data] = nil
-
-            priv.catcher:onCooldownFinish()
-        else
-            priv.catcher:onCooldownLoop()
+            cooldown_data:finish()
         end
     end
 end

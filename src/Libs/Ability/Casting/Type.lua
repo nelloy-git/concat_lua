@@ -17,14 +17,14 @@ local Log = UtilsLib.DefaultLogger
 -- Class
 --=======
 
-local AbilityDataTypeCasting = Class.new('AbilityDataTypeCasting')
+local AbilityCastingType = Class.new('AbilityCastingType')
 --region Class
----@class AbilityDataTypeCasting
-local public = AbilityDataTypeCasting.public
----@class AbilityDataTypeCastingClass
-local static = AbilityDataTypeCasting.static
----@type AbilityDataTypeCastingClass
-local override = AbilityDataTypeCasting.override
+---@class AbilityCastingType
+local public = AbilityCastingType.public
+---@class AbilityCastingTypeClass
+local static = AbilityCastingType.static
+---@type AbilityCastingTypeClass
+local override = AbilityCastingType.override
 local private = {}
 private.virtual_functions = {}
 --endregion
@@ -34,16 +34,16 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param child_instance AbilityDataTypeCasting | nil
----@return AbilityDataTypeCasting
+---@param child_instance AbilityCastingType | nil
+---@return AbilityCastingType
 function override.new(name, child_instance)
-    if child_instance then checkTypeErr(child_instance, AbilityDataTypeCasting, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, AbilityCastingType, 'child_instance') end
 
     if private.instances[name] then
-        Log:err(tostring(AbilityDataTypeCasting)..' with name \"'..name..'\" already exists.', 2)
+        Log:err(tostring(AbilityCastingType)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(AbilityDataTypeCasting)
+    local instance = child_instance or Class.allocate(AbilityCastingType)
     private.instances[instance] = name
 
     return instance
@@ -59,10 +59,9 @@ function public:getName()
 end
 
 --- Virtual function
----@param target AbilityTarget
 ---@param caster Unit
 ---@return number
-function public:getCastingTime(target, caster) end
+function public:getCastingTime(caster) end
 private.virtual_functions['getCastingTime'] = public.getCastingTime
 
 --- Virtual function.

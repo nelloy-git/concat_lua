@@ -9,28 +9,27 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
+local Action = UtilsLib.Action
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local Log = UtilsLib.DefaultLogger
 local Timer = UtilsLib.Handle.Timer
-local Unit = UtilsLib.Handle.Unit
 
----@type AbilityCastingCatcherClass
-local AbilityCastingCatcher = require(lib_modname..'.Casting.Catcher')
 ---@type AbilityTargetClass
-local AbilityTarget = require(lib_modname..'.Target.Target')
+local AbilityTarget = require(lib_modname..'.Target.Base')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local AbilityCastingInstance = Class.new('AbilityCastingInstance')
+local AbilityCasting = Class.new('AbilityCasting')
 --region Class
----@class AbilityCastingInstance
-local public = AbilityCastingInstance.public
----@class AbilityCastingInstanceClass
-local static = AbilityCastingInstance.static
----@type AbilityCastingInstanceClass
-local override = AbilityCastingInstance.override
+---@class AbilityCasting
+local public = AbilityCasting.public
+---@class AbilityCastingClass
+local static = AbilityCasting.static
+---@type AbilityCastingClass
+local override = AbilityCasting.override
 local private = {}
 --endregion
 
@@ -38,17 +37,15 @@ local private = {}
 -- Static
 --=========
 
----@param catcher AbilityCastingCatcher
----@param target AbilityTarget
----@param child_instance AbilityCastingInstance | nil
----@return AbilityCastingInstance
-function override.new(catcher, target, child_instance)
-    checkTypeErr(catcher, AbilityCastingCatcher, 'owner')
-    checkTypeErr(target, AbilityTarget, 'target')
-    if child_instance then checkTypeErr(child_instance, AbilityCastingInstance, 'child_instance') end
+---@alias AbilityCastingCallback fun(abil_cd:AbilityCasting)
 
-    local instance = child_instance or Class.allocate(AbilityCastingInstance)
-    private.newData(instance, catcher, target)
+---@param child_instance AbilityCasting | nil
+---@return AbilityCasting
+function override.new(child_instance)
+    if child_instance then checkTypeErr(child_instance, AbilityCasting, 'child_instance') end
+
+    local instance = child_instance or Class.allocate(AbilityCasting)
+    private.newData(instance)
 
     return instance
 end
@@ -81,38 +78,56 @@ end
 ---@param casting_time number
 function public:start(casting_time)
     local priv = private.data[self]
+
     priv.start_time = private.casting_current_time
     priv.finish_time = private.casting_current_time + casting_time
-    private.casting_list[self] = private.data[self]
-
-    priv.catcher:onCastingStart(priv.target)
+    private.casting_list[self] = priv
 end
 
 function public:cancel()
     local priv = private.data[self]
+
     priv.start_time = -1
     priv.finish_time = -1
-
-    priv.catcher:onCastingCancel(private.data[self].target)
-    private.casting_list[self] = nil
-end
-
-function public:interrupt()
-    local priv = private.data[self]
-    priv.start_time = -1
-    priv.finish_time = -1
-
-    priv.catcher:onCastingInterrupt(private.data[self].target)
     private.casting_list[self] = nil
 end
 
 function public:finish()
     local priv = private.data[self]
+
     priv.start_time = -1
     priv.finish_time = -1
-
-    priv.catcher:onCastingFinish(private.data[self].target)
     private.casting_list[self] = nil
+
+    if priv.finish_action then priv.finish_action:run(self) end
+end
+
+--===========
+-- Callbacks
+--===========
+
+---@param callback AbilityCastingCallback | Action
+function public:setCastingAction(callback)
+    if type(callback) == 'function' then
+        private.data[self].casting_action = Action.new(callback, self)
+    elseif callback == nil or Class.type(callback, Action) then
+        local action = callback
+        private.data[self].casting_action = action
+    else
+        Log:err('variable \'callback\' is not of type AbilityCastingCallback | Action', 2)
+    end
+end
+
+---@param callback AbilityCastingCallback | Action
+function public:setFinishAction(callback)
+    if type(callback) == 'function' then
+        private.data[self].finish_action = Action.new(callback, self)
+    elseif callback == nil or Class.type(callback, Action) then
+        local action = callback
+        private.data[self].finish_action = action
+    else
+        Log:err('variable \'callback\' is not of type AbilityCastingCallback | Action', 2)
+    end
 end
 
 --=========
@@ -122,15 +137,14 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.casting_list = setmetatable({}, {__mode = 'k'})
 
----@param catcher AbilityCastingCatcher
----@param target AbilityTarget
-function private.newData(self, catcher, target)
+---@param self AbilityCasting
+function private.newData(self)
     local priv = {
-        catcher = catcher,
-        target = target,
-
         start_time = -1,
         finish_time = -1,
+
+        casting_action = nil,
+        finish_action = nil,
     }
     private.data[self] = priv
 end
@@ -143,13 +157,9 @@ function private.castingLoop()
 
     for casting_data, priv in pairs(private.casting_list) do
         if priv.finish_time <= cur_time then
-            priv.start_time = -1
-            priv.finish_time = -1
-            private.casting_list[casting_data] = nil
-
-            priv.catcher:onCastingFinish(priv.target)
+            casting_data:finish()
         else
-            priv.catcher:onCastingLoop(priv.target)
+            if priv.casting_action then priv.casting_action:run(casting_data) end
         end
     end
 end

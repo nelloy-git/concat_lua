@@ -11,14 +11,15 @@ local Class = depencies.Class
 local UtilsLib = depencies.UtilsLib
 local Ability = UtilsLib.Handle.Ability
 local AbilityPublic = Class.getPublic(Ability)
-local ActionList = UtilsLib.ActionList
+local Action = UtilsLib.Action
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 local Unit = UtilsLib.Handle.Unit
+local Timer = UtilsLib.Handle.Timer
 local Trigger = UtilsLib.Handle.Trigger
 
----@type AbilityDummyType
-local AbilityDummyType = require(lib_modname..'.Dummy.Type')
+---@type AbilityDummyPool
+local AbilityDummyPool = require(lib_modname..'.Dummy.Pool')
 --endregion
 
 --=======
@@ -38,6 +39,8 @@ local private = {}
 -- Static
 --=========
 
+---@alias AbilityDummyCallback fun(abil_dummy:AbilityDummy)
+
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param child_instance AbilityDummy | nil
@@ -47,7 +50,7 @@ function override.new(owner, hotkey, child_instance)
     checkTypeErr(hotkey, 'string', 'hotkey')
     if child_instance then checkTypeErr(child_instance, AbilityDummy, 'child_instance') end
 
-    local abil_dummy_type = AbilityDummyType.pop(hotkey)
+    local abil_dummy_type = AbilityDummyPool.pop(hotkey)
     local instance = child_instance or Class.allocate(AbilityDummy)
     instance = Ability.new(owner:getHandleData(), abil_dummy_type:getId(), instance)
     private.newData(instance, owner, abil_dummy_type, hotkey)
@@ -63,18 +66,6 @@ end
 ---@return Unit
 function public:getOwner()
     return private.data[self].owner
-end
-
----@param callback AbilityDummyCallback
----@return Action
-function public:addOnEffectAction(callback)
-    return private.data[self].effect_actions:add(callback)
-end
-
----@param action Action
----@return boolean
-function public:removeOnEffectAction(action)
-    return private.data[self].effect_actions:remove(action)
 end
 
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
@@ -121,11 +112,15 @@ end
 
 ---@param cooldown number
 function public:setCooldownRemaining(cooldown)
-    if cooldown > 0 then
-        BlzStartUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId(), cooldown)
-    else
-        BlzEndUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId())
-    end
+    -- Can not be charged after some events, so Timer is used.
+    local timer = Timer.new()
+    timer:start(0, false, function()
+        if cooldown > 0 then
+            BlzStartUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId(), cooldown)
+        else
+            BlzEndUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId())
+        end
+    end)
 end
 
 ---@return number
@@ -141,8 +136,24 @@ end
 
 function public:destroy()
     local priv = private.data[self]
-    AbilityDummyType.push(priv.hotkey, priv.abil_dummy_type)
+    AbilityDummyPool.push(priv.hotkey, priv.abil_dummy_type)
     AbilityPublic.destroy()
+end
+
+--===========
+-- Callbacks
+--===========
+
+---@param callback AbilityDummyCallback | Action
+function public:setEffectAction(callback)
+    if type(callback) == 'function' then
+        private.data[self].effect_action = Action.new(callback, self)
+    elseif Class.type(callback, Action) then
+        local action = callback
+        private.data[self].effect_action = action
+    else
+        Log:err('variable \'callback\' is not of type AbilityDummyCallback | Action', 2)
+    end
 end
 
 --=========
@@ -159,7 +170,7 @@ function private.newData(self, owner, abil_dummy_type, hotkey)
         abil_dummy_type = abil_dummy_type,
         hotkey = hotkey,
 
-        effect_actions = ActionList.new(self)
+        effect_action = nil
     }
 
     private.data[self] = priv
@@ -167,8 +178,9 @@ end
 
 function private.onEffect()
     ---@type AbilityDummy
-    local self = Ability.getLinked(GetSpellAbility())
-    private.data[self].effect_actions:run(self)
+    local self = static.getLinked(GetSpellAbility())
+    local priv = private.data[self]
+    if priv.effect_action then priv.effect_action:run(self) end
 end
 
 if not IsCompiletime() then

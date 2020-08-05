@@ -17,14 +17,14 @@ local Log = UtilsLib.DefaultLogger
 -- Class
 --=======
 
-local AbilityDataTypeCooldown = Class.new('AbilityDataTypeCooldown')
+local AbilityDataTypeCondition = Class.new('AbilityDataTypeCondition')
 --region Class
----@class AbilityDataTypeCooldown
-local public = AbilityDataTypeCooldown.public
----@class AbilityDataTypeCooldownClass
-local static = AbilityDataTypeCooldown.static
----@type AbilityDataTypeCooldownClass
-local override = AbilityDataTypeCooldown.override
+---@class AbilityDataTypeCondition
+local public = AbilityDataTypeCondition.public
+---@class AbilityDataTypeConditionClass
+local static = AbilityDataTypeCondition.static
+---@type AbilityDataTypeConditionClass
+local override = AbilityDataTypeCondition.override
 local private = {}
 private.virtual_functions = {}
 --endregion
@@ -34,16 +34,16 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param child_instance AbilityDataTypeCooldown | nil
----@return AbilityDataTypeCooldown
+---@param child_instance AbilityDataTypeCondition | nil
+---@return AbilityDataTypeCondition
 function override.new(name, child_instance)
-    if child_instance then checkTypeErr(child_instance, AbilityDataTypeCooldown, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, AbilityDataTypeCondition, 'child_instance') end
 
     if private.instances[name] then
-        Log:err(tostring(AbilityDataTypeCooldown)..' with name \"'..name..'\" already exists.', 2)
+        Log:err(tostring(AbilityDataTypeCondition)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(AbilityDataTypeCooldown)
+    local instance = child_instance or Class.allocate(AbilityDataTypeCondition)
     private.instances[instance] = name
 
     return instance
@@ -61,20 +61,38 @@ end
 --- Virtual function
 ---@param owner Unit
 ---@return number
-function public:getChargesForUse(owner) end
-private.virtual_functions['getChargesForUse'] = public.getChargesForUse
+function public:getRange(owner) end
+private.virtual_functions['getRange'] = public.getRange
 
 --- Virtual function
 ---@param owner Unit
 ---@return number
-function public:getChargesMax(owner) end
-private.virtual_functions['getChargesMax'] = public.getChargesMax
+function public:getArea(owner) end
+private.virtual_functions['getArea'] = public.getArea
 
 --- Virtual function
 ---@param owner Unit
 ---@return number
-function public:getChargeCooldown(owner) end
-private.virtual_functions['getChargeCooldown'] = public.getChargeCooldown
+function public:getManaCost(owner) end
+private.virtual_functions['getManaCost'] = public.getManaCost
+
+--- Virtual function
+---@param owner Unit
+---@return number
+function public:getHealthCost(owner) end
+private.virtual_functions['getHealthCost'] = public.getHealthCost
+
+--- Virtual function
+---@param owner Unit
+---@return string
+function public:getIcon(owner) end
+private.virtual_functions['getIcon'] = public.getIcon
+
+--- Virtual function
+---@param owner Unit
+---@return string
+function public:getTooltip(owner) end
+private.virtual_functions['getTooltip'] = public.getTooltip
 
 --=========
 -- Private

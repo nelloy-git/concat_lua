@@ -12,12 +12,12 @@ local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Log = UtilsLib.DefaultLogger
 
----@type AbilityDataTypeCastingClass
-local AbilityDataTypeCasting = require(lib_modname..'.Data.Type.Casting')
+---@type AbilityCastingType
+local AbilityCastingType = require(lib_modname..'.Casting.Type')
 ---@type AbilityDataTypeConditionClass
 local AbilityDataTypeCondition = require(lib_modname..'.Data.Type.Condition')
----@type AbilityDataTypeCooldownClass
-local AbilityDataTypeCooldown = require(lib_modname..'.Data.Type.Cooldown')
+---@type AbilityCooldownTypeClass
+local AbilityCooldownType = require(lib_modname..'.Cooldown.Type')
 ---@type AbilityDataTypeUIClass
 local AbilityDataTypeUI = require(lib_modname..'.Data.Type.UI')
 --endregion
@@ -26,14 +26,14 @@ local AbilityDataTypeUI = require(lib_modname..'.Data.Type.UI')
 -- Class
 --=======
 
-local AbilityDataType = Class.new('AbilityDataType', AbilityDataTypeCasting,
+local AbilityDataType = Class.new('AbilityDataType', AbilityCastingType,
                                                      AbilityDataTypeCondition,
-                                                     AbilityDataTypeCooldown,
+                                                     AbilityCooldownType,
                                                      AbilityDataTypeUI)
 --region Class
----@class AbilityDataType : AbilityDataTypeCooldown
+---@class AbilityDataType
 local public = AbilityDataType.public
----@class AbilityDataTypeClass : AbilityDataTypeCooldownClass
+---@class AbilityDataTypeClass
 local static = AbilityDataType.static
 ---@type AbilityDataTypeClass
 local override = AbilityDataType.override
@@ -58,9 +58,9 @@ function override.new(name, child_instance)
 
     local instance = child_instance or Class.allocate(AbilityDataType)
     instance = AbilityDataTypeUI.new(name, instance)
-    instance = AbilityDataTypeCooldown.new(name, instance)
+    instance = AbilityCooldownType.new(name, instance)
     instance = AbilityDataTypeCondition.new(name, instance)
-    instance = AbilityDataTypeCasting.new(name, instance)
+    instance = AbilityCastingType.new(name, instance)
 
     private.instances[instance] = name
 

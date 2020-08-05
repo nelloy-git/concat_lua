@@ -15,23 +15,23 @@ function TestAbilityType:checkConditions(abil)
     return true
 end
 
-function TestAbilityType:onCastingStart(abil)
-    print('onStart')
+function TestAbilityType:onCastingStart(target, caster)
+    print('Start casting')
 end
 
-function TestAbilityType:onCastingLoop(abil)
-    print('onCasting')
+function TestAbilityType:onCastingLoop(target, caster, time_left, full_time)
+    print('Casting: ', time_left)
 end
 
-function TestAbilityType:onCastingCancel(abil)
+function TestAbilityType:onCastingCancel(target, caster, time_left, full_time)
     print('onCancel')
 end
 
-function TestAbilityType:onCastingInterrupt(abil)
+function TestAbilityType:onCastingInterrupt(target, caster, time_left, full_time)
     print('onInterrupt')
 end
 
-function TestAbilityType:onCastingFinish(abil)
+function TestAbilityType:onCastingFinish(target, caster, time_left, full_time)
     print('onFinish')
 end
 
@@ -43,7 +43,7 @@ function TestAbilityType:getArea(abil)
     return 0
 end
 
-function TestAbilityType:getCastingTime(abil)
+function TestAbilityType:getCastingTime(caster)
     print('getCastingTime')
     return 3
 end

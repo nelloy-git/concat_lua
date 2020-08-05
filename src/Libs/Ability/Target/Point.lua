@@ -11,7 +11,7 @@ local UtilsLib = depencies.UtilsLib
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 
 ---@type AbilityTarget
-local AbilityTarget = require(lib_modname..'.Target.Target')
+local AbilityTarget = require(lib_modname..'.Target.Base')
 
 --=======
 -- Class

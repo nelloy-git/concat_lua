@@ -40,7 +40,6 @@ local private = {}
 ---@param child_instance ActionList | nil
 ---@return ActionList
 function override.new(owner, child_instance)
-    if owner == nil then Log:err('\"owner\" can not be nil.', 2) end
     if child_instance then checkTypeErr(child_instance, ActionList, 'child_instance') end
 
     local instance = child_instance or Class.allocate(ActionList)
@@ -68,10 +67,11 @@ end
 ---@param action Action
 ---@return boolean
 function public:remove(action)
-    checkTypeErr(action, Action, 'action')
-    if action:getOwner() ~= self then return false end
-
     local priv = private.data[self]
+
+    checkTypeErr(action, Action, 'action')
+    if action:getOwner() ~= priv.owner then return false end
+
     for i = 1, #priv.actions do
         if priv.actions[i] == action then
             table.remove(priv.actions, i)
@@ -97,7 +97,7 @@ function public:run(...)
     local priv = private.data[self]
 
     for i = 1, #priv.actions do
-        priv.actions[i]:run(priv.owner, ...)
+        priv.actions[i]:run(...)
     end
 end
 

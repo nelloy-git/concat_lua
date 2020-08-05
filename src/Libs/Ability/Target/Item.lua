@@ -12,7 +12,7 @@ local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Item = UtilsLib.Handle.Item
 
 ---@type AbilityTarget
-local AbilityTarget = require(lib_modname..'.Target.Target')
+local AbilityTarget = require(lib_modname..'.Target.Base')
 
 --=======
 -- Class
