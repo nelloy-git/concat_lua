@@ -69,7 +69,7 @@ function public:getOwner()
 end
 
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
-function public:setTargetType(target_type)
+function public:setTargetingType(target_type)
     local value = nil
     value = target_type == 'None' and 0 or value
     value = target_type == 'Unit' and 1 or value
@@ -86,7 +86,17 @@ function public:setArea(area)
     BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_AREA_OF_EFFECT, 0, area)
 end
 
-function public:setTargetsAllowed()
+---@param range number
+function public:setRange(range)
+    -- TODO
+end
+
+---@param targets string
+function public:setTargetsAllowed(targets)
+    -- TODO
+end
+
+function public:setOptions(options)
     -- TODO
 end
 

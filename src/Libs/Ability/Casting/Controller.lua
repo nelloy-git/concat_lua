@@ -144,7 +144,10 @@ function private.newData(self, abil_casting_type, owner)
         abil_casting_type = abil_casting_type,
         casting_data = AbilityCasting.new(),
 
+        start_action = nil,
         casting_action = nil,
+        cancel_action = nil,
+        interrupt_action = nil,
         finish_action = nil
     }
     private.data[self] = priv

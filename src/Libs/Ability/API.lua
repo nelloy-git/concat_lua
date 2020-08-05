@@ -38,7 +38,7 @@ AbilityLibAPI.TargetPoint = require(lib_modename..'.Target.Point')
 ---@type AbilityTargetUnitClass
 AbilityLibAPI.TargetUnit = require(lib_modename..'.Target.Unit')
 
-AbilityLibAPI.Test = require(lib_modename..'.Dummy.Type')
+--AbilityLibAPI.Test = require(lib_modename..'.Dummy.Type')
 
 Lib.finish()
 

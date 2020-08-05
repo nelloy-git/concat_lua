@@ -17,14 +17,14 @@ local Log = UtilsLib.DefaultLogger
 -- Class
 --=======
 
-local AbilityDataTypeCondition = Class.new('AbilityDataTypeCondition')
+local AbilityInfoType = Class.new('AbilityInfoType')
 --region Class
----@class AbilityDataTypeCondition
-local public = AbilityDataTypeCondition.public
----@class AbilityDataTypeConditionClass
-local static = AbilityDataTypeCondition.static
----@type AbilityDataTypeConditionClass
-local override = AbilityDataTypeCondition.override
+---@class AbilityInfoType
+local public = AbilityInfoType.public
+---@class AbilityInfoTypeClass
+local static = AbilityInfoType.static
+---@type AbilityInfoTypeClass
+local override = AbilityInfoType.override
 local private = {}
 private.virtual_functions = {}
 --endregion
@@ -34,16 +34,16 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param child_instance AbilityDataTypeCondition | nil
----@return AbilityDataTypeCondition
+---@param child_instance AbilityInfoType | nil
+---@return AbilityInfoType
 function override.new(name, child_instance)
-    if child_instance then checkTypeErr(child_instance, AbilityDataTypeCondition, 'child_instance') end
+    if child_instance then checkTypeErr(child_instance, AbilityInfoType, 'child_instance') end
 
     if private.instances[name] then
-        Log:err(tostring(AbilityDataTypeCondition)..' with name \"'..name..'\" already exists.', 2)
+        Log:err(tostring(AbilityInfoType)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(AbilityDataTypeCondition)
+    local instance = child_instance or Class.allocate(AbilityInfoType)
     private.instances[instance] = name
 
     return instance
@@ -69,6 +69,18 @@ private.virtual_functions['getRange'] = public.getRange
 ---@return number
 function public:getArea(owner) end
 private.virtual_functions['getArea'] = public.getArea
+
+--- Virtual function
+---@param owner Unit
+---@return string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
+function public:getTargetingType(owner) end
+private.virtual_functions['getTargetingType'] = public.getTargetingType
+
+--- Virtual function
+---@param owner Unit
+---@return string
+function public:getTargetsAllowed(owner) end
+private.virtual_functions['getTargetsAllowed'] = public.getTargetsAllowed
 
 --- Virtual function
 ---@param owner Unit

@@ -35,14 +35,6 @@ function TestAbilityType:onCastingFinish(target, caster, time_left, full_time)
     print('onFinish')
 end
 
-function TestAbilityType:getRange(abil)
-    return 500
-end
-
-function TestAbilityType:getArea(abil)
-    return 0
-end
-
 function TestAbilityType:getCastingTime(caster)
     print('getCastingTime')
     return 3
@@ -60,23 +52,39 @@ function TestAbilityType:getChargesMax(abil)
     return 5
 end
 
-function TestAbilityType:getManaCost(abil)
-    return 0
-end
-
-function TestAbilityType:getHealthCost(abil)
-    return 5
-end
-
-function TestAbilityType:getName(abil)
+function TestAbilityType:getName()
     return 'TestName'
 end
 
-function TestAbilityType:getIcon(abil)
+function TestAbilityType:getRange(owner)
+    return 500
+end
+
+function TestAbilityType:getArea(owner)
+    return 0
+end
+
+function TestAbilityType:getTargetingType(owner)
+    return 'None'
+end
+
+function TestAbilityType:getTargetsAllowed(owner)
+    return ''
+end
+
+function TestAbilityType:getManaCost(owner)
+    return 0
+end
+
+function TestAbilityType:getHealthCost(owner)
+    return 5
+end
+
+function TestAbilityType:getIcon(owner)
     return "ReplaceableTextures\\\\CommandButtons\\\\BTNAcidBomb.blp"
 end
 
-function TestAbilityType:getTooltip(abil)
+function TestAbilityType:getTooltip(owner)
     return 'TestTooltip'
 end
 

@@ -14,8 +14,8 @@ local Log = UtilsLib.DefaultLogger
 
 ---@type AbilityCastingType
 local AbilityCastingType = require(lib_modname..'.Casting.Type')
----@type AbilityDataTypeConditionClass
-local AbilityDataTypeCondition = require(lib_modname..'.Data.Type.Condition')
+---@type AbilityInfoTypeClass
+local AbilityInfoType = require(lib_modname..'.Info.Type')
 ---@type AbilityCooldownTypeClass
 local AbilityCooldownType = require(lib_modname..'.Cooldown.Type')
 ---@type AbilityDataTypeUIClass
@@ -27,7 +27,7 @@ local AbilityDataTypeUI = require(lib_modname..'.Data.Type.UI')
 --=======
 
 local AbilityDataType = Class.new('AbilityDataType', AbilityCastingType,
-                                                     AbilityDataTypeCondition,
+                                                     AbilityInfoType,
                                                      AbilityCooldownType,
                                                      AbilityDataTypeUI)
 --region Class
@@ -59,7 +59,7 @@ function override.new(name, child_instance)
     local instance = child_instance or Class.allocate(AbilityDataType)
     instance = AbilityDataTypeUI.new(name, instance)
     instance = AbilityCooldownType.new(name, instance)
-    instance = AbilityDataTypeCondition.new(name, instance)
+    instance = AbilityInfoType.new(name, instance)
     instance = AbilityCastingType.new(name, instance)
 
     private.instances[instance] = name
