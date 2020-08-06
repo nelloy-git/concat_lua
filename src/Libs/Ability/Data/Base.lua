@@ -260,19 +260,6 @@ private.used_dummy_callback = function(abil_dummy)
 end
 private.used_dummy_action = Action.new(private.used_dummy_callback, AbilityData)
 
----@param self AbilityData
----@param priv table
----@return boolean
-function private.checkCharges(self, priv)
-    -- Check charges
-    local charges = priv.abil_charges:getChargesLeft()
-    local need_charges = priv.abil_type:getChargesForUse()
-    if charges < need_charges then
-        return false
-    end
-    return true
-end
-
 -------------
 -- Charges --
 -------------
