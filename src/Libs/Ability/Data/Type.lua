@@ -18,8 +18,6 @@ local AbilityCastingType = require(lib_modname..'.Casting.Type')
 local AbilityInfoType = require(lib_modname..'.Info.Type')
 ---@type AbilityCooldownTypeClass
 local AbilityCooldownType = require(lib_modname..'.Cooldown.Type')
----@type AbilityDataTypeUIClass
-local AbilityDataTypeUI = require(lib_modname..'.Data.Type.UI')
 --endregion
 
 --=======
@@ -28,8 +26,7 @@ local AbilityDataTypeUI = require(lib_modname..'.Data.Type.UI')
 
 local AbilityDataType = Class.new('AbilityDataType', AbilityCastingType,
                                                      AbilityInfoType,
-                                                     AbilityCooldownType,
-                                                     AbilityDataTypeUI)
+                                                     AbilityCooldownType)
 --region Class
 ---@class AbilityDataType
 local public = AbilityDataType.public
@@ -57,7 +54,6 @@ function override.new(name, child_instance)
     end
 
     local instance = child_instance or Class.allocate(AbilityDataType)
-    instance = AbilityDataTypeUI.new(name, instance)
     instance = AbilityCooldownType.new(name, instance)
     instance = AbilityInfoType.new(name, instance)
     instance = AbilityCastingType.new(name, instance)

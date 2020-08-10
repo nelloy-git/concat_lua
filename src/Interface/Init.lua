@@ -22,24 +22,32 @@ local function freeFrame(handle)
     BlzFrameClearAllPoints(handle)
 end
 
--- Free minimap
+------------------
+-- Free minimap --
+------------------
 local map_handle = BlzGetFrameByName("MiniMapFrame", 0)
 freeFrame(map_handle)
 Interface.Minimap = FrameLib.Frame.Normal.Image.new(map_handle)
 
--- Free chat edit
+--------------------
+-- Free chat edit --
+--------------------
 local chat_edit_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
 freeFrame(chat_edit_handle)
 Interface.ChatEdit = FrameLib.Frame.Normal.Image.new(chat_edit_handle)
 
--- Free chat
+---------------
+-- Free chat --
+---------------
 local chat_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 7)
 freeFrame(chat_handle)
 Interface.Chat = FrameLib.Frame.Normal.Image.new(chat_handle)
 Interface.Chat:setParent(Interface.ChatEdit)
 Interface.Chat:setPos(0, Interface.ChatEdit:getHeight())
 
--- Free command buttons
+--------------------------
+-- Free command buttons --
+--------------------------
 Interface.SkillsButtons = {}
 
 for i = 5, 11 do
@@ -53,18 +61,20 @@ for i = 5, 11 do
     Interface.SkillsButtons[i - 4] = btn
 end
 
+--------------
+-- Free Log --
+--------------
+local log_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_WORLD_FRAME, 0), 7)
+--
+freeFrame(log_handle)
+--Interface.Log = FrameLib.Frame.Normal.Image.new(log_handle)
+--Interface.Log:setPos(0, 0)
+-- ORIGIN_FRAME_WORLD_FRAME
+
 -- Hide portrait
 BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0))
 -- Hide inventory
 BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_ITEM_BUTTON, 0))), false)
-
-local btn = FrameLib.Frame.Normal.ButtonDefault.new()
-btn:setPos(0.4, 0.3)
---btn:setTexture("ReplaceableTextures\\\\CommandButtons\\\\BTNAmulet.blp", 0, true)
---btn:setVisible(true)
-
-local img = FrameLib.Frame.Normal.Image.new()
-img:setPos(0.3, 0.3)
 
 
 FrameLib.Screen.addResolutionChangedAction(

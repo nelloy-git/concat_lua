@@ -9,7 +9,7 @@ local UtilsLib = require(LibList.UtilsLib)
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib)
 
---local Interface = require('Interface.Init')
+local Interface = require('Interface.Init')
 
 local FourCC = FourCC or function(id) return string.unpack(">I4", id) end
 
