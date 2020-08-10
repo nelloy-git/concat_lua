@@ -8929,6 +8929,10 @@ function BlzFrameSetTextAlignment(frame, vert, horz) end
 ---@return framehandle
 function BlzFrameGetChild(frame, index) end
 
+---@param frame framehandle
+---@return number
+function BlzFrameGetChildrenCount(frame) end
+
 ---@param whichTrigger trigger
 ---@param frame framehandle
 ---@param eventId frameeventtype

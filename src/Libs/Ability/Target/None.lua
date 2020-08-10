@@ -59,7 +59,7 @@ end
 
 ---@param caster Unit
 ---@return number
-function public:getRange(caster)
+function public:getDistance(caster)
     return 0
 end
 

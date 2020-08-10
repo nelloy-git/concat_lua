@@ -78,7 +78,7 @@ private.virtual_functions['getTargetingType'] = public.getTargetingType
 
 --- Virtual function
 ---@param owner Unit
----@return string
+---@return string | "'friend'" | "'enemy'" | "'any'"
 function public:getTargetsAllowed(owner) end
 private.virtual_functions['getTargetsAllowed'] = public.getTargetsAllowed
 

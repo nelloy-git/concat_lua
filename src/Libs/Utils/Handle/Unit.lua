@@ -98,6 +98,11 @@ function public:getOwner()
     return private.data[self].owner
 end
 
+---@param val number
+function public:setMana(val)
+    SetUnitState(self:getHandleData(), UNIT_STATE_MANA, val)
+end
+
 ---@return number
 function public:getMana()
     return GetUnitState(self:getHandleData(), UNIT_STATE_MANA)
@@ -106,6 +111,18 @@ end
 ---@return number
 function public:getHealth()
     return GetUnitState(self:getHandleData(), UNIT_STATE_LIFE)
+end
+
+---@param other_unit Unit
+---@return boolean
+function public:isEnemy(other_unit)
+    return IsUnitEnemy(self:getHandleData(), private.data[other_unit].owner)
+end
+
+---@param other_unit Unit
+---@return boolean
+function public:isAlly(other_unit)
+    return IsUnitAlly(self:getHandleData(), private.data[other_unit].owner)
 end
 
 --=========

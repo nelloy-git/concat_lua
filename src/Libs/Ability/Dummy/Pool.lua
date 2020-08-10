@@ -66,6 +66,7 @@ function override.new(target_type, is_area, child_instance)
     instance:setOptions(true, is_area, false, false, false, 1)
     instance:setOrderId(order_id, 1)
     instance:setTargetType(target_type, 1)
+    instance:setTargetsAllowed({'enemies', 'friend', 'self'}, 1)
 
     return instance
 end
@@ -141,12 +142,14 @@ function private.id2Str(id)
     return s_id
 end
 
-for i = 1, #private.hotkeys do
-    local hotkey = private.hotkeys[i]
-    local dummy = static.new('None', false)
-    dummy:setHotkey(hotkey)
-    dummy:setButtonPositionNormal(private.pos[hotkey].x, private.pos[hotkey].y)
-    static.push(hotkey, dummy)
+for j = 1, private.pool_size_per_hotkey do
+    for i = 1, #private.hotkeys do
+        local hotkey = private.hotkeys[i]
+        local dummy = static.new('None', false)
+        dummy:setHotkey(hotkey)
+        dummy:setButtonPositionNormal(private.pos[hotkey].x, private.pos[hotkey].y)
+        static.push(hotkey, dummy)
+    end
 end
 
 return static

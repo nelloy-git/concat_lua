@@ -168,6 +168,18 @@ function public:setTargetType(target, lvl)
     private.setValue(self, AbilDB.ANcl.TargetType, FourCC('ANcl'), lvl, value)
 end
 
+---@param list table
+---@param lvl number
+function public:setTargetsAllowed(list, lvl)
+    local val = ''
+    for i = 1, #list do
+        val = val..list[i]
+        if i < #list then val = val..',' end
+    end
+
+    private.setValue(self, AbilDB.TargetsAllowed, nil, lvl, val)
+end
+
 ---@param value_id string
 ---@param value_type string | "'bool'" | "'int'" | "'real'" | "'unreal'" | "'string'"
 ---@param extra_id number

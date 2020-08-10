@@ -25,9 +25,13 @@ local AbilityCastingController = require(lib_modename..'.Casting.Controller')
 ---@type AbilityInfoClass
 local AbilityInfo = require(lib_modename..'.Info.Base')
 local INFO_NAME = AbilityInfo.INFO_NAME
----@type AbilityTargetNone
-local AbilityTargetNone = require(lib_modename..'.Target.None')
 
+---@type AbilityTargetNoneClass
+local AbilityTargetNone = require(lib_modename..'.Target.None')
+---@type AbilityTargetUnitClass
+local AbilityTargetUnit = require(lib_modename..'.Target.Unit')
+---@type AbilityTargetPointClass
+local AbilityTargetPoint = require(lib_modename..'.Target.Point')
 --endregion
 
 --=======
@@ -70,7 +74,7 @@ end
 -- Static callbacks
 --==================
 
----@alias AbilityDataEventCallback fun(abil_data:AbilityData)
+---@alias AbilityDataEventCallback fun(event: AbilityDataEvent, abil_data:AbilityData)
 
 ---@alias AbilityDataEvent string
 override.EVENT = {}
@@ -78,6 +82,12 @@ override.EVENT = {}
 static.EVENT.AlreadyCasting = 'AlreadyCasting'
 ---@type AbilityDataEvent
 static.EVENT.NoCharges = 'NoCharges'
+---@type AbilityDataEvent
+static.EVENT.OutOfRange = 'OutOfRange'
+---@type AbilityDataEvent
+static.EVENT.NeedsAllyTarget = 'NeedsAllyTarget'
+---@type AbilityDataEvent
+static.EVENT.NeedsEnemyTarget = 'NeedsEnemyTarget'
 ---@type AbilityDataEvent
 static.EVENT.CastingStart = 'CastingStart'
 ---@type AbilityDataEvent
@@ -93,14 +103,14 @@ static.EVENT.CastingFinish = 'CastingFinish'
 ---@param callback AbilityDataEventCallback
 ---@return Action
 function override.addEventAction(event, callback)
-    return private.event_actions[event]:addAction(callback)
+    return private.event_actions[event]:add(callback)
 end
 
 ---@param event AbilityDataEvent
 ---@param action Action
 ---@return boolean
 function override.removeEventAction(event, action)
-    return private.event_actions[event]:removeAction(action)
+    return private.event_actions[event]:remove(action)
 end
 
 --========
@@ -130,23 +140,50 @@ end
 ---@param target AbilityTarget
 function public:use(target)
     local priv = private.data[self]
+    local EVENT = static.EVENT
 
+    local mana_cost = priv.abil_info:get(INFO_NAME.ManaCost)
+
+    -- Check casting
     if priv.target ~= nil then
-        private.event_actions[static.EVENT.AlreadyCasting]:run(self)
+        priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
+        private.event_actions[EVENT.AlreadyCasting]:run(EVENT.AlreadyCasting, self)
         return
     end
 
-    -- Check charges
+    -- Check charges.
     local charges = priv.abil_charges:getChargesLeft()
     local need_charges = priv.abil_type:getChargesForUse()
     if charges < need_charges then
-        private.event_actions[static.EVENT.NoCharges]:run(self)
+        priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
+        private.event_actions[EVENT.NoCharges]:run(EVENT.NoCharges, self)
         return
     end
 
+    -- Check range.
+    local range = target:getDistance(priv.owner)
+    local max_range = priv.abil_info:get(INFO_NAME.Range)
+    if range > max_range then
+        priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
+        private.event_actions[EVENT.OutOfRange]:run(EVENT.OutOfRange, self)
+        return
+    end
 
-    -- TODO other conditions
-
+    -- Check allowed target.
+    if Class.type(target, AbilityTargetUnit) then
+        local target_unit = target:getUnit()
+        local allowed = priv.abil_info:get(INFO_NAME.TargetsAllowed)
+        print(allowed)
+        if allowed == 'friend' and priv.owner:isEnemy(target_unit) then
+            priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
+            private.event_actions[EVENT.NeedsAllyTarget]:run(EVENT.NeedsAllyTarget, self)
+            return
+        elseif allowed == 'enemy' and priv.owner:isAlly(target_unit) then
+            priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
+            private.event_actions[EVENT.NeedsEnemyTarget]:run(EVENT.NeedsEnemyTarget, self)
+            return
+        end
+    end
 
     -- Consume
     priv.abil_charges:setChargesLeft(charges - need_charges)
@@ -161,7 +198,7 @@ function public:start(target)
 
     priv.abil_casting:start(target)
     priv.target = target
-    private.event_actions[static.EVENT.CastingStart]:run(self)
+    private.event_actions[static.EVENT.CastingStart]:run(static.EVENT.CastingStart, self)
 end
 
 function public:cancel()
@@ -169,7 +206,7 @@ function public:cancel()
 
     if priv.target ~= nil then
         priv.abil_casting:cancel()
-        private.event_actions[static.EVENT.CastingCancel]:run(self)
+        private.event_actions[static.EVENT.CastingCancel]:run(static.EVENT.CastingCancel, self)
         priv.target = nil
     end
 end
@@ -179,7 +216,7 @@ function public:interrupt()
 
     if priv.target ~= nil then
         priv.abil_casting:interrupt()
-        private.event_actions[static.EVENT.CastingInterrupt]:run(self)
+        private.event_actions[static.EVENT.CastingInterrupt]:run(static.EVENT.CastingInterrupt, self)
         priv.target = nil
     end
 end
@@ -189,7 +226,7 @@ function public:finish()
 
     if priv.target ~= nil then
         priv.abil_casting:finish()
-        private.event_actions[static.EVENT.CastingFinish]:run(self)
+        private.event_actions[static.EVENT.CastingFinish]:run(static.EVENT.CastingFinish, self)
         priv.target = nil
     end
 end
@@ -255,8 +292,15 @@ private.dummy2instance = setmetatable({}, {__mode = 'kv'})
 private.used_dummy_callback = function(abil_dummy)
     ---@type AbilityData
     local self = private.dummy2instance[abil_dummy]
-    self:use(AbilityTargetNone.new())
-    -- TODO AbilityTarget
+
+    local target
+    local target_unit = Unit.getLinked(GetSpellTargetUnit())
+    if target_unit then
+        target = AbilityTargetUnit.new(target_unit)
+    else
+        target = AbilityTargetPoint(GetSpellTargetX(), GetSpellTargetY())
+    end
+    self:use(target)
 end
 private.used_dummy_action = Action.new(private.used_dummy_callback, AbilityData)
 
@@ -293,14 +337,15 @@ private.casting2instance = setmetatable({}, {__mode = 'kv'})
 private.casting_callback = function(abil_casting)
     ---@type AbilityData
     local self = private.casting2instance[abil_casting]
-    private.event_actions[static.EVENT.CastingLoop]:run(self)
+    private.event_actions[static.EVENT.CastingLoop]:run(static.EVENT.CastingLoop, self)
 end
 private.casting_action = Action.new(private.casting_callback, AbilityData)
 
 private.casting_finish_callback = function(abil_casting)
     ---@type AbilityData
     local self = private.casting2instance[abil_casting]
-    private.event_actions[static.EVENT.CastingFinish]:run(self)
+    private.event_actions[static.EVENT.CastingFinish]:run(static.EVENT.CastingFinish, self)
+    private.data[self].target = nil
 end
 private.casting_finish_action = Action.new(private.casting_finish_callback, AbilityData)
 
@@ -309,6 +354,19 @@ private.casting_finish_action = Action.new(private.casting_finish_callback, Abil
 ----------
 
 private.info2instance = setmetatable({}, {__mode = 'kv'})
+
+-- INFO_NAME -> dummy func name
+private.info_update = {
+    [INFO_NAME.Name] = 'setName',
+    [INFO_NAME.Range] = 'setRange',
+    [INFO_NAME.Area] = 'setArea',
+    [INFO_NAME.TargetingType] = 'setTargetingType',
+    [INFO_NAME.TargetsAllowed] = nil,
+    [INFO_NAME.ManaCost] = 'setManaCost',
+    [INFO_NAME.HealthCost] = nil, -- TODO
+    [INFO_NAME.Icon] = 'setIcon',
+    [INFO_NAME.Tooltip] = 'setTooltip',
+}
 ---@type AbilityInfoCallback
 private.info_changed_callback = function(abil_info, info_name)
     ---@type AbilityData
@@ -317,25 +375,8 @@ private.info_changed_callback = function(abil_info, info_name)
     local abil_dummy = private.data[self].abil_dummy
     local value = abil_info:get(info_name)
 
-    if info_name == INFO_NAME.Name then
-        abil_dummy:setName(value)
-    elseif info_name == INFO_NAME.Range then
-        abil_dummy:setRange(value)
-    elseif info_name == INFO_NAME.Area then
-        abil_dummy:setArea(value)
-    elseif info_name == INFO_NAME.TargetingType then
-        abil_dummy:setTargetingType(value)
-    elseif info_name == INFO_NAME.TargetsAllowed then
-        abil_dummy:setTargetsAllowed(value)
-    elseif info_name == INFO_NAME.ManaCost then
-        abil_dummy:setManaCost(value)
-    elseif info_name == INFO_NAME.HealthCost then
-        -- TODO
-    elseif info_name == INFO_NAME.Icon then
-        abil_dummy:setIcon(value)
-    elseif info_name == INFO_NAME.Tooltip then
-        abil_dummy:setTooltip(value)
-    end
+    local func_name = private.info_update[info_name]
+    if func_name then abil_dummy[func_name](abil_dummy, value) end
 end
 private.info_changed_action = Action.new(private.info_changed_callback, AbilityData)
 

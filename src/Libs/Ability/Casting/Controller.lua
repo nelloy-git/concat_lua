@@ -60,6 +60,10 @@ end
 -- Public
 --========
 
+function public:getTimeLeft()
+    return private.data[self].casting_data:getTimeLeft()
+end
+
 ---@param target AbilityTarget
 function public:start(target)
     local priv = private.data[self]

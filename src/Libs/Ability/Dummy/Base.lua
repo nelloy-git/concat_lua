@@ -88,12 +88,7 @@ end
 
 ---@param range number
 function public:setRange(range)
-    -- TODO
-end
-
----@param targets string
-function public:setTargetsAllowed(targets)
-    -- TODO
+    BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_CAST_RANGE, 0, range)
 end
 
 function public:setOptions(options)

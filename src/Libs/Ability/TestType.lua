@@ -20,7 +20,7 @@ function TestAbilityType:onCastingStart(target, caster)
 end
 
 function TestAbilityType:onCastingLoop(target, caster, time_left, full_time)
-    print('Casting: ', time_left)
+    --print('Casting: ', time_left)
 end
 
 function TestAbilityType:onCastingCancel(target, caster, time_left, full_time)
@@ -65,11 +65,11 @@ function TestAbilityType:getArea(owner)
 end
 
 function TestAbilityType:getTargetingType(owner)
-    return 'None'
+    return 'Unit'
 end
 
 function TestAbilityType:getTargetsAllowed(owner)
-    return ''
+    return 'friend'
 end
 
 function TestAbilityType:getManaCost(owner)

@@ -36,7 +36,19 @@ AbilityLibAPI.TargetPoint = require(lib_modename..'.Target.Point')
 ---@type AbilityTargetUnitClass
 AbilityLibAPI.TargetUnit = require(lib_modename..'.Target.Unit')
 
---AbilityLibAPI.Test = require(lib_modename..'.Dummy.Type')
+---@type AbilityDataClass
+local AbilityData = require(lib_modename..'.Data.Base')
+AbilityLibAPI.EVENT = AbilityData.EVENT
+AbilityLibAPI.addEventAction = AbilityData.addEventAction
+
+---@type AbilityDataEventCallback
+local simpleCallback = function(event, abil_data)
+    print(event)
+end
+
+for _, event_name in pairs(AbilityLibAPI.EVENT) do
+    AbilityLibAPI.addEventAction(event_name, simpleCallback)
+end
 
 Lib.finish()
 
