@@ -46,12 +46,12 @@ BlzFrameSetParent(chat_handle, console_ui_backdrop)
 --------------------
 -- Free chat edit --
 --------------------
-local chat_edit_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
+--local chat_edit_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
 --BlzFrameClearAllPoints(chat_edit_handle)
-BlzFrameSetParent(chat_edit_handle, console_ui_backdrop)
-BlzFrameClearAllPoints(chat_edit_handle)
-BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0.05)
-BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, 0, 0)
+--BlzFrameSetParent(chat_edit_handle, console_ui_backdrop)
+--BlzFrameClearAllPoints(chat_edit_handle)
+--BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0.05)
+--BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, 0, 0)
 --freeFrame(chat_edit_handle)
 --Interface.ChatEditBox = FrameLib.Frame.Normal.Image.new(chat_edit_handle)
 --local child1 = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 9)
@@ -66,6 +66,42 @@ BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, F
 --Interface.ChatEditBoxChild2 = FrameLib.Frame.Normal.Image.new(child2)
 --Interface.ChatEditBoxChild2:setPos(0, 0.3)
 
+local function freeAll(handle)
+
+    local count = BlzFrameGetChildrenCount(handle)
+    for i = 0, count - 1 do
+        local child = BlzFrameGetChild(handle, i)
+
+        freeFrame(child)
+        if BlzFrameGetChildrenCount(child) > 0 then
+            freeAll(child)
+        end
+    end
+end
+
+local function moveAll(handle, point, other_handle, other_point, x, y)
+    BlzFrameSetPoint(handle, point, other_handle, other_point, x, y)
+
+    local count = BlzFrameGetChildrenCount(handle)
+    for i = 0, count - 1 do
+        local child = BlzFrameGetChild(handle, i)
+        if BlzFrameGetChildrenCount(child) > 0 then
+            moveAll(child, point, other_handle, other_point, x, y)
+        else
+            BlzFrameSetPoint(child, point, other_handle, other_point, x, y)
+        end
+    end
+end
+
+local chat_edit_box_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
+freeFrame(chat_edit_box_handle)
+freeAll(chat_edit_box_handle)
+
+local child0 = BlzFrameGetChild(chat_edit_box_handle, 0)
+--freeFrame(child0)
+--
+local child1 = BlzFrameGetChild(chat_edit_box_handle, 1)
+--freeFrame(child1)
 
 --------------------------
 -- Free command buttons --
@@ -104,8 +140,14 @@ FrameLib.Screen.addResolutionChangedAction(
     function(prev_x0, prev_width, prev_height, new_x0, new_width, new_height)
         Interface.Minimap:setPos(new_x0 + new_width - Interface.Minimap:getWidth(), 0)
         --Interface.ChatEditBox:setPos(new_x0, 0)
-        BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, new_x0, 0.025)
-        BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, new_x0, 0)
+        BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, new_x0, 0.025)
+        BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, new_x0, 0)
+        
+        moveAll(child0, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
+        moveAll(child0, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
+
+        --moveAll(child1, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
+        --moveAll(child1, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
     end)
 
 return Interface

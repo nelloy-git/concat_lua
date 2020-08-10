@@ -61,11 +61,11 @@ src\Libs\Ability\Casting\Base.lua
 src\Libs\Ability\Target\Base.lua
 src\Libs\Ability\Info\Base.lua
 src\Libs\Ability\Target\None.lua
+src\Libs\Ability\Target\Unit.lua
+src\Libs\Ability\Target\Point.lua
 src\Libs\Ability\TestType.lua
 src\Libs\Ability\Target\Destructable.lua
 src\Libs\Ability\Target\Item.lua
-src\Libs\Ability\Target\Point.lua
-src\Libs\Ability\Target\Unit.lua
 src\Libs\Buff\API.lua
 src\Libs\Buff\Container.lua
 src\Libs\Buff\Buff.lua
