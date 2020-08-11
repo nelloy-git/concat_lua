@@ -94,3 +94,4 @@ src\Libs\Frame\Fdf\Frame\NormalHighlight.lua
 src\Libs\Frame\Fdf\Frame\NormalButton.lua
 src\Libs\Frame\Fdf\Frame\NormalText.lua
 src\Libs\Frame\Normal\ButtonDefault.lua
+src\Libs\Frame\Origin\ChatEditBox.lua

@@ -58,7 +58,7 @@ local function listAllChildrens(handle)
         local child = BlzFrameGetChild(handle, i)
         local child_list
         if BlzFrameGetChildrenCount(child) > 0 then
-            child_list = listAll(child)
+            child_list = listAllChildrens(child)
         else
             child_list = {child}
         end
@@ -72,12 +72,60 @@ local function listAllChildrens(handle)
     return list
 end
 
+local function getChild(handle, pos)
+    return BlzFrameGetChild(handle, pos)
+end
+
 local background_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
-local list = listAll(background_handle)
-freeAll(background_handle)
+local list = listAllChildrens(background_handle)
 
-print(#list) -- 12
+local background = background_handle
+freeFrame(background)
+local prefix = getChild(background, 0)
+freeFrame(prefix)
+local empty = getChild(background, 1)
+BlzFrameClearAllPoints(empty)
+--freeFrame(empty)
+    local child_1_0 = getChild(empty, 0)
+    --freeFrame(child_1_0)
+        local message = getChild(child_1_0, 0)
+        --freeFrame(message)
+        local unknown = getChild(child_1_0, 1)
+        --freeFrame(unknown)
+        local unknown2 = getChild(child_1_0, 2)
+        --freeFrame(unknown2)
+        local unknown3 = getChild(child_1_0, 3)
+        --freeFrame(unknown3)
+        local unknown4 = getChild(child_1_0, 4)
+        --freeFrame(unknown4)
+    local child_1_1 = getChild(empty, 1)
+    --freeFrame(child_1_1)
+    local child_1_2 = getChild(empty, 2)
+    --freeFrame(child_1_2)
+    local child_1_3 = getChild(empty, 3)
+    --freeFrame(child_1_3)
 
+BlzFrameSetParent(background, console_ui_backdrop)
+BlzFrameSetPoint(background, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, -0.15 ,  0.3)
+
+BlzFrameSetParent(prefix, background)
+BlzFrameSetPoint(prefix, FRAMEPOINT_LEFT, background, FRAMEPOINT_LEFT, 0.01,  0)
+
+BlzFrameSetParent(empty, console_ui_backdrop)
+--BlzFrameSetAllPoints(empty, background)
+BlzFrameSetPoint(empty, FRAMEPOINT_BOTTOMLEFT, background, FRAMEPOINT_BOTTOMLEFT, 0,  0)
+BlzFrameSetPoint(empty, FRAMEPOINT_TOPRIGHT, background, FRAMEPOINT_TOPRIGHT, 0,  0)
+
+--BlzFrameSetPoint(child_1_0, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(message, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(unknown, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(unknown2, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(unknown3, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(unknown4, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--
+--BlzFrameSetPoint(child_1_1, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(child_1_2, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
+--BlzFrameSetPoint(child_1_3, FRAMEPOINT_LEFT, prefix, FRAMEPOINT_RIGHT, 0.01,  0)
 
 
 --BlzFrameSetParent(background_handle, console_ui_backdrop)
