@@ -43,6 +43,7 @@ FrameLib.Frame.Simple = {}
 FrameLib.Frame.Normal = {}
 
 FrameLib.Screen = {}
+FrameLib.Origin = {}
 
 --=================
 -- FdfSimpleFrames
@@ -130,6 +131,12 @@ end
 ---@type FrameScreen
 local Screen = require(lib_modname..'.Screen')
 FrameLib.Screen.addResolutionChangedAction = Screen.addResolutionChangedAction
+
+--========
+-- Origin
+--========
+
+FrameLib.Origin.ChatEditBox = require(lib_modname..'.Origin.ChatEditBox')
 
 Lib.finish()
 

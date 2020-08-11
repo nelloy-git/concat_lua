@@ -29,12 +29,15 @@ end
 ------------------
 -- Free minimap --
 ------------------
+
 local map_handle = BlzGetFrameByName("MiniMapFrame", 0)
 freeFrame(map_handle)
 Interface.Minimap = FrameLib.Frame.Normal.Image.new(map_handle)
+
 ---------------
 -- Free chat --
 ---------------
+
 local chat_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 7)
 BlzFrameSetParent(chat_handle, console_ui_backdrop)
 
@@ -43,9 +46,12 @@ BlzFrameSetParent(chat_handle, console_ui_backdrop)
 --Interface.Chat:setParent(Interface.ChatEdit)
 --Interface.Chat:setPos(0, Interface.ChatEdit:getHeight())
 
---------------------
--- Free chat edit --
---------------------
+-----------------
+-- ChatEditBox --
+-----------------
+
+Interface.ChatEditBox = FrameLib.Origin.ChatEditBox
+
 --local chat_edit_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
 --BlzFrameClearAllPoints(chat_edit_handle)
 --BlzFrameSetParent(chat_edit_handle, console_ui_backdrop)
@@ -93,14 +99,14 @@ local function moveAll(handle, point, other_handle, other_point, x, y)
     end
 end
 
-local chat_edit_box_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
-freeFrame(chat_edit_box_handle)
-freeAll(chat_edit_box_handle)
+--local chat_edit_box_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
+--freeFrame(chat_edit_box_handle)
+--freeAll(chat_edit_box_handle)
 
-local child0 = BlzFrameGetChild(chat_edit_box_handle, 0)
+--local child0 = BlzFrameGetChild(chat_edit_box_handle, 0)
 --freeFrame(child0)
 --
-local child1 = BlzFrameGetChild(chat_edit_box_handle, 1)
+--local child1 = BlzFrameGetChild(chat_edit_box_handle, 1)
 --freeFrame(child1)
 
 --------------------------
@@ -139,12 +145,13 @@ BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_
 FrameLib.Screen.addResolutionChangedAction(
     function(prev_x0, prev_width, prev_height, new_x0, new_width, new_height)
         Interface.Minimap:setPos(new_x0 + new_width - Interface.Minimap:getWidth(), 0)
+        --Interface.ChatEditBox:setPos(new_x0, 0.3)
         --Interface.ChatEditBox:setPos(new_x0, 0)
-        BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, new_x0, 0.025)
-        BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, new_x0, 0)
+        --BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, new_x0, 0.025)
+        --BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, new_x0, 0)
         
-        moveAll(child0, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
-        moveAll(child0, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
+        --moveAll(child0, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
+        --moveAll(child0, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
 
         --moveAll(child1, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
         --moveAll(child1, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
