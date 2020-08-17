@@ -8,12 +8,10 @@ local depencies = Lib.current().depencies
 local Class = depencies.Class
 ---@type UtilsLib
 local UtilsLib = depencies.UtilsLib
-local Action = UtilsLib.Action
 local Log = UtilsLib.DefaultLogger
 local checkType = UtilsLib.Functions.checkType
 local checkTypeErr = UtilsLib.Functions.checkTypeErr
 local Handle = UtilsLib.Handle.Base
-local Timer = UtilsLib.Handle.Timer
 
 ---@type FdfFrameClass
 local FdfFrame = require(lib_modname..'.Fdf.Frame')

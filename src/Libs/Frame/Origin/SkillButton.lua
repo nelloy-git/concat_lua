@@ -16,11 +16,15 @@ if IsCompiletime() then
     return
 end
 
-local handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
-BlzFrameClearAllPoints(handle)
---- Can not be moved outside of default 0.8x0.6 box.
----@class ChatEditBox
-local ChatEditBox = FrameNormalBase.new(handle)
-ChatEditBox:setParent(nil)
+local SkillButton = {}
 
-return ChatEditBox
+for i = 0, 11 do
+    local handle = BlzGetFrameByName("CommandButton_"..tonumber(i), 0)
+    BlzFrameClearAllPoints(handle)
+
+    ---@class SkillButton
+    SkillButton[i + 1] = FrameNormalBase.new(handle)
+    SkillButton[i + 1]:setParent(nil)
+end
+
+return SkillButton

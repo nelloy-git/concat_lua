@@ -16,6 +16,47 @@ if IsCompiletime() then
     return
 end
 
+-----------------
+-- ChatEditBox --
+-----------------
+
+Interface.ChatEditBox = FrameLib.Origin.ChatEditBox
+Interface.ChatEditBox:setPos(0, 0)
+Interface.ChatEditBox:setSize(0.3, 0.025)
+
+-------------
+-- CharBox --
+-------------
+
+Interface.ChatBox = FrameLib.Origin.ChatBox
+Interface.ChatBox:setParent(Interface.ChatEditBox)
+Interface.ChatBox:setPos(0, Interface.ChatEditBox:getHeight())
+Interface.ChatBox:setSize(0.25, 0.25)
+
+-------------
+-- Minimap --
+-------------
+
+Interface.Minimap = FrameLib.Origin.Minimap
+Interface.Minimap:setSize(0.2, 0.2)
+Interface.Minimap:setPos(0.8 - Interface.Minimap:getWidth(), 0)
+FrameLib.Screen.addResolutionChangedAction(function (_, _, _, new_x0, new_width, _)
+    Interface.Minimap:setPos(new_x0 + new_width - Interface.Minimap:getWidth(), 0)
+end)
+
+-------------------
+-- Skill buttons --
+-------------------
+
+Interface.SkillsButtons = {}
+for i = 5, 11 do
+    local btn = FrameLib.SkillButton[i]
+    btn:setParent(Interface.Minimap)
+    btn:setPos(-((11 - i) + 4) * btn:getWidth(), 0)
+
+    Interface.SkillsButtons[i - 4] = btn
+end
+
 --===================
 -- Capture origin UI
 --===================
@@ -25,52 +66,6 @@ local function freeFrame(handle)
     BlzFrameSetParent(handle, console_ui_backdrop)
     BlzFrameClearAllPoints(handle)
 end
-
-------------------
--- Free minimap --
-------------------
-
-local map_handle = BlzGetFrameByName("MiniMapFrame", 0)
-freeFrame(map_handle)
-Interface.Minimap = FrameLib.Frame.Normal.Image.new(map_handle)
-
----------------
--- Free chat --
----------------
-
-local chat_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 7)
-BlzFrameSetParent(chat_handle, console_ui_backdrop)
-
---freeFrame(chat_handle)
---Interface.Chat = FrameLib.Frame.Normal.Image.new(chat_handle)
---Interface.Chat:setParent(Interface.ChatEdit)
---Interface.Chat:setPos(0, Interface.ChatEdit:getHeight())
-
------------------
--- ChatEditBox --
------------------
-
-Interface.ChatEditBox = FrameLib.Origin.ChatEditBox
-
---local chat_edit_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
---BlzFrameClearAllPoints(chat_edit_handle)
---BlzFrameSetParent(chat_edit_handle, console_ui_backdrop)
---BlzFrameClearAllPoints(chat_edit_handle)
---BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0.05)
---BlzFrameSetPoint(chat_edit_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, 0, 0)
---freeFrame(chat_edit_handle)
---Interface.ChatEditBox = FrameLib.Frame.Normal.Image.new(chat_edit_handle)
---local child1 = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 9)
---BlzFrameSetParent(child1, console_ui_backdrop)
---BlzFrameClearAllPoints(child1)
---BlzFrameSetVisible(child1, false)
---Interface.ChatEditBoxChild1 = FrameLib.Frame.Normal.Image.new(child1)
-
---local child2 = BlzFrameGetChild(chat_edit_handle, 1)
---BlzFrameSetParent(child2, console_ui_backdrop)
---BlzFrameClearAllPoints(child2)
---Interface.ChatEditBoxChild2 = FrameLib.Frame.Normal.Image.new(child2)
---Interface.ChatEditBoxChild2:setPos(0, 0.3)
 
 local function freeAll(handle)
 
@@ -97,32 +92,6 @@ local function moveAll(handle, point, other_handle, other_point, x, y)
             BlzFrameSetPoint(child, point, other_handle, other_point, x, y)
         end
     end
-end
-
---local chat_edit_box_handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
---freeFrame(chat_edit_box_handle)
---freeAll(chat_edit_box_handle)
-
---local child0 = BlzFrameGetChild(chat_edit_box_handle, 0)
---freeFrame(child0)
---
---local child1 = BlzFrameGetChild(chat_edit_box_handle, 1)
---freeFrame(child1)
-
---------------------------
--- Free command buttons --
---------------------------
-Interface.SkillsButtons = {}
-
-for i = 5, 11 do
-    local btn_handle = BlzGetFrameByName("CommandButton_"..tonumber(i), 0)
-    freeFrame(btn_handle)
-    -- TODO change to BUTTON
-    local btn = FrameLib.Frame.Normal.Image.new(btn_handle)
-    btn:setParent(Interface.Minimap)
-    btn:setPos(-(i - 4) * btn:getWidth(), 0)
-    
-    Interface.SkillsButtons[i - 4] = btn
 end
 
 --------------

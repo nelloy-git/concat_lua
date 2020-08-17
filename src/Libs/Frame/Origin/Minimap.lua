@@ -16,11 +16,10 @@ if IsCompiletime() then
     return
 end
 
-local handle = BlzFrameGetChild(BlzGetOriginFrame(ORIGIN_FRAME_GAME_UI, 0), 11)
+local handle = BlzGetFrameByName("MiniMapFrame", 0)
 BlzFrameClearAllPoints(handle)
---- Can not be moved outside of default 0.8x0.6 box.
----@class ChatEditBox
-local ChatEditBox = FrameNormalBase.new(handle)
-ChatEditBox:setParent(nil)
+---@class Minimap
+local Minimap = FrameNormalBase.new(handle)
+Minimap:setParent(nil)
 
-return ChatEditBox
+return Minimap

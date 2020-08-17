@@ -43,7 +43,11 @@ FrameLib.Frame.Simple = {}
 FrameLib.Frame.Normal = {}
 
 FrameLib.Screen = {}
-FrameLib.Origin = {}
+
+-- Runtime only.
+if not IsCompiletime() then
+    FrameLib.Origin = {}
+end
 
 --=================
 -- FdfSimpleFrames
@@ -136,7 +140,21 @@ FrameLib.Screen.addResolutionChangedAction = Screen.addResolutionChangedAction
 -- Origin
 --========
 
-FrameLib.Origin.ChatEditBox = require(lib_modname..'.Origin.ChatEditBox')
+local ChatBox = require(lib_modname..'.Origin.ChatBox')
+local ChatEditBox = require(lib_modname..'.Origin.ChatEditBox')
+local Minimap = require(lib_modname..'.Origin.Minimap')
+local SkillButton = require(lib_modname..'.Origin.SkillButton')
+if not IsCompiletime() then
+    ---@type ChatBox
+    FrameLib.Origin.ChatBox = ChatBox
+    --- Can not be moved outside of default 0.8x0.6 box.
+    ---@type ChatEditBox
+    FrameLib.Origin.ChatEditBox = ChatEditBox
+    ---@type Minimap
+    FrameLib.Origin.Minimap = Minimap
+    ---@type table{number,SkillButton}
+    FrameLib.SkillButton = SkillButton
+end
 
 Lib.finish()
 
