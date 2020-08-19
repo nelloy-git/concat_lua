@@ -25,6 +25,7 @@ for i = 0, 11 do
     ---@class SkillButton
     SkillButton[i + 1] = FrameNormalBase.new(handle)
     SkillButton[i + 1]:setParent(nil)
+    SkillButton[i + 1]:setSize(0.03, 0.03)
 end
 
 return SkillButton

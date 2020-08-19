@@ -2,15 +2,6 @@ local Interface = {}
 
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib)
---local SBtn = FrameLib.SimpleButton
----@type InterfaceSkillsBarClass
---local SkillsBar = require('Interface.SkillsBar.SkillsBar')
----@type InterfaceSkillTooltipClass
---local SkillTooltip = require('Interface.SkillsBar.SkillTooltip')
----@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local Timer = UtilsLib.Handle.Timer
-local Trigger = UtilsLib.Handle.Trigger
 
 if IsCompiletime() then
     return
@@ -49,12 +40,10 @@ end)
 -------------------
 
 Interface.SkillsButtons = {}
-for i = 5, 11 do
-    local btn = FrameLib.SkillButton[i]
-    btn:setParent(Interface.Minimap)
-    btn:setPos(-((11 - i) + 4) * btn:getWidth(), 0)
-
-    Interface.SkillsButtons[i - 4] = btn
+for i = 6, 12 do
+    Interface.SkillsButtons[i - 4] = FrameLib.SkillButton[i]
+    Interface.SkillsButtons[i - 4]:setParent(Interface.Minimap)
+    Interface.SkillsButtons[i - 4]:setPos(-(12 - i) * Interface.SkillsButtons[i - 4]:getWidth(), 0)
 end
 
 --===================
@@ -109,21 +98,5 @@ end
 BlzFrameSetVisible(BlzGetOriginFrame(ORIGIN_FRAME_PORTRAIT, 0))
 -- Hide inventory
 BlzFrameSetVisible(BlzFrameGetParent(BlzFrameGetParent(BlzGetOriginFrame(ORIGIN_FRAME_ITEM_BUTTON, 0))), false)
-
-
-FrameLib.Screen.addResolutionChangedAction(
-    function(prev_x0, prev_width, prev_height, new_x0, new_width, new_height)
-        Interface.Minimap:setPos(new_x0 + new_width - Interface.Minimap:getWidth(), 0)
-        --Interface.ChatEditBox:setPos(new_x0, 0.3)
-        --Interface.ChatEditBox:setPos(new_x0, 0)
-        --BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_TOPLEFT, console_ui_backdrop, FRAMEPOINT_TOPLEFT, new_x0, 0.025)
-        --BlzFrameSetPoint(chat_edit_box_handle, FRAMEPOINT_BOTTOMLEFT, console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, new_x0, 0)
-        
-        --moveAll(child0, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
-        --moveAll(child0, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
-
-        --moveAll(child1, FRAMEPOINT_TOPLEFT, chat_edit_box_handle, FRAMEPOINT_TOPLEFT, 0, 0)
-        --moveAll(child1, FRAMEPOINT_BOTTOMRIGHT, chat_edit_box_handle, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
-    end)
 
 return Interface
