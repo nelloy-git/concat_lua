@@ -2,15 +2,16 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local Class = Lib.current().depencies.Class
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
----@type LoggerClass
-local Logger = require(lib_modname..'.Logger')
-local Log = Logger.getDefault()
+local Class = lib_dep.Class or error('')
 ---@type UtilsFunctions
-local Functions = require(lib_modname..'.Functions')
-local checkTypeErr = Functions.checkTypeErr
+local Functions = require(lib_path..'Functions') or error('')
+local isTypeErr = Functions.isTypeErr or error('')
+---@type UtilsSettings
+local Settings = require(lib_path..'Settings') or error('')
+local Log = Settings.default_logger or error('')
 
 --=======
 -- Class
@@ -33,15 +34,13 @@ local private = {}
 
 ---@param callback Callback
 ---@param owner any
----@param child_instance Action | nil
+---@param child Action | nil
 ---@return Action
-function override.new(callback, owner, child_instance)
-    checkTypeErr(callback, 'function', 'callback')
-    if child_instance then
-        checkTypeErr(child_instance, 'Action', 'child_instance')
-    end
+function override.new(callback, owner, child)
+    isTypeErr(callback, 'function', 'callback')
+    if child then isTypeErr(child, 'Action', 'child') end
 
-    local instance = child_instance or Class.allocate(Action)
+    local instance = child or Class.allocate(Action)
     private.newData(instance, callback, owner)
 
     return instance
@@ -51,8 +50,9 @@ end
 -- Public
 --========
 
+---@return any
 function public:run(...)
-    if private.debug then
+    if Settings.debug then
         local success, result = pcall(private.data[self].callback, ...)
         if success then
             return result
@@ -74,8 +74,6 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-
-private.debug = true
 
 ---@param self Action
 ---@param callback Callback

@@ -27,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_instance FdfHighlight | nil
+---@param child FdfHighlight | nil
 ---@return FdfHighlight
-function override.new(name, child_instance)
-    local instance = child_instance or Class.allocate(FdfHighlight)
+function override.new(name, child)
+    local instance = child or Class.allocate(FdfHighlight)
     instance = FdfObject.new(name, 'HIGHLIGHT', instance)
 
     return instance

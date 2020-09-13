@@ -3,16 +3,16 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
 
 ---@type ParameterClass
-local Parameter = require(lib_modname..'.Parameter')
+local Parameter = require(lib_path..'.Parameter')
 --endregion
 
 --=======
@@ -37,7 +37,7 @@ local private = {}
 ---@param param Parameter
 ---@return ParameterValue
 function override.new(param)
-    checkTypeErr(param, Parameter, 'param')
+    isTypeErr(param, Parameter, 'param')
 
     local instance = Class.allocate(ParameterValue)
     private.newData(instance, param)

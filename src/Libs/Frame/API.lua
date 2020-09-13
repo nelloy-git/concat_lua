@@ -1,24 +1,16 @@
 ---@class FrameLib
 local FrameLib = {}
-local lib_modname = Compiletime(Lib.getModname())
+Lib.start('FrameLib', {
+    Class = Lib.load(LibList.ClassLib) or error(''),
+    Handle = Lib.load(LibList.HandleLib) or error(''),
+    Utils = Lib.load(LibList.UtilsLib) or error(''),
+})
+local path = Lib.curPath()
 
-Lib.start(lib_modname)
-
---===========
--- Depencies
---===========
-
-Lib.current().depencies = {
-    Class = require(LibList.ClassLib),
-    UtilsLib = require(LibList.UtilsLib)
-}
-
+-- Check Warcraft version.
 if not IsCompiletime() then
-    local is_v1_32_7 = BlzFrameGetChild and true or false
-    if not is_v1_32_7 then
-        Lib.current().depencies.UtilsLib.DefaultLogger:err('FrameLib need at least 1.32.7 patch.')
-        Lib.finish()
-        return nil
+    if not BlzFrameGetChild then
+        error('FrameLib: BlzFrameGetChild function wan not found.')
     end
 end
 
@@ -30,13 +22,8 @@ end
 -- Categories
 --============
 
-FrameLib.Fdf = {}
----@type FdfFileClass
-FrameLib.Fdf.File = require(lib_modname..'.Fdf.File')
-FrameLib.Fdf.File.init('Default')
 
-FrameLib.Fdf.Simple = {}
-FrameLib.Fdf.Normal = {}
+--FrameLib.Fdf.Normal = {}
 
 FrameLib.Frame = {}
 FrameLib.Frame.Simple = {}
@@ -49,113 +36,121 @@ if not IsCompiletime() then
     FrameLib.Origin = {}
 end
 
---=================
--- FdfSimpleFrames
---=================
+----------------
+-- FdfGenerator
+----------------
 
----@type FdfSimpleBaseClass
-FrameLib.Fdf.Simple.Base = require(lib_modname..'.Fdf.Frame.SimpleBase')
+FrameLib.Fdf = {}
+
+---@type FdfBaseClass
+FrameLib.Fdf.Base = require(path..'Fdf.Base') or error('')
+
+-- Simple
+
+FrameLib.Fdf.Simple = {}
 ---@type FdfSimpleFrameClass
-FrameLib.Fdf.Simple.Frame = require(lib_modname..'.Fdf.Frame.SimpleFrame')
+FrameLib.Fdf.Simple.Frame = require(path..'Fdf.Simple.Frame') or error('')
 ---@type FdfSimpleLayerClass
-FrameLib.Fdf.Simple.Layer = require(lib_modname..'.Fdf.Frame.SimpleLayer')
+FrameLib.Fdf.Simple.Layer = require(path..'Fdf.Simple.Layer') or error('')
+---@type FdfSimpleStatusBarClass
+FrameLib.Fdf.Simple.StatusBar = require(path..'Fdf.Simple.StatusBar') or error('')
 ---@type FdfSimpleStringClass
-FrameLib.Fdf.Simple.String = require(lib_modname..'.Fdf.Frame.SimpleString')
----@type FdfSimpleTextureClass
-FrameLib.Fdf.Simple.Texture = require(lib_modname..'.Fdf.Frame.SimpleTexture')
+FrameLib.Fdf.Simple.String = require(path..'Fdf.Simple.String') or error('')
+---@type FdfTextureClass
+FrameLib.Fdf.Simple.Texture = require(path..'Fdf.Simple.Texture') or error('')
 
--- TODO add SimpleButton, SimpleStatusBar
+-- Normal
 
--- Example
+FrameLib.Fdf.Normal = {}
+---@type FdfBackdropClass
+FrameLib.Fdf.Normal.Backdrop = require(path..'Fdf.Normal.Backdrop')
+---@type FdfGlueTextButtonClass
+FrameLib.Fdf.Normal.GlueTextButton = require(path..'Fdf.Normal.GlueTextButton')
+---@type FdfHighlightClass
+FrameLib.Fdf.Normal.Highlight = require(path..'Fdf.Normal.Highlight')
+---@type FdfTextClass
+FrameLib.Fdf.Normal.Text = require(path..'Fdf.Normal.Text')
+
+----------
+-- Frames
+----------
+
+FrameLib.Frame = {}
+
+-- Simple
+
+FrameLib.Frame.Simple = {}
+---@type FrameSimpleImageClass
+FrameLib.Frame.Simple.Image = require(path..'Simple.Image')
+---@type FrameSimpleStatusBarClass
+FrameLib.Frame.Simple.StatusBar = require(path..'Simple.StatusBar')
+---@type FrameSimpleStringClass
+FrameLib.Frame.Simple.String = require(path..'Simple.String')
+---@type FrameSimpleTextClass
+FrameLib.Frame.Simple.Text = require(path..'Simple.Text')
+---@type FrameSimpleTextureClass
+FrameLib.Frame.Simple.Texture = require(path..'Simple.Texture')
+
 --[[
-local test = FrameLib.Fdf.Simple.Frame.new('TestSimpleFrame')
-test:setWidth(0.05)
-test:setHeight(0.05)
-    local layer = FrameLib.Fdf.Simple.Layer.new('ARTWORK')
-        local texture = FrameLib.Fdf.Simple.Texture.new('TestSimpleTexture')
-        texture:setFile("ReplaceableTextures\\\\CommandButtons\\\\BTNAcidBomb.blp")
-        layer:addSubframe(texture)
-
-        local string = FrameLib.Fdf.Simple.String.new('TestSimpleString')
-        string:setFont('fonts\\nim_____.ttf', 0.14)
-        layer:addSubframe(string)
-test:addSubframe(layer)
-]]
-
---=================
--- FdfNormalFrames
---=================
-
-
 --==============
 -- SimpleFrames
 --==============
 
----@type FrameSimpleBaseClass
-FrameLib.Frame.Simple.Base = require(lib_modname..'.Simple.Base')
 ---@type FrameSimpleImageClass
-FrameLib.Frame.Simple.Image = require(lib_modname..'.Simple.Image')
-
--- Example
---[[
-if not IsCompiletime() then
-    local test = FrameLib.Frame.Simple.Image.new()
-    --test:setFile('', 0, true)
-    test:setPos(0.2, 0.3)
-end
-]]
+FrameLib.Frame.Simple.Image = require(path..'Simple.Image')
+---@type FrameSimpleStatusBarClass
+FrameLib.Frame.Simple.StatusBar = require(path..'Simple.StatusBar')
+---@type FrameSimpleTextClass
+FrameLib.Frame.Simple.Text = require(path..'Simple.Text')
 
 --==============
 -- NormalFrames
 --==============
 
----@type FrameNormalBaseClass
-FrameLib.Frame.Normal.Base = require(lib_modname..'.Normal.Base')
----@type FrameNormalImageClass
-FrameLib.Frame.Normal.Image = require(lib_modname..'.Normal.Image')
 ---@type FrameNormalButtonClass
-FrameLib.Frame.Normal.Button = require(lib_modname..'.Normal.Button')
+FrameLib.Frame.Normal.Button = require(path..'Normal.Button')
 ---@type FrameNormalButtonDefaultClass
-FrameLib.Frame.Normal.ButtonDefault = require(lib_modname..'.Normal.ButtonDefault')
-
--- Example
---[[
-if not IsCompiletime() then
-    local test = FrameLib.Frame.Normal.Image.new()
-    --test:setFile('', 0, true)
-    test:setPos(-0.1, 0.3)
-    test:setSize(0.04, 0.04)
-end
-]]
+FrameLib.Frame.Normal.ButtonDefault = require(path..'Normal.ButtonDefault')
+---@type FrameNormalImageClass
+FrameLib.Frame.Normal.Image = require(path..'Normal.Image')
+---@type FrameNormalTextClass
+FrameLib.Frame.Normal.Text = require(path..'Normal.Text')
 
 --========
 -- Screen
 --========
 
 ---@type FrameScreen
-local Screen = require(lib_modname..'.Screen')
+local Screen = require(path..'.Screen')
+FrameLib.Screen.getX0 = Screen.getX0
 FrameLib.Screen.addResolutionChangedAction = Screen.addResolutionChangedAction
 
 --========
 -- Origin
 --========
 
-local ChatBox = require(lib_modname..'.Origin.ChatBox')
-local ChatEditBox = require(lib_modname..'.Origin.ChatEditBox')
-local Minimap = require(lib_modname..'.Origin.Minimap')
-local SkillButton = require(lib_modname..'.Origin.SkillButton')
+local ChatBox = require(path..'Origin.ChatBox')
+local ChatEditBox = require(path..'Origin.ChatEditBox')
+local Inventory = require(path..'Origin.Inventory')
+local Minimap = require(path..'Origin.Minimap')
+local Portrait = require(path..'Origin.Portrait')
+local SkillButton = require(path..'Origin.SkillButton')
 if not IsCompiletime() then
-    ---@type ChatBox
+    ---@type FrameOriginChatBox
     FrameLib.Origin.ChatBox = ChatBox
     --- Can not be moved outside of default 0.8x0.6 box.
-    ---@type ChatEditBox
+    ---@type FrameOriginChatEditBox
     FrameLib.Origin.ChatEditBox = ChatEditBox
-    ---@type Minimap
+    ---@type FrameOriginInventory
+    FrameLib.Origin.Inventory = Inventory
+    ---@type FrameOriginMinimap
     FrameLib.Origin.Minimap = Minimap
-    ---@type table{number,SkillButton}
-    FrameLib.SkillButton = SkillButton
+    ---@type FrameOriginPortrait
+    FrameLib.Origin.Portrait = Portrait
+    ---@type table<number,FrameOriginSkillButton>
+    FrameLib.Origin.SkillButton = SkillButton
 end
-
+]]
 Lib.finish()
 
 return FrameLib

@@ -3,23 +3,24 @@
 --=========
 
 --region Include
-local lib_modename = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
+--local TargetType = UtilsLib.Types.TargetType
 
 ---@type BinaryAbilityDB
-local AbilDB = require(lib_modename..'.AbilityDB')
+local AbilDB = require(lib_path..'AbilityDB')
 ---@type BinaryFileClass
-local BinaryFile = require(lib_modename..'.File')
+local BinaryFile = require(lib_path..'File')
 ---@type BinaryDataClass
-local BinaryData = require(lib_modename..'.Data')
+local BinaryData = require(lib_path..'Data')
 ---@type BinaryUtils
-local BinaryUtils = require(lib_modename..'.Utils')
+local BinaryUtils = require(lib_path..'Utils')
 
 local FourCC = function(id) return string.unpack(">I4", id) end
 --endregion
@@ -46,15 +47,15 @@ local private = {}
 ---@param new_id number
 ---@param base_id number
 ---@param name string | nil
----@param child_instance BinaryAbility | nil
+---@param child BinaryAbility | nil
 ---@return BinaryAbility
-function override.new(new_id, base_id, name, child_instance)
-    checkTypeErr(new_id, 'number', 'new_id')
-    checkTypeErr(base_id, 'number', 'base_id')
-    if name then checkTypeErr(name, 'string', 'name') end
-    if child_instance then checkTypeErr(child_instance, BinaryAbility, 'child_instance') end
+function override.new(new_id, base_id, name, child)
+    isTypeErr(new_id, 'number', 'new_id')
+    isTypeErr(base_id, 'number', 'base_id')
+    if name then isTypeErr(name, 'string', 'name') end
+    if child then isTypeErr(child, BinaryAbility, 'child') end
 
-    local instance = child_instance or Class.allocate(BinaryAbility)
+    local instance = child or Class.allocate(BinaryAbility)
     instance = BinaryData.new(new_id, base_id, name, instance)
     private.newData(instance)
 
@@ -79,7 +80,7 @@ end
 
 ---@param value string
 function public:setHotkey(value)
-    checkTypeErr(value, 'string', 'value')
+    isTypeErr(value, 'string', 'value')
     if string.len(value) > 1 then
         Log:err('value length > 1.', 2)
     end
@@ -155,7 +156,7 @@ end
 
 ---@param target string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
 ---@param lvl any
-function public:setTargetType(target, lvl)
+function public:setTargeting(target, lvl)
     local value = nil
     value = target == 'None' and 0 or value
     value = target == 'Unit' and 1 or value
@@ -168,12 +169,12 @@ function public:setTargetType(target, lvl)
     private.setValue(self, AbilDB.ANcl.TargetType, FourCC('ANcl'), lvl, value)
 end
 
----@param list table
+---@param list table<number, targettype>
 ---@param lvl number
 function public:setTargetsAllowed(list, lvl)
     local val = ''
     for i = 1, #list do
-        val = val..list[i]
+        val = val..TargetType.toStr(list[i])
         if i < #list then val = val..',' end
     end
 
@@ -186,7 +187,7 @@ end
 ---@param lvl number
 ---@param value any
 function public:setValue(value_id, value_type, extra_id, lvl, value)
-    checkTypeErr(value_id, 'string', 'value_id')
+    isTypeErr(value_id, 'string', 'value_id')
     if not (value_type == 'bool' or
        value_type == 'int' or
        value_type == 'real' or
@@ -194,9 +195,9 @@ function public:setValue(value_id, value_type, extra_id, lvl, value)
        value_type == 'string') then
         Log:err('Unavailable \'value_type\'. Got '..value_type, 2)
     end
-    checkTypeErr(extra_id, 'number', 'extra_id')
-    checkTypeErr(lvl, 'number', 'lvl')
-    checkTypeErr(value, private.real_value_type[value_type], 'value')
+    isTypeErr(extra_id, 'number', 'extra_id')
+    isTypeErr(lvl, 'number', 'lvl')
+    isTypeErr(value, private.real_value_type[value_type], 'value')
 
     if value_type == 'bool' then
         value = value and 1 or 0
@@ -272,7 +273,7 @@ function private.setValue(self, db, avaliable_base_id, lvl, value)
     if avaliable_base_id and self:getBaseId() ~= avaliable_base_id then
         Log:err('Function is not available for this basic ability.', 3)
     end
-    checkTypeErr(lvl, 'number', 'lvl', 3)
+    isTypeErr(lvl, 'number', 'lvl', 3)
     self:setValue(db.value_id, db.value_type, db.extra_id, lvl, value)
 end
 

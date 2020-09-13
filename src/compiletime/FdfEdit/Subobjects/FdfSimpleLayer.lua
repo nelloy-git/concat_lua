@@ -27,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_instance FdfSimpleLayer | nil
+---@param child FdfSimpleLayer | nil
 ---@return FdfSimpleLayer
-function override.new(name, child_instance)
-    local instance = child_instance or Class.allocate(FdfSimpleLayer, child_instance)
+function override.new(name, child)
+    local instance = child or Class.allocate(FdfSimpleLayer, child)
     instance = FdfSubobject.new(name, 'Layer', instance)
 
     return instance

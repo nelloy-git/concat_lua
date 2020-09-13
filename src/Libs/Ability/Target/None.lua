@@ -2,16 +2,16 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityTarget
-local AbilityTarget = require(lib_modname..'.Target.Base')
+local AbilityTarget = require(lib_path..'Target.Base') or error('')
 
 --=======
 -- Class
@@ -30,14 +30,14 @@ local private = {}
 -- Static
 --=========
 
----@param child_instance AbilityTargetNone | nil
+---@param child AbilityTargetNone | nil
 ---@return AbilityTargetNone
-function override.new(child_instance)
-    if child_instance then
-        checkTypeErr(child_instance, AbilityTargetNone, 'child_instance')
+function override.new(child)
+    if child then
+        isTypeErr(child, AbilityTargetNone, 'child')
     end
 
-    local instance = child_instance or Class.allocate(AbilityTargetNone)
+    local instance = child or Class.allocate(AbilityTargetNone)
     instance = AbilityTarget.new(instance)
 
     return instance

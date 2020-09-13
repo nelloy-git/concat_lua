@@ -2,34 +2,34 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_deplass
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
+local UtilsLib = lib_deptilsLib
 local Action = UtilsLib.Handle.Action
 local checkType = UtilsLib.Functions.checkType
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 local Trigger = UtilsLib.Handle.Trigger
 
 ---@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_modname..'.Normal.Base')
+local FrameNormalBase = require(lib_path..'.Normal.Base')
 local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
 ---@type FrameNormalButtonClass
-local FrameNormalButton = require(lib_modname..'.Normal.Button')
+local FrameNormalButton = require(lib_path..'.Normal.Button')
 ---@type FrameNormalImageClass
-local FrameNormalImage = require(lib_modname..'.Normal.Image')
+local FrameNormalImage = require(lib_path..'.Normal.Image')
 
 ---@type FdfNormalBackdropClass
-local FdfNormalBackdrop = require(lib_modname..'.Fdf.Frame.NormalBackdrop')
+local FdfNormalBackdrop = require(lib_path..'.Fdf.Frame.NormalBackdrop')
 ---@type FdfNormalHighlightClass
-local FdfNormalHighlight = require(lib_modname..'.Fdf.Frame.NormalHighlight')
+local FdfNormalHighlight = require(lib_path..'.Fdf.Frame.NormalHighlight')
 ---@type FdfNormalGlueTextButtonClass
-local FdfNormalGlueTextButton = require(lib_modname..'.Fdf.Frame.NormalButton')
+local FdfNormalGlueTextButton = require(lib_path..'.Fdf.Frame.NormalButton')
 ---@type FdfNormalTextClass
-local FdfNormalText = require(lib_modname..'.Fdf.Frame.NormalText')
+local FdfNormalText = require(lib_path..'.Fdf.Frame.NormalText')
 
 --=======
 -- Class
@@ -69,21 +69,21 @@ end
 ---@param flag number
 ---@param blend boolean
 function public:setTexture(path, flag, blend)
-    self:getSubframe(private.control_name):setFile(path, flag, blend)
+    self:getSubframe(private.control_name):setTexture(path, flag, blend)
 end
 
 ---@param path string
 ---@param flag number
 ---@param blend boolean
 function public:setTextureDisabled(path, flag, blend)
-    self:getSubframe(private.control_pushed_name):setFile(path, flag, blend)
+    self:getSubframe(private.control_pushed_name):setTexture(path, flag, blend)
 end
 
 ---@param path string
 ---@param flag number
 ---@param blend boolean
 function public:setTexturePushed(path, flag, blend)
-    self:getSubframe(private.control_disabled_name):setFile(path, flag, blend)
+    self:getSubframe(private.control_disabled_name):setTexture(path, flag, blend)
 end
 
 --=========

@@ -3,14 +3,14 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 --endregion
 
 --=======
@@ -34,16 +34,16 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param child_instance AbilityCooldownType | nil
+---@param child AbilityCooldownType | nil
 ---@return AbilityCooldownType
-function override.new(name, child_instance)
-    if child_instance then checkTypeErr(child_instance, AbilityCooldownType, 'child_instance') end
+function override.new(name, child)
+    if child then isTypeErr(child, AbilityCooldownType, 'child') end
 
     if private.instances[name] then
         Log:err(tostring(AbilityCooldownType)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(AbilityCooldownType)
+    local instance = child or Class.allocate(AbilityCooldownType)
     private.instances[instance] = name
 
     return instance

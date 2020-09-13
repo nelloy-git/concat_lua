@@ -2,17 +2,19 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Destructable = HandleLib.Destructable or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Destructable = UtilsLib.Handle.Destructable
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityTarget
-local AbilityTarget = require(lib_modname..'.Target.Base')
+local AbilityTarget = require(lib_path..'Target.Base')
 
 --=======
 -- Class
@@ -32,13 +34,13 @@ local private = {}
 --=========
 
 ---@param destr Destructable
----@param child_instance AbilityTargetDestructable | nil
+---@param child AbilityTargetDestructable | nil
 ---@return AbilityTargetDestructable
-function override.new(destr, child_instance)
-    checkTypeErr(destr, Destructable, 'destr')
-    if child_instance then checkTypeErr(child_instance, AbilityTargetDestructable, 'child_instance') end
+function override.new(destr, child)
+    isTypeErr(destr, Destructable, 'destr')
+    if child then isTypeErr(child, AbilityTargetDestructable, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilityTargetDestructable)
+    local instance = child or Class.allocate(AbilityTargetDestructable)
     instance = AbilityTarget.new(instance)
     private.newData(instance, destr)
 

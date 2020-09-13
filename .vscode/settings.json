@@ -2,7 +2,9 @@
     "Lua.workspace.ignoreDir": [
         ".vscode",
         "dst",
-        "builder"
+        "builder",
+        "src/compiletime",
+        "src/Libs/Lib.lua"
     ],
     "Lua.workspace.library": {
         "./lib": true,
@@ -15,7 +17,7 @@
         "GetSrcDir",
         "GetDstDir",
         "CompileFinal",
-        "CompiletimeFinalToRuntime",
+        "CompiletimeFinalToRuntime"
     ],
     "files.associations": {
         "chrono": "cpp"

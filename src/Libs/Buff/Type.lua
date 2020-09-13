@@ -3,14 +3,14 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_depss
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib)
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 --endregion
 
 --=======
@@ -33,19 +33,19 @@ local private = {}
 --=========
 
 ---@param id string
----@param child_instance BuffType | nil
+---@param child BuffType | nil
 ---@return BuffType
-function override.new(id, child_instance)
-    checkTypeErr(id, 'string', 'id')
-    if child_instance then
-        checkTypeErr(child_instance, BuffType, 'child_instance')
+function override.new(id, child)
+    isTypeErr(id, 'string', 'id')
+    if child then
+        isTypeErr(child, BuffType, 'child')
     end
 
     if private.instances[id] then
         Log:err(tostring(BuffType)..' with this id already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(BuffType)
+    local instance = child or Class.allocate(BuffType)
     private.instances[id] = instance
 
     return instance

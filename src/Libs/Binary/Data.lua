@@ -2,17 +2,17 @@
 -- Include
 --=========
 
-local lib_modename = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 
 ---@type BinaryUtils
-local BinaryUtils = require(lib_modename..'.Utils')
+local BinaryUtils = require(lib_path..'Utils')
 
 --=======
 -- Class
@@ -34,15 +34,15 @@ local private = {}
 ---@param id number
 ---@param base_id number
 ---@param name string | nil
----@param child_instance BinaryData | nil
+---@param child BinaryData | nil
 ---@return BinaryData
-function override.new(id, base_id, name, child_instance)
-    checkTypeErr(id, 'number', 'id')
-    checkTypeErr(base_id, 'number', 'base_id')
-    if name then checkTypeErr(name, 'string', 'name') end
-    if child_instance then checkTypeErr(child_instance, BinaryData, 'child_instance') end
+function override.new(id, base_id, name, child)
+    isTypeErr(id, 'number', 'id')
+    isTypeErr(base_id, 'number', 'base_id')
+    if name then isTypeErr(name, 'string', 'name') end
+    if child then isTypeErr(child, BinaryData, 'child') end
 
-    local instance = child_instance or Class.allocate(BinaryData)
+    local instance = child or Class.allocate(BinaryData)
     private.newData(instance, id, base_id, name)
 
     return instance
@@ -68,9 +68,10 @@ function public:getName()
 end
 
 ---@param value_id string
----@param value_type string | 'bool' | 'int' | 'real' | 'unreal' | 'string'
+---@param value_type string | "'bool'" | "'int'" | "'real'" | "'unreal'" | "'string'"
 ---@param value any
 function public:setValue(value_id, value_type, value)
+    isTypeErr(value_id, 'string', 'value_id')
     if not (value_type == 'bool' or
        value_type == 'int' or
        value_type == 'real' or
@@ -78,8 +79,7 @@ function public:setValue(value_id, value_type, value)
        value_type == 'string') then
         Log:err('Unavailable \'value_type\'. Got '..value_type, 2)
     end
-    checkTypeErr(value_id, 'string', 'value_id')
-    checkTypeErr(value, value_type, 'value')
+    isTypeErr(value, private.real_types[value_type], 'value')
 
     local priv = private.data[self]
     priv.values[value_id] = {value_type = value_type, value = value}
@@ -132,6 +132,14 @@ function private.newData(self, id, base_id, name)
     }
     private.data[self] = priv
 end
+
+private.real_types = {
+    bool = 'boolean',
+    int = 'number',
+    real = 'number',
+    unreal = 'number',
+    string = 'string',
+}
 
 private.type_to_bytes = {
     bool = BinaryUtils.int2byte(0),

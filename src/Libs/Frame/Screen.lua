@@ -2,11 +2,11 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
+local UtilsLib = lib_deptilsLib
 local Action = UtilsLib.Action
 local Timer = UtilsLib.Handle.Timer
 
@@ -32,6 +32,11 @@ local actions = {}
 ---@return number
 function Screen.getX0()
     return screen_x0
+end
+
+---@return number
+function Screen.getWidth()
+    return screen_width
 end
 
 ---@alias FrameScreenCallback fun(prev_x0:number, prev_width:number, prev_height:number, new_x0:number, new_width:number, new_height:number)

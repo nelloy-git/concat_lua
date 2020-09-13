@@ -9,6 +9,8 @@ do
     local loaded_packages = {}
     local loading_packages = {}
     function require(package_name)
+        package_name = package_name:gsub('[.]+', '.')
+        
         if loading_packages[package_name] then
             print('Recursive require detected.')
             return nil

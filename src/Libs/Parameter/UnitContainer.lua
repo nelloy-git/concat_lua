@@ -3,38 +3,38 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 local Unit = UtilsLib.Handle.Unit
 ---@type DamageLib
-local DamageLib = depencies.DamageLib
+local DamageLib = lib_dep.DamageLib
 local DamageType = DamageLib.DamageType
 
 ---@type ParameterValueListClass
-local ValueList = require(lib_modname..'.ValueList')
+local ValueList = require(lib_path..'.ValueList')
 local ValueListPublic = Class.getPublic(ValueList)
 ---@type ParameterDefines
-local Defines = require(lib_modname..'.Defines')
+local Defines = require(lib_path..'.Defines')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local UnitParameterContainer = Class.new('UnitParameterContainer', ValueList)
+local ParameterContainerUnit = Class.new('ParameterContainerUnit', ValueList)
 --region Class
----@class UnitParameterContainer : ParameterValueList
-local public = UnitParameterContainer.public
----@class UnitParameterContainerClass : ParameterValueListClass
-local static = UnitParameterContainer.static
----@type UnitParameterContainerClass
-local override = UnitParameterContainer.override
+---@class ParameterContainerUnit : ParameterValueList
+local public = ParameterContainerUnit.public
+---@class ParameterContainerUnitClass : ParameterValueListClass
+local static = ParameterContainerUnit.static
+---@type ParameterContainerUnitClass
+local override = ParameterContainerUnit.override
 local private = {}
 --endregion
 
@@ -43,20 +43,17 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param child_instance UnitParameterContainer | nil
----@return UnitParameterContainer
-function override.new(owner, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    if child_instance then
-        checkTypeErr(child_instance, UnitParameterContainer, 'child_instance')
-    end
+---@param child ParameterContainerUnit | nil
+---@return ParameterContainerUnit
+function override.new(owner, child)
+    isTypeErr(owner, Unit, 'owner')
+    if child then isTypeErr(child, ParameterContainerUnit, 'child') end
 
     if private.owners[owner] then
-        Log:msg(tostring(UnitParameterContainer)..' container exists.')
-        return private.owners[owner]
+        Log:err('Parameter container already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(UnitParameterContainer)
+    local instance = child or Class.allocate(ParameterContainerUnit)
     instance = ValueList.new(instance)
     private.newData(instance, owner)
 
@@ -64,7 +61,7 @@ function override.new(owner, child_instance)
 end
 
 ---@param owner Unit
----@return UnitParameterContainer | nil
+---@return ParameterContainerUnit | nil
 function static.get(owner)
     return private.owners[owner]
 end
@@ -81,12 +78,13 @@ local MReduc = Defines.MagicalDamageReduction
 
 ---@type DamageEventCallback
 static.DamageCallback = function(dmg, dmg_type, target, damager)
+    local damager_params = static.get(damager)
     local target_params = static.get(target)
     if not target_params then return dmg end
 
     -- Add magic damage to attacks
     if dmg_type == DamageType.PhysicalAttack then
-        local m_atk = target_params:getResult(MDmg)
+        local m_atk = damager_params:getResult(MDmg)
         local m_dmg = m_atk * (0.85 + 0.3 * math.random())
         DamageLib.damageUnit(m_dmg, DamageType.MagicalAttack, target, damager, WEAPON_TYPE_WHOKNOWS)
     end
@@ -109,9 +107,9 @@ end
 ---@param value number
 function public:addBase(param, value)
     ValueListPublic.addBase(self, param, value)
-    local result = self:getResult(param)
+    local result = private.getResult(self, param)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getHandleData(), result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getData(), result)
     end
 end
 
@@ -119,9 +117,9 @@ end
 ---@param value number
 function public:addMult(param, value)
     ValueListPublic.addMult(self, param, value)
-    local result = self:getResult(param)
+    local result = private.getResult(self, param)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getHandleData(), result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getData(), result)
     end
 end
 
@@ -129,9 +127,9 @@ end
 ---@param value number
 function public:addAddit(param, value)
     ValueListPublic.addAddit(self, param, value)
-    local result = self:getResult(param)
+    local result = private.getResult(self, param)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getHandleData(), result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getData(), result)
     end
 end
 
@@ -142,7 +140,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.owners = setmetatable({}, {__mode = 'k'})
 
----@param self UnitParameterContainer
+---@param self ParameterContainerUnit
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {
@@ -154,6 +152,16 @@ function private.newData(self, owner)
     for i = 1, #Defines.AllParameters do
         self:addBase(Defines.AllParameters[i], 0)
     end
+end
+
+---@param self ParameterContainerUnit
+---@param param Parameter
+---@return number
+function private.getResult(self, param)
+    local res = self:getResult(param)
+    if res > param:getMax() then res = param:getMax() end
+    if res < param:getMin() then res = param:getMin() end
+    return res
 end
 
 return static

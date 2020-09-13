@@ -1,4 +1,4 @@
-[0.463] {Msg} Created new FdfFile 'Default' containg:
-    FrameNormalButtonDefault
-    FrameNormalImage
+[0.177] {Msg} Created new FdfFile 'GeneratedFile' containing:
+    FrameSimpleStatusBar
+    FrameSimpleText
     FrameSimpleImage

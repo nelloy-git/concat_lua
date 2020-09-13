@@ -3,21 +3,23 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Action = UtilsLib.Action
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityCooldownClass
-local AbilityCooldown = require(lib_modname..'.Cooldown.Base')
+local AbilityCooldown = require(lib_path..'.Cooldown.Base')
 ---@type AbilityCooldownTypeClass
-local AbilityCooldownType = require(lib_modname..'.Cooldown.Type')
+local AbilityCooldownType = require(lib_path..'.Cooldown.Type')
 --endregion
 
 --=======
@@ -43,14 +45,14 @@ local private = {}
 
 ---@param owner Unit
 ---@param abil_cooldown_type AbilityCooldownTypeClass
----@param child_instance AbilityCooldownCharges | nil
+---@param child AbilityCooldownCharges | nil
 ---@return AbilityCooldownCharges
-function override.new(owner, abil_cooldown_type, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(abil_cooldown_type, AbilityCooldownType, 'abil_cooldown_type')
-    if child_instance then checkTypeErr(child_instance, AbilityCooldownCharges, 'child_instance') end
+function override.new(owner, abil_cooldown_type, child)
+    isTypeErr(owner, Unit, 'owner')
+    isTypeErr(abil_cooldown_type, AbilityCooldownType, 'abil_cooldown_type')
+    if child then isTypeErr(child, AbilityCooldownCharges, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilityCooldownCharges)
+    local instance = child or Class.allocate(AbilityCooldownCharges)
     private.newData(instance, abil_cooldown_type, owner)
 
     instance:setChargesLeft(1)

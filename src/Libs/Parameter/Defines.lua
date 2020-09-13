@@ -75,7 +75,7 @@ Defines.PhysicalDamage = registerParam('PDmg', 'Physical damage',
 
 Defines.AttackSpeed = registerParam('ASpd', 'Attack speed',
                                     Compiletime(UtilsLib.Icon.BTNCommand),
-                                    0, 10^10, 1, applyAttackSpeed)
+                                    0, 10^10, 2, applyAttackSpeed)
 
 Defines.Defence = registerParam('Def', 'Defence',
                                 Compiletime(UtilsLib.Icon.BTNDefend),
@@ -115,7 +115,7 @@ Defines.CriticalStrikeChance = registerParam('Crit', 'Critical strike chance',
 
 Defines.Health = registerParam('HP', 'Health',
                                Compiletime(UtilsLib.Icon.BTNHealthStone),
-                               0, 10^10, 10, applyHealth)
+                               10, 10^10, 0, applyHealth)
 
 Defines.Regeneration = registerParam('Regen', 'Regeneration',
                                      Compiletime(UtilsLib.Icon.BTNRegenerate),
@@ -123,7 +123,7 @@ Defines.Regeneration = registerParam('Regen', 'Regeneration',
 
 Defines.Mana = registerParam('MP', 'Mana',
                              Compiletime(UtilsLib.Icon.BTNManaStone),
-                             0, 10^10, 0, applyMana)
+                             5, 10^10, 0, applyMana)
 
 Defines.Recovery = registerParam('Recov', 'Recovery',
                                  Compiletime(UtilsLib.Icon.BTNBlink),

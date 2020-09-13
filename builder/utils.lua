@@ -132,7 +132,8 @@ function Utils.appendFile(data, path)
 end
 
 ---@param val string|number|nil|boolean|table
-function Utils.toString(val)
+---@param level number | nil
+function Utils.toString(val, level)
     local t = type(val)
     if t == 'string' then
         val = val:gsub('\'', '\\\'')
@@ -142,7 +143,7 @@ function Utils.toString(val)
     elseif t == 'number' then
         return tostring(val)
     elseif t == 'nil' then
-        return 'nil1'
+        return 'NULL'
     elseif t == 'boolean' then
         if val then
             return 'true'
@@ -152,9 +153,13 @@ function Utils.toString(val)
     elseif t == 'table' then
         local res = '{'
         for k, v in pairs(val) do
-            res = res..string.format('[%s] = %s,', Utils.toString(k), Utils.toString(v))
+            res = res..string.format('[%s] = %s,',
+                                     Utils.toString(k, level and level + 1 or 4),
+                                     Utils.toString(v, level and level + 1 or 4))
         end
         return res..'}'
+    else
+        error('Can not use \''..t..'\' type', level or 4)
     end
 end
 

@@ -27,10 +27,10 @@ local private = {}
 --========
 
 ---@param path string
----@param child_instance WeFile | nil
+---@param child WeFile | nil
 ---@return WeFile
-function override.new(path, child_instance)
-    local instance = child_instance or Class.allocate(WeFile)
+function override.new(path, child)
+    local instance = child or Class.allocate(WeFile)
     private.newData(instance, path)
 
     return instance

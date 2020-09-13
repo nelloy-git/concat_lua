@@ -1,11 +1,11 @@
-local modname = Lib.current().modname
+local lib_path = Lib.curPath()
 
-local ClassName = require(modname..'.Name')
-local ClassParent = require(modname..'.Parent')
-local ClassStatic = require(modname..'.Static')
-local ClassOverride = require(modname..'.Override')
-local ClassPublic = require(modname..'.Public')
-local ClassInstance = require(modname..'.Instance')
+local ClassName = require(lib_path..'Name')
+local ClassParent = require(lib_path..'Parent')
+local ClassStatic = require(lib_path..'Static')
+local ClassOverride = require(lib_path..'Override')
+local ClassPublic = require(lib_path..'Public')
+local ClassInstance = require(lib_path..'Instance')
 
 ---@class ClassDeclare
 local ClassDeclare = {}
@@ -49,8 +49,8 @@ end
 ---@return boolean
 ---@overload fun(value:any):string
 ---@overload fun(child_class:any, parent_class:any):boolean
----@overload fun(child_instance:any, parent_class:any):boolean
----@overload fun(child_instance:any, parent_instance:any):boolean
+---@overload fun(child:any, parent_class:any):boolean
+---@overload fun(child:any, parent_instance:any):boolean
 function ClassDeclare.type(value1, value2)
     if not value2 then
         if ClassName.isClass(value1) or ClassInstance.isInstance(value1) then

@@ -28,10 +28,10 @@ local private = {}
 ---@param id number | string
 ---@param base_id number | string
 ---@param name string
----@param child_instance WeObject | nil
+---@param child WeObject | nil
 ---@return WeObject
-function override.new(id, base_id, name, child_instance)
-    local instance = child_instance or Class.allocate(WeObject)
+function override.new(id, base_id, name, child)
+    local instance = child or Class.allocate(WeObject)
     private.newData(instance, id, base_id, name)
 
     return instance

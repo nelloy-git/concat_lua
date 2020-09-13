@@ -11,8 +11,8 @@ local BinaryLib = require(LibList.BinaryLib)
 local UnitType = BinaryLib.Unit
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib)
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 local Unit = UtilsLib.Handle.Unit
 
 ---@type DummyAbilityPool
@@ -41,16 +41,16 @@ local private = {}
 ---@param x number
 ---@param y number
 ---@param owner player
----@param child_instance Unit | nil
+---@param child Unit | nil
 ---@return Hero
-function override.new(hero_type, x, y, owner, child_instance)
-    checkTypeErr(hero_type, HeroType, 'hero_type')
-    checkTypeErr(x, 'number', 'x')
-    checkTypeErr(y, 'number', 'y')
-    checkTypeErr(owner, 'player', owner)
-    if child_instance then checkTypeErr(child_instance, Hero, 'child_instance') end
+function override.new(hero_type, x, y, owner, child)
+    isTypeErr(hero_type, HeroType, 'hero_type')
+    isTypeErr(x, 'number', 'x')
+    isTypeErr(y, 'number', 'y')
+    isTypeErr(owner, 'player', owner)
+    if child then isTypeErr(child, Hero, 'child') end
 
-    local instance = child_instance or Class.allocate(Hero)
+    local instance = child or Class.allocate(Hero)
     instance = Unit.new(hero_type:getId(), x, y, owner, instance)
     private.newData(instance, hero_type)
 
@@ -83,7 +83,7 @@ function private.newAbilities(self)
     priv.ability_dummy = {}
     for i = 1, 6 do
         priv.ability_dummy[i] = DummyAbilityPool.pop()
-        UnitAddAbility(self:getHandleData(), priv.ability_dummy[i]:getId())
+        UnitAddAbility(self:getData(), priv.ability_dummy[i]:getId())
     end
 end
 

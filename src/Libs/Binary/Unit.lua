@@ -3,34 +3,38 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+---@type ClassLib
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
+--local AttackType = UtilsLib.Types.AttackType
+--local TargetType = UtilsLib.Types.TargetType
 
 ---@type BinaryFileClass
-local BinaryFile = require(lib_modname..'.File')
+local BinaryFile = require(lib_path..'File')
 ---@type BinaryDataClass
-local BinaryData = require(lib_modname..'.Data')
----@type BinaryDataUnitDB
-local UnitDB = require(lib_modname..'.UnitDB')
+local BinaryData = require(lib_path..'Data')
+---@type BinaryUnitDB
+local UnitDB = require(lib_path..'UnitDB')
 --endregion
 
 --=======
 -- Class
 --=======
 
-local BinaryDataUnit = Class.new('BinaryDataUnit', BinaryData)
+local BinaryUnit = Class.new('BinaryUnit', BinaryData)
 --region Class
----@class BinaryDataUnit : BinaryData
-local public = BinaryDataUnit.public
----@class BinaryDataUnitClass : BinaryDataClass
-local static = BinaryDataUnit.static
----@type BinaryDataUnitClass
-local override = BinaryDataUnit.override
+---@class BinaryUnit : BinaryData
+local public = BinaryUnit.public
+---@class BinaryUnitClass : BinaryDataClass
+local static = BinaryUnit.static
+---@type BinaryUnitClass
+local override = BinaryUnit.override
 local private = {}
 --endregion
 
@@ -41,15 +45,15 @@ local private = {}
 ---@param new_id number
 ---@param base_id number
 ---@param name string | nil
----@param child_instance BinaryDataUnit | nil
----@return BinaryDataUnit
-function override.new(new_id, base_id, name, child_instance)
-    checkTypeErr(new_id, 'number', 'new_id')
-    checkTypeErr(base_id, 'number', 'base_id')
-    if name then checkTypeErr(name, 'string', 'name') end
-    if child_instance then checkTypeErr(child_instance, BinaryDataUnit, 'child_instance') end
+---@param child BinaryUnit | nil
+---@return BinaryUnit
+function override.new(new_id, base_id, name, child)
+    isTypeErr(new_id, 'number', 'new_id')
+    isTypeErr(base_id, 'number', 'base_id')
+    if name then isTypeErr(name, 'string', 'name') end
+    if child then isTypeErr(child, BinaryUnit, 'child') end
 
-    local instance = child_instance or Class.allocate(BinaryDataUnit)
+    local instance = child or Class.allocate(BinaryUnit)
     instance = BinaryData.new(new_id, base_id, name, instance)
 
     private.file:add(instance)
@@ -61,17 +65,136 @@ end
 -- Public
 --========
 
----@param time number
-function public:setAnimationBlendTime(time)
-    local db = UnitDB.AnimationBlendTimeseconds
-    self:setValue(db.value_id, db.value_type, time)
-end
+local db_atk = {
+    [1] = UnitDB.Attack1,
+    [2] = UnitDB.Attack2
+}
+
+---------------
+-- Abilities --
+---------------
 
 ---@param time number
 function public:setAnimationCastBackswing(time)
     local db = UnitDB.AnimationCastBackswing
     self:setValue(db.value_id, db.value_type, time)
 end
+
+---@param id_list table<number, string>
+function public:setNormalAbilities(id_list)
+    local abil_list = ''
+    for i = 1, #id_list do
+        abil_list = abil_list..id_list[i]..','
+    end
+    if #id_list > 0 then
+        abil_list = abil_list:sub(1, abil_list:len() - 1)
+    end
+
+    local db = UnitDB.NormalAbilities
+    self:setValue(db.value_id, db.value_type, abil_list)
+end
+
+---@param value number
+function public:setMana(value)
+    local db = UnitDB.ManaMaximum
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+---@param value number
+function public:setManaRegeneration(value)
+    local db = UnitDB.ManaRegeneration
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+---------------
+-- Animation --
+---------------
+
+---@param time number
+function public:setAnimationBlendTime(time)
+    local db = UnitDB.AnimationBlendTimeseconds
+    self:setValue(db.value_id, db.value_type, time)
+end
+
+---@param atk number
+---@param value number
+function public:setAttackAnimationBackswingPoint(atk, value)
+    local db = db_atk[atk].AnimationBackswingPoint
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+---@param atk number
+---@param value number
+function public:setAttackAnimationDamagePoint(atk, value)
+    local db = db_atk[atk].AnimationDamagePoint
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+------------
+-- Attack --
+------------
+
+-- TODO AreaAttacks
+
+---@param atk number
+---@param value attacktype
+function public:setAttackType(atk, value)
+    local db = db_atk[atk].AttackType
+    local str_type = AttackType.toStr(value)
+    self:setValue(db.value_id, db.value_type, str_type)
+end
+
+---@param atk number
+---@param value number
+function public:setAttackProjectileArc(atk, value)
+    local db = db_atk[atk].ProjectileArc
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+---@param atk number
+---@param model string
+function public:setAttackProjectileArt(atk, model)
+    local db = db_atk[atk].ProjectileArt
+    self:setValue(db.value_id, db.value_type, model)
+end
+
+---@param atk number
+---@param flag boolean
+function public:setAttackProjectileHomingEnabled(atk, flag)
+    local db = db_atk[atk].ProjectileHomingEnabled
+    self:setValue(db.value_id, db.value_type, flag)
+end
+
+---@param atk number
+---@param value number
+function public:setAttackProjectileSpeed(atk, value)
+    local db = db_atk[atk].ProjectileSpeed
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+---@param atk number
+---@param value number
+function public:setAttackRange(atk, value)
+    local db = db_atk[atk].Range
+    self:setValue(db.value_id, db.value_type, value)
+end
+
+---@param atk number
+---@param list table<number, targettype>
+function public:setAttackTargetsAllowed(atk, list)
+    local val = ''
+    for i = 1, #list do
+        val = val..TargetType.toStr(list[i])
+        if i < #list then val = val..',' end
+    end
+
+    local db = db_atk[atk].TargetsAllowed
+    self:setValue(db.value_id, db.value_type, val)
+end
+
+---------------
+-- Interface --
+---------------
 
 ---@param name string
 function public:setName(name)
@@ -91,19 +214,11 @@ function public:setModelFile(model)
     self:setValue(db.value_id, db.value_type, model)
 end
 
----@param id_list table
-function public:setNormalAbilities(id_list)
-    local abil_list = ''
-    for i = 1, #id_list do
-        abil_list = abil_list..id_list[i]..','
-    end
-    if #id_list > 0 then
-        abil_list = abil_list:sub(1, abil_list:len() - 1)
-    end
+------------
+-- Sounds --
+------------
 
-    local db = UnitDB.NormalAbilities
-    self:setValue(db.value_id, db.value_type, abil_list)
-end
+
 
 --=========
 -- Private

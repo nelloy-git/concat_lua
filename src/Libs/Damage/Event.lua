@@ -3,18 +3,18 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
+local UtilsLib = lib_deplsLib
 local Action = UtilsLib.Action
-local Log = UtilsLib.DefaultLogger
+local Log = UtilsLib.Log
 local Unit = UtilsLib.Handle.Unit
 local Trigger = UtilsLib.Handle.Trigger
 
 ---@type DamageDefines
-local Defines = require(lib_modname..'.Defines')
+local Defines = require(lib_path..'.Defines')
 local DamageType = Defines.DamageType
 
 --endregion
@@ -91,7 +91,7 @@ function DamageEvent.damageUnit(dmg, dmg_type, target, damager, sound)
     local is_attack = dmg_type == DamageType.PhysicalAttack or
                       dmg_type == DamageType.MagicalAttack or
                       dmg_type == DamageType.ChaosAttack
-    UnitDamageTarget(damager:getHandleData(), target:getHandleData(),
+    UnitDamageTarget(damager:getData(), target:getData(),
                      dmg, is_attack, false, ATTACK_TYPE_CHAOS, dmg_type, sound)
 end
 

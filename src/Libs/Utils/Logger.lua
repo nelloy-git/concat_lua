@@ -2,9 +2,12 @@
 -- Include
 --=========
 
-local Class = Lib.current().depencies.Class
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local fmt = string.format
+local Class = lib_dep.Class or error('')
+
+local fmt = string.format or error('')
 
 --=======
 -- Class
@@ -44,23 +47,6 @@ function static.new(show_msg, show_wrn, show_err,
                     compile_log_path, runtime_log_path)
 
     return instance
-end
-
----@return Logger
-function static.getDefault()
-    if not private.default then
-        private.default = static.new(true, true, true,
-                                     true, true, true, true,
-                                     'log.txt', 'log.txt')
-    end
-    return private.default
-end
-
----@param msg string
----@param level number
-function static.error(msg, level)
-    static.write(nil, static.LogType.Err, msg)
-    error('', (level or 1) + 1)
 end
 
 --========

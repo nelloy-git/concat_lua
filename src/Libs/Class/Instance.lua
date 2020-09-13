@@ -1,9 +1,7 @@
-local modname = Lib.current().modname
+local lib_path = Lib.curPath()
 
-local ClassName = require(modname..'.Name')
-local ClassParent = require(modname..'.Parent')
-local ClassPublic = require(modname..'.Public')
-local ClassUtils = require(modname..'.Utils')
+local ClassName = require(lib_path..'Name')
+local ClassPublic = require(lib_path..'Public')
 
 ---@class ClassInstance
 local ClassInstance = {}
@@ -11,10 +9,7 @@ local ClassInstance = {}
 local instance2class = {}
 setmetatable(instance2class, {__mode = 'kv'})
 
-local rawget = rawget
-local rawset = rawset
 local fmt = string.format
-local deepcopy = ClassUtils.deepcopy
 
 local instance_metatable
 instance_metatable = {
@@ -39,19 +34,8 @@ instance_metatable = {
 ---@return table
 function ClassInstance.allocate(class)
     local instance = {}
-    local parents = ClassParent.getList(class)
-
-    --for i = 1, #parents do
-    --    local cur = parents[#parents + 1 - i]
-    --    local cur_public = ClassPublic.get(cur)
-    --    local copy = deepcopy(cur_public)
-    --    for k,v in pairs(copy) do
-    --        instance[k] = v
-    --    end
-    --end
 
     local public = ClassPublic.get(class)
-    local copy = deepcopy(public)
     for k,v in pairs(public) do
         instance[k] = v
     end
@@ -75,6 +59,14 @@ function ClassInstance.isInstance(instance)
         return true
     end
     return false
+end
+
+function ClassInstance.getStatistics()
+    local res = {}
+    for _, class in pairs(instance2class) do
+        res[class] = (res[class] or 0) + 1
+    end
+    return res
 end
 
 return ClassInstance

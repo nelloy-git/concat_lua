@@ -1,4 +1,4 @@
----@class BinaryDataUnitDB
+---@class BinaryUnitDB
 local UnitValueDB = {}
 
 UnitValueDB.AIPlacementRadius = {value_id = "uabr", value_type = 'real'}
@@ -15,78 +15,80 @@ UnitValueDB.ArmorSoundType = {value_id = "uarm", value_type = 'string'}
 UnitValueDB.ArmorType = {value_id = "udty", value_type = 'string'}
 UnitValueDB.ArtSpecial = {value_id = "uspa", value_type = 'string'}
 UnitValueDB.ArtTarget = {value_id = "utaa", value_type = 'string'}
-UnitValueDB.Attack1AnimationBackswingPoint = {value_id = "ubs1", value_type = 'real'}
-UnitValueDB.Attack1AnimationDamagePoint = {value_id = "udp1", value_type = 'real'}
-UnitValueDB.Attack1AreaofEffectFullDamage = {value_id = "ua1f", value_type = 'int'}
-UnitValueDB.Attack1AreaofEffectMediumDamage = {value_id = "ua1h", value_type = 'int'}
-UnitValueDB.Attack1AreaofEffectSmallDamage = {value_id = "ua1q", value_type = 'int'}
-UnitValueDB.Attack1AreaofEffectTargets = {value_id = "ua1p", value_type = 'string'}
+UnitValueDB.Attack1 = {}
+UnitValueDB.Attack1.AnimationBackswingPoint = {value_id = "ubs1", value_type = 'real'}
+UnitValueDB.Attack1.AnimationDamagePoint = {value_id = "udp1", value_type = 'real'}
+UnitValueDB.Attack1.AreaofEffectFullDamage = {value_id = "ua1f", value_type = 'int'}
+UnitValueDB.Attack1.AreaofEffectMediumDamage = {value_id = "ua1h", value_type = 'int'}
+UnitValueDB.Attack1.AreaofEffectSmallDamage = {value_id = "ua1q", value_type = 'int'}
+UnitValueDB.Attack1.AreaofEffectTargets = {value_id = "ua1p", value_type = 'string'}
 --- 'unknown', 'normal', 'pierce', 'siege', 'spells', 'chaos', 'magic', 'hero'
-UnitValueDB.Attack1AttackType = {value_id = "ua1t", value_type = 'string'}
-UnitValueDB.Attack1CooldownTime = {value_id = "ua1c", value_type = 'real'}
-UnitValueDB.Attack1DamageBase = {value_id = "ua1b", value_type = 'int'}
-UnitValueDB.Attack1DamageFactorMedium = {value_id = "uhd1", value_type = 'real'}
-UnitValueDB.Attack1DamageFactorSmall = {value_id = "uqd1", value_type = 'real'}
-UnitValueDB.Attack1DamageLossFactor = {value_id = "udl1", value_type = 'real'}
-UnitValueDB.Attack1DamageSidesperDie = {value_id = "ua1s", value_type = 'int'}
-UnitValueDB.Attack1DamageSpillDistance = {value_id = "usd1", value_type = 'real'}
-UnitValueDB.Attack1DamageSpillRadius = {value_id = "usr1", value_type = 'real'}
-UnitValueDB.Attack1DamageUpgradeAmount = {value_id = "udu1", value_type = 'int'}
-UnitValueDB.Attack1DamagebooleanofDice = {value_id = "ua1d", value_type = 'int'}
-UnitValueDB.Attack1MaximumbooleanofTargets = {value_id = "utc1", value_type = 'int'}
-UnitValueDB.Attack1ProjectileArc = {value_id = "uma1", value_type = 'real'}
-UnitValueDB.Attack1ProjectileArt = {value_id = "ua1m", value_type = 'string'}
-UnitValueDB.Attack1ProjectileHomingEnabled = {value_id = "umh1", value_type = 'bool'}
-UnitValueDB.Attack1ProjectileSpeed = {value_id = "ua1z", value_type = 'int'}
-UnitValueDB.Attack1Range = {value_id = "ua1r", value_type = 'int'}
-UnitValueDB.Attack1RangeMotionBuffer = {value_id = "urb1", value_type = 'real'}
-UnitValueDB.Attack1ShowUI = {value_id = "uwu1", value_type = 'bool'}
+UnitValueDB.Attack1.AttackType = {value_id = "ua1t", value_type = 'string'}
+UnitValueDB.Attack1.CooldownTime = {value_id = "ua1c", value_type = 'real'}
+UnitValueDB.Attack1.DamageBase = {value_id = "ua1b", value_type = 'int'}
+UnitValueDB.Attack1.DamageFactorMedium = {value_id = "uhd1", value_type = 'real'}
+UnitValueDB.Attack1.DamageFactorSmall = {value_id = "uqd1", value_type = 'real'}
+UnitValueDB.Attack1.DamageLossFactor = {value_id = "udl1", value_type = 'real'}
+UnitValueDB.Attack1.DamageSidesperDie = {value_id = "ua1s", value_type = 'int'}
+UnitValueDB.Attack1.DamageSpillDistance = {value_id = "usd1", value_type = 'real'}
+UnitValueDB.Attack1.DamageSpillRadius = {value_id = "usr1", value_type = 'real'}
+UnitValueDB.Attack1.DamageUpgradeAmount = {value_id = "udu1", value_type = 'int'}
+UnitValueDB.Attack1.DamageDice = {value_id = "ua1d", value_type = 'int'}
+UnitValueDB.Attack1.MaximumTargets = {value_id = "utc1", value_type = 'int'}
+UnitValueDB.Attack1.ProjectileArc = {value_id = "uma1", value_type = 'real'}
+UnitValueDB.Attack1.ProjectileArt = {value_id = "ua1m", value_type = 'string'}
+UnitValueDB.Attack1.ProjectileHomingEnabled = {value_id = "umh1", value_type = 'bool'}
+UnitValueDB.Attack1.ProjectileSpeed = {value_id = "ua1z", value_type = 'int'}
+UnitValueDB.Attack1.Range = {value_id = "ua1r", value_type = 'int'}
+UnitValueDB.Attack1.RangeMotionBuffer = {value_id = "urb1", value_type = 'real'}
+UnitValueDB.Attack1.ShowUI = {value_id = "uwu1", value_type = 'bool'}
 --- 'air', 'alive', 'allies', 'ancient', 'dead', 'debris', 'decoration', 'enemies', 'friend', 'ground', 'hero',
 --- 'invulnerable', 'item', 'mechanical', 'neutral', 'nonancient', 'none', 'nonhero', 'nonsapper', 'notself',
---- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall'
-UnitValueDB.Attack1TargetsAllowed = {value_id = "ua1g", value_type = 'string'}
+--- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall',
+UnitValueDB.Attack1.TargetsAllowed = {value_id = "ua1g", value_type = 'string'}
 --- 'Nothing', 'AxeMediumChop', 'MetalHeavyBash', 'MetalHeavyChop',
 --- 'MetalHeavySlice', 'MetalLightChop', 'MetalLightSlice', 'MetalMediumBash', 'MetalMediumChop',
 --- 'MetalMediumSlice', 'RockHeavyBash', 'WoodHeavyBash', 'WoodLightBash', 'WoodMediumBash'
-UnitValueDB.Attack1WeaponSound = {value_id = "ucs1", value_type = 'string'}
---- 'normal', 'instant', 'artillery', 'aline', 'missile', 'msplash', 'mbounce', 'mline'
-UnitValueDB.Attack1WeaponType = {value_id = "ua1w", value_type = 'string'}
-UnitValueDB.Attack2AnimationBackswingPoint = {value_id = "ubs2", value_type = 'real'}
-UnitValueDB.Attack2AnimationDamagePoint = {value_id = "udp2", value_type = 'real'}
-UnitValueDB.Attack2AreaofEffectFullDamage = {value_id = "ua2f", value_type = 'int'}
-UnitValueDB.Attack2AreaofEffectMediumDamage = {value_id = "ua2h", value_type = 'int'}
-UnitValueDB.Attack2AreaofEffectSmallDamage = {value_id = "ua2q", value_type = 'int'}
-UnitValueDB.Attack2AreaofEffectTargets = {value_id = "ua2p", value_type = 'string'}
+UnitValueDB.Attack1.WeaponSound = {value_id = "ucs1", value_type = 'string'}
+--- 'normal', 'instant', 'artillery', 'aline', 'missile', 'splash', 'bounce', 'line'
+UnitValueDB.Attack1.WeaponType = {value_id = "ua1w", value_type = 'string'}
+UnitValueDB.Attack2 = {}
+UnitValueDB.Attack2.AnimationBackswingPoint = {value_id = "ubs2", value_type = 'real'}
+UnitValueDB.Attack2.AnimationDamagePoint = {value_id = "udp2", value_type = 'real'}
+UnitValueDB.Attack2.AreaofEffectFullDamage = {value_id = "ua2f", value_type = 'int'}
+UnitValueDB.Attack2.AreaofEffectMediumDamage = {value_id = "ua2h", value_type = 'int'}
+UnitValueDB.Attack2.AreaofEffectSmallDamage = {value_id = "ua2q", value_type = 'int'}
+UnitValueDB.Attack2.AreaofEffectTargets = {value_id = "ua2p", value_type = 'string'}
 --- 'unknown', 'normal', 'pierce', 'siege', 'spells', 'chaos', 'magic', 'hero'
-UnitValueDB.Attack2AttackType = {value_id = "ua2t", value_type = 'string'}
-UnitValueDB.Attack2CooldownTime = {value_id = "ua2c", value_type = 'real'}
-UnitValueDB.Attack2DamageBase = {value_id = "ua2b", value_type = 'int'}
-UnitValueDB.Attack2DamageFactorMedium = {value_id = "uhd2", value_type = 'real'}
-UnitValueDB.Attack2DamageFactorSmall = {value_id = "uqd2", value_type = 'real'}
-UnitValueDB.Attack2DamageLossFactor = {value_id = "udl2", value_type = 'real'}
-UnitValueDB.Attack2DamageSidesperDie = {value_id = "ua2s", value_type = 'int'}
-UnitValueDB.Attack2DamageSpillDistance = {value_id = "usd2", value_type = 'real'}
-UnitValueDB.Attack2DamageSpillRadius = {value_id = "usr2", value_type = 'real'}
-UnitValueDB.Attack2DamageUpgradeAmount = {value_id = "udu2", value_type = 'int'}
-UnitValueDB.Attack2DamagebooleanofDice = {value_id = "ua2d", value_type = 'int'}
-UnitValueDB.Attack2MaximumbooleanofTargets = {value_id = "utc2", value_type = 'int'}
-UnitValueDB.Attack2ProjectileArc = {value_id = "uma2", value_type = 'real'}
-UnitValueDB.Attack2ProjectileArt = {value_id = "ua2m", value_type = 'string'}
-UnitValueDB.Attack2ProjectileHomingEnabled = {value_id = "umh2", value_type = 'bool'}
-UnitValueDB.Attack2ProjectileSpeed = {value_id = "ua2z", value_type = 'int'}
-UnitValueDB.Attack2Range = {value_id = "ua2r", value_type = 'int'}
-UnitValueDB.Attack2RangeMotionBuffer = {value_id = "urb2", value_type = 'real'}
-UnitValueDB.Attack2ShowUI = {value_id = "uwu2", value_type = 'bool'}
+UnitValueDB.Attack2.AttackType = {value_id = "ua2t", value_type = 'string'}
+UnitValueDB.Attack2.CooldownTime = {value_id = "ua2c", value_type = 'real'}
+UnitValueDB.Attack2.DamageBase = {value_id = "ua2b", value_type = 'int'}
+UnitValueDB.Attack2.DamageFactorMedium = {value_id = "uhd2", value_type = 'real'}
+UnitValueDB.Attack2.DamageFactorSmall = {value_id = "uqd2", value_type = 'real'}
+UnitValueDB.Attack2.DamageLossFactor = {value_id = "udl2", value_type = 'real'}
+UnitValueDB.Attack2.DamageSidesperDie = {value_id = "ua2s", value_type = 'int'}
+UnitValueDB.Attack2.DamageSpillDistance = {value_id = "usd2", value_type = 'real'}
+UnitValueDB.Attack2.DamageSpillRadius = {value_id = "usr2", value_type = 'real'}
+UnitValueDB.Attack2.DamageUpgradeAmount = {value_id = "udu2", value_type = 'int'}
+UnitValueDB.Attack2.DamagebooleanofDice = {value_id = "ua2d", value_type = 'int'}
+UnitValueDB.Attack2.MaximumbooleanofTargets = {value_id = "utc2", value_type = 'int'}
+UnitValueDB.Attack2.ProjectileArc = {value_id = "uma2", value_type = 'real'}
+UnitValueDB.Attack2.ProjectileArt = {value_id = "ua2m", value_type = 'string'}
+UnitValueDB.Attack2.ProjectileHomingEnabled = {value_id = "umh2", value_type = 'bool'}
+UnitValueDB.Attack2.ProjectileSpeed = {value_id = "ua2z", value_type = 'int'}
+UnitValueDB.Attack2.Range = {value_id = "ua2r", value_type = 'int'}
+UnitValueDB.Attack2.RangeMotionBuffer = {value_id = "urb2", value_type = 'real'}
+UnitValueDB.Attack2.ShowUI = {value_id = "uwu2", value_type = 'bool'}
 --- 'air', 'alive', 'allies', 'ancient', 'dead', 'debris', 'decoration', 'enemies', 'friend', 'ground', 'hero',
 --- 'invulnerable', 'item', 'mechanical', 'neutral', 'nonancient', 'none', 'nonhero', 'nonsapper', 'notself',
 --- 'organic', 'player', 'playerunits', 'sapper', 'self', 'structure', 'terrain', 'tree', 'vulnerable', 'wall'
-UnitValueDB.Attack2TargetsAllowed = {value_id = "ua2g", value_type = 'string'}
+UnitValueDB.Attack2.TargetsAllowed = {value_id = "ua2g", value_type = 'string'}
 --- 'Nothing', 'AxeMediumChop', 'MetalHeavyBash', 'MetalHeavyChop',
 --- 'MetalHeavySlice', 'MetalLightChop', 'MetalLightSlice', 'MetalMediumBash', 'MetalMediumChop',
 --- 'MetalMediumSlice', 'RockHeavyBash', 'WoodHeavyBash', 'WoodLightBash', 'WoodMediumBash'
-UnitValueDB.Attack2WeaponSound = {value_id = "ucs2", value_type = 'string'}
+UnitValueDB.Attack2.WeaponSound = {value_id = "ucs2", value_type = 'string'}
 --- 'unknown', 'normal', 'pierce', 'siege', 'spells', 'chaos', 'magic', 'hero'
-UnitValueDB.Attack2WeaponType = {value_id = "ua2w", value_type = 'string'}
+UnitValueDB.Attack2.WeaponType = {value_id = "ua2w", value_type = 'string'}
 UnitValueDB.AttacksEnabled = {value_id = "uaen", value_type = 'int'}
 UnitValueDB.BuildTime = {value_id = "ubld", value_type = 'int'}
 UnitValueDB.ButtonPositionX = {value_id = "ubpx", value_type = 'int'}

@@ -34,10 +34,10 @@ local private = {}
 ---@param id number | string
 ---@param base_id number | string
 ---@param name string
----@param child_instance WeAbility | nil
+---@param child WeAbility | nil
 ---@return WeAbility
-function override.new(id, base_id, name, child_instance)
-    local instance = child_instance or Class.allocate(WeAbility, child_instance)
+function override.new(id, base_id, name, child)
+    local instance = child or Class.allocate(WeAbility, child)
 
     instance = WeObject.new(id, base_id, name, instance)
     private.newData(instance)

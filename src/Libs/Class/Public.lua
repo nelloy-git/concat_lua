@@ -1,8 +1,8 @@
-local modname = Lib.current().modname
+local lib_path = Lib.curPath()
 
-local ClassStatic = require(modname..'.Static')
-local ClassUtils = require(modname..'.Utils')
-local ClassParent = require(modname..'.Parent')
+local ClassStatic = require(lib_path..'Static')
+local ClassUtils = require(lib_path..'Utils')
+local ClassParent = require(lib_path..'Parent')
 
 ---@class ClassPublic
 local ClassPublic = {}

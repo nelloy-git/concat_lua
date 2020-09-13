@@ -1,14 +1,14 @@
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.Utils
+local Log = UtilsLib.Log
 
 ---@type AbilityDataTypeClass
-local AbilityType = require(lib_modname..'.Data.Type')
+local AbilityType = require(lib_path..'.Data.Type') or error('')
 
-local TestAbilityType = AbilityType.new('TestAbilityType')
+local TestAbilityType = AbilityType.new('TestAbilityType') or error('')
 
 function TestAbilityType:checkConditions(abil)
     print('checkConditions')

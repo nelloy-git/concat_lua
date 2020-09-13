@@ -3,17 +3,19 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type BinaryLib
-local BinaryLib = depencies.BinaryLib
-local BinaryAbility = BinaryLib.Ability
+local BinaryLib = lib_dep.Binary or error('')
+local BinaryAbility = BinaryLib.Ability or error('')
+---@type TypesLib
+local TypesLib = lib_dep.Types or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Log = UtilsLib.DefaultLogger
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 --endregion
 
@@ -21,7 +23,7 @@ local checkTypeErr = UtilsLib.Functions.checkTypeErr
 -- Class
 --=======
 
-local AbilityDummyPool = Class.new('AbilityDummyPool', BinaryAbility)
+local AbilityDummyPool = Class.new('AbilityDummyPool')
 ---@class AbilityDummyPool : BinaryAbility
 local public = AbilityDummyPool.public
 ---@class AbilityDummyPoolClass : BinaryAbilityClass
@@ -34,47 +36,10 @@ local private = {}
 -- Static
 --=========
 
----@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
----@param is_area boolean
----@param child_instance AbilityDummy | nil
----@return AbilityDummy
-function override.new(target_type, is_area, child_instance)
-    checkTypeErr(target_type, 'string', 'target_type')
-    if not (target_type == 'None' or
-            target_type == 'Unit' or
-            target_type == 'Point' or
-            target_type == 'PointOrUnit') then
-        Log:err('Got wrong \"target_type\".', 2)
-    end
-    checkTypeErr(is_area, 'boolean', 'is_area')
-    if child_instance then checkTypeErr(child_instance, AbilityDummyPool, 'child_instance') end
-
-    local instance = child_instance or Class.allocate(AbilityDummyPool)
-    local id = BinaryLib.getAbilityId()
-    local order_id = BinaryLib.getOrderId()
-    instance = BinaryAbility.new(id, private.channel_id, private.id2Str(id), instance)
-
-    instance:setLevels(1)
-    instance:setHero(false)
-    instance:setArtCaster('')
-    instance:setArtEffect('')
-    instance:setArtSpecial('')
-    instance:setArtTarget('')
-    instance:setDisableOtherAbilities(false, 1)
-    instance:setFollowThoughTime(0, 1)
-    instance:setArtDuration(0, 1)
-    instance:setOptions(true, is_area, false, false, false, 1)
-    instance:setOrderId(order_id, 1)
-    instance:setTargetType(target_type, 1)
-    instance:setTargetsAllowed({'enemies', 'friend', 'self'}, 1)
-
-    return instance
-end
-
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@return BinaryAbility
 function static.pop(hotkey)
-    checkTypeErr(hotkey, 'string', 'hotkey')
+    isTypeErr(hotkey, 'string', 'hotkey')
 
     local list = private.pool[hotkey]
     if list == nil then
@@ -91,8 +56,8 @@ end
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param abil BinaryAbility
 function static.push(hotkey, abil)
-    checkTypeErr(hotkey, 'string', 'hotkey')
-    checkTypeErr(abil, AbilityDummyPool, 'abil')
+    isTypeErr(hotkey, 'string', 'hotkey')
+    isTypeErr(abil, BinaryAbility, 'abil')
 
     local list = private.pool[hotkey]
     if list == nil then
@@ -108,6 +73,45 @@ end
 --=========
 -- Private
 --=========
+
+---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
+---@param is_area boolean
+---@param child AbilityDummy | nil
+---@return AbilityDummy
+function private.newDummy(target_type, is_area, child)
+    isTypeErr(target_type, 'string', 'target_type')
+    if not (target_type == 'None' or
+            target_type == 'Unit' or
+            target_type == 'Point' or
+            target_type == 'PointOrUnit') then
+        Log:err('Got wrong \"target_type\".', 2)
+    end
+    isTypeErr(is_area, 'boolean', 'is_area')
+    if child then isTypeErr(child, AbilityDummyPool, 'child') end
+
+    local id = BinaryLib.getAbilityId()
+    local order_id = BinaryLib.getOrderId()
+    local instance = BinaryAbility.new(id, private.channel_id, private.id2Str(id))
+
+    instance:setLevels(1)
+    instance:setHero(false)
+    instance:setArtCaster('')
+    instance:setArtEffect('')
+    instance:setArtSpecial('')
+    instance:setArtTarget('')
+    instance:setDisableOtherAbilities(false, 1)
+    instance:setFollowThoughTime(0, 1)
+    instance:setArtDuration(0, 1)
+    instance:setOptions(true, is_area, false, false, false, 1)
+    instance:setOrderId(order_id, 1)
+    instance:setTargeting(target_type, 1)
+    --instance:setTargetsAllowed({
+    --    TargetType.ENEMIES,
+    --    TargetType.FRIEND,
+    --    TargetType.SELF}, 1)
+
+    return instance
+end
 
 private.channel_id = string.unpack('>I4', 'ANcl')
 
@@ -145,7 +149,7 @@ end
 for j = 1, private.pool_size_per_hotkey do
     for i = 1, #private.hotkeys do
         local hotkey = private.hotkeys[i]
-        local dummy = static.new('None', false)
+        local dummy = private.newDummy('None', false)
         dummy:setHotkey(hotkey)
         dummy:setButtonPositionNormal(private.pos[hotkey].x, private.pos[hotkey].y)
         static.push(hotkey, dummy)

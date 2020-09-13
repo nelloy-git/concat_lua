@@ -2,17 +2,17 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 
 ---@type BinaryDataClass
-local BinaryData = require(lib_modname..'.Data')
+local BinaryData = require(lib_path..'Data')
 
 --=======
 -- Class
@@ -32,13 +32,13 @@ local private = {}
 --========
 
 ---@param path string
----@param child_instance BinaryFile | nil
+---@param child BinaryFile | nil
 ---@return BinaryFile
-function override.new(path, child_instance)
-    checkTypeErr(path, 'string', 'path')
-    if child_instance then checkTypeErr(child_instance, BinaryFile, 'child_instance') end
+function override.new(path, child)
+    isTypeErr(path, 'string', 'path')
+    if child then isTypeErr(child, BinaryFile, 'child') end
 
-    local instance = child_instance or Class.allocate(BinaryFile)
+    local instance = child or Class.allocate(BinaryFile)
     private.newData(instance, path)
 
     return instance
@@ -50,7 +50,7 @@ end
 
 ---@param data BinaryData
 function public:add(data)
-    checkTypeErr(data, BinaryData, 'data')
+    isTypeErr(data, BinaryData, 'data')
     table.insert(private.data[self].data, data)
 end
 

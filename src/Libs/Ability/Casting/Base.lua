@@ -3,19 +3,21 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Timer = HandleLib.Timer or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Action = UtilsLib.Action
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
-local Timer = UtilsLib.Handle.Timer
+local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityTargetClass
-local AbilityTarget = require(lib_modname..'.Target.Base')
+local AbilityTarget = require(lib_path..'.Target.Base')
 --endregion
 
 --=======
@@ -39,12 +41,12 @@ local private = {}
 
 ---@alias AbilityCastingCallback fun(abil_cd:AbilityCasting)
 
----@param child_instance AbilityCasting | nil
+---@param child AbilityCasting | nil
 ---@return AbilityCasting
-function override.new(child_instance)
-    if child_instance then checkTypeErr(child_instance, AbilityCasting, 'child_instance') end
+function override.new(child)
+    if child then isTypeErr(child, AbilityCasting, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilityCasting)
+    local instance = child or Class.allocate(AbilityCasting)
     private.newData(instance)
 
     return instance

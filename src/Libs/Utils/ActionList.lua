@@ -2,20 +2,15 @@
 -- Include
 --=========
 
---region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type ActionClass
-local Action = require(lib_modname..'.Action')
+local Action = require(lib_path..'Action') or error('')
 ---@type UtilsFunctions
-local Functions = require(lib_modname..'.Functions')
-local checkTypeErr = Functions.checkTypeErr
----@type LoggerClass
-local Logger = require(lib_modname..'.Logger')
-local Log = Logger.getDefault()
---endregion
+local Functions = require(lib_path..'Functions') or error('')
+local isTypeErr = Functions.isTypeErr or error('')
 
 --=======
 -- Class
@@ -37,12 +32,12 @@ local private = {}
 --========
 
 ---@param owner any
----@param child_instance ActionList | nil
+---@param child ActionList | nil
 ---@return ActionList
-function override.new(owner, child_instance)
-    if child_instance then checkTypeErr(child_instance, ActionList, 'child_instance') end
+function override.new(owner, child)
+    if child then isTypeErr(child, ActionList, 'child') end
 
-    local instance = child_instance or Class.allocate(ActionList)
+    local instance = child or Class.allocate(ActionList)
     private.newData(instance, owner)
 
     return instance
@@ -55,7 +50,7 @@ end
 ---@param callback Callback
 ---@return Action
 function public:add(callback)
-    checkTypeErr(callback, 'function', 'callback')
+    isTypeErr(callback, 'function', 'callback')
     local priv = private.data[self]
 
     local action = Action.new(callback, priv.owner)
@@ -67,9 +62,9 @@ end
 ---@param action Action
 ---@return boolean
 function public:remove(action)
-    local priv = private.data[self]
+    isTypeErr(action, Action, 'action')
 
-    checkTypeErr(action, Action, 'action')
+    local priv = private.data[self]
     if action:getOwner() ~= priv.owner then return false end
 
     for i = 1, #priv.actions do
@@ -93,12 +88,16 @@ function public:clear()
 end
 
 --- Run all actions.
+---@return table<Action, any>
 function public:run(...)
     local priv = private.data[self]
 
+    local res = {}
     for i = 1, #priv.actions do
-        priv.actions[i]:run(...)
+        res[priv.actions[i]] = priv.actions[i]:run(...)
     end
+
+    return res
 end
 
 --=========

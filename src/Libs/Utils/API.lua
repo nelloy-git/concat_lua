@@ -1,65 +1,29 @@
 ---@class UtilsLib
 local UtilsLibAPI = {}
-local lib_modename = Compiletime(Lib.getModname())
-Lib.start(lib_modename)
-
---===========
--- Depencies
---===========
-
-Lib.current().depencies = {
-    Class = require(LibList.ClassLib),
-}
+Lib.start('UtilsLib', {
+    Class = Lib.load(LibList.ClassLib) or error('')
+})
+local path = Lib.curPath()
 
 --=====
 -- API
 --=====
 
 ---@type ActionClass
-UtilsLibAPI.Action = require(lib_modename..'.Action')
+UtilsLibAPI.Action = require(path..'Action') or error('')
 ---@type ActionListClass
-UtilsLibAPI.ActionList = require(lib_modename..'.ActionList')
----@type DataSyncClass
-UtilsLibAPI.DataSync = require(lib_modename..'.DataSync')
-UtilsLibAPI.DataSync.Init()
+UtilsLibAPI.ActionList = require(path..'ActionList') or error('')
 ---@type UtilsFunctions
-UtilsLibAPI.Functions = require(lib_modename..'.Functions')
----@type LoggerClass
-UtilsLibAPI.Logger = require(lib_modename..'.Logger')
-UtilsLibAPI.DefaultLogger = UtilsLibAPI.Logger.getDefault()
-
---=========
--- Handles
---=========
-
-UtilsLibAPI.Handle = {}
----@type HandleClass
-UtilsLibAPI.Handle.Base = require(lib_modename..'.Handle.Handle')
-
----@type AbilityClass
-UtilsLibAPI.Handle.Ability = require(lib_modename..'.Handle.Ability')
----@type DestructableClass
-UtilsLibAPI.Handle.Destructable = require(lib_modename..'.Handle.Destructable')
----@type FrameClass
-UtilsLibAPI.Handle.Frame = require(lib_modename..'.Handle.Frame')
----@type ItemClass
-UtilsLibAPI.Handle.Item = require(lib_modename..'.Handle.Item')
----@type SmartTimerClass
-UtilsLibAPI.Handle.SmartTimer = require(lib_modename..'.Handle.SmartTimer')
----@type TextTagClass
-UtilsLibAPI.Handle.TextTag = require(lib_modename..'.Handle.TextTag')
----@type TimerClass
-UtilsLibAPI.Handle.Timer = require(lib_modename..'.Handle.Timer')
----@type TriggerClass
-UtilsLibAPI.Handle.Trigger = require(lib_modename..'.Handle.Trigger')
----@type UnitClass
-UtilsLibAPI.Handle.Unit = require(lib_modename..'.Handle.Unit')
-
---==================
--- Compiletime only
---==================
-
-local _ = Compiletime(function() UtilsLibAPI.Icon = require(lib_modename..'.Icon') end)
+local Functions = require(path..'Functions') or error('')
+UtilsLibAPI.isType = Functions.checkType or error('')
+UtilsLibAPI.isTypeErr = Functions.isTypeErr or error('')
+UtilsLibAPI.getEnum = Functions.getUniqueNumber or error('')
+---@type StringCommand
+UtilsLibAPI.StringCommand = require(path..'StringCommand') or error('')
+---@type UtilsSettings
+local Settings = require(path..'Settings') or error('')
+UtilsLibAPI.isDebug = Settings.isDebug
+UtilsLibAPI.Log = Settings.default_logger
 
 Lib.finish()
 

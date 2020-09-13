@@ -1,3 +1,14 @@
+--=========
+-- Include
+--=========
+
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
+
+--========
+-- Module
+--========
+
 ---@class BinaryUtils
 local BinaryUtils = {}
 
@@ -119,21 +130,6 @@ function BinaryUtils.float2byte(data)
     return v
 end
 
----@return string
-function  BinaryUtils.getErrorPos()
-    local str = ''
-    local i = 2
-    while debug.getinfo(i, 'ln') ~= nil do
-        local func = debug.getinfo(i, 'lnS')
-        local source_type = func.source:sub(#func.source - 3, #func.source)
-        if func.source:sub(#func.source - 3, #func.source) == '.lua' then
-            str = '  ' .. func.source .. ':' .. tostring(func.currentline) .. '\n' .. str
-        end
-        i = i + 1
-    end
-    return str
-end
-
 ---@param cur_id string
 ---@return string
 local function nextId(cur_id)
@@ -160,55 +156,60 @@ local function nextId(cur_id)
         while p3 >= 48 and p3 <= 57 do
             p3 = p3 + 1
         end
-    else 
-        print('No valid ids left.')
+    else
+        Log:err('No valid ids left.', 2)
         return nil
     end
     return string.char(p4)..string.char(p3)..string.char(p2)..string.char(p1)
 end
 
-local FourCC = function(id) return string.unpack(">I4", id) end
+---@param id string
+---@return number
+function BinaryUtils.id2int(id)
+    local res, _ = string.unpack(">I4", id)
+    return res
+end
 
 local UNIT_ID = 'x###'
----@return string
+---@return number
 function BinaryUtils.nextUnitId()
     UNIT_ID = nextId(UNIT_ID)
-    return FourCC(UNIT_ID)
+    return BinaryUtils.id2int(UNIT_ID)
 end
 
 local HERO_ID = 'HM##'
----@return string
+---@return number
 function BinaryUtils.nextHeroId()
     HERO_ID = nextId(HERO_ID)
-    return FourCC(HERO_ID)
+    return BinaryUtils.id2int(HERO_ID)
 end
 
 local ABIL_ID = 'AM##'
----@return string
+---@return number
 function BinaryUtils.nextAbilityId()
     ABIL_ID = nextId(ABIL_ID)
-    return FourCC(ABIL_ID)
+    return BinaryUtils.id2int(ABIL_ID)
 end
 
 local BUFF_ID = 'BM##'
----@return string
+---@return number
 function BinaryUtils.nextBuffId()
     BUFF_ID = nextId(BUFF_ID)
-    return FourCC(BUFF_ID)
+    return BinaryUtils.id2int(BUFF_ID)
 end
 
 local ITEM_ID = 'IM##'
----@return string
+---@return number
 function BinaryUtils.nextItemId()
     ITEM_ID = nextId(ITEM_ID)
-    return FourCC(ITEM_ID)
+    return BinaryUtils.id2int(ITEM_ID)
 end
 
 local UPGR_ID = 'RM##'
----@return string
+---@return number
 function BinaryUtils.nextUpgradeId()
     UPGR_ID = nextId(UPGR_ID)
-    return FourCC(UPGR_ID)
+    return BinaryUtils.id2int(UPGR_ID)
 end
 
 local current_pos = 0
@@ -225,11 +226,11 @@ local orders = {"absorb", "acidbomb", "acolyteharvest", "whirlwind", "ambush", "
 	            "thunderclap", "tornado", "townbelloff", "townbellon", "tranquility", "transmute", "unavatar", "unavengerform", "unbearform", "unburrow", "uncoldarrows", "uncorporealform", "undeadbuild", "undefend", "undivineshield", "unetherealform", "unflamingarrows", "unflamingattack", "unholyfrenzy", "unimmolation", "unload", "unloadall", "unloadallcorpses", "unloadallinstant", "unpoisonarrows", "unravenform", "unrobogoblin", "unroot", "unstableconcoction", "unstoneform",
 	            "unsubmerge", "unsummon", "unwindwalk", "vengeance", "vengeanceinstant",
 }
+
 function BinaryUtils.nextOrderId()
     current_pos = current_pos + 1
     if current_pos > #orders then
-        print('No empty orders for channel ability')
-        print(BinaryUtils.getErrorPos())
+        Log:err('No empty orders for channel ability', 2)
         return nil
     end
     return orders[current_pos]

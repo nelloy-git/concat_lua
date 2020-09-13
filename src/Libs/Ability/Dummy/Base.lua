@@ -3,23 +3,25 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Ability = HandleLib.Ability or error('')
+local AbilityPublic = Class.getPublic(Ability) or error('')
+local Unit = HandleLib.Unit or error('')
+local Timer = HandleLib.Timer or error('')
+local Trigger = HandleLib.Trigger or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Ability = UtilsLib.Handle.Ability
-local AbilityPublic = Class.getPublic(Ability)
-local Action = UtilsLib.Action
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
-local Unit = UtilsLib.Handle.Unit
-local Timer = UtilsLib.Handle.Timer
-local Trigger = UtilsLib.Handle.Trigger
+local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityDummyPool
-local AbilityDummyPool = require(lib_modname..'.Dummy.Pool')
+local AbilityDummyPool = require(lib_path..'.Dummy.Pool')
 --endregion
 
 --=======
@@ -43,16 +45,16 @@ local private = {}
 
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param child_instance AbilityDummy | nil
+---@param child AbilityDummy | nil
 ---@return AbilityDummy
-function override.new(owner, hotkey, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(hotkey, 'string', 'hotkey')
-    if child_instance then checkTypeErr(child_instance, AbilityDummy, 'child_instance') end
+function override.new(owner, hotkey, child)
+    isTypeErr(owner, Unit, 'owner')
+    isTypeErr(hotkey, 'string', 'hotkey')
+    if child then isTypeErr(child, AbilityDummy, 'child') end
 
     local abil_dummy_type = AbilityDummyPool.pop(hotkey)
-    local instance = child_instance or Class.allocate(AbilityDummy)
-    instance = Ability.new(owner:getHandleData(), abil_dummy_type:getId(), instance)
+    local instance = child or Class.allocate(AbilityDummy)
+    instance = Ability.new(owner:getData(), abil_dummy_type:getId(), instance)
     private.newData(instance, owner, abil_dummy_type, hotkey)
 
     return instance
@@ -78,17 +80,17 @@ function public:setTargetingType(target_type)
     if value == nil then
         Log:err('Unavailable target type.', 2)
     end
-    BlzSetAbilityIntegerLevelField(self:getHandleData(), ABILITY_ILF_TARGET_TYPE, 0, value)
+    BlzSetAbilityIntegerLevelField(self:getData(), ABILITY_ILF_TARGET_TYPE, 0, value)
 end
 
 ---@param area number
 function public:setArea(area)
-    BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_AREA_OF_EFFECT, 0, area)
+    BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_AREA_OF_EFFECT, 0, area)
 end
 
 ---@param range number
 function public:setRange(range)
-    BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_CAST_RANGE, 0, range)
+    BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_CAST_RANGE, 0, range)
 end
 
 function public:setOptions(options)
@@ -112,7 +114,7 @@ end
 
 ---@param mana_cost number
 function public:setManaCost(mana_cost)
-    BlzSetUnitAbilityManaCost(self:getOwner():getHandleData(), self:getId(), 0, mana_cost)
+    BlzSetUnitAbilityManaCost(self:getOwner():getData(), self:getId(), 0, mana_cost)
 end
 
 ---@param cooldown number
@@ -121,22 +123,22 @@ function public:setCooldownRemaining(cooldown)
     local timer = Timer.new()
     timer:start(0, false, function()
         if cooldown > 0 then
-            BlzStartUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId(), cooldown)
+            BlzStartUnitAbilityCooldown(self:getOwner():getData(), self:getId(), cooldown)
         else
-            BlzEndUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId())
+            BlzEndUnitAbilityCooldown(self:getOwner():getData(), self:getId())
         end
     end)
 end
 
 ---@return number
 function public:getCooldownRemaining()
-    return BlzGetUnitAbilityCooldownRemaining(self:getOwner():getHandleData(), self:getId())
+    return BlzGetUnitAbilityCooldownRemaining(self:getOwner():getData(), self:getId())
 end
 
 ---@param cooldown number
 function public:setCooldown(cooldown)
-    --BlzSetAbilityRealLevelField(self:getHandleData(), ABILITY_RLF_COOLDOWN, 0, cooldown)
-    BlzSetUnitAbilityCooldown(self:getOwner():getHandleData(), self:getId(), 0, cooldown)
+    --BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_COOLDOWN, 0, cooldown)
+    BlzSetUnitAbilityCooldown(self:getOwner():getData(), self:getId(), 0, cooldown)
 end
 
 function public:destroy()

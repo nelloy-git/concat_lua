@@ -3,35 +3,38 @@
 --=========
 
 --region Include
-local lib_modename = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Action = UtilsLib.Action
-local ActionList = UtilsLib.ActionList
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action or error('')
+local ActionList = UtilsLib.ActionList or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local getEnum = UtilsLib.getEnum or error('')
 
 ---@type AbilityDataTypeClass
-local AbilityDataType = require(lib_modename..'.Data.Type')
+local AbilityDataType = require(lib_path..'.Data.Type') or error('')
 ---@type AbilityDummyClass
-local AbilityDummy = require(lib_modename..'.Dummy.Base')
+local AbilityDummy = require(lib_path..'.Dummy.Base') or error('')
 ---@type AbilityCooldownChargesClass
-local AbilityCooldownCharges = require(lib_modename..'.Cooldown.Charges')
+local AbilityCooldownCharges = require(lib_path..'.Cooldown.Charges') or error('')
 ---@type AbilityCastingClass
-local AbilityCastingController = require(lib_modename..'.Casting.Controller')
+local AbilityCastingController = require(lib_path..'.Casting.Controller') or error('')
 ---@type AbilityInfoClass
-local AbilityInfo = require(lib_modename..'.Info.Base')
+local AbilityInfo = require(lib_path..'.Info.Base') or error('')
 local INFO_NAME = AbilityInfo.INFO_NAME
 
 ---@type AbilityTargetNoneClass
-local AbilityTargetNone = require(lib_modename..'.Target.None')
+local AbilityTargetNone = require(lib_path..'.Target.None') or error('')
 ---@type AbilityTargetUnitClass
-local AbilityTargetUnit = require(lib_modename..'.Target.Unit')
+local AbilityTargetUnit = require(lib_path..'.Target.Unit') or error('')
 ---@type AbilityTargetPointClass
-local AbilityTargetPoint = require(lib_modename..'.Target.Point')
+local AbilityTargetPoint = require(lib_path..'.Target.Point') or error('')
 --endregion
 
 --=======
@@ -56,15 +59,15 @@ local private = {}
 ---@param owner Unit
 ---@param abil_type AbilityDataType
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param child_instance AbilityData | nil
+---@param child AbilityData | nil
 ---@return AbilityData
-function override.new(owner, abil_type, hotkey, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(abil_type, AbilityDataType, 'abil_type')
-    checkTypeErr(hotkey, 'string', 'hotkey')
-    if child_instance then checkTypeErr(child_instance, AbilityData, 'child_instance') end
+function override.new(owner, abil_type, hotkey, child)
+    isTypeErr(owner, Unit, 'owner')
+    isTypeErr(abil_type, AbilityDataType, 'abil_type')
+    isTypeErr(hotkey, 'string', 'hotkey')
+    if child then isTypeErr(child, AbilityData, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilityData)
+    local instance = child or Class.allocate(AbilityData)
     private.newData(instance, owner, abil_type, hotkey)
 
     return instance
@@ -79,25 +82,25 @@ end
 ---@alias AbilityDataEvent string
 override.EVENT = {}
 ---@type AbilityDataEvent
-static.EVENT.AlreadyCasting = 'AlreadyCasting'
+static.EVENT.AlreadyCasting = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.NoCharges = 'NoCharges'
+static.EVENT.NoCharges = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.OutOfRange = 'OutOfRange'
+static.EVENT.OutOfRange = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.NeedsAllyTarget = 'NeedsAllyTarget'
+static.EVENT.NeedsAllyTarget = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.NeedsEnemyTarget = 'NeedsEnemyTarget'
+static.EVENT.NeedsEnemyTarget = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.CastingStart = 'CastingStart'
+static.EVENT.CastingStart = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.CastingLoop = 'CastingLoop'
+static.EVENT.CastingLoop = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.CastingCancel = 'CastingCancel'
+static.EVENT.CastingCancel = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.CastingInterrupt = 'CastingInterrupt'
+static.EVENT.CastingInterrupt = getEnum()
 ---@type AbilityDataEvent
-static.EVENT.CastingFinish = 'CastingFinish'
+static.EVENT.CastingFinish = getEnum()
 
 ---@param event AbilityDataEvent
 ---@param callback AbilityDataEventCallback
@@ -173,7 +176,7 @@ function public:use(target)
     if Class.type(target, AbilityTargetUnit) then
         local target_unit = target:getUnit()
         local allowed = priv.abil_info:get(INFO_NAME.TargetsAllowed)
-        print(allowed)
+        --print(allowed)
         if allowed == 'friend' and priv.owner:isEnemy(target_unit) then
             priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
             private.event_actions[EVENT.NeedsAllyTarget]:run(EVENT.NeedsAllyTarget, self)
@@ -229,6 +232,11 @@ function public:finish()
         private.event_actions[static.EVENT.CastingFinish]:run(static.EVENT.CastingFinish, self)
         priv.target = nil
     end
+end
+
+function public:destroy()
+    local priv = private.data[self]
+    priv.abil_dummy:destroy()
 end
 
 --=========

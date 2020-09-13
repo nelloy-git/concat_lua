@@ -2,14 +2,14 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
@@ -29,21 +29,22 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_instance FdfFile | nil
+---@param child FdfFile | nil
 ---@return FdfFile
-function override.new(name, child_instance)
-    checkTypeErr(name, 'string', 'name')
-    if child_instance then checkTypeErr(child_instance, FdfFile, 'child_instance') end
+function override.new(name, child)
+    isTypeErr(name, 'string', 'name')
+    if child then isTypeErr(child, FdfFile, 'child') end
 
-    local instance = child_instance or Class.allocate(FdfFile)
+    local instance = child or Class.allocate(FdfFile)
     private.newData(instance, name)
 
     return instance
 end
 
----@param static_filename string
-function static.init(static_filename)
-    private.static_file = static.new(static_filename)
+---@param filename string
+---@return FdfFile
+function static.init(filename)
+    local file = static.new(filename)
 
     if IsCompiletime() then
         -- Clear previous files
@@ -57,16 +58,14 @@ function static.init(static_filename)
             end
         end
 
-        CompileFinal(function() private.static_file:save() end)
+        CompileFinal(function() file:save() end)
     else
-        if not BlzLoadTOCFile(private.dst_path..static_filename..'.toc') then
-            Log:err('Can not load '..private.dst_path..static_filename..'.toc')
+        if not BlzLoadTOCFile(private.dst_path..filename..'.toc') then
+            Log:err('Can not load '..private.dst_path..filename..'.toc')
         end
     end
-end
 
-function static.getDefault()
-    return private.static_file
+    return file
 end
 
 --========
@@ -91,7 +90,7 @@ function public:save()
 
     local priv = private.data[self]
 
-    local log_msg = 'Created new FdfFile \''..priv.name..'\' containg:\n'
+    local log_msg = 'Created new FdfFile \''..priv.name..'\' containing:\n'
     local text = ''
     for frame, _ in pairs(priv.frames) do
         log_msg = log_msg..'    '..frame:getName()..'\n'

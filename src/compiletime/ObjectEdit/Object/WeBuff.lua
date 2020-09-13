@@ -34,10 +34,10 @@ local private = {}
 ---@param id string | number
 ---@param base_id string | number
 ---@param name string
----@param child_instance WeBuff | nil
+---@param child WeBuff | nil
 ---@return WeBuff
-function override.new(id, base_id, name, child_instance)
-    local instance = child_instance or Class.allocate(WeBuff)
+function override.new(id, base_id, name, child)
+    local instance = child or Class.allocate(WeBuff)
     instance = WeObject.new(id, base_id, name, instance)
 
     if not private.we_file then

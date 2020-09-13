@@ -3,17 +3,17 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_depss
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_deplsLib
+local isTypeErr = UtilsLib.isTypeErr
 local Unit = UtilsLib.Handle.Unit
 
 ---@type BuffClass
-local Buff = require(lib_modname..'.Buff')
+local Buff = require(lib_path..'.Buff')
 --endregion
 
 --=======
@@ -34,15 +34,15 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param child_instance BuffsContainer | nil
+---@param child BuffsContainer | nil
 ---@return BuffsContainer
-function static.new(owner, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    if child_instance then
-        checkTypeErr(child_instance, BuffsContainer, 'child_instance')
+function static.new(owner, child)
+    isTypeErr(owner, Unit, 'owner')
+    if child then
+        isTypeErr(child, BuffsContainer, 'child')
     end
 
-    local instance = child_instance or Class.allocate(BuffsContainer)
+    local instance = child or Class.allocate(BuffsContainer)
     private.newData(instance, owner)
 
     return instance

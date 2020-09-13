@@ -3,20 +3,22 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Timer = HandleLib.Timer or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Action = UtilsLib.Action
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
-local Unit = UtilsLib.Handle.Unit
-local Timer = UtilsLib.Handle.Timer
+local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityInfoTypeClass
-local AbilityInfoType = require(lib_modname..'.Info.Type')
+local AbilityInfoType = require(lib_path..'.Info.Type')
 --endregion
 
 --=======
@@ -40,14 +42,14 @@ local private = {}
 
 ---@param owner Unit
 ---@param abil_info_type AbilityInfoType
----@param child_instance AbilityInfo | nil
+---@param child AbilityInfo | nil
 ---@return AbilityInfo
-function override.new(owner, abil_info_type, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(abil_info_type, AbilityInfoType, 'abil_info_type')
-    if child_instance then checkTypeErr(child_instance, AbilityInfo, 'child_instance') end
+function override.new(owner, abil_info_type, child)
+    isTypeErr(owner, Unit, 'owner')
+    isTypeErr(abil_info_type, AbilityInfoType, 'abil_info_type')
+    if child then isTypeErr(child, AbilityInfo, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilityInfo)
+    local instance = child or Class.allocate(AbilityInfo)
     private.newData(instance, abil_info_type, owner)
 
     return instance

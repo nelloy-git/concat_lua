@@ -1,6 +1,6 @@
-local modname = Lib.current().modname
+local lib_path = Lib.curPath()
 
-local ClassParent = require(modname..'.Parent')
+local ClassParent = require(lib_path..'Parent')
 
 ---@class ClassStatic
 local ClassStatic = {}

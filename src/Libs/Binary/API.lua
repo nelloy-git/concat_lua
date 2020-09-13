@@ -1,30 +1,24 @@
 ---@class BinaryLib
 local BinaryLibAPI = {}
-local libmodename = Compiletime(Lib.getModname())
-Lib.start(libmodename)
-
---===========
--- Depencies
---===========
-
-Lib.current().depencies = {
-    Class = require(LibList.ClassLib),
-    UtilsLib = require(LibList.UtilsLib)
-}
+Lib.start('BinaryLib', {
+    Class = Lib.load(LibList.ClassLib),
+    UtilsLib = Lib.load(LibList.UtilsLib),
+})
+local path = Lib.curPath()
 
 --=====
 -- API
 --=====
 
 ---@type BinaryUtils
-local Utils = require(libmodename..'.Utils')
+local Utils = require(path..'Utils')
 
----@type BinaryDataUnitClass
-BinaryLibAPI.Unit = require(libmodename..'.Unit')
+---@type BinaryUnitClass
+BinaryLibAPI.Unit = require(path..'Unit')
 BinaryLibAPI.getUnitId = Utils.nextUnitId
 BinaryLibAPI.getHeroId = Utils.nextHeroId
 ---@type BinaryAbilityClass
-BinaryLibAPI.Ability = require(libmodename..'.Ability')
+BinaryLibAPI.Ability = require(path..'Ability')
 BinaryLibAPI.getAbilityId = Utils.nextAbilityId
 BinaryLibAPI.getOrderId = Utils.nextOrderId
 

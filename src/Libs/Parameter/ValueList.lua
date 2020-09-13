@@ -3,20 +3,20 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_dep.UtilsLib
+local isTypeErr = UtilsLib.isTypeErr
 
 ---@type ParameterClass
-local Parameter = require(lib_modname..'.Parameter')
+local Parameter = require(lib_path..'.Parameter')
 ---@type ParameterDefines
-local Defines = require(lib_modname..'.Defines')
+local Defines = require(lib_path..'.Defines')
 ---@type ParameterValueClass
-local Value = require(lib_modname..'.Value')
+local Value = require(lib_path..'.Value')
 --endregion
 
 --=======
@@ -39,12 +39,12 @@ local private = {}
 --========
 
 ---@return ParameterValueList
-function override.new(child_instance)
-    if child_instance then
-        checkTypeErr(child_instance, ParameterValueList, 'child_instance')
+function override.new(child)
+    if child then
+        isTypeErr(child, ParameterValueList, 'child')
     end
 
-    local instance = child_instance or Class.allocate(ParameterValueList)
+    local instance = child or Class.allocate(ParameterValueList)
     private.newData(instance)
 
     return instance

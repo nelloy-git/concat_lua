@@ -2,32 +2,32 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_deplass
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
+local UtilsLib = lib_deptilsLib
 local Action = UtilsLib.Handle.Action
 local checkType = UtilsLib.Functions.checkType
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local isTypeErr = UtilsLib.isTypeErr
+local Log = UtilsLib.Log
 local Trigger = UtilsLib.Handle.Trigger
 
 ---@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_modname..'.Normal.Base')
+local FrameNormalBase = require(lib_path..'.Normal.Base')
 local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
 ---@type FrameNormalImageClass
-local FrameNormalImage = require(lib_modname..'.Normal.Image')
+local FrameNormalImage = require(lib_path..'.Normal.Image')
 
 ---@type FdfNormalBackdropClass
-local FdfNormalBackdrop = require(lib_modname..'.Fdf.Frame.NormalBackdrop')
+local FdfNormalBackdrop = require(lib_path..'.Fdf.Frame.NormalBackdrop')
 ---@type FdfNormalHighlightClass
-local FdfNormalHighlight = require(lib_modname..'.Fdf.Frame.NormalHighlight')
+local FdfNormalHighlight = require(lib_path..'.Fdf.Frame.NormalHighlight')
 ---@type FdfNormalGlueTextButtonClass
-local FdfNormalGlueTextButton = require(lib_modname..'.Fdf.Frame.NormalButton')
+local FdfNormalGlueTextButton = require(lib_path..'.Fdf.Frame.NormalButton')
 ---@type FdfNormalTextClass
-local FdfNormalText = require(lib_modname..'.Fdf.Frame.NormalText')
+local FdfNormalText = require(lib_path..'.Fdf.Frame.NormalText')
 
 --=======
 -- Class
@@ -49,15 +49,15 @@ local private = {}
 ---@alias FrameNormalButtonCallback fun(frame:FrameNormalButton, player:player, event:frameeventtype)
 
 ---@param fdf_or_handle FdfNormalGlueTextButton | framehandle
----@param child_instance FrameNormalButton | nil
+---@param child FrameNormalButton | nil
 ---@return FrameNormalButton
-function override.new(fdf_or_handle, child_instance)
+function override.new(fdf_or_handle, child)
     if not (checkType(fdf_or_handle, 'framehandle') or checkType(fdf_or_handle, FdfNormalGlueTextButton)) then
         Log:err('variable \'fdf_frame\'('..tostring(fdf_or_handle)..') is not of type framehandle or '..tostring(FdfNormalGlueTextButton), 2)
     end
-    if child_instance then checkTypeErr(child_instance, FrameNormalBase, 'child_instance') end
+    if child then isTypeErr(child, FrameNormalBase, 'child') end
 
-    local instance = child_instance or Class.allocate(FrameNormalButton)
+    local instance = child or Class.allocate(FrameNormalButton)
     instance = FrameNormalBase.new(fdf_or_handle, instance)
     private.newData(instance)
 
@@ -84,7 +84,7 @@ end
 ---@param action Action
 ---@return boolean
 function public:removeAction(action)
-    checkTypeErr(action, Action, 'action')
+    isTypeErr(action, Action, 'action')
 
     local priv = private.data[self]
 
@@ -132,7 +132,7 @@ function private.newData(self)
     priv.trigger:addAction(private.runActions)
     for event, _ in pairs(private.available_events) do
         priv.actions[event] = {}
-        priv.trigger:addFrameEvent(self:getHandleData(), event)
+        priv.trigger:addFrameEvent(self:getData(), event)
     end
 end
 

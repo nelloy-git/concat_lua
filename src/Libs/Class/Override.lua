@@ -1,6 +1,6 @@
-local modname = Lib.current().modname
+local lib_path = Lib.curPath()
 
-local ClassStatic = require(modname..'.Static')
+local ClassStatic = require(lib_path..'Static')
 
 ---@class ClassOverride
 local ClassOverride = {}

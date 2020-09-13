@@ -3,15 +3,15 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
+local UtilsLib = lib_deplsLib
 local TextTag = UtilsLib.Handle.TextTag
 
 ---@type DamageDefines
-local Defines = require(lib_modname..'.Defines')
+local Defines = require(lib_path..'.Defines')
 local DamageType = Defines.DamageType
 --endregion
 
@@ -42,9 +42,11 @@ DamageShowText.Height[DamageType.ChaosSpell] = 80
 DamageShowText.DamageEvent = function(dmg, dmg_type, target, damager)
     if dmg < 1 then return dmg end
 
+    local idmg, _ = math.modf(dmg)
+    local sdmg = tostring(idmg)
     local color = DamageShowText.Colors[dmg_type]
     local height = DamageShowText.Height[dmg_type]
-    TextTag.newTimedForUnit(dmg, 0.0023 * 10,
+    TextTag.newTimedForUnit(sdmg, 0.0023 * 10,
                             color.red, color.green, color.blue, color.alpha,
                             target, height,
                             0.03, 0.03, 1)

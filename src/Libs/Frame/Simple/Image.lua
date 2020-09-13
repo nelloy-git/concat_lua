@@ -2,33 +2,37 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Frame = HandleLib.Frame
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+
+---@type FrameUtils
+local FrameUtils = require(lib_path..'Utils') or error('')
+local newFrame = FrameUtils.newFrameFromFdf or error('')
 
 ---@type FdfSimpleFrameClass
-local FdfSimpleFrame = require(lib_modname..'.Fdf.Frame.SimpleFrame')
----@type FdfSimpleTextureClass
-local FdfSimpleTexture = require(lib_modname..'.Fdf.Frame.SimpleTexture')
+local FdfSimpleFrame = require(lib_path..'Fdf.Simple.Frame') or error('')
+---@type FdfTextureClass
+local FdfSimpleTexture = require(lib_path..'Fdf.Simple.Texture') or error('')
 
----@type FrameSimpleBaseClass
-local FrameSimpleBase = require(lib_modname..'.Simple.Base')
 ---@type FrameSimpleTextureClass
-local FrameSimpleTexture = require(lib_modname..'.Simple.Texture')
+local FrameSimpleTexture = require(lib_path..'Simple.Texture') or error('')
 
 --=======
 -- Class
 --=======
 
-local FrameSimpleImage = Class.new('FrameSimpleImage', FrameSimpleBase)
----@class FrameSimpleImage : FrameSimpleBase
+local FrameSimpleImage = Class.new('FrameSimpleImage', Frame)
+---@class FrameSimpleImage : Frame
 local public = FrameSimpleImage.public
----@class FrameSimpleImageClass : FrameSimpleBaseClass
+---@class FrameSimpleImageClass : FrameClass
 local static = FrameSimpleImage.static
 ---@type FrameSimpleImageClass
 local override = FrameSimpleImage.override
@@ -38,18 +42,15 @@ local private = {}
 -- Static
 --=========
 
----@param handle framehandle
----@param child_instance FrameSimpleImage | nil
+---@param child FrameSimpleImage | nil
 ---@return FrameSimpleImage
-function override.new(handle, child_instance)
-    if handle then checkTypeErr(handle, 'framehandle', 'handle') end
-    if child_instance then checkTypeErr(child_instance, FrameSimpleImage, 'child_instance') end
+function override.new(child)
+    if child then isTypeErr(child, FrameSimpleImage, 'child') end
 
-    local instance = child_instance or Class.allocate(FrameSimpleImage)
-    instance = FrameSimpleBase.new(private.fdf, instance)
+    local instance = child or Class.allocate(FrameSimpleImage)
+    instance = newFrame(private.fdf, instance)
 
-    --- convert FrameBase -> FrameSimpleTexture
-    instance:setSubframeClass(private.fdf_texture_name, FrameSimpleTexture)
+    private.newData(instance)
 
     return instance
 end
@@ -61,22 +62,29 @@ end
 ---@param tex_file string
 ---@param flag number
 ---@param blend boolean
-function public:setFile(tex_file, flag, blend)
-    self:getSubframe(private.fdf_texture_name):setFile(tex_file, flag, blend)
+function public:setTexture(tex_file, flag, blend)
+    private.data[self].texture:setTexture(tex_file, flag, blend)
 end
 
 --=========
 -- Private
 --=========
 
-private.fdf_name = 'FrameSimpleImage'
-private.fdf_texture_name = 'FrameSimpleImageTexture'
+private.data = setmetatable({}, {__mode = 'k'})
 
-private.fdf = FdfSimpleFrame.new(private.fdf_name)
+private.fdf = FdfSimpleFrame.new('FrameSimpleImage')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
-    local fdf_texture = FdfSimpleTexture.new(private.fdf_texture_name)
+    local fdf_texture = FdfSimpleTexture.new('FrameSimpleImageTexture')
     fdf_texture:setFile("ReplaceableTextures\\\\CommandButtons\\\\BTNAcidBomb.blp")
 private.fdf:addSubframe(fdf_texture)
+
+---@param self FrameSimpleImage
+function private.newData(self)
+    local priv = {
+        texture = FrameSimpleTexture.new(BlzGetFrameByName('FrameSimpleImageTexture', 0)),
+    }
+    private.data[self] = priv
+end
 
 return static

@@ -3,20 +3,22 @@
 --=========
 
 --region Include
-local lib_modename = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local ActionList = UtilsLib.ActionList
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityDataClass
-local AbilityData = require(lib_modename..'.Data.Base')
+local AbilityData = require(lib_path..'.Data.Base')
 ---@type AbilityDataTypeClass
-local AbilityDataType = require(lib_modename..'.Data.Type')
+local AbilityDataType = require(lib_path..'.Data.Type')
 --endregion
 
 --=======
@@ -37,13 +39,13 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param child_instance AbilitiesContainer | nil
+---@param child AbilitiesContainer | nil
 ---@return AbilitiesContainer
-function override.new(owner, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    if child_instance then checkTypeErr(child_instance, AbilitiesContainer, 'child_instance') end
+function override.new(owner, child)
+    isTypeErr(owner, Unit, 'owner')
+    if child then isTypeErr(child, AbilitiesContainer, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilitiesContainer)
+    local instance = child or Class.allocate(AbilitiesContainer)
     private.newData(instance, owner)
 
     return instance
@@ -64,18 +66,16 @@ end
 
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param abil_type AbilityDataType | nil
----@return AbilityData | nil
 function public:set(hotkey, abil_type)
-    checkTypeErr(hotkey, 'string', 'hotkey')
-    if abil_type then checkTypeErr(abil_type, AbilityDataType, 'abil_type') end
+    isTypeErr(hotkey, 'string', 'hotkey')
+    if abil_type then isTypeErr(abil_type, AbilityDataType, 'abil_type') end
 
     local priv = private.data[self]
 
     local data = AbilityData.new(priv.owner, abil_type, hotkey)
     local prev = priv.abil_data_list[hotkey]
+    if prev then prev:destroy() end
     priv.abil_data_list[hotkey] = data
-
-    return prev
 end
 
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
@@ -89,7 +89,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.owners = setmetatable({}, {__mode = 'kv'})
+private.owners = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilitiesContainer
 ---@param owner Unit

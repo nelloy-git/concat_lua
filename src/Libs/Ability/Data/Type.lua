@@ -3,21 +3,21 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityCastingType
-local AbilityCastingType = require(lib_modname..'.Casting.Type')
+local AbilityCastingType = require(lib_path..'.Casting.Type') or error('')
 ---@type AbilityInfoTypeClass
-local AbilityInfoType = require(lib_modname..'.Info.Type')
+local AbilityInfoType = require(lib_path..'.Info.Type') or error('')
 ---@type AbilityCooldownTypeClass
-local AbilityCooldownType = require(lib_modname..'.Cooldown.Type')
+local AbilityCooldownType = require(lib_path..'.Cooldown.Type') or error('')
 --endregion
 
 --=======
@@ -43,17 +43,17 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param child_instance AbilityDataType | nil
+---@param child AbilityDataType | nil
 ---@return AbilityDataType
-function override.new(name, child_instance)
-    checkTypeErr(name, 'string', 'id')
-    if child_instance then checkTypeErr(child_instance, AbilityDataType, 'child_instance') end
+function override.new(name, child)
+    isTypeErr(name, 'string', 'id')
+    if child then isTypeErr(child, AbilityDataType, 'child') end
 
     if private.instances[name] then
         Log:err(tostring(AbilityDataType)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child_instance or Class.allocate(AbilityDataType)
+    local instance = child or Class.allocate(AbilityDataType)
     instance = AbilityCooldownType.new(name, instance)
     instance = AbilityInfoType.new(name, instance)
     instance = AbilityCastingType.new(name, instance)

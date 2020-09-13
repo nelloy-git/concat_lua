@@ -3,18 +3,18 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_depss
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
+local UtilsLib = lib_deplsLib
+local isTypeErr = UtilsLib.isTypeErr
 local Timer = UtilsLib.Handle.Timer
 local Unit = UtilsLib.Handle.Unit
 
 ---@type BuffTypeClass
-local BuffType = require(lib_modname..'.Type')
+local BuffType = require(lib_path..'.Type')
 --endregion
 
 --=======
@@ -39,17 +39,15 @@ local private = {}
 ---@param source Unit
 ---@param target Unit
 ---@param buff_type BuffType
----@param child_instance Buff | nil
+---@param child Buff | nil
 ---@return Buff
-function override.new(source, target, buff_type, child_instance)
-    checkTypeErr(source, Unit, 'source')
-    checkTypeErr(target, Unit, 'target')
-    checkTypeErr(buff_type, BuffType, 'buff_type')
-    if child_instance then
-        checkTypeErr(child_instance, Buff, 'child_instance')
-    end
+function override.new(source, target, buff_type, child)
+    isTypeErr(source, Unit, 'source')
+    isTypeErr(target, Unit, 'target')
+    isTypeErr(buff_type, BuffType, 'buff_type')
+    if child then isTypeErr(child, Buff, 'child') end
 
-    local instance = child_instance or Class.allocate(Buff)
+    local instance = child or Class.allocate(Buff)
     private.newData(instance, source, target, buff_type)
 
     if buff_type:checkConditions() then

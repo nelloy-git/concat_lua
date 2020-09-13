@@ -1282,6 +1282,8 @@ ORIGIN_FRAME_CHAT_MSG                = ConvertOriginFrameType(13) ---@type origi
 ORIGIN_FRAME_UNIT_MSG                = ConvertOriginFrameType(14) ---@type originframetype
 ORIGIN_FRAME_TOP_MSG                 = ConvertOriginFrameType(15) ---@type originframetype
 ORIGIN_FRAME_PORTRAIT                = ConvertOriginFrameType(16) ---@type originframetype
+ORIGIN_FRAME_PORTRAIT_HP_TEXT        = ConvertOriginFrameType(18) ---@type originframetype
+ORIGIN_FRAME_PORTRAIT_MANA_TEXT      = ConvertOriginFrameType(19) ---@type originframetype
 ORIGIN_FRAME_WORLD_FRAME             = ConvertOriginFrameType(17) ---@type originframetype
 
 FRAMEPOINT_TOPLEFT                   = ConvertFramePointType(0) ---@type framepointtype

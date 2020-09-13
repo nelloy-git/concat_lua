@@ -100,9 +100,15 @@ local function replaceCompiletime()
     for i = 1, #replace_compiletime.path do
         local path = replace_compiletime.path[i]
         local original = replace_compiletime.original[i]:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
-        local result = Utils.toString(replace_compiletime.result[i])
 
-        runtime_packages[path] = string.gsub(runtime_packages[path], original, result, 1)
+        local success, result = pcall( Utils.toString, replace_compiletime.result[i])
+        if success then
+            runtime_packages[path] = string.gsub(runtime_packages[path], original, result, 1)
+        else
+            print(result)
+            print(path)
+            print(original)
+        end
     end
 end
 
@@ -164,6 +170,7 @@ function require(package_name)
         error('recursive require detected.', 2)
     end
 
+    package_name = package_name:gsub('[.]+', '.')
     local path = name2path(package_name)
     local log_path
     local packages_list

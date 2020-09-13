@@ -11,7 +11,7 @@ FdfEdit.Backdrop = require('compiletime.FdfEdit.Objects.FdfBackdrop')
 FdfEdit.Highlight = require('compiletime.FdfEdit.Objects.FdfHighlight')
 ----@type FdfButtonClass
 FdfEdit.GlueButton = require('compiletime.FdfEdit.Objects.FdfGlueButton')
----@type FdfSimpleFrameClass
+---@type FdfFrameClass
 FdfEdit.SimpleFrame = require('compiletime.FdfEdit.Objects.FdfSimpleFrame')
 ---@type FdfSimpleButtonClass
 FdfEdit.SimpleButton = require('compiletime.FdfEdit.Objects.FdfSimpleButton')
@@ -23,7 +23,7 @@ FdfEdit.Text = require('compiletime.FdfEdit.Objects.FdfText')
 -- Subobjects
 ---@type FdfSimpleStringClass
 FdfEdit.SimpleString = require('compiletime.FdfEdit.Subobjects.FdfSimpleString')
----@type FdfSimpleTextureClass
+---@type FdfTextureClass
 FdfEdit.SimpleTexture = require('compiletime.FdfEdit.Subobjects.FdfSimpleTexture')
 ---@type FdfSimpleLayerClass
 FdfEdit.SimpleLayer = require('compiletime.FdfEdit.Subobjects.FdfSimpleLayer')

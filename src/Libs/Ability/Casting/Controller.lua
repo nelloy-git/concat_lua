@@ -3,21 +3,23 @@
 --=========
 
 --region Include
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local Action = UtilsLib.Action
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityCastingClass
-local AbilityCasting = require(lib_modname..'.Casting.Base')
+local AbilityCasting = require(lib_path..'Casting.Base') or error('')
 ---@type AbilityCastingTypeClass
-local AbilityCastingType = require(lib_modname..'.Casting.Type')
+local AbilityCastingType = require(lib_path..'Casting.Type') or error('')
 --endregion
 
 --=======
@@ -43,14 +45,14 @@ local private = {}
 
 ---@param owner Unit
 ---@param abil_casting_type AbilityCastingType
----@param child_instance AbilityCastingController | nil
+---@param child AbilityCastingController | nil
 ---@return AbilityCastingController
-function override.new(owner, abil_casting_type, child_instance)
-    checkTypeErr(owner, Unit, 'owner')
-    checkTypeErr(abil_casting_type, AbilityCastingType, 'abil_casting_type')
-    if child_instance then checkTypeErr(child_instance, AbilityCastingController, 'child_instance') end
+function override.new(owner, abil_casting_type, child)
+    isTypeErr(owner, Unit, 'owner')
+    isTypeErr(abil_casting_type, AbilityCastingType, 'abil_casting_type')
+    if child then isTypeErr(child, AbilityCastingController, 'child') end
 
-    local instance = child_instance or Class.allocate(AbilityCastingController)
+    local instance = child or Class.allocate(AbilityCastingController)
     private.newData(instance, abil_casting_type, owner)
 
     return instance

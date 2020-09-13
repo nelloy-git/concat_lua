@@ -2,17 +2,19 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityTarget
-local AbilityTarget = require(lib_modname..'.Target.Base')
+local AbilityTarget = require(lib_path..'Target.Base') or error('')
 
 --=======
 -- Class
@@ -32,15 +34,15 @@ local private = {}
 --=========
 
 ---@param unit Unit
----@param child_instance AbilityTargetUnit | nil
+---@param child AbilityTargetUnit | nil
 ---@return AbilityTargetUnit
-function override.new(unit, child_instance)
-    checkTypeErr(unit, Unit, 'unit')
-    if child_instance then
-        checkTypeErr(child_instance, AbilityTargetUnit, 'child_instance')
+function override.new(unit, child)
+    isTypeErr(unit, Unit, 'unit')
+    if child then
+        isTypeErr(child, AbilityTargetUnit, 'child')
     end
 
-    local instance = child_instance or Class.allocate(AbilityTargetUnit)
+    local instance = child or Class.allocate(AbilityTargetUnit)
     instance = AbilityTarget.new(instance)
     private.newData(instance, unit)
 

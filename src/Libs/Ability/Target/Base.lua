@@ -2,14 +2,14 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
-local Class = depencies.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = depencies.UtilsLib
-local checkTypeErr = UtilsLib.Functions.checkTypeErr
-local Log = UtilsLib.DefaultLogger
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
@@ -28,15 +28,18 @@ local private = {}
 -- Static
 --=========
 
----@param child_instance AbilityTarget
+---@param child AbilityTarget
 ---@return AbilityTarget
-function override.new(child_instance)
-    if child_instance then
-        checkTypeErr(child_instance, AbilityTarget, 'child_instance')
+function override.new(child)
+    if child then
+        isTypeErr(child, AbilityTarget, 'child')
     else
         Log:err('Can not create instance of abstract class.', 2)
     end
-    return child_instance
+
+    private.instances[child] = true
+
+    return child
 end
 
 --========
@@ -64,5 +67,20 @@ end
 --=========
 -- Private
 --=========
+
+private.instances = setmetatable({}, {__mode = 'k'})
+
+CompileFinal(function()
+    for instance, name in pairs(private.instances) do
+        for field, value in pairs(public) do
+            local func = private.virtual_functions[field]
+            if func ~= nil then
+                if value == instance[field] then
+                    Log:err(name..': virtual function \"'..field..'\" must be overriden.', 1)
+                end
+            end
+        end
+    end
+end)
 
 return static

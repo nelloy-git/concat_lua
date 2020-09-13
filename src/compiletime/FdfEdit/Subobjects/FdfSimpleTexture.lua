@@ -16,9 +16,9 @@ local FdfField = require('compiletime.FdfEdit.FdfField')
 local FdfSimpleTexture = Class.new('FdfSimpleTexture', FdfSubobject)
 ---@class FdfSimpleTexture : FdfSubobject
 local public = FdfSimpleTexture.public
----@class FdfSimpleTextureClass : FdfSubobjectClass
+---@class FdfTextureClass : FdfSubobjectClass
 local static = FdfSimpleTexture.static
----@type FdfSimpleTextureClass
+---@type FdfTextureClass
 local override = FdfSimpleTexture.override
 local private = {}
 
@@ -27,10 +27,10 @@ local private = {}
 --=========
 
 ---@param name string
----@param child_instance FdfSimpleTexture | nil
+---@param child FdfSimpleTexture | nil
 ---@return FdfSimpleTexture
-function override.new(name, child_instance)
-    local instance = child_instance or Class.allocate(FdfSimpleTexture)
+function override.new(name, child)
+    local instance = child or Class.allocate(FdfSimpleTexture)
     instance = FdfSubobject.new(name, 'Texture', instance)
 
     return instance

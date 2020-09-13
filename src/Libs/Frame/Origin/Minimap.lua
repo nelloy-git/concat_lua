@@ -2,11 +2,11 @@
 -- Include
 --=========
 
-local lib_modname = Lib.current().modname
-local depencies = Lib.current().depencies
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
 
 ---@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_modname..'.Normal.Base')
+local FrameNormalBase = require(lib_path..'.Normal.Base')
 
 --========
 -- Module
@@ -18,7 +18,7 @@ end
 
 local handle = BlzGetFrameByName("MiniMapFrame", 0)
 BlzFrameClearAllPoints(handle)
----@class Minimap
+---@class FrameOriginMinimap
 local Minimap = FrameNormalBase.new(handle)
 Minimap:setParent(nil)
 
