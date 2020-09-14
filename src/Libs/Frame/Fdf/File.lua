@@ -10,6 +10,7 @@ local Class = lib_dep.Class or error('')
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
+local pairsByKeys = UtilsLib.pairsByKeys or error('')
 
 --=======
 -- Class
@@ -72,12 +73,12 @@ end
 -- Public
 --========
 
----@param fdf_frame FdfFrame
+---@param fdf_frame FdfBase
 function public:add(fdf_frame)
     private.data[self].frames[fdf_frame] = true
 end
 
----@param fdf_frame FdfFrame
+---@param fdf_frame FdfBase
 function public:remove(fdf_frame)
     private.data[self].frames[fdf_frame] = nil
 end
@@ -92,7 +93,8 @@ function public:save()
 
     local log_msg = 'Created new FdfFile \''..priv.name..'\' containing:\n'
     local text = ''
-    for frame, _ in pairs(priv.frames) do
+    local sort_func = function(k1, k2) return k1:getName() < k2:getName() end
+    for frame, _ in pairsByKeys(priv.frames, sort_func) do
         log_msg = log_msg..'    '..frame:getName()..'\n'
         text = text..frame:serialize()..'\n'
     end

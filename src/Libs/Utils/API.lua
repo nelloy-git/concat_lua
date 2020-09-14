@@ -18,6 +18,7 @@ local Functions = require(path..'Functions') or error('')
 UtilsLibAPI.isType = Functions.checkType or error('')
 UtilsLibAPI.isTypeErr = Functions.isTypeErr or error('')
 UtilsLibAPI.getEnum = Functions.getUniqueNumber or error('')
+UtilsLibAPI.pairsByKeys = Functions.pairsByKeys or error('')
 ---@type StringCommand
 UtilsLibAPI.StringCommand = require(path..'StringCommand') or error('')
 ---@type UtilsSettings

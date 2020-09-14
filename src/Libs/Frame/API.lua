@@ -3,7 +3,7 @@ local FrameLib = {}
 Lib.start('FrameLib', {
     Class = Lib.load(LibList.ClassLib) or error(''),
     Handle = Lib.load(LibList.HandleLib) or error(''),
-    Type = Lib.load(LibList.TypesLib) or error(''),
+    Types = Lib.load(LibList.TypesLib) or error(''),
     Utils = Lib.load(LibList.UtilsLib) or error(''),
 })
 local path = Lib.curPath()
@@ -19,23 +19,11 @@ end
 -- API
 --=====
 
---============
--- Categories
---============
+--========
+-- Screen
+--========
 
-
---FrameLib.Fdf.Normal = {}
-
-FrameLib.Frame = {}
-FrameLib.Frame.Simple = {}
-FrameLib.Frame.Normal = {}
-
-FrameLib.Screen = {}
-
--- Runtime only.
-if not IsCompiletime() then
-    FrameLib.Origin = {}
-end
+FrameLib.Screen = require(path..'Screen') or error('')
 
 ----------------
 -- FdfGenerator
@@ -64,13 +52,13 @@ FrameLib.Fdf.Simple.Texture = require(path..'Fdf.Simple.Texture') or error('')
 
 FrameLib.Fdf.Normal = {}
 ---@type FdfBackdropClass
-FrameLib.Fdf.Normal.Backdrop = require(path..'Fdf.Normal.Backdrop')
+FrameLib.Fdf.Normal.Backdrop = require(path..'Fdf.Normal.Backdrop') or error('')
 ---@type FdfGlueTextButtonClass
-FrameLib.Fdf.Normal.GlueTextButton = require(path..'Fdf.Normal.GlueTextButton')
+FrameLib.Fdf.Normal.GlueTextButton = require(path..'Fdf.Normal.GlueTextButton') or error('')
 ---@type FdfHighlightClass
-FrameLib.Fdf.Normal.Highlight = require(path..'Fdf.Normal.Highlight')
+FrameLib.Fdf.Normal.Highlight = require(path..'Fdf.Normal.Highlight') or error('')
 ---@type FdfTextClass
-FrameLib.Fdf.Normal.Text = require(path..'Fdf.Normal.Text')
+FrameLib.Fdf.Normal.Text = require(path..'Fdf.Normal.Text') or error('')
 
 ----------
 -- Frames
@@ -80,79 +68,45 @@ FrameLib.Fdf.Normal.Text = require(path..'Fdf.Normal.Text')
 
 FrameLib.Simple = {}
 ---@type FrameSimpleImageClass
-FrameLib.Simple.Image = require(path..'Simple.Image')
+FrameLib.Simple.Image = require(path..'Simple.Image') or error('')
 ---@type FrameSimpleStatusBarClass
-FrameLib.Simple.StatusBar = require(path..'Simple.StatusBar')
+FrameLib.Simple.StatusBar = require(path..'Simple.StatusBar') or error('')
 ---@type FrameSimpleStringClass
-FrameLib.Simple.String = require(path..'Simple.String')
+FrameLib.Simple.String = require(path..'Simple.String') or error('')
 ---@type FrameSimpleTextClass
-FrameLib.Simple.Text = require(path..'Simple.Text')
+FrameLib.Simple.Text = require(path..'Simple.Text') or error('')
 ---@type FrameSimpleTextureClass
-FrameLib.Simple.Texture = require(path..'Simple.Texture')
+FrameLib.Simple.Texture = require(path..'Simple.Texture') or error('')
 
 -- Normal
 
 FrameLib.Normal = {}
 ---@type FrameNormalButtonClass
-FrameLib.Normal.Button = require(path..'Normal.Button')
----@type FrameNormalButtonDefaultClass
-FrameLib.Normal.ButtonDefault = require(path..'Normal.ButtonDefault')
+FrameLib.Normal.Button = require(path..'Normal.Button') or error('')
 ---@type FrameNormalImageClass
-FrameLib.Normal.Image = require(path..'Normal.Image')
+FrameLib.Normal.Image = require(path..'Normal.Image') or error('')
 ---@type FrameNormalTextClass
-FrameLib.Normal.Text = require(path..'Normal.Text')
-
---[[
---==============
--- SimpleFrames
---==============
-
----@type FrameSimpleImageClass
-FrameLib.Frame.Simple.Image = require(path..'Simple.Image')
----@type FrameSimpleStatusBarClass
-FrameLib.Frame.Simple.StatusBar = require(path..'Simple.StatusBar')
----@type FrameSimpleTextClass
-FrameLib.Frame.Simple.Text = require(path..'Simple.Text')
-
---==============
--- NormalFrames
---==============
-
---========
--- Screen
---========
-
----@type FrameScreen
-local Screen = require(path..'.Screen')
-FrameLib.Screen.getX0 = Screen.getX0
-FrameLib.Screen.addResolutionChangedAction = Screen.addResolutionChangedAction
+FrameLib.Normal.Text = require(path..'Normal.Text') or error('')
 
 --========
 -- Origin
 --========
 
-local ChatBox = require(path..'Origin.ChatBox')
-local ChatEditBox = require(path..'Origin.ChatEditBox')
-local Inventory = require(path..'Origin.Inventory')
-local Minimap = require(path..'Origin.Minimap')
-local Portrait = require(path..'Origin.Portrait')
-local SkillButton = require(path..'Origin.SkillButton')
-if not IsCompiletime() then
-    ---@type FrameOriginChatBox
-    FrameLib.Origin.ChatBox = ChatBox
-    --- Can not be moved outside of default 0.8x0.6 box.
-    ---@type FrameOriginChatEditBox
-    FrameLib.Origin.ChatEditBox = ChatEditBox
-    ---@type FrameOriginInventory
-    FrameLib.Origin.Inventory = Inventory
-    ---@type FrameOriginMinimap
-    FrameLib.Origin.Minimap = Minimap
-    ---@type FrameOriginPortrait
-    FrameLib.Origin.Portrait = Portrait
-    ---@type table<number,FrameOriginSkillButton>
-    FrameLib.Origin.SkillButton = SkillButton
-end
-]]
+FrameLib.Origin = {}
+---@type FrameOriginChatBox
+FrameLib.Origin.ChatBox = require(path..'Origin.ChatBox') or error('')
+--- Can not be moved outside of default 0.8x0.6 box.
+---@type FrameOriginChatEditBox
+FrameLib.Origin.ChatEditBox = require(path..'Origin.ChatEditBox') or error('')
+---@type FrameOriginInventory
+FrameLib.Origin.Inventory = require(path..'Origin.Inventory') or error('')
+---@type FrameOriginMinimap
+FrameLib.Origin.Minimap = require(path..'Origin.Minimap') or error('')
+---@type FrameOriginPortrait
+FrameLib.Origin.Portrait = require(path..'Origin.Portrait') or error('')
+---@type table<number,FrameOriginSkillButton>
+FrameLib.Origin.SkillButton = require(path..'Origin.SkillButton') or error('')
+
 Lib.finish()
 
 return FrameLib

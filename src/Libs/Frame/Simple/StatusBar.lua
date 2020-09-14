@@ -8,14 +8,10 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
-local Frame = HandleLib.Frame
+local Frame = HandleLib.Frame or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-
----@type FrameUtils
-local FrameUtils = require(lib_path..'Utils') or error('')
-local newFrame = FrameUtils.newFrameFromFdf or error('')
 
 ---@type FdfSimpleFrameClass
 local FdfSimpleFrame = require(lib_path..'Fdf.Simple.Frame') or error('')
@@ -55,8 +51,24 @@ local private = {}
 function override.new(child)
     if child then isTypeErr(child, FrameSimpleStatusBar, 'child') end
 
+    local fdf = private.fdf
     local instance = child or Class.allocate(FrameSimpleStatusBar)
-    instance = newFrame(private.fdf, instance)
+    instance = Frame.new(fdf:getName(), fdf:isSimple())
+
+    private.newData(instance)
+
+    return instance
+end
+
+---@param handle framehandle
+---@param child FrameSimpleStatusBar
+---@return FrameSimpleStatusBar
+function override.link(handle, child)
+    isTypeErr(handle, 'framehandle', 'handle')
+    if child then isTypeErr(child, FrameSimpleStatusBar, 'child') end
+
+    local instance = child or Class.allocate(FrameSimpleStatusBar)
+    instance = Frame.link(handle, true, instance)
 
     private.newData(instance)
 
@@ -113,43 +125,39 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.fdf_name = 'FrameSimpleStatusBar'
-private.fdf_forw_name = 'FrameSimpleStatusBarForward'
-private.fdf_string_name = 'FrameSimpleStatusBarString'
-private.fdf_texture_name = 'FrameSimpleStatusBarTexture'
-private.fdf_border_name = 'FrameSimpleStatusBarBorder'
-
-private.fdf = FdfSimpleStatusBar.new(private.fdf_name)
+private.fdf = FdfSimpleStatusBar.new('FrameSimpleStatusBar')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.01)
 private.fdf:setBarTexture('Replaceabletextures\\Teamcolor\\Teamcolor00.blp')
-
-    local fdf_layer_back = FdfSimpleLayer.new('BACKGROUND')
-        local fdf_texture = FdfSimpleTexture.new(private.fdf_texture_name)
-        fdf_texture:setFile('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
-    fdf_layer_back:addSubframe(fdf_texture)
-private.fdf:addSubframe(fdf_layer_back)
-
-    local fdf_forw = FdfSimpleFrame.new(private.fdf_forw_name)
-    fdf_forw:setAllPoints(true)
-        local fdf_layer_forw = FdfSimpleLayer.new('ARTWORK')
-            local fdf_string = FdfSimpleString.new(private.fdf_string_name)
-            fdf_string:setFont('fonts\\nim_____.ttf', 0.008)
-            fdf_string:setColor(1.0, 1.0, 1.0, 1.0)
-            fdf_string:setText('Azaza')
-        fdf_layer_forw:addSubframe(fdf_string)
-            local fdf_border = FdfSimpleTexture.new(private.fdf_border_name)
-            fdf_border:setFile('UI\\Feedback\\XPBar\\human-xpbar-border.blp') -- from UI/war3skins.txt
-        fdf_layer_forw:addSubframe(fdf_border)
-    fdf_forw:addSubframe(fdf_layer_forw)
-private.fdf:addSubframe(fdf_forw)
+    private.fdf_layer_back = FdfSimpleLayer.new('BACKGROUND')
+        private.fdf_background = FdfSimpleTexture.new('FrameSimpleStatusBarTexture')
+        private.fdf_background:setFile('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
+    private.fdf_layer_back:addSubframe(private.fdf_background)
+private.fdf:addSubframe(private.fdf_layer_back)
+    private.fdf_forw = FdfSimpleFrame.new('FrameSimpleStatusBarForward')
+    private.fdf_forw:setAllPoints(true)
+        private.fdf_layer_forw = FdfSimpleLayer.new('ARTWORK')
+            private.fdf_string = FdfSimpleString.new('FrameSimpleStatusBarString')
+            private.fdf_string:setFont('fonts\\nim_____.ttf', 0.008)
+            private.fdf_string:setColor(1.0, 1.0, 1.0, 1.0)
+            private.fdf_string:setText('')
+        private.fdf_layer_forw:addSubframe(private.fdf_string)
+            private.fdf_border = FdfSimpleTexture.new('FrameSimpleStatusBarBorder')
+            private.fdf_border:setFile('UI\\Feedback\\XPBar\\human-xpbar-border.blp') -- from UI/war3skins.txt
+        private.fdf_layer_forw:addSubframe(private.fdf_border)
+    private.fdf_forw:addSubframe(private.fdf_layer_forw)
+private.fdf:addSubframe(private.fdf_forw)
 
 ---@param self FrameSimpleStatusBar
 function private.newData(self)
+    local h_border = BlzGetFrameByName(private.fdf_border:getName(), 0)
+    local h_string = BlzGetFrameByName(private.fdf_string:getName(), 0)
+    local h_texture = BlzGetFrameByName(private.fdf_texture:getName(), 0)
+
     local priv = {
-        border = FrameSimpleTexture.new(BlzGetFrameByName(private.fdf_border_name, 0)),
-        string = FrameSimpleString.new(BlzGetFrameByName(private.fdf_string_name, 0)),
-        texture = FrameSimpleTexture.new(BlzGetFrameByName(private.fdf_texture_name, 0)),
+        border = FrameSimpleTexture.link(h_border),
+        string = FrameSimpleString.link(h_string),
+        texture = FrameSimpleTexture.link(h_texture),
     }
     private.data[self] = priv
 end

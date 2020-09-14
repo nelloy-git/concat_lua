@@ -36,20 +36,24 @@ local private = {}
 ---@param min_value number
 ---@param max_value number
 ---@param default_value number
+---@param apply_func function
 ---@return Parameter
 function override.new(short_name, full_name, icon,
-                      min_value, max_value, default_value)
+                      min_value, max_value, default_value,
+                      apply_func)
     isTypeErr(short_name, 'string', 'short_name')
     isTypeErr(full_name, 'string', 'full_name')
     isTypeErr(icon, 'string', 'icon')
     isTypeErr(min_value, 'number', 'min_value')
     isTypeErr(max_value, 'number', 'max_value')
     isTypeErr(default_value, 'number', 'default_value')
+    isTypeErr(apply_func, 'function', 'apply_func')
 
     local instance = Class.allocate(Parameter)
     private.newData(instance,
                     short_name, full_name, icon,
-                    min_value, max_value, default_value)
+                    min_value, max_value, default_value,
+                    apply_func)
 
     return instance
 end
@@ -101,9 +105,11 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param min_value number
 ---@param max_value number
 ---@param default_value number
+---@param apply_func function
 function private.newData(self,
                          short_name, full_name, icon,
-                         min_value, max_value, default_value)
+                         min_value, max_value, default_value,
+                         apply_func)
     local priv = {
         short_name = short_name,
         full_name = full_name,
@@ -111,6 +117,7 @@ function private.newData(self,
         min_value = min_value,
         max_value = max_value,
         default_value = default_value,
+        apply_func = apply_func,
     }
     private.data[self] = priv
 end

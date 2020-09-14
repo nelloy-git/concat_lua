@@ -5,26 +5,25 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_deplass
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Frame = HandleLib.Frame
 ---@type UtilsLib
-local UtilsLib = lib_deptilsLib
-local checkType = UtilsLib.Functions.checkType
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
----@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_path..'.Normal.Base')
----@type FdfNormalBackdropClass
-local FdfNormalBackdrop = require(lib_path..'.Fdf.Frame.NormalBackdrop')
+---@type FdfBackdropClass
+local FdfBackdrop = require(lib_path..'Fdf.Normal.Backdrop') or error('')
 
 --=======
 -- Class
 --=======
 
-local FrameNormalImage = Class.new('FrameNormalImage', FrameNormalBase)
----@class FrameNormalImage : FrameNormalBase
+local FrameNormalImage = Class.new('FrameNormalImage', Frame)
+---@class FrameNormalImage : Frame
 local public = FrameNormalImage.public
----@class FrameNormalImageClass : FrameNormalBaseClass
+---@class FrameNormalImageClass : FrameClass
 local static = FrameNormalImage.static
 ---@type FrameNormalImageClass
 local override = FrameNormalImage.override
@@ -34,18 +33,31 @@ local private = {}
 -- Static
 --=========
 
----@param fdf_or_handle FdfNormalBackdrop | framehandle
 ---@param child FrameNormalImage | nil
 ---@return FrameNormalImage
-function override.new(fdf_or_handle, child)
-    fdf_or_handle = fdf_or_handle or private.fdf
-    if not (checkType(fdf_or_handle, 'framehandle') or checkType(fdf_or_handle, FdfNormalBackdrop)) then
-        Log:err('variable \'fdf_frame\'('..tostring(fdf_or_handle)..') is not of type framehandle or '..tostring(FdfNormalBackdrop), 2)
-    end
-    if child then isTypeErr(child, FrameNormalBase, 'child') end
+function override.new(child)
+    if child then isTypeErr(child, FrameNormalImage, 'child') end
+
+    local fdf = private.fdf
+    local instance = child or Class.allocate(FrameNormalImage)
+    instance = Frame.new(fdf:getName(), fdf:isSimple())
+
+    private.newData(instance)
+
+    return instance
+end
+
+---@param handle framehandle
+---@param child FrameNormalImage
+---@return FrameNormalImage
+function override.link(handle, child)
+    isTypeErr(handle, 'framehandle', 'handle')
+    if child then isTypeErr(child, FrameNormalImage, 'child') end
 
     local instance = child or Class.allocate(FrameNormalImage)
-    instance = FrameNormalBase.new(fdf_or_handle, instance)
+    instance = Frame.link(handle, true, instance)
+
+    private.newData(instance)
 
     return instance
 end
@@ -64,5 +76,15 @@ end
 --=========
 -- Private
 --=========
+
+---@type FdfBackdrop
+private.fdf = FdfBackdrop.new('FrameNormalImage')
+private.fdf:setWidth(0.04)
+private.fdf:setHeight(0.04)
+private.fdf:setBackground("ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp")
+private.fdf:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
+private.fdf:setCornerSize(0.0125)
+private.fdf:setInsets(0.005, 0.005, 0.005, 0.005)
+private.fdf:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
 
 return static

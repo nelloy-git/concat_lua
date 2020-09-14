@@ -8,14 +8,10 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
-local Frame = HandleLib.Frame
+local Frame = HandleLib.Frame or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-
----@type FrameUtils
-local FrameUtils = require(lib_path..'Utils') or error('')
-local newFrame = FrameUtils.newFrameFromFdf or error('')
 
 ---@type FdfSimpleFrameClass
 local FdfSimpleFrame = require(lib_path..'Fdf.Simple.Frame') or error('')
@@ -47,8 +43,24 @@ local private = {}
 function override.new(child)
     if child then isTypeErr(child, FrameSimpleText, 'child') end
 
+    local fdf = private.fdf
     local instance = child or Class.allocate(FrameSimpleText)
-    instance = newFrame(private.fdf, instance)
+    instance = Frame.new(fdf:getName(), fdf:isSimple())
+
+    private.newData(instance)
+
+    return instance
+end
+
+---@param handle framehandle
+---@param child FrameSimpleText
+---@return FrameSimpleText
+function override.link(handle, child)
+    isTypeErr(handle, 'framehandle', 'handle')
+    if child then isTypeErr(child, FrameSimpleText, 'child') end
+
+    local instance = child or Class.allocate(FrameSimpleText)
+    instance = Frame.link(handle, true, instance)
 
     private.newData(instance)
 
@@ -77,19 +89,17 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.fdf_name = 'FrameSimpleText'
-private.fdf_string_name = 'FrameSimpleTextString'
-
-private.fdf = FdfSimpleFrame.new(private.fdf_name)
+private.fdf = FdfSimpleFrame.new('FrameSimpleText')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.01)
-    local fdf_string = FdfSimpleString.new(private.fdf_string_name)
-    fdf_string:setFont('fonts\\nim_____.ttf', 0.008)
-private.fdf:addSubframe(fdf_string)
+    private.fdf_string = FdfSimpleString.new('FrameSimpleTextString')
+    private.fdf_string:setFont('fonts\\nim_____.ttf', 0.008)
+private.fdf:addSubframe(private.fdf_string)
+
 ---@param self FrameSimpleText
 function private.newData(self)
     local priv = {
-        string = FrameSimpleString.new(BlzGetFrameByName(private.fdf_string_name, 0)),
+        string = FrameSimpleString.link(BlzGetFrameByName(private.fdf_string:getName(), 0)),
     }
     private.data[self] = priv
 end

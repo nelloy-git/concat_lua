@@ -5,8 +5,9 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
----@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_path..'.Normal.Base')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Frame = HandleLib.Frame or error('')
 
 --========
 -- Module
@@ -23,7 +24,7 @@ for i = 0, 11 do
     BlzFrameClearAllPoints(handle)
 
     ---@class FrameOriginSkillButton
-    SkillButton[i + 1] = FrameNormalBase.new(handle)
+    SkillButton[i + 1] = Frame.link(handle, false)
     SkillButton[i + 1]:setParent(nil)
 end
 

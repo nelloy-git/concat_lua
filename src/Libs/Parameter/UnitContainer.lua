@@ -17,10 +17,10 @@ local DamageLib = lib_dep.DamageLib
 local DamageType = DamageLib.DamageType
 
 ---@type ParameterValueListClass
-local ValueList = require(lib_path..'.ValueList')
+local ValueList = require(lib_path..'ValueList')
 local ValueListPublic = Class.getPublic(ValueList)
 ---@type ParameterDefines
-local Defines = require(lib_path..'.Defines')
+local Defines = require(lib_path..'Defines')
 --endregion
 
 --=======

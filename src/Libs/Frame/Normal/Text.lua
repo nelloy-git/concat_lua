@@ -5,26 +5,26 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_deplass
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Frame = HandleLib.Frame or error('')
 ---@type UtilsLib
-local UtilsLib = lib_deptilsLib
-local checkType = UtilsLib.Functions.checkType
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
----@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_path..'.Normal.Base')
----@type FdfNormalTextClass
-local FdfNormalText = require(lib_path..'.Fdf.Frame.NormalText')
+---@type FdfTextClass
+local FdfText = require(lib_path..'Fdf.Normal.Text') or error('')
 
 --=======
 -- Class
 --=======
 
-local FrameNormalText = Class.new('FrameNormalText', FrameNormalBase)
----@class FrameNormalText : FrameNormalBase
+local FrameNormalText = Class.new('FrameNormalText', Frame)
+---@class FrameNormalText : Frame
 local public = FrameNormalText.public
----@class FrameNormalTextClass : FrameNormalBaseClass
+---@class FrameNormalTextClass : FrameClass
 local static = FrameNormalText.static
 ---@type FrameNormalTextClass
 local override = FrameNormalText.override
@@ -34,18 +34,31 @@ local private = {}
 -- Static
 --=========
 
----@param fdf_or_handle FdfNormalText | framehandle
 ---@param child FrameNormalText | nil
 ---@return FrameNormalText
-function override.new(fdf_or_handle, child)
-    fdf_or_handle = fdf_or_handle or private.fdf
-    if not (checkType(fdf_or_handle, 'framehandle') or checkType(fdf_or_handle, FdfNormalText)) then
-        Log:err('variable \'fdf_frame\'('..tostring(fdf_or_handle)..') is not of type framehandle or '..tostring(FdfNormalText), 2)
-    end
-    if child then isTypeErr(child, FrameNormalBase, 'child') end
+function override.new(child)
+    if child then isTypeErr(child, FrameNormalText, 'child') end
+
+    local fdf = private.fdf
+    local instance = child or Class.allocate(FrameNormalText)
+    instance = Frame.new(fdf:getName(), fdf:isSimple())
+
+    private.newData(instance)
+
+    return instance
+end
+
+---@param handle framehandle
+---@param child FrameNormalText
+---@return FrameNormalText
+function override.link(handle, child)
+    isTypeErr(handle, 'framehandle', 'handle')
+    if child then isTypeErr(child, FrameNormalText, 'child') end
 
     local instance = child or Class.allocate(FrameNormalText)
-    instance = FrameNormalBase.new(fdf_or_handle, instance)
+    instance = Frame.link(handle, true, instance)
+
+    private.newData(instance)
 
     return instance
 end
@@ -63,9 +76,7 @@ end
 -- Private
 --=========
 
-private.fdf_name = 'FrameNormalTextDefault'
-
-private.fdf = FdfNormalText.new(private.fdf_name)
+private.fdf = FdfText.new('FrameNormalTextDefault')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setFont('fonts\\nim_____.ttf', 0.008)

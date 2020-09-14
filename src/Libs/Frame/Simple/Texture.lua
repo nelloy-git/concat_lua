@@ -12,10 +12,7 @@ local Frame = HandleLib.Frame or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-
----@type FrameUtils
-local FrameUtils = require(lib_path..'Utils') or error('')
-local newFrame = FrameUtils.newFrameFromFdf or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
@@ -34,15 +31,22 @@ local private = {}
 -- Static
 --=========
 
+---@param name string
+---@param child FrameSimpleTexture | nil
+---@return FrameSimpleTexture
+function override.new(name, child)
+    Log:err(tostring(FrameSimpleTexture)..': can not be created manually.')
+end
+
 ---@param handle framehandle
 ---@param child FrameSimpleTexture | nil
 ---@return FrameSimpleTexture
-function override.new(handle, child)
+function override.link(handle, child)
     isTypeErr(handle, 'framehandle', 'handle')
     if child then isTypeErr(child, FrameSimpleTexture, 'child') end
 
     local instance = child or Class.allocate(FrameSimpleTexture)
-    instance = Frame.new(handle, instance)
+    instance = Frame.link(handle, true, instance)
 
     return instance
 end

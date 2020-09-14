@@ -12,7 +12,7 @@ local UtilsLib = lib_dep.UtilsLib
 local isTypeErr = UtilsLib.isTypeErr
 
 ---@type ParameterClass
-local Parameter = require(lib_path..'.Parameter')
+local Parameter = require(lib_path..'Parameter')
 --endregion
 
 --=======

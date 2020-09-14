@@ -2,6 +2,7 @@
 local HandleLibAPI = {}
 Lib.start('HandleLib', {
     Class = Lib.load(LibList.ClassLib) or error(''),
+    Types = Lib.load(LibList.TypesLib) or error(''),
     Utils = Lib.load(LibList.UtilsLib) or error('')
 })
 local path = Lib.curPath()

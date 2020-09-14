@@ -6,9 +6,6 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Trigger = HandleLib.Trigger or error('')
 ---@type TypesLib
 local TypesLib = lib_dep.Types or error('')
 local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
@@ -20,6 +17,8 @@ local Log = UtilsLib.Log or error('')
 
 ---@type HandleClass
 local Handle = require(lib_path..'Base') or error('')
+---@type TriggerClass
+local Trigger = require(lib_path..'Types.Trigger') or error('')
 
 --=======
 -- Class
@@ -38,12 +37,26 @@ local private = {}
 -- Static
 --=========
 
+---@param name string
+---@param is_simple boolean
+---@param child Frame | nil
+---@return Frame
+function override.new(name, is_simple, child)
+    isTypeErr(name, 'string', 'name')
+    isTypeErr(is_simple, 'boolean', 'is_simple')
+    if child then isTypeErr(child, Frame, 'child') end
+
+    local handle = private.createFramehandle(name, is_simple)
+    return static.link(handle, is_simple, child)
+end
+
 ---@param handle framehandle
 ---@param is_simple boolean
 ---@param child Frame | nil
 ---@return Frame
-function override.new(handle, is_simple, child)
+function override.link(handle, is_simple, child)
     isTypeErr(handle, 'framehandle', 'handle')
+    isTypeErr(is_simple, 'boolean', 'is_simple')
     if child then isTypeErr(child, Frame, 'child') end
 
     local instance = child or Class.allocate(Frame)
@@ -67,12 +80,12 @@ function public:setPos(x, y)
 
     local handle = self:getData()
     if priv.parent then
-        BlzFrameSetPoint(handle, FRAMEPOINT_BOTTOMLEFT,
-                         priv.parent:getData(), FRAMEPOINT_BOTTOMLEFT,
-                         x, y)
+        BlzFrameSetPoint(handle, FRAMEPOINT_TOPRIGHT,
+                         priv.parent:getData(), FRAMEPOINT_TOPRIGHT,
+                         x, -y)
     else
-        BlzFrameSetAbsPoint(handle, FRAMEPOINT_BOTTOMLEFT,
-                            x, y)
+        BlzFrameSetAbsPoint(handle, FRAMEPOINT_TOPRIGHT,
+                            x, 0.6 - y)
     end
 end
 
@@ -286,6 +299,30 @@ function private.newData(self, is_simple)
     end
 end
 
+---@param name string
+---@param is_simple boolean
+---@return framehandle
+function private.createFramehandle(name, is_simple)
+    local handle
+    local test_handle
+    if is_simple then
+        handle = BlzCreateSimpleFrame(name, nil, 0)
+        test_handle = BlzCreateSimpleFrame('', nil, 0)
+    else
+        handle = BlzCreateFrame(name, private.console_ui_backdrop, 0, 0)
+        test_handle = BlzCreateFrame('', private.console_ui_backdrop, 0, 0)
+    end
+
+    if tostring(handle) == tostring(test_handle) then
+        BlzDestroyFrame(handle)
+        BlzDestroyFrame(test_handle)
+        Log:err('Can not create framehandle', 3)
+    end
+    BlzDestroyFrame(test_handle)
+
+    return handle
+end
+
 function private.runActions()
     local frame = static.getLinked(BlzGetTriggerFrame())
     local player = GetTriggerPlayer()
@@ -299,10 +336,19 @@ end
 if not IsCompiletime() then
     private.console_ui_backdrop = BlzGetFrameByName("ConsoleUIBackdrop", 0)
     BlzFrameClearAllPoints(private.console_ui_backdrop)
-    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, 0, 0)
-    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
-    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0)
-    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPRIGHT, 0, 0)
+    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, 0, 0.6)
+    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMRIGHT, 0, 0.6)
+    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0.6)
+    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPRIGHT, 0, 0.6)
+
+    -- Protect ConsoleUIBackdrop
+    local origBlzGetFrameByName = BlzGetFrameByName
+    BlzGetFrameByName = function(name, createContext)
+        if name == 'ConsoleUIBackdrop' then
+            Log:err('Function disabled by FrameClass from HandleLib.', 2)
+        end
+        return origBlzGetFrameByName(name, createContext)
+    end
 
     private.trigger = Trigger.new()
     private.trigger:addAction(private.runActions)

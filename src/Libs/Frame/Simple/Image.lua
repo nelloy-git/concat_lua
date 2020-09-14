@@ -8,14 +8,10 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
-local Frame = HandleLib.Frame
+local Frame = HandleLib.Frame or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-
----@type FrameUtils
-local FrameUtils = require(lib_path..'Utils') or error('')
-local newFrame = FrameUtils.newFrameFromFdf or error('')
 
 ---@type FdfSimpleFrameClass
 local FdfSimpleFrame = require(lib_path..'Fdf.Simple.Frame') or error('')
@@ -47,8 +43,24 @@ local private = {}
 function override.new(child)
     if child then isTypeErr(child, FrameSimpleImage, 'child') end
 
+    local fdf = private.fdf
     local instance = child or Class.allocate(FrameSimpleImage)
-    instance = newFrame(private.fdf, instance)
+    instance = Frame.new(fdf:getName(), fdf:isSimple())
+
+    private.newData(instance)
+
+    return instance
+end
+
+---@param handle framehandle
+---@param child FrameSimpleImage
+---@return FrameSimpleImage
+function override.link(handle, child)
+    isTypeErr(handle, 'framehandle', 'handle')
+    if child then isTypeErr(child, FrameSimpleImage, 'child') end
+
+    local instance = child or Class.allocate(FrameSimpleImage)
+    instance = Frame.link(handle, true, instance)
 
     private.newData(instance)
 
@@ -82,7 +94,7 @@ private.fdf:addSubframe(fdf_texture)
 ---@param self FrameSimpleImage
 function private.newData(self)
     local priv = {
-        texture = FrameSimpleTexture.new(BlzGetFrameByName('FrameSimpleImageTexture', 0)),
+        texture = FrameSimpleTexture.link(BlzGetFrameByName('FrameSimpleImageTexture', 0)),
     }
     private.data[self] = priv
 end

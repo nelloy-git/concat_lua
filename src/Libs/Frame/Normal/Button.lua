@@ -19,18 +19,17 @@ local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log
 
----@type FrameUtils
-local FrameUtils = require(lib_path..'Utils') or error('')
-local newFrame = FrameUtils.newFrameFromFdf or error('')
-
 ---@type FdfBackdropClass
-local FdfBackdrop = require(lib_path..'.Fdf.Normal.Backdrop') or error('')
+local FdfBackdrop = require(lib_path..'Fdf.Normal.Backdrop') or error('')
 ---@type FdfGlueTextButtonClass
-local FdfGlueTextButton = require(lib_path..'.Fdf.Normal.GlueTextButton') or error('')
+local FdfGlueTextButton = require(lib_path..'Fdf.Normal.GlueTextButton') or error('')
 ---@type FdfHighlightClass
-local FdfHighlight = require(lib_path..'.Fdf.Normal.Highlight') or error('')
+local FdfHighlight = require(lib_path..'Fdf.Normal.Highlight') or error('')
 ---@type FdfTextClass
-local FdfText = require(lib_path..'.Fdf.Normal.Text') or error('')
+local FdfText = require(lib_path..'Fdf.Normal.Text') or error('')
+
+---@type FrameNormalImageClass
+local FrameImage = require(lib_path..'Normal.Image') or error('')
 
 --=======
 -- Class
@@ -56,8 +55,10 @@ local private = {}
 function override.new(child)
     if child then isTypeErr(child, FrameNormalButton, 'child') end
 
+    ---@type FdfGlueTextButton
+    local fdf = private.fdf
     local instance = child or Class.allocate(FrameNormalButton)
-    instance = newFrame(private.fdf, instance)
+    instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 
     private.newData(instance)
 
@@ -76,28 +77,33 @@ function public:addAction(event, callback)
     return FramePublic.addAction(self, event, callback)
 end
 
+function public:setTexture()
+    local priv = private.data[self]
+
+end
+
+function public:setDisabledTexture()
+end
+
 --=========
 -- Private
 --=========
 
-private.fdf_name = 'FrameNormalButtonDefault'
-private.control_name = 'FrameNormalButtonDefaultControlNormal'
-private.control_pushed_name = 'FrameNormalButtonDefaultControlPushed'
-private.control_disabled_name = 'FrameNormalButtonDefaultControlDisabled'
-private.control_mouseover_name = 'FrameNormalButtonDefaultControlMouseOver'
-private.control_focus_name = 'FrameNormalButtonDefaultControlFocus'
-private.text_name = 'FrameNormalButtonDefaultText'
+private.data = setmetatable({}, {__mode = 'k'})
 
-private.icon = "ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp"
-private.icon_pushed = "ReplaceableTextures\\CommandButtons\\BTNAltarOfElders.blp"
-private.disbtn_icon = "ReplaceableTextures\\CommandButtonsDisabled\\DISBTNAcidBomb.blp"
-private.highlight_icon = "UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp"
-private.font = "fonts\\nim_____.ttf"
-private.font_size = 0.009
+---@param self FrameSimpleImage
+function private.newData(self)
+    local priv = {
+        --normal = newFrame(private.fdf_control_normal)
+    }
+    private.data[self] = priv
+end
 
-function private.createControl(name, icon)
-    local control = FdfNormalBackdrop.new(name)
-    control:setBackground(icon)
+---@param name string
+---@return FdfBackdrop
+function private.createFdfControl(name)
+    local control = FdfBackdrop.new(name)
+    control:setBackground("")
     control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
     control:setCornerSize(0.0125)
     control:setInsets(0.005, 0.005, 0.005, 0.005)
@@ -105,16 +111,22 @@ function private.createControl(name, icon)
     return control
 end
 
-function private.createHighlight(name, path)
-    local highlight = FdfNormalHighlight.new(name)
+---@param name string
+---@return FdfBackdrop
+function private.createFdfHighlight(name)
+    local highlight = FdfHighlight.new(name)
     highlight:setHighlightType('FILETEXTURE')
     highlight:setAlphaFile("UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp")
     highlight:setAlphaMode('ADD')
     return highlight
 end
 
-function private.createText(name, font, size)
-    local text = FdfNormalText.new(name)
+---@param name string
+---@param font string
+---@param size number
+---@return FdfBackdrop
+function private.createFdfText(name, font, size)
+    local text = FdfText.new(name)
     text:setText('Text')
     text:setJustification('JUSTIFYCENTER', 'JUSTIFYMIDDLE')
     text:setFont(font, size)
@@ -126,17 +138,17 @@ private.fdf = FdfGlueTextButton.new('FrameNormalButton')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setControlStyle(true, true, true)
-    local fdf_control = FdfBackdrop.new('FrameNormalButtonControl')
-    fdf_control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
-    fdf_control:setCornerSize(0.0125)
-    fdf_control:setInsets(0.005, 0.005, 0.005, 0.005)
-    fdf_control:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
-private.fdf:setControl(private.createControl(private.control_name, private.icon))
-private.fdf:setControlPushed(private.createControl(private.control_pushed_name, private.icon_pushed))
-private.fdf:setControlDisabled(private.createControl(private.control_disabled_name, private.disbtn_icon))
-private.fdf:setControlMouseOver(private.createHighlight(private.control_mouseover_name, private.highlight_icon))
-private.fdf:setControlFocus(private.createHighlight(private.control_focus_name, private.highlight_icon))
-private.fdf:setText(private.createText(private.text_name, private.font, private.font_size))
+
+private.fdf_control_normal = private.createFdfControl('FrameNormalButtonControlNormal')
+private.fdf:setControl(private.fdf_control_normal)
+
+private.fdf:setControlPushed(private.createFdfControl('FrameNormalButtonControlPushed'))
+private.fdf:setControlDisabled(private.createFdfControl('FrameNormalButtonControlDisabled'))
+private.fdf:setControlMouseOver(private.createFdfHighlight('FrameNormalButtonControlMouseOver'))
+private.fdf:setControlFocus(private.createFdfHighlight('FrameNormalButtonControlFocus'))
+private.fdf:setText(private.createFdfText('FrameNormalButtonDefaultText',
+                                       'fonts\\nim_____.ttf',
+                                        0.009))
 
 private.available_events = {
     [FrameEventType.CONTROL_CLICK] = true,
