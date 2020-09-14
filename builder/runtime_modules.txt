@@ -30,6 +30,10 @@ src\Libs\Handle\Types\TextTag.lua
 src\Libs\Handle\Types\Timer.lua
 src\Libs\Handle\Types\Trigger.lua
 src\Libs\Handle\Types\Unit.lua
+src\Libs\Types\API.lua
+src\Libs\Types\AttackType.lua
+src\Libs\Types\FrameEventType.lua
+src\Libs\Types\TargetType.lua
 src\Libs\Frame\Fdf\Base.lua
 src\Libs\Frame\Fdf\File.lua
 src\Libs\Frame\Fdf\Simple\Frame.lua
@@ -47,3 +51,4 @@ src\Libs\Frame\Simple\Texture.lua
 src\Libs\Frame\Simple\StatusBar.lua
 src\Libs\Frame\Simple\String.lua
 src\Libs\Frame\Simple\Text.lua
+src\Libs\Frame\Normal\Button.lua

@@ -6,8 +6,15 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Trigger = HandleLib.Trigger or error('')
+---@type TypesLib
+local TypesLib = lib_dep.Types or error('')
+local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
@@ -217,6 +224,36 @@ function public:setTooltip(tooltip)
     tooltip:setVisible(false)
 end
 
+---@alias FrameCallback fun(frame:Frame, player:player, event:frameeventtype)
+
+--- Not all events are available for all
+---@param event frameeventtype
+---@param callback FrameCallback
+---@return Action
+function public:addAction(event, callback)
+    local priv = private.data[self]
+
+    if not priv.actions[event] then
+        priv.actions[event] = ActionList.new(self)
+    end
+    ---@type ActionList
+    local list = priv.actions[event]
+    return list:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    local priv = private.data[self]
+
+    for _, list in pairs(priv.actions) do
+        if list:remove(action) then
+            return true
+        end
+    end
+    return false
+end
+
 --=========
 -- Private
 --=========
@@ -238,8 +275,25 @@ function private.newData(self, is_simple)
 
         level = 0,
         alpha = 0,
+
+        ---@type table<frameeventtype, ActionList>
+        actions = {}
     }
     private.data[self] = priv
+
+    for _, event in pairs(FrameEventType) do
+        private.trigger:addFrameEvent(handle, event)
+    end
+end
+
+function private.runActions()
+    local frame = static.getLinked(BlzGetTriggerFrame())
+    local player = GetTriggerPlayer()
+    local event = BlzGetTriggerFrameEvent()
+
+    ---@type ActionList
+    local actions_list = private.data[frame].actions[event]
+    actions_list:run(frame, player, event)
 end
 
 if not IsCompiletime() then
@@ -249,6 +303,9 @@ if not IsCompiletime() then
     BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMRIGHT, 0, 0)
     BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0)
     BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPRIGHT, 0, 0)
+
+    private.trigger = Trigger.new()
+    private.trigger:addAction(private.runActions)
 end
 
 return static

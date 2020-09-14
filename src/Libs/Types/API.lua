@@ -11,15 +11,21 @@ local path = Lib.curPath()
 
 ---@type AttackTypeModule
 local AttackType = require(path..'AttackType') or error('')
-TypesAPI.AttackTypeEnum = AttackType.Enum
-TypesAPI.isAttackType = AttackType.isAttackType
-TypesAPI.attackTypeToString = AttackType.toStr
+TypesAPI.AttackTypeEnum = AttackType.Enum or error('')
+TypesAPI.isAttackType = AttackType.isAttackType or error('')
+TypesAPI.attackTypeToString = AttackType.toStr or error('')
+
+---@type FrameEventTypeModule
+local FrameEventType = require(path..'FrameEventType') or error('')
+TypesAPI.FrameEventTypeEnum = FrameEventType.Enum or error('')
+TypesAPI.isFrameEventType = FrameEventType.isFrameEventType or error('')
+TypesAPI.frameEventtoString = FrameEventType.toStr or error('')
 
 ---@type TargetTypeModule
 local TargetType = require(path..'TargetType') or error('')
-TypesAPI.TargetTypeEnum = TargetType.Enum
-TypesAPI.isTargetType = TargetType.isTargetType
-TypesAPI.targetTypetoString = TargetType.toStr
+TypesAPI.TargetTypeEnum = TargetType.Enum or error('')
+TypesAPI.isTargetType = TargetType.isTargetType or error('')
+TypesAPI.targetTypetoString = TargetType.toStr or error('')
 
 Lib.finish()
 

@@ -3,6 +3,7 @@ local FrameLib = {}
 Lib.start('FrameLib', {
     Class = Lib.load(LibList.ClassLib) or error(''),
     Handle = Lib.load(LibList.HandleLib) or error(''),
+    Type = Lib.load(LibList.TypesLib) or error(''),
     Utils = Lib.load(LibList.UtilsLib) or error(''),
 })
 local path = Lib.curPath()
@@ -75,21 +76,31 @@ FrameLib.Fdf.Normal.Text = require(path..'Fdf.Normal.Text')
 -- Frames
 ----------
 
-FrameLib.Frame = {}
-
 -- Simple
 
-FrameLib.Frame.Simple = {}
+FrameLib.Simple = {}
 ---@type FrameSimpleImageClass
-FrameLib.Frame.Simple.Image = require(path..'Simple.Image')
+FrameLib.Simple.Image = require(path..'Simple.Image')
 ---@type FrameSimpleStatusBarClass
-FrameLib.Frame.Simple.StatusBar = require(path..'Simple.StatusBar')
+FrameLib.Simple.StatusBar = require(path..'Simple.StatusBar')
 ---@type FrameSimpleStringClass
-FrameLib.Frame.Simple.String = require(path..'Simple.String')
+FrameLib.Simple.String = require(path..'Simple.String')
 ---@type FrameSimpleTextClass
-FrameLib.Frame.Simple.Text = require(path..'Simple.Text')
+FrameLib.Simple.Text = require(path..'Simple.Text')
 ---@type FrameSimpleTextureClass
-FrameLib.Frame.Simple.Texture = require(path..'Simple.Texture')
+FrameLib.Simple.Texture = require(path..'Simple.Texture')
+
+-- Normal
+
+FrameLib.Normal = {}
+---@type FrameNormalButtonClass
+FrameLib.Normal.Button = require(path..'Normal.Button')
+---@type FrameNormalButtonDefaultClass
+FrameLib.Normal.ButtonDefault = require(path..'Normal.ButtonDefault')
+---@type FrameNormalImageClass
+FrameLib.Normal.Image = require(path..'Normal.Image')
+---@type FrameNormalTextClass
+FrameLib.Normal.Text = require(path..'Normal.Text')
 
 --[[
 --==============
@@ -106,15 +117,6 @@ FrameLib.Frame.Simple.Text = require(path..'Simple.Text')
 --==============
 -- NormalFrames
 --==============
-
----@type FrameNormalButtonClass
-FrameLib.Frame.Normal.Button = require(path..'Normal.Button')
----@type FrameNormalButtonDefaultClass
-FrameLib.Frame.Normal.ButtonDefault = require(path..'Normal.ButtonDefault')
----@type FrameNormalImageClass
-FrameLib.Frame.Normal.Image = require(path..'Normal.Image')
----@type FrameNormalTextClass
-FrameLib.Frame.Normal.Text = require(path..'Normal.Text')
 
 --========
 -- Screen

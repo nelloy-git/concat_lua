@@ -5,38 +5,41 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_deplass
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Frame = HandleLib.Frame
+local FramePublic = Class.getPublic(Frame)
+---@type TypesLib
+local TypesLib = lib_dep.Types or error('')
+local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
+local frameToString = TypesLib.frameEventtoString or error('')
 ---@type UtilsLib
-local UtilsLib = lib_deptilsLib
-local Action = UtilsLib.Handle.Action
-local checkType = UtilsLib.Functions.checkType
-local isTypeErr = UtilsLib.isTypeErr
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log
-local Trigger = UtilsLib.Handle.Trigger
 
----@type FrameNormalBaseClass
-local FrameNormalBase = require(lib_path..'.Normal.Base')
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
----@type FrameNormalImageClass
-local FrameNormalImage = require(lib_path..'.Normal.Image')
+---@type FrameUtils
+local FrameUtils = require(lib_path..'Utils') or error('')
+local newFrame = FrameUtils.newFrameFromFdf or error('')
 
----@type FdfNormalBackdropClass
-local FdfNormalBackdrop = require(lib_path..'.Fdf.Frame.NormalBackdrop')
----@type FdfNormalHighlightClass
-local FdfNormalHighlight = require(lib_path..'.Fdf.Frame.NormalHighlight')
----@type FdfNormalGlueTextButtonClass
-local FdfNormalGlueTextButton = require(lib_path..'.Fdf.Frame.NormalButton')
----@type FdfNormalTextClass
-local FdfNormalText = require(lib_path..'.Fdf.Frame.NormalText')
+---@type FdfBackdropClass
+local FdfBackdrop = require(lib_path..'.Fdf.Normal.Backdrop') or error('')
+---@type FdfGlueTextButtonClass
+local FdfGlueTextButton = require(lib_path..'.Fdf.Normal.GlueTextButton') or error('')
+---@type FdfHighlightClass
+local FdfHighlight = require(lib_path..'.Fdf.Normal.Highlight') or error('')
+---@type FdfTextClass
+local FdfText = require(lib_path..'.Fdf.Normal.Text') or error('')
 
 --=======
 -- Class
 --=======
 
-local FrameNormalButton = Class.new('FrameNormalButton', FrameNormalBase)
----@class FrameNormalButton : FrameNormalBase
+local FrameNormalButton = Class.new('FrameNormalButton', Frame)
+---@class FrameNormalButton : Frame
 local public = FrameNormalButton.public
----@class FrameNormalButtonClass : FrameNormalBaseClass
+---@class FrameNormalButtonClass : FrameClass
 local static = FrameNormalButton.static
 ---@type FrameNormalButtonClass
 local override = FrameNormalButton.override
@@ -48,17 +51,14 @@ local private = {}
 
 ---@alias FrameNormalButtonCallback fun(frame:FrameNormalButton, player:player, event:frameeventtype)
 
----@param fdf_or_handle FdfNormalGlueTextButton | framehandle
 ---@param child FrameNormalButton | nil
 ---@return FrameNormalButton
-function override.new(fdf_or_handle, child)
-    if not (checkType(fdf_or_handle, 'framehandle') or checkType(fdf_or_handle, FdfNormalGlueTextButton)) then
-        Log:err('variable \'fdf_frame\'('..tostring(fdf_or_handle)..') is not of type framehandle or '..tostring(FdfNormalGlueTextButton), 2)
-    end
-    if child then isTypeErr(child, FrameNormalBase, 'child') end
+function override.new(child)
+    if child then isTypeErr(child, FrameNormalButton, 'child') end
 
     local instance = child or Class.allocate(FrameNormalButton)
-    instance = FrameNormalBase.new(fdf_or_handle, instance)
+    instance = newFrame(private.fdf, instance)
+
     private.newData(instance)
 
     return instance
@@ -73,85 +73,84 @@ end
 ---@return Action
 function public:addAction(event, callback)
     private.isEventAvailable(event)
-    local priv = private.data[self]
-
-    local action = Action.new(callback, self)
-    table.insert(priv.actions[event], action)
-
-    return action
-end
-
----@param action Action
----@return boolean
-function public:removeAction(action)
-    isTypeErr(action, Action, 'action')
-
-    local priv = private.data[self]
-
-    for event, list in pairs(priv.actions) do
-        for i = 1, #list do
-            if list[i] == action then
-                table.remove(list, i)
-                return true
-            end
-        end
-    end
-
-    return false
-end
-
-function public:destroy()
-    private.data[self].trigger:destroy()
-    FrameNormalBasePublic.destroy(self)
+    return FramePublic.addAction(self, event, callback)
 end
 
 --=========
 -- Private
 --=========
 
-private.data = setmetatable({}, {__mode = 'k'})
+private.fdf_name = 'FrameNormalButtonDefault'
+private.control_name = 'FrameNormalButtonDefaultControlNormal'
+private.control_pushed_name = 'FrameNormalButtonDefaultControlPushed'
+private.control_disabled_name = 'FrameNormalButtonDefaultControlDisabled'
+private.control_mouseover_name = 'FrameNormalButtonDefaultControlMouseOver'
+private.control_focus_name = 'FrameNormalButtonDefaultControlFocus'
+private.text_name = 'FrameNormalButtonDefaultText'
+
+private.icon = "ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp"
+private.icon_pushed = "ReplaceableTextures\\CommandButtons\\BTNAltarOfElders.blp"
+private.disbtn_icon = "ReplaceableTextures\\CommandButtonsDisabled\\DISBTNAcidBomb.blp"
+private.highlight_icon = "UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp"
+private.font = "fonts\\nim_____.ttf"
+private.font_size = 0.009
+
+function private.createControl(name, icon)
+    local control = FdfNormalBackdrop.new(name)
+    control:setBackground(icon)
+    control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
+    control:setCornerSize(0.0125)
+    control:setInsets(0.005, 0.005, 0.005, 0.005)
+    control:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
+    return control
+end
+
+function private.createHighlight(name, path)
+    local highlight = FdfNormalHighlight.new(name)
+    highlight:setHighlightType('FILETEXTURE')
+    highlight:setAlphaFile("UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp")
+    highlight:setAlphaMode('ADD')
+    return highlight
+end
+
+function private.createText(name, font, size)
+    local text = FdfNormalText.new(name)
+    text:setText('Text')
+    text:setJustification('JUSTIFYCENTER', 'JUSTIFYMIDDLE')
+    text:setFont(font, size)
+    text:setColor(0, 0, 0, 1)
+    return text
+end
+
+private.fdf = FdfGlueTextButton.new('FrameNormalButton')
+private.fdf:setWidth(0.04)
+private.fdf:setHeight(0.04)
+private.fdf:setControlStyle(true, true, true)
+    local fdf_control = FdfBackdrop.new('FrameNormalButtonControl')
+    fdf_control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
+    fdf_control:setCornerSize(0.0125)
+    fdf_control:setInsets(0.005, 0.005, 0.005, 0.005)
+    fdf_control:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
+private.fdf:setControl(private.createControl(private.control_name, private.icon))
+private.fdf:setControlPushed(private.createControl(private.control_pushed_name, private.icon_pushed))
+private.fdf:setControlDisabled(private.createControl(private.control_disabled_name, private.disbtn_icon))
+private.fdf:setControlMouseOver(private.createHighlight(private.control_mouseover_name, private.highlight_icon))
+private.fdf:setControlFocus(private.createHighlight(private.control_focus_name, private.highlight_icon))
+private.fdf:setText(private.createText(private.text_name, private.font, private.font_size))
 
 private.available_events = {
-    [FRAMEEVENT_CONTROL_CLICK or 1] = true,
-    [FRAMEEVENT_MOUSE_ENTER or 2] = true,
-    [FRAMEEVENT_MOUSE_LEAVE or 3] = true,
-    [FRAMEEVENT_MOUSE_UP or 4] = true,
-    [FRAMEEVENT_MOUSE_DOWN or 5] = true,
-    [FRAMEEVENT_MOUSE_WHEEL or 6] = true,
+    [FrameEventType.CONTROL_CLICK] = true,
+    [FrameEventType.MOUSE_ENTER] = true,
+    [FrameEventType.MOUSE_LEAVE] = true,
+    [FrameEventType.MOUSE_UP] = true,
+    [FrameEventType.MOUSE_DOWN] = true,
+    [FrameEventType.MOUSE_WHEEL] = true,
 }
-
----@param self FrameNormalButton
-function private.newData(self)
-    local priv = {
-        trigger = Trigger.new(),
-
-        actions = {},
-    }
-    private.data[self] = priv
-
-    priv.trigger:addAction(private.runActions)
-    for event, _ in pairs(private.available_events) do
-        priv.actions[event] = {}
-        priv.trigger:addFrameEvent(self:getData(), event)
-    end
-end
-
-function private.runActions()
-    local button = static.getLinked(BlzGetTriggerFrame())
-    local player = GetTriggerPlayer()
-    local event = BlzGetTriggerFrameEvent()
-
-    local actions_list = private.data[button].actions[event]
-
-    for i = 1, #actions_list do
-        actions_list[i]:run(button, player, event)
-    end
-end
 
 ---@param event frameeventtype
 function private.isEventAvailable(event)
     if not private.available_events[event] then
-        Log:err('Event is not available for '..tostring(FrameNormalButton), 2)
+        Log:err('Event \''..frameToString(event)..'\' is not available for '..tostring(FrameNormalButton))
     end
 end
 
