@@ -2,26 +2,28 @@
 -- Include
 --=========
 
-local Class = require(LibList.ClassLib)
+local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib)
-local FrameNormalBase = FrameLib.Frame.Normal.Base
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Frame = HandleLib.Frame or error('')
+local FramePublic = Class.getPublic(Frame)
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local Log = UtilsLib.Log
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceUnitParamsClass
-local InterfaceUnitParams = require('Interface.UnitParams')
+local InterfaceUnitParams = require('Interface.UnitParams') or error('')
 
 --=======
 -- Class
 --=======
 
-local InterfaceUnitStatus = Class.new('InterfaceUnitStatus', FrameNormalBase)
----@class InterfaceUnitStatus : FrameNormalBase
+local InterfaceUnitStatus = Class.new('InterfaceUnitStatus', Frame)
+---@class InterfaceUnitStatus : Frame
 local public = InterfaceUnitStatus.public
----@class InterfaceUnitStatusClass : FrameNormalBaseClass
+---@class InterfaceUnitStatusClass : FrameClass
 local static = InterfaceUnitStatus.static
 ---@type InterfaceUnitStatusClass
 local override = InterfaceUnitStatus.override
@@ -41,7 +43,7 @@ function override.new()
     end
 
     local instance = Class.allocate(InterfaceUnitStatus)
-    instance = FrameNormalBase.new(private.fdf, instance)
+    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
 
     private.newData(instance)
 
@@ -57,27 +59,27 @@ end
 ---@param y number
 function public:setPos(x, y)
     local priv = private.data[self]
-    FrameNormalBasePublic.setPos(self, x, y)
+    FramePublic.setPos(self, x, y)
 
     priv.border:setPos(self:getAbsX(), self:getAbsY())
 
     priv.portrait:setPos(self:getAbsX() + 0.065 * self:getHeight(),
                          self:getAbsY() + 0.065 * self:getHeight())
 
-    priv.hp_bar:setPos(self:getAbsX() + self:getWidth() - priv.hp_bar:getWidth(),
-                       self:getAbsY() + self:getHeight() - priv.hp_bar:getHeight())
+    priv.hp_bar:setPos(self:getAbsX() + priv.border:getWidth(),
+                       self:getAbsY())
 
     priv.mp_bar:setPos(priv.hp_bar:getAbsX(),
-                       priv.hp_bar:getAbsY() - priv.mp_bar:getHeight())
+                       priv.hp_bar:getAbsY() + priv.hp_bar:getHeight())
 
-    priv.params:setPos(self:getAbsX(), self:getAbsY() - priv.params:getHeight())
+    priv.params:setPos(self:getAbsX(), self:getAbsY() + self:getHeight())
 end
 
 ---@param w number
 ---@param h number
 function public:setSize(w, h)
     local priv = private.data[self]
-    FrameNormalBasePublic.setSize(self, w, h)
+    FramePublic.setSize(self, w, h)
 
     priv.border:setSize(h, h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
@@ -154,9 +156,9 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self)
     local priv = {
         portrait = FrameLib.Origin.Portrait,
-        border = FrameLib.Frame.Normal.Base.new(private.fdf_border),
-        hp_bar = FrameLib.Frame.Simple.StatusBar.new(),
-        mp_bar = FrameLib.Frame.Simple.StatusBar.new(),
+        border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
+        hp_bar = FrameLib.Simple.StatusBar.new(),
+        mp_bar = FrameLib.Simple.StatusBar.new(),
         params = InterfaceUnitParams.new()
     }
     private.data[self] = priv

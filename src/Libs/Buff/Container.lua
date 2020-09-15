@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -14,7 +13,6 @@ local Unit = UtilsLib.Handle.Unit
 
 ---@type BuffClass
 local Buff = require(lib_path..'.Buff')
---endregion
 
 --=======
 -- Class

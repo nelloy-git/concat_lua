@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -13,7 +12,6 @@ local TextTag = UtilsLib.Handle.TextTag
 ---@type DamageDefines
 local Defines = require(lib_path..'.Defines')
 local DamageType = Defines.DamageType
---endregion
 
 --========
 -- Module

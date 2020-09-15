@@ -15,7 +15,7 @@ local Logger = require(lib_path..'Logger') or error('')
 ---@class UtilsSettings
 local Settings = {}
 
-local debug = false
+local debug = true
 function Settings.isDebug()
     return debug
 end

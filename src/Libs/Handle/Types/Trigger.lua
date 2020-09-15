@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -14,14 +13,12 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type HandleClass
 local Handle = require(lib_path..'Base') or error('')
---endregion
 
 --=======
 -- Class
 --=======
 
 local Trigger = Class.new('Trigger', Handle)
---region Class
 ---@class Trigger : Handle
 local public = Trigger.public
 ---@class TriggerClass : HandleClass
@@ -29,7 +26,6 @@ local static = Trigger.static
 ---@type TriggerClass
 local override = Trigger.override
 local private = {}
---endregion
 
 --========
 -- Static

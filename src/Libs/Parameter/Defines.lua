@@ -1,18 +1,26 @@
-local lib_modname = Lib.current().modname
----@type UtilsLib
-local UtilsLib = Lib.current().depencies.UtilsLib
+--=========
+-- Include
+--=========
+
+local lib_path = Lib.curPath()
+local lib_dep = Lib.curDepencies()
+
+---@type AssetLib
+local AssetLib = lib_dep.Asset or error('')
+local Icon = AssetLib.IconDefault or error('')
+
+---@type ParameterClass
+local Parameter = require(lib_path..'Parameter') or error('')
+
+--========
+-- Module
+--========
 
 ---@class ParameterDefines
 local Defines = {}
----@type ParameterClass
-local Parameter = require(lib_modname..'.Parameter')
 
 Defines.AllParameters = {}
 Defines.ApplyToUnit = {}
-
---=======
--- Utils
---=======
 
 local function registerParam(short_name, full_name, icon,
                              min_value, max_value, default_value,
@@ -70,67 +78,67 @@ end
 --============
 
 Defines.PhysicalDamage = registerParam('PDmg', 'Physical damage',
-                                       Compiletime(UtilsLib.Icon.BTNSteelMelee),
+                                       Icon.BTNSteelMelee,
                                        0, 10^10, 0, applyPhysDmg)
 
 Defines.AttackSpeed = registerParam('ASpd', 'Attack speed',
-                                    Compiletime(UtilsLib.Icon.BTNCommand),
+                                    Icon.BTNCommand,
                                     0, 10^10, 2, applyAttackSpeed)
 
 Defines.Defence = registerParam('Def', 'Defence',
-                                Compiletime(UtilsLib.Icon.BTNDefend),
+                                Icon.BTNDefend,
                                 0, 10^10, 0, nil)
 
-Defines.PhysicalDamageReduction = registerParam('PDmgReduc', 'Physical damage reduction',
-                                                Compiletime(UtilsLib.Icon.BTNHumanArmorUpThree),
+Defines.PhysicalDamageReduction = registerParam('PReduc', 'Physical damage reduction',
+                                                Icon.BTNHumanArmorUpThree,
                                                 -1, 1, 0, nil)
 
 Defines.MagicalDamage = registerParam('MDmg', 'Magical damage',
-                                      Compiletime(UtilsLib.Icon.BTNAdvancedStrengthOfTheMoon),
+                                      Icon.BTNAdvancedStrengthOfTheMoon,
                                       0, 10^10, 0, nil)
 
 Defines.CooldownReduction = registerParam('CdR', 'Cooldown reduction',
-                                          Compiletime(UtilsLib.Icon.BTNDispelMagic),
+                                          Icon.BTNDispelMagic,
                                           0, 0.75, 0, nil)
 
 Defines.Resistance = registerParam('Res', 'Resistance',
-                                   Compiletime(UtilsLib.Icon.BTNResistantSkin),
+                                   Icon.BTNResistantSkin,
                                    0, 10^10, 0, nil)
 
-Defines.MagicalDamageReduction = registerParam('MDmgReduc', 'Magical damage reduction',
-                                               Compiletime(UtilsLib.Icon.BTNLightningShield),
+Defines.MagicalDamageReduction = registerParam('MReduc', 'Magical damage reduction',
+                                               Icon.BTNLightningShield,
                                                -1, 1, 0, nil)
 
-Defines.ControlReduction = registerParam('ConReduc', 'Control reduction',
-                                    Compiletime(UtilsLib.Icon.BTNEvasion),
+Defines.ControlReduction = registerParam('CReduc', 'Control reduction',
+                                    Icon.BTNEvasion,
                                     0, 0.75, 0, nil)
 
 Defines.DodgeChance = registerParam('Dodge', 'Dodge chance',
-                                    Compiletime(UtilsLib.Icon.BTNAncestralSpirit),
+                                    Icon.BTNAncestralSpirit,
                                     0, 0.75, 0, nil)
 
 Defines.CriticalStrikeChance = registerParam('Crit', 'Critical strike chance',
-                                             Compiletime(UtilsLib.Icon.BTNCriticalStrike),
+                                             Icon.BTNCriticalStrike,
                                              0, 0.75, 0, nil)
 
 Defines.Health = registerParam('HP', 'Health',
-                               Compiletime(UtilsLib.Icon.BTNHealthStone),
+                               Icon.BTNHealthStone,
                                10, 10^10, 0, applyHealth)
 
 Defines.Regeneration = registerParam('Regen', 'Regeneration',
-                                     Compiletime(UtilsLib.Icon.BTNRegenerate),
+                                     Icon.BTNRegenerate,
                                      0, 10^10, 0, applyRegen)
 
 Defines.Mana = registerParam('MP', 'Mana',
-                             Compiletime(UtilsLib.Icon.BTNManaStone),
+                             Icon.BTNManaStone,
                              5, 10^10, 0, applyMana)
 
 Defines.Recovery = registerParam('Recov', 'Recovery',
-                                 Compiletime(UtilsLib.Icon.BTNBlink),
+                                 Icon.BTNBlink,
                                  0, 10^10, 0, applyRecov)
 
 Defines.MoveSpeed = registerParam('MS', 'Move speed',
-                                  Compiletime(UtilsLib.Icon.BTNBootsOfSpeed),
+                                  Icon.BTNBootsOfSpeed,
                                   0, 500, 250, applyMoveSpeed)
 
 return Defines

@@ -2,15 +2,15 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 ---@type TypesLib
-local TypeLib = lib_dep.Types or error('')
-local DamageType = TypeLib.DamageTypeEnum or error('')
+local TypesLib = lib_dep.Types or error('')
+local DamageType = TypesLib.DamageTypeEnum or error('')
+local isDamageType = TypesLib.isDamageType
 ---@type HandleLib
-local HandleLib = lib_dep.HandleLib or error('')
+local HandleLib = lib_dep.Handle or error('')
 local Trigger = HandleLib.Trigger or error('')
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
@@ -19,8 +19,6 @@ local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 local pairsByKeys = UtilsLib.pairsByKeys or error('')
-
---endregion
 
 --========
 -- Module
@@ -42,7 +40,9 @@ end
 ---@param callback DamageEventCallback
 ---@return Action
 function DamageEvent.addAction(dmg_type, priority, callback)
-    isTypeErr(dmg_type, 'damagetype', 'dmg_type')
+    if not isDamageType(dmg_type) then
+        Log:err('variable \'dmg_type\' is not of type damagetype', 2)
+    end
     isTypeErr(priority, 'number', 'priority')
     isTypeErr(callback, 'function', 'callback')
 
@@ -74,7 +74,10 @@ local function runActions(dmg, dmg_type, target, damager)
     local action_lists_by_priority = DamageEvent.callbacks[dmg_type]
 
     for _, actions in pairsByKeys(action_lists_by_priority) do
-        dmg = actions:run(dmg, dmg_type, target, damager)
+        local count = actions:count()
+        for i = 1, count do
+            dmg = actions:get(i):run(dmg, dmg_type, target, damager)
+        end
     end
 
     return dmg

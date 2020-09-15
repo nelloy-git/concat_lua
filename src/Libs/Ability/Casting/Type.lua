@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -11,14 +10,12 @@ local Class = lib_dep.Class or error('')
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
---endregion
 
 --=======
 -- Class
 --=======
 
 local AbilityCastingType = Class.new('AbilityCastingType')
---region Class
 ---@class AbilityCastingType
 local public = AbilityCastingType.public
 ---@class AbilityCastingTypeClass
@@ -27,7 +24,6 @@ local static = AbilityCastingType.static
 local override = AbilityCastingType.override
 local private = {}
 private.virtual_functions = {}
---endregion
 
 --========
 -- Static

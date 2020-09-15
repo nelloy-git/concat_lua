@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -19,7 +18,6 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 local AbilityData = require(lib_path..'.Data.Base')
 ---@type AbilityDataTypeClass
 local AbilityDataType = require(lib_path..'.Data.Type')
---endregion
 
 --=======
 -- Class

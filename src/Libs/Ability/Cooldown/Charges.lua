@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -20,14 +19,12 @@ local Log = UtilsLib.Log or error('')
 local AbilityCooldown = require(lib_path..'.Cooldown.Base')
 ---@type AbilityCooldownTypeClass
 local AbilityCooldownType = require(lib_path..'.Cooldown.Type')
---endregion
 
 --=======
 -- Class
 --=======
 
 local AbilityCooldownCharges = Class.new('AbilityCooldownCharges')
---region Class
 ---@class AbilityCooldownCharges
 local public = AbilityCooldownCharges.public
 ---@class AbilityCooldownChargesClass
@@ -35,7 +32,6 @@ local static = AbilityCooldownCharges.static
 ---@type AbilityCooldownChargesClass
 local override = AbilityCooldownCharges.override
 local private = {}
---endregion
 
 --========
 -- Static

@@ -1,65 +1,46 @@
 ---@class ParameterLib
 local ParameterLibAPI = {}
-local modname = Compiletime(Lib.getModname())
-Lib.start(modname)
-
---===========
--- Depencies
---===========
-
-Lib.current().depencies = {
-    Class = require(LibList.ClassLib),
-    UtilsLib = require(LibList.UtilsLib),
-    DamageLib = require(LibList.DamageLib)
-}
-local depencies = Lib.current().depencies
+Lib.start('ParameterLib', {
+    Asset = Lib.load(LibList.AssetLib) or error(''),
+    Class = Lib.load(LibList.ClassLib) or error(''),
+    Damage = Lib.load(LibList.DamageLib) or error(''),
+    Handle = Lib.load(LibList.HandleLib) or error(''),
+    Types = Lib.load(LibList.TypesLib) or error(''),
+    Utils = Lib.load(LibList.UtilsLib) or error(''),
+})
+local path = Lib.curPath()
 
 --=====
 -- API
 --=====
 
----@type ParameterDefines
-local Defines = require(modname..'.Defines')
-ParameterLibAPI.PhysicalDamage = Defines.PhysicalDamage
-ParameterLibAPI.AttackSpeed = Defines.AttackSpeed
-ParameterLibAPI.Defence = Defines.Defence
-ParameterLibAPI.PhysicalDamageReduction = Defines.PhysicalDamageReduction
-ParameterLibAPI.MagicalDamage = Defines.MagicalDamage
-ParameterLibAPI.CooldownReduction = Defines.CooldownReduction
-ParameterLibAPI.Resistance = Defines.Resistance
-ParameterLibAPI.MagicalDamageReduction = Defines.MagicalDamageReduction
-ParameterLibAPI.ControlReduction = Defines.ControlReduction
-ParameterLibAPI.DodgeChance = Defines.DodgeChance
-ParameterLibAPI.CriticalStrikeChance = Defines.CriticalStrikeChance
-ParameterLibAPI.Health = Defines.Health
-ParameterLibAPI.Regeneration = Defines.Regeneration
-ParameterLibAPI.Mana = Defines.Mana
-ParameterLibAPI.Recovery = Defines.Recovery
-ParameterLibAPI.MoveSpeed = Defines.MoveSpeed
----@type table<number, Parameter>
-ParameterLibAPI.AllParameters = Defines.AllParameters
----@type ParameterValueListClass
-ParameterLibAPI.Container = require(modname..'.ValueList')
 ---@type ParameterClass
-ParameterLibAPI.Parameter = require(modname..'.Parameter')
+ParameterLibAPI.Parameter = require(path..'Parameter') or error('')
+
+---@type ParameterDefines
+local Defines = require(path..'Defines') or error('')
+ParameterLibAPI.PhysicalDamage = Defines.PhysicalDamage or error('')
+ParameterLibAPI.AttackSpeed = Defines.AttackSpeed or error('')
+ParameterLibAPI.Defence = Defines.Defence or error('')
+ParameterLibAPI.PhysicalDamageReduction = Defines.PhysicalDamageReduction or error('')
+ParameterLibAPI.MagicalDamage = Defines.MagicalDamage or error('')
+ParameterLibAPI.CooldownReduction = Defines.CooldownReduction or error('')
+ParameterLibAPI.Resistance = Defines.Resistance or error('')
+ParameterLibAPI.MagicalDamageReduction = Defines.MagicalDamageReduction or error('')
+ParameterLibAPI.ControlReduction = Defines.ControlReduction or error('')
+ParameterLibAPI.DodgeChance = Defines.DodgeChance or error('')
+ParameterLibAPI.CriticalStrikeChance = Defines.CriticalStrikeChance or error('')
+ParameterLibAPI.Health = Defines.Health or error('')
+ParameterLibAPI.Regeneration = Defines.Regeneration or error('')
+ParameterLibAPI.Mana = Defines.Mana or error('')
+ParameterLibAPI.Recovery = Defines.Recovery or error('')
+ParameterLibAPI.MoveSpeed = Defines.MoveSpeed or error('')
+---@type table<number, Parameter>
+ParameterLibAPI.AllParameters = Defines.AllParameters or error('')
+
+local Damage = require(path..'Damage') or error('')
 ---@type ParameterContainerUnitClass
-ParameterLibAPI.UnitContainer = require(modname..'.UnitContainer')
----@type ParameterValueListClass
-ParameterLibAPI.ValueList = require(modname..'.ValueList')
-
---=======================
--- Register unit damage.
---=======================
-
----@type DamageType
-local DamageType = depencies.DamageLib.DamageType
----@type DamageCallbackPriority
-local Priority = depencies.DamageLib.CallbackPriority
-
-for _, dmg_type in pairs(DamageType) do
-    Lib.current().depencies.DamageLib.addCallback(ParameterLibAPI.UnitContainer.DamageCallback,
-                                                  dmg_type, Priority.Highest)
-end
+ParameterLibAPI.UnitContainer = require(path..'Container.Unit') or error('')
 
 Lib.finish()
 

@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -19,14 +18,12 @@ local BinaryData = require(lib_path..'Data') or error('')
 local BinaryUtils = require(lib_path..'Utils') or error('')
 ---@type BinaryUnitDB
 local UnitDB = require(lib_path..'UnitDB') or error('')
---endregion
 
 --=======
 -- Class
 --=======
 
 local BinaryUnit = Class.new('BinaryUnit', BinaryData)
---region Class
 ---@class BinaryUnit : BinaryData
 local public = BinaryUnit.public
 ---@class BinaryUnitClass : BinaryDataClass
@@ -34,7 +31,6 @@ local static = BinaryUnit.static
 ---@type BinaryUnitClass
 local override = BinaryUnit.override
 local private = {}
---endregion
 
 --=========
 -- Static

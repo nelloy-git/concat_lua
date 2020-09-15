@@ -2,9 +2,12 @@
 -- Include
 --=========
 
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Trigger = HandleLib.Trigger
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local ActionList = UtilsLib.ActionList
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local ActionList = UtilsLib.ActionList or error('')
 
 --========
 -- Module
@@ -54,11 +57,11 @@ local function onDeselection()
 end
 
 if not IsCompiletime() then
-    local trigger_select = UtilsLib.Handle.Trigger.new()
+    local trigger_select = Trigger.new()
     trigger_select:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SELECTED, GetLocalPlayer())
     trigger_select:addAction(onSelection)
 
-    local trigger_deselect = UtilsLib.Handle.Trigger.new()
+    local trigger_deselect = Trigger.new()
     trigger_deselect:addPlayerUnitEvent(EVENT_PLAYER_UNIT_DESELECTED, GetLocalPlayer())
     trigger_deselect:addAction(onDeselection)
 end

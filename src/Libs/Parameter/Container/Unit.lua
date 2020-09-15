@@ -2,33 +2,32 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_dep.Class
+local Class = lib_dep.Class or error('')
+---@type TypesLib
+local TypesLib = lib_dep.Types or error('')
+local DamageType = TypesLib.DamageTypeEnum or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = lib_dep.UtilsLib
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
-local Unit = UtilsLib.Handle.Unit
----@type DamageLib
-local DamageLib = lib_dep.DamageLib
-local DamageType = DamageLib.DamageType
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type ParameterValueListClass
-local ValueList = require(lib_path..'ValueList')
-local ValueListPublic = Class.getPublic(ValueList)
+local ValueList = require(lib_path..'ValueList') or error('')
+local ValueListPublic = Class.getPublic(ValueList) or error('')
 ---@type ParameterDefines
-local Defines = require(lib_path..'Defines')
---endregion
+local Defines = require(lib_path..'Defines') or error('')
 
 --=======
 -- Class
 --=======
 
 local ParameterContainerUnit = Class.new('ParameterContainerUnit', ValueList)
---region Class
 ---@class ParameterContainerUnit : ParameterValueList
 local public = ParameterContainerUnit.public
 ---@class ParameterContainerUnitClass : ParameterValueListClass
@@ -36,7 +35,6 @@ local static = ParameterContainerUnit.static
 ---@type ParameterContainerUnitClass
 local override = ParameterContainerUnit.override
 local private = {}
---endregion
 
 --=========
 -- Static
@@ -64,39 +62,6 @@ end
 ---@return ParameterContainerUnit | nil
 function static.get(owner)
     return private.owners[owner]
-end
-
---=================
--- Damage callback
---=================
-
-local MDmg = Defines.MagicalDamage
-local Def = Defines.Defence
-local PReduc = Defines.PhysicalDamageReduction
-local Res = Defines.Resistance
-local MReduc = Defines.MagicalDamageReduction
-
----@type DamageEventCallback
-static.DamageCallback = function(dmg, dmg_type, target, damager)
-    local damager_params = static.get(damager)
-    local target_params = static.get(target)
-    if not target_params then return dmg end
-
-    -- Add magic damage to attacks
-    if dmg_type == DamageType.PhysicalAttack then
-        local m_atk = damager_params:getResult(MDmg)
-        local m_dmg = m_atk * (0.85 + 0.3 * math.random())
-        DamageLib.damageUnit(m_dmg, DamageType.MagicalAttack, target, damager, WEAPON_TYPE_WHOKNOWS)
-    end
-
-    if dmg_type == DamageType.PhysicalAttack or dmg_type == DamageType.PhysicalSpell then
-        dmg = dmg * (1 - target_params:getResult(PReduc)) - target_params:getResult(Def)
-    elseif dmg_type == DamageType.MagicalAttack or dmg_type == DamageType.MagicalSpell then
-        dmg = dmg * (1 - target_params:getResult(MReduc)) - target_params:getResult(Res)
-    end
-
-    dmg = dmg > 0 and dmg or 0
-    return dmg
 end
 
 --========

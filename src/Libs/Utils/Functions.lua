@@ -7,7 +7,6 @@ local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
 local classType = Class.type or error('')
-local isClass = Class.isClass or error('')
 local getClass = Class.getClass or error('')
 ---@type UtilsSettings
 local Settings = require(lib_path..'Settings') or error('')
@@ -43,22 +42,23 @@ end
 ---@param var_name string
 ---@param level number | nil
 function UtilsFunctions.isTypeErr(var, need_type, var_name, level)
-    if not Settings.debug or UtilsFunctions.checkType(var, need_type) then
+    if not Settings.isDebug() or UtilsFunctions.checkType(var, need_type) then
         return
     end
 
     -- Print error
     local real_type = type(var)
+    level = level and level + 1 or 3
     if real_type == 'userdata' then
         local wc3_type_string = tostring(var)
         local pos = wc3_type_string:find(':')
         local wc3_type = wc3_type_string:sub(1, pos - 1)
-        Log:err('variable \''..(var_name or '')..'\'('..wc3_type..') is not of type '..tostring(need_type), level and level + 1 or 3)
-    elseif real_type == 'table' and isClass(var) then
+        Log:err('variable \''..(var_name or '')..'\'('..wc3_type..') is not of type '..tostring(need_type), level)
+    elseif real_type == 'table' and getClass(var) then
         local class_str = tostring(getClass(var))
-        Log:err('variable \''..(var_name or '')..'\'('..class_str..') is not of type '..tostring(need_type), level and level + 1 or 3)
+        Log:err('variable \''..(var_name or '')..'\'('..class_str..') is not of type '..tostring(need_type), level)
     else
-        Log:err('variable \''..(var_name or '')..'\'('..real_type..') is not of type '..tostring(need_type), level and level + 1 or 3)
+        Log:err('variable \''..(var_name or '')..'\'('..real_type..') is not of type '..tostring(need_type), level)
     end
 end
 
@@ -67,6 +67,14 @@ end
 function UtilsFunctions.id2int(id)
     UtilsFunctions.isTypeErr(id, 'string', 'id')
     local res, _ = string.unpack(">I4", id)
+    return res
+end
+
+---@param id integer
+---@return number
+function UtilsFunctions.int2id(id)
+    UtilsFunctions.isTypeErr(id, 'number', 'id')
+    local res = string.pack(">I4", id)
     return res
 end
 

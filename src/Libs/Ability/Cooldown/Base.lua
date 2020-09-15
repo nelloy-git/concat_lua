@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -15,14 +14,12 @@ local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
---endregion
 
 --=======
 -- Class
 --=======
 
 local AbilityCooldown = Class.new('AbilityCooldown')
---region Class
 ---@class AbilityCooldown
 local public = AbilityCooldown.public
 ---@class AbilityCooldownClass
@@ -30,7 +27,6 @@ local static = AbilityCooldown.static
 ---@type AbilityCooldownClass
 local override = AbilityCooldown.override
 local private = {}
---endregion
 
 --=========
 -- Static

@@ -40,7 +40,7 @@ function override.new(child)
 
     local fdf = private.fdf
     local instance = child or Class.allocate(FrameNormalImage)
-    instance = Frame.new(fdf:getName(), fdf:isSimple())
+    instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 
     private.newData(instance)
 
@@ -81,7 +81,7 @@ end
 private.fdf = FdfBackdrop.new('FrameNormalImage')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
-private.fdf:setBackground("ReplaceableTextures\\CommandButtons\\BTNAcidBomb.blp")
+private.fdf:setBackground('UI\\Widgets\\ToolTips\\Human\\human-tooltip-background')
 private.fdf:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
 private.fdf:setCornerSize(0.0125)
 private.fdf:setInsets(0.005, 0.005, 0.005, 0.005)

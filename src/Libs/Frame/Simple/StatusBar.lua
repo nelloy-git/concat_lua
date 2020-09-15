@@ -53,7 +53,7 @@ function override.new(child)
 
     local fdf = private.fdf
     local instance = child or Class.allocate(FrameSimpleStatusBar)
-    instance = Frame.new(fdf:getName(), fdf:isSimple())
+    instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 
     private.newData(instance)
 
@@ -152,7 +152,7 @@ private.fdf:addSubframe(private.fdf_forw)
 function private.newData(self)
     local h_border = BlzGetFrameByName(private.fdf_border:getName(), 0)
     local h_string = BlzGetFrameByName(private.fdf_string:getName(), 0)
-    local h_texture = BlzGetFrameByName(private.fdf_texture:getName(), 0)
+    local h_texture = BlzGetFrameByName(private.fdf_background:getName(), 0)
 
     local priv = {
         border = FrameSimpleTexture.link(h_border),

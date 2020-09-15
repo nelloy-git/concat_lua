@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -18,7 +17,6 @@ local AbilityCastingType = require(lib_path..'.Casting.Type') or error('')
 local AbilityInfoType = require(lib_path..'.Info.Type') or error('')
 ---@type AbilityCooldownTypeClass
 local AbilityCooldownType = require(lib_path..'.Cooldown.Type') or error('')
---endregion
 
 --=======
 -- Class
@@ -27,7 +25,6 @@ local AbilityCooldownType = require(lib_path..'.Cooldown.Type') or error('')
 local AbilityDataType = Class.new('AbilityDataType', AbilityCastingType,
                                                      AbilityInfoType,
                                                      AbilityCooldownType)
---region Class
 ---@class AbilityDataType
 local public = AbilityDataType.public
 ---@class AbilityDataTypeClass
@@ -36,7 +33,6 @@ local static = AbilityDataType.static
 local override = AbilityDataType.override
 local private = {}
 private.virtual_functions = {}
---endregion
 
 --========
 -- Static

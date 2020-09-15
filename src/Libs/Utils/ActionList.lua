@@ -17,7 +17,6 @@ local isTypeErr = Functions.isTypeErr or error('')
 --=======
 
 local ActionList = Class.new('ActionList')
---region Class
 ---@class ActionList : Handle
 local public = ActionList.public
 ---@class ActionListClass : HandleClass
@@ -25,7 +24,6 @@ local static = ActionList.static
 ---@type ActionListClass
 local override = ActionList.override
 local private = {}
---endregion
 
 --========
 -- Static
@@ -75,6 +73,12 @@ function public:remove(action)
     end
 
     return false
+end
+
+---@param pos number
+---@return Action | nil
+function public:get(pos)
+    return private.data[self].actions[pos]
 end
 
 ---@return number

@@ -2,23 +2,25 @@
 -- Include
 --=========
 
-local Class = require(LibList.ClassLib)
+local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib)
-local FrameNormalBase = FrameLib.Frame.Normal.Base
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Frame = HandleLib.Frame or error('')
+local FramePublic = Class.getPublic(Frame)
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local Log = UtilsLib.Log
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
 --=======
 
-local InterfaceMinimap = Class.new('InterfaceMinimap', FrameNormalBase)
----@class InterfaceMinimap : FrameNormalBase
+local InterfaceMinimap = Class.new('InterfaceMinimap', Frame)
+---@class InterfaceMinimap : Frame
 local public = InterfaceMinimap.public
----@class InterfaceMinimapClass : FrameNormalBaseClass
+---@class InterfaceMinimapClass : FrameClass
 local static = InterfaceMinimap.static
 ---@type InterfaceMinimapClass
 local override = InterfaceMinimap.override
@@ -38,12 +40,19 @@ function override.new()
     end
 
     local instance = Class.allocate(InterfaceMinimap)
-    instance = FrameNormalBase.new(private.fdf, instance)
+    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
 
     private.newData(instance)
 
     static_instance = instance
     return instance
+end
+
+---@param handle framehandle
+---@param child FrameNormalImage
+---@return FrameNormalImage
+function override.link(handle, child)
+    Log:err('Function disabled', 2)
 end
 
 --========
@@ -54,7 +63,7 @@ end
 ---@param y number
 function public:setPos(x, y)
     local priv = private.data[self]
-    FrameNormalBasePublic.setPos(self, x, y)
+    FramePublic.setPos(self, x, y)
 
     priv.minimap:setPos(self:getAbsX() + 0.05 * self:getHeight(),
                         self:getAbsY() + 0.05 * self:getHeight())
@@ -64,7 +73,7 @@ end
 ---@param h number
 function public:setSize(w, h)
     local priv = private.data[self]
-    FrameNormalBasePublic.setSize(self, w, h)
+    FramePublic.setSize(self, w, h)
 
     priv.minimap:setSize(0.9 * h, 0.9 * h)
 end
@@ -72,7 +81,7 @@ end
 ---@param flag boolean
 function public:setVisible(flag)
     local priv = private.data[self]
-    FrameNormalBasePublic.setVisible(self, flag)
+    FramePublic.setVisible(self, flag)
 
     priv.minimap:setVisible(flag)
 end

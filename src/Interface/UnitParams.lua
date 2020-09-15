@@ -2,27 +2,30 @@
 -- Include
 --=========
 
-local Class = require(LibList.ClassLib)
-
+local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib)
-local FrameNormalBase = FrameLib.Frame.Normal.Base
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Frame = HandleLib.Frame or error('')
+local FramePublic = Class.getPublic(Frame) or error('')
 ---@type ParameterLib
-local ParamLib = require(LibList.ParameterLib)
+local ParamLib = require(LibList.ParameterLib) or error('')
+local Parameter = ParamLib.Parameter or error('')
+local ParamUnitContainer = ParamLib.UnitContainer or error('')
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
 --=======
 
-local InterfaceUnitParams = Class.new('InterfaceUnitParams', FrameNormalBase)
----@class InterfaceUnitParams : FrameNormalBase
+local InterfaceUnitParams = Class.new('InterfaceUnitParams', Frame)
+---@class InterfaceUnitParams : Frame
 local public = InterfaceUnitParams.public
----@class InterfaceUnitParamsClass : FrameNormalBaseClass
+---@class InterfaceUnitParamsClass : FrameClass
 local static = InterfaceUnitParams.static
 ---@type InterfaceUnitParamsClass
 local override = InterfaceUnitParams.override
@@ -35,7 +38,9 @@ local private = {}
 ---@return InterfaceUnitParams
 function override.new()
     local instance = Class.allocate(InterfaceUnitParams)
-    instance = FrameNormalBase.new(private.fdf_background, instance)
+    instance = Frame.new(private.fdf_background:getName(),
+                         private.fdf_background:isSimple(),
+                         instance)
 
     private.newData(instance)
 
@@ -47,7 +52,7 @@ end
 --========
 
 function public:setPos(x, y)
-    FrameNormalBasePublic.setPos(self, x, y)
+    FramePublic.setPos(self, x, y)
 
     print('SettingPosition')
     private.updatePos(self)
@@ -56,13 +61,13 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    FrameNormalBasePublic.setSize(self, width, height)
+    FramePublic.setSize(self, width, height)
     private.updatePos(self)
 end
 
 ---@param flag number
 function public:setVisible(flag)
-    FrameNormalBasePublic.setVisible(self, flag)
+    FramePublic.setVisible(self, flag)
     local priv = private.data[self]
 
     for i = 1, #private.params_order do
@@ -74,7 +79,7 @@ end
 ---@param param Parameter
 ---@param value number
 function public:setValue(param, value)
-    isTypeErr(param, ParamLib.Parameter, 'param')
+    isTypeErr(param, Parameter, 'param')
     isTypeErr(value, 'number', 'value')
 
     local priv = private.data[self]
@@ -94,7 +99,7 @@ end
 
 ---@param value_list ParameterValueList
 function public:setAllValues(value_list)
-    isTypeErr(value_list, ParamLib.ValueList, 'value_list')
+    isTypeErr(value_list, ParamUnitContainer, 'value_list')
 
     local count = #private.params_order
     for i = 1, count do
@@ -158,11 +163,11 @@ function private.newData(self)
         ---@type Parameter
         local param = private.params_order[i]
 
-        local name = FrameLib.Frame.Simple.Text.new()
+        local name = FrameLib.Simple.Text.new()
         name:setText(param:getShortName())
         table.insert(priv.names, #priv.names + 1, name)
 
-        local value = FrameLib.Frame.Simple.Text.new()
+        local value = FrameLib.Simple.Text.new()
         value:setText('0')
         table.insert(priv.values, #priv.values + 1, value)
     end
@@ -190,14 +195,14 @@ function private.updatePos(self)
 
     for i = 1, count do
         ---@type FrameSimpleText
-        local name = priv.names[count - i + 1]
+        local name = priv.names[i]
         name:setPos(x + x_border, y + y_border + (i - 1) * h)
         name:setSize(w_name, h)
         name:setFont(private.font, font_size)
         name:setVisible(self:isVisible())
 
         ---@type FrameSimpleText
-        local value = priv.values[count - i + 1]
+        local value = priv.values[i]
         value:setPos(x + width - x_border - w_value, y + y_border + (i - 1) * h)
         value:setSize(w_value, h)
         value:setFont(private.font, font_size)

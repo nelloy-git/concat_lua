@@ -15,6 +15,9 @@ local path = Lib.curPath()
 local DamageEvent = require(path..'Event')
 DamageLibAPI.addAction = DamageEvent.addAction
 DamageLibAPI.removeAction = DamageEvent.removeAction
+---@type DamageFunctions
+local DamageFunctions = require(path..'Functions')
+DamageLibAPI.damageUnit = DamageFunctions.damageUnit
 
 Lib.finish()
 

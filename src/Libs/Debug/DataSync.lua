@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -21,14 +20,12 @@ local Settings = require(lib_path..'Settings')
 local Log = Settings.default_logger
 ---@type TriggerClass
 local Trigger = require(lib_path..'Handle.Trigger')
---endregion
 
 --=======
 -- Class
 --=======
 
 local DataSync = Class.new('DataSync')
---region Class
 ---@class DataSync
 local public = DataSync.public
 ---@class DataSyncClass
@@ -36,7 +33,6 @@ local static = DataSync.static
 ---@type DataSyncClass
 local override = DataSync.override
 local private = {}
---endregion
 
 --=========
 -- Static

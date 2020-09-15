@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -22,14 +21,12 @@ local BinaryData = require(lib_path..'Data') or error('')
 local BinaryUtils = require(lib_path..'Utils') or error('')
 
 local FourCC = function(id) return string.unpack(">I4", id) end
---endregion
 
 --=======
 -- Class
 --=======
 
 local BinaryAbility = Class.new('BinaryAbility', BinaryData)
---region Class
 ---@class BinaryAbility : BinaryData
 local public = BinaryAbility.public
 ---@class BinaryAbilityClass : BinaryDataClass
@@ -37,7 +34,6 @@ local static = BinaryAbility.static
 ---@type BinaryAbilityClass
 local override = BinaryAbility.override
 local private = {}
---endregion
 
 --=========
 -- Static

@@ -23,6 +23,7 @@ end
 -- Screen
 --========
 
+---@type FrameScreen
 FrameLib.Screen = require(path..'Screen') or error('')
 
 ----------------

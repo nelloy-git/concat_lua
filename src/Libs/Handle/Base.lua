@@ -33,6 +33,9 @@ local private = {}
 ---@param child Handle | nil
 ---@return Handle
 function override.new(handle, destructor, child)
+    if not handle then
+        Log:err('variable \'handle\' can not be nil.', 2)
+    end
     isTypeErr(destructor, 'function', 'destructor')
     if child then isTypeErr(child, Handle, 'child') end
 

@@ -2,18 +2,18 @@
 -- Include
 --=========
 
-local Class = require(LibList.ClassLib)
+local Class = require(LibList.ClassLib) or error('')
 
 ---@type FrameLib
-local FrameLib = require(LibList.FrameLib)
-local FrameNormalBase = FrameLib.Frame.Normal.Base
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
+local FrameLib = require(LibList.FrameLib) or error('')
+local FrameNormalBase = FrameLib.Frame.Normal.Base or error('')
+local FrameNormalBasePublic = Class.getPublic(FrameNormalBase) or error('')
 ---@type ParameterLib
-local ParamLib = require(LibList.ParameterLib)
+local ParamLib = require(LibList.ParameterLib) or error('')
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class

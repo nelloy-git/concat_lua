@@ -45,7 +45,7 @@ function override.new(child)
 
     local fdf = private.fdf
     local instance = child or Class.allocate(FrameSimpleText)
-    instance = Frame.new(fdf:getName(), fdf:isSimple())
+    instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 
     private.newData(instance)
 

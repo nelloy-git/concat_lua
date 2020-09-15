@@ -74,6 +74,7 @@ local function updateResolution()
     if cur_p_width == p_width and cur_p_height == p_height then
         return
     end
+
     p_width = cur_p_width
     p_height = cur_p_height
 
@@ -81,9 +82,7 @@ local function updateResolution()
     screen_width = 0.8 * cur_p_width / ui_pixel_width
     screen_x0 = -(screen_width - 0.8) / 2
 
-    for i = 1, #actions do
-        actions[i]:run(screen_x0, screen_y0, screen_width, screen_height)
-    end
+    actions:run(screen_x0, screen_y0, screen_width, screen_height)
 end
 
 if not IsCompiletime() then

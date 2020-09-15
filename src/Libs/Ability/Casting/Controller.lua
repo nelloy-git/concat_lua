@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -20,14 +19,12 @@ local Log = UtilsLib.Log or error('')
 local AbilityCasting = require(lib_path..'Casting.Base') or error('')
 ---@type AbilityCastingTypeClass
 local AbilityCastingType = require(lib_path..'Casting.Type') or error('')
---endregion
 
 --=======
 -- Class
 --=======
 
 local AbilityCastingController = Class.new('AbilityCastingController')
---region Class
 ---@class AbilityCastingController
 local public = AbilityCastingController.public
 ---@class AbilityCastingControllerClass
@@ -35,7 +32,6 @@ local static = AbilityCastingController.static
 ---@type AbilityCastingControllerClass
 local override = AbilityCastingController.override
 local private = {}
---endregion
 
 --========
 -- Static

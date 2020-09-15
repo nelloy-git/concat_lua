@@ -8,7 +8,7 @@ local BinaryLib = require(LibList.BinaryLib) or error('')
 local ParamLib = require(LibList.ParameterLib) or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
-local id2int = UtilsLib.Functions.id2int or error('')
+local id2int = UtilsLib.id2int or error('')
 
 --========
 -- Module

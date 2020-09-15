@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -15,14 +14,12 @@ local Unit = UtilsLib.Handle.Unit
 
 ---@type BuffTypeClass
 local BuffType = require(lib_path..'.Type')
---endregion
 
 --=======
 -- Class
 --=======
 
 local Buff = Class.new('Buff')
---region Class
 ---@class Buff
 local public = Buff.public
 ---@class BuffClass
@@ -30,7 +27,6 @@ local static = Buff.static
 ---@type BuffClass
 local override = Buff.override
 local private = {}
---endregion
 
 --=========
 -- Static

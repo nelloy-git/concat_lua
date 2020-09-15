@@ -24,14 +24,5 @@
         "chrono": "cpp"
     },
     "Lua.awakened.cat": true,
-    "maptz.regionfolder": {
-        "[lua]": {
-            "foldEnd": "--endregion",
-            "foldEndRegex": "[\\s]*--endregion",
-            "foldStart": "--region [NAME]",
-            "foldStartRegex": "[\\s]*--region[\\s]*(.*)"
-        }
-    
-    },
     "cmake.configureOnOpen": false,
 }

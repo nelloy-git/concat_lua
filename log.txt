@@ -1,0 +1,12 @@
+[0.450] {Msg} Created new FdfFile 'GeneratedFile' containing:
+    FrameNormalButton
+    FrameNormalImage
+    FrameNormalTextDefault
+    FrameSimpleImage
+    FrameSimpleStatusBar
+    FrameSimpleText
+    InterfaceMinimapBorder
+    InterfacePortrait
+    InterfacePortraitBorder
+    InterfaceSpellButtonBorder
+    InterfaceUnitParametersBackground

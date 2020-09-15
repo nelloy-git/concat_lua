@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -19,14 +18,12 @@ local Log = UtilsLib.Log or error('')
 
 ---@type AbilityInfoTypeClass
 local AbilityInfoType = require(lib_path..'.Info.Type')
---endregion
 
 --=======
 -- Class
 --=======
 
 local AbilityInfo = Class.new('AbilityInfo')
---region Class
 ---@class AbilityInfo
 local public = AbilityInfo.public
 ---@class AbilityInfoClass
@@ -34,7 +31,6 @@ local static = AbilityInfo.static
 ---@type AbilityInfoClass
 local override = AbilityInfo.override
 local private = {}
---endregion
 
 --=========
 -- Static

@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -35,14 +34,12 @@ local AbilityTargetNone = require(lib_path..'.Target.None') or error('')
 local AbilityTargetUnit = require(lib_path..'.Target.Unit') or error('')
 ---@type AbilityTargetPointClass
 local AbilityTargetPoint = require(lib_path..'.Target.Point') or error('')
---endregion
 
 --=======
 -- Class
 --=======
 
 local AbilityData = Class.new('AbilityData')
---region Class
 ---@class AbilityData
 local public = AbilityData.public
 ---@class AbilityDataClass
@@ -50,7 +47,6 @@ local static = AbilityData.static
 ---@type AbilityDataClass
 local override = AbilityData.override
 local private = {}
---endregion
 
 --=========
 -- Static

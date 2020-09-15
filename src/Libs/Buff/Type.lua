@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -11,14 +10,12 @@ local Class = lib_depss
 local UtilsLib = require(LibList.UtilsLib)
 local isTypeErr = UtilsLib.isTypeErr
 local Log = UtilsLib.Log
---endregion
 
 --=======
 -- Class
 --=======
 
 local BuffType = Class.new('BuffType')
---region Class
 ---@class BuffType
 local public = BuffType.public
 ---@class BuffTypeClass
@@ -26,7 +23,6 @@ local static = BuffType.static
 ---@type BuffTypeClass
 local override = BuffType.override
 local private = {}
---endregion
 
 --=========
 -- Static

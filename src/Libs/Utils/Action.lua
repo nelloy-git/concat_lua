@@ -52,7 +52,7 @@ end
 
 ---@return any
 function public:run(...)
-    if Settings.debug then
+    if Settings.isDebug() then
         local success, result = pcall(private.data[self].callback, ...)
         if success then
             return result

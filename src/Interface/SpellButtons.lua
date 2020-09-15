@@ -2,23 +2,25 @@
 -- Include
 --=========
 
-local Class = require(LibList.ClassLib)
+local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib)
-local FrameNormalBase = FrameLib.Frame.Normal.Base
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase)
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Frame = HandleLib.Frame or error('')
+local FramePublic = Class.getPublic(Frame) or error('')
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local Log = UtilsLib.Log
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
 --=======
 
-local InterfaceSpellButtons = Class.new('InterfaceSpellButtons', FrameNormalBase)
----@class InterfaceSpellButtons : FrameNormalBase
+local InterfaceSpellButtons = Class.new('InterfaceSpellButtons', Frame)
+---@class InterfaceSpellButtons : Frame
 local public = InterfaceSpellButtons.public
----@class InterfaceSpellButtonsClass : FrameNormalBaseClass
+---@class InterfaceSpellButtonsClass : FrameClass
 local static = InterfaceSpellButtons.static
 ---@type InterfaceSpellButtonsClass
 local override = InterfaceSpellButtons.override
@@ -38,7 +40,7 @@ function override.new()
     end
 
     local instance = Class.allocate(InterfaceSpellButtons)
-    instance = FrameNormalBase.new(private.fdf, instance)
+    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
 
     private.newData(instance)
 
@@ -50,18 +52,11 @@ end
 -- Public
 --========
 
-----@param x number
-----@param y number
---function public:setPos(x, y)
---    local priv = private.data[self]
---    FrameNormalBasePublic.setPos(self, x, y)
---end
-
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
     local priv = private.data[self]
-    FrameNormalBasePublic.setSize(self, width, height)
+    FramePublic.setSize(self, width, height)
 
     local w = width / 8
     for i = 1, #priv.button_borders do
@@ -73,14 +68,6 @@ function public:setSize(width, height)
         btn:setPos(0.15 * w, 0.15 * w)
         btn:setSize(0.7 * w, 0.7 * w)
     end
-end
-
----@param flag boolean
-function public:setVisible(flag)
-    local priv = private.data[self]
-    FrameNormalBasePublic.setVisible(self, flag)
-
-    --priv.minimap:setVisible(flag)
 end
 
 --=========
@@ -99,7 +86,7 @@ function private.newData(self)
 
     local w = self:getWidth() / 7.5
     for i = 6, 12 do
-        local border = FrameLib.Frame.Normal.Base.new(private.fdf)
+        local border = Frame.new(private.fdf:getName(), private.fdf:isSimple())
         border:setParent(self)
         border:setPos((i - 5.5) * w, 0.1 * self:getHeight())
         border:setSize(w, w)

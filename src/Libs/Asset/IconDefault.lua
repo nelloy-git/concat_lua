@@ -1,4 +1,4 @@
----@class Icon
+---@class AssetIconDefault
 local Icon = {
     BTN3M1 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M1.blp",
     BTN3M2 = "ReplaceableTextures\\\\CommandButtons\\\\BTN3M2.blp",
@@ -2340,5 +2340,6 @@ local Icon = {
     pASBTNVorpalBlades = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNVorpalBlades.blp",
     pASBTNWarStomp = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNWarStomp.blp"
 }
+setmetatable(Icon, {__mode = 'k'})
 
 return Icon

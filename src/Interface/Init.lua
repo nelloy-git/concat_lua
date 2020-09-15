@@ -3,24 +3,26 @@
 --=========
 
 ---@type FrameLib
-local FrameLib = require(LibList.FrameLib)
-
+local FrameLib = require(LibList.FrameLib) or error('')
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Timer = HandleLib.Timer
+local Unit = HandleLib.Unit
 ---@type ParameterLib
-local ParamLib = require(LibList.ParameterLib)
-local ParamUnitContainer = ParamLib.UnitContainer
+local ParamLib = require(LibList.ParameterLib) or error('')
+local ParamUnitContainer = ParamLib.UnitContainer or error('')
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local Log = UtilsLib.Log
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceMinimapClass
-local InterfaceMinimap = require('Interface.Minimap')
+local InterfaceMinimap = require('Interface.Minimap') or error('')
 ---@type InterfaceSelection
-local InterfaceSelection = require('Interface.Selection')
+local InterfaceSelection = require('Interface.Selection') or error('')
 ---@type InterfaceSpellButtonsClass
-local InterfaceSpellButtons = require('Interface.SpellButtons')
+local InterfaceSpellButtons = require('Interface.SpellButtons') or error('')
 ---@type InterfaceUnitStatusClass
-local InterfaceUnitStatus = require('Interface.UnitStatus')
+local InterfaceUnitStatus = require('Interface.UnitStatus') or error('')
 
 --========
 -- Module
@@ -46,8 +48,8 @@ FrameLib.Origin.Inventory:setVisible(false)
 Interface.Minimap = InterfaceMinimap.new()
 Interface.Minimap:setSize(0.15, 0.15)
 Interface.Minimap:setPos(0, 0)
-FrameLib.Screen.addResolutionChangedAction(function (_, _, _, new_x0, _, _)
-    Interface.Minimap:setPos(new_x0, 0)
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    Interface.Minimap:setPos(x0, y0 + h - Interface.Minimap:getHeight())
 end)
 
 -----------------
@@ -57,11 +59,11 @@ end)
 Interface.ChatEditBox = FrameLib.Origin.ChatEditBox
 Interface.ChatEditBox:setPos(0, 0)
 Interface.ChatEditBox:setSize(0.3, 0.025)
-FrameLib.Screen.addResolutionChangedAction(function (_, _, _, new_x0, _, _)
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
     local map_w = Interface.Minimap:getWidth()
 
-    local x = new_x0 + map_w > 0 and new_x0 + map_w + 0.005 or 0
-    Interface.ChatEditBox:setPos(x, 0)
+    local x = x0 + map_w > 0 and x0 + map_w + 0.005 or 0
+    Interface.ChatEditBox:setPos(x, y0 + h - Interface.ChatEditBox:getHeight())
 end)
 
 -------------
@@ -70,8 +72,8 @@ end)
 
 Interface.ChatBox = FrameLib.Origin.ChatBox
 Interface.ChatBox:setParent(Interface.ChatEditBox)
-Interface.ChatBox:setPos(0, Interface.ChatEditBox:getHeight())
-Interface.ChatBox:setSize(0.25, 0.25)
+Interface.ChatBox:setPos(0, Interface.ChatEditBox:getHeight() + Interface.ChatBox:getHeight())
+Interface.ChatBox:setSize(0.3, 0.25)
 
 --------------
 -- Portrait --
@@ -79,11 +81,11 @@ Interface.ChatBox:setSize(0.25, 0.25)
 
 Interface.UnitStatus = InterfaceUnitStatus.new()
 Interface.UnitStatus:setSize(0.3, 0.08)
-Interface.UnitStatus:setPos(0, 0.49)
+Interface.UnitStatus:setPos(0, 0)
 Interface.UnitStatus:setVisible(false)
 
-FrameLib.Screen.addResolutionChangedAction(function (_, _, _, new_x0, _, _)
-    Interface.UnitStatus:setPos(new_x0, 0.49)
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    Interface.UnitStatus:setPos(0.6, 0.3)
 end)
 
 ---@type Unit
@@ -103,14 +105,15 @@ InterfaceSelection.addAction(function(group)
     end
 end)
 
-local stats_time = UtilsLib.Handle.Timer.new()
+local stats_time = Timer.new()
 stats_time:start(0.05, true, function()
     if selected then
         if selected:getHealth() > 0.5 then
             Interface.UnitStatus:setHealth(selected:getHealth(), selected:getMaxHealth())
             Interface.UnitStatus:setMana(selected:getMana(), selected:getMaxMana())
-            
+
             local params = ParamUnitContainer.get(selected)
+            print(params)
             if not params then Log:err('Can not find linked ParameterContainerUnit') end
             Interface.UnitStatus:setParameters(params)
         else
@@ -126,8 +129,9 @@ end)
 Interface.SkillsButtons = InterfaceSpellButtons.new()
 Interface.SkillsButtons:setSize(0.3, 0.045)
 Interface.SkillsButtons:setPos(0.5, 0)
-FrameLib.Screen.addResolutionChangedAction(function (_, _, _, new_x0, new_width, _)
-    Interface.SkillsButtons:setPos(new_x0 + new_width - Interface.SkillsButtons:getWidth(), 0)
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    Interface.SkillsButtons:setPos(x0 + w - Interface.SkillsButtons:getWidth(), 
+                                   y0 + h - Interface.SkillsButtons:getHeight())
 end)
 
 --[[
@@ -142,7 +146,7 @@ for i = 1, count do
     local w = 0.04
     Interface.SkillsButtons[i]:setSize(w, h)
     Interface.SkillsButtons[i]:setPos(0.8 - (count - i + 1) * w, 0)
-    FrameLib.Screen.addResolutionChangedAction(function (_, _, _, new_x0, new_width, _)
+    FrameLib.Screen.addChangedAction(function (_, _, _, new_x0, new_width, _)
         Interface.SkillsButtons[i]:setPos(new_x0 + new_width - (count - i + 1) * w, 0)
     end)
 end

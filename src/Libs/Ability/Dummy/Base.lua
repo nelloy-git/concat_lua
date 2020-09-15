@@ -2,7 +2,6 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -22,7 +21,6 @@ local Log = UtilsLib.Log or error('')
 
 ---@type AbilityDummyPool
 local AbilityDummyPool = require(lib_path..'.Dummy.Pool')
---endregion
 
 --=======
 -- Class

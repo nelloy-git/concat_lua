@@ -80,11 +80,11 @@ function public:setPos(x, y)
 
     local handle = self:getData()
     if priv.parent then
-        BlzFrameSetPoint(handle, FRAMEPOINT_TOPRIGHT,
-                         priv.parent:getData(), FRAMEPOINT_TOPRIGHT,
+        BlzFrameSetPoint(handle, FRAMEPOINT_TOPLEFT,
+                         priv.parent:getData(), FRAMEPOINT_TOPLEFT,
                          x, -y)
     else
-        BlzFrameSetAbsPoint(handle, FRAMEPOINT_TOPRIGHT,
+        BlzFrameSetAbsPoint(handle, FRAMEPOINT_TOPLEFT,
                             x, 0.6 - y)
     end
 end
@@ -339,7 +339,7 @@ if not IsCompiletime() then
     BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMLEFT, 0, 0.6)
     BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_BOTTOMRIGHT, 0, 0.6)
     BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0.6)
-    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPRIGHT, 0, 0.6)
+    BlzFrameSetAbsPoint(private.console_ui_backdrop, FRAMEPOINT_TOPLEFT, 0, 0.6)
 
     -- Protect ConsoleUIBackdrop
     local origBlzGetFrameByName = BlzGetFrameByName

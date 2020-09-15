@@ -9,6 +9,7 @@ local Class = lib_dep.Class or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type HandleClass
 local Handle = require(lib_path..'Base') or error('')
@@ -45,8 +46,13 @@ function override.new(unit_id, x, y, owner, child)
         isTypeErr(child, Unit, 'child')
     end
 
+    local handle = CreateUnit(owner, unit_id, x, y, 0)
+    if not handle then
+        Log:err('Can not create unit('..UtilsLib.int2id(unit_id)..')', 2)
+    end
+
     local instance = child or Class.allocate(Unit)
-    instance = Handle.new(CreateUnit(owner, unit_id, x, y, 0), RemoveUnit, instance)
+    instance = Handle.new(handle, RemoveUnit, instance)
     private.newData(instance, owner)
 
     return instance

@@ -6,15 +6,16 @@
 local AbilLib = require(LibList.AbilityLib) or error('')
 ---@type BinaryLib
 local BinaryLib = require(LibList.BinaryLib) or error('')
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Unit = HandleLib.Unit
 ---@type BuffLib
 --local BuffLib = require(LibList.BuffLib) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
----@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib) or error('')
 
 ---@type CorruptedPriestSettings
-local Settings = require('Hero.CorruptedPriest.Settings')
+local Settings = require('Hero.CorruptedPriest.Settings') or error('')
 
 --========
 -- Module
@@ -28,7 +29,7 @@ local CorruptedPriest = {}
 ---@param owner player
 ---@return Unit
 function CorruptedPriest.new(x, y, owner)
-    local unit = UtilsLib.Handle.Unit.new(CorruptedPriest.Type:getId(), x, y, owner)
+    local unit = Unit.new(CorruptedPriest.Type:getId(), x, y, owner)
     AbilLib.Container.new(unit)
     --BuffLib.Container.new(unit)
 
@@ -52,10 +53,10 @@ function CorruptedPriest.new(x, y, owner)
 end
 
 CorruptedPriest.Type = BinaryLib.Unit.new(Settings.Id, Settings.BaseId, Settings.Name)
-CorruptedPriest.Type:setName(Settings.Name)
-CorruptedPriest.Type:setIconGameInterface(Settings.Icon)
-CorruptedPriest.Type:setMana(100)
-CorruptedPriest.Type:setManaRegeneration(1)
-CorruptedPriest.Type:setNormalAbilities({})
+--CorruptedPriest.Type:setName(Settings.Name)
+--CorruptedPriest.Type:setIconGameInterface(Settings.Icon)
+--CorruptedPriest.Type:setMana(100)
+--CorruptedPriest.Type:setManaRegeneration(1)
+--CorruptedPriest.Type:setNormalAbilities({})
 
 return CorruptedPriest

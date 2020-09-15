@@ -67,7 +67,7 @@ Screen.addChangedAction(function(x0, y0, w, h)
     local real_w = k * FramePublic.getWidth(Portrait)
     Portrait:setSize(real_w, Portrait:getHeight())
 
-    local real_x = k * FramePublic.getX(Portrait)
+    local real_x = k * FramePublic.getX(Portrait) + x0
     Portrait:setPos(real_x, Portrait:getY())
 end)
 

@@ -2,25 +2,22 @@
 -- Include
 --=========
 
---region Include
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_dep.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = lib_dep.UtilsLib
-local isTypeErr = UtilsLib.isTypeErr
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type ParameterClass
-local Parameter = require(lib_path..'Parameter')
---endregion
+local Parameter = require(lib_path..'Parameter') or error('')
 
 --=======
 -- Class
 --=======
 
 local ParameterValue = Class.new('ParameterValue')
---region Class
 ---@class ParameterValue
 local public = ParameterValue.public
 ---@class ParameterValueClass
@@ -28,7 +25,6 @@ local static = ParameterValue.static
 ---@type ParameterValueClass
 local override = ParameterValue.override
 local private = {}
---endregion
 
 --========
 -- Static

@@ -15,6 +15,8 @@ UtilsLibAPI.Action = require(path..'Action') or error('')
 UtilsLibAPI.ActionList = require(path..'ActionList') or error('')
 ---@type UtilsFunctions
 local Functions = require(path..'Functions') or error('')
+UtilsLibAPI.id2int = Functions.id2int or error('')
+UtilsLibAPI.int2id = Functions.int2id or error('')
 UtilsLibAPI.isType = Functions.checkType or error('')
 UtilsLibAPI.isTypeErr = Functions.isTypeErr or error('')
 UtilsLibAPI.getEnum = Functions.getUniqueNumber or error('')
