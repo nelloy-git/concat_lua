@@ -3,15 +3,15 @@
 --=========
 
 ---@type AbilityLib
-local AbilLib = require(LibList.AbilityLib)
+local AbilLib = require(LibList.AbilityLib) or error('')
 ---@type BinaryLib
-local BinaryLib = require(LibList.BinaryLib)
+local BinaryLib = require(LibList.BinaryLib) or error('')
 ---@type BuffLib
-local BuffLib = require(LibList.BuffLib)
+--local BuffLib = require(LibList.BuffLib) or error('')
 ---@type ParameterLib
-local ParamLib = require(LibList.ParameterLib)
+local ParamLib = require(LibList.ParameterLib) or error('')
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
+local UtilsLib = require(LibList.UtilsLib) or error('')
 
 ---@type CorruptedPriestSettings
 local Settings = require('Hero.CorruptedPriest.Settings')
@@ -30,7 +30,7 @@ local CorruptedPriest = {}
 function CorruptedPriest.new(x, y, owner)
     local unit = UtilsLib.Handle.Unit.new(CorruptedPriest.Type:getId(), x, y, owner)
     AbilLib.Container.new(unit)
-    BuffLib.Container.new(unit)
+    --BuffLib.Container.new(unit)
 
     -- Params
     local params = ParamLib.UnitContainer.new(unit)

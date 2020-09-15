@@ -15,6 +15,12 @@ TypesAPI.AttackTypeEnum = AttackType.Enum or error('')
 TypesAPI.isAttackType = AttackType.isAttackType or error('')
 TypesAPI.attackTypeToString = AttackType.toStr or error('')
 
+---@type DamageTypeModule
+local DamageType = require(path..'DamageType') or error('')
+TypesAPI.DamageTypeEnum = DamageType.Enum or error('')
+TypesAPI.isDamageType = DamageType.isDamageType or error('')
+TypesAPI.damageTypeToString = DamageType.toStr or error('')
+
 ---@type FrameEventTypeModule
 local FrameEventType = require(path..'FrameEventType') or error('')
 TypesAPI.FrameEventTypeEnum = FrameEventType.Enum or error('')

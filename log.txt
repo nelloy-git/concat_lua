@@ -1,7 +1,0 @@
-[0.247] {Msg} Created new FdfFile 'GeneratedFile' containing:
-    FrameNormalButton
-    FrameNormalImage
-    FrameNormalTextDefault
-    FrameSimpleImage
-    FrameSimpleStatusBar
-    FrameSimpleText

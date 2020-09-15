@@ -6,16 +6,19 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
+---@type TypesLib
+local TypeLib = lib_dep.Types or error('')
+local DamageType = TypeLib.DamageTypeEnum or error('')
+---@type HandleLib
+local HandleLib = lib_dep.HandleLib or error('')
+local Trigger = HandleLib.Trigger or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = lib_deplsLib
-local Action = UtilsLib.Action
-local Log = UtilsLib.Log
-local Unit = UtilsLib.Handle.Unit
-local Trigger = UtilsLib.Handle.Trigger
-
----@type DamageDefines
-local Defines = require(lib_path..'.Defines')
-local DamageType = Defines.DamageType
+local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
+local pairsByKeys = UtilsLib.pairsByKeys or error('')
 
 --endregion
 
@@ -26,112 +29,70 @@ local DamageType = Defines.DamageType
 ---@class DamageEvent
 local DamageEvent = {}
 
----@alias DamageCallbackPriority number
-DamageEvent.CallbackPriority = {}
-DamageEvent.CallbackPriority.Highest = 1
-DamageEvent.CallbackPriority.High = 2
-DamageEvent.CallbackPriority.Medium = 3
-DamageEvent.CallbackPriority.Low = 4
-DamageEvent.CallbackPriority.Lowest = 5
-
-local function isCallbackPriority(val)
-    for _, priority in pairs(DamageEvent.CallbackPriority) do
-        if val == priority then return true end
-    end
-    return false
-end
-
-DamageEvent.Callbacks = {}
+DamageEvent.callbacks = {}
 for _, dmg_type in pairs(DamageType) do
-    DamageEvent.Callbacks[dmg_type] = {}
-    for priority = DamageEvent.CallbackPriority.Highest, DamageEvent.CallbackPriority.Lowest do
-        DamageEvent.Callbacks[dmg_type][priority] = {}
-    end
+    DamageEvent.callbacks[dmg_type] = {}
 end
 
-local function executeCallbacks(dmg, dmg_type, target, damager)
-    local callbacks = DamageEvent.Callbacks[dmg_type]
+---@alias DamageEventCallback fun(dmg:number, dmg_type:damagetype, target:Unit, damager:Unit):number
 
-    for priority = DamageEvent.CallbackPriority.Highest, DamageEvent.CallbackPriority.Lowest do
-        for i = 1, #callbacks[priority] do
-            dmg = callbacks[priority][i]:run(dmg, dmg_type, target, damager)
-        end
-    end
-    return dmg
-end
-
-function DamageEvent.Init()
-    if IsCompiletime() then
-        return
-    end
-
-    local trigger = Trigger.new()
-    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_DAMAGING, Player(i))
-    end
-    trigger:addAction(function()
-        local dmg = executeCallbacks(GetEventDamage(), BlzGetEventDamageType(),
-                                     Unit.getLinked(BlzGetEventDamageTarget()),
-                                     Unit.getLinked(GetEventDamageSource()))
-        BlzSetEventDamage(dmg < 0 and 0 or dmg)
-    end)
-end
-
-local UnitDamageTarget = UnitDamageTarget
----@param dmg number
+--- Actions with same priority can will be executed in random order.
 ---@param dmg_type damagetype
----@param target Unit
----@param damager Unit
----@param sound weapontype
-function DamageEvent.damageUnit(dmg, dmg_type, target, damager, sound)
-    if not Defines.isDamageType(dmg_type) then
-        Log:err('variable \'dmg_type\'('..tostring(dmg_type)..') is not of type DamageType', 2)
-    end
-
-    local is_attack = dmg_type == DamageType.PhysicalAttack or
-                      dmg_type == DamageType.MagicalAttack or
-                      dmg_type == DamageType.ChaosAttack
-    UnitDamageTarget(damager:getData(), target:getData(),
-                     dmg, is_attack, false, ATTACK_TYPE_CHAOS, dmg_type, sound)
-end
-
----@alias DamageEventCallback fun(dmg:number, dmg_type:damagetype, target:Unit, damager:Unit)
-
+---@param priority integer
 ---@param callback DamageEventCallback
----@param dmg_type DamageType
----@param priority DamageCallbackPriority
 ---@return Action
-function DamageEvent.addAction(callback, dmg_type, priority)
-    if not Defines.isDamageType(dmg_type) then
-        Log:err('variable \'dmg_type\'('..tostring(dmg_type)..') is not of type DamageType', 2)
+function DamageEvent.addAction(dmg_type, priority, callback)
+    isTypeErr(dmg_type, 'damagetype', 'dmg_type')
+    isTypeErr(priority, 'number', 'priority')
+    isTypeErr(callback, 'function', 'callback')
+
+    local action_lists_by_priority = DamageEvent.callbacks[dmg_type]
+    if not action_lists_by_priority[priority] then
+        action_lists_by_priority[priority] = ActionList.new(DamageEvent)
     end
-
-    if not isCallbackPriority(priority) then
-        Log:err('variable \'priority\'('..tostring(priority)..') is not of type DamageCallbackPriority', 2)
-    end
-
-    local action = Action.new(callback)
-    table.insert(DamageEvent.Callbacks[dmg_type][priority], action)
-
-    return action
+    local actions = action_lists_by_priority[priority]
+    return actions:add(callback)
 end
 
 ---@param action Action
 ---@return boolean
 function DamageEvent.removeAction(action)
-    for _, dmg_type in pairs(DamageType) do
-        local callbacks = DamageEvent.Callbacks[dmg_type]
-
-        for priority = DamageEvent.CallbackPriority.Highest, DamageEvent.CallbackPriority.Lowest do
-            for i = 1, #callbacks[priority] do
-                if callbacks[priority][i] == action then
-                    table.remove(callbacks[priority], i)
-                    return true
-                end
-            end
+    for dmg_type, action_lists_by_priority in pairs(DamageEvent.callbacks) do
+        for priority, actions in pairs(action_lists_by_priority) do
+            if actions:remove(action) then return true end
         end
     end
     return false
 end
 
+---@param dmg number
+---@param dmg_type damagetype
+---@param target Unit
+---@param damager Unit
+---@return number
+local function runActions(dmg, dmg_type, target, damager)
+    local action_lists_by_priority = DamageEvent.callbacks[dmg_type]
+
+    for _, actions in pairsByKeys(action_lists_by_priority) do
+        dmg = actions:run(dmg, dmg_type, target, damager)
+    end
+
+    return dmg
+end
+
+if not IsCompiletime() then
+    local trigger = Trigger.new()
+    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
+        trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_DAMAGING, Player(i))
+    end
+    trigger:addAction(function()
+        local dmg = GetEventDamage()
+        local dmg_type = BlzGetEventDamageType()
+        local target = Unit.getLinked(BlzGetEventDamageTarget())
+        local damager = Unit.getLinked(GetEventDamageSource())
+
+        dmg = runActions(dmg, dmg_type, target, damager)
+        BlzSetEventDamage(dmg < 0 and 0 or dmg)
+    end)
+end
 return DamageEvent

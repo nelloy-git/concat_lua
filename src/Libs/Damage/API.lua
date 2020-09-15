@@ -1,38 +1,20 @@
 ---@class DamageLib
 local DamageLibAPI = {}
-local modname = Compiletime(Lib.getModname())
-Lib.start(modname)
-
---===========
--- Depencies
---===========
-
-Lib.current().depencies = {
-    Class = require(LibList.ClassLib),
-    UtilsLib = require(LibList.UtilsLib),
-}
+Lib.start('Damage', {
+    Handle = Lib.load(LibList.HandleLib) or error(''),
+    Types = Lib.load(LibList.TypesLib) or error(''),
+    Utils = Lib.load(LibList.UtilsLib) or error('')
+})
+local path = Lib.curPath()
 
 --=====
 -- API
 --=====
 
----@type DamageDefines
-local Defines = require(modname..'.Defines')
-DamageLibAPI.DamageType = Defines.DamageType
 ---@type DamageEvent
-local DamageEvent = require(modname..'.Event')
-DamageEvent.Init()
-DamageLibAPI.CallbackPriority = DamageEvent.CallbackPriority
-DamageLibAPI.addCallback = DamageEvent.addAction
-DamageLibAPI.removeCallback = DamageEvent.removeAction
-DamageLibAPI.damageUnit = DamageEvent.damageUnit
----@type DamageShowText
-local DamageShowText = require(modname..'.ShowText')
-
-for _, dmg_type in pairs(Defines.DamageType) do
-    DamageEvent.addAction(DamageShowText.DamageEvent,
-                          dmg_type, DamageEvent.CallbackPriority.Lowest)
-end
+local DamageEvent = require(path..'Event')
+DamageLibAPI.addAction = DamageEvent.addAction
+DamageLibAPI.removeAction = DamageEvent.removeAction
 
 Lib.finish()
 

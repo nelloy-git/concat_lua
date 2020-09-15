@@ -6,21 +6,19 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
----@type ClassLib
-local Class = lib_dep.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = lib_dep.UtilsLib
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
---local AttackType = UtilsLib.Types.AttackType
---local TargetType = UtilsLib.Types.TargetType
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type BinaryFileClass
-local BinaryFile = require(lib_path..'File')
+local BinaryFile = require(lib_path..'File') or error('')
 ---@type BinaryDataClass
-local BinaryData = require(lib_path..'Data')
+local BinaryData = require(lib_path..'Data') or error('')
+---@type BinaryUtils
+local BinaryUtils = require(lib_path..'Utils') or error('')
 ---@type BinaryUnitDB
-local UnitDB = require(lib_path..'UnitDB')
+local UnitDB = require(lib_path..'UnitDB') or error('')
 --endregion
 
 --=======
@@ -140,7 +138,7 @@ end
 ---@param value attacktype
 function public:setAttackType(atk, value)
     local db = db_atk[atk].AttackType
-    local str_type = AttackType.toStr(value)
+    local str_type = BinaryUtils.attackTypeToData(value)
     self:setValue(db.value_id, db.value_type, str_type)
 end
 
@@ -184,7 +182,7 @@ end
 function public:setAttackTargetsAllowed(atk, list)
     local val = ''
     for i = 1, #list do
-        val = val..TargetType.toStr(list[i])
+        val = val..BinaryUtils.targetTypeToData(list[i])
         if i < #list then val = val..',' end
     end
 

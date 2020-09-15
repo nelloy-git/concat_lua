@@ -5,14 +5,14 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_dep.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = lib_dep.UtilsLib
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type BinaryUtils
-local BinaryUtils = require(lib_path..'Utils')
+local BinaryUtils = require(lib_path..'Utils') or error('')
 
 --=======
 -- Class

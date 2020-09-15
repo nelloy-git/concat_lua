@@ -17,7 +17,8 @@
         "GetSrcDir",
         "GetDstDir",
         "CompileFinal",
-        "CompiletimeFinalToRuntime"
+        "CompiletimeFinalToRuntime",
+        "Lib"
     ],
     "files.associations": {
         "chrono": "cpp"

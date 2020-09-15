@@ -5,6 +5,14 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
+---@type TypesLib
+local TypesLib = lib_dep.Types or error('')
+local AttackType = TypesLib.AttackTypeEnum or error('')
+local TargetType = TypesLib.TargetTypeEnum or error('')
+---@type UtilsLib
+local UtilsLib = lib_dep.Utils or error('')
+local Log = UtilsLib.Log or error('')
+
 --========
 -- Module
 --========
@@ -234,6 +242,69 @@ function BinaryUtils.nextOrderId()
         return nil
     end
     return orders[current_pos]
+end
+
+local atk_type2str = {
+    [AttackType.NORMAL] = 'unknown',
+    [AttackType.MELEE] = 'normal',
+    [AttackType.PIERCE] = 'pierce',
+    [AttackType.SIEGE] = 'siege',
+    [AttackType.MAGIC] = 'magic',
+    [AttackType.CHAOS] = 'chaos',
+    [AttackType.HERO] = 'hero'
+}
+
+---@param atk_type attacktype
+---@return string
+function BinaryUtils.attackTypeToData(atk_type)
+    local res = atk_type2str[atk_type]
+    if res == nil then
+        Log:err('variable \'atk_type\' is not of type attacktype', 3)
+    end
+    return res
+end
+
+local target_type2str = {
+    [TargetType.AIR] = 'air',
+    [TargetType.ALIVE] = 'alive',
+    [TargetType.ALLIES] = 'allies',
+    [TargetType.ANCIENT] = 'ancient',
+    [TargetType.DEAD] = 'dead',
+    [TargetType.DEBRIS] = 'debris',
+    [TargetType.DECORATION] = 'decoration',
+    [TargetType.ENEMIES] = 'enemies',
+    [TargetType.FRIEND] = 'friend',
+    [TargetType.GROUND] = 'ground',
+    [TargetType.HERO] = 'hero',
+    [TargetType.INVULNERABLE] = 'invulnerable',
+    [TargetType.ITEM] = 'item',
+    [TargetType.MECHANICAL] = 'mechanical',
+    [TargetType.NEUTRAL] = 'neutral',
+    [TargetType.NONANCIENT] = 'nonancient',
+    [TargetType.NONE] = 'none',
+    [TargetType.NONHERO] = 'nonhero',
+    [TargetType.NONSAPPER] = 'nonsapper',
+    [TargetType.NOTSELF] = 'notself',
+    [TargetType.ORGANIC] = 'organic',
+    [TargetType.PLAYER] = 'player',
+    [TargetType.PLAYERUNITS] = 'playerunits',
+    [TargetType.SAPPER] = 'sapper',
+    [TargetType.SELF] = 'self',
+    [TargetType.STRUCTURE] = 'structure',
+    [TargetType.TERRAIN] = 'terrain',
+    [TargetType.TREE] = 'tree',
+    [TargetType.VULNERABLE] = 'vulnerable',
+    [TargetType.WALL] = 'wall',
+}
+
+---@param target_type targettype
+---@return string
+function BinaryUtils.targetTypeToData(target_type)
+    local res = target_type2str[target_type]
+    if res == nil then
+        Log:err('variable \'target_type\' is not of type targettype', 3)
+    end
+    return res
 end
 
 return BinaryUtils

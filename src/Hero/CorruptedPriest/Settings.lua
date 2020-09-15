@@ -3,13 +3,12 @@
 --=========
 
 ---@type BinaryLib
-local BinaryLib = require(LibList.BinaryLib)
+local BinaryLib = require(LibList.BinaryLib) or error('')
 ---@type ParameterLib
-local ParamLib = require(LibList.ParameterLib)
+local ParamLib = require(LibList.ParameterLib) or error('')
 ---@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
-local id2int = UtilsLib.Functions.id2int
-local Icon = UtilsLib.Icon
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local id2int = UtilsLib.Functions.id2int or error('')
 
 --========
 -- Module
@@ -21,7 +20,7 @@ local Settings = {}
 Settings.Name = 'Corrupted priest'
 Settings.BaseId = id2int('Hpal')
 Settings.Id = BinaryLib.getHeroId()
-Settings.Icon = Compiletime(Icon.BTNPriest)
+Settings.Icon = Compiletime('ReplaceableTextures\\\\CommandButtons\\\\BTNPriest.blp')
 
 ----------------
 -- Parameters --

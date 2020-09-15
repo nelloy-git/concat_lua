@@ -6,21 +6,20 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_dep.Class
+local Class = lib_dep.Class or error('')
 ---@type UtilsLib
-local UtilsLib = lib_dep.UtilsLib
-local isTypeErr = UtilsLib.isTypeErr
-local Log = UtilsLib.Log
---local TargetType = UtilsLib.Types.TargetType
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type BinaryAbilityDB
-local AbilDB = require(lib_path..'AbilityDB')
+local AbilDB = require(lib_path..'AbilityDB') or error('')
 ---@type BinaryFileClass
-local BinaryFile = require(lib_path..'File')
+local BinaryFile = require(lib_path..'File') or error('')
 ---@type BinaryDataClass
-local BinaryData = require(lib_path..'Data')
+local BinaryData = require(lib_path..'Data') or error('')
 ---@type BinaryUtils
-local BinaryUtils = require(lib_path..'Utils')
+local BinaryUtils = require(lib_path..'Utils') or error('')
 
 local FourCC = function(id) return string.unpack(">I4", id) end
 --endregion
@@ -174,7 +173,7 @@ end
 function public:setTargetsAllowed(list, lvl)
     local val = ''
     for i = 1, #list do
-        val = val..TargetType.toStr(list[i])
+        val = val..BinaryUtils.targetTypeToData(list[i])
         if i < #list then val = val..',' end
     end
 

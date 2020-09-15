@@ -170,6 +170,9 @@ function require(package_name)
         error('recursive require detected.', 2)
     end
 
+    if not package_name then
+        error('Can not find file.', 2)
+    end
     package_name = package_name:gsub('[.]+', '.')
     local path = name2path(package_name)
     local log_path

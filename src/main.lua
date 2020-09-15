@@ -5,10 +5,10 @@ require('Libs.Lib')
 ---@type ParameterLib
 --local ParameterLib = require(LibList.ParameterLib)
 
+---@type AbilityLib
+local AbilityLib = require(LibList.AbilityLib) or error('')
 ---@type FrameLib
-local FrameLib = require(LibList.FrameLib)
----@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib)
+local FrameLib = require(LibList.FrameLib) or error('')
 
 ---@type BuffLib
 --local BuffLib = require(LibList.BuffLib)
@@ -17,7 +17,7 @@ local UtilsLib = require(LibList.UtilsLib)
 --local Interface = require('Interface.Init')
 
 ---@type CorruptedPriest
---local CorruptedPriest = require('Hero.CorruptedPriest.Unit')
+local CorruptedPriest = require('Hero.CorruptedPriest.Unit')
 
 if IsCompiletime() then
     return
