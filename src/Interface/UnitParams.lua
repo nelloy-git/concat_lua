@@ -53,8 +53,6 @@ end
 
 function public:setPos(x, y)
     FramePublic.setPos(self, x, y)
-
-    print('SettingPosition')
     private.updatePos(self)
 end
 

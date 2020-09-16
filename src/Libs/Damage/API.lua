@@ -19,7 +19,7 @@ DamageLibAPI.removeAction = DamageEvent.removeAction or error('')
 local DamageFunctions = require(path..'Functions') or error('')
 DamageLibAPI.dealAtk = DamageFunctions.dealAtk or error('')
 DamageLibAPI.dealPhys = DamageFunctions.dealPhys or error('')
-DamageLibAPI.dealMagic = DamageFunctions.dealAtk or error('')
+DamageLibAPI.dealMagic = DamageFunctions.dealMagic or error('')
 DamageLibAPI.dealChaos = DamageFunctions.dealChaos or error('')
 ---@type DamageSettings
 local Settings = require(path..'Settings')

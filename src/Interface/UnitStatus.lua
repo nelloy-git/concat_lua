@@ -4,11 +4,12 @@
 
 local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
-local FrameLib = require(LibList.FrameLib)
+local FrameLib = require(LibList.FrameLib) or error('')
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
 local Frame = HandleLib.Frame or error('')
-local FramePublic = Class.getPublic(Frame)
+local FramePublic = Class.getPublic(Frame) or error('')
+local Screen = FrameLib.Screen or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local Log = UtilsLib.Log or error('')

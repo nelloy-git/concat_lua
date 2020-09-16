@@ -330,7 +330,7 @@ function private.runActions()
 
     ---@type ActionList
     local actions_list = private.data[frame].actions[event]
-    actions_list:run(frame, player, event)
+    if actions_list then actions_list:run(frame, player, event) end
 end
 
 if not IsCompiletime() then

@@ -19,7 +19,7 @@ local Settings = {}
 
 Settings.Name = 'Corrupted priest'
 Settings.BaseId = id2int('Hpal')
-Settings.Id = BinaryLib.getHeroId()
+Settings.Id = BinaryLib.getUnitId()
 Settings.Icon = Compiletime('ReplaceableTextures\\\\CommandButtons\\\\BTNPriest.blp')
 
 ----------------

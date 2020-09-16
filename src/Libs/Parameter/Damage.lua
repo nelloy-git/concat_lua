@@ -45,10 +45,10 @@ local function damageAction(dmg, dmg_type, target, src)
 
     local reduc = 0
     local def = 0
-    if dmg_type == Settings.PAtk or dmg_type == Settings.PSpl then
+    if dmg_type == DamageLib.Atk or dmg_type == DamageLib.Phys then
         reduc = p_targ:getResult(Defines.PhysicalDamageReduction)
         def = p_targ:getResult(Defines.Defence)
-    elseif dmg_type == Settings.PAtk or dmg_type == Settings.PSpl then
+    elseif dmg_type == DamageLib.Magic then
         reduc = p_targ:getResult(Defines.MagicalDamageReduction)
         def = p_targ:getResult(Defines.Resistance)
     end

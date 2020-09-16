@@ -2,16 +2,11 @@
 -- Include
 --=========
 
-local lib_path = Lib.curPath()
-local lib_dep = Lib.curDepencies()
-
----@type UtilsLib
-local UtilsLib = lib_deplsLib
-local TextTag = UtilsLib.Handle.TextTag
-
----@type DamageDefines
-local Defines = require(lib_path..'.Defines')
-local DamageType = Defines.DamageType
+---@type DamageLib
+local DamageLib = require(LibList.DamageLib) or error('')
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local TextTag = HandleLib.TextTag
 
 --========
 -- Module
@@ -21,20 +16,16 @@ local DamageType = Defines.DamageType
 local DamageShowText = {}
 
 DamageShowText.Colors = {}
-DamageShowText.Colors[DamageType.PhysicalAttack] = {red = 220, green = 30, blue = 30, alpha = 200}
-DamageShowText.Colors[DamageType.PhysicalSpell] = {red = 220, green = 30, blue = 30, alpha = 200}
-DamageShowText.Colors[DamageType.MagicalAttack] = {red = 30, green = 30, blue = 220, alpha = 200}
-DamageShowText.Colors[DamageType.MagicalSpell] = {red = 30, green = 30, blue = 220, alpha = 200}
-DamageShowText.Colors[DamageType.ChaosAttack] = {red = 220, green = 220, blue = 220, alpha = 200}
-DamageShowText.Colors[DamageType.ChaosSpell] = {red = 220, green = 220, blue = 220, alpha = 200}
+DamageShowText.Colors[DamageLib.Atk] = {r = 220, g = 30, b = 30, a = 200}
+DamageShowText.Colors[DamageLib.Phys] = {r = 220, g = 30, b = 30, a = 200}
+DamageShowText.Colors[DamageLib.Magic] = {r = 30, g = 30, b = 220, a = 200}
+DamageShowText.Colors[DamageLib.Chaos] = {r = 220, g = 220, b = 220, a = 200}
 
-DamageShowText.Height = {}
-DamageShowText.Height[DamageType.PhysicalAttack] = 0
-DamageShowText.Height[DamageType.PhysicalSpell] = 0
-DamageShowText.Height[DamageType.MagicalAttack] = 40
-DamageShowText.Height[DamageType.MagicalSpell] = 40
-DamageShowText.Height[DamageType.ChaosAttack] = 80
-DamageShowText.Height[DamageType.ChaosSpell] = 80
+DamageShowText.Vel = {}
+DamageShowText.Vel[DamageLib.Atk] = {x = 0.05, y = 0}
+DamageShowText.Vel[DamageLib.Phys] = {x = 0.05, y = 0}
+DamageShowText.Vel[DamageLib.Magic] = {x = 0.03, y = 0.03}
+DamageShowText.Vel[DamageLib.Chaos] = {x = 0, y = 0.05}
 
 ---@type DamageEventCallback
 DamageShowText.DamageEvent = function(dmg, dmg_type, target, damager)
@@ -43,12 +34,16 @@ DamageShowText.DamageEvent = function(dmg, dmg_type, target, damager)
     local idmg, _ = math.modf(dmg)
     local sdmg = tostring(idmg)
     local color = DamageShowText.Colors[dmg_type]
-    local height = DamageShowText.Height[dmg_type]
-    TextTag.newTimedForUnit(sdmg, 0.0023 * 10,
-                            color.red, color.green, color.blue, color.alpha,
-                            target, height,
-                            0.03, 0.03, 1)
+    local vel = DamageShowText.Vel[dmg_type]
+    TextTag.newTimedForUnit(sdmg, 12,
+                            color.r, color.g, color.b, color.a,
+                            target, 0,
+                            vel.x, vel.y, 1)
     return dmg
 end
+DamageLib.addAction(DamageLib.Atk, -10000, DamageShowText.DamageEvent)
+DamageLib.addAction(DamageLib.Phys, -10000, DamageShowText.DamageEvent)
+DamageLib.addAction(DamageLib.Magic, -10000, DamageShowText.DamageEvent)
+DamageLib.addAction(DamageLib.Chaos, -10000, DamageShowText.DamageEvent)
 
 return DamageShowText

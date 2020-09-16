@@ -53,10 +53,10 @@ function CorruptedPriest.new(x, y, owner)
 end
 
 CorruptedPriest.Type = BinaryLib.Unit.new(Settings.Id, Settings.BaseId, Settings.Name)
---CorruptedPriest.Type:setName(Settings.Name)
---CorruptedPriest.Type:setIconGameInterface(Settings.Icon)
---CorruptedPriest.Type:setMana(100)
---CorruptedPriest.Type:setManaRegeneration(1)
---CorruptedPriest.Type:setNormalAbilities({})
+CorruptedPriest.Type:setName(Settings.Name)
+CorruptedPriest.Type:setIconGameInterface(Settings.Icon)
+CorruptedPriest.Type:setMana(100)
+CorruptedPriest.Type:setManaRegeneration(1)
+CorruptedPriest.Type:setNormalAbilities({})
 
 return CorruptedPriest

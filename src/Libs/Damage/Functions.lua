@@ -45,28 +45,28 @@ end
 ---@param targ Unit
 ---@param src Unit
 function DamageFunctions.dealAtk(dmg, targ, src)
-    DamageFunctions.damageUnit(dmg, Settings.Atk, targ, src, WEAPON_TYPE_WHOKNOWS)
+    DamageFunctions.damageUnit(dmg, Settings.Atk, true, targ, src, WEAPON_TYPE_WHOKNOWS)
 end
 
 ---@param dmg number
 ---@param targ Unit
 ---@param src Unit
 function DamageFunctions.dealPhys(dmg, targ, src)
-    DamageFunctions.damageUnit(dmg, Settings.Phys, targ, src, WEAPON_TYPE_WHOKNOWS)
+    DamageFunctions.damageUnit(dmg, Settings.Phys, false, targ, src, WEAPON_TYPE_WHOKNOWS)
 end
 
 ---@param dmg number
 ---@param targ Unit
 ---@param src Unit
 function DamageFunctions.dealMagic(dmg, targ, src)
-    DamageFunctions.damageUnit(dmg, Settings.Magic, targ, src, WEAPON_TYPE_WHOKNOWS)
+    DamageFunctions.damageUnit(dmg, Settings.Magic, false, targ, src, WEAPON_TYPE_WHOKNOWS)
 end
 
 ---@param dmg number
 ---@param targ Unit
 ---@param src Unit
 function DamageFunctions.dealChaos(dmg, targ, src)
-    DamageFunctions.damageUnit(dmg, Settings.Chaos, targ, src, WEAPON_TYPE_WHOKNOWS)
+    DamageFunctions.damageUnit(dmg, Settings.Chaos, false, targ, src, WEAPON_TYPE_WHOKNOWS)
 end
 
 return DamageFunctions

@@ -24,6 +24,8 @@ local InterfaceSpellButtons = require('Interface.SpellButtons') or error('')
 ---@type InterfaceUnitStatusClass
 local InterfaceUnitStatus = require('Interface.UnitStatus') or error('')
 
+local DamageText = require('Interface.ShowDamage') or error('')
+
 --========
 -- Module
 --========
@@ -85,7 +87,7 @@ Interface.UnitStatus:setPos(0, 0)
 Interface.UnitStatus:setVisible(false)
 
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
-    Interface.UnitStatus:setPos(0.6, 0.3)
+    Interface.UnitStatus:setPos(x0, 0.03)
 end)
 
 ---@type Unit
@@ -113,7 +115,6 @@ stats_time:start(0.05, true, function()
             Interface.UnitStatus:setMana(selected:getMana(), selected:getMaxMana())
 
             local params = ParamUnitContainer.get(selected)
-            print(params)
             if not params then Log:err('Can not find linked ParameterContainerUnit') end
             Interface.UnitStatus:setParameters(params)
         else
@@ -134,22 +135,8 @@ FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
                                    y0 + h - Interface.SkillsButtons:getHeight())
 end)
 
---[[
-Interface.SkillsButtons = {}
-for i = 6, 12 do
-    Interface.SkillsButtons[i - 5] = FrameLib.Origin.SkillButton[i]
-end
-
-local count = #Interface.SkillsButtons
-for i = 1, count do
-    local h = 0.04
-    local w = 0.04
-    Interface.SkillsButtons[i]:setSize(w, h)
-    Interface.SkillsButtons[i]:setPos(0.8 - (count - i + 1) * w, 0)
-    FrameLib.Screen.addChangedAction(function (_, _, _, new_x0, new_width, _)
-        Interface.SkillsButtons[i]:setPos(new_x0 + new_width - (count - i + 1) * w, 0)
-    end)
-end
-]]
+--------------------------
+-- Damage Floating Text --
+--------------------------
 
 return Interface

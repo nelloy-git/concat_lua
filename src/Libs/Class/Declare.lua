@@ -83,7 +83,6 @@ function ClassDeclare.type(value1, value2)
         class2 = ClassInstance.getClass(value2)
     end
 
-    --print(class1, class2)
     return ClassParent.isChild(class1, class2)
 end
 

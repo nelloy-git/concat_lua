@@ -61,7 +61,7 @@ function override.newTimed(text, size,
                            x_vel, y_vel,
                            time)
     local text_tag = CreateTextTag()
-    SetTextTagText(text_tag, text, size)
+    SetTextTagText(text_tag, text, 0.0023 * size)
     SetTextTagColor(text_tag, red, green, blue, alpha)
     SetTextTagPos(text_tag, x, y, z)
     SetTextTagVelocity(text_tag, x_vel, y_vel)
@@ -88,7 +88,7 @@ function override.newTimedForUnit(text, size,
                                    time)
 
     local text_tag = CreateTextTag()
-    SetTextTagText(text_tag, text, size)
+    SetTextTagText(text_tag, text, 0.0023 * size)
     SetTextTagColor(text_tag, red, green, blue, alpha)
     SetTextTagPosUnit(text_tag, target:getData(), z)
     SetTextTagVelocity(text_tag, x_vel, y_vel)
@@ -104,7 +104,7 @@ end
 ---@param text string
 ---@param size number
 function public:setText(text, size)
-    SetTextTagText(self:getData(), text, size)
+    SetTextTagText(self:getData(), text, 0.0023 * size)
 end
 
 ---@param red number

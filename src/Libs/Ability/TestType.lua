@@ -36,7 +36,7 @@ function TestAbilityType:onCastingFinish(target, caster, time_left, full_time)
 end
 
 function TestAbilityType:getCastingTime(caster)
-    print('getCastingTime')
+    --print('getCastingTime')
     return 3
 end
 

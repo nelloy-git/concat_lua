@@ -23,10 +23,11 @@ local Screen = {}
 local p_width = 800
 local p_height = 600
 
-local screen_x0 = 0
-local screen_y0 = 0
-local screen_width = 0.8
-local screen_height = 0.6
+local data = {}
+data.x0 = 0
+data.y0 = 0
+data.width = 0.8
+data.height = 0.6
 
 local update_timer = 0
 local update_period = 1
@@ -35,21 +36,22 @@ local actions = ActionList.new(Screen)
 
 ---@return number
 function Screen.getX0()
-    return screen_x0
+    return data.x0
 end
+
 ---@return number
-function Screen.getX0()
-    return screen_y0
+function Screen.getY0()
+    return data.y0
 end
 
 ---@return number
 function Screen.getWidth()
-    return screen_width
+    return data.width
 end
 
 ---@return number
 function Screen.getHeight()
-    return screen_width
+    return data.width
 end
 
 ---@alias FrameScreenCallback fun(x0:number, y0:number, width:number, height:number)
@@ -79,10 +81,11 @@ local function updateResolution()
     p_height = cur_p_height
 
     local ui_pixel_width = cur_p_height * 4 / 3
-    screen_width = 0.8 * cur_p_width / ui_pixel_width
-    screen_x0 = -(screen_width - 0.8) / 2
+    data.width = 0.8 * cur_p_width / ui_pixel_width
+    data.x0 = -(data.width - 0.8) / 2
 
-    actions:run(screen_x0, screen_y0, screen_width, screen_height)
+    actions:run(data.x0, data.y0,
+                data.width, data.height)
 end
 
 if not IsCompiletime() then
