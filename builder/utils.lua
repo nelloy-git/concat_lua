@@ -151,9 +151,9 @@ function Utils.toString(val, level)
             return 'false'
         end
     elseif t == 'table' then
-        local res = '{'
+        local res = '{\n'
         for k, v in pairs(val) do
-            res = res..string.format('[%s] = %s,',
+            res = res..string.format('[%s] = %s,\n',
                                      Utils.toString(k, level and level + 1 or 4),
                                      Utils.toString(v, level and level + 1 or 4))
         end

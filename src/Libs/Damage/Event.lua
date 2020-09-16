@@ -32,7 +32,7 @@ for _, dmg_type in pairs(DamageType) do
     DamageEvent.callbacks[dmg_type] = {}
 end
 
----@alias DamageEventCallback fun(dmg:number, dmg_type:damagetype, target:Unit, damager:Unit):number
+---@alias DamageEventCallback fun(dmg:number, dmg_type:damagetype, targ:Unit, src:Unit):number
 
 --- Actions with same priority can will be executed in random order.
 ---@param dmg_type damagetype
@@ -67,16 +67,16 @@ end
 
 ---@param dmg number
 ---@param dmg_type damagetype
----@param target Unit
----@param damager Unit
+---@param targ Unit
+---@param src Unit
 ---@return number
-local function runActions(dmg, dmg_type, target, damager)
+local function runActions(dmg, dmg_type, targ, src)
     local action_lists_by_priority = DamageEvent.callbacks[dmg_type]
 
-    for _, actions in pairsByKeys(action_lists_by_priority) do
+    for _, actions in pairsByKeys(action_lists_by_priority, function(k1, k2) return k1 > k2 end) do
         local count = actions:count()
         for i = 1, count do
-            dmg = actions:get(i):run(dmg, dmg_type, target, damager)
+            dmg = actions:get(i):run(dmg, dmg_type, targ, src)
         end
     end
 
@@ -91,11 +91,12 @@ if not IsCompiletime() then
     trigger:addAction(function()
         local dmg = GetEventDamage()
         local dmg_type = BlzGetEventDamageType()
-        local target = Unit.getLinked(BlzGetEventDamageTarget())
-        local damager = Unit.getLinked(GetEventDamageSource())
+        local targ = Unit.getLinked(BlzGetEventDamageTarget())
+        local src = Unit.getLinked(GetEventDamageSource())
 
-        dmg = runActions(dmg, dmg_type, target, damager)
+        dmg = runActions(dmg, dmg_type, targ, src)
         BlzSetEventDamage(dmg < 0 and 0 or dmg)
     end)
 end
+
 return DamageEvent

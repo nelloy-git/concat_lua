@@ -14,6 +14,9 @@ local Unit = HandleLib.Unit or error('')
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 
+---@type DamageSettings
+local Settings = require(lib_path..'Settings')
+
 --========
 -- Module
 --========
@@ -24,18 +27,46 @@ local DamageFunctions = {}
 ---@param dmg number
 ---@param dmg_type damagetype
 ---@param is_attack boolean
----@param target Unit
----@param damager Unit
+---@param targ Unit
+---@param src Unit
 ---@param sound weapontype
-function DamageFunctions.damageUnit(dmg, dmg_type, is_attack, target, damager, sound)
+function DamageFunctions.damageUnit(dmg, dmg_type, is_attack, targ, src, sound)
     isTypeErr(dmg, 'number', 'dmg')
     isTypeErr(dmg_type, 'damagetype', 'dmg_type')
-    isTypeErr(target, Unit, 'target')
-    isTypeErr(damager, Unit, 'damager')
+    isTypeErr(targ, Unit, 'targ')
+    isTypeErr(src, Unit, 'src')
     isTypeErr(sound, 'weapontype', 'sound')
 
-    UnitDamageTarget(damager:getData(), target:getData(),
+    UnitDamageTarget(src:getData(), targ:getData(),
                      dmg, is_attack, false, ATTACK_TYPE_CHAOS, dmg_type, sound)
+end
+
+---@param dmg number
+---@param targ Unit
+---@param src Unit
+function DamageFunctions.dealAtk(dmg, targ, src)
+    DamageFunctions.damageUnit(dmg, Settings.Atk, targ, src, WEAPON_TYPE_WHOKNOWS)
+end
+
+---@param dmg number
+---@param targ Unit
+---@param src Unit
+function DamageFunctions.dealPhys(dmg, targ, src)
+    DamageFunctions.damageUnit(dmg, Settings.Phys, targ, src, WEAPON_TYPE_WHOKNOWS)
+end
+
+---@param dmg number
+---@param targ Unit
+---@param src Unit
+function DamageFunctions.dealMagic(dmg, targ, src)
+    DamageFunctions.damageUnit(dmg, Settings.Magic, targ, src, WEAPON_TYPE_WHOKNOWS)
+end
+
+---@param dmg number
+---@param targ Unit
+---@param src Unit
+function DamageFunctions.dealChaos(dmg, targ, src)
+    DamageFunctions.damageUnit(dmg, Settings.Chaos, targ, src, WEAPON_TYPE_WHOKNOWS)
 end
 
 return DamageFunctions

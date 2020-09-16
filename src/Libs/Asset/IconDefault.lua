@@ -2340,6 +2340,5 @@ local Icon = {
     pASBTNVorpalBlades = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNVorpalBlades.blp",
     pASBTNWarStomp = "ReplaceableTextures\\\\PassiveButtons\\\\PASBTNWarStomp.blp"
 }
-setmetatable(Icon, {__mode = 'k'})
 
 return Icon

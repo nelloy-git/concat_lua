@@ -131,7 +131,7 @@ end
 ---@return boolean
 local function checkCompiletimeResult(result)
     local res_type = type(result)
-    if res_type == 'string' or res_type == 'number' or res_type == 'nil' then
+    if res_type == 'string' or res_type == 'number' or res_type == 'boolean' or res_type == 'nil' then
         return true
     end
 

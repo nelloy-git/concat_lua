@@ -16,14 +16,8 @@ local DamageType = TypeLib.DamageTypeEnum or error('')
 ---@class ParameterSettings
 local ParameterSettings = {}
 
-ParameterSettings.PAtk = DamageType.NORMAL
-ParameterSettings.MAtk = DamageType.ENHANCED
-ParameterSettings.PSpl = DamageType.FORCE
-ParameterSettings.MSpl = DamageType.MAGIC
-
 ParameterSettings.PAtkDispersion = 0.3
 ParameterSettings.MAtkDispersion = 0.3
-
 ParameterSettings.DamageEventPriority = 0
 
 return ParameterSettings

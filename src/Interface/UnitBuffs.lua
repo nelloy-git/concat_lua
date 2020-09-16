@@ -6,8 +6,8 @@ local Class = require(LibList.ClassLib) or error('')
 
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
-local FrameNormalBase = FrameLib.Frame.Normal.Base or error('')
-local FrameNormalBasePublic = Class.getPublic(FrameNormalBase) or error('')
+local Frame = FrameLib.Frame.Normal.Base or error('')
+local FramePublic = Class.getPublic(Frame) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 ---@type UtilsLib
@@ -19,10 +19,10 @@ local Log = UtilsLib.Log or error('')
 -- Class
 --=======
 
-local InterfaceUnitBuffs = Class.new('InterfaceUnitBuffs', FrameNormalBase)
----@class InterfaceUnitBuffs : FrameNormalBase
+local InterfaceUnitBuffs = Class.new('InterfaceUnitBuffs', Frame)
+---@class InterfaceUnitBuffs : Frame
 local public = InterfaceUnitBuffs.public
----@class InterfaceUnitBuffsClass : FrameNormalBaseClass
+---@class InterfaceUnitBuffsClass : FrameClass
 local static = InterfaceUnitBuffs.static
 ---@type InterfaceUnitBuffsClass
 local override = InterfaceUnitBuffs.override
@@ -36,7 +36,7 @@ local private = {}
 ---@param buffs_per_line number
 function override.new(buffs_per_line)
     local instance = Class.allocate(InterfaceUnitBuffs)
-    instance = FrameNormalBase.new(private.fdf, instance)
+    instance = Frame.new(private.fdf, instance)
 
     private.newData(instance, buffs_per_line)
 
@@ -48,7 +48,7 @@ end
 --========
 
 function public:setPos(x, y)
-    FrameNormalBasePublic.setPos(self, x, y)
+    FramePublic.setPos(self, x, y)
     private.update(self)
 end
 
@@ -69,7 +69,7 @@ end
 
 ---@param flag number
 function public:setVisible(flag)
-    FrameNormalBasePublic.setVisible(self, flag)
+    FramePublic.setVisible(self, flag)
     local priv = private.data[self]
 
     for i = 1, #private.buffs do
@@ -151,7 +151,7 @@ function private.update(self)
     local lines, mod = math.modf(count / per_line)
     if mod ~= 0 then lines = lines + 1 end
 
-    FrameNormalBasePublic.setSize(self,
+    FramePublic.setSize(self,
                                   1 / 0.9 * per_line * w,
                                   1 / 0.9 * lines * h)
 

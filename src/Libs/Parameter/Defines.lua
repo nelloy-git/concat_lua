@@ -11,6 +11,8 @@ local Icon = AssetLib.IconDefault or error('')
 
 ---@type ParameterClass
 local Parameter = require(lib_path..'Parameter') or error('')
+---@type ParameterSettings
+local Settings = require(lib_path..'Settings') or error('')
 
 --========
 -- Module
@@ -35,9 +37,9 @@ local function registerParam(short_name, full_name, icon,
 end
 
 local function applyPhysDmg(unit, value)
-    BlzSetUnitBaseDamage(unit, math.floor(0.85 * value), 0)
+    BlzSetUnitBaseDamage(unit, math.floor((1 - 0.5 * Settings.PAtkDispersion) * value), 0)
     BlzSetUnitDiceNumber(unit, 1, 0)
-    BlzSetUnitDiceSides(unit, math.floor(0.3 * value + 1), 0)
+    BlzSetUnitDiceSides(unit, math.floor(Settings.PAtkDispersion * value + 1), 0)
 end
 
 local function applyAttackSpeed(unit, value)

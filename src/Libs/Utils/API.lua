@@ -25,8 +25,8 @@ UtilsLibAPI.pairsByKeys = Functions.pairsByKeys or error('')
 UtilsLibAPI.StringCommand = require(path..'StringCommand') or error('')
 ---@type UtilsSettings
 local Settings = require(path..'Settings') or error('')
-UtilsLibAPI.isDebug = Settings.isDebug
-UtilsLibAPI.Log = Settings.default_logger
+UtilsLibAPI.isDebug = Settings.isDebug or error('')
+UtilsLibAPI.Log = Settings.default_logger or error('')
 
 Lib.finish()
 

@@ -1,16 +1,20 @@
 ---@class AssetLib
 local AssetLibAPI = {}
-Lib.start('AssetLib', {})
+Lib.start('AssetLib', {
+    Utils = Lib.load(LibList.UtilsLib) or error('')
+})
 local path = Lib.curPath()
 
 --=====
 -- API
 --=====
 
--- TODO exclude unused data
+---@type AssetLoader
+AssetLibAPI.Loader = require(path..'Loader')
 
 ---@type AssetIconDefault
-AssetLibAPI.IconDefault = require(path..'IconDefault')
+AssetLibAPI.IconDefault = {}
+AssetLibAPI.Loader.load(path..'IconDefault', AssetLibAPI.IconDefault)
 
 Lib.finish()
 

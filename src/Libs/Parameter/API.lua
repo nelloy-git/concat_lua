@@ -38,9 +38,11 @@ ParameterLibAPI.MoveSpeed = Defines.MoveSpeed or error('')
 ---@type table<number, Parameter>
 ParameterLibAPI.AllParameters = Defines.AllParameters or error('')
 
-local Damage = require(path..'Damage') or error('')
 ---@type ParameterContainerUnitClass
 ParameterLibAPI.UnitContainer = require(path..'Container.Unit') or error('')
+
+---@type ParameterDamageEvent
+local DamageEvent = require(path..'Damage')
 
 Lib.finish()
 

@@ -1,6 +1,7 @@
 ---@class BinaryLib
 local BinaryLibAPI = {}
 Lib.start('BinaryLib', {
+    Asset = Lib.load(LibList.AssetLib) or error(''),
     Class = Lib.load(LibList.ClassLib) or error(''),
     Types = Lib.load(LibList.TypesLib) or error(''),
     Utils = Lib.load(LibList.UtilsLib) or error(''),

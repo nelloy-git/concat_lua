@@ -12,12 +12,21 @@ local path = Lib.curPath()
 --=====
 
 ---@type DamageEvent
-local DamageEvent = require(path..'Event')
-DamageLibAPI.addAction = DamageEvent.addAction
-DamageLibAPI.removeAction = DamageEvent.removeAction
+local DamageEvent = require(path..'Event') or error('')
+DamageLibAPI.addAction = DamageEvent.addAction or error('')
+DamageLibAPI.removeAction = DamageEvent.removeAction or error('')
 ---@type DamageFunctions
-local DamageFunctions = require(path..'Functions')
-DamageLibAPI.damageUnit = DamageFunctions.damageUnit
+local DamageFunctions = require(path..'Functions') or error('')
+DamageLibAPI.dealAtk = DamageFunctions.dealAtk or error('')
+DamageLibAPI.dealPhys = DamageFunctions.dealPhys or error('')
+DamageLibAPI.dealMagic = DamageFunctions.dealAtk or error('')
+DamageLibAPI.dealChaos = DamageFunctions.dealChaos or error('')
+---@type DamageSettings
+local Settings = require(path..'Settings')
+DamageLibAPI.Atk = Settings.Atk
+DamageLibAPI.Magic = Settings.Magic
+DamageLibAPI.Phys = Settings.Phys
+DamageLibAPI.Chaos = Settings.Chaos
 
 Lib.finish()
 

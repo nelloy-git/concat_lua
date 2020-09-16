@@ -60,7 +60,7 @@ function Lib.start(name, depencies)
     table.insert(Stack.deps, depencies)
 
     if IsCompiletime() then
-        print('Using '..name..'('..debug.getinfo(2, "S").source:sub(2)..')')
+        print('Using '..name..' ('..debug.getinfo(2, "S").source:sub(2)..')')
     end
 end
 

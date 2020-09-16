@@ -6,13 +6,17 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
+---@type AssetLib
+local AssetLib = lib_dep.Asset or error('')
+local AssetLoader = AssetLib.Loader or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
 ---@type BinaryAbilityDB
-local AbilDB = require(lib_path..'AbilityDB') or error('')
+local AbilDB = {}
+AssetLoader.load(lib_path..'AbilityDB', AbilDB)
 ---@type BinaryFileClass
 local BinaryFile = require(lib_path..'File') or error('')
 ---@type BinaryDataClass

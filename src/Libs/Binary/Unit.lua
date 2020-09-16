@@ -6,6 +6,9 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
+---@type AssetLib
+local AssetLib = lib_dep.Asset or error('')
+local AssetLoader = AssetLib.Loader or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
@@ -17,7 +20,8 @@ local BinaryData = require(lib_path..'Data') or error('')
 ---@type BinaryUtils
 local BinaryUtils = require(lib_path..'Utils') or error('')
 ---@type BinaryUnitDB
-local UnitDB = require(lib_path..'UnitDB') or error('')
+local UnitDB = {}
+AssetLoader.load(lib_path..'UnitDB', UnitDB)
 
 --=======
 -- Class
