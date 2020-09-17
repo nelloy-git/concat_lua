@@ -190,7 +190,7 @@ end
 
 if not IsCompiletime() then
     local trigger = Trigger.new()
-    for i = 0, bj_MAX_PLAYER_SLOTS do
+    for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         trigger:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SPELL_EFFECT, Player(i))
     end
     trigger:addAction(private.onEffect)

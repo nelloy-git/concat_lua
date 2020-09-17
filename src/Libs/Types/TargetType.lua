@@ -16,10 +16,10 @@ local Log = UtilsLib.Log or error('')
 
 ---@alias targettype number
 
----@class TargetTypeModule
-local TargetTypeModule = {}
+---@class TargetType
+local TargetType = {}
 
-TargetTypeModule.Enum = {
+TargetType.Enum = {
     ---@type targettype
     AIR = getEnum(),
     ---@type targettype
@@ -83,41 +83,41 @@ TargetTypeModule.Enum = {
 }
 
 local target_type2str = {
-    [TargetTypeModule.Enum.AIR] = 'air',
-    [TargetTypeModule.Enum.ALIVE] = 'alive',
-    [TargetTypeModule.Enum.ALLIES] = 'allies',
-    [TargetTypeModule.Enum.ANCIENT] = 'ancient',
-    [TargetTypeModule.Enum.DEAD] = 'dead',
-    [TargetTypeModule.Enum.DEBRIS] = 'debris',
-    [TargetTypeModule.Enum.DECORATION] = 'decoration',
-    [TargetTypeModule.Enum.ENEMIES] = 'enemies',
-    [TargetTypeModule.Enum.FRIEND] = 'friend',
-    [TargetTypeModule.Enum.GROUND] = 'ground',
-    [TargetTypeModule.Enum.HERO] = 'hero',
-    [TargetTypeModule.Enum.INVULNERABLE] = 'invulnerable',
-    [TargetTypeModule.Enum.ITEM] = 'item',
-    [TargetTypeModule.Enum.MECHANICAL] = 'mechanical',
-    [TargetTypeModule.Enum.NEUTRAL] = 'neutral',
-    [TargetTypeModule.Enum.NONANCIENT] = 'nonancient',
-    [TargetTypeModule.Enum.NONE] = 'none',
-    [TargetTypeModule.Enum.NONHERO] = 'nonhero',
-    [TargetTypeModule.Enum.NONSAPPER] = 'nonsapper',
-    [TargetTypeModule.Enum.NOTSELF] = 'notself',
-    [TargetTypeModule.Enum.ORGANIC] = 'organic',
-    [TargetTypeModule.Enum.PLAYER] = 'player',
-    [TargetTypeModule.Enum.PLAYERUNITS] = 'playerunits',
-    [TargetTypeModule.Enum.SAPPER] = 'sapper',
-    [TargetTypeModule.Enum.SELF] = 'self',
-    [TargetTypeModule.Enum.STRUCTURE] = 'structure',
-    [TargetTypeModule.Enum.TERRAIN] = 'terrain',
-    [TargetTypeModule.Enum.TREE] = 'tree',
-    [TargetTypeModule.Enum.VULNERABLE] = 'vulnerable',
-    [TargetTypeModule.Enum.WALL] = 'wall',
+    [TargetType.Enum.AIR] = 'AIR',
+    [TargetType.Enum.ALIVE] = 'ALIVE',
+    [TargetType.Enum.ALLIES] = 'ALLIES',
+    [TargetType.Enum.ANCIENT] = 'ANCIENT',
+    [TargetType.Enum.DEAD] = 'DEAD',
+    [TargetType.Enum.DEBRIS] = 'DEBRIS',
+    [TargetType.Enum.DECORATION] = 'DECORATION',
+    [TargetType.Enum.ENEMIES] = 'ENEMIES',
+    [TargetType.Enum.FRIEND] = 'FRIEND',
+    [TargetType.Enum.GROUND] = 'GROUND',
+    [TargetType.Enum.HERO] = 'HERO',
+    [TargetType.Enum.INVULNERABLE] = 'INVULNERABLE',
+    [TargetType.Enum.ITEM] = 'ITEM',
+    [TargetType.Enum.MECHANICAL] = 'MECHANICAL',
+    [TargetType.Enum.NEUTRAL] = 'NEUTRAL',
+    [TargetType.Enum.NONANCIENT] = 'NONANCIENT',
+    [TargetType.Enum.NONE] = 'NONE',
+    [TargetType.Enum.NONHERO] = 'NONHERO',
+    [TargetType.Enum.NONSAPPER] = 'NONSAPPER',
+    [TargetType.Enum.NOTSELF] = 'NOTSELF',
+    [TargetType.Enum.ORGANIC] = 'ORGANIC',
+    [TargetType.Enum.PLAYER] = 'PLAYER',
+    [TargetType.Enum.PLAYERUNITS] = 'PLAYERUNITS',
+    [TargetType.Enum.SAPPER] = 'SAPPER',
+    [TargetType.Enum.SELF] = 'SELF',
+    [TargetType.Enum.STRUCTURE] = 'STRUCTURE',
+    [TargetType.Enum.TERRAIN] = 'TERRAIN',
+    [TargetType.Enum.TREE] = 'TREE',
+    [TargetType.Enum.VULNERABLE] = 'VULNERABLE',
+    [TargetType.Enum.WALL] = 'WALL',
 }
 
 ---@param val any
 ---@return boolean
-function TargetTypeModule.isTargetType(val)
+function TargetType.isTargetType(val)
     if target_type2str[val] then
         return true
     end
@@ -125,7 +125,7 @@ function TargetTypeModule.isTargetType(val)
 end
 
 ---@param target_type targettype
-function TargetTypeModule.toStr(target_type)
+function TargetType.toStr(target_type)
     local res = target_type2str[target_type]
     if res == nil then
         Log:err('variable \'target_type\' is not of type targettype', 3)
@@ -133,4 +133,4 @@ function TargetTypeModule.toStr(target_type)
     return res
 end
 
-return TargetTypeModule
+return TargetType

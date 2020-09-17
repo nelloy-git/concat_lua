@@ -8,7 +8,7 @@ local Log = UtilsLib.Log
 ---@type AbilityDataTypeClass
 local AbilityType = require(lib_path..'.Data.Type') or error('')
 
-local TestAbilityType = AbilityType.new('TestAbilityType') or error('')
+local TestAbilityType = AbilityType.new('TestAbilityType')
 
 function TestAbilityType:checkConditions(abil)
     print('checkConditions')

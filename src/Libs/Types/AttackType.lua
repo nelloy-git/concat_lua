@@ -14,10 +14,10 @@ local Log = UtilsLib.Log or error('')
 -- Module
 --========
 
----@class AttackTypeModule
-local Module = {}
+---@class AttackType
+local AttackType = {}
 
-Module.Enum = {
+AttackType.Enum = {
     ---@type attacktype
     NORMAL = ATTACK_TYPE_NORMAL or getEnum(),
     ---@type attacktype
@@ -35,18 +35,18 @@ Module.Enum = {
 }
 
 local atk_type2str = {
-    [Module.Enum.NORMAL] = 'unknown',
-    [Module.Enum.MELEE] = 'normal',
-    [Module.Enum.PIERCE] = 'pierce',
-    [Module.Enum.SIEGE] = 'siege',
-    [Module.Enum.MAGIC] = 'magic',
-    [Module.Enum.CHAOS] = 'chaos',
-    [Module.Enum.HERO] = 'hero'
+    [AttackType.Enum.NORMAL] = 'NORMAL',
+    [AttackType.Enum.MELEE] = 'MELEE',
+    [AttackType.Enum.PIERCE] = 'PIERCE',
+    [AttackType.Enum.SIEGE] = 'SIEGE',
+    [AttackType.Enum.MAGIC] = 'MAGIC',
+    [AttackType.Enum.CHAOS] = 'CHAOS',
+    [AttackType.Enum.HERO] = 'HERO'
 }
 
 ---@param val any
 ---@return boolean
-function Module.isAttackType(val)
+function AttackType.isAttackType(val)
     if not atk_type2str[val] then
         return false
     end
@@ -55,7 +55,7 @@ end
 
 ---@param atk_type attacktype
 ---@return string
-function Module.toStr(atk_type)
+function AttackType.toStr(atk_type)
     local res = atk_type2str[atk_type]
     if res == nil then
         Log:err('variable \'atk_type\' is not of type attacktype', 3)
@@ -63,4 +63,4 @@ function Module.toStr(atk_type)
     return res
 end
 
-return Module
+return AttackType

@@ -5,6 +5,8 @@ require('Libs.Lib')
 
 ---@type AbilityLib
 local AbilityLib = require(LibList.AbilityLib) or error('')
+---@type BuffLib
+local BuffLib = require(LibList.BuffLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
 ---@type HandleLib

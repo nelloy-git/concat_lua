@@ -14,10 +14,10 @@ local Log = UtilsLib.Log or error('')
 -- Module
 --========
 
----@class FrameEventTypeModule
-local Module = {}
+---@class FrameEventType
+local FrameEventType = {}
 
-Module.Enum = {
+FrameEventType.Enum = {
     ---@type frameeventtype
     CONTROL_CLICK = FRAMEEVENT_CONTROL_CLICK or getEnum(),
     ---@type frameeventtype
@@ -53,27 +53,27 @@ Module.Enum = {
 }
 
 local frameevent_type2str = {
-    [Module.Enum.CONTROL_CLICK] = 'CONTROL_CLICK',
-    [Module.Enum.MOUSE_ENTER] = 'MOUSE_ENTER',
-    [Module.Enum.MOUSE_LEAVE] = 'MOUSE_LEAVE',
-    [Module.Enum.MOUSE_UP] = 'MOUSE_UP',
-    [Module.Enum.MOUSE_DOWN] = 'MOUSE_DOWN',
-    [Module.Enum.MOUSE_WHEEL] = 'MOUSE_WHEEL',
-    [Module.Enum.CHECKBOX_CHECKED] = 'CHECKBOX_CHECKED',
-    [Module.Enum.CHECKBOX_UNCHECKED] = 'CHECKBOX_UNCHECKED',
-    [Module.Enum.EDITBOX_TEXT_CHANGED] = 'EDITBOX_TEXT_CHANGED',
-    [Module.Enum.POPUPMENU_ITEM_CHANGED] = 'POPUPMENU_ITEM_CHANGED',
-    [Module.Enum.MOUSE_DOUBLECLICK] = 'MOUSE_DOUBLECLICK',
-    [Module.Enum.SPRITE_ANIM_UPDATE] = 'SPRITE_ANIM_UPDATE',
-    [Module.Enum.SLIDER_VALUE_CHANGED] = 'SLIDER_VALUE_CHANGED',
-    [Module.Enum.DIALOG_CANCEL] = 'DIALOG_CANCEL',
-    [Module.Enum.DIALOG_ACCEPT] = 'DIALOG_ACCEPT',
-    [Module.Enum.EDITBOX_ENTER] = 'EDITBOX_ENTER',
+    [FrameEventType.Enum.CONTROL_CLICK] = 'CONTROL_CLICK',
+    [FrameEventType.Enum.MOUSE_ENTER] = 'MOUSE_ENTER',
+    [FrameEventType.Enum.MOUSE_LEAVE] = 'MOUSE_LEAVE',
+    [FrameEventType.Enum.MOUSE_UP] = 'MOUSE_UP',
+    [FrameEventType.Enum.MOUSE_DOWN] = 'MOUSE_DOWN',
+    [FrameEventType.Enum.MOUSE_WHEEL] = 'MOUSE_WHEEL',
+    [FrameEventType.Enum.CHECKBOX_CHECKED] = 'CHECKBOX_CHECKED',
+    [FrameEventType.Enum.CHECKBOX_UNCHECKED] = 'CHECKBOX_UNCHECKED',
+    [FrameEventType.Enum.EDITBOX_TEXT_CHANGED] = 'EDITBOX_TEXT_CHANGED',
+    [FrameEventType.Enum.POPUPMENU_ITEM_CHANGED] = 'POPUPMENU_ITEM_CHANGED',
+    [FrameEventType.Enum.MOUSE_DOUBLECLICK] = 'MOUSE_DOUBLECLICK',
+    [FrameEventType.Enum.SPRITE_ANIM_UPDATE] = 'SPRITE_ANIM_UPDATE',
+    [FrameEventType.Enum.SLIDER_VALUE_CHANGED] = 'SLIDER_VALUE_CHANGED',
+    [FrameEventType.Enum.DIALOG_CANCEL] = 'DIALOG_CANCEL',
+    [FrameEventType.Enum.DIALOG_ACCEPT] = 'DIALOG_ACCEPT',
+    [FrameEventType.Enum.EDITBOX_ENTER] = 'EDITBOX_ENTER',
 }
 
 ---@param val any
 ---@return boolean
-function Module.isFrameEventType(val)
+function FrameEventType.isFrameEventTypeType(val)
     if not frameevent_type2str[val] then
         return false
     end
@@ -82,7 +82,7 @@ end
 
 ---@param frameevent_type frameeventtype
 ---@return string
-function Module.toStr(frameevent_type)
+function FrameEventType.toStr(frameevent_type)
     local res = frameevent_type2str[frameevent_type]
     if res == nil then
         Log:err('variable \'frameevent_type\' is not of type frameevent', 3)
@@ -90,4 +90,4 @@ function Module.toStr(frameevent_type)
     return res
 end
 
-return Module
+return FrameEventType

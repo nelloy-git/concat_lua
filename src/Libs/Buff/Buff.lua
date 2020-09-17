@@ -5,15 +5,17 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_depss
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Timer = HandleLib.Timer or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = lib_deplsLib
-local isTypeErr = UtilsLib.isTypeErr
-local Timer = UtilsLib.Handle.Timer
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type BuffTypeClass
-local BuffType = require(lib_path..'.Type')
+local BuffType = require(lib_path..'Type') or error('')
 
 --=======
 -- Class

@@ -1,12 +1,20 @@
+--=========
+-- Include
+--=========
+
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 ---@type UtilsLib
-local UtilsLib = lib_deplsLib
+local UtilsLib = lib_dep.Utils
 local Log = UtilsLib.Log
 
 ---@type BuffTypeClass
-local BuffType = require(lib_path..'.Type')
+local BuffType = require(lib_path..'Type')
+
+--========
+-- Module
+--========
 
 local TestBuffType = BuffType.new('TestBuffType')
 

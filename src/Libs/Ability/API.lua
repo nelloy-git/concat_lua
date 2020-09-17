@@ -35,6 +35,10 @@ local AbilityData = require(path..'Data.Base') or error('')
 AbilityLibAPI.EVENT = AbilityData.EVENT
 AbilityLibAPI.addEventAction = AbilityData.addEventAction
 
+---@type AbilityCastingClass
+local AbilityCasting = require(path..'Casting.Base')
+AbilityLibAPI.CastingLoopPeriod = AbilityCasting.getCastingPeriod()
+
 ---@type AbilityDataType
 AbilityLibAPI.TestType = require(path..'TestType') or error('')
 

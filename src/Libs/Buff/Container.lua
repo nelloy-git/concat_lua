@@ -5,14 +5,16 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_depss
+local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
-local UtilsLib = lib_deplsLib
-local isTypeErr = UtilsLib.isTypeErr
-local Unit = UtilsLib.Handle.Unit
+local UtilsLib = lib_dep.Utils or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type BuffClass
-local Buff = require(lib_path..'.Buff')
+local Buff = require(lib_path..'.Buff') or error('')
 
 --=======
 -- Class
@@ -36,9 +38,7 @@ local private = {}
 ---@return BuffsContainer
 function static.new(owner, child)
     isTypeErr(owner, Unit, 'owner')
-    if child then
-        isTypeErr(child, BuffsContainer, 'child')
-    end
+    if child then isTypeErr(child, BuffsContainer, 'child') end
 
     local instance = child or Class.allocate(BuffsContainer)
     private.newData(instance, owner)

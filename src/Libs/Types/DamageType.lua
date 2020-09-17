@@ -14,10 +14,10 @@ local Log = UtilsLib.Log or error('')
 -- Module
 --========
 
----@class DamageTypeModule
-local Module = {}
+---@class DamageType
+local DamageType = {}
 
-Module.Enum = {
+DamageType.Enum = {
     ---@type damagetype
     UNKNOWN = DAMAGE_TYPE_UNKNOWN or getEnum(),
     ---@type damagetype
@@ -65,33 +65,33 @@ Module.Enum = {
 }
 
 local dmg_type2str = {
-    [Module.Enum.UNKNOWN] = 'UNKNOWN',
-    [Module.Enum.NORMAL] = 'NORMAL',
-    [Module.Enum.ENHANCED] = 'ENHANCED',
-    [Module.Enum.FIRE] = 'FIRE',
-    [Module.Enum.COLD] = 'COLD',
-    [Module.Enum.LIGHTNING] = 'LIGHTNING',
-    [Module.Enum.POISON] = 'POISON',
-    [Module.Enum.DISEASE] = 'DISEASE',
-    [Module.Enum.DIVINE] = 'DIVINE',
-    [Module.Enum.MAGIC] = 'MAGIC',
-    [Module.Enum.SONIC] = 'SONIC',
-    [Module.Enum.ACID] = 'ACID',
-    [Module.Enum.FORCE] = 'FORCE',
-    [Module.Enum.DEATH] = 'DEATH',
-    [Module.Enum.MIND] = 'MIND',
-    [Module.Enum.PLANT] = 'PLANT',
-    [Module.Enum.DEFENSIVE] = 'DEFENSIVE',
-    [Module.Enum.DEMOLITION] = 'DEMOLITION',
-    [Module.Enum.SLOW_POISON] = 'SLOW_POISON',
-    [Module.Enum.SPIRIT_LINK] = 'SPIRIT_LINK',
-    [Module.Enum.SHADOW_STRIKE] = 'SHADOW_STRIKE',
-    [Module.Enum.UNIVERSAL] = 'UNIVERSAL',
+    [DamageType.Enum.UNKNOWN] = 'UNKNOWN',
+    [DamageType.Enum.NORMAL] = 'NORMAL',
+    [DamageType.Enum.ENHANCED] = 'ENHANCED',
+    [DamageType.Enum.FIRE] = 'FIRE',
+    [DamageType.Enum.COLD] = 'COLD',
+    [DamageType.Enum.LIGHTNING] = 'LIGHTNING',
+    [DamageType.Enum.POISON] = 'POISON',
+    [DamageType.Enum.DISEASE] = 'DISEASE',
+    [DamageType.Enum.DIVINE] = 'DIVINE',
+    [DamageType.Enum.MAGIC] = 'MAGIC',
+    [DamageType.Enum.SONIC] = 'SONIC',
+    [DamageType.Enum.ACID] = 'ACID',
+    [DamageType.Enum.FORCE] = 'FORCE',
+    [DamageType.Enum.DEATH] = 'DEATH',
+    [DamageType.Enum.MIND] = 'MIND',
+    [DamageType.Enum.PLANT] = 'PLANT',
+    [DamageType.Enum.DEFENSIVE] = 'DEFENSIVE',
+    [DamageType.Enum.DEMOLITION] = 'DEMOLITION',
+    [DamageType.Enum.SLOW_POISON] = 'SLOW_POISON',
+    [DamageType.Enum.SPIRIT_LINK] = 'SPIRIT_LINK',
+    [DamageType.Enum.SHADOW_STRIKE] = 'SHADOW_STRIKE',
+    [DamageType.Enum.UNIVERSAL] = 'UNIVERSAL',
 }
 
 ---@param val any
 ---@return boolean
-function Module.isDamageType(val)
+function DamageType.isDamageType(val)
     if not dmg_type2str[val] then
         return false
     end
@@ -100,7 +100,7 @@ end
 
 ---@param dmg_type damagetype
 ---@return string
-function Module.toStr(dmg_type)
+function DamageType.toStr(dmg_type)
     local res = dmg_type2str[dmg_type]
     if res == nil then
         Log:err('variable \'dmg_type\' is not of type damagetype', 3)
@@ -108,4 +108,4 @@ function Module.toStr(dmg_type)
     return res
 end
 
-return Module
+return DamageType

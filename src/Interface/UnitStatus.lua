@@ -118,8 +118,10 @@ function public:setHealth(cur, max)
     cur, _ = math.modf(cur)
     max, _ = math.modf(max)
     local perc, _ = math.modf(100 * cur / max)
+    perc = perc > 100 and 100 or perc
 
-    priv.hp_bar:setProgress(cur / max)
+    local progress = cur / max
+    priv.hp_bar:setProgress(progress > 1 and 1 or progress)
     priv.hp_bar:setText(tostring(cur)..' / '..tostring(max)..' ('..tostring(perc)..'%)')
 end
 

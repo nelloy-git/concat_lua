@@ -113,6 +113,11 @@ function public:getMaxMana()
     return GetUnitState(self:getData(), UNIT_STATE_MAX_MANA)
 end
 
+---@param val number
+function public:setHealth(val)
+    SetUnitState(self:getData(), UNIT_STATE_LIFE, val)
+end
+
 ---@return number
 function public:getHealth()
     return GetUnitState(self:getData(), UNIT_STATE_LIFE)
