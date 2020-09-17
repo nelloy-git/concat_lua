@@ -1,5 +1,5 @@
 ---@type AbilityLib
-local AbilityLib = require(LibList.AbilityLib)
+local AbilityLib = require(LibList.AbilityExtLib)
 ---@type BinaryLib
 local BinaryLib = require(LibList.BinaryLib)
 ---@type BuffLib
@@ -36,9 +36,9 @@ function FullUnit.newUnit(id, x, y, owner)
     local u = UtilsLib.Handle.Unit.new(id, x, y, owner)
 
     local params = ParameterLib.Container.new(u)
-    params:addBase(ParameterLib.PhysicalDamage, 5)
-    params:addBase(ParameterLib.Defence, 0)
-    params:addBase(ParameterLib.Health, 1000)
+    params:addBase(ParameterLib.PDMG, 5)
+    params:addBase(ParameterLib.PDEF, 0)
+    params:addBase(ParameterLib.LIFE, 1000)
 
     local abils = AbilityLib.Container.new(u)
     local buffs = BuffLib.Container.new(u)

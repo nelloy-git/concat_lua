@@ -51,24 +51,30 @@ function public:getParameter()
 end
 
 ---@param value number
+---@return number
 function public:addBase(value)
     local priv = private.data[self]
     priv.base = priv.base + value
-    priv.is_res_ready = false
+    priv.res = priv.base * priv.mult + priv.addit
+    return priv.res
 end
 
 ---@param value number
+---@return number
 function public:addMult(value)
     local priv = private.data[self]
     priv.mult = priv.mult + value
-    priv.is_res_ready = false
+    priv.res = priv.base * priv.mult + priv.addit
+    return priv.res
 end
 
 ---@param value number
+---@return number
 function public:addAddit(value)
     local priv = private.data[self]
     priv.addit = priv.addit + value
-    priv.is_res_ready = false
+    priv.res = priv.base * priv.mult + priv.addit
+    return priv.res
 end
 
 ---@return number
@@ -88,14 +94,7 @@ end
 
 ---@return number
 function public:getResult()
-    local priv = private.data[self]
-
-    if not priv.is_res_ready then
-        priv.res = priv.base * priv.mult + priv.addit
-        priv.is_res_ready = true
-    end
-
-    return priv.res
+    return private.data[self].res
 end
 
 --=========

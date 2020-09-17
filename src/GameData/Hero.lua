@@ -4,7 +4,7 @@
 
 local Class = require(LibList.ClassLib)
 ---@type AbilityLib
-local AbilityLib = require(LibList.AbilityLib)
+local AbilityLib = require(LibList.AbilityExtLib)
 local AbilContainer = AbilityLib.Container
 ---@type BinaryLib
 local BinaryLib = require(LibList.BinaryLib)

@@ -12,21 +12,12 @@ local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
-local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-local getEnum = UtilsLib.getEnum or error('')
 
----@type AbilityDataTypeClass
-local AbilityDataType = require(lib_path..'.Data.Type') or error('')
+---@type AbilityExttTypeClass
+local AbilityExttType = require(lib_path..'Type') or error('')
 ---@type AbilityDummyClass
 local AbilityDummy = require(lib_path..'.Dummy.Base') or error('')
----@type AbilityCooldownChargesClass
-local AbilityCooldownCharges = require(lib_path..'.Cooldown.Charges') or error('')
----@type AbilityCastingClass
-local AbilityCastingController = require(lib_path..'.Casting.Controller') or error('')
----@type AbilityInfoClass
-local AbilityInfo = require(lib_path..'.Info.Base') or error('')
-local INFO_NAME = AbilityInfo.INFO_NAME
 
 ---@type AbilityTargetNoneClass
 local AbilityTargetNone = require(lib_path..'.Target.None') or error('')
@@ -39,13 +30,13 @@ local AbilityTargetPoint = require(lib_path..'.Target.Point') or error('')
 -- Class
 --=======
 
-local AbilityData = Class.new('AbilityData')
----@class AbilityData
-local public = AbilityData.public
----@class AbilityDataClass
-local static = AbilityData.static
----@type AbilityDataClass
-local override = AbilityData.override
+local AbilityExt = Class.new('AbilityExt')
+---@class AbilityExt
+local public = AbilityExt.public
+---@class AbilityExtClass
+local static = AbilityExt.static
+---@type AbilityExtClass
+local override = AbilityExt.override
 local private = {}
 
 --=========
@@ -53,63 +44,20 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param abil_type AbilityDataType
+---@param abil_type AbilityExttType
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param child AbilityData | nil
----@return AbilityData
+---@param child AbilityExt | nil
+---@return AbilityExt
 function override.new(owner, abil_type, hotkey, child)
     isTypeErr(owner, Unit, 'owner')
-    isTypeErr(abil_type, AbilityDataType, 'abil_type')
+    isTypeErr(abil_type, AbilityExttType, 'abil_type')
     isTypeErr(hotkey, 'string', 'hotkey')
-    if child then isTypeErr(child, AbilityData, 'child') end
+    if child then isTypeErr(child, AbilityExt, 'child') end
 
-    local instance = child or Class.allocate(AbilityData)
+    local instance = child or Class.allocate(AbilityExt)
     private.newData(instance, owner, abil_type, hotkey)
 
     return instance
-end
-
---==================
--- Static callbacks
---==================
-
----@alias AbilityDataEventCallback fun(event: AbilityDataEvent, abil_data:AbilityData)
-
----@alias AbilityDataEvent string
-override.EVENT = {}
----@type AbilityDataEvent
-static.EVENT.AlreadyCasting = getEnum()
----@type AbilityDataEvent
-static.EVENT.NoCharges = getEnum()
----@type AbilityDataEvent
-static.EVENT.OutOfRange = getEnum()
----@type AbilityDataEvent
-static.EVENT.NeedsAllyTarget = getEnum()
----@type AbilityDataEvent
-static.EVENT.NeedsEnemyTarget = getEnum()
----@type AbilityDataEvent
-static.EVENT.CastingStart = getEnum()
----@type AbilityDataEvent
-static.EVENT.CastingLoop = getEnum()
----@type AbilityDataEvent
-static.EVENT.CastingCancel = getEnum()
----@type AbilityDataEvent
-static.EVENT.CastingInterrupt = getEnum()
----@type AbilityDataEvent
-static.EVENT.CastingFinish = getEnum()
-
----@param event AbilityDataEvent
----@param callback AbilityDataEventCallback
----@return Action
-function override.addEventAction(event, callback)
-    return private.event_actions[event]:add(callback)
-end
-
----@param event AbilityDataEvent
----@param action Action
----@return boolean
-function override.removeEventAction(event, action)
-    return private.event_actions[event]:remove(action)
 end
 
 --========
@@ -126,7 +74,7 @@ function public:getOwner()
     return private.data[self].owner
 end
 
----@return AbilityDataType
+---@return AbilityExttType
 function public:getType()
     return private.data[self].abil_type
 end
@@ -241,9 +189,9 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityData
+---@param self AbilityExt
 ---@param owner Unit
----@param abil_type AbilityDataType
+---@param abil_type AbilityExtType
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 function private.newData(self, owner, abil_type, hotkey)
     local priv = {
@@ -282,8 +230,8 @@ end
 ------------
 
 private.event_actions = {}
-for _, event in pairs(static.EVENT) do
-    private.event_actions[event] = ActionList.new(AbilityData)
+for _, event in pairs(static.Event) do
+    private.event_actions[event] = ActionList.new(AbilityExt)
 end
 
 -----------
@@ -294,7 +242,7 @@ private.dummy2instance = setmetatable({}, {__mode = 'kv'})
 
 ---@type AbilityDummyCallback
 private.used_dummy_callback = function(abil_dummy)
-    ---@type AbilityData
+    ---@type AbilityExt
     local self = private.dummy2instance[abil_dummy]
 
     local target
@@ -306,7 +254,7 @@ private.used_dummy_callback = function(abil_dummy)
     end
     self:use(target)
 end
-private.used_dummy_action = Action.new(private.used_dummy_callback, AbilityData)
+private.used_dummy_action = Action.new(private.used_dummy_callback, AbilityExt)
 
 -------------
 -- Charges --
@@ -316,7 +264,7 @@ private.charges2instance = setmetatable({}, {__mode = 'kv'})
 
 ---@type AbilityCooldownChargesCallback
 private.charges_changed_callback = function(abil_charges)
-    ---@type AbilityData
+    ---@type AbilityExt
     local self = private.charges2instance[abil_charges]
     local abil_dummy = private.data[self].abil_dummy
 
@@ -330,7 +278,7 @@ private.charges_changed_callback = function(abil_charges)
         abil_dummy:setCooldownRemaining(0)
     end
 end
-private.charges_changed_action = Action.new(private.charges_changed_callback, AbilityData)
+private.charges_changed_action = Action.new(private.charges_changed_callback, AbilityExt)
 
 -------------
 -- Casting --
@@ -339,19 +287,19 @@ private.charges_changed_action = Action.new(private.charges_changed_callback, Ab
 private.casting2instance = setmetatable({}, {__mode = 'kv'})
 ---@type AbilityCastingCallback
 private.casting_callback = function(abil_casting)
-    ---@type AbilityData
+    ---@type AbilityExt
     local self = private.casting2instance[abil_casting]
     private.event_actions[static.EVENT.CastingLoop]:run(static.EVENT.CastingLoop, self)
 end
-private.casting_action = Action.new(private.casting_callback, AbilityData)
+private.casting_action = Action.new(private.casting_callback, AbilityExt)
 
 private.casting_finish_callback = function(abil_casting)
-    ---@type AbilityData
+    ---@type AbilityExt
     local self = private.casting2instance[abil_casting]
     private.event_actions[static.EVENT.CastingFinish]:run(static.EVENT.CastingFinish, self)
     private.data[self].target = nil
 end
-private.casting_finish_action = Action.new(private.casting_finish_callback, AbilityData)
+private.casting_finish_action = Action.new(private.casting_finish_callback, AbilityExt)
 
 ----------
 -- Info --
@@ -373,7 +321,7 @@ private.info_update = {
 }
 ---@type AbilityInfoCallback
 private.info_changed_callback = function(abil_info, info_name)
-    ---@type AbilityData
+    ---@type AbilityExt
     local self = private.info2instance[abil_info]
     ---@type AbilityDummy
     local abil_dummy = private.data[self].abil_dummy
@@ -382,7 +330,7 @@ private.info_changed_callback = function(abil_info, info_name)
     local func_name = private.info_update[info_name]
     if func_name then abil_dummy[func_name](abil_dummy, value) end
 end
-private.info_changed_action = Action.new(private.info_changed_callback, AbilityData)
+private.info_changed_action = Action.new(private.info_changed_callback, AbilityExt)
 
 
 return static

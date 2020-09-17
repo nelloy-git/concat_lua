@@ -11,26 +11,17 @@ local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
----@type AbilityCastingType
-local AbilityCastingType = require(lib_path..'.Casting.Type') or error('')
----@type AbilityInfoTypeClass
-local AbilityInfoType = require(lib_path..'.Info.Type') or error('')
----@type AbilityCooldownTypeClass
-local AbilityCooldownType = require(lib_path..'.Cooldown.Type') or error('')
-
 --=======
 -- Class
 --=======
 
-local AbilityDataType = Class.new('AbilityDataType', AbilityCastingType,
-                                                     AbilityInfoType,
-                                                     AbilityCooldownType)
----@class AbilityDataType
-local public = AbilityDataType.public
----@class AbilityDataTypeClass
-local static = AbilityDataType.static
----@type AbilityDataTypeClass
-local override = AbilityDataType.override
+local AbilityExtType = Class.new('AbilityExtType')
+---@class AbilityExtType
+local public = AbilityExtType.public
+---@class AbilityExtTypeClass
+local static = AbilityExtType.static
+---@type AbilityExtTypeClass
+local override = AbilityExtType.override
 local private = {}
 private.virtual_functions = {}
 
@@ -39,20 +30,17 @@ private.virtual_functions = {}
 --========
 
 ---@param name string
----@param child AbilityDataType | nil
----@return AbilityDataType
+---@param child AbilityExtType | nil
+---@return AbilityExtType
 function override.new(name, child)
     isTypeErr(name, 'string', 'id')
-    if child then isTypeErr(child, AbilityDataType, 'child') end
+    if child then isTypeErr(child, AbilityExtType, 'child') end
 
     if private.instances[name] then
-        Log:err(tostring(AbilityDataType)..' with name \"'..name..'\" already exists.', 2)
+        Log:err(tostring(AbilityExtType)..' with name \"'..name..'\" already exists.', 2)
     end
 
-    local instance = child or Class.allocate(AbilityDataType)
-    instance = AbilityCooldownType.new(name, instance)
-    instance = AbilityInfoType.new(name, instance)
-    instance = AbilityCastingType.new(name, instance)
+    local instance = child or Class.allocate(AbilityExtType)
 
     private.instances[instance] = name
 

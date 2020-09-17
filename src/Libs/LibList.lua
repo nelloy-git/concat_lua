@@ -1,6 +1,6 @@
 LibList = {}
 
-LibList.AbilityLib = 'Libs.Ability.API'
+LibList.AbilityExtLib = 'Libs.AbilityExt.API'
 LibList.AssetLib = 'Libs.Asset.API'
 LibList.BinaryLib = 'Libs.Binary.API'
 LibList.BuffLib = 'Libs.Buff.API'

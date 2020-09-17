@@ -73,7 +73,7 @@ local frameevent_type2str = {
 
 ---@param val any
 ---@return boolean
-function FrameEventType.isFrameEventTypeType(val)
+function FrameEventType.isFrameEventType(val)
     if not frameevent_type2str[val] then
         return false
     end

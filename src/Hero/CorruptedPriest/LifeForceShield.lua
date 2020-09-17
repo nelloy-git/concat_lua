@@ -3,7 +3,7 @@
 --=========
 
 ---@type AbilityLib
-local AbilityLib = require(LibList.AbilityLib) or error('')
+local AbilityLib = require(LibList.AbilityExtLib) or error('')
 ---@type AssetLib
 local AssetLib = require(LibList.AssetLib) or error('')
 local Icon = AssetLib.IconDefault
@@ -54,7 +54,7 @@ end
 function LifeForceShield:onCastingCancel(target, caster, time_left, full_time)
     target = target:getUnit()
     local params = ParameterLib.UnitContainer.get(caster)
-    local matk = params:getResult(ParameterLib.MagicalDamage)
+    local matk = params:getResult(ParameterLib.MDMG)
 
     BuffLib.addShield(drained_life[caster] * (1 + BonusPerMAtk * matk), target)
     drained_life[caster] = nil
@@ -63,7 +63,7 @@ end
 function LifeForceShield:onCastingInterrupt(target, caster, time_left, full_time)
     target = target:getUnit()
     local params = ParameterLib.UnitContainer.get(caster)
-    local matk = params:getResult(ParameterLib.MagicalDamage)
+    local matk = params:getResult(ParameterLib.MDMG)
 
     BuffLib.addShield(drained_life[caster] * (1 + BonusPerMAtk * matk), target)
     drained_life[caster] = nil
@@ -72,7 +72,7 @@ end
 function LifeForceShield:onCastingFinish(target, caster, time_left, full_time)
     target = target:getUnit()
     local params = ParameterLib.UnitContainer.get(caster)
-    local matk = params:getResult(ParameterLib.MagicalDamage)
+    local matk = params:getResult(ParameterLib.MDMG)
 
     BuffLib.addShield(drained_life[caster] * (1 + BonusPerMAtk * matk), target)
     drained_life[caster] = nil

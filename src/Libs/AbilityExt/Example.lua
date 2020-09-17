@@ -1,3 +1,4 @@
+--[[
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
@@ -93,3 +94,4 @@ end
 
 
 return TestAbilityType
+]]

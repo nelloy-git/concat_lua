@@ -6,9 +6,6 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
----@type TypesLib
-local TypesLib = lib_dep.Types or error('')
-local DamageType = TypesLib.DamageTypeEnum or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local Unit = HandleLib.Unit or error('')
@@ -48,7 +45,8 @@ function override.new(owner, child)
     if child then isTypeErr(child, ParameterContainerUnit, 'child') end
 
     if private.owners[owner] then
-        Log:err('Parameter container already exists.', 2)
+        Log:wnr('Parameter container for unit already exists.')
+        return private.owners[owner]
     end
 
     local instance = child or Class.allocate(ParameterContainerUnit)
@@ -70,32 +68,35 @@ end
 
 ---@param param Parameter
 ---@param value number
+---@return number
 function public:addBase(param, value)
-    ValueListPublic.addBase(self, param, value)
-    local result = private.getResult(self, param)
+    local res = ValueListPublic.addBase(self, param, value)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getData(), result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getData(), res)
     end
+    return res
 end
 
 ---@param param Parameter
 ---@param value number
+---@return number
 function public:addMult(param, value)
-    ValueListPublic.addMult(self, param, value)
-    local result = private.getResult(self, param)
+    local res = ValueListPublic.addMult(self, param, value)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getData(), result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getData(), res)
     end
+    return res
 end
 
 ---@param param Parameter
 ---@param value number
+---@return number
 function public:addAddit(param, value)
-    ValueListPublic.addAddit(self, param, value)
-    local result = private.getResult(self, param)
+    local res = ValueListPublic.addAddit(self, param, value)
     if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getData(), result)
+        Defines.ApplyToUnit[param](private.data[self].owner:getData(), res)
     end
+    return res
 end
 
 --=========
@@ -110,6 +111,7 @@ private.owners = setmetatable({}, {__mode = 'k'})
 function private.newData(self, owner)
     local priv = {
         owner = owner
+
     }
     private.data[self] = priv
     private.owners[owner] = self

@@ -19,22 +19,24 @@ ParameterLibAPI.Parameter = require(path..'Parameter') or error('')
 
 ---@type ParameterDefines
 local Defines = require(path..'Defines') or error('')
-ParameterLibAPI.PhysicalDamage = Defines.PhysicalDamage or error('')
-ParameterLibAPI.AttackSpeed = Defines.AttackSpeed or error('')
-ParameterLibAPI.Defence = Defines.Defence or error('')
-ParameterLibAPI.PhysicalDamageReduction = Defines.PhysicalDamageReduction or error('')
-ParameterLibAPI.MagicalDamage = Defines.MagicalDamage or error('')
-ParameterLibAPI.CooldownReduction = Defines.CooldownReduction or error('')
-ParameterLibAPI.Resistance = Defines.Resistance or error('')
-ParameterLibAPI.MagicalDamageReduction = Defines.MagicalDamageReduction or error('')
-ParameterLibAPI.ControlReduction = Defines.ControlReduction or error('')
-ParameterLibAPI.DodgeChance = Defines.DodgeChance or error('')
-ParameterLibAPI.CriticalStrikeChance = Defines.CriticalStrikeChance or error('')
-ParameterLibAPI.Health = Defines.Health or error('')
-ParameterLibAPI.Regeneration = Defines.Regeneration or error('')
-ParameterLibAPI.Mana = Defines.Mana or error('')
-ParameterLibAPI.Recovery = Defines.Recovery or error('')
-ParameterLibAPI.MoveSpeed = Defines.MoveSpeed or error('')
+ParameterLibAPI.Enum = {
+    PDMG = Defines.PhysicalDamage or error(''),
+    PDEF = Defines.Defence or error(''),
+    PRES = Defines.PhysicalDamageReduction or error(''),
+    MDMG = Defines.MagicalDamage or error(''),
+    MDEF = Defines.Resistance or error(''),
+    MRES = Defines.MagicalDamageReduction or error(''),
+    ASPD = Defines.AttackSpeed or error(''),
+    CDR = Defines.CooldownReduction or error(''),
+    CRES = Defines.ControlReduction or error(''),
+    DCH = Defines.DodgeChance or error(''),
+    CRCH = Defines.CriticalStrikeChance or error(''),
+    LIFE = Defines.Health or error(''),
+    REGEN = Defines.Regeneration or error(''),
+    MANA = Defines.Mana or error(''),
+    RECOV = Defines.Recovery or error(''),
+    MSPD = Defines.MoveSpeed or error(''),
+}
 ---@type table<number, Parameter>
 ParameterLibAPI.AllParameters = Defines.AllParameters or error('')
 

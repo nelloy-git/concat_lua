@@ -8,6 +8,7 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
+local Action = UtilsLib.Action
 local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type ParameterDefines
@@ -48,28 +49,47 @@ end
 -- Public
 --========
 
+---@alias ParameterChangedCallback fun(param:Parameter, value:number)
+
+---@param callback ParameterChangedCallback
+function public:setChangedAction(callback)
+    private.data[self].action = Action.new(callback)
+end
+
 ---@param param Parameter
 ---@param value number
+---@return number
 function public:addBase(param, value)
-    ---@type ParameterValue
-    local param_value = private.data[self].values[param]
-    param_value:addBase(value)
+    local priv = private.data[self]
+    local res = priv.values[param]:addBase(value)
+    if priv.action then
+        priv.action:run(param, res)
+    end
+    return res
 end
 
 ---@param param Parameter
 ---@param value number
+---@return number
 function public:addMult(param, value)
-    ---@type ParameterValue
-    local param_value = private.data[self].values[param]
-    param_value:addMult(value)
+    local priv = private.data[self]
+    local res = priv.values[param]:addMult(value)
+    if priv.action then
+        priv.action:run(param, res)
+    end
+    return res
 end
 
 ---@param param Parameter
 ---@param value number
+---@return number
 function public:addAddit(param, value)
-    ---@type ParameterValue
-    local param_value = private.data[self].values[param]
-    param_value:addAddit(value)
+    local priv = private.data[self]
+    local res = priv.values[param]:addAddit(value)
+    if priv.action then
+        priv.action:run(param, res)
+    end
+    return res
 end
 
 ---@param param Parameter
@@ -114,7 +134,8 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param self ParameterValueList
 function private.newData(self)
     local priv = {
-        values = {}
+        values = {},
+        action = nil
     }
     private.data[self] = priv
 

@@ -3,7 +3,7 @@
 --=========
 
 ---@type AbilityLib
-local AbilLib = require(LibList.AbilityLib) or error('')
+local AbilLib = require(LibList.AbilityExtLib) or error('')
 ---@type BinaryLib
 local BinaryLib = require(LibList.BinaryLib) or error('')
 ---@type HandleLib
