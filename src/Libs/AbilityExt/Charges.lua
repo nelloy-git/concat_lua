@@ -24,28 +24,23 @@ local AbilityExtType = require(lib_path..'Type')
 -- Class
 --=======
 
-local AbilityCharges = Class.new('AbilityCharges')
----@class AbilityCharges
-local public = AbilityCharges.public
----@class AbilityChargesClass
-local static = AbilityCharges.static
----@type AbilityChargesClass
-local override = AbilityCharges.override
+local AbilityExtCharges = Class.new('AbilityExtCharges')
+---@class AbilityExtCharges
+local public = AbilityExtCharges.public
+---@class AbilityExtChargesClass
+local static = AbilityExtCharges.static
+---@type AbilityExtChargesClass
+local override = AbilityExtCharges.override
 local private = {}
 
 --========
 -- Static
 --========
 
----@param loop_cb Callback | nil
----@param changed_cb Callback | nil
----@return AbilityCharges
-function override.new(loop_cb, changed_cb)
-    if loop_cb then isTypeErr(loop_cb, 'function', 'loop_cb') end
-    if changed_cb then isTypeErr(changed_cb, 'function', 'changed_cb') end
-
-    local instance = Class.allocate(AbilityCharges)
-    private.newData(instance, loop_cb, changed_cb)
+---@return AbilityExtCharges
+function override.new()
+    local instance = Class.allocate(AbilityExtCharges)
+    private.newData(instance)
 
     return instance
 end
@@ -54,6 +49,7 @@ end
 -- Public
 --========
 
+--- Set current charges.
 ---@param charges number
 ---@param ignore_max boolean | nil
 function public:set(charges, ignore_max)
@@ -82,40 +78,70 @@ function public:set(charges, ignore_max)
     end
 end
 
+--- Get current charges
 ---@return number
 function public:get()
     return private.data[self].charges
 end
 
+--- Set maximum charges
 ---@param max number
 function public:setMax(max)
     private.data[self].max_charges = max
     self:set(self:get())
 end
 
+--- Get maxinun charges
 ---@return number
 function public:getMax()
     return private.data[self].max_charges
 end
 
+--- Pause charges cooldown
+---@param flag boolean
+function public:pause(flag)
+    private.data[self].timer:pause(flag)
+end
+
+--- Set time left for getting charge.
 ---@param time number
 function public:setTimeLeft(time)
     private.data[self].timer:setTimeLeft(time)
 end
 
+--- Get time left for getting charge.
 ---@return number
 function public:getTimerLeft()
     return private.data[self].timer:getTimerLeft()
 end
 
+--- Set full time for getting charge.
 ---@param time number
 function public:setCooldown(time)
-    private.data[self].max_charges = time
+    local priv = private.data[self]
+
+    priv.timer:setTimeLeft(priv.timer:getTimeLeft() + time - priv.cooldown)
+    priv.cooldown = time
 end
 
+--- Get full time for getting charge.
 ---@return number
 function public:getCooldown()
     return private.data[self].cooldown
+end
+
+---@alias AbilityExtChargesCallback fun(charges:AbilityExtCharges)
+
+---@param callback AbilityExtChargesCallback
+function public:setLoopAction(callback)
+    local priv = private.data[self]
+    priv.action_loop = Action.new(callback)
+end
+
+---@param callback AbilityExtChargesCallback
+function public:setChangedAction(callback)
+    local priv = private.data[self]
+    priv.action_changed = Action.new(callback)
 end
 
 --=========
@@ -123,25 +149,39 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.timer2charges = setmetatable({}, {__mode = 'kv'})
 
----@param self AbilityCharges
----@param loop_cb Callback
----@param changed_cb Callback
-function private.newData(self, loop_cb, changed_cb)
-    local finish_timer_cb = function()
-        self:set(self:get() + 1)
-    end
-
+---@param self AbilityExtCharges
+function private.newData(self)
     local priv = {
         charges = 1,
         max_charges = 1,
         cooldown = 0,
 
-        timer = AbilityExtTimer.new(loop_cb, finish_timer_cb),
-        changed_action = changed_cb and Action.new(changed_cb) or nil
-    }
+        action_loop = nil,
+        action_changed = nil,
 
+        timer = AbilityExtTimer.new(),
+    }
     private.data[self] = priv
+    private.timer2charges[priv.timer] = self
+
+    priv.timer:setLoopAction(private.timerLoopCallback)
+    priv.timer:setFinishAction(private.timerFinishCallback)
+end
+
+---@param timer AbilityExtTimer
+function private.timerLoopCallback(timer)
+    local self = private.timer2charges[timer]
+    local priv = private.data[self]
+    if priv.action_loop then priv.action_loop:run(self) end
+end
+
+---@param timer AbilityExtTimer
+function private.timerFinishCallback(timer)
+    local self = private.timer2charges[timer]
+    local priv = private.data[self]
+    if priv.action_changed then priv.action_changed:run(self) end
 end
 
 return static

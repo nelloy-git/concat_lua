@@ -29,20 +29,13 @@ private.virtual_functions = {}
 -- Static
 --========
 
----@param name string
 ---@param child AbilityExtType | nil
 ---@return AbilityExtType
-function override.new(name, child)
-    isTypeErr(name, 'string', 'id')
+function override.new(child)
     if child then isTypeErr(child, AbilityExtType, 'child') end
 
-    if private.instances[name] then
-        Log:err(tostring(AbilityExtType)..' with name \"'..name..'\" already exists.', 2)
-    end
-
     local instance = child or Class.allocate(AbilityExtType)
-
-    private.instances[instance] = name
+    private.newData(instance)    
 
     return instance
 end
@@ -51,36 +44,137 @@ end
 -- Public
 --========
 
----@return string
-function public:getName()
-    return private.data[self].name
+---@param event AbilityExtEvent
+---@param callback AbilityExtControllerCallback
+function public:setCallback(event, callback)
 end
 
---- Virtual function.
---- Return true if check is successfull.
----@param abil AbilityData
----@return boolean
-function public:checkConditions(abil) end
-private.virtual_functions['checkConditions'] = public.checkConditions
+---@return AbilityExtControllerCallback
+function public:getCallback(event)
+end
+
+---@param name string | function(owner:Unit):string
+function public:setName(name)
+end
+
+---@return string
+function public:setIcon(value)
+end
+
+---@return string
+function public:setTooltip(value)
+end
+
+---@return string
+function public:setArea(value)
+end
+
+---@return string
+function public:setRange(value)
+end
+
+---@return string
+function public:setManaCost(value)
+end
+
+---@return string
+function public:setCastingTime(value)
+end
+
+---@return string
+function public:setChargesForUse(value)
+end
+
+---@return string
+function public:setMaxCharges(value)
+end
+
+---@return string
+function public:setChargeCooldown(value)
+end
+
+---@param owner Unit
+function public:getName(owner)
+    local name = private.data[self].name
+    if type(name) == 'string' then
+end
+
+---@param owner Unit
+function public:getIcon(owner)
+end
+
+---@param owner Unit
+function public:getTooltip(owner)
+end
+
+---@return string
+function public:setTargetingType(value)
+end
+
+---@param owner Unit
+function public:getTargetingType(owner)
+end
+
+---@param owner Unit
+function public:getArea(owner)
+end
+
+---@param owner Unit
+function public:getRange(owner)
+end
+
+---@param owner Unit
+function public:getManaCost(owner)
+end
+
+---@param owner Unit
+function public:getCastingTime(owner)
+end
+
+---@param owner Unit
+function public:getChargesForUse(owner)
+end
+
+---@param owner Unit
+function public:getMaxCharges(owner)
+end
+
+---@param owner Unit
+function public:getChargeCooldown(owner)
+end
 
 --=========
 -- Private
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.instances = setmetatable({}, {__mode = 'k'})
 
-CompileFinal(function()
-    for instance, name in pairs(private.instances) do
-        for field, value in pairs(public) do
-            local func = private.virtual_functions[field]
-            if func ~= nil then
-                if value == instance[field] then
-                    Log:err(name..': virtual function \"'..field..'\" must be overriden.', 1)
-                end
-            end
-        end
-    end
-end)
+---@param self AbilityExtType
+function private.newData(self)
+    local priv = {
+        name = nil,
+        icon = nil,
+        tooltip = nil,
+        targeting_type = nil,
+
+        area = nil,
+        range = nil,
+        manacost = nil,
+        casting_time = nil,
+        charges_for_use = nil,
+        charges_max = nil,
+        charge_cooldown = nil
+    }
+    private.data[self] = priv
+end
+
+---@param self AbilityExtType
+function private.returnPrivField(self, key, val_t)
+    local val = private.data[self][key]
+    if type(val) == val_t then
+        return val_t
+    elseif type(val) == 'function' then
+        return 
+end
 
 return static

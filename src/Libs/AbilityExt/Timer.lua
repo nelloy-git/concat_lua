@@ -34,15 +34,12 @@ local private = {}
 -- Static
 --=========
 
----@param loop_cb Callback | nil
----@param finish_cb Callback | nil
----@return AbilityExtTimer
-function override.new(loop_cb, finish_cb)
-    if loop_cb then isTypeErr(loop_cb, 'function', 'loop_cb') end
-    if finish_cb then isTypeErr(finish_cb, 'function', 'finish_cb') end
+---@alias AbilityExtTimerCallback fun(timer:AbilityExtTimer)
 
+---@return AbilityExtTimer
+function override.new()
     local instance = Class.allocate(AbilityExtTimer)
-    private.newData(instance, loop_cb, finish_cb)
+    private.newData(instance)
 
     return instance
 end
@@ -60,6 +57,11 @@ function public:start(time)
     private.active_list[self] = priv
 end
 
+---@param flag boolean
+function public:pause(flag)
+    private.data[self].pause = flag
+end
+
 function public:stop()
     local priv = private.data[self]
 
@@ -75,7 +77,7 @@ function public:finish()
     priv.finish_time = -1
     private.active_list[self] = nil
 
-    priv.finish_action:run()
+    priv.action_finish:run()
 end
 
 ---@param time_left number
@@ -85,13 +87,26 @@ end
 
 ---@return number
 function public:getTimeLeft()
-    return private.data[self].finish_time - private.casting_current_time
+    local left = private.data[self].finish_time - private.casting_current_time
+    return left >= 0 and left or 0
 end
 
 ---@return number
 function public:getFullTime()
     local priv = private.data[self]
     return priv.finish_time - priv.start_time
+end
+
+---@param callback AbilityExtTimerCallback
+function public:setLoopAction(callback)
+    local priv = private.data[self]
+    priv.action_loop = callback and Action.new(callback) or nil
+end
+
+---@param callback AbilityExtTimerCallback
+function public:setFinishAction(callback)
+    local priv = private.data[self]
+    priv.action_finish = callback and Action.new(callback) or nil
 end
 
 --=========
@@ -102,15 +117,13 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.active_list = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityExtTimer
----@param loop_cb Callback
----@param finish_cb Callback
-function private.newData(self, loop_cb, finish_cb)
+function private.newData(self)
     local priv = {
         start_time = -1,
         finish_time = -1,
 
-        loop_action = loop_cb and Action.new(loop_cb) or nil,
-        finish_action = finish_cb and Action.new(finish_cb) or nil,
+        action_loop = nil,
+        action_finish = nil,
     }
     private.data[self] = priv
 end
@@ -122,17 +135,23 @@ function private.loop()
 
     local cur_time = private.cur_time
     for timer, priv in pairs(private.active_list) do
+        if priv.pause then
+            priv.finish_time = priv.finish_time + private.period
+        end
+
         if priv.finish_time <= cur_time then
             -- Finished
             priv.start_time = -1
             priv.finish_time = -1
-            if priv.finish_action then
-                priv.finish_action:run()
+            if priv.action_finish then
+                priv.action_finish:run(timer)
             end
             private.active_list[timer] = nil
         else
             -- Continue
-            if priv.loop_action then priv.loop_action:run() end
+            if priv.action_loop then
+                priv.action_loop:run(timer)
+            end
         end
     end
 end

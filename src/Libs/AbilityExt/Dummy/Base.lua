@@ -19,39 +19,39 @@ local Action = UtilsLib.Action or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
----@type AbilityDummyPool
-local AbilityDummyPool = require(lib_path..'.Dummy.Pool')
+---@type AbilityExtDummyPool
+local AbilityExtDummyPool = require(lib_path..'.Dummy.Pool')
 
 --=======
 -- Class
 --=======
 
-local AbilityDummy = Class.new('AbilityDummy', Ability)
----@class AbilityDummy : Ability
-local public = AbilityDummy.public
----@class AbilityDummyClass : AbilityClass
-local static = AbilityDummy.static
----@type AbilityDummyClass
-local override = AbilityDummy.override
+local AbilityExtDummy = Class.new('AbilityExtDummy', Ability)
+---@class AbilityExtDummy : Ability
+local public = AbilityExtDummy.public
+---@class AbilityExtDummyClass : AbilityClass
+local static = AbilityExtDummy.static
+---@type AbilityExtDummyClass
+local override = AbilityExtDummy.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@alias AbilityDummyCallback fun(abil_dummy:AbilityDummy)
+---@alias AbilityExtDummyCallback fun(abil_dummy:AbilityExtDummy)
 
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param child AbilityDummy | nil
----@return AbilityDummy
+---@param child AbilityExtDummy | nil
+---@return AbilityExtDummy
 function override.new(owner, hotkey, child)
     isTypeErr(owner, Unit, 'owner')
     isTypeErr(hotkey, 'string', 'hotkey')
-    if child then isTypeErr(child, AbilityDummy, 'child') end
+    if child then isTypeErr(child, AbilityExtDummy, 'child') end
 
-    local abil_dummy_type = AbilityDummyPool.pop(hotkey)
-    local instance = child or Class.allocate(AbilityDummy)
+    local abil_dummy_type = AbilityExtDummyPool.pop(hotkey)
+    local instance = child or Class.allocate(AbilityExtDummy)
     instance = Ability.new(owner:getData(), abil_dummy_type:getId(), instance)
     private.newData(instance, owner, abil_dummy_type, hotkey)
 
@@ -115,6 +115,11 @@ function public:setManaCost(mana_cost)
     BlzSetUnitAbilityManaCost(self:getOwner():getData(), self:getId(), 0, mana_cost)
 end
 
+---@return number
+function public:getManaCost(mana_cost)
+    return BlzGetUnitAbilityManaCost(self:getOwner():getData(), self:getId(), 0)
+end
+
 ---@param cooldown number
 function public:setCooldownRemaining(cooldown)
     -- Can not be charged after some events, so Timer is used.
@@ -135,13 +140,13 @@ end
 
 ---@param cooldown number
 function public:setCooldown(cooldown)
-    --BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_COOLDOWN, 0, cooldown)
-    BlzSetUnitAbilityCooldown(self:getOwner():getData(), self:getId(), 0, cooldown)
+    BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_COOLDOWN, 0, cooldown)
+    --BlzSetUnitAbilityCooldown(self:getOwner():getData(), self:getId(), 0, cooldown)
 end
 
 function public:destroy()
     local priv = private.data[self]
-    AbilityDummyPool.push(priv.hotkey, priv.abil_dummy_type)
+    AbilityExtDummyPool.push(priv.hotkey, priv.abil_dummy_type)
     AbilityPublic.destroy()
 end
 
@@ -149,16 +154,9 @@ end
 -- Callbacks
 --===========
 
----@param callback AbilityDummyCallback | Action
+---@param callback AbilityExtDummyCallback
 function public:setEffectAction(callback)
-    if type(callback) == 'function' then
-        private.data[self].effect_action = Action.new(callback, self)
-    elseif Class.type(callback, Action) then
-        local action = callback
-        private.data[self].effect_action = action
-    else
-        Log:err('variable \'callback\' is not of type AbilityDummyCallback | Action', 2)
-    end
+    private.data[self].effect_action = Action.new(callback, self)
 end
 
 --=========
@@ -167,7 +165,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityDummy
+---@param self AbilityExtDummy
 ---@param owner Unit
 function private.newData(self, owner, abil_dummy_type, hotkey)
     local priv = {
@@ -182,7 +180,7 @@ function private.newData(self, owner, abil_dummy_type, hotkey)
 end
 
 function private.onEffect()
-    ---@type AbilityDummy
+    ---@type AbilityExtDummy
     local self = static.getLinked(GetSpellAbility())
     local priv = private.data[self]
     if priv.effect_action then priv.effect_action:run(self) end

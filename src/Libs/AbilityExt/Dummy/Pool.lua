@@ -20,13 +20,13 @@ local Log = UtilsLib.Log or error('')
 -- Class
 --=======
 
-local AbilityDummyPool = Class.new('AbilityDummyPool')
----@class AbilityDummyPool : BinaryAbility
-local public = AbilityDummyPool.public
----@class AbilityDummyPoolClass : BinaryAbilityClass
-local static = AbilityDummyPool.static
----@type AbilityDummyPool
-local override = AbilityDummyPool.override
+local AbilityExtDummyPool = Class.new('AbilityExtDummyPool')
+---@class AbilityExtDummyPool : BinaryAbility
+local public = AbilityExtDummyPool.public
+---@class AbilityExtDummyPoolClass : BinaryAbilityClass
+local static = AbilityExtDummyPool.static
+---@type AbilityExtDummyPool
+local override = AbilityExtDummyPool.override
 local private = {}
 
 --=========
@@ -73,8 +73,8 @@ end
 
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
 ---@param is_area boolean
----@param child AbilityDummy | nil
----@return AbilityDummy
+---@param child AbilityExtDummy | nil
+---@return AbilityExtDummy
 function private.newDummy(target_type, is_area, child)
     isTypeErr(target_type, 'string', 'target_type')
     if not (target_type == 'None' or
@@ -84,7 +84,7 @@ function private.newDummy(target_type, is_area, child)
         Log:err('Got wrong \"target_type\".', 2)
     end
     isTypeErr(is_area, 'boolean', 'is_area')
-    if child then isTypeErr(child, AbilityDummyPool, 'child') end
+    if child then isTypeErr(child, AbilityExtDummyPool, 'child') end
 
     local id = BinaryLib.getAbilityId()
     local order_id = BinaryLib.getOrderId()

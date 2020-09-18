@@ -40,6 +40,11 @@ function override.new(callback, owner, child)
     isTypeErr(callback, 'function', 'callback')
     if child then isTypeErr(child, 'Action', 'child') end
 
+    local list = private.callback2list[callback]
+    if list and list[owner] then
+        return list[owner]
+    end
+
     local instance = child or Class.allocate(Action)
     private.newData(instance, callback, owner)
 
@@ -74,6 +79,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.callback2list = setmetatable({}, {__mode = 'v'})
 
 ---@param self Action
 ---@param callback Callback
@@ -83,7 +89,13 @@ function private.newData(self, callback, owner)
         callback = callback,
         owner = owner
     }
+
     private.data[self] = priv
+    if not private.callback2list[callback] then
+        private.callback2list[callback] = setmetatable({}, {__mode = 'v'})
+    end
+    local list = private.callback2list[callback]
+    list[owner or ''] = self
 end
 
 return static

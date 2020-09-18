@@ -39,13 +39,7 @@ Event.Enum = {
     ERROR_ALREADY_CASTING = getEnum(),
     ---@type AbilityExtEvent
     ERROR_NO_CHARGES = getEnum(),
-    ---@type AbilityExtEvent
-    ERROR_OUT_OF_RANGE = getEnum(),
-    ---@type AbilityExtEvent
-    ERROR_WRONG_TARGET = getEnum(),
 }
-
----@alias AbilityExtEventCallback fun(event:AbilityExtEvent, abil:AbilityExt)
 
 local actions = {}
 for _, event in pairs(Event.Enum) do

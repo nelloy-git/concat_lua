@@ -12,28 +12,46 @@ local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
+local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
+local getEnum = UtilsLib.getEnum or error('')
 
----@type AbilityExttTypeClass
-local AbilityExttType = require(lib_path..'Type') or error('')
----@type AbilityDummyClass
-local AbilityDummy = require(lib_path..'.Dummy.Base') or error('')
-
----@type AbilityTargetNoneClass
-local AbilityTargetNone = require(lib_path..'.Target.None') or error('')
----@type AbilityTargetUnitClass
-local AbilityTargetUnit = require(lib_path..'.Target.Unit') or error('')
----@type AbilityTargetPointClass
-local AbilityTargetPoint = require(lib_path..'.Target.Point') or error('')
+---@type AbilityExtControllerClass
+local AbilityExtController = require(lib_path..'Controller') or error('')
+---@type AbilityExtDummyClass
+local AbilityExtDummy = require(lib_path..'Dummy') or error('')
+local AbilityExtDummyPublic = Class.getPublic(AbilityExtDummy)
+---@type AbilityExtEventModule
+local AbilityExtEventModule = require(lib_path..'Event') or error('')
+local Event = AbilityExtEventModule.Enum
+---@type AbilityExtTypeClass
+local AbilityExtType = require(lib_path..'Type') or error('')
 
 --=======
 -- Class
 --=======
 
-local AbilityExt = Class.new('AbilityExt')
----@class AbilityExt
+local AbilityExt = Class.new('AbilityExt', AbilityExtController, AbilityExtDummy)
+-- Copy AbilityExtDummy methods because EmmyLua does not support multiple inheritance.
+-- Some of methods are blocked
+---@class AbilityExt : AbilityExtController, AbilityExtDummy
+---@field getOwner fun(self:AbilityExt):Unit
+---@field setTargetingType fun(self:AbilityExt, target_type:string)
+---@field setArea fun(self:AbilityExt, area:number)
+---@field setRange fun(self:AbilityExt, range:number)
+---@field setOptions fun(self:AbilityExt, options:any)
+---@field setName fun(self:AbilityExt, name:string)
+---@field setTooltip fun(self:AbilityExt, tooltip:string)
+---@field setIcon fun(self:AbilityExt, icon:string)
+---@field setManaCost fun(self:AbilityExt, mana_cost:number)
+---@field getManaCost fun(self:AbilityExt):number
+---@blocked setCooldownRemaining fun(self:AbilityExt, cooldown:number)
+---@blocked getCooldownRemaining fun(self:AbilityExt):number
+---@blocked setCooldown fun(self:AbilityExt, cooldown:number)
+---@field destroy fun(self:AbilityExt)
+---@blocked setEffectAction fun(self:AbilityExt, callback:AbilityExtDummyCallback)
 local public = AbilityExt.public
----@class AbilityExtClass
+---@class AbilityExtClass : AbilityExtControllerClass, AbilityExtDummy
 local static = AbilityExt.static
 ---@type AbilityExtClass
 local override = AbilityExt.override
@@ -44,17 +62,19 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param abil_type AbilityExttType
+---@param abil_type AbilityExtType
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
 ---@param child AbilityExt | nil
 ---@return AbilityExt
 function override.new(owner, abil_type, hotkey, child)
     isTypeErr(owner, Unit, 'owner')
-    isTypeErr(abil_type, AbilityExttType, 'abil_type')
+    isTypeErr(abil_type, AbilityExtType, 'abil_type')
     isTypeErr(hotkey, 'string', 'hotkey')
     if child then isTypeErr(child, AbilityExt, 'child') end
 
     local instance = child or Class.allocate(AbilityExt)
+    instance = AbilityExtController.new(instance)
+
     private.newData(instance, owner, abil_type, hotkey)
 
     return instance
@@ -64,124 +84,47 @@ end
 -- Public
 --========
 
----@return AbilityTarget
-function public:getTarget()
-    return private.data[self].target
-end
-
----@return Unit
-function public:getOwner()
-    return private.data[self].owner
-end
-
----@return AbilityExttType
+---@return AbilityExtType
 function public:getType()
     return private.data[self].abil_type
 end
 
----@return string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
-function public:getHotkey()
-    return private.data[self].hotkey
+---@return Unit | nil
+function public:getTargetUnit()
+    return private.data[self].target_unit
 end
 
----@param target AbilityTarget
-function public:use(target)
-    local priv = private.data[self]
-    local EVENT = static.EVENT
-
-    local mana_cost = priv.abil_info:get(INFO_NAME.ManaCost)
-
-    -- Check casting
-    if priv.target ~= nil then
-        priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
-        private.event_actions[EVENT.AlreadyCasting]:run(EVENT.AlreadyCasting, self)
-        return
-    end
-
-    -- Check charges.
-    local charges = priv.abil_charges:getChargesLeft()
-    local need_charges = priv.abil_type:getChargesForUse()
-    if charges < need_charges then
-        priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
-        private.event_actions[EVENT.NoCharges]:run(EVENT.NoCharges, self)
-        return
-    end
-
-    -- Check range.
-    local range = target:getDistance(priv.owner)
-    local max_range = priv.abil_info:get(INFO_NAME.Range)
-    if range > max_range then
-        priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
-        private.event_actions[EVENT.OutOfRange]:run(EVENT.OutOfRange, self)
-        return
-    end
-
-    -- Check allowed target.
-    if Class.type(target, AbilityTargetUnit) then
-        local target_unit = target:getUnit()
-        local allowed = priv.abil_info:get(INFO_NAME.TargetsAllowed)
-        --print(allowed)
-        if allowed == 'friend' and priv.owner:isEnemy(target_unit) then
-            priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
-            private.event_actions[EVENT.NeedsAllyTarget]:run(EVENT.NeedsAllyTarget, self)
-            return
-        elseif allowed == 'enemy' and priv.owner:isAlly(target_unit) then
-            priv.owner:setMana(priv.owner:getMana() + mana_cost) -- restore mana
-            private.event_actions[EVENT.NeedsEnemyTarget]:run(EVENT.NeedsEnemyTarget, self)
-            return
-        end
-    end
-
-    -- Consume
-    priv.abil_charges:setChargesLeft(charges - need_charges)
-
-    self:start(target)
+---@return number
+function public:getTargetPointX()
+    return private.data[self].target_x
 end
 
---- Start casting ignoring conditions.
----@param target AbilityTarget
-function public:start(target)
-    local priv = private.data[self]
-
-    priv.abil_casting:start(target)
-    priv.target = target
-    private.event_actions[static.EVENT.CastingStart]:run(static.EVENT.CastingStart, self)
+---@return number
+function public:getTargetPointY()
+    return private.data[self].target_y
 end
 
-function public:cancel()
-    local priv = private.data[self]
+function public:update()
+    local abil_type = private.data[self].abil_type
+    local owner = self:getOwner()
 
-    if priv.target ~= nil then
-        priv.abil_casting:cancel()
-        private.event_actions[static.EVENT.CastingCancel]:run(static.EVENT.CastingCancel, self)
-        priv.target = nil
-    end
+    self:setName(abil_type:getName(owner))
+    self:setIcon(abil_type:getIcon(owner))
+    self:setTooltip(abil_type:getTooltip(owner))
+    self:setTargetingType(abil_type:getTargetingType(owner))
+    self:setArea(abil_type:getArea(owner))
+    self:setRange(abil_type:getRange(owner))
+    self:setManaCost(abil_type:getManaCost(owner))
+    self:setCastingTime(abil_type:getCastingTime(owner))
+    self:setChargesForUse(abil_type:getChargesForUse(owner))
+    self:setMaxCharges(abil_type:getMaxCharges(owner))
+    self:setChargeCooldown(abil_type:getChargeCooldown(owner))
 end
 
-function public:interrupt()
-    local priv = private.data[self]
-
-    if priv.target ~= nil then
-        priv.abil_casting:interrupt()
-        private.event_actions[static.EVENT.CastingInterrupt]:run(static.EVENT.CastingInterrupt, self)
-        priv.target = nil
-    end
-end
-
-function public:finish()
-    local priv = private.data[self]
-
-    if priv.target ~= nil then
-        priv.abil_casting:finish()
-        private.event_actions[static.EVENT.CastingFinish]:run(static.EVENT.CastingFinish, self)
-        priv.target = nil
-    end
-end
-
-function public:destroy()
-    local priv = private.data[self]
-    priv.abil_dummy:destroy()
-end
+public.setCooldownRemaining = 0
+public.getCooldownRemaining = 0
+public.setCooldown = 0
+public.setEffectAction = 0
 
 --=========
 -- Private
@@ -190,147 +133,54 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityExt
----@param owner Unit
 ---@param abil_type AbilityExtType
----@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
-function private.newData(self, owner, abil_type, hotkey)
+function private.newData(self, abil_type)
     local priv = {
-        target = nil,
-        owner = owner,
-        abil_type = abil_type,
-        hotkey = hotkey,
+        target_unit = nil,
+        target_x = 0,
+        target_y = 0,
 
-        abil_dummy = AbilityDummy.new(owner, hotkey),
-        abil_charges = AbilityCooldownCharges.new(owner, abil_type),
-        abil_casting = AbilityCastingController.new(owner, abil_type),
-        abil_info = AbilityInfo.new(owner, abil_type),
+        abil_type = abil_type,
     }
     private.data[self] = priv
 
-    -- Init dummy
-    priv.abil_dummy:setEffectAction(private.used_dummy_action)
-    private.dummy2instance[priv.abil_dummy] = self
-    -- Init charges
-    priv.abil_charges:setChargesChangedAction(private.charges_changed_action)
-    private.charges2instance[priv.abil_charges] = self
-    -- Init casting
-    priv.abil_casting:setCastingAction(private.casting_action)
-    priv.abil_casting:setFinishAction(private.casting_finish_action)
-    private.casting2instance[priv.abil_casting] = self
-    -- Init info
-    priv.abil_info:setInfoChangedAction(private.info_changed_action)
-    priv.abil_info:autoUpdate(true)
-    private.info2instance[priv.abil_info] = self
-    priv.abil_info:update()
+    self:addAction(Event.CHARGES_CHANGED, private.chargesChanged)
+    AbilityExtDummyPublic.setEffectAction(self, private.dummyEffect)
 
-end
-
-------------
--- Events --
-------------
-
-private.event_actions = {}
-for _, event in pairs(static.Event) do
-    private.event_actions[event] = ActionList.new(AbilityExt)
-end
-
------------
--- Dummy --
------------
-
-private.dummy2instance = setmetatable({}, {__mode = 'kv'})
-
----@type AbilityDummyCallback
-private.used_dummy_callback = function(abil_dummy)
-    ---@type AbilityExt
-    local self = private.dummy2instance[abil_dummy]
-
-    local target
-    local target_unit = Unit.getLinked(GetSpellTargetUnit())
-    if target_unit then
-        target = AbilityTargetUnit.new(target_unit)
-    else
-        target = AbilityTargetPoint(GetSpellTargetX(), GetSpellTargetY())
+    for _, event in pairs(Event) do
+        local cb = abil_type:getCallback(event)
+        if cb then self:addAction(event, cb) end
     end
-    self:use(target)
+    self:update()
 end
-private.used_dummy_action = Action.new(private.used_dummy_callback, AbilityExt)
 
--------------
--- Charges --
--------------
+---@param self AbilityExt
+---@param _ AbilityExtEvent
+function private.chargesChanged(self, _)
+    local left = self:getCharges()
 
-private.charges2instance = setmetatable({}, {__mode = 'kv'})
-
----@type AbilityCooldownChargesCallback
-private.charges_changed_callback = function(abil_charges)
-    ---@type AbilityExt
-    local self = private.charges2instance[abil_charges]
-    local abil_dummy = private.data[self].abil_dummy
-
-    -- Update cooldown of dummy
-    local charges = abil_charges:getChargesLeft()
-    if charges <= 0 then
-        abil_dummy:setCooldown(abil_charges:getChargeCooldown())
-        abil_dummy:setCooldownRemaining(abil_charges:getChargeCooldownLeft())
+    if left <= 0 then
+        AbilityExtDummyPublic.setCooldown(self, self:getChargeCooldown())
+        AbilityExtDummyPublic.setCooldownRemaining(self, self:getChargeTimeLeft())
     else
-        abil_dummy:setCooldown(0)
-        abil_dummy:setCooldownRemaining(0)
+        AbilityExtDummyPublic.setCooldown(self, 0)
+        AbilityExtDummyPublic.setCooldownRemaining(self, 0)
     end
 end
-private.charges_changed_action = Action.new(private.charges_changed_callback, AbilityExt)
 
--------------
--- Casting --
--------------
+---@param self AbilityExt
+function private.dummyEffect(self)
+    local priv = private.data[self]
 
-private.casting2instance = setmetatable({}, {__mode = 'kv'})
----@type AbilityCastingCallback
-private.casting_callback = function(abil_casting)
-    ---@type AbilityExt
-    local self = private.casting2instance[abil_casting]
-    private.event_actions[static.EVENT.CastingLoop]:run(static.EVENT.CastingLoop, self)
+    priv.target_unit = Unit.getLinked(GetSpellTargetUnit())
+    priv.target_x = GetSpellTargetX()
+    priv.target_y = GetSpellTargetY()
+
+    -- Restore mana if use is not successed.
+    if not self:use() then
+        local owner = self:getOwner()
+        owner:setMana(owner:getMana() + self:getManaCost())
+    end
 end
-private.casting_action = Action.new(private.casting_callback, AbilityExt)
-
-private.casting_finish_callback = function(abil_casting)
-    ---@type AbilityExt
-    local self = private.casting2instance[abil_casting]
-    private.event_actions[static.EVENT.CastingFinish]:run(static.EVENT.CastingFinish, self)
-    private.data[self].target = nil
-end
-private.casting_finish_action = Action.new(private.casting_finish_callback, AbilityExt)
-
-----------
--- Info --
-----------
-
-private.info2instance = setmetatable({}, {__mode = 'kv'})
-
--- INFO_NAME -> dummy func name
-private.info_update = {
-    [INFO_NAME.Name] = 'setName',
-    [INFO_NAME.Range] = 'setRange',
-    [INFO_NAME.Area] = 'setArea',
-    [INFO_NAME.TargetingType] = 'setTargetingType',
-    [INFO_NAME.TargetsAllowed] = nil,
-    [INFO_NAME.ManaCost] = 'setManaCost',
-    [INFO_NAME.HealthCost] = nil, -- TODO
-    [INFO_NAME.Icon] = 'setIcon',
-    [INFO_NAME.Tooltip] = 'setTooltip',
-}
----@type AbilityInfoCallback
-private.info_changed_callback = function(abil_info, info_name)
-    ---@type AbilityExt
-    local self = private.info2instance[abil_info]
-    ---@type AbilityDummy
-    local abil_dummy = private.data[self].abil_dummy
-    local value = abil_info:get(info_name)
-
-    local func_name = private.info_update[info_name]
-    if func_name then abil_dummy[func_name](abil_dummy, value) end
-end
-private.info_changed_action = Action.new(private.info_changed_callback, AbilityExt)
-
 
 return static

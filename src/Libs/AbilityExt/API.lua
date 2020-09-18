@@ -12,7 +12,7 @@ local path = Lib.curPath()
 --=====
 -- API
 --=====
-
+--[[
 ---@type AbilitiesContainerClass
 AbilityLibAPI.Container = require(path..'Data.Container') or error('')
 
@@ -41,7 +41,7 @@ AbilityLibAPI.CastingLoopPeriod = AbilityCasting.getCastingPeriod()
 
 ---@type AbilityDataType
 AbilityLibAPI.TestType = require(path..'TestType') or error('')
-
+]]
 Lib.finish()
 
 return AbilityLibAPI

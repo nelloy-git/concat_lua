@@ -16,7 +16,7 @@ local ParamLib = require(LibList.ParameterLib) or error('')
 
 
 ---@type AbilityDataTypeClass
-local LifeForceShield = require('Hero.CorruptedPriest.LifeForceShield') or error('')
+--local LifeForceShield = require('Hero.CorruptedPriest.LifeForceShield') or error('')
 ---@type CorruptedPriestSettings
 local Settings = require('Hero.CorruptedPriest.Settings') or error('')
 
