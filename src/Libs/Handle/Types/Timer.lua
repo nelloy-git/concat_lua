@@ -57,6 +57,10 @@ end
 ---@param periodic boolean
 ---@param callback Callback
 function public:start(timeout, periodic, callback)
+    isTypeErr(timeout, 'number', 'timeout')
+    isTypeErr(periodic, 'boolean', 'periodic')
+    isTypeErr(callback, 'function', 'callback')
+
     local action = Action.new(callback, self)
     TimerStart(self:getData(), timeout, periodic, function() action:run() end)
 end

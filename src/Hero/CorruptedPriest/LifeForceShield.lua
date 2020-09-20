@@ -4,6 +4,7 @@
 
 ---@type AbilityLib
 local AbilityLib = require(LibList.AbilityExtLib) or error('')
+local Event = AbilityLib.Event
 ---@type AssetLib
 local AssetLib = require(LibList.AssetLib) or error('')
 local Icon = AssetLib.IconDefault
@@ -11,6 +12,11 @@ local Icon = AssetLib.IconDefault
 local BuffLib = require(LibList.BuffLib) or error('')
 ---@type ParameterLib
 local ParameterLib = require(LibList.ParameterLib) or error('')
+local UnitParam = ParameterLib.UnitContainer or error('')
+local Param = ParameterLib.Enum or error('')
+
+---@type HeroUtils
+local Utils = require('Hero.Utils') or error('')
 
 --==========
 -- Settings
@@ -23,112 +29,84 @@ local DrainLifePerSec = 0.05
 -- Module
 --========
 
-local LifeForceShield = AbilityLib.Type.new('LifeForceShield')
+local LifeForceShield = Utils.newAbilAlly('Life Force Shield')
+--local LifeForceShield = AbilityLib.Type.new('LifeForceShield')
 
-local casting_period = AbilityLib.CastingLoopPeriod
+local casting_period = AbilityLib.TimerPeriod
 local percent_per_loop = DrainLifePerSec * casting_period
 local drained_life = {}
 
+---@param owner Unit
+---@return string
+function LifeForceShield:getIcon(owner) return Icon.BTNAbsorbMagic end
 
-function LifeForceShield:checkConditions(abil)
-    return true
-end
+---@param owner Unit
+---@return string
+function LifeForceShield:getTooltip(owner) return 'Tooltip' end
 
-function LifeForceShield:onCastingStart(target, caster)
-end
+---@param owner Unit
+---@return number
+function LifeForceShield:getArea(owner) return 0
+ end
 
----@param target AbilityTargetUnit
----@param caster Unit
----@param time_left number
----@param full_time number
-function LifeForceShield:onCastingLoop(target, caster, time_left, full_time)
-    target = target:getUnit()
+---@param owner Unit
+---@return number
+function LifeForceShield:getRange(owner) return 500 end
+
+---@param owner Unit
+---@return number
+function LifeForceShield:getManaCost(owner) return 20 end
+
+---@param owner Unit
+---@return number
+function LifeForceShield:getCastingTime(owner) return 4 end
+
+---@param owner Unit
+---@return number
+function LifeForceShield:getChargeCooldown(owner) return 10 end
+
+---@param abil AbilityExt
+local function onCasting(abil)
+    local owner = abil:getOwner()
+    local target = abil:getTargetUnit()
+
     local hp = target:getHealth()
     local max_hp = target:getMaxHealth()
     local perc = hp / max_hp
 
-    drained_life[caster] = (drained_life[caster] or 0) + percent_per_loop * max_hp
+    drained_life[owner] = (drained_life[owner] or 0) + percent_per_loop * max_hp
     target:setHealth((perc - percent_per_loop) * max_hp)
 end
 
-function LifeForceShield:onCastingCancel(target, caster, time_left, full_time)
-    target = target:getUnit()
-    local params = ParameterLib.UnitContainer.get(caster)
-    local matk = params:getResult(ParameterLib.MDMG)
+---@param abil AbilityExt
+local function onEnd(abil)
+    local owner = abil:getOwner()
+    local target = abil:getTargetUnit()
 
-    BuffLib.addShield(drained_life[caster] * (1 + BonusPerMAtk * matk), target)
-    drained_life[caster] = nil
+    local matk = UnitParam.get(owner):getResult(Param.MDMG)
+
+    BuffLib.addShield(drained_life[owner] * (1 + BonusPerMAtk * matk), target)
+    drained_life[owner] = nil
 end
 
-function LifeForceShield:onCastingInterrupt(target, caster, time_left, full_time)
-    target = target:getUnit()
-    local params = ParameterLib.UnitContainer.get(caster)
-    local matk = params:getResult(ParameterLib.MDMG)
+local callbacks = {
+    [Event.CASTING_LOOP] = onCasting,
+    [Event.CASTING_CANCEL] = onEnd,
+    [Event.CASTING_INTERRUPT] = onEnd,
+    [Event.CASTING_FINISH] = onEnd,
 
-    BuffLib.addShield(drained_life[caster] * (1 + BonusPerMAtk * matk), target)
-    drained_life[caster] = nil
+    [Event.ERROR_NO_CHARGES] = function() print('No charges') end,
+}
+
+local errHandler = LifeForceShield.getCallback
+---@param event AbilityExtControllerCallback
+---@return AbilityExtControllerCallback
+function LifeForceShield:getCallback(event)
+    local cb = errHandler(event)
+    if cb ~= nil then
+        return cb
+    end
+    return callbacks[event]
 end
-
-function LifeForceShield:onCastingFinish(target, caster, time_left, full_time)
-    target = target:getUnit()
-    local params = ParameterLib.UnitContainer.get(caster)
-    local matk = params:getResult(ParameterLib.MDMG)
-
-    BuffLib.addShield(drained_life[caster] * (1 + BonusPerMAtk * matk), target)
-    drained_life[caster] = nil
-end
-
-function LifeForceShield:getCastingTime(caster)
-    return 3
-end
-
-function LifeForceShield:getChargesForUse()
-    return 1
-end
-
-function LifeForceShield:getChargeCooldown(abil)
-    return 10
-end
-
-function LifeForceShield:getChargesMax(abil)
-    return 1
-end
-
-function LifeForceShield:getName()
-    return 'Life Force Shield'
-end
-
-function LifeForceShield:getRange(owner)
-    return 500
-end
-
-function LifeForceShield:getArea(owner)
-    return 0
-end
-
-function LifeForceShield:getTargetingType(owner)
-    return 'Unit'
-end
-
-function LifeForceShield:getTargetsAllowed(owner)
-    return 'friend'
-end
-
-function LifeForceShield:getManaCost(owner)
-    return 50
-end
-
-function LifeForceShield:getHealthCost(owner)
-    return 0
-end
-
-function LifeForceShield:getIcon(owner)
-    return Icon.BTNAbsorbMagic
-end
-
-function LifeForceShield:getTooltip(owner)
-    return 'TestTooltip'
-end
-
 
 return LifeForceShield

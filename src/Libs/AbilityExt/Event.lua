@@ -7,7 +7,6 @@ local lib_dep = Lib.curDepencies()
 
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
-local ActionList = UtilsLib.ActionList
 local getEnum = UtilsLib.getEnum
 
 --========
@@ -40,22 +39,5 @@ Event.Enum = {
     ---@type AbilityExtEvent
     ERROR_NO_CHARGES = getEnum(),
 }
-
-local actions = {}
-for _, event in pairs(Event.Enum) do
-    actions[event] = ActionList.new(Event)
-end
-
----@param callback AbilityExtEventCallback
-function Event.addAction(event, callback)
-    -- TODO type check
-    actions[event]:add(callback)
-end
-
----@param event any
----@param abil any
-function Event.run(event, abil)
-    actions[event]:run(event, abil)
-end
 
 return Event

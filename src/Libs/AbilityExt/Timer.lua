@@ -12,10 +12,9 @@ local Timer = HandleLib.Timer or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
-local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityExtSettings
-local AbilityExtSettings = require(lib_path..'Settings')
+local Settings = require(lib_path..'Settings')
 
 --=======
 -- Class
@@ -52,8 +51,8 @@ end
 function public:start(time)
     local priv = private.data[self]
 
-    priv.start_time = private.casting_current_time
-    priv.finish_time = private.casting_current_time + time
+    priv.start_time = private.cur_time
+    priv.finish_time = private.cur_time + time
     private.active_list[self] = priv
 end
 
@@ -82,12 +81,12 @@ end
 
 ---@param time_left number
 function public:setTimeLeft(time_left)
-    private.data[self].finish_time = private.casting_current_time + time_left
+    private.data[self].finish_time = private.cur_time + time_left
 end
 
 ---@return number
 function public:getTimeLeft()
-    local left = private.data[self].finish_time - private.casting_current_time
+    local left = private.data[self].finish_time - private.cur_time
     return left >= 0 and left or 0
 end
 
@@ -129,7 +128,7 @@ function private.newData(self)
 end
 
 private.cur_time = 0
-private.period = AbilityExtSettings.CastingLoopPeriod
+private.period = Settings.TimerPeriod
 function private.loop()
     private.cur_time = private.cur_time + private.period
 
@@ -157,8 +156,8 @@ function private.loop()
 end
 
 if not IsCompiletime() then
-    private.casting_timer = Timer.new()
-    private.casting_timer:start(private.period, true, private.loop)
+    private.timer = Timer.new()
+    private.timer:start(private.period, true, private.loop)
 end
 
 return static

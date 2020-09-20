@@ -56,6 +56,8 @@ function public:addBase(value)
     local priv = private.data[self]
     priv.base = priv.base + value
     priv.res = priv.base * priv.mult + priv.addit
+    priv.res = priv.res < priv.param:getMin() and priv.param:getMin() or priv.res
+    priv.res = priv.res > priv.param:getMax() and priv.param:getMax() or priv.res
     return priv.res
 end
 
@@ -65,6 +67,8 @@ function public:addMult(value)
     local priv = private.data[self]
     priv.mult = priv.mult + value
     priv.res = priv.base * priv.mult + priv.addit
+    priv.res = priv.res < priv.param:getMin() and priv.param:getMin() or priv.res
+    priv.res = priv.res > priv.param:getMax() and priv.param:getMax() or priv.res
     return priv.res
 end
 
@@ -74,6 +78,8 @@ function public:addAddit(value)
     local priv = private.data[self]
     priv.addit = priv.addit + value
     priv.res = priv.base * priv.mult + priv.addit
+    priv.res = priv.res < priv.param:getMin() and priv.param:getMin() or priv.res
+    priv.res = priv.res > priv.param:getMax() and priv.param:getMax() or priv.res
     return priv.res
 end
 

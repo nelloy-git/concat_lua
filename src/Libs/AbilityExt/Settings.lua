@@ -12,6 +12,6 @@ local lib_dep = Lib.curDepencies()
 ---@class AbilityExtSettings
 local AbilityExtSettings = {}
 
-AbilityExtSettings.CastingLoopPeriod = 0.05
+AbilityExtSettings.TimerPeriod = 0.05
 
 return AbilityExtSettings

@@ -113,7 +113,8 @@ local stats_time = Timer.new()
 stats_time:start(0.05, true, function()
     if selected then
         if selected:getHealth() > 0.5 then
-            Interface.UnitStatus:setHealth(selected:getHealth() + BuffLib.getShield(selected), selected:getMaxHealth())
+            Interface.UnitStatus:setShield(BuffLib.getShield(selected), BuffLib.getMaxShield(selected))
+            Interface.UnitStatus:setHealth(selected:getHealth(), selected:getMaxHealth())
             Interface.UnitStatus:setMana(selected:getMana(), selected:getMaxMana())
 
             local params = ParamUnitContainer.get(selected)

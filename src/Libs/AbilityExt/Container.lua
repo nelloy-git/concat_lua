@@ -14,22 +14,22 @@ local UtilsLib = lib_dep.Utils or error('')
 local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 
----@type AbilityDataClass
-local AbilityData = require(lib_path..'.Data.Base')
----@type AbilityDataTypeClass
-local AbilityDataType = require(lib_path..'.Data.Type')
+---@type AbilityExtClass
+local AbilityExt = require(lib_path..'Ability')
+---@type AbilityExtTypeClass
+local AbilityExtType = require(lib_path..'Type')
 
 --=======
 -- Class
 --=======
 
-local AbilitiesContainer = Class.new('AbilitiesContainer')
----@class AbilitiesContainer
-local public = AbilitiesContainer.public
----@class AbilitiesContainerClass
-local static = AbilitiesContainer.static
----@type AbilitiesContainerClass
-local override = AbilitiesContainer.override
+local AbilityExtContainer = Class.new('AbilityExtContainer')
+---@class AbilityExtContainer
+local public = AbilityExtContainer.public
+---@class AbilityExtContainerClass
+local static = AbilityExtContainer.static
+---@type AbilityExtContainerClass
+local override = AbilityExtContainer.override
 local private = {}
 
 --=========
@@ -37,13 +37,13 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param child AbilitiesContainer | nil
----@return AbilitiesContainer
+---@param child AbilityExtContainer | nil
+---@return AbilityExtContainer
 function override.new(owner, child)
     isTypeErr(owner, Unit, 'owner')
-    if child then isTypeErr(child, AbilitiesContainer, 'child') end
+    if child then isTypeErr(child, AbilityExtContainer, 'child') end
 
-    local instance = child or Class.allocate(AbilitiesContainer)
+    local instance = child or Class.allocate(AbilityExtContainer)
     private.newData(instance, owner)
 
     return instance
@@ -63,21 +63,21 @@ function public:getOwner()
 end
 
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param abil_type AbilityDataType | nil
+---@param abil_type AbilityExtType | nil
 function public:set(hotkey, abil_type)
     isTypeErr(hotkey, 'string', 'hotkey')
-    if abil_type then isTypeErr(abil_type, AbilityDataType, 'abil_type') end
+    if abil_type then isTypeErr(abil_type, AbilityExtType, 'abil_type') end
 
     local priv = private.data[self]
 
-    local data = AbilityData.new(priv.owner, abil_type, hotkey)
+    local data = AbilityExt.new(priv.owner, abil_type, hotkey)
     local prev = priv.abil_data_list[hotkey]
     if prev then prev:destroy() end
     priv.abil_data_list[hotkey] = data
 end
 
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@return AbilityData | nil
+---@return AbilityExt | nil
 function public:get(hotkey)
     return private.data[self].abil_data_list[hotkey]
 end
@@ -89,7 +89,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.owners = setmetatable({}, {__mode = 'k'})
 
----@param self AbilitiesContainer
+---@param self AbilityExtContainer
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {

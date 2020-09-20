@@ -25,6 +25,7 @@ local Settings = require(lib_path..'Settings')
 local BuffEffectShield = {}
 
 local active = {}
+local max = {}
 
 ---@param value number
 ---@param target Unit
@@ -33,12 +34,19 @@ function BuffEffectShield.add(value, target)
     isTypeErr(target, Unit, 'target')
 
     active[target] = (active[target] or 0) + value
+    max[target] = (max[target] or 0) + value
 end
 
 ---@param target Unit
 ---@return number
 function BuffEffectShield.get(target)
     return active[target] or 0
+end
+
+---@param target Unit
+---@return number
+function BuffEffectShield.getMax(target)
+    return max[target] or 0
 end
 
 ---@type DamageEventCallback

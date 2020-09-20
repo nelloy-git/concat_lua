@@ -31,11 +31,11 @@ private.virtual_functions = {}
 
 ---@param child AbilityExtType | nil
 ---@return AbilityExtType
-function override.new(child)
+function override.new(name, child)
     if child then isTypeErr(child, AbilityExtType, 'child') end
 
     local instance = child or Class.allocate(AbilityExtType)
-    private.newData(instance)    
+    private.data[instance] = name
 
     return instance
 end
@@ -44,104 +44,70 @@ end
 -- Public
 --========
 
----@param event AbilityExtEvent
----@param callback AbilityExtControllerCallback
-function public:setCallback(event, callback)
-end
+---@param owner Unit
+---@return string
+function public:getName(owner) end
+private.virtual_functions['getName'] = public.getName
 
+---@param owner Unit
+---@return string
+function public:getIcon(owner) end
+private.virtual_functions['getIcon'] = public.getIcon
+
+---@param owner Unit
+---@return string
+function public:getTooltip(owner) end
+private.virtual_functions['getTooltip'] = public.getTooltip
+
+---@param owner Unit
+---@return string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
+function public:getTargetingType(owner) end
+private.virtual_functions['setTargetingType'] = public.setTargetingType
+
+---@param owner Unit
+---@return number
+function public:getArea(owner) end
+private.virtual_functions['getArea'] = public.getArea
+
+---@param owner Unit
+---@return number
+function public:getRange(owner) end
+private.virtual_functions['getRange'] = public.getRange
+
+---@param owner Unit
+---@return number
+function public:getManaCost(owner) end
+private.virtual_functions['getManaCost'] = public.getManaCost
+
+---@param owner Unit
+---@return number
+function public:getCastingTime(owner) end
+private.virtual_functions['getCastingTime'] = public.getCastingTime
+
+---@param owner Unit
+---@return number
+function public:getChargesForUse(owner) end
+private.virtual_functions['getChargesForUse'] = public.getChargesForUse
+
+---@param owner Unit
+---@return number
+function public:getMaxCharges(owner) end
+private.virtual_functions['getMaxCharges'] = public.getMaxCharges
+
+---@param owner Unit
+---@return number
+function public:getChargeCooldown(owner) end
+private.virtual_functions['getChargeCooldown'] = public.getChargeCooldown
+
+---@param abil AbilityExt
+---@return boolean
+function public:isStarted(abil) end
+private.virtual_functions['isStarted'] = public.isStarted
+
+---@param event AbilityExtControllerCallback
 ---@return AbilityExtControllerCallback
-function public:getCallback(event)
-end
-
----@param name string | function(owner:Unit):string
-function public:setName(name)
-end
-
----@return string
-function public:setIcon(value)
-end
-
----@return string
-function public:setTooltip(value)
-end
-
----@return string
-function public:setArea(value)
-end
-
----@return string
-function public:setRange(value)
-end
-
----@return string
-function public:setManaCost(value)
-end
-
----@return string
-function public:setCastingTime(value)
-end
-
----@return string
-function public:setChargesForUse(value)
-end
-
----@return string
-function public:setMaxCharges(value)
-end
-
----@return string
-function public:setChargeCooldown(value)
-end
-
----@param owner Unit
-function public:getName(owner)
-    local name = private.data[self].name
-    if type(name) == 'string' then
-end
-
----@param owner Unit
-function public:getIcon(owner)
-end
-
----@param owner Unit
-function public:getTooltip(owner)
-end
-
----@return string
-function public:setTargetingType(value)
-end
-
----@param owner Unit
-function public:getTargetingType(owner)
-end
-
----@param owner Unit
-function public:getArea(owner)
-end
-
----@param owner Unit
-function public:getRange(owner)
-end
-
----@param owner Unit
-function public:getManaCost(owner)
-end
-
----@param owner Unit
-function public:getCastingTime(owner)
-end
-
----@param owner Unit
-function public:getChargesForUse(owner)
-end
-
----@param owner Unit
-function public:getMaxCharges(owner)
-end
-
----@param owner Unit
-function public:getChargeCooldown(owner)
-end
+function public:getCallback(event) end
+private.virtual_functions['getCallback'] = public.getCallback
 
 --=========
 -- Private
@@ -149,32 +115,17 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityExtType
-function private.newData(self)
-    local priv = {
-        name = nil,
-        icon = nil,
-        tooltip = nil,
-        targeting_type = nil,
-
-        area = nil,
-        range = nil,
-        manacost = nil,
-        casting_time = nil,
-        charges_for_use = nil,
-        charges_max = nil,
-        charge_cooldown = nil
-    }
-    private.data[self] = priv
-end
-
----@param self AbilityExtType
-function private.returnPrivField(self, key, val_t)
-    local val = private.data[self][key]
-    if type(val) == val_t then
-        return val_t
-    elseif type(val) == 'function' then
-        return 
-end
+CompileFinal(function()
+    for instance, name in pairs(private.data) do
+        for field, value in pairs(public) do
+            local func = private.virtual_functions[field]
+            if func ~= nil then
+                if value == instance[field] then
+                    Log:err(name..': virtual function \"'..field..'\" must be overriden.', 1)
+                end
+            end
+        end
+    end
+end)
 
 return static

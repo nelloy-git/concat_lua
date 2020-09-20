@@ -84,6 +84,11 @@ end
 ---@param area number
 function public:setArea(area)
     BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_AREA_OF_EFFECT, 0, area)
+    if area > 0 then
+        BlzSetAbilityIntegerLevelField(self:getData(), ABILITY_ILF_OPTIONS, 0, 3)
+    else
+        BlzSetAbilityIntegerLevelField(self:getData(), ABILITY_ILF_OPTIONS, 0, 1)
+    end
 end
 
 ---@param range number
@@ -91,9 +96,9 @@ function public:setRange(range)
     BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_CAST_RANGE, 0, range)
 end
 
-function public:setOptions(options)
-    -- TODO
-end
+--function public:setOptions(options)
+--    -- TODO
+--end
 
 ---@param name string
 function public:setName(name)

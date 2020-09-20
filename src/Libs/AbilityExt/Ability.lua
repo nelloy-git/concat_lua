@@ -11,15 +11,13 @@ local HandleLib = lib_dep.Handle or error('')
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
-local Action = UtilsLib.Action or error('')
-local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-local getEnum = UtilsLib.getEnum or error('')
 
 ---@type AbilityExtControllerClass
 local AbilityExtController = require(lib_path..'Controller') or error('')
+local AbilityExtControllerPublic = Class.getPublic(AbilityExtController)
 ---@type AbilityExtDummyClass
-local AbilityExtDummy = require(lib_path..'Dummy') or error('')
+local AbilityExtDummy = require(lib_path..'Dummy.Base') or error('')
 local AbilityExtDummyPublic = Class.getPublic(AbilityExtDummy)
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
@@ -73,9 +71,10 @@ function override.new(owner, abil_type, hotkey, child)
     if child then isTypeErr(child, AbilityExt, 'child') end
 
     local instance = child or Class.allocate(AbilityExt)
+    instance = AbilityExtDummy.new(owner, hotkey, instance)
     instance = AbilityExtController.new(instance)
 
-    private.newData(instance, owner, abil_type, hotkey)
+    private.newData(instance, abil_type)
 
     return instance
 end
@@ -83,6 +82,34 @@ end
 --========
 -- Public
 --========
+
+---@param unit Unit
+---@param x number
+---@param y number
+---@return boolean
+function public:use(unit, x, y)
+    local priv = private.data[self]
+
+    priv.target_unit = unit
+    priv.target_x = x
+    priv.target_y = y
+
+    local started = priv.abil_type:isStarted(self)
+    if not started then
+        local owner = self:getOwner()
+        owner:setMana(owner:getMana() + self:getManaCost())
+        return false
+    end
+
+    started = AbilityExtControllerPublic.use(self)
+    if not started then
+        local owner = self:getOwner()
+        owner:setMana(owner:getMana() + self:getManaCost())
+        return false
+    end
+
+    return true
+end
 
 ---@return AbilityExtType
 function public:getType()
@@ -109,7 +136,7 @@ function public:update()
     local owner = self:getOwner()
 
     self:setName(abil_type:getName(owner))
-    self:setIcon(abil_type:getIcon(owner))
+    self:setIcon(abil_type:getIcon(owner) or '')
     self:setTooltip(abil_type:getTooltip(owner))
     self:setTargetingType(abil_type:getTargetingType(owner))
     self:setArea(abil_type:getArea(owner))
@@ -118,7 +145,10 @@ function public:update()
     self:setCastingTime(abil_type:getCastingTime(owner))
     self:setChargesForUse(abil_type:getChargesForUse(owner))
     self:setMaxCharges(abil_type:getMaxCharges(owner))
-    self:setChargeCooldown(abil_type:getChargeCooldown(owner))
+
+    local cd = abil_type:getChargeCooldown(owner)
+    self:setChargeCooldown(cd)
+    AbilityExtDummyPublic.setCooldown(self, cd)
 end
 
 public.setCooldownRemaining = 0
@@ -160,8 +190,8 @@ function private.chargesChanged(self, _)
     local left = self:getCharges()
 
     if left <= 0 then
-        AbilityExtDummyPublic.setCooldown(self, self:getChargeCooldown())
-        AbilityExtDummyPublic.setCooldownRemaining(self, self:getChargeTimeLeft())
+        AbilityExtDummyPublic.setCooldown(self, self:getChargeCooldown() + 0.1)
+        AbilityExtDummyPublic.setCooldownRemaining(self, self:getChargeTimeLeft() + 0.1)
     else
         AbilityExtDummyPublic.setCooldown(self, 0)
         AbilityExtDummyPublic.setCooldownRemaining(self, 0)
@@ -172,15 +202,11 @@ end
 function private.dummyEffect(self)
     local priv = private.data[self]
 
-    priv.target_unit = Unit.getLinked(GetSpellTargetUnit())
-    priv.target_x = GetSpellTargetX()
-    priv.target_y = GetSpellTargetY()
+    local unit = Unit.getLinked(GetSpellTargetUnit())
+    local x = GetSpellTargetX()
+    local y = GetSpellTargetY()
 
-    -- Restore mana if use is not successed.
-    if not self:use() then
-        local owner = self:getOwner()
-        owner:setMana(owner:getMana() + self:getManaCost())
-    end
+    self:use(unit, x, y)
 end
 
 return static

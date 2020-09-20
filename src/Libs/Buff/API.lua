@@ -25,6 +25,7 @@ BuffLibAPI.TestType = require(path..'.TestType') or error('')
 local Shield = require(path..'Effects.Shield') or error('')
 BuffLibAPI.addShield = Shield.add
 BuffLibAPI.getShield = Shield.get
+BuffLibAPI.getMaxShield = Shield.getMax
 
 Lib.finish()
 

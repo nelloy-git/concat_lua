@@ -12,12 +12,21 @@ local path = Lib.curPath()
 --=====
 -- API
 --=====
---[[
----@type AbilitiesContainerClass
-AbilityLibAPI.Container = require(path..'Data.Container') or error('')
 
----@type AbilityDataTypeClass
-AbilityLibAPI.Type = require(path..'Data.Type') or error('')
+---@type AbilityExtContainerClass
+AbilityLibAPI.Container = require(path..'Container') or error('')
+---@type AbilityExtEventModule
+local AbilityExtEventModule = require(path..'Event') or error('')
+AbilityLibAPI.Event = AbilityExtEventModule.Enum
+---@type AbilityExtTypeClass
+AbilityLibAPI.Type = require(path..'Type') or error('')
+---@type AbilityExtSettings
+local Settings = require(path..'Settings') or error('')
+AbilityLibAPI.TimerPeriod = Settings.TimerPeriod or error('')
+
+
+--[[
+
 
 ---@type AbilityTargetDestructableClass
 AbilityLibAPI.TargetDestructable = require(path..'Target.Destructable') or error('')

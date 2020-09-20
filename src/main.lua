@@ -41,7 +41,7 @@ local param_container2 = ParamUnit.new(u2)
 --local buff_container2 = BuffLib.ContPDMG
 --buff_container2:addBuff(BuffLib.TestPDEF)
 param_container2:addBase(Param.PDMG, 10)
-param_container2:addBase(Param.PDEF, 5)
-param_container2:addBase(Param.LIFE, 100)
+param_container2:addBase(Param.MDEF, 10)
+param_container2:addBase(Param.LIFE, 1000)
 
 --Interface.SkillsBar:setSkill(1, abil_container:get(1))

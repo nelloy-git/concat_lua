@@ -6,19 +6,12 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
-local isTypeErr = UtilsLib.isTypeErr or error('')
-local Log = UtilsLib.Log or error('')
 
 ---@type AbilityExtTimerClass
 local AbilityExtTimer = require(lib_path..'Timer')
----@type AbilityExtTypeClass
-local AbilityExtType = require(lib_path..'Type')
 
 --=======
 -- Class
@@ -66,6 +59,7 @@ function public:set(charges, ignore_max)
     end
 
     if charges < priv.max_charges then
+        print(priv.timer:getTimeLeft())
         if priv.timer:getTimeLeft() <= 0 then
             priv.timer:start(priv.cooldown)
         end
@@ -73,8 +67,8 @@ function public:set(charges, ignore_max)
         priv.timer:stop()
     end
 
-    if priv.charges ~= prev_charges and priv.changed_action then
-        priv.changed_action:run(self)
+    if priv.charges ~= prev_charges and priv.action_changed then
+        priv.action_changed:run(self)
     end
 end
 
@@ -111,8 +105,8 @@ end
 
 --- Get time left for getting charge.
 ---@return number
-function public:getTimerLeft()
-    return private.data[self].timer:getTimerLeft()
+function public:getTimeLeft()
+    return private.data[self].timer:getTimeLeft()
 end
 
 --- Set full time for getting charge.
@@ -120,7 +114,9 @@ end
 function public:setCooldown(time)
     local priv = private.data[self]
 
-    priv.timer:setTimeLeft(priv.timer:getTimeLeft() + time - priv.cooldown)
+    if priv.timer:getTimeLeft() > 0 then
+        priv.timer:setTimeLeft(priv.timer:getTimeLeft() + time - priv.cooldown)
+    end
     priv.cooldown = time
 end
 
@@ -166,6 +162,7 @@ function private.newData(self)
     private.data[self] = priv
     private.timer2charges[priv.timer] = self
 
+
     priv.timer:setLoopAction(private.timerLoopCallback)
     priv.timer:setFinishAction(private.timerFinishCallback)
 end
@@ -180,8 +177,7 @@ end
 ---@param timer AbilityExtTimer
 function private.timerFinishCallback(timer)
     local self = private.timer2charges[timer]
-    local priv = private.data[self]
-    if priv.action_changed then priv.action_changed:run(self) end
+    self:set(self:get() + 1)
 end
 
 return static

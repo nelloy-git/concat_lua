@@ -14,6 +14,8 @@ local Screen = FrameLib.Screen or error('')
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local Log = UtilsLib.Log or error('')
 
+---@type InterfaceUnitBars
+local InterfaceUnitBars = require('Interface.UnitBars') or error('')
 ---@type InterfaceUnitParamsClass
 local InterfaceUnitParams = require('Interface.UnitParams') or error('')
 
@@ -67,11 +69,8 @@ function public:setPos(x, y)
     priv.portrait:setPos(self:getAbsX() + 0.065 * self:getHeight(),
                          self:getAbsY() + 0.065 * self:getHeight())
 
-    priv.hp_bar:setPos(self:getAbsX() + priv.border:getWidth(),
-                       self:getAbsY())
-
-    priv.mp_bar:setPos(priv.hp_bar:getAbsX(),
-                       priv.hp_bar:getAbsY() + priv.hp_bar:getHeight())
+    priv.bars:setPos(self:getAbsX() + priv.border:getWidth(),
+                     self:getAbsY())
 
     priv.params:setPos(self:getAbsX(), self:getAbsY() + self:getHeight())
 end
@@ -84,11 +83,8 @@ function public:setSize(w, h)
 
     priv.border:setSize(h, h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
-    priv.hp_bar:setSize(w - h, h / 4)
-    priv.hp_bar:setFont('fonts\\nim_____.ttf', 0.6 * priv.hp_bar:getHeight())
-    priv.mp_bar:setSize(w - h, h / 4)
-    priv.mp_bar:setFont('fonts\\nim_____.ttf', 0.6 * priv.mp_bar:getHeight())
-    priv.params:setSize(h, 2 * h)
+    priv.bars:setSize(w - h, h / 4)
+    priv.params:setSize(h, 1.5 * h)
 
     self:setPos(self:getX(), self:getY())
 end
@@ -99,49 +95,29 @@ function public:setVisible(flag)
 
     priv.border:setVisible(flag)
     priv.portrait:setVisible(flag)
-    priv.hp_bar:setVisible(flag)
-    priv.mp_bar:setVisible(flag)
+    priv.bars:setVisible(flag)
     priv.params:setVisible(flag)
+end
+
+---@param cur number
+---@param max number
+function public:setShield(cur, max)
+    local priv = private.data[self]
+    priv.bars:setShield(cur, max)
 end
 
 ---@param cur number
 ---@param max number
 function public:setHealth(cur, max)
     local priv = private.data[self]
-
-    if not (cur or max) then
-        priv.hp_bar:setProgress()
-        priv.hp_bar:setText('')
-        return
-    end
-
-    cur, _ = math.modf(cur)
-    max, _ = math.modf(max)
-    local perc, _ = math.modf(100 * cur / max)
-    perc = perc > 100 and 100 or perc
-
-    local progress = cur / max
-    priv.hp_bar:setProgress(progress > 1 and 1 or progress)
-    priv.hp_bar:setText(tostring(cur)..' / '..tostring(max)..' ('..tostring(perc)..'%)')
+    priv.bars:setHealth(cur, max)
 end
 
 ---@param cur number
 ---@param max number
 function public:setMana(cur, max)
     local priv = private.data[self]
-
-    if not (cur or max) then
-        priv.mp_bar:setProgress()
-        priv.mp_bar:setText('')
-        return
-    end
-
-    cur, _ = math.modf(cur)
-    max, _ = math.modf(max)
-    local perc, _ = math.modf(100 * cur / max)
-
-    priv.mp_bar:setProgress(cur / max)
-    priv.mp_bar:setText(tostring(cur)..' / '..tostring(max)..' ('..tostring(perc)..'%)')
+    priv.bars:setMana(cur, max)
 end
 
 ---@param params ParameterValueList
@@ -160,25 +136,10 @@ function private.newData(self)
     local priv = {
         portrait = FrameLib.Origin.Portrait,
         border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
-        hp_bar = FrameLib.Simple.StatusBar.new(),
-        mp_bar = FrameLib.Simple.StatusBar.new(),
+        bars = InterfaceUnitBars.new(),
         params = InterfaceUnitParams.new()
     }
     private.data[self] = priv
-
-    priv.hp_bar:setBackground('Replaceabletextures\\Teamcolor\\Teamcolor27.blp', 0, true)
-    priv.hp_bar:setBar('Replaceabletextures\\Teamcolor\\Teamcolor00.blp', 0, true)
-    priv.hp_bar:setBorder('UI\\Feedback\\XPBar\\human-xpbar-border.blp', 0, true)
-    priv.hp_bar:setFont('fonts\\nim_____.ttf', 0.008)
-    priv.hp_bar:setProgress(0)
-    priv.hp_bar:setText('')
-
-    priv.mp_bar:setBackground('Replaceabletextures\\Teamcolor\\Teamcolor27.blp', 0, true)
-    priv.mp_bar:setBar('Replaceabletextures\\Teamcolor\\Teamcolor01.blp', 0, true)
-    priv.mp_bar:setBorder('UI\\Feedback\\XPBar\\human-xpbar-border.blp', 0, true)
-    priv.mp_bar:setFont('fonts\\nim_____.ttf', 0.008)
-    priv.mp_bar:setProgress(0)
-    priv.mp_bar:setText('')
 end
 
 private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfacePortrait')
