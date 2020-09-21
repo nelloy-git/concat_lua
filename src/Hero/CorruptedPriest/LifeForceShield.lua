@@ -10,11 +10,14 @@ local AssetLib = require(LibList.AssetLib) or error('')
 local Icon = AssetLib.IconDefault
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
+local UnitBuffs = BuffLib.Container or error('')
 ---@type ParameterLib
 local ParameterLib = require(LibList.ParameterLib) or error('')
 local UnitParam = ParameterLib.UnitContainer or error('')
 local Param = ParameterLib.Enum or error('')
 
+---@type BuffType
+local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')
 ---@type HeroUtils
 local Utils = require('Hero.Utils') or error('')
 
@@ -83,9 +86,8 @@ local function onEnd(abil)
     local owner = abil:getOwner()
     local target = abil:getTargetUnit()
 
-    local matk = UnitParam.get(owner):getResult(Param.MDMG)
-
-    BuffLib.addShield(drained_life[owner] * (1 + BonusPerMAtk * matk), target)
+    local buffs = UnitBuffs.get(target)
+    buffs:addBuff(BuffEffect, owner, drained_life[owner])
     drained_life[owner] = nil
 end
 

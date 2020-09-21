@@ -59,7 +59,6 @@ function public:set(charges, ignore_max)
     end
 
     if charges < priv.max_charges then
-        print(priv.timer:getTimeLeft())
         if priv.timer:getTimeLeft() <= 0 then
             priv.timer:start(priv.cooldown)
         end

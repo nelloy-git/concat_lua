@@ -8,6 +8,7 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
+local Timer = HandleLib.Timer or error('')
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
@@ -97,14 +98,20 @@ function public:use(unit, x, y)
     local started = priv.abil_type:isStarted(self)
     if not started then
         local owner = self:getOwner()
-        owner:setMana(owner:getMana() + self:getManaCost())
+        private.chargesChanged(self)
+        Timer.new():start(0, false, function()
+            owner:setMana(owner:getMana() + self:getManaCost())
+        end)
         return false
     end
 
     started = AbilityExtControllerPublic.use(self)
     if not started then
         local owner = self:getOwner()
-        owner:setMana(owner:getMana() + self:getManaCost())
+        private.chargesChanged(self)
+        Timer.new():start(0, false, function()
+            owner:setMana(owner:getMana() + self:getManaCost())
+        end)
         return false
     end
 

@@ -10,7 +10,7 @@ local BinaryLib = require(LibList.BinaryLib) or error('')
 local HandleLib = require(LibList.HandleLib) or error('')
 local Unit = HandleLib.Unit
 ---@type BuffLib
---local BuffLib = require(LibList.BuffLib) or error('')
+local BuffLib = require(LibList.BuffLib) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 
@@ -34,7 +34,7 @@ local CorruptedPriest = {}
 function CorruptedPriest.new(x, y, owner)
     local unit = Unit.new(CorruptedPriest.Type:getId(), x, y, owner)
     AbilLib.Container.new(unit)
-    --BuffLib.Container.new(unit)
+    BuffLib.Container.new(unit)
 
     -- Params
     local params = ParamLib.UnitContainer.new(unit)

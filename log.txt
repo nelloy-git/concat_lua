@@ -1,4 +1,4 @@
-[0.486] {Msg} Created new FdfFile 'GeneratedFile' containing:
+[0.029] {Msg} Created new FdfFile 'GeneratedFile' containing:
     FrameNormalButton
     FrameNormalImage
     FrameNormalTextDefault

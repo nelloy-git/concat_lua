@@ -37,19 +37,21 @@ local private = {}
 ---@param source Unit
 ---@param target Unit
 ---@param buff_type BuffType
+---@param user_data any
 ---@param child Buff | nil
 ---@return Buff
-function override.new(source, target, buff_type, child)
+function override.new(source, target, buff_type, user_data, child)
     isTypeErr(source, Unit, 'source')
     isTypeErr(target, Unit, 'target')
     isTypeErr(buff_type, BuffType, 'buff_type')
     if child then isTypeErr(child, Buff, 'child') end
 
     local instance = child or Class.allocate(Buff)
-    private.newData(instance, source, target, buff_type)
+    private.newData(instance, source, target, buff_type, user_data)
 
     if buff_type:checkConditions() then
         private.data[instance].end_time = private.duration_current_time + buff_type:getDuration(instance)
+        buff_type:onStart(instance)
         return instance
     else
         return nil
@@ -87,6 +89,10 @@ function public:getType()
     return private.data[self].buff_type
 end
 
+function public:getUserData()
+    return private.data[self].user_data
+end
+
 ---@param duration number
 function public:setDuration(duration)
     private.data[self].end_time = private.duration_current_time + duration
@@ -109,11 +115,13 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param source Unit
 ---@param target Unit
 ---@param buff_type BuffType
-function private.newData(self, source, target, buff_type)
+---@param user_data any
+function private.newData(self, source, target, buff_type, user_data)
     local priv = {
         source = source,
         target = target,
         buff_type = buff_type,
+        user_data = user_data,
     }
     private.data[self] = priv
 end

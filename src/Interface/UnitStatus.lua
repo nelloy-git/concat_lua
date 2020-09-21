@@ -84,7 +84,7 @@ function public:setSize(w, h)
     priv.border:setSize(h, h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
     priv.bars:setSize(w - h, h / 4)
-    priv.params:setSize(h, 1.5 * h)
+    priv.params:setSize(h, 2 * h)
 
     self:setPos(self:getX(), self:getY())
 end

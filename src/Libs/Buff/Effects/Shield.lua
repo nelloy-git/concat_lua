@@ -33,8 +33,17 @@ function BuffEffectShield.add(value, target)
     isTypeErr(value, 'number', 'value')
     isTypeErr(target, Unit, 'target')
 
-    active[target] = (active[target] or 0) + value
-    max[target] = (max[target] or 0) + value
+    if value > 0 then
+        active[target] = math.max((active[target] or 0) + value, 0)
+        max[target] = math.max((max[target] or 0) + value, 0)
+    else
+        local new_max = math.max((max[target] or 0) + value, 0)
+        -- Was not fully used
+        if max[target] - active[target] < -value then
+            active[target] = new_max
+        end
+        max[target] = new_max
+    end
 end
 
 ---@param target Unit
@@ -59,6 +68,7 @@ local damageEvent = function(dmg, dmg_type, target, src)
         dmg = 0
     else
         active[target] = nil
+        max[target] = nil
         dmg = dmg - cur
     end
 

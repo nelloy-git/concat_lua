@@ -56,11 +56,12 @@ end
 
 ---@param buff_type Buff
 ---@param source Unit
+---@param user_data any
 ---@return boolean
-function public:addBuff(buff_type, source)
+function public:addBuff(buff_type, source, user_data)
     local priv = private.data[self]
 
-    local buff = Buff.new(source, priv.owner, buff_type)
+    local buff = Buff.new(source, priv.owner, buff_type, user_data)
     table.insert(priv.list, buff)
 end
 
