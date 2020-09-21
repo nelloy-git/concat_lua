@@ -96,7 +96,7 @@ end
 ---@return number
 function public:getDurationLeft()
     local priv = private.data[self]
-    local t = (priv and priv.end_time or 0) - private.duration_current_time
+    local t = priv.end_time - private.duration_current_time
     if t < 0 then t = 0 end
     return t
 end
