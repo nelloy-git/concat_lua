@@ -49,13 +49,8 @@ function override.new(source, target, buff_type, user_data, child)
     local instance = child or Class.allocate(Buff)
     private.newData(instance, source, target, buff_type, user_data)
 
-    if buff_type:checkConditions() then
-        private.data[instance].end_time = private.duration_current_time + buff_type:getDuration(instance)
-        buff_type:onStart(instance)
-        return instance
-    else
-        return nil
-    end
+    buff_type:onStart(instance)
+    return instance
 end
 
 ---@return number
@@ -76,12 +71,12 @@ end
 
 ---@return Unit
 function public:getSource()
-    return private.data[self].owner
+    return private.data[self].source
 end
 
 ---@return Unit
 function public:getTarget()
-    return private.data[self].cur_target
+    return private.data[self].target
 end
 
 ---@return BuffType
@@ -100,7 +95,8 @@ end
 
 ---@return number
 function public:getDurationLeft()
-    local t = private.data[self].end_time - private.duration_current_time
+    local priv = private.data[self]
+    local t = (priv and priv.end_time or 0) - private.duration_current_time
     if t < 0 then t = 0 end
     return t
 end
@@ -124,6 +120,8 @@ function private.newData(self, source, target, buff_type, user_data)
         user_data = user_data,
     }
     private.data[self] = priv
+    
+    priv.end_time = private.duration_current_time + buff_type:getDuration(self)
 end
 
 private.duration_current_time = 0
@@ -138,7 +136,6 @@ function private.durationLoop()
 
         if priv.end_time <= private.duration_current_time then
             buff_type:onFinish(buff)
-            private.data[buff] = nil
         else
             buff_type:onTick(buff)
         end

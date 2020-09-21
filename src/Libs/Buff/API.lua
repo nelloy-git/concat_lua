@@ -19,7 +19,7 @@ BuffLibAPI.Container = require(path..'.Container') or error('')
 ---@type BuffTypeClass
 BuffLibAPI.Type = require(path..'.Type') or error('')
 ---@type BuffType
-BuffLibAPI.TestType = require(path..'.TestType') or error('')
+--BuffLibAPI.TestType = require(path..'.TestType') or error('')
 
 ---@type BuffEffectShield
 local Shield = require(path..'Effects.Shield') or error('')

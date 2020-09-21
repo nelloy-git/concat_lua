@@ -2,24 +2,16 @@
 -- Include
 --=========
 
+---@type AssetLib
+local AssetLib = require(LibList.AssetLib) or error('')
+local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local BuffType = BuffLib.Type or error('')
----@type AbilityLib
-local AbilityLib = require(LibList.AbilityExtLib) or error('')
-local Event = AbilityLib.Event
----@type AssetLib
-local AssetLib = require(LibList.AssetLib) or error('')
-local Icon = AssetLib.IconDefault
----@type BuffLib
-local BuffLib = require(LibList.BuffLib) or error('')
 ---@type ParameterLib
 local ParameterLib = require(LibList.ParameterLib) or error('')
 local UnitParam = ParameterLib.UnitContainer or error('')
 local Param = ParameterLib.Enum or error('')
-
----@type HeroUtils
-local Utils = require('Hero.Utils') or error('')
 
 --==========
 -- Settings
@@ -35,14 +27,10 @@ local LifeForceShieldBuff = BuffType.new('Life Force Shield Effect')
 local stored_shield = {}
 
 ---@param buff Buff
-function LifeForceShieldBuff:checkConditions(buff) return true end
-
----@param buff Buff
 function LifeForceShieldBuff:onStart(buff)
-    print('start')
-    --local matk = UnitParam.get(buff:getSource()):getResult(Param.MDMG)
-    --stored_shield[buff] = buff:getUserData() * (1 + BonusPerMAtk * matk)
-    --BuffLib.addShield(stored_shield[buff], buff:getTarget())
+    local matk = UnitParam.get(buff:getSource()):getResult(Param.MDMG)
+    stored_shield[buff] = buff:getUserData() * (1 + BonusPerMAtk * matk)
+    BuffLib.addShield(stored_shield[buff], buff:getTarget())
 end
 
 ---@param buff Buff
@@ -51,16 +39,14 @@ end
 
 ---@param buff Buff
 function LifeForceShieldBuff:onCancel(buff)
-    print('cancel')
-    --BuffLib.addShield(-stored_shield[buff], buff:getTarget())
-    --stored_shield[buff] = nil
+    BuffLib.addShield(-stored_shield[buff], buff:getTarget())
+    stored_shield[buff] = nil
 end
 
 ---@param buff Buff
 function LifeForceShieldBuff:onFinish(buff)
-    print('finish')
-    --BuffLib.addShield(-stored_shield[buff], buff:getTarget())
-    --stored_shield[buff] = nil
+    BuffLib.addShield(-stored_shield[buff], buff:getTarget())
+    stored_shield[buff] = nil
 end
 
 ---@param buff Buff
@@ -75,7 +61,7 @@ end
 
 ---@param buff Buff
 function LifeForceShieldBuff:getIcon(buff)
-    return ''
+    return Icon
 end
 
 ---@param buff Buff

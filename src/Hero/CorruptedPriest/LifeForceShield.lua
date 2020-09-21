@@ -7,7 +7,7 @@ local AbilityLib = require(LibList.AbilityExtLib) or error('')
 local Event = AbilityLib.Event
 ---@type AssetLib
 local AssetLib = require(LibList.AssetLib) or error('')
-local Icon = AssetLib.IconDefault
+local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
@@ -25,7 +25,6 @@ local Utils = require('Hero.Utils') or error('')
 -- Settings
 --==========
 
-local BonusPerMAtk = 0.01
 local DrainLifePerSec = 0.05
 
 --========
@@ -41,7 +40,7 @@ local drained_life = {}
 
 ---@param owner Unit
 ---@return string
-function LifeForceShield:getIcon(owner) return Icon.BTNAbsorbMagic end
+function LifeForceShield:getIcon(owner) return Icon end
 
 ---@param owner Unit
 ---@return string

@@ -120,6 +120,10 @@ stats_time:start(0.05, true, function()
             local params = ParamUnitContainer.get(selected)
             if not params then Log:err('Can not find linked ParameterContainerUnit') end
             Interface.UnitStatus:setParameters(params)
+            
+            local buffs = BuffLib.Container.get(selected)
+            if not buffs then Log:err('Can not find linked UnitBuffs') end
+            Interface.UnitStatus:setBuffs(buffs)
         else
             Interface.UnitStatus:setVisible(false)
         end

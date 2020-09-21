@@ -6,7 +6,10 @@ local Class = require(LibList.ClassLib) or error('')
 
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
-local Frame = FrameLib.Frame.Normal.Base or error('')
+local Image = FrameLib.Normal.Image or error('')
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Frame = HandleLib.Frame or error('')
 local FramePublic = Class.getPublic(Frame) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
@@ -33,12 +36,11 @@ local private = {}
 --=========
 
 ---@return InterfaceUnitBuffs
----@param buffs_per_line number
-function override.new(buffs_per_line)
+function override.new()
     local instance = Class.allocate(InterfaceUnitBuffs)
-    instance = Frame.new(private.fdf, instance)
+    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
 
-    private.newData(instance, buffs_per_line)
+    private.newData(instance)
 
     return instance
 end
@@ -47,11 +49,14 @@ end
 -- Public
 --========
 
+---@param x number
+---@param y number
 function public:setPos(x, y)
     FramePublic.setPos(self, x, y)
-    private.update(self)
+    self:update()
 end
 
+--- Disabled
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
@@ -64,7 +69,7 @@ function public:setBuffIconSize(width, height)
     local priv = private.data[self]
     priv.buff_w = width
     priv.buff_h = height
-    private.update(self)
+    self:update()
 end
 
 ---@param flag number
@@ -77,13 +82,58 @@ function public:setVisible(flag)
     end
 end
 
+---@param unit_buffs BuffsContainer
+function public:setUnitBuffs(unit_buffs)
+    private.data[self].unit_buffs = unit_buffs
+    self:update()
+end
+
+---@param self InterfaceUnitBuffs
+function public:update()
+    private.updateBuffFrames(self)
+    local priv = private.data[self]
+
+    local x0 = self:getAbsX() + 0.05 * self:getWidth()
+    local y0 = self:getAbsY() + 0.95 * self:getHeight()
+
+    local per_line = priv.per_line
+    local count = #priv.buff_frames
+    local w = priv.buff_w
+    local h = priv.buff_h
+    print(w, h)
+    local lines, mod = math.modf(count / per_line)
+
+    if mod ~= 0 then lines = lines + 1 end
+
+    FramePublic.setSize(self,
+                        1 / 0.9 * per_line * w,
+                        1 / 0.9 * lines * h)
+
+    local buffs = priv.unit_buffs and priv.unit_buffs:getAll() or {}
+    local i = 0
+    for l = 1, lines do
+        for p = 1, per_line do
+            i = i + 1
+            ---@type FrameNormalImage
+            local buff = priv.buff_frames[i]
+            buff:setSize(w, h)
+            buff:setPos(x0 + (p - 1) * w, y0 - l * h)
+            buff:setTexture(buffs[i]:getType():getIcon(buffs[i]), 0, true)
+
+            if i + 1 > #priv.buff_frames then
+                return
+            end
+        end
+    end
+end
+
 --=========
 -- Private
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceUnitParametersBackground')
+private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceUnitBuffsBackground')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setBackgroundTileMode(true)
@@ -95,12 +145,12 @@ private.fdf:setCornerSize(0.0125)
 private.fdf:setEdgeFile('UI\\Widgets\\ToolTips\\Human\\human-tooltip-border')
 
 ---@param self InterfaceUnitBuffs
-function private.newData(self, buffs_per_line)
+function private.newData(self)
     local priv = {
         unit_buffs = nil,
         buff_frames = {},
 
-        buffs_per_line = buffs_per_line,
+        per_line = 7,
         buff_w = 0.04,
         buff_h = 0.04
     }
@@ -108,58 +158,18 @@ function private.newData(self, buffs_per_line)
 end
 
 ---@param self InterfaceUnitBuffs
-function private.clearFrames(self)
+function private.updateBuffFrames(self)
     local priv = private.data[self]
+    local buffs = priv.unit_buffs and priv.unit_buffs:getAll() or {}
 
-    for i = 1, #priv.buff_frames do
-        priv.buff_frames[i]:destroy()
-    end
-    priv.buff_frames = {}
-end
-
----@param self InterfaceUnitBuffs
----@param lines number
-function private.fillBuffs(self, lines)
-    local priv = private.data[self]
-
-    local x0 = self:getAbsX() + 0.05 * self:getWidth()
-    local y0 = self:getAbsY() + 0.95 * self:getHeight()
-    local per_line = priv.per_line
-
-    local w = priv.buff_w
-    local h = priv.buff_h
-    local i = 0
-    for l = 1, lines do
-        for p = 1, per_line do
-            i = i + 1
-            ---@type FrameNormalButton
-            local buff = priv.buff_frames[i]
-            buff:setSize(w, h)
-            buff:setPos(x0 + p * w, y0 - l * h)
+    if #buffs > #priv.buff_frames then
+        for i = #priv.buff_frames + 1, #buffs do
+            priv.buff_frames[i] = Image.new()
         end
-    end
-end
-
----@param self InterfaceUnitBuffs
-function private.update(self)
-    local priv = private.data[self]
-
-    local per_line = private.buffs_per_line
-    local count = #priv.buff_frames
-    local w = priv.buff_w
-    local h = priv.buff_h
-    local lines, mod = math.modf(count / per_line)
-    if mod ~= 0 then lines = lines + 1 end
-
-    FramePublic.setSize(self,
-                                  1 / 0.9 * per_line * w,
-                                  1 / 0.9 * lines * h)
-
-    -- Is empty
-    if not priv.unit_buffs then
-        private.clearFrames(self)
     else
-        private.fillBuffs(self, lines)
+        for i = #buffs + 1, #priv.buff_frames do
+            priv.buff_frames[i]:destroy()
+        end
     end
 end
 

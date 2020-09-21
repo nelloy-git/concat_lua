@@ -16,6 +16,8 @@ local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceUnitBars
 local InterfaceUnitBars = require('Interface.UnitBars') or error('')
+---@type InterfaceUnitBuffs
+local InterfaceUnitBuffs = require('Interface.UnitBuffs') or error('')
 ---@type InterfaceUnitParamsClass
 local InterfaceUnitParams = require('Interface.UnitParams') or error('')
 
@@ -66,13 +68,16 @@ function public:setPos(x, y)
 
     priv.border:setPos(self:getAbsX(), self:getAbsY())
 
-    priv.portrait:setPos(self:getAbsX() + 0.065 * self:getHeight(),
-                         self:getAbsY() + 0.065 * self:getHeight())
-
     priv.bars:setPos(self:getAbsX() + priv.border:getWidth(),
                      self:getAbsY())
 
+    priv.buffs:setPos(self:getAbsX() + priv.border:getWidth(),
+                      self:getAbsY() + priv.border:getHeight())
+
     priv.params:setPos(self:getAbsX(), self:getAbsY() + self:getHeight())
+
+    priv.portrait:setPos(self:getAbsX() + 0.065 * self:getHeight(),
+                         self:getAbsY() + 0.065 * self:getHeight())
 end
 
 ---@param w number
@@ -81,10 +86,11 @@ function public:setSize(w, h)
     local priv = private.data[self]
     FramePublic.setSize(self, w, h)
 
-    priv.border:setSize(h, h)
-    priv.portrait:setSize(0.87 * h, 0.87 * h)
     priv.bars:setSize(w - h, h / 4)
+    priv.border:setSize(h, h)
+    priv.buffs:setBuffIconSize(h / 3, h / 3)
     priv.params:setSize(h, 2 * h)
+    priv.portrait:setSize(0.87 * h, 0.87 * h)
 
     self:setPos(self:getX(), self:getY())
 end
@@ -125,6 +131,11 @@ function public:setParameters(params)
     private.data[self].params:setAllValues(params)
 end
 
+---@param buffs BuffsContainer
+function public:setBuffs(buffs)
+    private.data[self].buffs:setUnitBuffs(buffs)
+end
+
 --=========
 -- Private
 --=========
@@ -134,10 +145,11 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param self InterfaceUnitStatus
 function private.newData(self)
     local priv = {
-        portrait = FrameLib.Origin.Portrait,
-        border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
         bars = InterfaceUnitBars.new(),
-        params = InterfaceUnitParams.new()
+        border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
+        buffs = InterfaceUnitBuffs.new(),
+        params = InterfaceUnitParams.new(),
+        portrait = FrameLib.Origin.Portrait,
     }
     private.data[self] = priv
 end

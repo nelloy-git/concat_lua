@@ -50,12 +50,6 @@ end
 --========
 
 --- Virtual function.
---- Return true if check is successfull.
----@param buff Buff
----@return boolean
-function public:checkConditions(buff) end
-
---- Virtual function.
 ---@param buff Buff
 function public:onStart(buff) end
 

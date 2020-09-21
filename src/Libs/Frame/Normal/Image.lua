@@ -42,8 +42,6 @@ function override.new(child)
     local instance = child or Class.allocate(FrameNormalImage)
     instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 
-    private.newData(instance)
-
     return instance
 end
 
@@ -57,8 +55,6 @@ function override.link(handle, child)
     local instance = child or Class.allocate(FrameNormalImage)
     instance = Frame.link(handle, true, instance)
 
-    private.newData(instance)
-
     return instance
 end
 
@@ -70,6 +66,9 @@ end
 ---@param flag number
 ---@param blend boolean
 function public:setTexture(tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    isTypeErr(flag, 'number', 'flag')
+    isTypeErr(blend, 'boolean', 'blend')
     BlzFrameSetTexture(self:getData(), tex_file, flag, blend)
 end
 

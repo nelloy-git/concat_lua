@@ -69,7 +69,6 @@ src\Libs\Parameter\Damage.lua
 src\Libs\Buff\Container.lua
 src\Libs\Buff\Buff.lua
 src\Libs\Buff\Type.lua
-src\Libs\Buff\TestType.lua
 src\Libs\Buff\Effects\Shield.lua
 src\Libs\Buff\Settings.lua
 src\Libs\Frame\API.lua
@@ -105,9 +104,11 @@ src\Interface\Selection.lua
 src\Interface\SpellButtons.lua
 src\Interface\UnitStatus.lua
 src\Interface\UnitBars.lua
+src\Interface\UnitBuffs.lua
 src\Interface\UnitParams.lua
 src\Interface\ShowDamage.lua
 src\Hero\CorruptedPriest\Unit.lua
 src\Hero\CorruptedPriest\LifeForceShield.lua
+src\Hero\CorruptedPriest\LifeForceShieldBuff.lua
 src\Hero\Utils.lua
 src\Hero\CorruptedPriest\Settings.lua

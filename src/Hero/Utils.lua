@@ -48,7 +48,6 @@ function HeroUtils.newAbilAlly(name)
         local owner = abil:getOwner()
         local target = abil:getTargetUnit()
 
-        print(target)
         if not target then
             print('No target unit.')
             return false
