@@ -44,9 +44,9 @@ function override.new(owner, child)
     isTypeErr(owner, Unit, 'owner')
     if child then isTypeErr(child, ParameterContainerUnit, 'child') end
 
-    if private.owners[owner] then
-        Log:wnr('Parameter container for unit already exists.')
-        return private.owners[owner]
+    if private.owner2container[owner] then
+        Log:wrn('Parameter container for unit already exists.')
+        return private.owner2container[owner]
     end
 
     local instance = child or Class.allocate(ParameterContainerUnit)
@@ -59,7 +59,7 @@ end
 ---@param owner Unit
 ---@return ParameterContainerUnit | nil
 function static.get(owner)
-    return private.owners[owner]
+    return private.owner2container[owner]
 end
 
 --========
@@ -104,7 +104,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.owners = setmetatable({}, {__mode = 'k'})
+private.owner2container = setmetatable({}, {__mode = 'k'})
 
 ---@param self ParameterContainerUnit
 ---@param owner Unit
@@ -114,7 +114,7 @@ function private.newData(self, owner)
 
     }
     private.data[self] = priv
-    private.owners[owner] = self
+    private.owner2container[owner] = self
 
     for i = 1, #Defines.AllParameters do
         self:addBase(Defines.AllParameters[i], 0)

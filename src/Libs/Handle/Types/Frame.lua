@@ -240,6 +240,16 @@ function public:setTooltip(tooltip)
     tooltip:setVisible(false)
 end
 
+---@return boolean
+function public:isEnable()
+    return BlzFrameGetEnable(self:getData())
+end
+
+---@param flag boolean
+function public:setEnable(flag)
+    BlzFrameSetEnable(self:getData(), flag)
+end
+
 ---@alias FrameCallback fun(frame:Frame, player:player, event:frameeventtype)
 
 --- Not all events are available for all
@@ -263,7 +273,7 @@ function public:removeAction(action)
     local priv = private.data[self]
 
     for _, list in pairs(priv.actions) do
-        if list:remove(action) then
+        if list and list:remove(action) then
             return true
         end
     end
@@ -327,13 +337,22 @@ function private.createFramehandle(name, is_simple)
 end
 
 function private.runActions()
+    ---@type Frame
     local frame = static.getLinked(BlzGetTriggerFrame())
     local player = GetTriggerPlayer()
     local event = BlzGetTriggerFrameEvent()
 
+    local priv = private.data[frame]
+    if not priv then return end
     ---@type ActionList
-    local actions_list = private.data[frame].actions[event]
+    local actions_list = priv.actions[event]
     if actions_list then actions_list:run(frame, player, event) end
+
+    -- Drop focus
+    if event == FrameEventType.CONTROL_CLICK and frame:isEnable() then
+        frame:setEnable(false)
+        frame:setEnable(true)
+    end
 end
 
 if not IsCompiletime() then

@@ -13,11 +13,11 @@ local FramePublic = Class.getPublic(Frame)
 ---@type TypesLib
 local TypesLib = lib_dep.Types or error('')
 local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
-local frameToString = TypesLib.frameEventtoString or error('')
+local eventToString = TypesLib.frameEventtoString or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-local Log = UtilsLib.Log
+local Log = UtilsLib.Log or error('')
 
 ---@type FdfBackdropClass
 local FdfBackdrop = require(lib_path..'Fdf.Normal.Backdrop') or error('')
@@ -29,7 +29,7 @@ local FdfHighlight = require(lib_path..'Fdf.Normal.Highlight') or error('')
 local FdfText = require(lib_path..'Fdf.Normal.Text') or error('')
 
 ---@type FrameNormalImageClass
-local FrameImage = require(lib_path..'Normal.Image') or error('')
+local Image = require(lib_path..'Normal.Image') or error('')
 
 --=======
 -- Class
@@ -71,18 +71,53 @@ end
 
 ---@param event frameeventtype
 ---@param callback FrameNormalButtonCallback
----@return Action
+---@return Action | nil
 function public:addAction(event, callback)
-    private.isEventAvailable(event)
+    if not private.available_events[event] then
+        Log:wrn('Event \''..eventToString(event)..'\' is not available for '..tostring(FrameNormalButton))
+        return
+    end
     return FramePublic.addAction(self, event, callback)
 end
 
-function public:setTexture()
-    local priv = private.data[self]
-
+---@param tex_file string
+---@param flag number | nil
+---@param blend boolean | nil
+function public:setNormalTexture(tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    private.data[self].normal:setTexture(tex_file, flag or 0, blend or true)
 end
 
-function public:setDisabledTexture()
+---@param tex_file string
+---@param flag number | nil
+---@param blend boolean | nil
+function public:setPushedTexture(tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    private.data[self].pushed:setTexture(tex_file, flag or 0, blend or true)
+end
+
+---@param tex_file string
+---@param flag number | nil
+---@param blend boolean | nil
+function public:setDisabledTexture(tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    private.data[self].disabled:setTexture(tex_file, flag or 0, blend or true)
+end
+
+---@param tex_file string
+---@param flag number | nil
+---@param blend boolean | nil
+function public:setMouseOverTexture(tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    private.data[self].mouse:setTexture(tex_file, flag or 0, blend or true)
+end
+
+---@param tex_file string
+---@param flag number | nil
+---@param blend boolean | nil
+function public:setFocusTexture(tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    private.data[self].focus:setTexture(tex_file, flag or 0, blend or true)
 end
 
 --=========
@@ -93,8 +128,14 @@ private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self FrameSimpleImage
 function private.newData(self)
+    local getHandle = BlzGetFrameByName
     local priv = {
-        --normal = newFrame(private.fdf_control_normal)
+        normal = Image.link(getHandle(private.fdf_normal:getName(), 0)),
+        pushed = Image.link(getHandle(private.fdf_pushed:getName(), 0)),
+        disabled = Image.link(getHandle(private.fdf_disabled:getName(), 0)),
+        mouse = Image.link(getHandle(private.fdf_mouse:getName(), 0)),
+        focus = Image.link(getHandle(private.fdf_focus:getName(), 0)),
+        text = Image.link(getHandle(private.fdf_text:getName(), 0)),
     }
     private.data[self] = priv
 end
@@ -104,10 +145,6 @@ end
 function private.createFdfControl(name)
     local control = FdfBackdrop.new(name)
     control:setBackground("")
-    control:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
-    control:setCornerSize(0.0125)
-    control:setInsets(0.005, 0.005, 0.005, 0.005)
-    control:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
     return control
 end
 
@@ -139,16 +176,20 @@ private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setControlStyle(true, true, true)
 
-private.fdf_control_normal = private.createFdfControl('FrameNormalButtonControlNormal')
-private.fdf:setControl(private.fdf_control_normal)
-
-private.fdf:setControlPushed(private.createFdfControl('FrameNormalButtonControlPushed'))
-private.fdf:setControlDisabled(private.createFdfControl('FrameNormalButtonControlDisabled'))
-private.fdf:setControlMouseOver(private.createFdfHighlight('FrameNormalButtonControlMouseOver'))
-private.fdf:setControlFocus(private.createFdfHighlight('FrameNormalButtonControlFocus'))
-private.fdf:setText(private.createFdfText('FrameNormalButtonDefaultText',
-                                       'fonts\\nim_____.ttf',
-                                        0.009))
+private.fdf_normal = private.createFdfControl('FrameNormalButtonControlNormal')
+private.fdf:setControl(private.fdf_normal)
+private.fdf_pushed = private.createFdfControl('FrameNormalButtonControlPushed')
+private.fdf:setControlPushed(private.fdf_pushed)
+private.fdf_disabled = private.createFdfControl('FrameNormalButtonControlDisabled')
+private.fdf:setControlDisabled(private.fdf_disabled)
+private.fdf_mouse = private.createFdfHighlight('FrameNormalButtonControlMouseOver')
+private.fdf:setControlMouseOver(private.fdf_mouse)
+private.fdf_focus = private.createFdfHighlight('FrameNormalButtonControlFocus')
+private.fdf:setControlFocus(private.fdf_focus)
+private.fdf_text = private.createFdfText('FrameNormalButtonDefaultText',
+                                         'fonts\\nim_____.ttf',
+                                          0.009)
+private.fdf:setText(private.fdf_text)
 
 private.available_events = {
     [FrameEventType.CONTROL_CLICK] = true,
@@ -158,12 +199,5 @@ private.available_events = {
     [FrameEventType.MOUSE_DOWN] = true,
     [FrameEventType.MOUSE_WHEEL] = true,
 }
-
----@param event frameeventtype
-function private.isEventAvailable(event)
-    if not private.available_events[event] then
-        Log:err('Event \''..frameToString(event)..'\' is not available for '..tostring(FrameNormalButton))
-    end
-end
 
 return static

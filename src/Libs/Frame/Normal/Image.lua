@@ -9,9 +9,14 @@ local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local Frame = HandleLib.Frame
+---@type TypesLib
+local TypesLib = lib_dep.Types or error('')
+local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
+local eventToString = TypesLib.frameEventtoString or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type FdfBackdropClass
 local FdfBackdrop = require(lib_path..'Fdf.Normal.Backdrop') or error('')
@@ -63,13 +68,18 @@ end
 --========
 
 ---@param tex_file string
----@param flag number
----@param blend boolean
+---@param flag number | nil
+---@param blend boolean | nil
 function public:setTexture(tex_file, flag, blend)
     isTypeErr(tex_file, 'string', 'tex_file')
-    isTypeErr(flag, 'number', 'flag')
-    isTypeErr(blend, 'boolean', 'blend')
-    BlzFrameSetTexture(self:getData(), tex_file, flag, blend)
+    BlzFrameSetTexture(self:getData(), tex_file, flag or 0, blend or true)
+end
+
+---@param event frameeventtype
+---@param callback FrameNormalButtonCallback
+---@return Action | nil
+function public:addAction(event, callback)
+    Log:wrn('Event \''..eventToString(event)..'\' is not available for '..tostring(FrameNormalImage))
 end
 
 --=========
@@ -81,9 +91,5 @@ private.fdf = FdfBackdrop.new('FrameNormalImage')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setBackground('UI\\Widgets\\ToolTips\\Human\\human-tooltip-background')
-private.fdf:setCornerFlags("UL|UR|BL|BR|T|L|B|R")
-private.fdf:setCornerSize(0.0125)
-private.fdf:setInsets(0.005, 0.005, 0.005, 0.005)
-private.fdf:setEdgeFile("UI\\Widgets\\ToolTips\\Human\\human-tooltip-border.blp")
 
 return static

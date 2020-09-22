@@ -6,13 +6,9 @@ local Class = require(LibList.ClassLib) or error('')
 
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
+local Button = FrameLib.Normal.Button
 local Image = FrameLib.Normal.Image or error('')
----@type HandleLib
-local HandleLib = require(LibList.HandleLib) or error('')
-local Frame = HandleLib.Frame or error('')
-local FramePublic = Class.getPublic(Frame) or error('')
----@type ParameterLib
-local ParamLib = require(LibList.ParameterLib) or error('')
+local ImagePublic = Class.getPublic(Image) or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
@@ -22,10 +18,10 @@ local Log = UtilsLib.Log or error('')
 -- Class
 --=======
 
-local InterfaceUnitBuffs = Class.new('InterfaceUnitBuffs', Frame)
----@class InterfaceUnitBuffs : Frame
+local InterfaceUnitBuffs = Class.new('InterfaceUnitBuffs', Image)
+---@class InterfaceUnitBuffs : FrameNormalImage
 local public = InterfaceUnitBuffs.public
----@class InterfaceUnitBuffsClass : FrameClass
+---@class InterfaceUnitBuffsClass : FrameNormalImageClass
 local static = InterfaceUnitBuffs.static
 ---@type InterfaceUnitBuffsClass
 local override = InterfaceUnitBuffs.override
@@ -38,7 +34,7 @@ local private = {}
 ---@return InterfaceUnitBuffs
 function override.new()
     local instance = Class.allocate(InterfaceUnitBuffs)
-    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
+    instance = Image.new(instance)
 
     private.newData(instance)
 
@@ -52,7 +48,7 @@ end
 ---@param x number
 ---@param y number
 function public:setPos(x, y)
-    FramePublic.setPos(self, x, y)
+    ImagePublic.setPos(self, x, y)
     self:update()
 end
 
@@ -74,7 +70,7 @@ end
 
 ---@param flag number
 function public:setVisible(flag)
-    FramePublic.setVisible(self, flag)
+    ImagePublic.setVisible(self, flag)
     local priv = private.data[self]
 
     for i = 1, #priv.buff_frames do
@@ -117,7 +113,8 @@ function public:update()
             local buff = priv.buff_frames[i]
             buff:setSize(w, h)
             buff:setPos(x0 + (p - 1) * w, y0 + (l - 1) * h)
-            buff:setTexture(buffs[i]:getType():getIcon(buffs[i]), 0, true)
+            buff:setNormalTexture(buffs[i]:getType():getIcon(buffs[i]))
+            buff:setPushedTexture(buffs[i]:getType():getIcon(buffs[i]))
         end
     end
 end
@@ -128,24 +125,16 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceUnitBuffsBackground')
-private.fdf:setWidth(0.04)
-private.fdf:setHeight(0.04)
-private.fdf:setBackgroundTileMode(true)
-private.fdf:setBackgroundTileSize(0.2)
-private.fdf:setBackground('UI\\Widgets\\ToolTips\\Human\\human-tooltip-background')
-private.fdf:setInsets(0.005, 0.005, 0.005, 0.005)
-private.fdf:setCornerFlags('UL|UR|BL|BR|T|L|B|R')
-private.fdf:setCornerSize(0.0125)
-private.fdf:setEdgeFile('UI\\Widgets\\ToolTips\\Human\\human-tooltip-border')
+private.fdf_tooltip = Fdf
 
 ---@param self InterfaceUnitBuffs
 function private.newData(self)
     local priv = {
         unit_buffs = nil,
         buff_frames = {},
+        tooltip = nil,
 
-        per_line = 7,
+        per_line = 10,
         buff_w = 0.04,
         buff_h = 0.04
     }
@@ -160,7 +149,7 @@ function private.updateBuffFrames(self)
 
     if #buffs > #priv.buff_frames then
         for i = #priv.buff_frames + 1, #buffs do
-            priv.buff_frames[i] = Image.new()
+            priv.buff_frames[i] = Button.new()
         end
     else
         for i = #buffs + 1, #priv.buff_frames do
