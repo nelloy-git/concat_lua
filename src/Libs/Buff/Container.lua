@@ -12,6 +12,7 @@ local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type BuffClass
 local Buff = require(lib_path..'.Buff') or error('')
@@ -47,7 +48,7 @@ function static.new(owner, child)
 end
 
 function static.get(owner)
-    return private.owners[owner]
+    return private.owner2container[owner]
 end
 
 --========
@@ -56,45 +57,40 @@ end
 
 ---@param buff_type Buff
 ---@param source Unit
+---@param time number
 ---@param user_data any
 ---@return boolean
-function public:addBuff(buff_type, source, user_data)
+function public:add(buff_type, source, time, user_data)
     local priv = private.data[self]
 
     local buff = Buff.new(source, priv.owner, buff_type, user_data)
-    table.insert(priv.list, buff)
+
+    buff:addCancelAction(private.removeBuff)
+    buff:addFinishAction(private.removeBuff)
+    buff:start(time)
+    table.insert(priv.list, #priv.list + 1, buff)
+    private.buffs2container[buff] = self
+end
+
+---@return number
+function public:count()
+    return #private.data[self].list
+end
+
+---@param i number
+---@return Buff | nil
+function public:get(i)
+    return private.data[self].list[i]
 end
 
 ---@return table
 function public:getAll()
     local priv = private.data[self]
-    local copy = {}
-    local new_list = {}
-    for i = 1, #priv.list do
-        if priv.list[i]:getDurationLeft() > 0 then
-            table.insert(copy, priv.list[i])
-            table.insert(new_list, priv.list[i])
-        end
-    end
-    priv.list = new_list
-    return copy
-end
 
----@param buff_type BuffType
----@return table
-function public:getByType(buff_type)
-    local priv = private.data[self]
     local copy = {}
-    local new_list = {}
     for i = 1, #priv.list do
-        if priv.list[i]:getDurationLeft() > 0 then
-            table.insert(new_list, priv.list[i])
-            if priv.list[i]:getType() == buff_type then
-                table.insert(copy, priv.list[i])
-            end
-        end
+        table.insert(copy, i, priv.list[i])
     end
-    priv.list = new_list
     return copy
 end
 
@@ -103,7 +99,8 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.owners = setmetatable({}, {__mode = 'k'})
+private.owner2container = setmetatable({}, {__mode = 'k'})
+private.buffs2container = setmetatable({}, {__mode = 'k'})
 
 ---@param self BuffsContainer
 ---@param owner Unit
@@ -113,7 +110,21 @@ function private.newData(self, owner)
         list = {}
     }
     private.data[self] = priv
-    private.owners[owner] = self
+    private.owner2container[owner] = self
+end
+
+function private.removeBuff(buff)
+    ---@type BuffsContainer
+    local self = private.buffs2container[buff]
+    local priv = private.data[self]
+
+    for i = 1, #priv.list do
+        if priv.list[i] == buff then
+            table.remove(priv.list, i)
+            return
+        end
+    end
+    Log:err('Removing buff is not found')
 end
 
 return static

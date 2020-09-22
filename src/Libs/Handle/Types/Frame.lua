@@ -194,10 +194,13 @@ function public:getAlpha()
     return private.data[self].alpha
 end
 
+--- [0, 1]
 ---@param alpha number
 function public:setAlpha(alpha)
+    alpha = alpha > 1 and 1 or alpha < 0 and 0 or alpha
     private.data[self].alpha = alpha
-    BlzFrameSetAlpha(self:getData(), alpha)
+
+    BlzFrameSetAlpha(self:getData(), 255 * alpha)
 end
 
 ---@return boolean

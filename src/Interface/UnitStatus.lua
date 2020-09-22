@@ -71,8 +71,8 @@ function public:setPos(x, y)
     priv.bars:setPos(self:getAbsX() + priv.border:getWidth(),
                      self:getAbsY())
 
-    priv.buffs:setPos(self:getAbsX() + priv.border:getWidth(),
-                      self:getAbsY() + priv.border:getHeight())
+    priv.buffs:setPos(priv.bars:getAbsX(),
+                      priv.bars:getAbsY() + 3 * priv.bars:getHeight())
 
     priv.params:setPos(self:getAbsX(), self:getAbsY() + self:getHeight())
 
@@ -88,7 +88,7 @@ function public:setSize(w, h)
 
     priv.bars:setSize(w - h, h / 4)
     priv.border:setSize(h, h)
-    priv.buffs:setBuffIconSize(h / 3, h / 3)
+    priv.buffs:setBuffIconSize(h / 2, h / 2)
     priv.params:setSize(h, 2 * h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
 
@@ -99,10 +99,11 @@ end
 function public:setVisible(flag)
     local priv = private.data[self]
 
-    priv.border:setVisible(flag)
-    priv.portrait:setVisible(flag)
     priv.bars:setVisible(flag)
+    priv.border:setVisible(flag)
+    priv.buffs:setVisible(flag)
     priv.params:setVisible(flag)
+    priv.portrait:setVisible(flag)
 end
 
 ---@param cur number

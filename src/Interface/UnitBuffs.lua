@@ -77,7 +77,7 @@ function public:setVisible(flag)
     FramePublic.setVisible(self, flag)
     local priv = private.data[self]
 
-    for i = 1, #private.buffs do
+    for i = 1, #priv.buff_frames do
         priv.buff_frames[i]:setVisible(flag)
     end
 end
@@ -93,36 +93,31 @@ function public:update()
     private.updateBuffFrames(self)
     local priv = private.data[self]
 
-    local x0 = self:getAbsX() + 0.05 * self:getWidth()
-    local y0 = self:getAbsY() + 0.95 * self:getHeight()
+    local x0 = self:getAbsX()
+    local y0 = self:getAbsY()
 
     local per_line = priv.per_line
     local count = #priv.buff_frames
     local w = priv.buff_w
     local h = priv.buff_h
-    print(w, h)
     local lines, mod = math.modf(count / per_line)
 
     if mod ~= 0 then lines = lines + 1 end
-
-    FramePublic.setSize(self,
-                        1 / 0.9 * per_line * w,
-                        1 / 0.9 * lines * h)
 
     local buffs = priv.unit_buffs and priv.unit_buffs:getAll() or {}
     local i = 0
     for l = 1, lines do
         for p = 1, per_line do
             i = i + 1
+            if i > #priv.buff_frames or i > #buffs then
+                return
+            end
+
             ---@type FrameNormalImage
             local buff = priv.buff_frames[i]
             buff:setSize(w, h)
-            buff:setPos(x0 + (p - 1) * w, y0 - l * h)
+            buff:setPos(x0 + (p - 1) * w, y0 + (l - 1) * h)
             buff:setTexture(buffs[i]:getType():getIcon(buffs[i]), 0, true)
-
-            if i + 1 > #priv.buff_frames then
-                return
-            end
         end
     end
 end
@@ -155,6 +150,7 @@ function private.newData(self)
         buff_h = 0.04
     }
     private.data[self] = priv
+    self:setAlpha(0)
 end
 
 ---@param self InterfaceUnitBuffs
@@ -169,6 +165,7 @@ function private.updateBuffFrames(self)
     else
         for i = #buffs + 1, #priv.buff_frames do
             priv.buff_frames[i]:destroy()
+            priv.buff_frames[i] = nil
         end
     end
 end

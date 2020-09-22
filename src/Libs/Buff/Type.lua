@@ -55,7 +55,7 @@ function public:onStart(buff) end
 
 --- Virtual function
 ---@param buff Buff
-function public:onTick(buff) end
+function public:onLoop(buff) end
 
 --- Virtual function
 ---@param buff Buff
@@ -64,10 +64,6 @@ function public:onCancel(buff) end
 --- Virtual function
 ---@param buff Buff
 function public:onFinish(buff) end
-
---- Virtual function
----@param buff Buff
-function public:getDuration(buff) end
 
 --- Virtual function
 ---@param buff Buff

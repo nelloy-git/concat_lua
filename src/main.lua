@@ -36,7 +36,7 @@ u:setMana(0)
 u3 = CorruptedPriest.new(0, 0, Player(0))
 u4 = CorruptedPriest.new(0, 0, Player(0))
 
-u2 = Unit.new(FourCC('hfoo'), 0, 0, Player(1))
+u2 = CorruptedPriest.new(0, 0, Player(1))
 local param_container2 = ParamUnit.new(u2)
 --local buff_container2 = BuffLib.ContPDMG
 --buff_container2:addBuff(BuffLib.TestPDEF)

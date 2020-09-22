@@ -12,6 +12,8 @@ local lib_dep = Lib.curDepencies()
 ---@class BuffSettings
 local BuffSettings = {}
 
+BuffSettings.TimerPeriod = 0.05
+
 BuffSettings.ShieldPriority = -1 -- Parameter damage event priority based
 
 return BuffSettings

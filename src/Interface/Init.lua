@@ -120,7 +120,7 @@ stats_time:start(0.05, true, function()
             local params = ParamUnitContainer.get(selected)
             if not params then Log:err('Can not find linked ParameterContainerUnit') end
             Interface.UnitStatus:setParameters(params)
-            
+
             local buffs = BuffLib.Container.get(selected)
             if not buffs then Log:err('Can not find linked UnitBuffs') end
             Interface.UnitStatus:setBuffs(buffs)
@@ -135,10 +135,9 @@ end)
 -------------------
 
 Interface.SkillsButtons = InterfaceSpellButtons.new()
-Interface.SkillsButtons:setSize(0.3, 0.045)
 Interface.SkillsButtons:setPos(0.5, 0)
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
-    Interface.SkillsButtons:setPos(x0 + w - Interface.SkillsButtons:getWidth(), 
+    Interface.SkillsButtons:setPos(x0 + (w - Interface.SkillsButtons:getWidth()) / 2,
                                    y0 + h - Interface.SkillsButtons:getHeight())
 end)
 

@@ -25,6 +25,8 @@ HandleLibAPI.SmartTimer = require(path..'Types.SmartTimer') or error('')
 HandleLibAPI.TextTag = require(path..'Types.TextTag') or error('')
 ---@type TimerClass
 HandleLibAPI.Timer = require(path..'Types.Timer') or error('')
+---@type TimedObjClass
+HandleLibAPI.TimedObj = require(path..'TimedObj') or error('')
 ---@type TriggerClass
 HandleLibAPI.Trigger = require(path..'Types.Trigger') or error('')
 ---@type UnitClass

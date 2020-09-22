@@ -34,7 +34,7 @@ function LifeForceShieldBuff:onStart(buff)
 end
 
 ---@param buff Buff
-function LifeForceShieldBuff:onTick(buff)
+function LifeForceShieldBuff:onLoop(buff)
 end
 
 ---@param buff Buff
@@ -47,11 +47,6 @@ end
 function LifeForceShieldBuff:onFinish(buff)
     BuffLib.addShield(-stored_shield[buff], buff:getTarget())
     stored_shield[buff] = nil
-end
-
----@param buff Buff
-function LifeForceShieldBuff:getDuration(buff)
-    return 10
 end
 
 ---@param buff Buff

@@ -31,6 +31,8 @@ BlzFrameClearAllPoints(handle)
 ---@class FrameOriginPortrait
 local Portrait = Frame.link(handle, false)
 Portrait:setParent(nil)
+Portrait:setPos(0.4, 0.3)
+Portrait:setSize(0.1, 0.1)
 
 ---@param width number
 ---@param height number

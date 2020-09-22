@@ -6,6 +6,9 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local TimedObj = HandleLib.TimedObj
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local ActionList = UtilsLib.ActionList or error('')
@@ -16,8 +19,6 @@ local AbilityExtCharges = require(lib_path..'Charges') or error('')
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
 local Event = AbilityExtEventModule.Enum
----@type AbilityExtTimerClass
-local AbilityExtTimer = require(lib_path..'Timer') or error('')
 
 --=======
 -- Class
@@ -81,7 +82,7 @@ function public:cancel()
     local priv = private.data[self]
 
     if priv.casting:getTimeLeft() > 0 then
-        priv.casting:stop()
+        priv.casting:cancel()
         private.runEvent(self, Event.CASTING_CANCEL)
     end
 end
@@ -89,7 +90,7 @@ end
 function public:interrupt()
     local priv = private.data[self]
     if priv.casting:getTimeLeft() > 0 then
-        priv.casting:stop()
+        priv.casting:cancel()
         private.runEvent(self, Event.CASTING_INTERRUPT)
     end
 end
@@ -208,8 +209,8 @@ function private.newData(self)
         casting_time = 1,
         charges_for_use = 1,
 
-        ---@type AbilityExtTimer
-        casting = AbilityExtTimer.new(),
+        ---@type TimedObj
+        casting = TimedObj.new(),
         ---@type AbilityExtCharges
         charges = AbilityExtCharges.new(),
 
@@ -218,8 +219,8 @@ function private.newData(self)
     }
     private.data[self] = priv
 
-    priv.casting:setLoopAction(private.castingLoop)
-    priv.casting:setFinishAction(private.castingFinish)
+    priv.casting:addLoopAction(private.castingLoop)
+    priv.casting:addFinishAction(private.castingFinish)
     private.casting2controller[priv.casting] = self
 
     priv.charges:setLoopAction(private.cooldownLoop)
@@ -231,13 +232,13 @@ function private.newData(self)
     end
 end
 
----@param timer AbilityExtTimer
+---@param timer TimedObj
 function private.castingLoop(timer)
     local self = private.casting2controller[timer]
     private.runEvent(self, Event.CASTING_LOOP)
 end
 
----@param timer AbilityExtTimer
+---@param timer TimedObj
 function private.castingFinish(timer)
     local self = private.casting2controller[timer]
     private.runEvent(self, Event.CASTING_FINISH)

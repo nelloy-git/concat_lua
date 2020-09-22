@@ -86,7 +86,7 @@ local function onEnd(abil)
     local target = abil:getTargetUnit()
 
     local buffs = UnitBuffs.get(target)
-    buffs:addBuff(BuffEffect, owner, drained_life[owner])
+    buffs:add(BuffEffect, owner, 10, drained_life[owner])
     drained_life[owner] = nil
 end
 

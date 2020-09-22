@@ -55,19 +55,17 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    local priv = private.data[self]
-    FramePublic.setSize(self, width, height)
+    Log:wrn(tostring(InterfaceSpellButtons)..': it is autosized frame.')
+end
 
-    local w = width / 8
-    for i = 1, #priv.button_borders do
-        local border = priv.button_borders[i]
-        border:setPos((i - 0.5) * w, 0.05 * self:getHeight())
-        border:setSize(w, w)
+---@return number
+function public:getWidth()
+    return 7 * private.data[self].button_borders[1]:getWidth()
+end
 
-        local btn = priv.buttons[i]
-        btn:setPos(0.15 * w, 0.15 * w)
-        btn:setSize(0.7 * w, 0.7 * w)
-    end
+---@return number
+function public:getHeight()
+    return private.data[self].button_borders[1]:getHeight()
 end
 
 --=========
@@ -83,19 +81,21 @@ function private.newData(self)
         button_borders = {}
     }
     private.data[self] = priv
+    self:setAlpha(0)
 
-    local w = self:getWidth() / 7.5
-    for i = 6, 12 do
+    local w = 1.2 * FrameLib.Origin.SkillButton[1]:getWidth()
+    local h = 1.2 * FrameLib.Origin.SkillButton[1]:getHeight()
+    for i = 1, 7 do
         local border = Frame.new(private.fdf:getName(), private.fdf:isSimple())
         border:setParent(self)
-        border:setPos((i - 5.5) * w, 0.1 * self:getHeight())
-        border:setSize(w, w)
+        border:setPos((i - 1) * w, 0)
+        border:setSize(w, h)
+        border:setAlpha(1)
         table.insert(priv.button_borders, #priv.button_borders + 1, border)
 
-        local btn = FrameLib.Origin.SkillButton[i]
+        local btn = FrameLib.Origin.SkillButton[i + 5]
         btn:setParent(border)
-        btn:setPos(0.15 * w, 0.15 * w)
-        btn:setSize(0.7 * w, 0.7 * w)
+        btn:setPos((w - btn:getWidth()) / 2, (h - btn:getHeight()) / 2)
         table.insert(priv.buttons, #priv.buttons + 1, btn)
     end
 end

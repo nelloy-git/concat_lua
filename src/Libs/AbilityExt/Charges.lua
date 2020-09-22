@@ -6,12 +6,12 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
+---@type HandleLib
+local HandleLib = lib_dep.Handle or error('')
+local TimedObj = HandleLib.TimedObj
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
-
----@type AbilityExtTimerClass
-local AbilityExtTimer = require(lib_path..'Timer')
 
 --=======
 -- Class
@@ -63,7 +63,7 @@ function public:set(charges, ignore_max)
             priv.timer:start(priv.cooldown)
         end
     else
-        priv.timer:stop()
+        priv.timer:cancel()
     end
 
     if priv.charges ~= prev_charges and priv.action_changed then
@@ -156,24 +156,23 @@ function private.newData(self)
         action_loop = nil,
         action_changed = nil,
 
-        timer = AbilityExtTimer.new(),
+        timer = TimedObj.new(),
     }
     private.data[self] = priv
     private.timer2charges[priv.timer] = self
 
-
-    priv.timer:setLoopAction(private.timerLoopCallback)
-    priv.timer:setFinishAction(private.timerFinishCallback)
+    priv.timer:addLoopAction(private.timerLoopCallback)
+    priv.timer:addFinishAction(private.timerFinishCallback)
 end
 
----@param timer AbilityExtTimer
+---@param timer TimedObj
 function private.timerLoopCallback(timer)
     local self = private.timer2charges[timer]
     local priv = private.data[self]
     if priv.action_loop then priv.action_loop:run(self) end
 end
 
----@param timer AbilityExtTimer
+---@param timer TimedObj
 function private.timerFinishCallback(timer)
     local self = private.timer2charges[timer]
     self:set(self:get() + 1)
