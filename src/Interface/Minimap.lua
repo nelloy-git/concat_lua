@@ -52,7 +52,7 @@ end
 ---@param child FrameNormalImage
 ---@return FrameNormalImage
 function override.link(handle, child)
-    Log:err('Function disabled', 2)
+    Log:err(tostring(InterfaceMinimap)..': function \'link\' is not available.', 2)
 end
 
 --========

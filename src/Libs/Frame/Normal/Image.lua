@@ -11,7 +11,6 @@ local HandleLib = lib_dep.Handle or error('')
 local Frame = HandleLib.Frame
 ---@type TypesLib
 local TypesLib = lib_dep.Types or error('')
-local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
 local eventToString = TypesLib.frameEventtoString or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
@@ -72,6 +71,8 @@ end
 ---@param blend boolean | nil
 function public:setTexture(tex_file, flag, blend)
     isTypeErr(tex_file, 'string', 'tex_file')
+    if flag then isTypeErr(flag, 'number', 'flag') end
+    if blend then isTypeErr(blend, 'boolean', 'blend') end
     BlzFrameSetTexture(self:getData(), tex_file, flag or 0, blend or true)
 end
 
@@ -79,6 +80,8 @@ end
 ---@param callback FrameNormalButtonCallback
 ---@return Action | nil
 function public:addAction(event, callback)
+    isTypeErr(event, 'frameeventtype', 'event')
+    isTypeErr(callback, 'function', 'callback')
     Log:wrn('Event \''..eventToString(event)..'\' is not available for '..tostring(FrameNormalImage))
 end
 

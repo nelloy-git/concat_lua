@@ -9,6 +9,10 @@ local FrameLib = require(LibList.FrameLib)
 local HandleLib = require(LibList.HandleLib) or error('')
 local Frame = HandleLib.Frame or error('')
 local FramePublic = Class.getPublic(Frame) or error('')
+local Tooltip = FrameLib.Normal.Tooltip
+---@type TypesLib
+local TypesLib = require(LibList.TypesLib) or error('')
+local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local Log = UtilsLib.Log or error('')
@@ -78,7 +82,8 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self)
     local priv = {
         buttons = {},
-        button_borders = {}
+        button_borders = {},
+        tooltip = FrameLib.Origin.Tooltip
     }
     private.data[self] = priv
     self:setAlpha(0)
@@ -98,6 +103,12 @@ function private.newData(self)
         btn:setPos((w - btn:getWidth()) / 2, (h - btn:getHeight()) / 2)
         table.insert(priv.buttons, #priv.buttons + 1, btn)
     end
+
+    priv.tooltip:setParent(self)
+    -- Native bind with leftbottom point
+    BlzFrameSetPoint(priv.tooltip:getData(), FRAMEPOINT_BOTTOMLEFT,
+                     self:getData(), FRAMEPOINT_TOPLEFT, 0, 0)
+    priv.tooltip:setAlpha(1)
 end
 
 private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceSpellButtonBorder')

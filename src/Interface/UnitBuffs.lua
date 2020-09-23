@@ -9,6 +9,10 @@ local FrameLib = require(LibList.FrameLib) or error('')
 local Button = FrameLib.Normal.Button
 local Image = FrameLib.Normal.Image or error('')
 local ImagePublic = Class.getPublic(Image) or error('')
+local Tooltip = FrameLib.Normal.Tooltip or error('')
+---@type TypesLib
+local TypesLib = require(LibList.TypesLib) or error('')
+local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
@@ -117,6 +121,8 @@ function public:update()
             buff:setPushedTexture(buffs[i]:getType():getIcon(buffs[i]))
         end
     end
+
+    priv.tooltip:setPos(x0, y0 - (lines - 1) * h)
 end
 
 --=========
@@ -124,15 +130,14 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-
-private.fdf_tooltip = Fdf
+private.frame2buff = setmetatable({}, {__mode = 'kv'})
 
 ---@param self InterfaceUnitBuffs
 function private.newData(self)
     local priv = {
         unit_buffs = nil,
         buff_frames = {},
-        tooltip = nil,
+        tooltip = Tooltip.new(),
 
         per_line = 10,
         buff_w = 0.04,
@@ -140,6 +145,11 @@ function private.newData(self)
     }
     private.data[self] = priv
     self:setAlpha(0)
+
+    priv.tooltip:setSize(0.2, 0.15)
+    priv.tooltip:setIconsSize(0.02, 0.02)
+    priv.tooltip:setRightIcon('ReplaceableTextures\\\\CommandButtons\\\\BTNPatrol.blp')
+    priv.tooltip:setVisible(false)
 end
 
 ---@param self InterfaceUnitBuffs
@@ -149,7 +159,12 @@ function private.updateBuffFrames(self)
 
     if #buffs > #priv.buff_frames then
         for i = #priv.buff_frames + 1, #buffs do
-            priv.buff_frames[i] = Button.new()
+            local btn = Button.new()
+            btn:addAction(FrameEventType.MOUSE_ENTER, private.updateTooltipFull)
+            btn:setTooltip(priv.tooltip)
+
+            private.frame2buff[btn] = buffs[i]
+            priv.buff_frames[i] = btn
         end
     else
         for i = #buffs + 1, #priv.buff_frames do
@@ -157,6 +172,19 @@ function private.updateBuffFrames(self)
             priv.buff_frames[i] = nil
         end
     end
+end
+
+---@param frame FrameNormalButton
+---@param player player
+function private.updateTooltipFull(frame, player)
+    ---@type FrameNormalTooltip
+    local tooltip = frame:getTooltip()
+    ---@type Buff
+    local buff = private.frame2buff[frame]
+
+    tooltip:setName(buff:getType():getName(buff))
+    tooltip:setText(buff:getType():getTooltip(buff))
+    tooltip:setRightText(tostring(buff:getTimeLeft()))
 end
 
 return static

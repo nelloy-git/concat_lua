@@ -69,6 +69,7 @@ end
 
 ---@param text string
 function public:setText(text)
+    isTypeErr(text, 'string', 'text')
     BlzFrameSetText(self:getData(), text)
 end
 

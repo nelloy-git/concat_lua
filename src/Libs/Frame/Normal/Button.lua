@@ -164,7 +164,7 @@ end
 ---@return FdfBackdrop
 function private.createFdfText(name, font, size)
     local text = FdfText.new(name)
-    text:setText('Text')
+    text:setText('')
     text:setJustification('JUSTIFYCENTER', 'JUSTIFYMIDDLE')
     text:setFont(font, size)
     text:setColor(0, 0, 0, 1)

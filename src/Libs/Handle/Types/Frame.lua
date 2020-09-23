@@ -9,6 +9,7 @@ local Class = lib_dep.Class or error('')
 ---@type TypesLib
 local TypesLib = lib_dep.Types or error('')
 local FrameEventType = TypesLib.FrameEventTypeEnum or error('')
+local eventToStr = TypesLib.frameEventtoString or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local ActionList = UtilsLib.ActionList or error('')
@@ -237,7 +238,9 @@ function public:setTooltip(tooltip)
 
     priv.tooltip = tooltip
     BlzFrameSetTooltip(self:getData(), tooltip_handle)
-    tooltip:setVisible(false)
+    --if priv.is_simple then
+        tooltip:setVisible(false)
+    --end
 end
 
 ---@return boolean

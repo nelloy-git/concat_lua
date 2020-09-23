@@ -9,10 +9,10 @@ local Class = lib_dep.Class
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local Frame = HandleLib.Frame or error('')
-local FramePublic = Class.getPublic(Frame)
+local FramePublic = Class.getPublic(Frame) or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
-local Log = UtilsLib.Log
+local Log = UtilsLib.Log or error('')
 
 --========
 -- Module
@@ -57,6 +57,10 @@ for i = 0, 11 do
     function btn:setSize(width, height)
         FramePublic.setSize(self, width, height)
         Log:wrn('CommandButton can not be resized correctly because of cooldown sprite.')
+    end
+
+    function btn:addAction(event, callback)
+        Log:wrn('CommandButton can not activate events.')
     end
 end
 

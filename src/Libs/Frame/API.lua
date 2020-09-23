@@ -88,6 +88,8 @@ FrameLib.Normal.Button = require(path..'Normal.Button') or error('')
 FrameLib.Normal.Image = require(path..'Normal.Image') or error('')
 ---@type FrameNormalTextClass
 FrameLib.Normal.Text = require(path..'Normal.Text') or error('')
+---@type FrameNormalTooltipClass
+FrameLib.Normal.Tooltip = require(path..'Normal.Tooltip') or error('')
 
 --========
 -- Origin
@@ -107,6 +109,8 @@ FrameLib.Origin.Minimap = require(path..'Origin.Minimap') or error('')
 FrameLib.Origin.Portrait = require(path..'Origin.Portrait') or error('')
 ---@type table<number,FrameOriginSkillButton>
 FrameLib.Origin.SkillButton = require(path..'Origin.SkillButton') or error('')
+---@type FrameOriginTooltip
+FrameLib.Origin.Tooltip = require(path..'Origin.Tooltip') or error('')
 
 Lib.finish()
 
