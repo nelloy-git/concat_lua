@@ -88,7 +88,7 @@ function public:setSize(w, h)
 
     priv.bars:setSize(w - h, h / 4)
     priv.border:setSize(h, h)
-    priv.buffs:setBuffIconSize(h / 4, h / 4)
+    priv.buffs:setBuffIconSize(h / 3, h / 3)
     priv.params:setSize(h, 2 * h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
 

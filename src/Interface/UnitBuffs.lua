@@ -35,12 +35,13 @@ local private = {}
 -- Static
 --=========
 
+---@param max_buffs number | nil
 ---@return InterfaceUnitBuffs
-function override.new()
+function override.new(max_buffs)
     local instance = Class.allocate(InterfaceUnitBuffs)
     instance = Image.new(instance)
 
-    private.newData(instance)
+    private.newData(instance, max_buffs or 20)
 
     return instance
 end
@@ -105,11 +106,17 @@ function public:update()
     if mod ~= 0 then lines = lines + 1 end
 
     local buffs = priv.unit_buffs and priv.unit_buffs:getAll() or {}
-    local i = 0
+    for i = 1, #priv.buff_frames do
+        local l, p = math.modf(i / per_line)
+        p = p * 10
+
+        if buffs[i]
+    end
     for l = 1, lines do
         for p = 1, per_line do
-            i = i + 1
+            i = p + (l - 1)
             if i > #priv.buff_frames or i > #buffs then
+                if i < #priv.buff_frames
                 return
             end
 
@@ -130,10 +137,11 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.frame2buff = setmetatable({}, {__mode = 'kv'})
+private.buff_frame2unit_buffs = setmetatable({}, {__mode = 'kv'})
 
 ---@param self InterfaceUnitBuffs
-function private.newData(self)
+---@param max_buffs number
+function private.newData(self, max_buffs)
     local priv = {
         unit_buffs = nil,
         buff_frames = {},
@@ -146,32 +154,20 @@ function private.newData(self)
     private.data[self] = priv
     self:setAlpha(0)
 
+    for i = 1, max_buffs do
+        local btn = Button.new()
+        btn:addAction(FrameEventType.MOUSE_ENTER, private.updateTooltipFull)
+        btn:setVisible(false)
+        btn:setTooltip(priv.tooltip)
+
+        private.buff_frame2unit_buffs[btn] = self
+        table.insert(priv.buff_frames, btn)
+    end
+
     priv.tooltip:setSize(0.2, 0.15)
     priv.tooltip:setIconsSize(0.02, 0.02)
     priv.tooltip:setRightIcon('ReplaceableTextures\\\\CommandButtons\\\\BTNPatrol.blp')
     priv.tooltip:setVisible(false)
-end
-
----@param self InterfaceUnitBuffs
-function private.updateBuffFrames(self)
-    local priv = private.data[self]
-    local buffs = priv.unit_buffs and priv.unit_buffs:getAll() or {}
-
-    if #buffs > #priv.buff_frames then
-        for i = #priv.buff_frames + 1, #buffs do
-            local btn = Button.new()
-            btn:addAction(FrameEventType.MOUSE_ENTER, private.updateTooltipFull)
-            btn:setTooltip(priv.tooltip)
-
-            private.frame2buff[btn] = buffs[i]
-            priv.buff_frames[i] = btn
-        end
-    else
-        for i = #buffs + 1, #priv.buff_frames do
-            priv.buff_frames[i]:destroy()
-            priv.buff_frames[i] = nil
-        end
-    end
 end
 
 ---@param frame FrameNormalButton
@@ -180,7 +176,7 @@ function private.updateTooltipFull(frame, player)
     ---@type FrameNormalTooltip
     local tooltip = frame:getTooltip()
     ---@type Buff
-    local buff = private.frame2buff[frame]
+    local buff = private.buff_frame2unit_buffs[frame]
 
     tooltip:setName(buff:getType():getName(buff))
     tooltip:setText(buff:getType():getTooltip(buff))
