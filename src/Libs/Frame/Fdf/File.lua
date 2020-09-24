@@ -122,8 +122,8 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 local sep = Compiletime(package.config:sub(1,1))
-if not IsCompiletime() then sep = '\\\\' end
-private.dst_path = 'GeneratedFdfFiles'..sep
+if not IsCompiletime() then sep = '\\' end
+private.dst_path = 'war3mapImported'..sep..'GeneratedFdfFiles'..sep
 if IsCompiletime() then
     private.full_dst_path = GetDstDir()..sep..private.dst_path
 end

@@ -93,12 +93,14 @@ src\Libs\Frame\Simple\Text.lua
 src\Libs\Frame\Normal\Button.lua
 src\Libs\Frame\Normal\Image.lua
 src\Libs\Frame\Normal\Text.lua
+src\Libs\Frame\Normal\Tooltip.lua
 src\Libs\Frame\Origin\ChatBox.lua
 src\Libs\Frame\Origin\ChatEditBox.lua
 src\Libs\Frame\Origin\Inventory.lua
 src\Libs\Frame\Origin\Minimap.lua
 src\Libs\Frame\Origin\Portrait.lua
 src\Libs\Frame\Origin\SkillButton.lua
+src\Libs\Frame\Origin\Tooltip.lua
 src\Interface\Init.lua
 src\Interface\Minimap.lua
 src\Interface\Selection.lua
