@@ -14,7 +14,7 @@ local path = Lib.curPath()
 -- API
 --=====
 
----@type BuffsContainerClass
+---@type BuffContainerClass
 BuffLibAPI.Container = require(path..'.Container') or error('')
 ---@type BuffTypeClass
 BuffLibAPI.Type = require(path..'.Type') or error('')

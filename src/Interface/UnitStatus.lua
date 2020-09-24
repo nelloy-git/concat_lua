@@ -88,9 +88,12 @@ function public:setSize(w, h)
 
     priv.bars:setSize(w - h, h / 4)
     priv.border:setSize(h, h)
-    priv.buffs:setBuffIconSize(h / 3, h / 3)
     priv.params:setSize(h, 2 * h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
+
+    local i, f = math.modf(priv.buffs:getMaxCount() / priv.buffs:getPerLine())
+    if f ~= 0 then i = i + 1 end
+    priv.buffs:setSize(w - h, i * (w - h) / priv.buffs:getPerLine())
 
     self:setPos(self:getX(), self:getY())
 end
@@ -132,9 +135,9 @@ function public:setParameters(params)
     private.data[self].params:setAllValues(params)
 end
 
----@param buffs BuffsContainer
-function public:setBuffs(buffs)
-    private.data[self].buffs:setUnitBuffs(buffs)
+---@param buffs BuffContainer
+function public:setBuffContainer(buffs)
+    private.data[self].buffs:setBuffContainer(buffs)
 end
 
 --=========

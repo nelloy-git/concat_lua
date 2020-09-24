@@ -51,7 +51,7 @@ end
 
 ---@param buff Buff
 function LifeForceShieldBuff:getName(buff)
-    return 'Life Force Shield Effect'
+    return 'Life Force Shield'
 end
 
 ---@param buff Buff
@@ -61,7 +61,10 @@ end
 
 ---@param buff Buff
 function LifeForceShieldBuff:getTooltip(buff)
-    return ''
+    local shield = stored_shield[buff]
+    local s_shield = tostring(shield)
+    s_shield = s_shield:sub(1, s_shield:find('.') + 1)
+    return 'This unit has shield based on maximum life ('..s_shield..').'
 end
 
 

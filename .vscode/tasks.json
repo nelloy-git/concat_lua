@@ -47,6 +47,7 @@
             "label": "Run Linux Reforged",
             "type": "shell",
             "command":[
+                //"wineserver -k &&",
                 "rm -r /home/bugrov/lua/wc3/drive_c/dst &&",
                 "cp -r ${workspaceFolder}/dst /home/bugrov/lua/wc3/drive_c/ &&",
                 "export WINEPREFIX=/home/bugrov/lua/wc3 &&",

@@ -105,9 +105,9 @@ function private.newData(self)
     end
 
     priv.tooltip:setParent(self)
-    -- Native bind with leftbottom point
-    BlzFrameSetPoint(priv.tooltip:getData(), FRAMEPOINT_BOTTOMLEFT,
-                     self:getData(), FRAMEPOINT_TOPLEFT, 0, 0)
+    -- Native bind with bottom center point
+    BlzFrameSetPoint(priv.tooltip:getData(), FRAMEPOINT_BOTTOM,
+                     self:getData(), FRAMEPOINT_TOP, 0, 0)
     priv.tooltip:setAlpha(1)
 end
 

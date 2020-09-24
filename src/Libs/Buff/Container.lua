@@ -11,6 +11,7 @@ local HandleLib = lib_dep.Handle or error('')
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
@@ -21,13 +22,13 @@ local Buff = require(lib_path..'.Buff') or error('')
 -- Class
 --=======
 
-local BuffsContainer = Class.new('BuffsContainer')
----@class BuffsContainer
-local public = BuffsContainer.public
----@class BuffsContainerClass
-local static = BuffsContainer.static
----@type BuffsContainerClass
-local override = BuffsContainer.override
+local BuffContainer = Class.new('BuffContainer')
+---@class BuffContainer
+local public = BuffContainer.public
+---@class BuffContainerClass
+local static = BuffContainer.static
+---@type BuffContainerClass
+local override = BuffContainer.override
 local private = {}
 
 --=========
@@ -35,13 +36,13 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param child BuffsContainer | nil
----@return BuffsContainer
+---@param child BuffContainer | nil
+---@return BuffContainer
 function static.new(owner, child)
     isTypeErr(owner, Unit, 'owner')
-    if child then isTypeErr(child, BuffsContainer, 'child') end
+    if child then isTypeErr(child, BuffContainer, 'child') end
 
-    local instance = child or Class.allocate(BuffsContainer)
+    local instance = child or Class.allocate(BuffContainer)
     private.newData(instance, owner)
 
     return instance
@@ -70,6 +71,8 @@ function public:add(buff_type, source, time, user_data)
     buff:start(time)
     table.insert(priv.list, #priv.list + 1, buff)
     private.buffs2container[buff] = self
+
+    priv.changed_actions:run(self)
 end
 
 ---@return number
@@ -94,6 +97,20 @@ function public:getAll()
     return copy
 end
 
+---@alias BuffContainerCallback fun(container:BuffContainer)
+
+---@param callback BuffContainerCallback
+---@return Action
+function public:addChangedAction(callback)
+    return private.data[self].changed_actions:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    return private.data[self].changed_actions:remove(action)
+end
+
 --=========
 -- Private
 --=========
@@ -102,25 +119,28 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.owner2container = setmetatable({}, {__mode = 'k'})
 private.buffs2container = setmetatable({}, {__mode = 'k'})
 
----@param self BuffsContainer
+---@param self BuffContainer
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {
         owner = owner,
-        list = {}
+        list = {},
+
+        changed_actions = ActionList.new(self)
     }
     private.data[self] = priv
     private.owner2container[owner] = self
 end
 
 function private.removeBuff(buff)
-    ---@type BuffsContainer
+    ---@type BuffContainer
     local self = private.buffs2container[buff]
     local priv = private.data[self]
 
     for i = 1, #priv.list do
         if priv.list[i] == buff then
             table.remove(priv.list, i)
+            priv.changed_actions:run(self)
             return
         end
     end

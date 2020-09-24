@@ -32,7 +32,6 @@ local DrainLifePerSec = 0.05
 --========
 
 local LifeForceShield = Utils.newAbilAlly('Life Force Shield')
---local LifeForceShield = AbilityLib.Type.new('LifeForceShield')
 
 local casting_period = AbilityLib.TimerPeriod
 local percent_per_loop = DrainLifePerSec * casting_period
@@ -48,8 +47,7 @@ function LifeForceShield:getTooltip(owner) return 'Tooltip' end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getArea(owner) return 0
- end
+function LifeForceShield:getArea(owner) return 0 end
 
 ---@param owner Unit
 ---@return number

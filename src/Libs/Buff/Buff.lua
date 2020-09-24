@@ -79,6 +79,21 @@ function public:getUserData()
     return private.data[self].user_data
 end
 
+---@return string
+function public:getName()
+    return private.data[self].buff_type:getName(self)
+end
+
+---@return string
+function public:getIcon()
+    return private.data[self].buff_type:getIcon(self)
+end
+
+---@return string
+function public:getTooltip()
+    return private.data[self].buff_type:getTooltip(self)
+end
+
 --=========
 -- Private
 --=========

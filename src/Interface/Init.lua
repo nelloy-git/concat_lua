@@ -8,8 +8,8 @@ local BuffLib = require(LibList.BuffLib) or error('')
 local FrameLib = require(LibList.FrameLib) or error('')
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
-local Timer = HandleLib.Timer
-local Unit = HandleLib.Unit
+local Timer = HandleLib.Timer or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 local ParamUnitContainer = ParamLib.UnitContainer or error('')
@@ -97,15 +97,18 @@ local selected = nil
 InterfaceSelection.addAction(function(group)
     if #group == 1 then
         local target = Unit.getLinked(group[1])
-        if not target then
-            Log:err('Can not find linked Unit')
-        end
+        if not target then Log:err('Can not find linked Unit') end
+        selected = target
 
         Interface.UnitStatus:setVisible(true)
-        selected = target
+
+        local buffs = BuffLib.Container.get(selected)
+        Interface.UnitStatus:setBuffContainer(buffs)
     else
-        Interface.UnitStatus:setVisible(false)
         selected = nil
+
+        Interface.UnitStatus:setVisible(false)
+        Interface.UnitStatus:setBuffContainer(nil)
     end
 end)
 
@@ -120,10 +123,6 @@ stats_time:start(0.05, true, function()
             local params = ParamUnitContainer.get(selected)
             if not params then Log:err('Can not find linked ParameterContainerUnit') end
             Interface.UnitStatus:setParameters(params)
-
-            local buffs = BuffLib.Container.get(selected)
-            if not buffs then Log:err('Can not find linked UnitBuffs') end
-            Interface.UnitStatus:setBuffs(buffs)
         else
             Interface.UnitStatus:setVisible(false)
         end

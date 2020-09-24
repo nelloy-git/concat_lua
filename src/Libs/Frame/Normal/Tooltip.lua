@@ -82,7 +82,7 @@ function public:setIconsSize(width, height)
     priv.right_icon:setSize(width, height)
     private.update(self)
 end
---[[
+
 ---@param flag boolean
 function public:setVisible(flag)
     FramePublic.setVisible(self, flag)
@@ -97,7 +97,7 @@ function public:setVisible(flag)
     priv.right_icon:setVisible(flag)
     priv.right_text:setVisible(flag)
 end
-]]
+
 ---@param name string
 function public:setName(name)
     isTypeErr(name, 'string', 'name')
@@ -214,24 +214,24 @@ function private.update(self)
     local icon_text_width = (0.9 * w - (priv.left_icon:getWidth() + priv.center_icon:getWidth() + priv.right_icon:getWidth())) / 3
 
     priv.name:setPos(x0, y0)
-    priv.name:setSize(0.9 * w, 0.01)    -- Font size
+    priv.name:setSize(0.9 * w, 0.012)    -- Font size
 
     -- Left
     local l_x0 = x0
-    priv.left_icon:setPos(l_x0, y0 + 0.95 * h - priv.left_icon:getHeight())
+    priv.left_icon:setPos(l_x0, y0 + 0.9 * h - priv.left_icon:getHeight())
     priv.left_text:setPos(priv.left_icon:getWidth(), 0)
     priv.left_text:setSize(icon_text_width, priv.left_icon:getHeight())
 
     -- Center
     local c_x0 = x0 + priv.left_icon:getWidth() + priv.left_text:getWidth()
-    priv.center_icon:setPos(c_x0, y0 + 0.95 * h - priv.center_icon:getHeight())
+    priv.center_icon:setPos(c_x0, y0 + 0.9 * h - priv.center_icon:getHeight())
     priv.center_text:setPos(priv.center_icon:getWidth(), 0)
     priv.center_text:setSize(icon_text_width, priv.center_icon:getHeight())
 
     -- Right
     local r_x0 = x0 + priv.left_icon:getWidth() + priv.left_text:getWidth()
                     + priv.center_icon:getWidth() + priv.center_text:getWidth()
-    priv.right_icon:setPos(r_x0, y0 + 0.95 * h - priv.right_icon:getHeight())
+    priv.right_icon:setPos(r_x0, y0 + 0.9 * h - priv.right_icon:getHeight())
     priv.right_text:setPos(priv.right_icon:getWidth(), 0)
     priv.right_text:setSize(icon_text_width, priv.right_icon:getHeight())
 
@@ -264,13 +264,13 @@ private.fdf_icon:setBackground('UI\\Widgets\\ToolTips\\Human\\human-tooltip-back
 private.fdf_name = FdfText.new('FrameNormalTooltipName')
 private.fdf_name:setWidth(0.04)
 private.fdf_name:setHeight(0.04)
-private.fdf_name:setFont('fonts\\nim_____.ttf', 0.01)
+private.fdf_name:setFont('fonts\\nim_____.ttf', 0.012)
 private.fdf_name:setJustification('JUSTIFYLEFT', 'JUSTIFYMIDDLE')
 
 private.fdf_text = FdfText.new('FrameNormalTooltipText')
 private.fdf_text:setWidth(0.04)
 private.fdf_text:setHeight(0.04)
-private.fdf_text:setFont('fonts\\nim_____.ttf', 0.008)
+private.fdf_text:setFont('fonts\\nim_____.ttf', 0.010)
 private.fdf_text:setJustification('JUSTIFYLEFT', 'JUSTIFYMIDDLE')
 
 return static
