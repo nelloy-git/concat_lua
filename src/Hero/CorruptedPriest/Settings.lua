@@ -6,7 +6,7 @@
 local BinaryLib = require(LibList.BinaryLib) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
-local Param = ParamLib.Enum
+local ParamType = ParamLib.ParamType or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local id2int = UtilsLib.id2int or error('')
@@ -28,22 +28,20 @@ Settings.Icon = Compiletime('ReplaceableTextures\\\\CommandButtons\\\\BTNPriest.
 ----------------
 
 Settings.Params = {
-    [Param.PDMG] = 0,
-    [Param.ASPD] = 0,
-    [Param.PDEF] = 3,
-    [Param.PRES] = 0,
-    [Param.MDMG] = 10,
-    [Param.CDR] = 0,
-    [Param.MRES] = 5,
-    [Param.MRES] = 0,
-    [Param.CRES] = 0,
-    [Param.DCH] = 0,
-    [Param.CRCH] = 0,
-    [Param.LIFE] = 300,
-    [Param.REGEN] = 3,
-    [Param.MANA] = 200,
-    [Param.RECOV] = 5,
-    [Param.MSPD] = 0,
+    [ParamType.PATK] = 10,
+    [ParamType.PSPD] = 0.5,
+    [ParamType.PDEF] = 2,
+    [ParamType.PRES] = 0.05,
+    [ParamType.MATK] = 20,
+    [ParamType.MSPD] = 0,
+    [ParamType.MDEF] = 5,
+    [ParamType.MRES] = 0.1,
+    [ParamType.CRIT] = 0,
+    [ParamType.LIFE] = 500,
+    [ParamType.REGE] = 3,
+    [ParamType.MANA] = 300,
+    [ParamType.RECO] = 1,
+    [ParamType.MOVE] = 220,
 }
 
 return Settings

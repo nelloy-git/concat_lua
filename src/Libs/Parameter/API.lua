@@ -14,32 +14,16 @@ local path = Lib.curPath()
 -- API
 --=====
 
----@type ParameterClass
-ParameterLibAPI.Parameter = require(path..'Parameter') or error('')
+---@type ParameterTypeModule
+local ParameterTypeModule = require(path..'Type') or error('')
+ParameterLibAPI.ParamType = ParameterTypeModule.Enum or error('')
+ParameterLibAPI.paramToStr = ParameterTypeModule.toStr or error('')
+---@type ParameterValueTypeModule
+local ParameterValueTypeModule = require(path..'ValueType') or error('')
+ParameterLibAPI.ValueType = ParameterValueTypeModule.Enum
 
----@type ParameterDefines
-local Defines = require(path..'Defines') or error('')
-ParameterLibAPI.Enum = {
-    PDMG = Defines.PhysicalDamage or error(''),
-    PDEF = Defines.Defence or error(''),
-    PRES = Defines.PhysicalDamageReduction or error(''),
-    MDMG = Defines.MagicalDamage or error(''),
-    MDEF = Defines.Resistance or error(''),
-    MRES = Defines.MagicalDamageReduction or error(''),
-    ASPD = Defines.AttackSpeed or error(''),
-    CDR = Defines.CooldownReduction or error(''),
-    CRES = Defines.ControlReduction or error(''),
-    DCH = Defines.DodgeChance or error(''),
-    CRCH = Defines.CriticalStrikeChance or error(''),
-    LIFE = Defines.Health or error(''),
-    REGEN = Defines.Regeneration or error(''),
-    MANA = Defines.Mana or error(''),
-    RECOV = Defines.Recovery or error(''),
-    MSPD = Defines.MoveSpeed or error(''),
-}
----@type table<number, Parameter>
-ParameterLibAPI.AllParameters = Defines.AllParameters or error('')
-
+---@type ParameterContainerClass
+ParameterLibAPI.Container = require(path..'Container') or error('')
 ---@type ParameterContainerUnitClass
 ParameterLibAPI.UnitContainer = require(path..'Container.Unit') or error('')
 

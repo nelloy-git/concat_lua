@@ -13,11 +13,12 @@ local dealMagic = DamageLib.dealMagic or error('')
 local UtilsLib = lib_dep.Utils or error('')
 local Log = UtilsLib.Log or error('')
 
----@type ParameterDefines
-local Defines = require(lib_path..'Defines') or error('')
----@type ParameterContainerUnit
+---@type ParameterTypeModule
+local ParameterTypeModule = require(lib_path..'Type') or error('')
+local ParameterType = ParameterTypeModule.Enum or error('')
+---@type ParameterContainerUnitClass
 local ParamUnit = require(lib_path..'Container.Unit') or error('')
----@type DamageSettings
+---@type ParameterSettings
 local Settings = require(lib_path..'Settings') or error('')
 
 --========
@@ -38,7 +39,7 @@ local function damageAction(dmg, dmg_type, target, src)
 
     -- Add magic damage to attacks
     if dmg_type == DamageLib.Atk then
-        local m_atk = p_src:getResult(Defines.MagicalDamage)
+        local m_atk = p_src:getResult(ParameterType.MATK)
         local m_dmg = m_atk * (1 + Settings.MAtkDispersion * (math.random() - 0.5))
         dealMagic(m_dmg, target, src)
     end
@@ -46,11 +47,11 @@ local function damageAction(dmg, dmg_type, target, src)
     local reduc = 0
     local def = 0
     if dmg_type == DamageLib.Atk or dmg_type == DamageLib.Phys then
-        reduc = p_targ:getResult(Defines.PhysicalDamageReduction)
-        def = p_targ:getResult(Defines.Defence)
+        reduc = p_targ:getResult(ParameterType.PRES)
+        def = p_targ:getResult(ParameterType.PDEF)
     elseif dmg_type == DamageLib.Magic then
-        reduc = p_targ:getResult(Defines.MagicalDamageReduction)
-        def = p_targ:getResult(Defines.Resistance)
+        reduc = p_targ:getResult(ParameterType.MRES)
+        def = p_targ:getResult(ParameterType.MDEF)
     end
     dmg = dmg * (1 - reduc) - def
 
@@ -58,8 +59,8 @@ local function damageAction(dmg, dmg_type, target, src)
     return dmg
 end
 addDamageAction(DamageLib.Atk, Settings.DamageEventPriority, damageAction)
-addDamageAction(DamageLib.Magic, Settings.DamageEventPriority, damageAction)
 addDamageAction(DamageLib.Phys, Settings.DamageEventPriority, damageAction)
+addDamageAction(DamageLib.Magic, Settings.DamageEventPriority, damageAction)
 addDamageAction(DamageLib.Chaos, Settings.DamageEventPriority, damageAction)
 
 return ParameterDamageEvent

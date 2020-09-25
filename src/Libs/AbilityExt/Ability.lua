@@ -12,6 +12,7 @@ local Timer = HandleLib.Timer or error('')
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityExtControllerClass
@@ -44,10 +45,10 @@ local AbilityExt = Class.new('AbilityExt', AbilityExtController, AbilityExtDummy
 ---@field setIcon fun(self:AbilityExt, icon:string)
 ---@field setManaCost fun(self:AbilityExt, mana_cost:number)
 ---@field getManaCost fun(self:AbilityExt):number
+---@field destroy fun(self:AbilityExt)
 ---@blocked setCooldownRemaining fun(self:AbilityExt, cooldown:number)
 ---@blocked getCooldownRemaining fun(self:AbilityExt):number
 ---@blocked setCooldown fun(self:AbilityExt, cooldown:number)
----@field destroy fun(self:AbilityExt)
 ---@blocked setEffectAction fun(self:AbilityExt, callback:AbilityExtDummyCallback)
 local public = AbilityExt.public
 ---@class AbilityExtClass : AbilityExtControllerClass, AbilityExtDummy
@@ -80,6 +81,8 @@ function override.new(owner, abil_type, hotkey, child)
     return instance
 end
 
+
+
 --========
 -- Public
 --========
@@ -99,8 +102,10 @@ function public:use(unit, x, y)
     if not started then
         local owner = self:getOwner()
         private.chargesChanged(self)
-        Timer.new():start(0, false, function()
+        local t = Timer.new()
+        t:start(0, false, function()
             owner:setMana(owner:getMana() + self:getManaCost())
+            t:destroy()
         end)
         return false
     end
@@ -109,8 +114,10 @@ function public:use(unit, x, y)
     if not started then
         local owner = self:getOwner()
         private.chargesChanged(self)
-        Timer.new():start(0, false, function()
+        local t = Timer.new()
+        t:start(0, false, function()
             owner:setMana(owner:getMana() + self:getManaCost())
+            t:destroy()
         end)
         return false
     end
@@ -207,8 +214,6 @@ end
 
 ---@param self AbilityExt
 function private.dummyEffect(self)
-    local priv = private.data[self]
-
     local unit = Unit.getLinked(GetSpellTargetUnit())
     local x = GetSpellTargetX()
     local y = GetSpellTargetY()

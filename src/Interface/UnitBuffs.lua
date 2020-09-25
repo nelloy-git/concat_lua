@@ -4,6 +4,9 @@
 
 local Class = require(LibList.ClassLib) or error('')
 
+---@type BuffLib
+local BuffLib = require(LibList.BuffLib) or error('')
+local BuffContainer = BuffLib.Container
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
 local Button = FrameLib.Normal.Button
@@ -63,6 +66,8 @@ end
 
 ---@param container BuffContainer | nil
 function public:setBuffContainer(container)
+    if container then isTypeErr(container, BuffContainer, 'container') end
+
     local priv = private.data[self]
 
     local previous = priv.container

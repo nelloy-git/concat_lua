@@ -11,10 +11,6 @@ local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
----@type ParameterLib
-local ParameterLib = require(LibList.ParameterLib) or error('')
-local UnitParam = ParameterLib.UnitContainer or error('')
-local Param = ParameterLib.Enum or error('')
 
 ---@type BuffType
 local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')

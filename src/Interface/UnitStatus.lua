@@ -18,8 +18,8 @@ local Log = UtilsLib.Log or error('')
 local InterfaceUnitBars = require('Interface.UnitBars') or error('')
 ---@type InterfaceUnitBuffs
 local InterfaceUnitBuffs = require('Interface.UnitBuffs') or error('')
----@type InterfaceUnitParamsClass
-local InterfaceUnitParams = require('Interface.UnitParams') or error('')
+---@type InterfaceParamListClass
+local InterfaceParamList = require('Interface.ParamList') or error('')
 
 --=======
 -- Class
@@ -152,7 +152,7 @@ function private.newData(self)
         bars = InterfaceUnitBars.new(),
         border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
         buffs = InterfaceUnitBuffs.new(),
-        params = InterfaceUnitParams.new(),
+        params = InterfaceParamList.new(),
         portrait = FrameLib.Origin.Portrait,
     }
     private.data[self] = priv

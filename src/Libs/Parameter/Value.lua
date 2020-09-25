@@ -6,12 +6,12 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
----@type UtilsLib
-local UtilsLib = lib_dep.Utils or error('')
-local isTypeErr = UtilsLib.isTypeErr or error('')
 
----@type ParameterClass
-local Parameter = require(lib_path..'Parameter') or error('')
+---@type ParameterValueTypeModule
+local ValueTypeModule = require(lib_path..'ValueType') or error('')
+local getDefault = ValueTypeModule.getDefault or error('')
+local ValueType = ValueTypeModule.Enum or error('')
+local ValueRes = ValueTypeModule.getResult or error('')
 
 --=======
 -- Class
@@ -30,13 +30,10 @@ local private = {}
 -- Static
 --========
 
----@param param Parameter
 ---@return ParameterValue
-function override.new(param)
-    isTypeErr(param, Parameter, 'param')
-
+function override.new()
     local instance = Class.allocate(ParameterValue)
-    private.newData(instance, param)
+    private.newData(instance)
 
     return instance
 end
@@ -45,57 +42,21 @@ end
 -- Public
 --========
 
----@return Parameter
-function public:getParameter()
-    return private.data[self].param
-end
-
----@param value number
----@return number
-function public:addBase(value)
+---@param val_type ParameterValueType
+---@param val number
+function public:add(val_type, val)
     local priv = private.data[self]
-    priv.base = priv.base + value
-    priv.res = priv.base * priv.mult + priv.addit
-    priv.res = priv.res < priv.param:getMin() and priv.param:getMin() or priv.res
-    priv.res = priv.res > priv.param:getMax() and priv.param:getMax() or priv.res
+
+    priv.list[val_type] = priv.list[val_type] + val
+    priv.res = ValueRes(priv.list)
+
     return priv.res
 end
 
----@param value number
+---@param val_type ParameterValueType
 ---@return number
-function public:addMult(value)
-    local priv = private.data[self]
-    priv.mult = priv.mult + value
-    priv.res = priv.base * priv.mult + priv.addit
-    priv.res = priv.res < priv.param:getMin() and priv.param:getMin() or priv.res
-    priv.res = priv.res > priv.param:getMax() and priv.param:getMax() or priv.res
-    return priv.res
-end
-
----@param value number
----@return number
-function public:addAddit(value)
-    local priv = private.data[self]
-    priv.addit = priv.addit + value
-    priv.res = priv.base * priv.mult + priv.addit
-    priv.res = priv.res < priv.param:getMin() and priv.param:getMin() or priv.res
-    priv.res = priv.res > priv.param:getMax() and priv.param:getMax() or priv.res
-    return priv.res
-end
-
----@return number
-function public:getBase()
-    return private.data[self].base
-end
-
----@return number
-function public:getMult()
-    return private.data[self].mult
-end
-
----@return number
-function public:getAddit()
-    return private.data[self].addit
+function public:get(val_type)
+    return private.data[self].list[val_type]
 end
 
 ---@return number
@@ -110,16 +71,15 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self ParameterValue
----@param param Parameter
-function private.newData(self, param)
+function private.newData(self)
     local priv = {
-        param = param,
-        base = param:getDefault(),
-        mult = 1,
-        addit = 0,
-        res = param:getDefault(),
-        is_res_ready = true,
+        list = {},
+        res = 1,
     }
+
+    for _, val_type in pairs(ValueType) do
+        priv.list[val_type] = getDefault(val_type)
+    end
 
     private.data[self] = priv
 end

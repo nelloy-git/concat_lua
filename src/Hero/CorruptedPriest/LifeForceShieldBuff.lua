@@ -9,9 +9,9 @@ local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 local BuffLib = require(LibList.BuffLib) or error('')
 local BuffType = BuffLib.Type or error('')
 ---@type ParameterLib
-local ParameterLib = require(LibList.ParameterLib) or error('')
-local UnitParam = ParameterLib.UnitContainer or error('')
-local Param = ParameterLib.Enum or error('')
+local ParamLib = require(LibList.ParameterLib) or error('')
+local ParamUnit = ParamLib.UnitContainer or error('')
+local ParamType = ParamLib.ParamType or error('')
 
 --==========
 -- Settings
@@ -28,7 +28,7 @@ local stored_shield = {}
 
 ---@param buff Buff
 function LifeForceShieldBuff:onStart(buff)
-    local matk = UnitParam.get(buff:getSource()):getResult(Param.MDMG)
+    local matk = ParamUnit.get(buff:getSource()):getResult(ParamType.MATK)
     stored_shield[buff] = buff:getUserData() * (1 + BonusPerMAtk * matk)
     BuffLib.addShield(stored_shield[buff], buff:getTarget())
 end

@@ -14,20 +14,23 @@ local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
----@type ParameterValueListClass
-local ValueList = require(lib_path..'ValueList') or error('')
-local ValueListPublic = Class.getPublic(ValueList) or error('')
----@type ParameterDefines
-local Defines = require(lib_path..'Defines') or error('')
+---@type ParameterContainerClass
+local Container = require(lib_path..'Container') or error('')
+local ContainerPublic = Class.getPublic(Container) or error('')
+---@type ParameterSettings
+local Settings = require(lib_path..'Settings') or error('')
+---@type ParameterTypeModule
+local ParameterTypeModule = require(lib_path..'Type') or error('')
+local ParameterType = ParameterTypeModule.Enum or error('')
 
 --=======
 -- Class
 --=======
 
-local ParameterContainerUnit = Class.new('ParameterContainerUnit', ValueList)
----@class ParameterContainerUnit : ParameterValueList
+local ParameterContainerUnit = Class.new('ParameterContainerUnit', Container)
+---@class ParameterContainerUnit : ParameterContainer
 local public = ParameterContainerUnit.public
----@class ParameterContainerUnitClass : ParameterValueListClass
+---@class ParameterContainerUnitClass : ParameterContainerClass
 local static = ParameterContainerUnit.static
 ---@type ParameterContainerUnitClass
 local override = ParameterContainerUnit.override
@@ -50,7 +53,7 @@ function override.new(owner, child)
     end
 
     local instance = child or Class.allocate(ParameterContainerUnit)
-    instance = ValueList.new(instance)
+    instance = Container.new(instance)
     private.newData(instance, owner)
 
     return instance
@@ -66,36 +69,19 @@ end
 -- Public
 --========
 
----@param param Parameter
+---@param param ParameterType
+---@param val_type ParameterValueType
 ---@param value number
 ---@return number
-function public:addBase(param, value)
-    local res = ValueListPublic.addBase(self, param, value)
-    if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getData(), res)
-    end
-    return res
-end
+function public:addBase(param, val_type, value)
+    local res = ContainerPublic.add(self, param, val_type, value)
+    local priv = private.data[self]
 
----@param param Parameter
----@param value number
----@return number
-function public:addMult(param, value)
-    local res = ValueListPublic.addMult(self, param, value)
-    if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getData(), res)
+    local apply = private.apply[param]
+    if apply then
+        apply(priv.owner:getData(), res)
     end
-    return res
-end
 
----@param param Parameter
----@param value number
----@return number
-function public:addAddit(param, value)
-    local res = ValueListPublic.addAddit(self, param, value)
-    if Defines.ApplyToUnit[param] then
-        Defines.ApplyToUnit[param](private.data[self].owner:getData(), res)
-    end
     return res
 end
 
@@ -111,24 +97,50 @@ private.owner2container = setmetatable({}, {__mode = 'k'})
 function private.newData(self, owner)
     local priv = {
         owner = owner
-
     }
     private.data[self] = priv
     private.owner2container[owner] = self
-
-    for i = 1, #Defines.AllParameters do
-        self:addBase(Defines.AllParameters[i], 0)
-    end
 end
 
----@param self ParameterContainerUnit
----@param param Parameter
----@return number
-function private.getResult(self, param)
-    local res = self:getResult(param)
-    if res > param:getMax() then res = param:getMax() end
-    if res < param:getMin() then res = param:getMin() end
-    return res
-end
+private.apply = {
+    [ParameterType.PATK] = function(unit, value)
+        BlzSetUnitBaseDamage(unit, math.floor((1 - 0.5 * Settings.PAtkDispersion) * value), 0)
+        BlzSetUnitDiceNumber(unit, 1, 0)
+        BlzSetUnitDiceSides(unit, math.floor(Settings.PAtkDispersion * value + 1), 0)
+    end,
+
+    [ParameterType.PSPD] = function(unit, value)
+        BlzSetUnitAttackCooldown(unit, value, 0)
+    end,
+
+    [ParameterType.LIFE] = function(unit, value)
+        local percent_hp = GetUnitLifePercent(unit)
+        BlzSetUnitMaxHP(unit, math.floor(value))
+        SetUnitState(unit, UNIT_STATE_LIFE, GetUnitState(unit, UNIT_STATE_MAX_LIFE) * percent_hp * 0.01)
+    end,
+
+    [ParameterType.REGE] = function(unit, value)
+        BlzSetUnitRealField(unit, UNIT_RF_HIT_POINTS_REGENERATION_RATE, value)
+    end,
+
+    [ParameterType.MANA] = function(unit, value)
+        local percent_mana = GetUnitManaPercent(unit)
+        BlzSetUnitMaxMana(unit, math.floor(value))
+        SetUnitState(unit, UNIT_STATE_MANA, GetUnitState(unit, UNIT_STATE_MAX_MANA) * percent_mana * 0.01)
+    end,
+
+    [ParameterType.RECO] = function(unit, value)
+        BlzSetUnitRealField(unit, UNIT_RF_MANA_REGENERATION, value)
+    end,
+
+    [ParameterType.MOVE] = function(unit, value)
+        if value <= 1 then
+            SetUnitTurnSpeed(unit, 0)
+        else
+            SetUnitTurnSpeed(unit, GetUnitDefaultTurnSpeed(unit))
+        end
+        SetUnitMoveSpeed(unit, value)
+    end,
+}
 
 return static

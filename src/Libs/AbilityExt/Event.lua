@@ -17,6 +17,7 @@ local getEnum = UtilsLib.getEnum
 local Event = {}
 
 ---@alias AbilityExtEvent number
+---@table <string, AbilityExtEvent>
 Event.Enum = {
     ---@type AbilityExtEvent
     CASTING_START = getEnum(),

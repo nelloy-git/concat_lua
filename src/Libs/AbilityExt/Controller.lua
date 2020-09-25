@@ -8,7 +8,7 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
-local TimedObj = HandleLib.TimedObj
+local TimedObj = HandleLib.TimedObj or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local ActionList = UtilsLib.ActionList or error('')
@@ -18,7 +18,7 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 local AbilityExtCharges = require(lib_path..'Charges') or error('')
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
-local Event = AbilityExtEventModule.Enum
+local Event = AbilityExtEventModule.Enum or error('')
 
 --=======
 -- Class
@@ -190,9 +190,23 @@ end
 
 ---@param event AbilityExtEvent
 ---@param callback AbilityExtControllerCallback
+---@return Action
 function public:addAction(event, callback)
     local priv = private.data[self]
-    priv.actions[event]:add(callback)
+    return priv.actions[event]:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    local priv = private.data[self]
+
+    for event, list in pairs(priv.actions) do
+        if list:remove(action) then
+            return true
+        end
+    end
+    return false
 end
 
 --=========
