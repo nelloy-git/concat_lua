@@ -13,6 +13,7 @@ local Unit = HandleLib.Unit
 local BuffLib = require(LibList.BuffLib) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
+local Value = ParamLib.ValueType or error('')
 
 
 ---@type AbilityExtTypeClass
@@ -39,7 +40,7 @@ function CorruptedPriest.new(x, y, owner)
     -- Params
     local params = ParamLib.UnitContainer.new(unit)
     for param, value in pairs(Settings.Params) do
-        params:addBase(param, value)
+        params:add(param, Value.BASE, value)
     end
     
     -- Abils

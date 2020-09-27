@@ -237,11 +237,18 @@ function private.updateValues(self)
         local param = private.params_order[i]
 
         local val = priv.container:getResult(param)
-        local s_val = tostring(val)
+        local s_val
         if private.is_percent[param] then
-            s_val = s_val:sub(1, s_val:find('') + 2)..'%'
+            val = 100 * val - (100 * val) % 0.1
+            val = (val > -0.5 and val < 0) and 0 or val
+            s_val = tostring(val)
+            local last = s_val:find('%.') and s_val:find('%.') + 2 or s_val:len()
+            s_val = s_val:sub(1, last)..'%'
         else
-            s_val = s_val:sub(1, s_val:find('') + 1)
+            val = val - val % 1
+            val = (val < 0 and val > -1) and 0 or val
+            s_val = tostring(val)
+            s_val = s_val:sub(1, s_val:find('%.') or s_val:len())
         end
 
         priv.value[i]:setText(s_val)

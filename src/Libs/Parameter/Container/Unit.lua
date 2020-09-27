@@ -21,7 +21,11 @@ local ContainerPublic = Class.getPublic(Container) or error('')
 local Settings = require(lib_path..'Settings') or error('')
 ---@type ParameterTypeModule
 local ParameterTypeModule = require(lib_path..'Type') or error('')
+local isParameterType = ParameterTypeModule.isParameterType or error('')
 local ParameterType = ParameterTypeModule.Enum or error('')
+---@type ParameterValueTypeModule
+local ValueTypeModule = require(lib_path..'ValueType') or error('')
+local isValueType = ValueTypeModule.isValueType or error('')
 
 --=======
 -- Class
@@ -73,7 +77,10 @@ end
 ---@param val_type ParameterValueType
 ---@param value number
 ---@return number
-function public:addBase(param, val_type, value)
+function public:add(param, val_type, value)
+    if not isParameterType(param) then Log:err('variable \'param\' is not of type ParameterType.', 2) end
+    if not isValueType(val_type) then Log:err('variable \'val_type\' is not of type ValueType.', 2) end
+
     local res = ContainerPublic.add(self, param, val_type, value)
     local priv = private.data[self]
 
@@ -110,7 +117,7 @@ private.apply = {
     end,
 
     [ParameterType.PSPD] = function(unit, value)
-        BlzSetUnitAttackCooldown(unit, value, 0)
+        BlzSetUnitAttackCooldown(unit, 1 / value, 0)
     end,
 
     [ParameterType.LIFE] = function(unit, value)

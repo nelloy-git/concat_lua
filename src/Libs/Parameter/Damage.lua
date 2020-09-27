@@ -32,7 +32,7 @@ local ParameterDamageEvent = {}
 local function damageAction(dmg, dmg_type, target, src)
     local p_targ = ParamUnit.get(target)
     local p_src = ParamUnit.get(src)
-    if not p_targ or not p_targ then
+    if not p_targ or not p_src then
         Log:wrn('Target or damager does not have linked '..tostring(ParamUnit)..' class.')
         return dmg
     end

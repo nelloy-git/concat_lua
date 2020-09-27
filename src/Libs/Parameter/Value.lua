@@ -6,10 +6,14 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
+---@type UtilsLib
+local UtilsLib = lib_dep.Utils or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type ParameterValueTypeModule
 local ValueTypeModule = require(lib_path..'ValueType') or error('')
 local getDefault = ValueTypeModule.getDefault or error('')
+local isValueType = ValueTypeModule.isValueType or error('')
 local ValueType = ValueTypeModule.Enum or error('')
 local ValueRes = ValueTypeModule.getResult or error('')
 
@@ -45,6 +49,7 @@ end
 ---@param val_type ParameterValueType
 ---@param val number
 function public:add(val_type, val)
+    if not isValueType(val_type) then Log:err('variable \'val_type\' is not of type ValueType.', 2) end
     local priv = private.data[self]
 
     priv.list[val_type] = priv.list[val_type] + val
@@ -56,6 +61,7 @@ end
 ---@param val_type ParameterValueType
 ---@return number
 function public:get(val_type)
+    if not isValueType(val_type) then Log:err('variable \'val_type\' is not of type ValueType.', 2) end
     return private.data[self].list[val_type]
 end
 

@@ -49,21 +49,33 @@ ParameterType.Enum = {
     MOVE = getEnum(),
 }
 
+---@param var any
+---@return boolean
+function ParameterType.isParameterType(var)
+    for k, v in pairs(ParameterType.Enum) do
+        if var == v then
+            return true
+        end
+    end
+    return false
+end
+
+local def_min = 10^-10
 local min_values = {
-    [ParameterType.Enum.PATK] = 0,
-    [ParameterType.Enum.PSPD] = 0,
-    [ParameterType.Enum.PDEF] = 0,
-    [ParameterType.Enum.PRES] = -1,
-    [ParameterType.Enum.MATK] = 0,
-    [ParameterType.Enum.MSPD] = 0,
-    [ParameterType.Enum.MDEF] = 0,
-    [ParameterType.Enum.MRES] = -1,
-    [ParameterType.Enum.CRIT] = 0,
+    [ParameterType.Enum.PATK] = def_min,
+    [ParameterType.Enum.PSPD] = def_min,
+    [ParameterType.Enum.PDEF] = def_min,
+    [ParameterType.Enum.PRES] = def_min,
+    [ParameterType.Enum.MATK] = def_min,
+    [ParameterType.Enum.MSPD] = def_min,
+    [ParameterType.Enum.MDEF] = def_min,
+    [ParameterType.Enum.MRES] = def_min,
+    [ParameterType.Enum.CRIT] = def_min,
     [ParameterType.Enum.LIFE] = 10,
-    [ParameterType.Enum.REGE] = 0,
+    [ParameterType.Enum.REGE] = def_min,
     [ParameterType.Enum.MANA] = 10,
-    [ParameterType.Enum.RECO] = 0,
-    [ParameterType.Enum.MOVE] = 0,
+    [ParameterType.Enum.RECO] = def_min,
+    [ParameterType.Enum.MOVE] = def_min,
 }
 
 ---@param param ParameterType

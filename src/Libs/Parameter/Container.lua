@@ -10,12 +10,17 @@ local Class = lib_dep.Class or error('')
 local UtilsLib = lib_dep.Utils or error('')
 local ActionList = UtilsLib.ActionList or error()
 local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type ParameterTypeModule
 local ParameterTypeModule = require(lib_path..'Type') or error('')
+local isParameterType = ParameterTypeModule.isParameterType or error('')
 local ParameterType = ParameterTypeModule.Enum or error('')
 ---@type ParameterValueClass
 local Value = require(lib_path..'Value') or error('')
+---@type ParameterValueTypeModule
+local ValueTypeModule = require(lib_path..'ValueType') or error('')
+local isValueType = ValueTypeModule.isValueType or error('')
 
 --=======
 -- Class
@@ -53,6 +58,8 @@ end
 ---@param val number
 ---@return number
 function public:add(param, val_type, val)
+    if not isParameterType(param) then Log:err('variable \'param\' is not of type ParameterType.', 2) end
+    if not isValueType(val_type) then Log:err('variable \'val_type\' is not of type ValueType.', 2) end
     local priv = private.data[self]
 
     local res = priv.values[param]:add(val_type, val)
@@ -71,12 +78,15 @@ end
 ---@param val_type ParameterValueType
 ---@return number
 function public:get(param, val_type)
+    if not isParameterType(param) then Log:err('variable \'param\' is not of type ParameterType.', 2) end
+    if not isValueType(val_type) then Log:err('variable \'val_type\' is not of type ValueType.', 2) end
     return private.data[self].values[param]:get(val_type)
 end
 
 ---@param param ParameterType
 ---@return number
 function public:getResult(param)
+    if not isParameterType(param) then Log:err('variable \'param\' is not of type ParameterType.', 2) end
     local priv = private.data[self]
 
     local res = priv.values[param]:getResult()

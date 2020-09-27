@@ -104,6 +104,9 @@ InterfaceSelection.addAction(function(group)
 
         local buffs = BuffLib.Container.get(selected)
         Interface.UnitStatus:setBuffContainer(buffs)
+
+        local params = ParamLib.UnitContainer.get(selected)
+        Interface.UnitStatus:setParameters(params)
     else
         selected = nil
 
@@ -119,10 +122,6 @@ stats_time:start(0.05, true, function()
             Interface.UnitStatus:setShield(BuffLib.getShield(selected), BuffLib.getMaxShield(selected))
             Interface.UnitStatus:setHealth(selected:getHealth(), selected:getMaxHealth())
             Interface.UnitStatus:setMana(selected:getMana(), selected:getMaxMana())
-
-            local params = ParamUnitContainer.get(selected)
-            if not params then Log:err('Can not find linked ParameterContainerUnit') end
-            Interface.UnitStatus:setParameters(params)
         else
             Interface.UnitStatus:setVisible(false)
         end

@@ -212,6 +212,18 @@ function public:setModelFile(model)
     self:setValue(db.value_id, db.value_type, model)
 end
 
+---@param size number
+function public:setModelSize(size)
+    local db = UnitDB.ModelScale
+    self:setValue(db.value_id, db.value_type, size)
+end
+
+---@param speed number
+function public:setMoveSpeed(speed)
+    local db = UnitDB.MovementSpeedBase
+    self:setValue(db.value_id, db.value_type, speed)
+end
+
 ------------
 -- Sounds --
 ------------

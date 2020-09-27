@@ -133,15 +133,15 @@ function private.updatePos(self)
     local w = self:getWidth()
     local h = self:getHeight()
     
-    self:setFont(private.font, 0.5 * h)
+    self:setFont(private.font, 0.8 * h)
 
     priv.hp_bar:setPos(x, y + h)
     priv.hp_bar:setSize(w, h)
-    priv.hp_bar:setFont(private.font, 0.5 * h)
+    priv.hp_bar:setFont(private.font, 0.8 * h)
 
     priv.mp_bar:setPos(x, y + 2 * h)
     priv.mp_bar:setSize(w, h)
-    priv.mp_bar:setFont(private.font, 0.5 * h)
+    priv.mp_bar:setFont(private.font, 0.8 * h)
 end
 
 ---@param elem FrameSimpleStatusBar

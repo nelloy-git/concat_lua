@@ -271,6 +271,6 @@ private.fdf_text = FdfText.new('FrameNormalTooltipText')
 private.fdf_text:setWidth(0.04)
 private.fdf_text:setHeight(0.04)
 private.fdf_text:setFont('fonts\\nim_____.ttf', 0.010)
-private.fdf_text:setJustification('JUSTIFYLEFT', 'JUSTIFYMIDDLE')
+private.fdf_text:setJustification('JUSTIFYCENTER', 'JUSTIFYMIDDLE')
 
 return static

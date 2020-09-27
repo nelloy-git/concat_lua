@@ -221,7 +221,7 @@ function private.updateTooltip(self)
         local time = buff:getTimeLeft()
         time = time - time % 0.1
         local s_time = tostring(time)
-        s_time = s_time:sub(1, s_time:find('.') + 2)
+        s_time = s_time:sub(1, s_time:find('%.') + 1)
         tooltip:setRightText(s_time)
 
         -- Position

@@ -86,7 +86,7 @@ function public:setSize(w, h)
     local priv = private.data[self]
     FramePublic.setSize(self, w, h)
 
-    priv.bars:setSize(w - h, h / 4)
+    priv.bars:setSize(w - h, h / 6)
     priv.border:setSize(h, h)
     priv.params:setSize(h, 2 * h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
@@ -130,9 +130,9 @@ function public:setMana(cur, max)
     priv.bars:setMana(cur, max)
 end
 
----@param params ParameterValueList
+---@param params ParameterContainer
 function public:setParameters(params)
-    private.data[self].params:setAllValues(params)
+    private.data[self].params:setParamsContainer(params)
 end
 
 ---@param buffs BuffContainer

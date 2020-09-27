@@ -1,6 +1,7 @@
 ---@class BuffLib
 local BuffLibAPI = {}
 Lib.start('Buff', {
+    Binary = Lib.load(LibList.BinaryLib) or error(''),
     Class = Lib.load(LibList.ClassLib) or error(''),
     Damage = Lib.load(LibList.DamageLib) or error(''),
     Handle = Lib.load(LibList.HandleLib) or error(''),

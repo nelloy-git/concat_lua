@@ -26,6 +26,17 @@ ValueType.Enum = {
     ADDIT = getEnum(),
 }
 
+---@param var any
+---@return boolean
+function ValueType.isValueType(var)
+    for k, v in pairs(ValueType.Enum) do
+        if var == v then
+            return true
+        end
+    end
+    return false
+end
+
 ---@param list table<ParameterValueType, number>
 ---@return number
 function ValueType.getResult(list)

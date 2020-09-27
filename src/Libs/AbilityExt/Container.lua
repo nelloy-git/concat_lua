@@ -74,15 +74,19 @@ function public:set(hotkey, abil_type)
     local priv = private.data[self]
 
     local prev = priv.abil_data_list[hotkey]
-    private.abil2container[prev] = nil
-    if prev then prev:destroy() end
-
-    local abil = AbilityExt.new(priv.owner, abil_type, hotkey)
-    for _, event in pairs(Event) do
-        abil:addAction(event, private.runAbilityAction)
+    if prev then
+        private.abil2container[prev] = nil
+        prev:destroy()
     end
 
-    private.abil2container[abil] = self
+    local abil = nil
+    if abil_type then
+        abil = AbilityExt.new(priv.owner, abil_type, hotkey)
+        for _, event in pairs(Event) do
+            abil:addAction(event, private.runAbilityAction)
+        end
+        private.abil2container[abil] = self
+    end
     priv.abil_data_list[hotkey] = abil
 end
 

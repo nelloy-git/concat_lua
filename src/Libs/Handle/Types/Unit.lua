@@ -8,6 +8,7 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
+local id2int = UtilsLib.id2int or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
@@ -140,6 +141,30 @@ function public:isAlly(other_unit)
     return IsUnitAlly(self:getData(), private.data[other_unit].owner)
 end
 
+--- [0,1]
+---@param r number
+---@param g number
+---@param b number
+---@param a number
+function public:setColor(r, g, b, a)
+    r = r < 0 and 0 or r > 1 and 1 or r
+    g = g < 0 and 0 or g > 1 and 1 or g
+    b = b < 0 and 0 or b > 1 and 1 or b
+    a = a < 0 and 0 or a > 1 and 1 or a
+
+    print(a)
+    SetUnitVertexColor(self:getData(),
+                       math.floor(250 * r),
+                       math.floor(250 * g),
+                       math.floor(250 * b),
+                       math.floor(250 * a))
+end
+
+---@param index number
+function public:setAnimation(index)
+    SetUnitAnimationByIndex(self:getData(), index)
+end
+
 --=========
 -- Private
 --=========
@@ -152,6 +177,9 @@ function private.newData(self, owner)
         owner = owner
     }
     private.data[self] = priv
+
+    UnitAddAbility(self:getData(), id2int('Arav'))
+    UnitRemoveAbility(self:getData(), id2int('Arav'))
 end
 
 return static

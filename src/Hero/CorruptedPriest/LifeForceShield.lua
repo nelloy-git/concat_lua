@@ -11,6 +11,10 @@ local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
+---@type ParameterLib
+local ParamLib = require(LibList.ParameterLib) or error('')
+local ParamUnit = ParamLib.UnitContainer or error('')
+local ParamType = ParamLib.ParamType or error('')
 
 ---@type BuffType
 local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')
@@ -22,6 +26,9 @@ local Utils = require('Hero.Utils') or error('')
 --==========
 
 local DrainLifePerSec = 0.05
+local BonusPerMAtk = 0.01
+
+local BonusColor = '|cFF3030A0'
 
 --========
 -- Module
@@ -39,7 +46,17 @@ function LifeForceShield:getIcon(owner) return Icon end
 
 ---@param owner Unit
 ---@return string
-function LifeForceShield:getTooltip(owner) return 'Tooltip' end
+function LifeForceShield:getTooltip(owner)
+    local percent = 100 * DrainLifePerSec
+    percent = percent - percent % 1
+
+    local bonus = 100 * BonusPerMAtk * ParamUnit.get(owner):getResult(ParamType.MATK)
+    bonus = bonus - bonus % 1 + 1
+
+    return 'Consumes '..tostring(percent)..'% of target ally unit per second.'..
+           'At the end of the cast gives shield to the target for '..
+           'drained life increased by '..BonusColor..tostring(bonus)..'%|r'
+end
 
 ---@param owner Unit
 ---@return number
@@ -80,7 +97,8 @@ local function onEnd(abil)
     local target = abil:getTargetUnit()
 
     local buffs = UnitBuffs.get(target)
-    buffs:add(BuffEffect, owner, 10, drained_life[owner])
+    local matk = ParamUnit.get(owner):getResult(ParamType.MATK)
+    buffs:add(BuffEffect, owner, 10, drained_life[owner] * (1 + BonusPerMAtk * matk))
     drained_life[owner] = nil
 end
 
