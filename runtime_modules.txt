@@ -20,6 +20,7 @@ src/Libs/Utils/Functions.lua
 src/Libs/Utils/Settings.lua
 src/Libs/Utils/Logger.lua
 src/Libs/Utils/ActionList.lua
+src/Libs/Utils/ImportFile.lua
 src/Libs/Utils/StringCommand.lua
 src/Libs/Asset/Loader.lua
 src/Libs/Types/API.lua
@@ -71,6 +72,7 @@ src/Libs/Buff/Container.lua
 src/Libs/Buff/Buff.lua
 src/Libs/Buff/Type.lua
 src/Libs/Buff/Effects/Shield.lua
+src/Libs/Buff/Effects/ShieldBar.lua
 src/Libs/Buff/Settings.lua
 src/Libs/Frame/API.lua
 src/Libs/Frame/Screen.lua
@@ -104,7 +106,8 @@ src/Libs/Frame/Origin/Tooltip.lua
 src/Interface/Init.lua
 src/Interface/Minimap.lua
 src/Interface/Selection.lua
-src/Interface/SpellButtons.lua
+src/Interface/SkillPanel.lua
+src/Interface/SkillButton.lua
 src/Interface/UnitStatus.lua
 src/Interface/UnitBars.lua
 src/Interface/UnitBuffs.lua

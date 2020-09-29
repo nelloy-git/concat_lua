@@ -2,6 +2,8 @@
 -- Include
 --=========
 
+---@type AbilityLib
+local AbilLib = require(LibList.AbilityExtLib) or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 ---@type FrameLib
@@ -21,8 +23,8 @@ local Log = UtilsLib.Log or error('')
 local InterfaceMinimap = require('Interface.Minimap') or error('')
 ---@type InterfaceSelection
 local InterfaceSelection = require('Interface.Selection') or error('')
----@type InterfaceSpellButtonsClass
-local InterfaceSpellButtons = require('Interface.SpellButtons') or error('')
+---@type InterfaceSkillPanelClass
+local InterfaceSkillPanel = require('Interface.SkillPanel') or error('')
 ---@type InterfaceUnitStatusClass
 local InterfaceUnitStatus = require('Interface.UnitStatus') or error('')
 
@@ -132,12 +134,28 @@ end)
 -- Skill buttons --
 -------------------
 
-Interface.SkillsButtons = InterfaceSpellButtons.new()
-Interface.SkillsButtons:setPos(0.5, 0)
+Interface.SkillsPanel = InterfaceSkillPanel.new()
+Interface.SkillsPanel:setPos(0.5, 0)
+
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
-    Interface.SkillsButtons:setPos(x0 + (w - Interface.SkillsButtons:getWidth()) / 2,
-                                   y0 + h - Interface.SkillsButtons:getHeight())
+    Interface.SkillsPanel:setPos(x0 + (w - Interface.SkillsPanel:getWidth()) / 2,
+                                   y0 + h - Interface.SkillsPanel:getHeight())
 end)
+
+InterfaceSelection.addAction(function(group)
+    if #group == 1 then
+        local target = Unit.getLinked(group[1])
+        if not target then Log:err('Can not find linked Unit') end
+        selected = target
+
+        local abils = AbilLib.Container.get(selected)
+        Interface.SkillsPanel:setAbilContainer(abils)
+    else
+        selected = nil
+    end
+end)
+
+
 
 --------------------------
 -- Damage Floating Text --

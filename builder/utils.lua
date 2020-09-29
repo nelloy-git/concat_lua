@@ -3,6 +3,20 @@ local Utils = {}
 
 local sep = package.config:sub(1,1)
 
+---@param inputstr string
+---@param sep string
+---@return table
+local function split (inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
 ---@param full_path string
 ---@return string
 local function removeFilename(full_path)

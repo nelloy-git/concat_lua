@@ -5,10 +5,9 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
+local Class = lib_dep.Class
 ---@type ChatCmd
 local ChatCmd = require(lib_path..'.ChatCmd')
----@type ClassLib
-local Class = lib_dep.Class
 ---@type UtilsFunctions
 local Functions = require(lib_path..'Functions')
 local pairsByKeys = Functions.pairsByKeys

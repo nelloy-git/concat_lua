@@ -1,4 +1,5 @@
 -- https://www.hiveworkshop.com/threads/genericbar.277605/#resource-37792
+-- https://www.hiveworkshop.com/threads/hero-glow.326680/#resource-91186
 
 --=========
 -- Include
@@ -18,6 +19,7 @@ local Timer = HandleLib.Timer or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local id2int = UtilsLib.id2int or error('')
+local ImportFile = UtilsLib.ImportFile or error('')
 
 --=======
 -- Class
@@ -78,15 +80,19 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
-private.base_id = id2int('hfoo')
+private.base_id = id2int('Hpal')
 private.id = BinaryLib.getUnitId()
 
 private.unit_type = BinaryUnit.new(private.id, private.base_id, 'Shield Bar')
 private.unit_type:setModelFile('war3mapImported\\Model\\GenericBar.mdx')
 private.unit_type:setModelSize(0.85)
-private.unit_type:setNormalAbilities({'Aloc'})
+private.unit_type:setNormalAbilities({'Aloc', 'Abun'})
 private.unit_type:setMoveSpeed(1)
-private.unit_type:setAttackTargetsAllowed(1, {})
+
+-- Disable hero glow. In reforged glow makes bar be transparent.
+local sep = Compiletime(package.config:sub(1,1))
+ImportFile.load(lib_path:gsub('%.', sep)..'Effects'..sep..'glow'..sep..'heroglow_bw.dds',
+                'textures'..sep..'fx'..sep..'flare'..sep..'heroglow_bw.dds')
 
 ---@param self ShieldBar
 ---@param target Unit
@@ -96,7 +102,7 @@ function private.newData(self, target)
     }
     private.data[self] = priv
 
-    self:setColor(0.3, 0.9, 0.9, 0.5)
+    self:setColor(0.3, 0.9, 0.9, 1)
 end
 
 if not IsCompiletime() then

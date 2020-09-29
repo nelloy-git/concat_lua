@@ -91,11 +91,11 @@ function public:save()
 
     local priv = private.data[self]
 
-    local log_msg = 'Created new FdfFile \''..priv.name..'\' containing:\n'
+    local log_msg = 'Created new FdfFile \''..priv.name..'\' containing: '
     local text = ''
     local sort_func = function(k1, k2) return k1:getName() < k2:getName() end
     for frame, _ in pairsByKeys(priv.frames, sort_func) do
-        log_msg = log_msg..'    '..frame:getName()..'\n'
+        log_msg = log_msg..''..frame:getName()..', '
         text = text..frame:serialize()..'\n'
     end
 

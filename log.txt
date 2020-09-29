@@ -1,16 +1,1 @@
-[0.489] {Msg} Created new FdfFile 'GeneratedFile' containing:
-    FrameNormalButton
-    FrameNormalImage
-    FrameNormalTextDefault
-    FrameNormalTooltip
-    FrameNormalTooltipIcon
-    FrameNormalTooltipName
-    FrameNormalTooltipText
-    FrameSimpleImage
-    FrameSimpleStatusBar
-    FrameSimpleText
-    InterfaceMinimapBorder
-    InterfacePortrait
-    InterfacePortraitBorder
-    InterfaceSpellButtonBorder
-    InterfaceUnitParametersBackground
+[0.030] {Msg} Created new FdfFile 'GeneratedFile' containing: FrameNormalButton, FrameNormalImage, FrameNormalTextDefault, FrameNormalTooltip, FrameNormalTooltipIcon, FrameNormalTooltipName, FrameNormalTooltipText, FrameSimpleImage, FrameSimpleStatusBar, FrameSimpleText, InterfaceMinimapBorder, InterfacePortrait, InterfacePortraitBorder, InterfaceSkillButtonBorder, InterfaceUnitParametersBackground, 

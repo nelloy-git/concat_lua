@@ -78,6 +78,10 @@ function LifeForceShield:getCastingTime(owner) return 4 end
 ---@return number
 function LifeForceShield:getChargeCooldown(owner) return 10 end
 
+---@param owner Unit
+---@return number
+function LifeForceShield:getMaxCharges(owner) return 5 end
+
 ---@param abil AbilityExt
 local function onCasting(abil)
     local owner = abil:getOwner()

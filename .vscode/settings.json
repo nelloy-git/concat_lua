@@ -3,14 +3,13 @@
         ".vscode",
         "dst",
         "builder",
-        "src/compiletime",
-        "src/Libs/Lib.lua"
+        "src/compiletime"
     ],
     "Lua.workspace.library": {
         "./lib": true,
         //"./src": true
     },
-    "Lua.workspace.preloadFileSize": 6000,
+    "Lua.workspace.preloadFileSize": 10000,
     "Lua.diagnostics.globals": [
         "Compiletime",
         "IsCompiletime",
@@ -18,11 +17,24 @@
         "GetDstDir",
         "CompileFinal",
         "CompiletimeFinalToRuntime",
-        "Lib"
+        "Lib",
+        "LibList"
     ],
     "files.associations": {
         "chrono": "cpp"
     },
-    "Lua.awakened.cat": true,
     "cmake.configureOnOpen": false,
+    "files.autoSave": "afterDelay",
+    "Lua.completion.callSnippet": "Both",
+    "Lua.diagnostics.severity": {
+        "redefined-local": "Warning",
+        "newfield-call": "Warning"
+    },
+    "Lua.workspace.maxPreload": 1000,
+    "Lua.runtime.path": [
+        "?.lua",
+        "?/init.lua",
+        "?/?.lua",
+        "./src/?"
+    ],
 }

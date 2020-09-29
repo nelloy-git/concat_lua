@@ -57,15 +57,27 @@ end
 
 ---@return any
 function public:run(...)
+    local callback = private.data[self].callback
+
     if Settings.isDebug() then
-        local success, result = pcall(private.data[self].callback, ...)
+        private.pcall_level = private.pcall_level + 1
+
+        local success, result
+        if private.pcall_level == 1 then
+            success, result = pcall(callback, ...)
+        else
+            success = true
+            result = callback(...)
+        end
+
+        private.pcall_level = private.pcall_level - 1
         if success then
             return result
         else
             Log:err(result)
         end
     else
-        return private.data[self].callback(...)
+        return callback(...)
     end
 end
 
@@ -80,6 +92,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 private.callback2list = setmetatable({}, {__mode = 'v'})
+private.pcall_level = 0
 
 ---@param self Action
 ---@param callback Callback

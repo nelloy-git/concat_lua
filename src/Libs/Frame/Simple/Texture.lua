@@ -56,10 +56,13 @@ end
 --========
 
 ---@param tex_file string
----@param flag number
----@param blend boolean
+---@param flag number | nil
+---@param blend boolean | nil
 function public:setTexture(tex_file, flag, blend)
-    BlzFrameSetTexture(self:getData(), tex_file, flag, blend)
+    isTypeErr(tex_file, 'string', 'tex_file')
+    if flag then isTypeErr(flag, 'number', 'flag') end
+    if blend then isTypeErr(blend, 'boolean', 'blend') end
+    BlzFrameSetTexture(self:getData(), tex_file, flag or 0, blend or true)
 end
 
 --=========
