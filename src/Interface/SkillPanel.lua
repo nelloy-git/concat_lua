@@ -104,6 +104,11 @@ function public:setAbilContainer(container)
         local action = container:addAction(AbilEvent.CHARGES_CHANGED, private.chargedChanged)
         priv.changed_action = action
     end
+
+    for i = 1, #private.hotkeys do
+        local abil = container:get(private.hotkeys[i])
+        priv.buttons[i]:setCharges(abil:getCharges(), abil:getMaxCharges())
+    end
 end
 
 --=========
@@ -138,7 +143,7 @@ function private.newData(self)
     priv.tooltip:setVisible(true)
 end
 
-local hotkeys = {
+private.hotkeys = {
     'Q', 'W', 'E', 'R', 'T', 'D', 'F'
 }
 
@@ -149,8 +154,8 @@ function private.chargedChanged(container, abil, event)
     ---@type InterfaceSkillPanel
     local self = private.container2interface[container]
 
-    for i = 1, #hotkeys do
-        if container:get(hotkeys[i]) == abil then
+    for i = 1, #private.hotkeys do
+        if container:get(private.hotkeys[i]) == abil then
             private.data[self].buttons[i]:setCharges(abil:getCharges(), abil:getMaxCharges())
             break
         end

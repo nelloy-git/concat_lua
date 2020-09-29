@@ -6,8 +6,8 @@ local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
 local OriginSkillBtn = FrameLib.Origin.SkillButton or error('')
-local SimpleImage = FrameLib.Simple.Image or error('')
-local SimpleText = FrameLib.Simple.Text or error('')
+local NormalImage = FrameLib.Normal.Image or error('')
+local NormalText = FrameLib.Normal.Text or error('')
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
 local Frame = HandleLib.Frame or error('')
@@ -65,11 +65,11 @@ function public:setPos(x, y)
     FramePublic.setPos(self, x, y)
     local priv = private.data[self]
 
-    local x0 = 0.1 * priv.origin:getWidth()
-    local y0 = 0.1 * priv.origin:getHeight()
+    local x0 = self:getAbsX() + 0.1 * priv.origin:getWidth()
+    local y0 = self:getAbsY()--self:getAbsY() + 0.1 * priv.origin:getHeight()
 
-    priv.charges_back:setPos(x0, y0)
-    priv.charges_text:setPos(x0, y0)
+    priv.charges_back:setPos(x0, y0 - priv.charges_back:getHeight())
+    priv.charges_text:setPos(x0, y0 - priv.charges_text:getHeight())
 end
 
 ---@param width number
@@ -82,7 +82,7 @@ end
 function public:setCharges(count, max_count)
     local priv = private.data[self]
 
-    if max_count > 1 then
+    if max_count <= 1 then
         priv.charges_back:setVisible(false)
         priv.charges_text:setVisible(false)
     else
@@ -105,15 +105,15 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self, origin_id)
     local priv = {
         origin = OriginSkillBtn[origin_id],
-        charges_back = SimpleImage.new(),
-        charges_text = SimpleText.new(),
+        charges_back = NormalImage.new(),
+        charges_text = NormalText.new(),
     }
     private.data[self] = priv
 
     local w = 1.2 * priv.origin:getWidth()
     local h = 1.2 * priv.origin:getHeight()
-    local x0 = 0.1 * priv.origin:getWidth()
-    local y0 = 0.1 * priv.origin:getHeight()
+    local x0 = self:getAbsX() + 0.1 * priv.origin:getWidth()
+    local y0 = self:getAbsY() + 0.1 * priv.origin:getHeight()
 
     FramePublic.setSize(self, w, h)
 
@@ -121,14 +121,16 @@ function private.newData(self, origin_id)
     priv.origin:setPos(x0, y0)
 
     priv.charges_back:setPos(x0, y0)
-    priv.charges_back:setSize(priv.origin:getWidth() / 3, priv.origin:getHeight() / 6)
+    priv.charges_back:setSize(priv.origin:getWidth() / 3, priv.origin:getHeight() / 4)
     priv.charges_back:setVisible(false)
     priv.charges_back:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
 
     priv.charges_text:setPos(x0, y0)
-    priv.charges_text:setSize(priv.origin:getWidth() / 3, priv.origin:getHeight() / 6)
+    priv.charges_text:setSize(priv.origin:getWidth() / 3, priv.origin:getHeight() / 4)
     priv.charges_text:setVisible(false)
-    priv.charges_text:setFont('fonts\\nim_____.ttf', 0.9 * priv.charges_text:getHeight(), 0)
+
+    --BlzCrea
+    --priv.charges_text:setFont('fonts\\nim_____.ttf', 0.9 * priv.charges_text:getHeight(), 0)
 end
 
 private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceSkillButtonBorder')
