@@ -66,7 +66,8 @@ function public:setPos(x, y)
     local priv = private.data[self]
 
     for i = 1, 7 do
-        priv.buttons[i]:setPos(x + (i - 1) * priv.buttons[i]:getWidth(), y)
+        local btn = priv.buttons[i]
+        btn:setPos(x + (i - 1) * btn:getWidth(), y)
     end
 end
 
@@ -135,6 +136,7 @@ function private.newData(self)
         priv.buttons[i]:setPos((i - 1) * priv.buttons[i]:getWidth(), 0)
         priv.buttons[i]:setVisible(true)
     end
+    ImagePublic.setSize(self, 7 * priv.buttons[1]:getWidth(), priv.buttons[1]:getHeight())
 
     priv.tooltip:setParent(self)
     -- Native bind with bottom center point

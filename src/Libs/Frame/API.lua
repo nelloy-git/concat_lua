@@ -103,6 +103,8 @@ FrameLib.Origin.ChatBox = require(path..'Origin.ChatBox') or error('')
 FrameLib.Origin.ChatEditBox = require(path..'Origin.ChatEditBox') or error('')
 ---@type FrameOriginInventory
 FrameLib.Origin.Inventory = require(path..'Origin.Inventory') or error('')
+---@type FrameOriginGameUI
+FrameLib.Origin.GameUI = require(path..'Origin.GameUI') or error('')
 ---@type FrameOriginMinimap
 FrameLib.Origin.Minimap = require(path..'Origin.Minimap') or error('')
 ---@type FrameOriginPortrait

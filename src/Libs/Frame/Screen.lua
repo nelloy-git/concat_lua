@@ -20,8 +20,8 @@ local ActionList = UtilsLib.ActionList or error('')
 ---@class FrameScreen
 local Screen = {}
 
-local p_width = 800
-local p_height = 600
+local p_width = 0
+local p_height = 0
 
 local data = {}
 data.x0 = 0
@@ -89,6 +89,9 @@ local function updateResolution()
 end
 
 if not IsCompiletime() then
+    local first_timer = Timer.new()
+    first_timer:start(0.01, false, function() updateResolution() first_timer:destroy() end)
+
     update_timer = Timer.new()
     update_timer:start(update_period, true, updateResolution)
 end
