@@ -46,12 +46,12 @@ function CorruptedPriest.new(x, y, owner)
     -- Abils
     local abils = AbilLib.Container.new(unit)
     abils:set('Q', LifeForceShield)
-    abils:set('W', LifeForceShield)
-    abils:set('E', LifeForceShield)
-    abils:set('R', LifeForceShield)
-    abils:set('T', LifeForceShield)
-    abils:set('D', LifeForceShield)
-    abils:set('F', LifeForceShield)
+    --abils:set('W', LifeForceShield)
+    --abils:set('E', LifeForceShield)
+    --abils:set('R', LifeForceShield)
+    --abils:set('T', LifeForceShield)
+    --abils:set('D', LifeForceShield)
+    --abils:set('F', LifeForceShield)
 
     return unit
 end

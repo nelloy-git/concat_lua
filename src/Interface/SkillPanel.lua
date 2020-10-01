@@ -96,7 +96,9 @@ function public:setAbilContainer(container)
     local previous = priv.container
     if previous then
         private.container2interface[previous] = nil
-        previous:removeAction(priv.changed_action)
+        if not previous:removeAction(priv.changed_action) then
+            Log:err('Can not remove action', 2)
+        end
     end
 
     priv.container = container
@@ -108,7 +110,11 @@ function public:setAbilContainer(container)
 
     for i = 1, #private.hotkeys do
         local abil = container:get(private.hotkeys[i])
-        priv.buttons[i]:setCharges(abil:getCharges(), abil:getMaxCharges())
+        if abil then
+            priv.buttons[i]:setCharges(abil:getCharges(), abil:getMaxCharges())
+        else
+            priv.buttons[i]:setCharges(0, 0)
+        end
     end
 end
 
