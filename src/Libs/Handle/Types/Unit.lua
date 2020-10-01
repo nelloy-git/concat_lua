@@ -152,12 +152,11 @@ function public:setColor(r, g, b, a)
     b = b < 0 and 0 or b > 1 and 1 or b
     a = a < 0 and 0 or a > 1 and 1 or a
 
-    print(a)
     SetUnitVertexColor(self:getData(),
-                       math.floor(250 * r),
-                       math.floor(250 * g),
-                       math.floor(250 * b),
-                       math.floor(250 * a))
+                       math.floor(255 * r),
+                       math.floor(255 * g),
+                       math.floor(255 * b),
+                       math.floor(255 * a))
 end
 
 ---@param index number

@@ -99,6 +99,7 @@ src/Libs/Frame/Normal/Tooltip.lua
 src/Libs/Frame/Origin/ChatBox.lua
 src/Libs/Frame/Origin/ChatEditBox.lua
 src/Libs/Frame/Origin/Inventory.lua
+src/Libs/Frame/Origin/GameUI.lua
 src/Libs/Frame/Origin/Minimap.lua
 src/Libs/Frame/Origin/Portrait.lua
 src/Libs/Frame/Origin/SkillButton.lua

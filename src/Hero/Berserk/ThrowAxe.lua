@@ -7,7 +7,7 @@ local AbilityLib = require(LibList.AbilityExtLib) or error('')
 local Event = AbilityLib.Event
 ---@type AssetLib
 local AssetLib = require(LibList.AssetLib) or error('')
-local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
+local Icon = AssetLib.IconDefault.BTNOrcMeleeUpOne or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
@@ -17,7 +17,7 @@ local ParamUnit = ParamLib.UnitContainer or error('')
 local ParamType = ParamLib.ParamType or error('')
 
 ---@type BuffType
-local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')
+local BuffEffect = require('Hero.Berserk.Bleeding') or error('')
 ---@type HeroUtils
 local Utils = require('Hero.Utils') or error('')
 
@@ -25,8 +25,9 @@ local Utils = require('Hero.Utils') or error('')
 -- Settings
 --==========
 
-local DrainLifePerSec = 0.05
-local BonusPerMAtk = 0.01
+local Range = 600
+local Width = 100
+
 
 local BonusColor = '|cFF3030A0'
 
@@ -34,7 +35,7 @@ local BonusColor = '|cFF3030A0'
 -- Module
 --========
 
-local LifeForceShield = Utils.newAbilAlly('Life Force Shield')
+local ThrowAxe = Utils.newAbilAlly('Life Force Shield')
 
 local casting_period = AbilityLib.TimerPeriod
 local percent_per_loop = DrainLifePerSec * casting_period
@@ -42,11 +43,11 @@ local drained_life = {}
 
 ---@param owner Unit
 ---@return string
-function LifeForceShield:getIcon(owner) return Icon end
+function ThrowAxe:getIcon(owner) return Icon end
 
 ---@param owner Unit
 ---@return string
-function LifeForceShield:getTooltip(owner)
+function ThrowAxe:getTooltip(owner)
     local percent = 100 * DrainLifePerSec
     percent = percent - percent % 1
 
@@ -55,32 +56,32 @@ function LifeForceShield:getTooltip(owner)
 
     return 'Consumes '..tostring(percent)..'% of target ally unit per second.'..
            'At the end of the cast gives shield to the target for '..
-           'drained life increased by '..Utils.colorScale(bonus, ParamType.MATK)..'%'
+           'drained life increased by '..BonusColor..tostring(bonus)..'%|r'
 end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getArea(owner) return 0 end
+function ThrowAxe:getArea(owner) return 0 end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getRange(owner) return 500 end
+function ThrowAxe:getRange(owner) return 500 end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getManaCost(owner) return 20 end
+function ThrowAxe:getManaCost(owner) return 20 end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getCastingTime(owner) return 4 end
+function ThrowAxe:getCastingTime(owner) return 4 end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getChargeCooldown(owner) return 10 end
+function ThrowAxe:getChargeCooldown(owner) return 10 end
 
 ---@param owner Unit
 ---@return number
-function LifeForceShield:getMaxCharges(owner) return 5 end
+function ThrowAxe:getMaxCharges(owner) return 5 end
 
 ---@param abil AbilityExt
 local function onCasting(abil)
@@ -115,10 +116,10 @@ local callbacks = {
     [Event.ERROR_NO_CHARGES] = function() print('No charges') end,
 }
 
-local errHandler = LifeForceShield.getCallback
+local errHandler = ThrowAxe.getCallback
 ---@param event AbilityExtControllerCallback
 ---@return AbilityExtControllerCallback
-function LifeForceShield:getCallback(event)
+function ThrowAxe:getCallback(event)
     local cb = errHandler(event)
     if cb ~= nil then
         return cb
@@ -126,4 +127,4 @@ function LifeForceShield:getCallback(event)
     return callbacks[event]
 end
 
-return LifeForceShield
+return ThrowAxe

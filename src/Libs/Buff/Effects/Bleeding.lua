@@ -23,8 +23,8 @@ local Settings = require(lib_path..'Settings') or error('')
 -- Module
 --========
 
----@class BuffEffectShield
-local BuffEffectShield = {}
+---@class Bleeding
+local Bleeding = {}
 
 local active = {}
 local max = {}
@@ -32,7 +32,7 @@ local bar = {}
 
 ---@param value number
 ---@param target Unit
-function BuffEffectShield.add(value, target)
+function Bleeding.add(value, target)
     isTypeErr(value, 'number', 'value')
     isTypeErr(target, Unit, 'target')
 
@@ -66,13 +66,13 @@ end
 
 ---@param target Unit
 ---@return number
-function BuffEffectShield.get(target)
+function Bleeding.get(target)
     return active[target] or 0
 end
 
 ---@param target Unit
 ---@return number
-function BuffEffectShield.getMax(target)
+function Bleeding.getMax(target)
     return max[target] or 0
 end
 
@@ -100,4 +100,4 @@ DamageLib.addAction(DamageLib.Atk, Settings.ShieldPriority, damageEvent)
 DamageLib.addAction(DamageLib.Phys, Settings.ShieldPriority, damageEvent)
 DamageLib.addAction(DamageLib.Magic, Settings.ShieldPriority, damageEvent)
 
-return BuffEffectShield
+return Bleeding
