@@ -59,6 +59,27 @@ function override.new(unit_id, x, y, owner, child)
     return instance
 end
 
+---@param x number
+---@param y number
+---@param r number
+---@return Unit[]
+function static.getInRange(x, y, r)
+    if not private.group then
+        private.group = CreateGroup()
+    end
+
+    GroupEnumUnitsInRange(private.group, x, y, r)
+    local cur = FirstOfGroup(private.group)
+    local list = {}
+    while cur do
+        table.insert(list, static.getLinked(cur))
+        GroupRemoveUnit(private.group, cur)
+        cur = FirstOfGroup(private.group)
+    end
+
+    return list
+end
+
 --========
 -- Public
 --========
@@ -169,6 +190,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.group = nil
 
 ---@param self Unit
 function private.newData(self, owner)

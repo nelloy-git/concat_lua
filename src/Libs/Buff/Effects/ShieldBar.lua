@@ -108,7 +108,7 @@ end
 if not IsCompiletime() then
     local timer = Timer.new()
     timer:start(0.01, true, function()
-        for self, priv in pairs(private.data) do
+        for self, _ in pairs(private.data) do
             self:updatePos()
         end
     end)

@@ -97,7 +97,7 @@ function public:setAbilContainer(container)
     if previous then
         private.container2interface[previous] = nil
         if not previous:removeAction(priv.changed_action) then
-            Log:err('Can not remove action', 2)
+            Log:err(tostring(InterfaceSkillPanel)..': сan clear precious AbilityExtContainer', 2)
         end
     end
 

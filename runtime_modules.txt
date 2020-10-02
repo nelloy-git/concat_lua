@@ -37,6 +37,7 @@ src/Libs/Handle/API.lua
 src/Libs/Handle/Types/Ability.lua
 src/Libs/Handle/Base.lua
 src/Libs/Handle/Types/Destructable.lua
+src/Libs/Handle/Types/Effect.lua
 src/Libs/Handle/Types/Frame.lua
 src/Libs/Handle/Types/Trigger.lua
 src/Libs/Handle/Types/Item.lua
@@ -54,7 +55,6 @@ src/Libs/AbilityExt/Event.lua
 src/Libs/AbilityExt/Dummy/Base.lua
 src/Libs/AbilityExt/Dummy/Pool.lua
 src/Libs/AbilityExt/Type.lua
-src/Libs/AbilityExt/Settings.lua
 src/Libs/Buff/API.lua
 src/Libs/Damage/API.lua
 src/Libs/Damage/Event.lua
@@ -115,7 +115,9 @@ src/Interface/UnitBuffs.lua
 src/Interface/ParamList.lua
 src/Interface/ShowDamage.lua
 src/Hero/CorruptedPriest/Unit.lua
+src/Hero/Berserk/ThrowAxe.lua
+src/Hero/Berserk/Bleeding.lua
+src/Hero/Utils.lua
 src/Hero/CorruptedPriest/LifeForceShield.lua
 src/Hero/CorruptedPriest/LifeForceShieldBuff.lua
-src/Hero/Utils.lua
 src/Hero/CorruptedPriest/Settings.lua

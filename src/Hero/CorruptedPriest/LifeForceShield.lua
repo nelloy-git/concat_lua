@@ -28,15 +28,13 @@ local Utils = require('Hero.Utils') or error('')
 local DrainLifePerSec = 0.05
 local BonusPerMAtk = 0.01
 
-local BonusColor = '|cFF3030A0'
-
 --========
 -- Module
 --========
 
 local LifeForceShield = Utils.newAbilAlly('Life Force Shield')
 
-local casting_period = AbilityLib.TimerPeriod
+local casting_period = AbilityLib.getLoopPeriod()
 local percent_per_loop = DrainLifePerSec * casting_period
 local drained_life = {}
 

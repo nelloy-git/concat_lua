@@ -46,6 +46,11 @@ function HeroUtils.newAbilPoint(name)
         return 'Point'
     end
 
+    ---@param abil AbilityExt
+    function abil:isStarted(abil)
+        return true
+    end
+
     return abil
 end
 

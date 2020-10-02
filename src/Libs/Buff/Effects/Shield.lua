@@ -26,9 +26,9 @@ local Settings = require(lib_path..'Settings') or error('')
 ---@class BuffEffectShield
 local BuffEffectShield = {}
 
-local active = {}
-local max = {}
-local bar = {}
+local curShield = {}
+local maxShield = {}
+local barShield = {}
 
 ---@param value number
 ---@param target Unit
@@ -36,64 +36,59 @@ function BuffEffectShield.add(value, target)
     isTypeErr(value, 'number', 'value')
     isTypeErr(target, Unit, 'target')
 
-    if value > 0 then
-        local max_val = math.max((max[target] or 0) + value, 0)
-        local val = math.max((active[target] or 0) + value, 0)
+    local new_max = (maxShield[target] or 0) + value
+    new_max = new_max <= 0 and 0 or new_max
 
-        if not bar[target] then bar[target] = ShieldBar.new(target) end
-        bar[target]:updateValue(val, max_val)
+    local new_cur = (curShield[target] or 0) + (value > 0) and value or 0
+    new_cur = new_cur > new_max and new_max or new_cur
 
-        active[target] = val
-        max[target] = max_val
+    local bar = barShield[target]
+    if new_cur > 0 and new_max > 0 then
+        bar = bar or ShieldBar.new(target)
+        bar:updateValue(new_cur, new_max)
     else
-        local old_val = active[target] or 0
-        local old_max = max[target] or 0
-
-        local new_max = math.max(old_max + value, 0)
-        local new_val = math.max(old_val + value, 0)
-
-        active[target] = new_val > new_max and new_max or new_val
-        max[target] = new_max
-
-        if new_max <= 0 and bar[target] then
-            bar[target]:destroy()
-            bar[target] = nil
-        else
-            bar[target]:updateValue(new_val, new_max)
-        end
+        if bar then bar:destroy() end
+        bar = nil
     end
+
+    curShield[target] = (new_cur > 0) and new_cur or nil
+    maxShield[target] = (new_max > 0) and new_max or nil
+    barShield[target] = bar
 end
 
 ---@param target Unit
 ---@return number
 function BuffEffectShield.get(target)
-    return active[target] or 0
+    return curShield[target] or 0
 end
 
 ---@param target Unit
 ---@return number
 function BuffEffectShield.getMax(target)
-    return max[target] or 0
+    return maxShield[target] or 0
 end
 
 ---@type DamageEventCallback
 local damageEvent = function(dmg, dmg_type, target, src)
-    local cur = active[target]
+    local cur = curShield[target]
     if not cur then return dmg end
 
-    if cur >= dmg then
-        active[target] = cur - dmg
-        if bar[target] then bar[target]:updateValue(active[target], max[target]) end
-        dmg = 0
-    else
-        active[target] = nil
-        max[target] = nil
-        if bar[target] then bar[target]:destroy() end
-        bar[target] = nil
-        dmg = dmg - cur
-    end
+    cur = cur - dmg
+    if cur <= 0 then
+        -- Shield has been broken.
+        if barShield[target] then barShield[target]:destroy() end
 
-    return dmg
+        curShield[target] = nil
+        maxShield[target] = nil
+        barShield[target] = nil
+
+        return -cur
+    else
+        barShield[target]:updateValue(cur, maxShield[target])
+        curShield[target] = cur
+
+        return 0
+    end
 end
 
 DamageLib.addAction(DamageLib.Atk, Settings.ShieldPriority, damageEvent)

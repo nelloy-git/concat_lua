@@ -16,11 +16,13 @@ local path = Lib.curPath()
 --=====
 
 ---@type BuffContainerClass
-BuffLibAPI.Container = require(path..'.Container') or error('')
+BuffLibAPI.Container = require(path..'Container') or error('')
 ---@type BuffTypeClass
-BuffLibAPI.Type = require(path..'.Type') or error('')
----@type BuffType
---BuffLibAPI.TestType = require(path..'.TestType') or error('')
+BuffLibAPI.Type = require(path..'Type') or error('')
+
+---@type BuffClass
+local Buff = require(path..'Buff') or error('')
+BuffLibAPI.getBuffLoopPeriod = Buff.getPeriod
 
 ---@type BuffEffectShield
 local Shield = require(path..'Effects.Shield') or error('')

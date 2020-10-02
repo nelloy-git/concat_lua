@@ -39,13 +39,18 @@ local private = {}
 
 ---@param child AbilityExtController | nil
 ---@return AbilityExtController
-function override.new(child)
+function static.new(child)
     if child then isTypeErr(child, AbilityExtController, 'child') end
 
     local instance = child or Class.allocate(AbilityExtController)
     private.newData(instance)
 
     return instance
+end
+
+---@return number
+function static.getPeriod()
+    return TimedObj.getPeriod()
 end
 
 --========

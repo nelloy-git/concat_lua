@@ -111,8 +111,8 @@ end
 function public:removeAction(action)
     local priv = private.data[self]
 
-    for _, event in pairs(priv.actions) do
-        if priv.actions[event] and priv.actions[event]:remove(action) then
+    for event, list in pairs(priv.actions) do
+        if list:remove(action) then
             return true
         end
     end

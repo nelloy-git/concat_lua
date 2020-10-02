@@ -9,7 +9,6 @@ local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local TimedObj = HandleLib.TimedObj or error('')
-local TimedObjPublic = Class.getPublic(TimedObj)
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')

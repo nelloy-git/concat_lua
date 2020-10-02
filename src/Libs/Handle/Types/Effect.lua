@@ -34,16 +34,20 @@ local private = {}
 ---@param model string
 ---@param x number
 ---@param y number
+---@param z number
 ---@param child Effect | nil
 ---@return Effect
-function override.new(model, x, y, child)
+function override.new(model, x, y, z, child)
     isTypeErr(model, 'string', 'model')
     isTypeErr(x, 'number', 'x')
-    isTypeErr(y, 'number', 'y') 
+    isTypeErr(y, 'number', 'y')
+    isTypeErr(z, 'number', 'z')
     if child then isTypeErr(child, Effect, 'child') end
 
     local instance = child or Class.allocate(Effect)
-    instance = Handle.new(AddSpecialEffect(model, x, y), DestroyEffect, instance)
+    instance = Handle.new(AddSpecialEffect(model, x, y), private.destroy, instance)
+
+    BlzSetSpecialEffectHeight(instance:getData(), z)
 
     return instance
 end
@@ -102,5 +106,10 @@ end
 --=========
 -- Private
 --=========
+
+function private.destroy(handle)
+    BlzSetSpecialEffectScale(handle, 0.001)
+    DestroyEffect(handle)
+end
 
 return static

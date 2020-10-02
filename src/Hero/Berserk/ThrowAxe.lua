@@ -11,13 +11,21 @@ local Icon = AssetLib.IconDefault.BTNOrcMeleeUpOne or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
+---@type DamageLib
+local DamageLib = require(LibList.DamageLib) or error('')
+local dealPhys = DamageLib.dealPhys or error('')
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local Effect = HandleLib.Effect or error('')
+local Unit = HandleLib.Unit or error('')
+local Timer = HandleLib.Timer or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 local ParamUnit = ParamLib.UnitContainer or error('')
 local ParamType = ParamLib.ParamType or error('')
 
 ---@type BuffType
-local BuffEffect = require('Hero.Berserk.Bleeding') or error('')
+local Bleeding = require('Hero.Berserk.Bleeding') or error('')
 ---@type HeroUtils
 local Utils = require('Hero.Utils') or error('')
 
@@ -27,19 +35,27 @@ local Utils = require('Hero.Utils') or error('')
 
 local Range = 600
 local Width = 100
+local ManaCost = 50
+local CastingTime = 0
+local Cooldown = 5
+local Charges = 1
+local BleedingTime = 10
 
+local ScalePAtk = 15
 
-local BonusColor = '|cFF3030A0'
+local AxeModel = 'Objects\\Invalidmodel\\Invalidmodel.mdx'
+local AxeSpeed = 1000
+local AxeOffsetZ = 50
 
 --========
 -- Module
 --========
 
-local ThrowAxe = Utils.newAbilAlly('Life Force Shield')
+local ThrowAxe = Utils.newAbilPoint('Throw Axe')
 
-local casting_period = AbilityLib.TimerPeriod
-local percent_per_loop = DrainLifePerSec * casting_period
-local drained_life = {}
+local axes = {}
+local axe_data = setmetatable({}, {__mode = 'k'})
+local cutted = setmetatable({}, {__mode = 'k'})
 
 ---@param owner Unit
 ---@return string
@@ -48,70 +64,71 @@ function ThrowAxe:getIcon(owner) return Icon end
 ---@param owner Unit
 ---@return string
 function ThrowAxe:getTooltip(owner)
-    local percent = 100 * DrainLifePerSec
-    percent = percent - percent % 1
+    local dmg = ScalePAtk * ParamUnit.get(owner):getResult(ParamType.PATK)
+    dmg = dmg - dmg % 1 + 1
 
-    local bonus = 100 * BonusPerMAtk * ParamUnit.get(owner):getResult(ParamType.MATK)
-    bonus = bonus - bonus % 1 + 1
+    local s_dmg = tostring(dmg)
+    s_dmg = s_dmg:sub(1, (s_dmg:find('%.') or (s_dmg:len() + 1)) - 1)
 
-    return 'Consumes '..tostring(percent)..'% of target ally unit per second.'..
-           'At the end of the cast gives shield to the target for '..
-           'drained life increased by '..BonusColor..tostring(bonus)..'%|r'
+    return 'Throws axe to target position, cutting enemies. Deals '..
+           Utils.colorScale(s_dmg, ParamType.PATK)..' damage.'
 end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getArea(owner) return 0 end
+function ThrowAxe:getArea(owner) return Width end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getRange(owner) return 500 end
+function ThrowAxe:getRange(owner) return Range end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getManaCost(owner) return 20 end
+function ThrowAxe:getManaCost(owner) return ManaCost end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getCastingTime(owner) return 4 end
+function ThrowAxe:getCastingTime(owner) return CastingTime end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getChargeCooldown(owner) return 10 end
+function ThrowAxe:getChargeCooldown(owner) return Cooldown end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getMaxCharges(owner) return 5 end
+function ThrowAxe:getMaxCharges(owner) return Charges end
 
 ---@param abil AbilityExt
-local function onCasting(abil)
-    local owner = abil:getOwner()
-    local target = abil:getTargetUnit()
-
-    local hp = target:getHealth()
-    local max_hp = target:getMaxHealth()
-    local perc = hp / max_hp
-
-    drained_life[owner] = (drained_life[owner] or 0) + percent_per_loop * max_hp
-    target:setHealth((perc - percent_per_loop) * max_hp)
+local function doNothing(abil)
 end
 
 ---@param abil AbilityExt
-local function onEnd(abil)
+local function onFinish(abil)
     local owner = abil:getOwner()
-    local target = abil:getTargetUnit()
+    local axe =  Effect.new(AxeModel,
+                            owner:getX(),
+                            owner:getY(),
+                            owner:getZ() + AxeOffsetZ)
+    table.insert(axes, axe)
 
-    local buffs = UnitBuffs.get(target)
-    local matk = ParamUnit.get(owner):getResult(ParamType.MATK)
-    buffs:add(BuffEffect, owner, 10, drained_life[owner] * (1 + BonusPerMAtk * matk))
-    drained_life[owner] = nil
+    local dx = abil:getTargetPointX() - owner:getX()
+    local dy = abil:getTargetPointY() - owner:getY()
+    local r = (dx * dx + dy * dy)^0.5
+
+    axe_data[axe] = {owner = owner,
+                     dmg = ScalePAtk * ParamUnit.get(owner):getResult(ParamType.PATK),
+                     r_x = dx,
+                     r_y = dy,
+                     vel_x = AxeSpeed * dx / r,
+                     vel_y = AxeSpeed * dy / r}
+    cutted[axe] = {}
 end
 
 local callbacks = {
-    [Event.CASTING_LOOP] = onCasting,
-    [Event.CASTING_CANCEL] = onEnd,
-    [Event.CASTING_INTERRUPT] = onEnd,
-    [Event.CASTING_FINISH] = onEnd,
+    [Event.CASTING_LOOP] = doNothing,
+    [Event.CASTING_CANCEL] = doNothing,
+    [Event.CASTING_INTERRUPT] = doNothing,
+    [Event.CASTING_FINISH] = onFinish,
 
     [Event.ERROR_NO_CHARGES] = function() print('No charges') end,
 }
@@ -125,6 +142,58 @@ function ThrowAxe:getCallback(event)
         return cb
     end
     return callbacks[event]
+end
+
+local period = 0.02
+if not IsCompiletime() then
+    Timer.new():start(period, true, function()
+        local new_axes = {}
+
+        for i = 1, #axes do
+            ---@type Effect
+            local axe = axes[i]
+            local data = axe_data[axe]
+
+            local vel_x = period * data.vel_x
+            local vel_y = period * data.vel_y
+            data.r_x = data.r_x - vel_x
+            data.r_y = data.r_y - vel_y
+
+            local x = axe:getX() + vel_x
+            local y = axe:getY() + vel_y
+
+            -- Finish
+            if (math.abs(data.r_x - vel_x) <= vel_x) or
+               (math.abs(data.r_y - vel_y) <= vel_y) then
+                data.r_x = 0
+                data.r_y = 0
+
+                x = x + (data.r_x - vel_x)
+                y = y + (data.r_y - vel_y)
+
+                axe:destroy()
+            else
+                axe:setPos(x, y, axe:getZ())
+                table.insert(new_axes, axe)
+            end
+
+            local list = Unit.getInRange(x, y, Width)
+            local cut = cutted[axe]
+            for j = 1, #list do
+                ---@type Unit
+                local u = list[j]
+                if not cut[u] then
+                    if not u:isAlly(data.owner) then
+                        dealPhys(data.dmg, u, data.owner)
+                        UnitBuffs.get(u):add(Bleeding, data.owner, BleedingTime, data.dmg / BleedingTime)
+                    end
+                    cut[u] = true
+                end
+            end
+        end
+
+        axes = new_axes
+    end)
 end
 
 return ThrowAxe
