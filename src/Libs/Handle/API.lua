@@ -1,6 +1,7 @@
 ---@class HandleLib
 local HandleLibAPI = {}
 Lib.start('HandleLib', {
+    Binary = Lib.load(LibList.BinaryLib) or error(''),
     Class = Lib.load(LibList.ClassLib) or error(''),
     Types = Lib.load(LibList.TypesLib) or error(''),
     Utils = Lib.load(LibList.UtilsLib) or error('')
@@ -21,6 +22,8 @@ HandleLibAPI.Effect = require(path..'Types.Effect') or error('')
 HandleLibAPI.Frame = require(path..'Types.Frame') or error('')
 ---@type ItemClass
 HandleLibAPI.Item = require(path..'Types.Item') or error('')
+---@type ProjectileClass
+HandleLibAPI.Projectile = require(path..'Preset.Projectile') or error('')
 ---@type SmartTimerClass
 HandleLibAPI.SmartTimer = require(path..'Types.SmartTimer') or error('')
 ---@type TextTagClass
@@ -33,6 +36,8 @@ HandleLibAPI.TimedObj = require(path..'TimedObj') or error('')
 HandleLibAPI.Trigger = require(path..'Types.Trigger') or error('')
 ---@type UnitClass
 HandleLibAPI.Unit = require(path..'Types.Unit') or error('')
+---@type WorldBarClass
+HandleLibAPI.WorldBar = require(path..'Preset.WorldBar') or error('')
 
 Lib.finish()
 

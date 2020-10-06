@@ -185,6 +185,11 @@ function public:setAnimation(index)
     SetUnitAnimationByIndex(self:getData(), index)
 end
 
+---@param scale number
+function public:setScale(scale)
+    SetUnitScale(self:getData(), scale, scale, scale)
+end
+
 --=========
 -- Private
 --=========

@@ -192,7 +192,7 @@ private.fdf_text = private.createFdfText('FrameNormalButtonDefaultText',
 private.fdf:setText(private.fdf_text)
 
 private.available_events = {
-    [FrameEventType.CONTROL_CLICK] = true,
+    [FrameEventType.MOUSE_CLICK] = true,
     [FrameEventType.MOUSE_ENTER] = true,
     [FrameEventType.MOUSE_LEAVE] = true,
     [FrameEventType.MOUSE_UP] = true,

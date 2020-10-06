@@ -17,6 +17,7 @@ local dealPhys = DamageLib.dealPhys or error('')
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
 local Effect = HandleLib.Effect or error('')
+local Projectile = HandleLib.Projectile or error('')
 local Unit = HandleLib.Unit or error('')
 local Timer = HandleLib.Timer or error('')
 ---@type ParameterLib
@@ -34,7 +35,7 @@ local Utils = require('Hero.Utils') or error('')
 --==========
 
 local Range = 600
-local Width = 100
+local AxeWidth = 150
 local ManaCost = 50
 local CastingTime = 0
 local Cooldown = 5
@@ -43,8 +44,10 @@ local BleedingTime = 10
 
 local ScalePAtk = 15
 
-local AxeModel = 'Objects\\Invalidmodel\\Invalidmodel.mdx'
-local AxeSpeed = 1000
+local AxeModel = 'Abilities\\Weapons\\Axe\\AxeMissile.mdl'
+local AxeScale = 1.5
+--local AxeModel = 'Objects\\Invalidmodel\\Invalidmodel.mdx'
+local AxeSpeed = 500
 local AxeOffsetZ = 50
 
 --========
@@ -52,6 +55,11 @@ local AxeOffsetZ = 50
 --========
 
 local ThrowAxe = Utils.newAbilPoint('Throw Axe')
+
+local axe_dmg = {}
+local axe_owner = {}
+local axe_targets = {}
+
 
 local axes = {}
 local axe_data = setmetatable({}, {__mode = 'k'})
@@ -76,7 +84,7 @@ end
 
 ---@param owner Unit
 ---@return number
-function ThrowAxe:getArea(owner) return Width end
+function ThrowAxe:getArea(owner) return AxeWidth / 2 end
 
 ---@param owner Unit
 ---@return number
@@ -102,26 +110,43 @@ function ThrowAxe:getMaxCharges(owner) return Charges end
 local function doNothing(abil)
 end
 
+local function axeLoop(axe)
+    local list = Unit.getInRange(axe:getX(), axe:getY(), AxeWidth / 2)
+
+    local dmg = axe_dmg[axe]
+    local owner = axe_owner[axe]
+    local targets = axe_targets[axe]
+
+    for i = 1, #list do
+        ---@type Unit
+        local cur = list[i]
+
+        if not targets[cur] then
+            if cur:isEnemy(owner) then
+                dealPhys(dmg, cur, owner)
+                UnitBuffs.get(cur):add(Bleeding, owner, BleedingTime, dmg / BleedingTime)
+            end
+            targets[cur] = true
+        end
+    end
+end
+
 ---@param abil AbilityExt
 local function onFinish(abil)
     local owner = abil:getOwner()
-    local axe =  Effect.new(AxeModel,
-                            owner:getX(),
-                            owner:getY(),
-                            owner:getZ() + AxeOffsetZ)
-    table.insert(axes, axe)
+    local axe = Projectile.new(AxeModel,
+                               owner:getX(),
+                               owner:getY(),
+                               owner:getZ() + AxeOffsetZ)
+    axe:setTarget(abil:getTargetPointX(),
+                  abil:getTargetPointY())
+    axe:setVelocity(AxeSpeed)
+    axe:addLoopAction(axeLoop)
+    axe:setScale(AxeScale)
 
-    local dx = abil:getTargetPointX() - owner:getX()
-    local dy = abil:getTargetPointY() - owner:getY()
-    local r = (dx * dx + dy * dy)^0.5
-
-    axe_data[axe] = {owner = owner,
-                     dmg = ScalePAtk * ParamUnit.get(owner):getResult(ParamType.PATK),
-                     r_x = dx,
-                     r_y = dy,
-                     vel_x = AxeSpeed * dx / r,
-                     vel_y = AxeSpeed * dy / r}
-    cutted[axe] = {}
+    axe_dmg[axe] = ScalePAtk * ParamUnit.get(owner):getResult(ParamType.PATK)
+    axe_owner[axe] = owner
+    axe_targets[axe] = {}
 end
 
 local callbacks = {
@@ -142,58 +167,6 @@ function ThrowAxe:getCallback(event)
         return cb
     end
     return callbacks[event]
-end
-
-local period = 0.02
-if not IsCompiletime() then
-    Timer.new():start(period, true, function()
-        local new_axes = {}
-
-        for i = 1, #axes do
-            ---@type Effect
-            local axe = axes[i]
-            local data = axe_data[axe]
-
-            local vel_x = period * data.vel_x
-            local vel_y = period * data.vel_y
-            data.r_x = data.r_x - vel_x
-            data.r_y = data.r_y - vel_y
-
-            local x = axe:getX() + vel_x
-            local y = axe:getY() + vel_y
-
-            -- Finish
-            if (math.abs(data.r_x - vel_x) <= vel_x) or
-               (math.abs(data.r_y - vel_y) <= vel_y) then
-                data.r_x = 0
-                data.r_y = 0
-
-                x = x + (data.r_x - vel_x)
-                y = y + (data.r_y - vel_y)
-
-                axe:destroy()
-            else
-                axe:setPos(x, y, axe:getZ())
-                table.insert(new_axes, axe)
-            end
-
-            local list = Unit.getInRange(x, y, Width)
-            local cut = cutted[axe]
-            for j = 1, #list do
-                ---@type Unit
-                local u = list[j]
-                if not cut[u] then
-                    if not u:isAlly(data.owner) then
-                        dealPhys(data.dmg, u, data.owner)
-                        UnitBuffs.get(u):add(Bleeding, data.owner, BleedingTime, data.dmg / BleedingTime)
-                    end
-                    cut[u] = true
-                end
-            end
-        end
-
-        axes = new_axes
-    end)
 end
 
 return ThrowAxe

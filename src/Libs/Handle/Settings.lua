@@ -13,5 +13,6 @@ local lib_dep = Lib.curDepencies()
 local HandleSettings = {}
 
 HandleSettings.TimedObjPeriod = 0.05
+HandleSettings.WorldBarPeriod = 0.03
 
 return HandleSettings

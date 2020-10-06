@@ -21,13 +21,13 @@ local Log = UtilsLib.Log or error('')
 -- Class
 --=======
 
-local InterfaceSkillButton2 = Class.new('InterfaceSkillButton2', Frame)
----@class InterfaceSkillButton2 : Frame
-local public = InterfaceSkillButton2.public
----@class InterfaceSkillButton2Class : FrameClass
-local static = InterfaceSkillButton2.static
----@type InterfaceSkillButton2Class
-local override = InterfaceSkillButton2.override
+local InterfaceSkillCastBar = Class.new('InterfaceSkillCastBar', Frame)
+---@class InterfaceSkillCastBar : Frame
+local public = InterfaceSkillCastBar.public
+---@class InterfaceSkillCastBarClass : FrameClass
+local static = InterfaceSkillCastBar.static
+---@type InterfaceSkillCastBarClass
+local override = InterfaceSkillCastBar.override
 local private = {}
 
 --=========
@@ -36,14 +36,14 @@ local private = {}
 
 local static_instances = {}
 
----@return InterfaceSkillButton2
+---@return InterfaceSkillCastBar
 function override.new(origin_id)
     if static_instances[origin_id] then
-        Log:wrn(tostring(InterfaceSkillButton2)..': instance with selected origin_id already exist.')
+        Log:wrn(tostring(InterfaceSkillCastBar)..': instance with selected origin_id already exist.')
         return static_instances[origin_id]
     end
 
-    local instance = Class.allocate(InterfaceSkillButton2)
+    local instance = Class.allocate(InterfaceSkillCastBar)
     instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
 
     private.newData(instance, origin_id)
@@ -71,7 +71,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log:wrn(tostring(InterfaceSkillButton2)..': size can not be changed.')
+    Log:wrn(tostring(InterfaceSkillCastBar)..': size can not be changed.')
 end
 
 ---@param count number
@@ -96,7 +96,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self InterfaceSkillButton2
+---@param self InterfaceSkillCastBar
 ---@param origin_id number
 function private.newData(self, origin_id)
     local priv = {
@@ -131,7 +131,7 @@ function private.newData(self, origin_id)
     --priv.charges_text:setFont('fonts\\nim_____.ttf', 0.9 * priv.charges_text:getHeight(), 0)
 end
 
-private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceSkillButton2Border')
+private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceSkillCastBarBorder')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setBackgroundTileMode(true)

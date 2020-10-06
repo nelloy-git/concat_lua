@@ -352,7 +352,7 @@ function private.runActions()
     if actions_list then actions_list:run(frame, player, event) end
 
     -- Drop focus
-    if event == FrameEventType.CONTROL_CLICK and frame:isEnable() then
+    if event == FrameEventType.MOUSE_CLICK and frame:isEnable() then
         frame:setEnable(false)
         frame:setEnable(true)
     end

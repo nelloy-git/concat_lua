@@ -10,12 +10,11 @@ local DamageLib = lib_dep.Damage or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local Unit = HandleLib.Unit or error('')
+local WorldBar = HandleLib.WorldBar or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 
----@type ShieldBarClass
-local ShieldBar = require(lib_path..'Effects.ShieldBar') or error('')
 ---@type BuffSettings
 local Settings = require(lib_path..'Settings') or error('')
 
@@ -39,13 +38,16 @@ function BuffEffectShield.add(value, target)
     local new_max = (maxShield[target] or 0) + value
     new_max = new_max <= 0 and 0 or new_max
 
-    local new_cur = (curShield[target] or 0) + (value > 0) and value or 0
+    local new_cur = (curShield[target] or 0) + ((value > 0) and value or 0)
     new_cur = new_cur > new_max and new_max or new_cur
 
     local bar = barShield[target]
     if new_cur > 0 and new_max > 0 then
-        bar = bar or ShieldBar.new(target)
-        bar:updateValue(new_cur, new_max)
+        bar = bar or WorldBar.new(target)
+        bar:setScale(0.85)
+        bar:setHeight(170)
+        bar:setColor(0.3, 0.9, 0.9, 1)
+        bar:setValue(new_cur, new_max)
     else
         if bar then bar:destroy() end
         bar = nil
@@ -84,7 +86,7 @@ local damageEvent = function(dmg, dmg_type, target, src)
 
         return -cur
     else
-        barShield[target]:updateValue(cur, maxShield[target])
+        barShield[target]:setValue(cur, maxShield[target])
         curShield[target] = cur
 
         return 0

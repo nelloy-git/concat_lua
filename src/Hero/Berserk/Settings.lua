@@ -15,13 +15,14 @@ local id2int = UtilsLib.id2int or error('')
 -- Module
 --========
 
----@class CorruptedPriestSettings
+---@class BerserkSettings
 local Settings = {}
 
-Settings.Name = 'Corrupted priest'
+Settings.Name = 'Berserk'
 Settings.BaseId = id2int('Hpal')
 Settings.Id = BinaryLib.getUnitId()
 Settings.Icon = Compiletime('ReplaceableTextures\\\\CommandButtons\\\\BTNPriest.blp')
+Settings.Model = Compiletime('Units\\Other\\Rexxar\\Rexxar.mdl')
 
 ----------------
 -- Parameters --

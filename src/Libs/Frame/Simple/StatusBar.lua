@@ -80,17 +80,17 @@ end
 --========
 
 ---@param tex_file string
----@param flag number
----@param blend boolean
+---@param flag number | nil
+---@param blend boolean | nil
 function public:setBackground(tex_file, flag, blend)
-    private.data[self].texture:setTexture(tex_file, flag, blend)
+    private.data[self].texture:setTexture(tex_file, flag or 0, blend or true)
 end
 
 ---@param tex_file string
----@param flag number
----@param blend boolean
+---@param flag number | nil
+---@param blend boolean | nil
 function public:setBar(tex_file, flag, blend)
-    BlzFrameSetTexture(self:getData(), tex_file, flag, blend)
+    BlzFrameSetTexture(self:getData(), tex_file, flag or 0, blend or true)
 end
 
 ---@param tex_file string

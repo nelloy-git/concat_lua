@@ -5,7 +5,6 @@
 local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
-local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local Timer = HandleLib.Timer or error('')

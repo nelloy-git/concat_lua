@@ -46,7 +46,6 @@ function override.new(model, x, y, z, child)
 
     local instance = child or Class.allocate(Effect)
     instance = Handle.new(AddSpecialEffect(model, x, y), private.destroy, instance)
-
     BlzSetSpecialEffectHeight(instance:getData(), z)
 
     return instance
@@ -101,6 +100,11 @@ function public:setColor(r, g, b, a)
                              math.floor(255 * g),
                              math.floor(255 * b))
     BlzSetSpecialEffectAlpha(self:getData(), math.floor(a))
+end
+
+---@param scale number
+function public:setScale(scale)
+    BlzSetSpecialEffectScale(self:getData(), scale)
 end
 
 --=========
