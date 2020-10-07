@@ -41,6 +41,7 @@ local private = {}
 ---@param child FrameNormalImage | nil
 ---@return FrameNormalImage
 function override.new(fdf, child)
+    if fdf then isTypeErr(fdf, FdfBackdrop, 'fdf') end
     if child then isTypeErr(child, FrameNormalImage, 'child') end
 
     fdf = fdf or private.fdf

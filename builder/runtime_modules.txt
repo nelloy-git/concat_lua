@@ -109,7 +109,8 @@ src\Interface\Init.lua
 src\Interface\Minimap.lua
 src\Interface\Selection.lua
 src\Interface\SkillPanel.lua
-src\Interface\SkillButton.lua
+src\Interface\Skill\Button.lua
+src\Interface\Skill\ButtonFdf.lua
 src\Interface\UnitStatus.lua
 src\Interface\UnitBars.lua
 src\Interface\UnitBuffs.lua

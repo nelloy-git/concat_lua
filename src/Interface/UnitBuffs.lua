@@ -45,7 +45,7 @@ local private = {}
 ---@return InterfaceUnitBuffs
 function override.new(max_buffs)
     local instance = Class.allocate(InterfaceUnitBuffs)
-    instance = Image.new(instance)
+    instance = Image.new(nil, instance)
 
     private.newData(instance,
                     max_buffs or 20)

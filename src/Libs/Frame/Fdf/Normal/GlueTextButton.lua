@@ -111,6 +111,14 @@ function public:getControlNormal()
     return priv.normal
 end
 
+---@return boolean
+function public:hasControlNormal()
+    if private.data[self].normal then
+        return true
+    end
+    return false
+end
+
 --- Shown as long as pressed
 ---@return FdfBackdrop
 function public:getControlPushed()
@@ -126,6 +134,14 @@ function public:getControlPushed()
     return priv.pushed
 end
 
+---@return boolean
+function public:hasControlPushed()
+    if private.data[self].pushed then
+        return true
+    end
+    return false
+end
+
 --- Shown when disabled
 ---@return FdfBackdrop
 function public:getControlDisabled()
@@ -139,6 +155,14 @@ function public:getControlDisabled()
     private.setControlSubframe(self, 'ControlDisabledBackdrop', priv.disabled)
 
     return priv.disabled
+end
+
+---@return boolean
+function public:hasControlDisabled()
+    if private.data[self].disabled then
+        return true
+    end
+    return false
 end
 
 --- Glowing when mouse hovers.
@@ -160,6 +184,14 @@ function public:getControlMouse()
     return priv.mouse
 end
 
+---@return boolean
+function public:hasControlMouse()
+    if private.data[self].mouse then
+        return true
+    end
+    return false
+end
+
 --- Glowing when mouse hovers.
 ---@return FdfHighlight
 function public:getControlFocus()
@@ -179,6 +211,14 @@ function public:getControlFocus()
     return priv.focus
 end
 
+---@return boolean
+function public:hasControlFocus()
+    if private.data[self].focus then
+        return true
+    end
+    return false
+end
+
 --- Is used to markup the text on the buttom.
 ---@return FdfText
 function public:getText()
@@ -194,6 +234,14 @@ function public:getText()
     self:setBaseType('GLUETEXTBUTTON')
 
     return priv.text
+end
+
+---@return boolean
+function public:hasText()
+    if private.data[self].text then
+        return true
+    end
+    return false
 end
 
 --=========

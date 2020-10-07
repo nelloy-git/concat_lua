@@ -55,7 +55,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    FramePublic.setSize(width, height)
+    FramePublic.setSize(self, width, height)
     local priv = private.data[self]
 
     priv.button:setSize(0.8 * width, 0.8 * height)
@@ -85,12 +85,9 @@ end
 ---@param tex_file string
 ---@param flag number | nil
 ---@param blend boolean | nil
-function public:setTexture(tex_file, flag, blend)
+function public:setTexture(tex_file, dis_tex, flag, blend)
     isTypeErr(tex_file, 'string', 'tex_file')
     local priv = private.data[self]
-
-    local index = string.find(tex_file, "/[^/]*$")
-    local dis_tex = tex_file:sub(1, index)..'DIS'..tex_file:sub(index + 1)
 
     priv.button:setNormalTexture(tex_file, flag, blend)
     priv.button:setPushedTexture(tex_file, flag, blend)
@@ -102,6 +99,13 @@ end
 ---@return Action | nil
 function public:addAction(event, callback)
     private.data[self].button:addAction(event, callback)
+end
+
+function public:setEnabled(flag)
+    FramePublic.setEnabled(self, flag)
+    local priv = private.data[self]
+
+    priv.button:setEnabled(flag)
 end
 
 --=========
@@ -119,6 +123,7 @@ function private.newData(self)
     private.data[self] = priv
 
     priv.button:setParent(self)
+    self:setSize(0.04, 0.04)
 end
 
 return static

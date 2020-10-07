@@ -244,12 +244,12 @@ function public:setTooltip(tooltip)
 end
 
 ---@return boolean
-function public:isEnable()
+function public:isEnabled()
     return BlzFrameGetEnable(self:getData())
 end
 
 ---@param flag boolean
-function public:setEnable(flag)
+function public:setEnabled(flag)
     BlzFrameSetEnable(self:getData(), flag)
 end
 
@@ -352,9 +352,9 @@ function private.runActions()
     if actions_list then actions_list:run(frame, player, event) end
 
     -- Drop focus
-    if event == FrameEventType.MOUSE_CLICK and frame:isEnable() then
-        frame:setEnable(false)
-        frame:setEnable(true)
+    if event == FrameEventType.MOUSE_CLICK and frame:isEnabled() then
+        frame:setEnabled(false)
+        frame:setEnabled(true)
     end
 end
 

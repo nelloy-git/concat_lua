@@ -60,6 +60,6 @@ highlight:setAlphaMode('ADD')
 ---@type FdfGlueTextButton
 InterfaceSkillButtonFdf.button = button
 ---@type FdfBackdrop
-InterfaceSkillButtonFdf.main = background
+InterfaceSkillButtonFdf.background = background
 
 return InterfaceSkillButtonFdf

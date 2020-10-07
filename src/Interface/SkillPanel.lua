@@ -50,7 +50,7 @@ function override.new()
     end
 
     local instance = Class.allocate(InterfaceSkillPanel2)
-    instance = Image.new(instance)
+    instance = Image.new(nil, instance)
 
     private.newData(instance)
 

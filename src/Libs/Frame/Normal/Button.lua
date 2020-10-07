@@ -137,11 +137,11 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self, fdf)
     local getH = BlzGetFrameByName
     local priv = {
-        normal = Image.link(getH(fdf:getControlNormal():getName(), 0)),
-        pushed = Image.link(getH(fdf:getControlPushed():getName(), 0)),
-        disabled = Image.link(getH(fdf:getControlDisabled():getName(), 0)),
-        mouse = Image.link(getH(fdf:getControlMouse():getName(), 0)),
-        focus = Image.link(getH(fdf:getControlFocus():getName(), 0)),
+        normal = fdf:hasControlNormal() and Image.link(getH(fdf:getControlNormal():getName(), 0)) or nil,
+        pushed = fdf:hasControlPushed() and Image.link(getH(fdf:getControlPushed():getName(), 0)) or nil,
+        disabled = fdf:hasControlDisabled() and Image.link(getH(fdf:getControlDisabled():getName(), 0)) or nil,
+        mouse = fdf:hasControlMouse() and Image.link(getH(fdf:getControlMouse():getName(), 0)) or nil,
+        focus = fdf:hasControlFocus() and Image.link(getH(fdf:getControlFocus():getName(), 0)) or nil,
     }
     private.data[self] = priv
 end
