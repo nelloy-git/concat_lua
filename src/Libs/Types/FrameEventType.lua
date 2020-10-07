@@ -19,7 +19,7 @@ local FrameEventType = {}
 
 FrameEventType.Enum = {
     ---@type frameeventtype
-    CONTROL_CLICK = FRAMEEVENT_CONTROL_CLICK or getEnum(),
+    MOUSE_CLICK = FRAMEEVENT_CONTROL_CLICK or getEnum(),
     ---@type frameeventtype
     MOUSE_ENTER = FRAMEEVENT_MOUSE_ENTER or getEnum(),
     ---@type frameeventtype
@@ -53,7 +53,7 @@ FrameEventType.Enum = {
 }
 
 local frameevent_type2str = {
-    [FrameEventType.Enum.MOUSE_CLICK] = 'CONTROL_CLICK',
+    [FrameEventType.Enum.MOUSE_CLICK] = 'MOUSE_CLICK',
     [FrameEventType.Enum.MOUSE_ENTER] = 'MOUSE_ENTER',
     [FrameEventType.Enum.MOUSE_LEAVE] = 'MOUSE_LEAVE',
     [FrameEventType.Enum.MOUSE_UP] = 'MOUSE_UP',

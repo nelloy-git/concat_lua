@@ -37,12 +37,13 @@ local private = {}
 -- Static
 --=========
 
+---@param fdf FdfBackdrop | nil
 ---@param child FrameNormalImage | nil
 ---@return FrameNormalImage
-function override.new(child)
+function override.new(fdf, child)
     if child then isTypeErr(child, FrameNormalImage, 'child') end
 
-    local fdf = private.fdf
+    fdf = fdf or private.fdf
     local instance = child or Class.allocate(FrameNormalImage)
     instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 

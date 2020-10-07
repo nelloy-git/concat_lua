@@ -47,6 +47,8 @@ function override.new(name, child)
     local instance = child or Class.allocate(FdfGlueTextButton)
     instance = FdfBase.new(name, 'GLUETEXTBUTTON', false, instance)
 
+    private.newData(instance)
+
     return instance
 end
 
@@ -95,71 +97,128 @@ function public:setPushedTextOffset(x, y)
 end
 
 --- Shown when enabled
----@param fdf_backdrop FdfBackdrop
-function public:setControl(fdf_backdrop)
-    isTypeErr(fdf_backdrop, FdfBackdrop, 'fdf_backdrop')
-    private.setControlSubframe(self, 'ControlBackdrop', fdf_backdrop)
+---@return FdfBackdrop
+function public:getControlNormal()
+    local priv = private.data[self]
+
+    if priv.normal then
+        return priv.normal
+    end
+
+    priv.normal = FdfBackdrop.new(self:getName()..'Normal')
+    private.setControlSubframe(self, 'ControlBackdrop', priv.normal)
+
+    return priv.normal
 end
 
 --- Shown as long as pressed
----@param fdf_backdrop FdfBackdrop
-function public:setControlPushed(fdf_backdrop)
-    isTypeErr(fdf_backdrop, FdfBackdrop, 'fdf_backdrop')
-    private.setControlSubframe(self, 'ControlPushedBackdrop', fdf_backdrop)
+---@return FdfBackdrop
+function public:getControlPushed()
+    local priv = private.data[self]
+
+    if priv.pushed then
+        return priv.pushed
+    end
+
+    priv.pushed = FdfBackdrop.new(self:getName()..'Pushed')
+    private.setControlSubframe(self, 'ControlPushedBackdrop', priv.pushed)
+
+    return priv.pushed
 end
 
 --- Shown when disabled
----@param fdf_backdrop FdfBackdrop
-function public:setControlDisabled(fdf_backdrop)
-    isTypeErr(fdf_backdrop, FdfBackdrop, 'fdf_backdrop')
-    private.setControlSubframe(self, 'ControlDisabledBackdrop', fdf_backdrop)
+---@return FdfBackdrop
+function public:getControlDisabled()
+    local priv = private.data[self]
+
+    if priv.disabled then
+        return priv.disabled
+    end
+
+    priv.disabled = FdfBackdrop.new(self:getName()..'Disabled')
+    private.setControlSubframe(self, 'ControlDisabledBackdrop', priv.disabled)
+
+    return priv.disabled
 end
 
 --- Glowing when mouse hovers.
----@param fdf_highlight FdfHighlight
-function public:setControlMouseOver(fdf_highlight)
-    isTypeErr(fdf_highlight, FdfHighlight, 'fdf_highlight')
-    private.setControlSubframe(self, 'ControlMouseOverHighlight', fdf_highlight)
+---@return FdfHighlight
+function public:getControlMouse()
+    local priv = private.data[self]
+
+    if priv.mouse then
+        return priv.mouse
+    end
+
+    priv.mouse = FdfHighlight.new(self:getName()..'Mouse')
+    private.setControlSubframe(self, 'ControlMouseOverHighlight', priv.mouse)
 
     if self:getBaseType() ~= 'GLUETEXTBUTTON' then
         self:setBaseType('GLUEBUTTON')
     end
+
+    return priv.mouse
 end
 
 --- Glowing when mouse hovers.
----@param fdf_highlight FdfHighlight
-function public:setControlFocus(fdf_highlight)
-    isTypeErr(fdf_highlight, FdfHighlight, 'fdf_highlight')
-    private.setControlSubframe(self, 'ControlFocusHighlight', fdf_highlight)
+---@return FdfHighlight
+function public:getControlFocus()
+    local priv = private.data[self]
+
+    if priv.focus then
+        return priv.focus
+    end
+
+    priv.focus = FdfHighlight.new(self:getName()..'Focus')
+    private.setControlSubframe(self, 'ControlFocusHighlight', priv.focus)
 
     if self:getBaseType() ~= 'GLUETEXTBUTTON' then
         self:setBaseType('GLUEBUTTON')
     end
+
+    return priv.focus
 end
 
 --- Is used to markup the text on the buttom.
----@param fdf_text FdfText
-function public:setText(fdf_text)
-    isTypeErr(fdf_text, FdfText, 'fdf_text')
-    private.setControlSubframe(self, 'ButtonText', fdf_text)
+---@return FdfText
+function public:getText()
+    local priv = private.data[self]
+
+    if priv.text then
+        return priv.text
+    end
+
+    priv.text = FdfText.new(self:getName()..'Text')
+    private.setControlSubframe(self, 'ButtonText', priv.text)
 
     self:setBaseType('GLUETEXTBUTTON')
+
+    return priv.text
 end
 
 --=========
 -- Private
 --=========
 
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self FdfGlueTextButton
+function private.newData(self)
+    local priv = {
+        normal = nil,
+        pushed = nil,
+        disabled = nil,
+        mouse = nil,
+        focus = nil,
+        text = nil,
+    }
+    private.data[self] = priv
+end
+
 ---@param self FdfGlueTextButton
 ---@param parameter string
 ---@param subframe FdfBase
 function private.setControlSubframe(self, parameter, subframe)
-    -- Remove previous
-    local name = self:getParameter(parameter)
-    if name then
-        self:removeSubframe(name)
-    end
-
     self:setParameter(parameter, '\"'..subframe:getName()..'\"')
     self:addSubframe(subframe)
 end

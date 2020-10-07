@@ -19,21 +19,19 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceSkillButtonClass
-local SkillButton = require('Interface.Skill.Button') or error('')
---local SkillButton = require('Interface.SkillButton') or error('')
-
+local SkillButton = require('Interface.SkillButton') or error('')
 
 --=======
 -- Class
 --=======
 
-local InterfaceSkillPanel2 = Class.new('InterfaceSkillPanel2', Image)
----@class InterfaceSkillPanel2 : FrameNormalImage
-local public = InterfaceSkillPanel2.public
----@class InterfaceSkillPanel2Class : FrameNormalImageClass
-local static = InterfaceSkillPanel2.static
----@type InterfaceSkillPanel2Class
-local override = InterfaceSkillPanel2.override
+local InterfaceSkillPanel = Class.new('InterfaceSkillPanel', Image)
+---@class InterfaceSkillPanel : FrameNormalImage
+local public = InterfaceSkillPanel.public
+---@class InterfaceSkillPanelClass : FrameNormalImageClass
+local static = InterfaceSkillPanel.static
+---@type InterfaceSkillPanelClass
+local override = InterfaceSkillPanel.override
 local private = {}
 
 --=========
@@ -42,14 +40,14 @@ local private = {}
 
 local static_instance = nil
 
----@return InterfaceSkillPanel2
+---@return InterfaceSkillPanel
 function override.new()
     if static_instance then
-        Log:wrn(tostring(InterfaceSkillPanel2)..': can not get new instance. It is static class.')
+        Log:wrn(tostring(InterfaceSkillPanel)..': can not get new instance. It is static class.')
         return static_instance
     end
 
-    local instance = Class.allocate(InterfaceSkillPanel2)
+    local instance = Class.allocate(InterfaceSkillPanel)
     instance = Image.new(instance)
 
     private.newData(instance)
@@ -83,7 +81,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log:wrn(tostring(InterfaceSkillPanel2)..': it is autosized frame.')
+    Log:wrn(tostring(InterfaceSkillPanel)..': it is autosized frame.')
 end
 
 ---@return number
@@ -106,7 +104,7 @@ function public:setAbilContainer(container)
     if previous then
         private.container2interface[previous] = nil
         if not previous:removeAction(priv.changed_action) then
-            Log:err(tostring(InterfaceSkillPanel2)..': сan clear precious AbilityExtContainer', 2)
+            Log:err(tostring(InterfaceSkillPanel)..': сan clear precious AbilityExtContainer', 2)
         end
     end
 
@@ -136,7 +134,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.container2interface = setmetatable({}, {__mode = 'kv'})
 
----@param self InterfaceSkillPanel2
+---@param self InterfaceSkillPanel
 function private.newData(self)
     local priv = {
         container = nil,
@@ -153,8 +151,7 @@ function private.newData(self)
     ImagePublic.setVisible(self, false)
 
     for i = 1, 7 do
-        --priv.buttons[i] = SkillButton.new(i + 5)
-        priv.buttons[i] = SkillButton.new()
+        priv.buttons[i] = SkillButton.new(i + 5)
         priv.buttons[i]:setPos((i - 1) * priv.buttons[i]:getWidth(), 0)
         priv.buttons[i]:setVisible(true)
     end
@@ -180,7 +177,7 @@ private.hotkeys = {
 ---@param abil AbilityExt
 ---@param event AbilityExtEvent
 function private.chargesChanged(container, abil, event)
-    ---@type InterfaceSkillPanel2
+    ---@type InterfaceSkillPanel
     local self = private.container2interface[container]
 
     for i = 1, #private.hotkeys do
@@ -195,7 +192,7 @@ end
 ---@param abil AbilityExt
 ---@param event AbilityExtEvent
 function private.castingStart(container, abil, event)
-    ---@type InterfaceSkillPanel2
+    ---@type InterfaceSkillPanel
     local self = private.container2interface[container]
     local priv = private.data[self]
 
@@ -215,7 +212,7 @@ end
 ---@param abil AbilityExt
 ---@param event AbilityExtEvent
 function private.castingLoop(container, abil, event)
-    ---@type InterfaceSkillPanel2
+    ---@type InterfaceSkillPanel
     local self = private.container2interface[container]
     local priv = private.data[self]
 

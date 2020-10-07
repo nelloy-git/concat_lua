@@ -50,19 +50,25 @@ local private = {}
 
 ---@alias FrameNormalButtonCallback fun(frame:FrameNormalButton, player:player, event:frameeventtype)
 
+---@param fdf FdfGlueTextButton | nil
 ---@param child FrameNormalButton | nil
 ---@return FrameNormalButton
-function override.new(child)
+function override.new(fdf, child)
+    if fdf then isTypeErr(fdf, FdfGlueTextButton, 'fdf') end
     if child then isTypeErr(child, FrameNormalButton, 'child') end
 
     ---@type FdfGlueTextButton
-    local fdf = private.fdf
+    fdf = fdf or private.fdf
     local instance = child or Class.allocate(FrameNormalButton)
     instance = Frame.new(fdf:getName(), fdf:isSimple(), instance)
 
-    private.newData(instance)
+    private.newData(instance, fdf)
 
     return instance
+end
+
+function override.link()
+    Log:err(tostring(FrameNormalButton)..': can not be linked.')
 end
 
 --========
@@ -127,48 +133,17 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self FrameSimpleImage
-function private.newData(self)
-    local getHandle = BlzGetFrameByName
+---@param fdf FdfGlueTextButton
+function private.newData(self, fdf)
+    local getH = BlzGetFrameByName
     local priv = {
-        normal = Image.link(getHandle(private.fdf_normal:getName(), 0)),
-        pushed = Image.link(getHandle(private.fdf_pushed:getName(), 0)),
-        disabled = Image.link(getHandle(private.fdf_disabled:getName(), 0)),
-        mouse = Image.link(getHandle(private.fdf_mouse:getName(), 0)),
-        focus = Image.link(getHandle(private.fdf_focus:getName(), 0)),
-        text = Image.link(getHandle(private.fdf_text:getName(), 0)),
+        normal = Image.link(getH(fdf:getControlNormal():getName(), 0)),
+        pushed = Image.link(getH(fdf:getControlPushed():getName(), 0)),
+        disabled = Image.link(getH(fdf:getControlDisabled():getName(), 0)),
+        mouse = Image.link(getH(fdf:getControlMouse():getName(), 0)),
+        focus = Image.link(getH(fdf:getControlFocus():getName(), 0)),
     }
     private.data[self] = priv
-end
-
----@param name string
----@return FdfBackdrop
-function private.createFdfControl(name)
-    local control = FdfBackdrop.new(name)
-    control:setBackground("")
-    return control
-end
-
----@param name string
----@return FdfBackdrop
-function private.createFdfHighlight(name)
-    local highlight = FdfHighlight.new(name)
-    highlight:setHighlightType('FILETEXTURE')
-    highlight:setAlphaFile("UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp")
-    highlight:setAlphaMode('ADD')
-    return highlight
-end
-
----@param name string
----@param font string
----@param size number
----@return FdfBackdrop
-function private.createFdfText(name, font, size)
-    local text = FdfText.new(name)
-    text:setText('')
-    text:setJustification('JUSTIFYCENTER', 'JUSTIFYMIDDLE')
-    text:setFont(font, size)
-    text:setColor(0, 0, 0, 1)
-    return text
 end
 
 private.fdf = FdfGlueTextButton.new('FrameNormalButton')
@@ -176,20 +151,24 @@ private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setControlStyle(true, true, true)
 
-private.fdf_normal = private.createFdfControl('FrameNormalButtonControlNormal')
-private.fdf:setControl(private.fdf_normal)
-private.fdf_pushed = private.createFdfControl('FrameNormalButtonControlPushed')
-private.fdf:setControlPushed(private.fdf_pushed)
-private.fdf_disabled = private.createFdfControl('FrameNormalButtonControlDisabled')
-private.fdf:setControlDisabled(private.fdf_disabled)
-private.fdf_mouse = private.createFdfHighlight('FrameNormalButtonControlMouseOver')
-private.fdf:setControlMouseOver(private.fdf_mouse)
-private.fdf_focus = private.createFdfHighlight('FrameNormalButtonControlFocus')
-private.fdf:setControlFocus(private.fdf_focus)
-private.fdf_text = private.createFdfText('FrameNormalButtonDefaultText',
-                                         'fonts\\nim_____.ttf',
-                                          0.009)
-private.fdf:setText(private.fdf_text)
+private.fdf_normal = private.fdf:getControlNormal()
+private.fdf_normal:setBackground("")
+
+private.fdf_pushed = private.fdf:getControlPushed()
+private.fdf_normal:setBackground("")
+
+private.fdf_disabled = private.fdf:getControlDisabled()
+private.fdf_normal:setBackground("")
+
+private.fdf_mouse = private.fdf:getControlMouse()
+private.fdf_mouse:setHighlightType('FILETEXTURE')
+private.fdf_mouse:setAlphaFile("UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp")
+private.fdf_mouse:setAlphaMode('ADD')
+
+private.fdf_focus = private.fdf:getControlFocus()
+private.fdf_focus:setHighlightType('FILETEXTURE')
+private.fdf_focus:setAlphaFile("UI\\Glues\\ScoreScreen\\scorescreen-tab-hilight.blp")
+private.fdf_focus:setAlphaMode('ADD')
 
 private.available_events = {
     [FrameEventType.MOUSE_CLICK] = true,
