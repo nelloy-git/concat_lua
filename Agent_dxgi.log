@@ -1,0 +1,94 @@
+info:  Game: Agent.exe
+info:  DXVK: v1.7.1-2-g743f309
+info:  Built-in extension providers:
+info:    Win32 WSI
+info:    OpenVR
+warn:  OpenVR: Failed to locate module
+info:  Enabled instance extensions:
+info:    VK_KHR_get_surface_capabilities2
+info:    VK_KHR_surface
+info:    VK_KHR_win32_surface
+info:  GeForce GTX 1070:
+info:    Driver: 435.21.0
+info:    Vulkan: 1.1.109
+info:    Memory Heap[0]: 
+info:      Size: 8192 MiB
+info:      Flags: 0x1
+info:      Memory Type[7]: Property Flags = 0x1
+info:      Memory Type[8]: Property Flags = 0x1
+info:    Memory Heap[1]: 
+info:      Size: 11908 MiB
+info:      Flags: 0x0
+info:      Memory Type[0]: Property Flags = 0x0
+info:      Memory Type[1]: Property Flags = 0x0
+info:      Memory Type[2]: Property Flags = 0x0
+info:      Memory Type[3]: Property Flags = 0x0
+info:      Memory Type[4]: Property Flags = 0x0
+info:      Memory Type[5]: Property Flags = 0x0
+info:      Memory Type[6]: Property Flags = 0x0
+info:      Memory Type[9]: Property Flags = 0x6
+info:      Memory Type[10]: Property Flags = 0xe
+info:  DXGI: NvAPI workaround enabled, reporting AMD GPU
+info:  Adapter LUID 0: 0:4df
+info:  Game: Agent.exe
+info:  DXVK: v1.7.1-2-g743f309
+info:  Built-in extension providers:
+info:    Win32 WSI
+info:    OpenVR
+warn:  OpenVR: Failed to locate module
+info:  Enabled instance extensions:
+info:    VK_KHR_get_surface_capabilities2
+info:    VK_KHR_surface
+info:    VK_KHR_win32_surface
+info:  GeForce GTX 1070:
+info:    Driver: 435.21.0
+info:    Vulkan: 1.1.109
+info:    Memory Heap[0]: 
+info:      Size: 8192 MiB
+info:      Flags: 0x1
+info:      Memory Type[7]: Property Flags = 0x1
+info:      Memory Type[8]: Property Flags = 0x1
+info:    Memory Heap[1]: 
+info:      Size: 11908 MiB
+info:      Flags: 0x0
+info:      Memory Type[0]: Property Flags = 0x0
+info:      Memory Type[1]: Property Flags = 0x0
+info:      Memory Type[2]: Property Flags = 0x0
+info:      Memory Type[3]: Property Flags = 0x0
+info:      Memory Type[4]: Property Flags = 0x0
+info:      Memory Type[5]: Property Flags = 0x0
+info:      Memory Type[6]: Property Flags = 0x0
+info:      Memory Type[9]: Property Flags = 0x6
+info:      Memory Type[10]: Property Flags = 0xe
+info:  DXGI: NvAPI workaround enabled, reporting AMD GPU
+info:  Game: Agent.exe
+info:  DXVK: v1.7.1-2-g743f309
+info:  Built-in extension providers:
+info:    Win32 WSI
+info:    OpenVR
+warn:  OpenVR: Failed to locate module
+info:  Enabled instance extensions:
+info:    VK_KHR_get_surface_capabilities2
+info:    VK_KHR_surface
+info:    VK_KHR_win32_surface
+info:  GeForce GTX 1070:
+info:    Driver: 435.21.0
+info:    Vulkan: 1.1.109
+info:    Memory Heap[0]: 
+info:      Size: 8192 MiB
+info:      Flags: 0x1
+info:      Memory Type[7]: Property Flags = 0x1
+info:      Memory Type[8]: Property Flags = 0x1
+info:    Memory Heap[1]: 
+info:      Size: 11908 MiB
+info:      Flags: 0x0
+info:      Memory Type[0]: Property Flags = 0x0
+info:      Memory Type[1]: Property Flags = 0x0
+info:      Memory Type[2]: Property Flags = 0x0
+info:      Memory Type[3]: Property Flags = 0x0
+info:      Memory Type[4]: Property Flags = 0x0
+info:      Memory Type[5]: Property Flags = 0x0
+info:      Memory Type[6]: Property Flags = 0x0
+info:      Memory Type[9]: Property Flags = 0x6
+info:      Memory Type[10]: Property Flags = 0xe
+info:  DXGI: NvAPI workaround enabled, reporting AMD GPU

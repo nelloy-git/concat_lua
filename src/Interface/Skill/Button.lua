@@ -7,7 +7,7 @@ local Class = require(LibList.ClassLib) or error('')
 local FrameLib = require(LibList.FrameLib) or error('')
 local NormalButton = FrameLib.Normal.Button or error('')
 local NormalImage = FrameLib.Normal.Image or error('')
-local NormalText = FrameLib.Normal.Text or error('')
+local SimpleText = FrameLib.Simple.Text or error('')
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
 local Frame = HandleLib.Frame or error('')
@@ -61,8 +61,22 @@ function public:setSize(width, height)
     priv.button:setSize(0.8 * width, 0.8 * height)
     priv.button:setPos(0.1 * width, 0.1 * height)
 
-    --priv.charges_back:setSize(width / 3, height / 4)
-    --priv.charges_text:setSize(width / 3, height / 4)
+    priv.charges_back:setSize(width / 3, height / 4)
+    priv.charges_back:setPos(0, priv.button:getHeight() - priv.charges_back:getHeight())
+
+    priv.charges_text:setSize(width / 3, height / 4)
+    priv.charges_text:setPos(0, priv.button:getHeight() - priv.charges_text:getHeight())
+    priv.charges_text:setFont('fonts\\nim_____.ttf', 0.8 * height / 4)
+
+    self:setCooldown(priv.cd_left, priv.cd_full)
+end
+
+---@param flag boolean
+function public:setEnabled(flag)
+    FramePublic.setEnabled(self, flag)
+    local priv = private.data[self]
+
+    priv.button:setEnabled(flag)
 end
 
 ---@param count number
@@ -80,6 +94,19 @@ function public:setCharges(count, max_count)
         priv.charges_text:setText(s_count)
     end
 --]]
+end
+
+---@param left number
+---@param full number
+function public:setCooldown(left, full)
+    local priv = private.data[self]
+    priv.cd_left = left
+    priv.cd_full = full
+
+    priv.cd_mask:setSize(left / full * priv.button:getWidth(), priv.button:getHeight())
+
+    priv.cd_line:setSize(0.1 * priv.button:getWidth(), 0)
+    priv.cd_line:setPos(left / full * 0.95 * priv.button:getWidth(), 0)
 end
 
 ---@param tex_file string
@@ -101,13 +128,6 @@ function public:addAction(event, callback)
     private.data[self].button:addAction(event, callback)
 end
 
-function public:setEnabled(flag)
-    FramePublic.setEnabled(self, flag)
-    local priv = private.data[self]
-
-    priv.button:setEnabled(flag)
-end
-
 --=========
 -- Private
 --=========
@@ -118,12 +138,34 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self)
     local priv = {
         button = NormalButton.new(Fdf.button),
-        -- TODO charges, cooldown
+
+        cd_mask = NormalImage.new(),
+        cd_line = NormalImage.new(),
+        cd_text = SimpleText.new(),
+
+        cd_left = 0,
+        cd_full = 1,
+
+        charges_back = NormalImage.new(),
+        charges_text = SimpleText.new(),
     }
     private.data[self] = priv
 
     priv.button:setParent(self)
-    self:setSize(0.04, 0.04)
+
+    priv.cd_mask:setParent(priv.button)
+    priv.cd_mask:setPos(0, 0)
+    priv.cd_mask:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
+    priv.cd_mask:setAlpha(0.6)
+
+    priv.cd_line:setParent(priv.button)
+    priv.cd_line:setPos(0, 0)
+    priv.cd_line:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor14.blp')
+
+    priv.charges_back:setParent(priv.button)
+    priv.charges_text:setParent(priv.button)
+
+    self:setSize(self:getWidth(), self:getHeight())
 end
 
 return static

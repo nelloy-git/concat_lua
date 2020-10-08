@@ -49,6 +49,11 @@ function override.new()
         return static_instance
     end
 
+    local test = SkillButton.new()
+    test:setPos(0.4, 0.3)
+    test:setSize(0.05, 0.05)
+    test:setCooldown(1, 2)
+
     local instance = Class.allocate(InterfaceSkillPanel2)
     instance = Image.new(nil, instance)
 

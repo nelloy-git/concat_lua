@@ -79,14 +79,18 @@ function public:setPos(x, y)
     priv.x = x
     priv.y = y
 
-    local handle = self:getData()
     if priv.parent then
-        BlzFrameSetPoint(handle, FRAMEPOINT_TOPLEFT,
+        BlzFrameSetPoint(self:getData(), FRAMEPOINT_TOPLEFT,
                          priv.parent:getData(), FRAMEPOINT_TOPLEFT,
                          x, -y)
     else
-        BlzFrameSetAbsPoint(handle, FRAMEPOINT_TOPLEFT,
+        BlzFrameSetAbsPoint(self:getData(), FRAMEPOINT_TOPLEFT,
                             x, 0.6 - y)
+    end
+
+    -- Adopted childrens
+    for child, _ in pairs(priv.adopted) do
+        child:setPos(child:getX(), child:getY())
     end
 end
 
@@ -157,26 +161,24 @@ end
 ---@param parent Frame | nil
 function public:setParent(parent)
     local priv = private.data[self]
-    priv.parent = parent
+    local prev_parent = self:getParent()
 
-    local handle = self:getData()
-    local parent_handle
-
-    if priv.is_simple then
-        -- Simple frame
-        if parent and not parent:isSimple() then
-            Log:err('Normal frame can not be a parent of simple frame.', 2)
-        end
-        parent_handle = parent and parent:getData() or nil
-    else
-        -- Normal frame
-        if parent and parent:isSimple() then
-            Log:err('Simple frame can not be a parent of normal frame.', 2)
-        end
-        parent_handle = parent and parent:getData() or private.console_ui_backdrop
+    -- If frame was adopted remove it from parent
+    if prev_parent then
+        private.data[prev_parent].adopted[self] = nil
     end
 
-    BlzFrameSetParent(handle, parent_handle)
+    priv.parent = parent
+
+    -- If no new parent or both are simple or normal.
+    if not parent or self:isSimple() == parent:isSimple() then
+        BlzFrameSetParent(self:getData(), parent and parent:getData() or nil)
+        return
+    end
+
+    -- Adopted
+    private.data[parent].adopted[self] = true
+    parent:setPos(parent:getX(), parent:getY())
 end
 
 function public:getLevel()
@@ -201,7 +203,7 @@ function public:setAlpha(alpha)
     alpha = alpha > 1 and 1 or alpha < 0 and 0 or alpha
     private.data[self].alpha = alpha
 
-    BlzFrameSetAlpha(self:getData(), 255 * alpha)
+    BlzFrameSetAlpha(self:getData(), math.floor(255 * alpha))
 end
 
 ---@return boolean
@@ -304,6 +306,8 @@ function private.newData(self, is_simple)
 
         level = 0,
         alpha = 0,
+
+        adopted = {},
 
         ---@type table<frameeventtype, ActionList>
         actions = {}
