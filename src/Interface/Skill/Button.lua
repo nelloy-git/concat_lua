@@ -61,6 +61,9 @@ function public:setSize(width, height)
     priv.button:setSize(0.8 * width, 0.8 * height)
     priv.button:setPos(0.1 * width, 0.1 * height)
 
+    priv.cd_text:setSize(0.8 * width, 0.8 * height)
+    priv.cd_text:setFont('fonts\\nim_____.ttf', height / 4)
+
     priv.charges_back:setSize(width / 3, height / 4)
     priv.charges_back:setPos(0, priv.button:getHeight() - priv.charges_back:getHeight())
 
@@ -82,7 +85,7 @@ end
 ---@param count number
 function public:setCharges(count, max_count)
     local priv = private.data[self]
---[[
+
     if max_count <= 1 then
         priv.charges_back:setVisible(false)
         priv.charges_text:setVisible(false)
@@ -93,7 +96,6 @@ function public:setCharges(count, max_count)
         local s_count = tostring(count - count % 1)
         priv.charges_text:setText(s_count)
     end
---]]
 end
 
 ---@param left number
@@ -103,10 +105,26 @@ function public:setCooldown(left, full)
     priv.cd_left = left
     priv.cd_full = full
 
-    priv.cd_mask:setSize(left / full * priv.button:getWidth(), priv.button:getHeight())
+    if priv.charges_left < priv.charges_full - 1 then
+        priv.cd_mask:setSize(left / full * priv.button:getWidth(), priv.button:getHeight())
 
-    priv.cd_line:setSize(0.1 * priv.button:getWidth(), 0)
-    priv.cd_line:setPos(left / full * 0.95 * priv.button:getWidth(), 0)
+        local cd_time = 10 * left
+        cd_time = cd_time - cd_time % 1
+        priv.cd_text:setVisible(true)
+        priv.cd_text:setText(tostring(cd_time / 10))
+    else
+        priv.cd_mask:setSize(0, priv.button:getHeight())
+        priv.cd_text:setVisible(false)
+    end
+
+    priv.cd_line:setSize(0.05 * priv.button:getWidth(), priv.button:getHeight())
+
+    if left > 0 then
+        priv.cd_line:setVisible(true)
+        priv.cd_line:setPos(left / full * 0.95 * priv.button:getWidth(), 0)
+    else
+        priv.cd_line:setVisible(false)
+    end
 end
 
 ---@param tex_file string
@@ -148,6 +166,9 @@ function private.newData(self)
 
         charges_back = NormalImage.new(),
         charges_text = SimpleText.new(),
+
+        charges_left = 1,
+        charges_full = 1,
     }
     private.data[self] = priv
 
@@ -156,11 +177,14 @@ function private.newData(self)
     priv.cd_mask:setParent(priv.button)
     priv.cd_mask:setPos(0, 0)
     priv.cd_mask:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
-    priv.cd_mask:setAlpha(0.6)
+    priv.cd_mask:setAlpha(0.7)
 
     priv.cd_line:setParent(priv.button)
     priv.cd_line:setPos(0, 0)
     priv.cd_line:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor14.blp')
+
+    priv.cd_text:setParent(priv.button)
+    priv.cd_text:setPos(0, 0)
 
     priv.charges_back:setParent(priv.button)
     priv.charges_text:setParent(priv.button)
