@@ -1,0 +1,4 @@
+<<<<<<< HEAD
+=======
+[0.568] {Msg} Created new FdfFile 'GeneratedFile' containing: FrameNormalButton, FrameNormalImage, FrameNormalTextDefault, FrameNormalTooltip, FrameNormalTooltipIcon, FrameNormalTooltipName, FrameNormalTooltipText, FrameSimpleImage, FrameSimpleStatusBar, FrameSimpleText, InterfaceMinimapBorder, InterfacePortrait, InterfacePortraitBorder, InterfaceSkillButton, InterfaceSkillButtonBackground, InterfaceUnitParametersBackground, 
+>>>>>>> e3e43388a10818c2cf177309b464e83da8d44162
