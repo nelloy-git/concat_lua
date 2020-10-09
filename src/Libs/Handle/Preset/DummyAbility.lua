@@ -19,39 +19,39 @@ local Action = UtilsLib.Action or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
----@type AbilityExtDummyPool
-local AbilityExtDummyPool = require(lib_path..'.Dummy.Pool')
+---@type DummyAbilityPool
+local DummyAbilityPool = require(lib_path..'Preset.DummyAbility.Pool')
 
 --=======
 -- Class
 --=======
 
-local AbilityExtDummy = Class.new('AbilityExtDummy', Ability)
----@class AbilityExtDummy : Ability
-local public = AbilityExtDummy.public
----@class AbilityExtDummyClass : AbilityClass
-local static = AbilityExtDummy.static
----@type AbilityExtDummyClass
-local override = AbilityExtDummy.override
+local DummyAbility = Class.new('DummyAbility', Ability)
+---@class DummyAbility : Ability
+local public = DummyAbility.public
+---@class DummyAbilityClass : AbilityClass
+local static = DummyAbility.static
+---@type DummyAbilityClass
+local override = DummyAbility.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@alias AbilityExtDummyCallback fun(abil_dummy:AbilityExtDummy)
+---@alias DummyAbilityCallback fun(abil_dummy:DummyAbility)
 
 ---@param owner Unit
 ---@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
----@param child AbilityExtDummy | nil
----@return AbilityExtDummy
+---@param child DummyAbility | nil
+---@return DummyAbility
 function override.new(owner, hotkey, child)
     isTypeErr(owner, Unit, 'owner')
     isTypeErr(hotkey, 'string', 'hotkey')
-    if child then isTypeErr(child, AbilityExtDummy, 'child') end
+    if child then isTypeErr(child, DummyAbility, 'child') end
 
-    local abil_dummy_type = AbilityExtDummyPool.pop(hotkey)
-    local instance = child or Class.allocate(AbilityExtDummy)
+    local abil_dummy_type = DummyAbilityPool.pop(hotkey)
+    local instance = child or Class.allocate(DummyAbility)
     instance = Ability.new(owner:getData(), abil_dummy_type:getId(), instance)
     private.newData(instance, owner, abil_dummy_type, hotkey)
 
@@ -95,10 +95,6 @@ end
 function public:setRange(range)
     BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_CAST_RANGE, 0, range)
 end
-
---function public:setOptions(options)
---    -- TODO
---end
 
 ---@param name string
 function public:setName(name)
@@ -146,12 +142,11 @@ end
 ---@param cooldown number
 function public:setCooldown(cooldown)
     BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_COOLDOWN, 0, cooldown)
-    --BlzSetUnitAbilityCooldown(self:getOwner():getData(), self:getId(), 0, cooldown)
 end
 
 function public:destroy()
     local priv = private.data[self]
-    AbilityExtDummyPool.push(priv.hotkey, priv.abil_dummy_type)
+    DummyAbilityPool.push(priv.hotkey, priv.abil_dummy_type)
     AbilityPublic.destroy()
 end
 
@@ -159,7 +154,7 @@ end
 -- Callbacks
 --===========
 
----@param callback AbilityExtDummyCallback
+---@param callback DummyAbilityCallback
 function public:setEffectAction(callback)
     private.data[self].effect_action = Action.new(callback, self)
 end
@@ -170,7 +165,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self AbilityExtDummy
+---@param self DummyAbility
 ---@param owner Unit
 function private.newData(self, owner, abil_dummy_type, hotkey)
     local priv = {
@@ -185,7 +180,7 @@ function private.newData(self, owner, abil_dummy_type, hotkey)
 end
 
 function private.onEffect()
-    ---@type AbilityExtDummy
+    ---@type DummyAbility
     local self = static.getLinked(GetSpellAbility())
     local priv = private.data[self]
     if priv.effect_action then priv.effect_action:run(self) end

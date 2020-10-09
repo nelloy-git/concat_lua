@@ -16,6 +16,8 @@ local path = Lib.curPath()
 HandleLibAPI.Ability = require(path..'Types.Ability') or error('')
 ---@type DestructableClass
 HandleLibAPI.Destructable = require(path..'Types.Destructable') or error('')
+---@type DummyAbilityClass
+HandleLibAPI.DummyAbility = require(path..'Types.DummyAbility') or error('')
 ---@type EffectClass
 HandleLibAPI.Effect = require(path..'Types.Effect') or error('')
 ---@type FrameClass

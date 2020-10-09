@@ -170,16 +170,6 @@ function public:getMaxCharges()
 end
 
 ---@param time number
-function public:setChargeTimeLeft(time)
-    private.data[self].charges:setTimeLeft(time)
-end
-
----@return number
-function public:getChargeTimeLeft()
-    return private.data[self].charges:getTimeLeft()
-end
-
----@param time number
 function public:setChargeCooldown(time)
     private.data[self].charges:setCooldown(time)
 end
@@ -187,6 +177,16 @@ end
 ---@return number
 function public:getChargeCooldown()
     return private.data[self].charges:getCooldown()
+end
+
+---@param time number
+function public:setCooldownTimeLeft(time)
+    private.data[self].charges:setTimeLeft(time)
+end
+
+---@return number
+function public:getCooldownTimeLeft()
+    return private.data[self].charges:getTimeLeft()
 end
 
 -- Actions
@@ -206,7 +206,7 @@ end
 function public:removeAction(action)
     local priv = private.data[self]
 
-    for event, list in pairs(priv.actions) do
+    for _, list in pairs(priv.actions) do
         if list:remove(action) then
             return true
         end
@@ -228,12 +228,9 @@ function private.newData(self)
         casting_time = 1,
         charges_for_use = 1,
 
-        ---@type TimedObj
         casting = TimedObj.new(),
-        ---@type AbilityExtCharges
         charges = AbilityExtCharges.new(),
 
-        ---@type table<AbilityExtEvent, Action | nil>
         actions = {}
     }
     private.data[self] = priv
@@ -279,10 +276,7 @@ end
 ---@param event AbilityExtEvent
 function private.runEvent(self, event)
     local priv = private.data[self]
-
-    -- Instance actions
-    local action = priv.actions[event]
-    if action then action:run(self, event) end
+    priv.actions[event]:run(self, event)
 end
 
 return static

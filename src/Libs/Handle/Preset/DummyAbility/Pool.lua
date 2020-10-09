@@ -16,17 +16,20 @@ local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
+---@type HandleSettings
+local Settings = require(lib_path..'Settings')
+
 --=======
 -- Class
 --=======
 
-local AbilityExtDummyPool = Class.new('AbilityExtDummyPool')
----@class AbilityExtDummyPool : BinaryAbility
-local public = AbilityExtDummyPool.public
----@class AbilityExtDummyPoolClass : BinaryAbilityClass
-local static = AbilityExtDummyPool.static
----@type AbilityExtDummyPool
-local override = AbilityExtDummyPool.override
+local DummyAbilityPool = Class.new('DummyAbilityPool')
+---@class DummyAbilityPool : BinaryAbility
+local public = DummyAbilityPool.public
+---@class DummyAbilityPoolClass : BinaryAbilityClass
+local static = DummyAbilityPool.static
+---@type DummyAbilityPool
+local override = DummyAbilityPool.override
 local private = {}
 
 --=========
@@ -73,8 +76,8 @@ end
 
 ---@param target_type string | "'None'" | "'Unit'" | "'Point'" | "'PointOrUnit'"
 ---@param is_area boolean
----@param child AbilityExtDummy | nil
----@return AbilityExtDummy
+---@param child DummyAbility | nil
+---@return DummyAbility
 function private.newDummy(target_type, is_area, child)
     isTypeErr(target_type, 'string', 'target_type')
     if not (target_type == 'None' or
@@ -84,7 +87,7 @@ function private.newDummy(target_type, is_area, child)
         Log:err('Got wrong \"target_type\".', 2)
     end
     isTypeErr(is_area, 'boolean', 'is_area')
-    if child then isTypeErr(child, AbilityExtDummyPool, 'child') end
+    if child then isTypeErr(child, DummyAbilityPool, 'child') end
 
     local id = BinaryLib.getAbilityId()
     local order_id = BinaryLib.getOrderId()
@@ -112,11 +115,10 @@ end
 
 private.channel_id = string.unpack('>I4', 'ANcl')
 
-private.pool_size_per_hotkey = 10
-
 private.hotkeys = {
     'Q', 'W', 'E', 'R', 'T', 'D', 'F'
 }
+private.pool_size_per_hotkey = math.floor(Settings.DummyAbilityPoolSize / #private.hotkeys) + 1
 
 private.pool = {}
 for i = 1, #private.hotkeys do
