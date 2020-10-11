@@ -118,7 +118,7 @@ end
 ---@param name string
 ---@return AbilityExtType
 function HeroUtils.newAbilErr(name)
-    local abil = AbilType.new(name)
+    local abil = AbilType.new()
 
     function abil:getName(owner) return name end
 

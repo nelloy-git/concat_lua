@@ -146,6 +146,10 @@ function public:addAction(event, callback)
     private.data[self].button:addAction(event, callback)
 end
 
+---@param abil AbilityExt
+function public:setAbility(abil)
+end
+
 --=========
 -- Private
 --=========

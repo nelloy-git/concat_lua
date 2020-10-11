@@ -17,4 +17,6 @@ HandleSettings.WorldBarPeriod = 0.03
 
 HandleSettings.DummyAbilityPoolSize = 30
 
+HandleSettings.FigurePixelSize = 16
+
 return HandleSettings

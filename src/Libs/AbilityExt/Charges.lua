@@ -11,7 +11,7 @@ local HandleLib = lib_dep.Handle or error('')
 local TimedObj = HandleLib.TimedObj
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
-local Action = UtilsLib.Action or error('')
+local ActionList = UtilsLib.ActionList or error('')
 
 --=======
 -- Class
@@ -66,8 +66,8 @@ function public:set(charges, ignore_max)
         priv.timer:cancel()
     end
 
-    if priv.charges ~= prev_charges and priv.action_changed then
-        priv.action_changed:run(self)
+    if priv.charges ~= prev_charges then
+        priv.charges_changed_actions:run(self)
     end
 end
 
@@ -128,15 +128,24 @@ end
 ---@alias AbilityExtChargesCallback fun(charges:AbilityExtCharges)
 
 ---@param callback AbilityExtChargesCallback
-function public:setLoopAction(callback)
-    local priv = private.data[self]
-    priv.action_loop = Action.new(callback)
+---@return Action
+function public:addCooldownAction(callback)
+    private.data[self].cooldown_actions:add(callback)
 end
 
 ---@param callback AbilityExtChargesCallback
-function public:setChangedAction(callback)
-    local priv = private.data[self]
-    priv.action_changed = Action.new(callback)
+---@return Action
+function public:addChargesChangedAction(callback)
+    return private.data[self].charges_changed_actions:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    if private.data[self].cooldown_actions:remove(action) then
+        return true
+    end
+    return private.data[self].charges_changed_actions:remove(action)
 end
 
 --=========
@@ -153,8 +162,8 @@ function private.newData(self)
         max_charges = 1,
         cooldown = 0,
 
-        action_loop = nil,
-        action_changed = nil,
+        cooldown_actions = ActionList.new(),
+        charges_changed_actions = ActionList.new(),
 
         timer = TimedObj.new(),
     }
@@ -168,8 +177,7 @@ end
 ---@param timer TimedObj
 function private.timerLoopCallback(timer)
     local self = private.timer2charges[timer]
-    local priv = private.data[self]
-    if priv.action_loop then priv.action_loop:run(self) end
+    private.data[self].cooldown_actions:run(self)
 end
 
 ---@param timer TimedObj

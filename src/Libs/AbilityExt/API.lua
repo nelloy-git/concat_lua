@@ -23,7 +23,6 @@ AbilityLibAPI.Type = require(path..'Type') or error('')
 
 ---@type AbilityExtClass
 local Ability = require(path..'Ability') or error('')
-AbilityLibAPI.getLoopPeriod = Ability.getPeriod
 
 
 --[[

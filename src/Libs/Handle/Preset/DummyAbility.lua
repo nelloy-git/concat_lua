@@ -6,21 +6,23 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Ability = HandleLib.Ability or error('')
-local AbilityPublic = Class.getPublic(Ability) or error('')
-local Unit = HandleLib.Unit or error('')
-local Timer = HandleLib.Timer or error('')
-local Trigger = HandleLib.Trigger or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
----@type DummyAbilityPool
+---@type AbilityClass
+local Ability = require(lib_path..'Types.Ability')
+local AbilityPublic = Class.getPublic(Ability) or error('')
+---@type DummyAbilityPoolClass
 local DummyAbilityPool = require(lib_path..'Preset.DummyAbility.Pool')
+---@type UnitClass
+local Unit = require(lib_path..'Types.Unit')
+---@type TimerClass
+local Timer = require(lib_path..'Types.Timer')
+---@type TriggerClass
+local Trigger = require(lib_path..'Types.Trigger')
 
 --=======
 -- Class

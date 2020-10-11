@@ -17,7 +17,7 @@ HandleLibAPI.Ability = require(path..'Types.Ability') or error('')
 ---@type DestructableClass
 HandleLibAPI.Destructable = require(path..'Types.Destructable') or error('')
 ---@type DummyAbilityClass
-HandleLibAPI.DummyAbility = require(path..'Types.DummyAbility') or error('')
+HandleLibAPI.DummyAbility = require(path..'Preset.DummyAbility') or error('')
 ---@type EffectClass
 HandleLibAPI.Effect = require(path..'Types.Effect') or error('')
 ---@type FrameClass
@@ -40,6 +40,14 @@ HandleLibAPI.Trigger = require(path..'Types.Trigger') or error('')
 HandleLibAPI.Unit = require(path..'Types.Unit') or error('')
 ---@type WorldBarClass
 HandleLibAPI.WorldBar = require(path..'Preset.WorldBar') or error('')
+
+HandleLibAPI.Figure = {}
+---@type FigureArcClass
+HandleLibAPI.Figure.Arc = require(path..'Preset.Figure.Arc') or error('')
+---@type FigurePixelClass
+HandleLibAPI.Figure.Pixel = require(path..'Preset.Figure.Pixel') or error('')
+---@type FigureLineClass
+HandleLibAPI.Figure.Line = require(path..'Preset.Figure.Line') or error('')
 
 Lib.finish()
 
