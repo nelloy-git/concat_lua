@@ -17,7 +17,7 @@ local Value = ParamLib.ValueType or error('')
 
 
 ---@type AbilityExtType
-local ThrowAxe = require('Hero.Berserk.ThrowAxe') or error('')
+--local ThrowAxe = require('Hero.Berserk.ThrowAxe') or error('')
 ---@type AbilityExtType
 local LifeForceShield = require('Hero.CorruptedPriest.LifeForceShield') or error('')
 ---@type CorruptedPriestSettings
@@ -47,8 +47,8 @@ function CorruptedPriest.new(x, y, owner)
     
     -- Abils
     local abils = AbilLib.Container.new(unit)
-    abils:set('Q', LifeForceShield)
-    abils:set('W', ThrowAxe)
+    abils:set(1, LifeForceShield)
+    --abils:set('W', ThrowAxe)
     --abils:set('E', LifeForceShield)
     --abils:set('R', LifeForceShield)
     --abils:set('T', LifeForceShield)

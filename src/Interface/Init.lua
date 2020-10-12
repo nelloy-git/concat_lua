@@ -24,7 +24,7 @@ local InterfaceMinimap = require('Interface.Minimap') or error('')
 ---@type InterfaceSelection
 local InterfaceSelection = require('Interface.Selection') or error('')
 ---@type InterfaceSkillPanelClass
-local InterfaceSkillPanel = require('Interface.SkillPanel') or error('')
+local InterfaceSkillPanel = require('Interface.Skill.Panel') or error('')
 ---@type InterfaceUnitStatusClass
 local InterfaceUnitStatus = require('Interface.UnitStatus') or error('')
 
@@ -140,8 +140,8 @@ end)
 -- Skill buttons --
 -------------------
 
-Interface.SkillsPanel = InterfaceSkillPanel.new()
-Interface.SkillsPanel:setPos(0.5, 0)
+Interface.SkillsPanel = InterfaceSkillPanel.new(20)
+Interface.SkillsPanel:setSize(10 * 0.04, 2 * 0.04)
 
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
     Interface.SkillsPanel:setPos(x0 + (w - Interface.SkillsPanel:getWidth()) / 2,

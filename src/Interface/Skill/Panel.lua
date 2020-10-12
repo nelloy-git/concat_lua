@@ -13,13 +13,17 @@ local Image = FrameLib.Normal.Image or error('')
 local ImagePublic = Class.getPublic(Image) or error('')
 local OriginTooltip = FrameLib.Origin.Tooltip or error('')
 local SimpleBar = FrameLib.Simple.StatusBar or error('')
+---@type TypesLib
+local TypesLib = require(LibList.TypesLib) or error('')
+local FrameEvent = TypesLib.FrameEventTypeEnum
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceSkillButtonClass
-local SkillButton = require('Interface.SkillButton') or error('')
+local SkillButton = require('Interface.Skill.Button') or error('')
+
 
 --=======
 -- Class
@@ -40,17 +44,19 @@ local private = {}
 
 local static_instance = nil
 
+---@param max_abils number
 ---@return InterfaceSkillPanel
-function override.new()
+function override.new(max_abils)
+    isTypeErr(max_abils, 'number', 'max_abils')
     if static_instance then
         Log:wrn(tostring(InterfaceSkillPanel)..': can not get new instance. It is static class.')
         return static_instance
     end
 
     local instance = Class.allocate(InterfaceSkillPanel)
-    instance = Image.new(instance)
+    instance = Image.new(nil, instance)
 
-    private.newData(instance)
+    private.newData(instance, max_abils)
 
     static_instance = instance
     return instance
@@ -60,51 +66,51 @@ end
 -- Public
 --========
 
----@param x number
----@param y number
-function public:setPos(x, y)
-    ImagePublic.setPos(self, x, y)
-    local priv = private.data[self]
-
-    local abs_x = self:getAbsX()
-    local abs_y = self:getAbsY()
-
-    priv.cast_bar:setSize(self:getWidth(), priv.buttons[1]:getHeight() / 4)
-    priv.cast_bar:setPos(abs_x, abs_y)
-
-    for i = 1, 7 do
-        local btn = priv.buttons[i]
-        btn:setPos(abs_x + (i - 1) * btn:getWidth(), abs_y + priv.cast_bar:getHeight())
-    end
-end
-
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log:wrn(tostring(InterfaceSkillPanel)..': it is autosized frame.')
-end
-
----@return number
-function public:getWidth()
-    return 7 * private.data[self].buttons[1]:getWidth()
-end
-
----@return number
-function public:getHeight()
-    return 1.25 * private.data[self].buttons[1]:getHeight()
+    ImagePublic.setSize(self, width, height)
+    private.updatePos(self)
 end
 
 ---@param container AbilityExtContainer
 function public:setAbilContainer(container)
     if container then isTypeErr(container, AbilContainer, 'container') end
+    local priv = private.data[self]
 
+    local abil_list = container and container:getAll() or {}
+
+    for i = 1, priv.max_abils do
+        ---@type AbilityExt
+        local abil = abil_list[i]
+
+        if abil then
+            priv.buttons[i]:setTexture(abil:getIcon(), '')
+            priv.buttons[i]:setButtonAlpha(1)
+            priv.buttons[i]:setCharges(abil:getCurrentChargesLeft(),
+                                       abil:getCurrentChargesMax())
+            priv.buttons[i]:setCooldown(abil:getCurrentCooldownLeft(),
+                                        abil:getCurrentCooldownFull())
+
+            if (priv.fast_cast) then
+                -- TODO fast cast
+            else
+                priv.buttons[i]:addAction(FrameEvent.MOUSE_CLICK, function() abil:targetingStart() end)
+                
+            end
+        else
+            priv.buttons[i]:setButtonAlpha(0)
+            priv.buttons[i]:setCharges(0, 0)
+        end
+    end
+    --[[
     local priv = private.data[self]
 
     local previous = priv.container
     if previous then
         private.container2interface[previous] = nil
         if not previous:removeAction(priv.changed_action) then
-            Log:err(tostring(InterfaceSkillPanel)..': сan clear precious AbilityExtContainer', 2)
+            Log:err(tostring(InterfaceSkillPanel)..': сan clear previous AbilityExtContainer', 2)
         end
     end
 
@@ -125,6 +131,7 @@ function public:setAbilContainer(container)
             priv.buttons[i]:setCharges(0, 0)
         end
     end
+    --]]
 end
 
 --=========
@@ -135,92 +142,72 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.container2interface = setmetatable({}, {__mode = 'kv'})
 
 ---@param self InterfaceSkillPanel
-function private.newData(self)
+---@param max_abils number
+function private.newData(self, max_abils)
     local priv = {
-        container = nil,
-        changed_action = nil,
-        start_action = nil,
-        loop_action = nil,
-        end_action = nil,
+        fast_cast = false,
+        max_abils = max_abils,
+        per_line = 10,
 
         buttons = {},
-        tooltip = OriginTooltip,
-        cast_bar = SimpleBar.new()
+        --tooltip = OriginTooltip,
+        --cast_bar = SimpleBar.new()
     }
     private.data[self] = priv
-    ImagePublic.setVisible(self, false)
+    self:setAlpha(0)
 
-    for i = 1, 7 do
-        priv.buttons[i] = SkillButton.new(i + 5)
-        priv.buttons[i]:setPos((i - 1) * priv.buttons[i]:getWidth(), 0)
-        priv.buttons[i]:setVisible(true)
+    for i = 1, max_abils do
+        local btn = SkillButton.new()
+        btn:setParent(self)
+        btn:setAlpha(1)
+
+        priv.buttons[i] = btn
     end
-    ImagePublic.setSize(self, 7 * priv.buttons[1]:getWidth(), priv.buttons[1]:getHeight())
 
-    priv.cast_bar:setBar('Replaceabletextures\\Teamcolor\\Teamcolor16.blp')
-    priv.cast_bar:setSize(self:getWidth(), priv.buttons[1]:getHeight() / 4)
-    priv.cast_bar:setPos(self:getAbsX(), self:getAbsY())
-    priv.cast_bar:setVisible(false)
+    --priv.cast_bar:setBar('Replaceabletextures\\Teamcolor\\Teamcolor16.blp')
+    --priv.cast_bar:setSize(self:getWidth(), priv.buttons[1]:getHeight() / 4)
+    --priv.cast_bar:setPos(self:getAbsX(), self:getAbsY())
+    --priv.cast_bar:setVisible(false)
 
-    priv.tooltip:setParent(self)
+    --priv.tooltip:setParent(self)
     -- Native bind with bottom center point
-    BlzFrameSetPoint(priv.tooltip:getData(), FRAMEPOINT_BOTTOM,
-                     self:getData(), FRAMEPOINT_TOP, 0, 0)
-    priv.tooltip:setVisible(true)
+    --BlzFrameSetPoint(priv.tooltip:getData(), FRAMEPOINT_BOTTOM,
+    --                 self:getData(), FRAMEPOINT_TOP, 0, 0)
+    --priv.tooltip:setVisible(true)
+
+    private.updatePos(self)
 end
 
-private.hotkeys = {
-    'Q', 'W', 'E', 'R', 'T', 'D', 'F'
-}
-
----@param container AbilityExtContainer
----@param abil AbilityExt
----@param event AbilityExtEvent
-function private.chargesChanged(container, abil, event)
-    ---@type InterfaceSkillPanel
-    local self = private.container2interface[container]
-
-    for i = 1, #private.hotkeys do
-        if container:get(private.hotkeys[i]) == abil then
-            private.data[self].buttons[i]:setCharges(abil:getCharges(), abil:getMaxCharges())
-            break
-        end
-    end
+---@param height number
+---@param max_frames number
+---@param per_line number
+---@return number
+function private.getLineHeight(height, max_frames, per_line)
+    local i, f = math.modf(max_frames / per_line)
+    if f ~= 0 then i = i + 1 end
+    return height / i
 end
 
----@param container AbilityExtContainer
----@param abil AbilityExt
----@param event AbilityExtEvent
-function private.castingStart(container, abil, event)
-    ---@type InterfaceSkillPanel
-    local self = private.container2interface[container]
+function private.updatePos(self)
     local priv = private.data[self]
 
-    for i = 1, #private.hotkeys do
-        if container:get(private.hotkeys[i]) == abil then
-            local abil_type = abil:getType()
+    local count = #priv.buttons
+    local w = self:getWidth() / priv.per_line
+    local h = private.getLineHeight(self:getHeight(),
+                                    priv.max_abils, priv.per_line)
 
-            priv.cast_bar:setVisible(true)
-            priv.cast_bar:setProgress(0)
-            priv.cast_bar:setText(abil_type:getName(abil))
-            break
+    local p = 0
+    local l = 1
+    for i = 1, count do
+        p = p + 1
+        if p > priv.per_line then
+            p = 1
+            l = l + 1
         end
+
+        priv.buttons[i]:setPos((p - 1) * w, self:getHeight() - l * h)
+        priv.buttons[i]:setSize(w, h)
     end
-end
-
----@param container AbilityExtContainer
----@param abil AbilityExt
----@param event AbilityExtEvent
-function private.castingLoop(container, abil, event)
-    ---@type InterfaceSkillPanel
-    local self = private.container2interface[container]
-    local priv = private.data[self]
-
-    local abil_type = abil:getType()
-
-    priv.cast_bar:setVisible(true)
-    priv.cast_bar:setProgress(0)
-    priv.cast_bar:setText(abil_type:getName(abil))
 end
 
 return static

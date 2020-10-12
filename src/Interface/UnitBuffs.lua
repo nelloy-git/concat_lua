@@ -139,6 +139,8 @@ function private.newData(self, max_buffs)
     priv.tooltip:setIconsSize(0.015, 0.015)
     priv.tooltip:setRightIcon('ReplaceableTextures\\\\CommandButtons\\\\BTNPatrol.blp')
     priv.tooltip:setVisible(false)
+
+    private.updatePos(self)
 end
 
 ---@param self InterfaceUnitBuffs

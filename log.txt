@@ -1,1 +1,1 @@
-[0.527] {Err} variable 'child'(string) is not of type AbilityExtType
+[0.027] {Msg} Created new FdfFile 'GeneratedFile' containing: FrameNormalButton, FrameNormalImage, FrameNormalTextDefault, FrameNormalTooltip, FrameNormalTooltipIcon, FrameNormalTooltipName, FrameNormalTooltipText, FrameSimpleImage, FrameSimpleStatusBar, FrameSimpleText, InterfaceMinimapBorder, InterfacePortrait, InterfacePortraitBorder, InterfaceSkillButton, InterfaceSkillButtonBackground, InterfaceUnitParametersBackground, 

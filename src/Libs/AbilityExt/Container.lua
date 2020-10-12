@@ -65,58 +65,42 @@ function public:getOwner()
     return private.data[self].owner
 end
 
----@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
+---@param pos number
 ---@param abil_type AbilityExtType | nil
-function public:set(hotkey, abil_type)
-    isTypeErr(hotkey, 'string', 'hotkey')
+function public:set(pos, abil_type)
+    isTypeErr(pos, 'number', 'pos')
     if abil_type then isTypeErr(abil_type, AbilityExtType, 'abil_type') end
 
     local priv = private.data[self]
 
-    local prev = priv.abil_data_list[hotkey]
+    local prev = priv.abil_list[pos]
     if prev then
         private.abil2container[prev] = nil
-        prev:destroy()
     end
 
     local abil = nil
     if abil_type then
-        abil = AbilityExt.new(priv.owner, abil_type, hotkey)
-        for _, event in pairs(Event) do
-            abil:addAction(event, private.runAbilityAction)
-        end
-        private.abil2container[abil] = self
+        abil = AbilityExt.new(priv.owner, abil_type)
     end
-    priv.abil_data_list[hotkey] = abil
+    priv.abil_list[pos] = abil
 end
 
----@param hotkey string | "'Q'" | "'W'" | "'E'" | "'R'" | "'T'" | "'D'" | "'F'"
+---@param pos number
 ---@return AbilityExt | nil
-function public:get(hotkey)
-    return private.data[self].abil_data_list[hotkey]
+function public:get(pos)
+    return private.data[self].abil_list[pos]
 end
 
----@alias AbilityExtContainerCallback fun(container:AbilityExtContainer, abil:AbilityExt, event:AbilityExtEvent)
-
----@param event AbilityExtEvent
----@param callback AbilityExtContainerCallback
----@return Action
-function public:addAction(event, callback)
-    local priv = private.data[self]
-    return priv.actions[event]:add(callback)
-end
-
----@param action Action
----@return boolean
-function public:removeAction(action)
+---@return table<number, AbilityExt>
+function public:getAll()
     local priv = private.data[self]
 
-    for event, list in pairs(priv.actions) do
-        if list:remove(action) then
-            return true
-        end
+    local copy = {}
+    for k,v in pairs(priv.abil_list) do
+        copy[k] = v
     end
-    return false
+
+    return copy
 end
 
 --=========
@@ -125,31 +109,16 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 private.owners = setmetatable({}, {__mode = 'k'})
-private.abil2container = setmetatable({}, {__mode = 'kv'})
 
 ---@param self AbilityExtContainer
 ---@param owner Unit
 function private.newData(self, owner)
     local priv = {
         owner = owner,
-        abil_data_list = {},
-
-        actions = {}
+        abil_list = {}
     }
     private.data[self] = priv
     private.owners[owner] = self
-
-    for _, event in pairs(Event) do
-        priv.actions[event] = ActionList.new(self)
-    end
-end
-
----@param abil AbilityExt
----@param event AbilityExtEvent
-function private.runAbilityAction(abil, event)
-    ---@type AbilityExtContainer
-    local self = private.abil2container[abil]
-    private.data[self].actions[event]:run(self, abil, event)
 end
 
 return static

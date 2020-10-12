@@ -91,31 +91,32 @@ function public:getCooldown(abil) return 0 end
 ---@return number
 function public:getCastingTime(abil) return 0 end
 
--------------
--- Targeting
--------------
-
 --- Should check if all conditions are correct.
 ---@param abil AbilityExt
 ---@return boolean
-function public:targetingCanStart(abil) return true end
+function public:isEnabled(abil) return true end
+
+---@param abil AbilityExt
+---@param target any
+---@return boolean
+function public:isTargetValid(abil, target) return true end
+
+-------------
+-- Targeting
+-------------
 
 ---@param abil AbilityExt
 function public:targetingStart(abil) end
 
 ---@param abil AbilityExt
 ---@return any
-function public:targetingEnd(abil) end
+function public:targetingCancel(abil) end
 
 -----------
 -- Casting
 -----------
 
---- Should check if all conditions are correct again and consume resources.
----@param abil AbilityExt
----@return boolean
-function public:castingCanStart(abil) return true end
-
+--- Should consume resources.
 ---@param abil AbilityExt
 function public:castingStart(abil) end
 

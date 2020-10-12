@@ -139,15 +139,17 @@ function public:setTexture(tex_file, dis_tex, flag, blend)
     priv.button:setDisabledTexture(dis_tex, flag, blend)
 end
 
+--- [0,1]
+---@param alpha number
+function public:setButtonAlpha(alpha)
+    private.data[self].button:setAlpha(alpha)
+end
+
 ---@param event frameeventtype
 ---@param callback FrameNormalButtonCallback
 ---@return Action | nil
 function public:addAction(event, callback)
     private.data[self].button:addAction(event, callback)
-end
-
----@param abil AbilityExt
-function public:setAbility(abil)
 end
 
 --=========
@@ -191,7 +193,10 @@ function private.newData(self)
     priv.cd_text:setPos(0, 0)
 
     priv.charges_back:setParent(priv.button)
+    priv.charges_back:setVisible(false)
+
     priv.charges_text:setParent(priv.button)
+    priv.charges_text:setVisible(false)
 
     self:setSize(self:getWidth(), self:getHeight())
 end

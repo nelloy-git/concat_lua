@@ -32,10 +32,10 @@ local BonusPerMAtk = 0.01
 -- Module
 --========
 
-local LifeForceShield = Utils.newAbilAlly('Life Force Shield')
+local LifeForceShield = AbilityLib.Type.new()
 
-local casting_period = AbilityLib.getLoopPeriod()
-local percent_per_loop = DrainLifePerSec * casting_period
+--local casting_period = AbilityLib.getLoopPeriod()
+--local percent_per_loop = DrainLifePerSec * casting_period
 local drained_life = {}
 
 ---@param owner Unit
@@ -55,7 +55,7 @@ function LifeForceShield:getTooltip(owner)
            'At the end of the cast gives shield to the target for '..
            'drained life increased by '..Utils.colorScale(bonus, ParamType.MATK)..'%'
 end
-
+--[[
 ---@param owner Unit
 ---@return number
 function LifeForceShield:getArea(owner) return 0 end
@@ -123,5 +123,6 @@ function LifeForceShield:getCallback(event)
     end
     return callbacks[event]
 end
+--]]
 
 return LifeForceShield
