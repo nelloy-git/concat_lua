@@ -86,7 +86,7 @@ function public:setAbilContainer(container)
 
         if abil then
             priv.buttons[i]:setTexture(abil:getIcon(), '')
-            priv.buttons[i]:setButtonAlpha(1)
+            --priv.buttons[i]:setButtonAlpha(1)
             priv.buttons[i]:setCharges(abil:getCurrentChargesLeft(),
                                        abil:getCurrentChargesMax())
             priv.buttons[i]:setCooldown(abil:getCurrentCooldownLeft(),
@@ -95,11 +95,21 @@ function public:setAbilContainer(container)
             if (priv.fast_cast) then
                 -- TODO fast cast
             else
-                priv.buttons[i]:addAction(FrameEvent.MOUSE_CLICK, function() abil:targetingStart() end)
+                priv.buttons[i]:addAction(FrameEvent.MOUSE_CLICK, function()
+                    local t = abil:getTargetingType()
+                    if t:isStarted(abil) then
+                        t:forceFinish(abil)
+                    end
+                    t:start(abil)
+                    t:setFinishAction(abil, function(abil, action)
+                        print('Targeting finished')
+                        abil:get
+                    end)
+                end)
                 -- TODO
             end
         else
-            priv.buttons[i]:setButtonAlpha(0)
+            --priv.buttons[i]:setButtonAlpha(0)
             priv.buttons[i]:setCharges(0, 0)
         end
     end

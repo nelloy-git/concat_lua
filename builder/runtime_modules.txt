@@ -59,6 +59,7 @@ src\Libs\AbilityExt\Container.lua
 src\Libs\AbilityExt\Ability.lua
 src\Libs\AbilityExt\Charges.lua
 src\Libs\AbilityExt\Event.lua
+src\Libs\AbilityExt\TargetingType.lua
 src\Libs\AbilityExt\Type.lua
 src\Libs\Buff\API.lua
 src\Libs\Damage\API.lua
@@ -111,7 +112,7 @@ src\Libs\Frame\Origin\Tooltip.lua
 src\Interface\Init.lua
 src\Interface\Minimap.lua
 src\Interface\Selection.lua
-src\Interface\SkillPanel.lua
+src\Interface\Skill\Panel.lua
 src\Interface\Skill\Button.lua
 src\Interface\Skill\ButtonFdf.lua
 src\Interface\UnitStatus.lua
@@ -120,6 +121,7 @@ src\Interface\UnitBuffs.lua
 src\Interface\ParamList.lua
 src\Interface\ShowDamage.lua
 src\Hero\CorruptedPriest\Unit.lua
-src\Hero\Berserk\ThrowAxe.lua
-src\Hero\Berserk\Bleeding.lua
+src\Hero\CorruptedPriest\LifeForceShield.lua
+src\Hero\CorruptedPriest\LifeForceShieldBuff.lua
 src\Hero\Utils.lua
+src\Hero\CorruptedPriest\Settings.lua

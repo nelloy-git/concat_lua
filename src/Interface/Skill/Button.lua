@@ -82,6 +82,22 @@ function public:setEnabled(flag)
     priv.button:setEnabled(flag)
 end
 
+---@param count number
+function public:setCharges(count, max_count)
+    local priv = private.data[self]
+
+    if max_count <= 1 then
+        priv.charges_back:setVisible(false)
+        priv.charges_text:setVisible(false)
+    else
+        priv.charges_back:setVisible(true)
+        priv.charges_text:setVisible(true)
+
+        local s_count = tostring(count - count % 1)
+        priv.charges_text:setText(s_count)
+    end
+end
+
 ---@param left number
 ---@param full number
 function public:setCooldown(left, full)
@@ -123,24 +139,15 @@ function public:setTexture(tex_file, dis_tex, flag, blend)
     priv.button:setDisabledTexture(dis_tex, flag, blend)
 end
 
---- [0,1]
----@param alpha number
-function public:setButtonAlpha(alpha)
-    private.data[self].button:setAlpha(alpha)
-end
-
----@param abil AbilityExt
-function public:setAbility(abil)
-    local priv = private.data[self]
-
-
-end
-
 ---@param event frameeventtype
 ---@param callback FrameNormalButtonCallback
 ---@return Action | nil
 function public:addAction(event, callback)
     private.data[self].button:addAction(event, callback)
+end
+
+---@param abil AbilityExt
+function public:setAbility(abil)
 end
 
 --=========
@@ -184,30 +191,9 @@ function private.newData(self)
     priv.cd_text:setPos(0, 0)
 
     priv.charges_back:setParent(priv.button)
-    priv.charges_back:setVisible(false)
-
     priv.charges_text:setParent(priv.button)
-    priv.charges_text:setVisible(false)
 
     self:setSize(self:getWidth(), self:getHeight())
-end
-
----@param self InterfaceSkillButton
----@param count number
----@param max_count number
-function private.setCharges(self, count, max_count)
-    local priv = private.data[self]
-
-    if max_count <= 1 then
-        priv.charges_back:setVisible(false)
-        priv.charges_text:setVisible(false)
-    else
-        priv.charges_back:setVisible(true)
-        priv.charges_text:setVisible(true)
-
-        local s_count = tostring(count - count % 1)
-        priv.charges_text:setText(s_count)
-    end
 end
 
 return static

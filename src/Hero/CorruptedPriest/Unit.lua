@@ -47,7 +47,7 @@ function CorruptedPriest.new(x, y, owner)
     
     -- Abils
     local abils = AbilLib.Container.new(unit)
-    abils:set(1, LifeForceShield)
+    abils:set(1, AbilLib.TargetingType.new(), LifeForceShield)
     --abils:set('W', ThrowAxe)
     --abils:set('E', LifeForceShield)
     --abils:set('R', LifeForceShield)

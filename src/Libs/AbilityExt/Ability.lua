@@ -25,6 +25,8 @@ local AbilityExtCharges = require(lib_path..'Charges') or error('')
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
 local TargetingEvent = AbilityExtEventModule.TargetingEnum
 local CastingEvent = AbilityExtEventModule.CastingEnum
+---@type AbilityExtTargetingTypeClass
+local AbilityExtTargetingType = require(lib_path..'TargetingType') or error('')
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type') or error('')
 
@@ -46,16 +48,18 @@ local private = {}
 --=========
 
 ---@param owner Unit
+---@param targeting_type AbilityExtTargetingType
 ---@param abil_type AbilityExtType
 ---@param child AbilityExt | nil
 ---@return AbilityExt
-function override.new(owner, abil_type, child)
+function override.new(owner, targeting_type, abil_type, child)
     isTypeErr(owner, Unit, 'owner')
+    isTypeErr(targeting_type, AbilityExtTargetingType, 'targeting_type')
     isTypeErr(abil_type, AbilityExtType, 'abil_type')
     if child then isTypeErr(child, AbilityExt, 'child') end
 
     local instance = child or Class.allocate(AbilityExt)
-    private.newData(instance, owner, abil_type)
+    private.newData(instance, owner, targeting_type, abil_type)
 
     return instance
 end
@@ -67,74 +71,14 @@ end
 
 ---@alias AbilityExtCallback fun(abil:AbilityExt)
 
+---@return AbilityExtTargetingType
+function public:getTargetingType()
+    return private.data[self].targeting_type
+end
+
 ---@return AbilityExtType
 function public:getType()
     return private.data[self].abil_type
-end
-
--------------
--- Targeting
--------------
-
----@param event AbilityExtTargetingEvent
----@param callback AbilityExtCallback
----@return Action
-function public:addTargetingAction(event, callback)
-    local actions = private.data[self].targeting_actions[event]
-    if not actions then
-        Log:err('variable \'event\' is not of type AbilityExtTargetingEvent.')
-    end
-    return actions:add(callback)
-end
-
----@param action Action
----@return boolean
-function public:removeTargetingAction(action)
-    local priv = private.data[self]
-    for _, event in pairs(TargetingEvent) do
-        if priv.targeting_actions[event]:remove(action) then
-            return true
-        end
-    end
-    return false
-end
-
----@return boolean
-function public:targetingStart()
-    local priv = private.data[self]
-
-    priv.target = nil
-    if priv.abil_type:targetingStart(self) then
-        priv.targeting_actions[TargetingEvent.START]:run(self)
-    end
-end
-
-function public:targetingCancel()
-    local priv = private.data[self]
-
-    priv.abil_type:targetingCancel(self)
-    private.data[self].targeting_actions[TargetingEvent.CANCEL]:run(self)
-end
-
----@param target any
-function public:targetingFinish(target)
-    local priv = private.data[self]
-    
-    private.data[self].targeting_actions[TargetingEvent.CANCEL]:run(self)
-end
-
----@alias AbilityExtTargetingFinishCallback fun(abil:AbilityExt, targ:any)
-
----@param callback AbilityExtTargetingFinishCallback
----@return Action
-function public:addTargetingFinishAction(callback)
-    return private.data[self].targeting_finish_actions:add(callback)
-end
-
----@param action Action
----@return boolean
-function public:removeTargetingFinishAction(action)
-    return private.data[self].targeting_finish_actions:remove(action)
 end
 
 -----------
@@ -304,14 +248,16 @@ private.charges2ability = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityExt
 ---@param owner Unit
+---@param targeting_type AbilityExtTargetingType
 ---@param abil_type AbilityExtType
-function private.newData(self, owner, abil_type)
+function private.newData(self, owner, targeting_type, abil_type)
     local priv = {
         target_unit = nil,
         target_x = 0,
         target_y = 0,
 
         owner = owner,
+        targeting_type = targeting_type,
         abil_type = abil_type,
 
         casting = TimedObj.new(),
