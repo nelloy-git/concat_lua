@@ -16,6 +16,32 @@ local getEnum = UtilsLib.getEnum
 ---@class AbilityExtEventModule
 local Event = {}
 
+---@alias AbilityExtTargetingEvent number
+---@table <string, AbilityExtTargetingEvent>
+Event.TargetingEnum = {
+    ---@type AbilityExtTargetingEvent
+    START = getEnum(),
+    ---@type AbilityExtTargetingEvent
+    CANCEL = getEnum(),
+    ---@type AbilityExtTargetingEvent
+    FINISH = getEnum(),
+}
+
+---@alias AbilityExtCastingEvent number
+---@table <string, AbilityExtCastingEvent>
+Event.CastingEnum = {
+    ---@type AbilityExtCastingEvent
+    START = getEnum(),
+    ---@type AbilityExtCastingEvent
+    LOOP = getEnum(),
+    ---@type AbilityExtCastingEvent
+    CANCEL = getEnum(),
+    ---@type AbilityExtCastingEvent
+    INTERRUPT = getEnum(),
+    ---@type AbilityExtCastingEvent
+    FINISH = getEnum(),
+}
+
 ---@alias AbilityExtEvent number
 ---@table <string, AbilityExtEvent>
 Event.Enum = {

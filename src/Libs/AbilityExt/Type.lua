@@ -106,6 +106,7 @@ function public:isTargetValid(abil, target) return true end
 -------------
 
 ---@param abil AbilityExt
+---@return boolean
 function public:targetingStart(abil) end
 
 ---@param abil AbilityExt

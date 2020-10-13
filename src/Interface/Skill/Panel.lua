@@ -96,7 +96,7 @@ function public:setAbilContainer(container)
                 -- TODO fast cast
             else
                 priv.buttons[i]:addAction(FrameEvent.MOUSE_CLICK, function() abil:targetingStart() end)
-                
+                -- TODO
             end
         else
             priv.buttons[i]:setButtonAlpha(0)

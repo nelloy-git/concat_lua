@@ -17,12 +17,14 @@ local Unit = HandleLib.Unit or error('')
 local UtilsLib = lib_dep.Utils or error('')
 local ActionList = UtilsLib.ActionList or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type AbilityExtChargesClass
 local AbilityExtCharges = require(lib_path..'Charges') or error('')
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
-local Event = AbilityExtEventModule.Enum
+local TargetingEvent = AbilityExtEventModule.TargetingEnum
+local CastingEvent = AbilityExtEventModule.CastingEnum
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type') or error('')
 
@@ -63,30 +65,62 @@ end
 -- Public
 --========
 
+---@alias AbilityExtCallback fun(abil:AbilityExt)
+
+---@return AbilityExtType
+function public:getType()
+    return private.data[self].abil_type
+end
+
 -------------
 -- Targeting
 -------------
 
----@return boolean
-function public:targetingStart()
-    local priv = private.data[self]
-    local atype = priv.abil_type
-
-    if atype:isEnabled(self) then
-        atype:targetingStart(self)
-        return true
+---@param event AbilityExtTargetingEvent
+---@param callback AbilityExtCallback
+---@return Action
+function public:addTargetingAction(event, callback)
+    local actions = private.data[self].targeting_actions[event]
+    if not actions then
+        Log:err('variable \'event\' is not of type AbilityExtTargetingEvent.')
     end
-    priv.target = nil
+    return actions:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeTargetingAction(action)
+    local priv = private.data[self]
+    for _, event in pairs(TargetingEvent) do
+        if priv.targeting_actions[event]:remove(action) then
+            return true
+        end
+    end
     return false
 end
 
+---@return boolean
+function public:targetingStart()
+    local priv = private.data[self]
+
+    priv.target = nil
+    if priv.abil_type:targetingStart(self) then
+        priv.targeting_actions[TargetingEvent.START]:run(self)
+    end
+end
+
 function public:targetingCancel()
-    private.data[self].abil_type:targetingCancel(self)
+    local priv = private.data[self]
+
+    priv.abil_type:targetingCancel(self)
+    private.data[self].targeting_actions[TargetingEvent.CANCEL]:run(self)
 end
 
 ---@param target any
 function public:targetingFinish(target)
-    private.data[self].targeting_finish_actions:run(self, target)
+    local priv = private.data[self]
+    
+    private.data[self].targeting_actions[TargetingEvent.CANCEL]:run(self)
 end
 
 ---@alias AbilityExtTargetingFinishCallback fun(abil:AbilityExt, targ:any)
@@ -283,11 +317,22 @@ function private.newData(self, owner, abil_type)
         casting = TimedObj.new(),
         charges = AbilityExtCharges.new(),
 
+        targeting_actions = {},
+        casting_actions = {},
+
         targeting_finish_actions = ActionList.new(self),
     }
     private.data[self] = priv
     private.casting2ability[priv.casting] = self
     private.charges2ability[priv.charges] = self
+
+    for _, event in pairs(TargetingEvent) do
+        priv.targeting_actions[event] = ActionList.new(self)
+    end
+
+    for _, event in pairs(CastingEvent) do
+        priv.casting_actions[event] = ActionList.new(self)
+    end
 
     priv.casting:addStartAction(private.castingStart)
     priv.casting:addLoopAction(private.castingLoop)
