@@ -23,43 +23,25 @@ local font_size = 0.014
 --========
 
 ---@class InterfaceSkillButtonFdf
-local InterfaceSkillButtonFdf = {}
+local InterfaceSkillButtonFdf = FdfGlueTextButton.new('InterfaceSkillButton')
 
-local background = FdfBackdrop.new('InterfaceSkillButtonBackground')
-background:setWidth(0.04)
-background:setHeight(0.04)
-background:setBackgroundTileMode(true)
-background:setBackgroundTileSize(0.2)
-background:setBackground('UI\\Widgets\\ToolTips\\Human\\human-tooltip-background')
-background:setBlendAll(true)
-background:setInsets(0.005, 0.005, 0.005, 0.005)
-background:setCornerFlags('UL|UR|BL|BR|T|L|B|R')
-background:setCornerSize(0.0125)
-background:setEdgeFile('UI\\Widgets\\ToolTips\\Human\\human-tooltip-border')
+InterfaceSkillButtonFdf:setWidth(0.04)
+InterfaceSkillButtonFdf:setHeight(0.04)
+InterfaceSkillButtonFdf:setControlStyle(true, false, true)
 
-local button = FdfGlueTextButton.new('InterfaceSkillButton')
-button:setWidth(0.04)
-button:setHeight(0.04)
-button:setControlStyle(true, false, true)
-
-local img_normal = button:getControlNormal()
+local img_normal = InterfaceSkillButtonFdf:getControlNormal()
 img_normal:setBackground(default_texture)
 
-local img_disabled = button:getControlDisabled()
+local img_disabled = InterfaceSkillButtonFdf:getControlDisabled()
 img_disabled:setBackground(default_texture)
 
-local img_pushed = button:getControlPushed()
+local img_pushed = InterfaceSkillButtonFdf:getControlPushed()
 img_pushed:setBackground(default_texture)
 -- TODO color
 
-local highlight = button:getControlMouse()
+local highlight = InterfaceSkillButtonFdf:getControlMouse()
 highlight:setHighlightType('FILETEXTURE')
 highlight:setAlphaFile(default_highlight)
 highlight:setAlphaMode('ADD')
-
----@type FdfGlueTextButton
-InterfaceSkillButtonFdf.button = button
----@type FdfBackdrop
-InterfaceSkillButtonFdf.background = background
 
 return InterfaceSkillButtonFdf

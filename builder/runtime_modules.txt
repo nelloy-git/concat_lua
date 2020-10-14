@@ -27,6 +27,7 @@ src\Libs\Types\API.lua
 src\Libs\Types\AttackType.lua
 src\Libs\Types\DamageType.lua
 src\Libs\Types\FrameEventType.lua
+src\Libs\Types\KeyType.lua
 src\Libs\Types\TargetType.lua
 src\Libs\Binary\Utils.lua
 src\Libs\Binary\Ability.lua
@@ -59,8 +60,9 @@ src\Libs\AbilityExt\Container.lua
 src\Libs\AbilityExt\Ability.lua
 src\Libs\AbilityExt\Charges.lua
 src\Libs\AbilityExt\Event.lua
-src\Libs\AbilityExt\TargetingType.lua
+src\Libs\AbilityExt\Type\Targeting.lua
 src\Libs\AbilityExt\Type.lua
+src\Libs\AbilityExt\Type\Targeting\Unit.lua
 src\Libs\Buff\API.lua
 src\Libs\Damage\API.lua
 src\Libs\Damage\Event.lua

@@ -6,12 +6,12 @@ local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
 local NormalButton = FrameLib.Normal.Button or error('')
+local NormalButtonPublic = Class.getPublic(NormalButton) or error('')
 local NormalImage = FrameLib.Normal.Image or error('')
 local SimpleText = FrameLib.Simple.Text or error('')
----@type HandleLib
-local HandleLib = require(LibList.HandleLib) or error('')
-local Frame = HandleLib.Frame or error('')
-local FramePublic = Class.getPublic(Frame) or error('')
+---@type TypesLib
+local TypesLib = require(LibList.TypesLib) or error('')
+local FrameEvemt = TypesLib.FrameEventTypeEnum
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
@@ -23,7 +23,7 @@ local Fdf = require('Interface.Skill.ButtonFdf') or error('')
 -- Class
 --=======
 
-local InterfaceSkillButton = Class.new('InterfaceSkillButton', Frame)
+local InterfaceSkillButton = Class.new('InterfaceSkillButton', NormalButton)
 ---@class InterfaceSkillButton : Frame
 local public = InterfaceSkillButton.public
 ---@class InterfaceSkillButtonClass : FrameClass
@@ -41,7 +41,7 @@ function override.new(child)
     if child then isTypeErr(child, InterfaceSkillButton, 'child') end
 
     local instance = child or Class.allocate(InterfaceSkillButton)
-    instance = Frame.new(Fdf.background:getName(), Fdf.background:isSimple(), instance)
+    instance = NormalButton.new(Fdf, instance)
 
     private.newData(instance)
 
@@ -55,31 +55,20 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    FramePublic.setSize(self, width, height)
+    NormalButtonPublic.setSize(self, width, height)
     local priv = private.data[self]
-
-    priv.button:setSize(0.8 * width, 0.8 * height)
-    priv.button:setPos(0.1 * width, 0.1 * height)
 
     priv.cd_text:setSize(0.8 * width, 0.8 * height)
     priv.cd_text:setFont('fonts\\nim_____.ttf', height / 4)
 
     priv.charges_back:setSize(width / 3, height / 4)
-    priv.charges_back:setPos(0, priv.button:getHeight() - priv.charges_back:getHeight())
+    priv.charges_back:setPos(0, height - priv.charges_back:getHeight())
 
     priv.charges_text:setSize(width / 3, height / 4)
-    priv.charges_text:setPos(0, priv.button:getHeight() - priv.charges_text:getHeight())
+    priv.charges_text:setPos(0, height - priv.charges_text:getHeight())
     priv.charges_text:setFont('fonts\\nim_____.ttf', 0.8 * height / 4)
 
     self:setCooldown(priv.cd_left, priv.cd_full)
-end
-
----@param flag boolean
-function public:setEnabled(flag)
-    FramePublic.setEnabled(self, flag)
-    local priv = private.data[self]
-
-    priv.button:setEnabled(flag)
 end
 
 ---@param count number
@@ -106,48 +95,47 @@ function public:setCooldown(left, full)
     priv.cd_full = full
 
     if priv.charges_left < priv.charges_full - 1 then
-        priv.cd_mask:setSize(left / full * priv.button:getWidth(), priv.button:getHeight())
+        priv.cd_mask:setSize(left / full * self:getWidth(), self:getHeight())
 
         local cd_time = 10 * left
         cd_time = cd_time - cd_time % 1
         priv.cd_text:setVisible(true)
         priv.cd_text:setText(tostring(cd_time / 10))
     else
-        priv.cd_mask:setSize(0, priv.button:getHeight())
+        priv.cd_mask:setSize(0, self:getHeight())
         priv.cd_text:setVisible(false)
     end
 
-    priv.cd_line:setSize(0.05 * priv.button:getWidth(), priv.button:getHeight())
+    priv.cd_line:setSize(0.05 * self:getWidth(), self:getHeight())
 
     if left > 0 then
         priv.cd_line:setVisible(true)
-        priv.cd_line:setPos(left / full * 0.95 * priv.button:getWidth(), 0)
+        priv.cd_line:setPos(left / full * 0.95 * self:getWidth(), 0)
     else
         priv.cd_line:setVisible(false)
     end
 end
 
----@param tex_file string
----@param flag number | nil
----@param blend boolean | nil
-function public:setTexture(tex_file, dis_tex, flag, blend)
-    isTypeErr(tex_file, 'string', 'tex_file')
-    local priv = private.data[self]
-
-    priv.button:setNormalTexture(tex_file, flag, blend)
-    priv.button:setPushedTexture(tex_file, flag, blend)
-    priv.button:setDisabledTexture(dis_tex, flag, blend)
-end
-
----@param event frameeventtype
----@param callback FrameNormalButtonCallback
----@return Action | nil
-function public:addAction(event, callback)
-    private.data[self].button:addAction(event, callback)
-end
-
 ---@param abil AbilityExt
 function public:setAbility(abil)
+    local priv = private.data[self]
+
+    if abil then
+        self:setAlpha(1)
+        self:setNormalTexture(abil:getIcon())
+        self:setCharges(abil:getCurrentChargesLeft(),
+                        abil:getCurrentChargesMax())
+        self:setCooldown(abil:getCurrentCooldownLeft(),
+                         abil:getCurrentCooldownFull())
+    else
+        self:setAlpha(0)
+        self:setCharges(0, 0)
+        self:setCooldown(0, 0)
+    end
+
+    local prev = priv.abil
+
+    priv.abil = abil
 end
 
 --=========
@@ -156,10 +144,10 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self InterfaceSkillButton
+---@param self FrameNormalButton
 function private.newData(self)
     local priv = {
-        button = NormalButton.new(Fdf.button),
+        abil = nil,
 
         cd_mask = NormalImage.new(),
         cd_line = NormalImage.new(),
@@ -176,24 +164,34 @@ function private.newData(self)
     }
     private.data[self] = priv
 
-    priv.button:setParent(self)
-
-    priv.cd_mask:setParent(priv.button)
+    priv.cd_mask:setParent(self)
     priv.cd_mask:setPos(0, 0)
     priv.cd_mask:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
     priv.cd_mask:setAlpha(0.7)
 
-    priv.cd_line:setParent(priv.button)
+    priv.cd_line:setParent(self)
     priv.cd_line:setPos(0, 0)
     priv.cd_line:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor14.blp')
 
-    priv.cd_text:setParent(priv.button)
+    priv.cd_text:setParent(self)
     priv.cd_text:setPos(0, 0)
 
-    priv.charges_back:setParent(priv.button)
-    priv.charges_text:setParent(priv.button)
+    priv.charges_back:setParent(self)
+    priv.charges_text:setParent(self)
 
     self:setSize(self:getWidth(), self:getHeight())
+    self:addAction(FrameEvemt.MOUSE_CLICK, private.startTargeting)
+end
+
+---@type FrameNormalButtonCallback
+private.startTargeting = function(self)
+    ---@type AbilityExt
+    local abil = private.data[self].abil
+    if not abil then
+        return
+    end
+
+    abil:targetingStart()
 end
 
 return static

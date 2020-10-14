@@ -18,10 +18,14 @@ AbilityLibAPI.Container = require(path..'Container') or error('')
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(path..'Event') or error('')
 AbilityLibAPI.Event = AbilityExtEventModule.Enum
----@type AbilityExtTargetingTypeClass
-AbilityLibAPI.TargetingType = require(path..'TargetingType') or error('')
 ---@type AbilityExtTypeClass
 AbilityLibAPI.Type = require(path..'Type') or error('')
+
+AbilityLibAPI.Targeting = {}
+---@type AbilityExtTypeTargetingClass
+AbilityLibAPI.Targeting.Type = require(path..'Type.Targeting') or error('')
+---@type AbilityExtTypeTargetingUnitClass
+AbilityLibAPI.Targeting.Unit = require(path..'Type.Targeting.Unit') or error('')
 
 ---@type AbilityExtClass
 local Ability = require(path..'Ability') or error('')

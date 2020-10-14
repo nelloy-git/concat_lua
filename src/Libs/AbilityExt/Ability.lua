@@ -25,8 +25,8 @@ local AbilityExtCharges = require(lib_path..'Charges') or error('')
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
 local TargetingEvent = AbilityExtEventModule.TargetingEnum
 local CastingEvent = AbilityExtEventModule.CastingEnum
----@type AbilityExtTargetingTypeClass
-local AbilityExtTargetingType = require(lib_path..'TargetingType') or error('')
+---@type AbilityExtTypeTargetingClass
+local AbilityExtTargetingType = require(lib_path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type') or error('')
 
@@ -48,7 +48,7 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param targeting_type AbilityExtTargetingType
+---@param targeting_type AbilityExtTypeTargeting
 ---@param abil_type AbilityExtType
 ---@param child AbilityExt | nil
 ---@return AbilityExt
@@ -69,9 +69,7 @@ end
 -- Public
 --========
 
----@alias AbilityExtCallback fun(abil:AbilityExt)
-
----@return AbilityExtTargetingType
+---@return AbilityExtTypeTargeting
 function public:getTargetingType()
     return private.data[self].targeting_type
 end
@@ -79,6 +77,22 @@ end
 ---@return AbilityExtType
 function public:getType()
     return private.data[self].abil_type
+end
+
+-------------
+-- Targeting
+-------------
+
+function public:targetingStart()
+    private.data[self].targeting_type:start(self, nil, function() self:castingStart() end)
+end
+
+function public:targetingCancel()
+    private.data[self].targeting_type:cancel()
+end
+
+function public:targetingFinish()
+    private.data[self].targeting_type:finish()
 end
 
 -----------
@@ -93,6 +107,8 @@ end
 ---@param target any
 ---@return boolean
 function public:castingStart(target)
+    print('Casting started')
+    --[[
     local priv = private.data[self]
     local atype = priv.abil_type
 
@@ -103,6 +119,7 @@ function public:castingStart(target)
     end
     priv.target = nil
     return false
+    ]]
 end
 
 function public:castingCancel()
@@ -248,7 +265,7 @@ private.charges2ability = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityExt
 ---@param owner Unit
----@param targeting_type AbilityExtTargetingType
+---@param targeting_type AbilityExtTypeTargeting
 ---@param abil_type AbilityExtType
 function private.newData(self, owner, targeting_type, abil_type)
     local priv = {

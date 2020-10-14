@@ -1259,7 +1259,7 @@ end
 ---@param duration number
 function PolledWait(duration)
 	---@type timer
-	t             = nil
+	local t             = nil
 	---@type number
 	timeRemaining = nil
 	

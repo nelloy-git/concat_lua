@@ -19,8 +19,8 @@ local AbilityExt = require(lib_path..'Ability')
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
 local Event = AbilityExtEventModule.Enum or error('')
----@type AbilityExtTargetingTypeClass
-local AbilityExtTargetingType = require(lib_path..'TargetingType') or error('')
+---@type AbilityExtTypeTargetingClass
+local AbilityExtTypeTargeting = require(lib_path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type')
 
@@ -68,11 +68,11 @@ function public:getOwner()
 end
 
 ---@param pos number
----@param targeting_type AbilityExtTargetingType
+---@param targeting_type AbilityExtTypeTargeting
 ---@param abil_type AbilityExtType | nil
 function public:set(pos, targeting_type, abil_type)
     isTypeErr(pos, 'number', 'pos')
-    isTypeErr(targeting_type, AbilityExtTargetingType, 'targeting_type')
+    isTypeErr(targeting_type, AbilityExtTypeTargeting, 'targeting_type')
     if abil_type then isTypeErr(abil_type, AbilityExtType, 'abil_type') end
 
     local priv = private.data[self]

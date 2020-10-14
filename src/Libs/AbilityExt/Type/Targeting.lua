@@ -34,38 +34,50 @@ private.virtual_functions = {}
 -- Static
 --========
 
+function override.new()
+    return Class.allocate(AbilityExtTypeTargeting)
+end
+
+---@return AbilityExtTypeTargeting | nil
+function override.getCurrent()
+    return private.cur_targeting
+end
+
+--========
+-- Public
+--========
+
 ---@alias AbilityExtTypeTargetingCancelCallback fun(abil:AbilityExt)
 ---@alias AbilityExtTypeTargetingFinishCallback fun(abil:AbilityExt, target:any)
 
 ---@param abil AbilityExt
 ---@param cancel_cb AbilityExtTypeTargetingCancelCallback | nil
 ---@param finish_cb AbilityExtTypeTargetingFinishCallback | nil
----@return boolean
-function static.start(abil, cancel_cb, finish_cb)
-    if private.abil then
-        Log:err(tostring(AbilityExtTypeTargeting)..
-                ': can not start ability targeting. Already targeting.')
+function public:start(abil, cancel_cb, finish_cb)
+    if private.cur_targeting then
+        private.cur_targeting:cancel()
     end
 
+    private.cur_targeting = self
     private.abil = abil
     private.cancel_action = cancel_cb and Action.new(cancel_cb) or nil
     private.finish_action = finish_cb and Action.new(finish_cb) or nil
 end
 
 ---@return boolean
-function static.isTargeting()
-    return private.abil and true or false
-end
+--function public:isTargeting()
+--    return private.cur_targeting and true or false
+--end
 
-function static.cancel()
-    if private.abil == nil then
-        Log:err(tostring(AbilityExtTypeTargeting)..
-                ': can not cancel targeting. Is not targeting.')
+function public:cancel()
+    if not private.cur_targeting then
+        return
     end
 
     local abil = private.abil
     local cancel = private.cancel_action
 
+    private.cur_targeting = nil
     private.abil = nil
     private.cancel_action = nil
     private.finish_action = nil
@@ -76,15 +88,15 @@ function static.cancel()
 end
 
 ---@param target any
-function static.finish(target)
-    if private.abil == nil then
-        Log:err(tostring(AbilityExtTypeTargeting)..
-                ': can not finish targeting. Is not targeting.')
+function public:finish(target)
+    if not private.cur_targeting then
+        return
     end
 
     local abil = private.abil
-    local finish = private.data[abil].finish
+    local finish = private.finish_action
 
+    private.cur_targeting = nil
     private.abil = nil
     private.cancel_action = nil
     private.finish_action = nil
@@ -98,6 +110,7 @@ end
 -- Private
 --=========
 
+private.cur_targeting = nil
 private.abil = nil
 private.cancel_action = nil
 private.finish_action = nil

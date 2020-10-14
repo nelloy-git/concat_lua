@@ -22,77 +22,78 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 
 ---@type AbilityExtTypeTargeting
 local AbilityExtTypeTargeting = require(lib_path..'Type.Targeting')
-
---=======
--- Class
---=======
-
-local AbilityExtTypeTargetingUnit = Class.new('AbilityExtTypeTargetingUnit', AbilityExtTypeTargeting)
----@class AbilityExtTypeTargetingUnit
-local public = AbilityExtTypeTargetingUnit.public
----@class AbilityExtTypeTargetingUnitClass
-local static = AbilityExtTypeTargetingUnit.static
----@type AbilityExtTypeTargetingUnitClass
-local override = AbilityExtTypeTargetingUnit.override
-local private = {}
-private.virtual_functions = {}
+local AbilityExtTypeTargetingPublic = Class.getPublic(AbilityExtTypeTargeting)
 
 --========
--- Static
+-- Module
 --========
+
+local AbilityExtTypeTargetingUnit = AbilityExtTypeTargeting.new()
+
+local function mouseUpCallback()
+    local btn = BlzGetTriggerPlayerMouseButton()
+    if btn == MOUSE_BUTTON_TYPE_LEFT then
+        AbilityExtTypeTargetingUnit:finish()
+    else
+        AbilityExtTypeTargetingUnit:cancel()
+    end
+end
+
+
+local trigger
+local mouse_action
+if not IsCompiletime() then
+    trigger = Trigger.new()
+    trigger:addPlayerEvent(EVENT_PLAYER_MOUSE_UP, GetLocalPlayer())
+end
 
 ---@alias AbilityExtTypeTargetingUnitFinishCallback fun(abil:AbilityExt, target:Unit)
 
 ---@param abil AbilityExt
 ---@param cancel_cb AbilityExtTypeTargetingCancelCallback | nil
 ---@param finish_cb AbilityExtTypeTargetingUnitFinishCallback | nil
----@return boolean
-function override.start(abil, cancel_cb, finish_cb)
-    AbilityExtTypeTargeting.start(abil, cancel_cb, finish_cb)
-    private.abil = abil
-    
+function AbilityExtTypeTargetingUnit:start(abil, cancel_cb, finish_cb)
+    AbilityExtTypeTargetingPublic.start(self, abil, cancel_cb, finish_cb)
+
+    -- Disable unit selection
+    local selected = GetUnitsSelectedAll(GetLocalPlayer())
+    EnableSelect(false, true)
+    EnableDragSelect(false, true)
+
+    SelectGroupBJ(selected)
+    DestroyGroup(selected)
+
+    mouse_action = trigger:addAction(mouseUpCallback)
 end
 
----@return boolean
-function static.isTargeting()
-    return private.abil and true or false
-end
-
-function override.cancel()
-    private.abil = nil
-    AbilityExtTypeTargeting.cancel()
-end
-
-function override.finish()
-    private.abil = nil
-
-    local target = Unit.getLinked(BlzGetMouseFocusUnit())
-    AbilityExtTypeTargeting.finish(target)
-end
-
---=========
--- Private
---=========
-
-private.abil = nil
-
-function private.mouseUpCallback()
-    if not static.isTargeting() then
+function AbilityExtTypeTargetingUnit:cancel()
+    local cur = AbilityExtTypeTargeting.getCurrent()
+    if self ~= cur then
+        cur:cancel()
         return
     end
 
-    local btn = BlzGetTriggerPlayerMouseButton()
-    if btn == MOUSE_BUTTON_TYPE_LEFT then
-        static.finish()
-    else
-        static.cancel()
+    EnableSelect(true, true)
+    EnableDragSelect(true, true)
+
+    trigger:removeAction(mouse_action)
+
+    AbilityExtTypeTargetingPublic.cancel(self)
+end
+
+function AbilityExtTypeTargetingUnit:finish()
+    local cur = AbilityExtTypeTargeting.getCurrent()
+    if self ~= cur then
+        return
     end
+
+    EnableSelect(true, true)
+    EnableDragSelect(true, true)
+
+    trigger:removeAction(mouse_action)
+
+    local target = Unit.getLinked(BlzGetMouseFocusUnit())
+    AbilityExtTypeTargetingPublic.finish(self, target)
 end
 
-if IsCompiletime() then
-    private.trigger = Trigger.new()
-    private.trigger:addPlayerEvent(EVENT_PLAYER_MOUSE_UP, GetLocalPlayer())
-    private.trigger:addAction(private.mouseUpCallback)
-end
-
-return static
+return AbilityExtTypeTargetingUnit

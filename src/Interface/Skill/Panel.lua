@@ -83,65 +83,8 @@ function public:setAbilContainer(container)
     for i = 1, priv.max_abils do
         ---@type AbilityExt
         local abil = abil_list[i]
-
-        if abil then
-            priv.buttons[i]:setTexture(abil:getIcon(), '')
-            --priv.buttons[i]:setButtonAlpha(1)
-            priv.buttons[i]:setCharges(abil:getCurrentChargesLeft(),
-                                       abil:getCurrentChargesMax())
-            priv.buttons[i]:setCooldown(abil:getCurrentCooldownLeft(),
-                                        abil:getCurrentCooldownFull())
-
-            if (priv.fast_cast) then
-                -- TODO fast cast
-            else
-                priv.buttons[i]:addAction(FrameEvent.MOUSE_CLICK, function()
-                    local t = abil:getTargetingType()
-                    if t:isStarted(abil) then
-                        t:forceFinish(abil)
-                    end
-                    t:start(abil)
-                    t:setFinishAction(abil, function(abil, action)
-                        print('Targeting finished')
-                        abil:get
-                    end)
-                end)
-                -- TODO
-            end
-        else
-            --priv.buttons[i]:setButtonAlpha(0)
-            priv.buttons[i]:setCharges(0, 0)
-        end
+        priv.buttons[i]:setAbility(abil)
     end
-    --[[
-    local priv = private.data[self]
-
-    local previous = priv.container
-    if previous then
-        private.container2interface[previous] = nil
-        if not previous:removeAction(priv.changed_action) then
-            Log:err(tostring(InterfaceSkillPanel)..': сan clear previous AbilityExtContainer', 2)
-        end
-    end
-
-    priv.container = container
-    if container then
-        private.container2interface[container] = self
-        priv.changed_action = container:addAction(AbilEvent.CHARGES_CHANGED, private.chargesChanged)
-        priv.start_action = container:addAction(AbilEvent.CASTING_START, private.castingStart)
-        priv.loop_action = 0
-        priv.end_action = 0
-    end
-
-    for i = 1, #private.hotkeys do
-        local abil = container:get(private.hotkeys[i])
-        if abil and IsUnitAlly(container:getOwner():getData(), GetLocalPlayer()) then
-            priv.buttons[i]:setCharges(abil:getCharges(), abil:getMaxCharges())
-        else
-            priv.buttons[i]:setCharges(0, 0)
-        end
-    end
-    --]]
 end
 
 --=========
@@ -149,6 +92,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
+private.button2panel = setmetatable({}, {__mode = 'kv'})
 private.container2interface = setmetatable({}, {__mode = 'kv'})
 
 ---@param self InterfaceSkillPanel
