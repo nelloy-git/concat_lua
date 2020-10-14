@@ -20,7 +20,6 @@ local Log = UtilsLib.Log or error('')
 ---@class FrameKeyboard
 local Keyboard = {}
 
-local actions = {}
 local key2data = {
     ['0'] = OSKEY_0,
     ['1'] = OSKEY_1,
@@ -60,6 +59,7 @@ local key2data = {
     ['Z'] = OSKEY_Z,
 }
 
+local actions = {}
 local trigger
 if not IsCompiletime() then
     trigger = Trigger.new()

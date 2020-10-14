@@ -44,8 +44,8 @@ function override.new(handle, destructor, child)
         Log:err('Handle instance already has connected handle.', 2)
     end
 
-    if private.db[handle] then
-        Log:err('handle data can have only one connected Handle instance. Old: '..tostring(private.db[handle])..' New: '..tostring(child), 2)
+    if private.data2handle[handle] then
+        Log:err('handle data can have only one connected Handle instance. Old: '..tostring(private.data2handle[handle])..' New: '..tostring(child), 2)
     end
 
     local instance = child or Class.allocate(Handle)
@@ -55,19 +55,15 @@ function override.new(handle, destructor, child)
 end
 
 --- Returns Handle instance linked to the handle data.
+---@overload fun(id:number):Handle
 ---@param handle handle
 ---@return Handle
 function static.getLinked(handle)
-    return private.db[handle]
+    if type(handle) == 'number' then
+        return private.id2handle[handle]
+    end
+    return private.data2handle[handle]
 end
-
------ Removes linked instance for handle.
------@param handle handle
---function static.removeLinked(handle)
---    local linked = private.db[handle]
---    private.data[linked] = nil
---    private.db[handle] = nil
---end
 
 --========
 -- Public
@@ -79,11 +75,17 @@ function public:getData()
     return private.data[self] and private.data[self].handle or nil
 end
 
+--- Returns handle id.
+---@return integer
+function public:getId()
+    return private.data[self] and private.data[self].id or nil
+end
+
 --- Destroy handle data.
 function public:destroy()
     local priv = private.data[self]
 
-    private.db[priv.handle] = nil
+    private.data2handle[priv.handle] = nil
     private.data[self] = nil
     if priv.handle then
         priv.destructor(priv.handle)
@@ -97,17 +99,20 @@ end
 --=========
 
 private.data = {}
-private.db = setmetatable({}, {__mode = 'v'})
+private.data2handle = setmetatable({}, {__mode = 'v'})
+private.id2handle = setmetatable({}, {__mode = 'v'})
 
 ---@param self Handle
 ---@param handle handle
 function private.newData(self, handle, destructor)
     local priv = {
         handle = handle,
+        id = GetHandleId(handle),
         destructor = destructor
     }
     private.data[self] = priv
-    private.db[handle] = self
+    private.data2handle[handle] = self
+    private.id2handle[priv.id] = self
 end
 
 return static

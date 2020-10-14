@@ -27,6 +27,12 @@ TypesAPI.FrameEventTypeEnum = FrameEventType.Enum or error('')
 TypesAPI.isFrameEventType = FrameEventType.isFrameEventType or error('')
 TypesAPI.frameEventtoString = FrameEventType.toStr or error('')
 
+---@type KeyType
+local KeyType = require(path..'KeyType') or error('')
+TypesAPI.KeyTypeEnum = KeyType.Enum or error('')
+TypesAPI.isKeyType = KeyType.isKeyType or error('')
+TypesAPI.frameEventtoString = KeyType.toStr or error('')
+
 ---@type TargetType
 local TargetType = require(path..'TargetType') or error('')
 TypesAPI.TargetTypeEnum = TargetType.Enum or error('')
