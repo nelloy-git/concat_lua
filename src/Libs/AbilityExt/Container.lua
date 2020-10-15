@@ -68,7 +68,7 @@ function public:getOwner()
 end
 
 ---@param pos number
----@param targeting_type AbilityExtTypeTargeting
+---@param targeting_type AbilityExtTypeTargetingClass
 ---@param abil_type AbilityExtType | nil
 function public:set(pos, targeting_type, abil_type)
     isTypeErr(pos, 'number', 'pos')

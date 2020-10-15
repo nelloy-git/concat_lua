@@ -255,6 +255,10 @@ function public:setEnabled(flag)
     BlzFrameSetEnable(self:getData(), flag)
 end
 
+function public:click()
+    BlzFrameClick(self:getData())
+end
+
 ---@alias FrameCallback fun(frame:Frame, player:player, event:frameeventtype)
 
 --- Not all events are available for all

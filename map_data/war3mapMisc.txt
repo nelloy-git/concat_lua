@@ -11,6 +11,7 @@ MaxUnitLevel=100
 MaxUnitSpeed=512.0
 MinUnitSpeed=0.0
 MissDamageReduction=0.0
+ReactionDelay=0.0
 StrAttackBonus=0.0
 StrHitPointBonus=0.0
 StrRegenBonus=0.0

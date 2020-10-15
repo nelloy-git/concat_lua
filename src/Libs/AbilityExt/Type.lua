@@ -11,6 +11,13 @@ local UtilsLib = lib_dep.Utils or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
 local Log = UtilsLib.Log or error('')
 
+---@type AbilityExtTypeTargetingClass
+local AbilityExtTargetingType = require(lib_path..'Type.Targeting') or error('')
+---@type AbilityExtTypeCastingClass
+local AbilityExtCastingType = require(lib_path..'Type.Casting') or error('')
+---@type AbilityExtTypeDataClass
+local AbilityExtDataType = require(lib_path..'Type.Data') or error('')
+
 --=======
 -- Class
 --=======
@@ -29,12 +36,14 @@ private.virtual_functions = {}
 -- Static
 --========
 
----@param child AbilityExtType | nil
+---@param targeting_type AbilityExtTypeTargetingClass
+---@param casting_type AbilityExtTypeCastingClass
+---@param data_type AbilityExtTypeDataClass
 ---@return AbilityExtType
-function override.new(child)
-    if child then isTypeErr(child, AbilityExtType, 'child') end
+function override.new(targeting_type, casting_type, data_type)
 
-    local instance = child or Class.allocate(AbilityExtType)
+    local instance = Class.allocate(AbilityExtType)
+    private.newData(instance, targeting_type, casting_type, data_type)
 
     return instance
 end
@@ -43,105 +52,41 @@ end
 -- Public
 --========
 
----------------
--- Information
----------------
-
----@param abil AbilityExt
----@return string
-function public:getName(abil) return 'Noname' end
-
----@param abil AbilityExt
----@return string
-function public:getIcon(abil) return '' end
-
----@param abil AbilityExt
----@return string
-function public:getTooltip(abil) return 'Notooltip' end
-
--------------
--- Resources
--------------
-
----@param abil AbilityExt
----@return number
-function public:getLifeCost(abil) return 0 end
-
----@param abil AbilityExt
----@return number
-function public:getManaCost(abil) return 0 end
-
----@param abil AbilityExt
----@return number
-function public:getSpecialCost(abil) return 0 end
-
----@param abil AbilityExt
----@return number
-function public:getChargesForUse(abil) return 1 end
-
----@param abil AbilityExt
----@return number
-function public:getMaxCharges(abil) return 1 end
-
----@param abil AbilityExt
----@return number
-function public:getCooldown(abil) return 0 end
-
----@param abil AbilityExt
----@return number
-function public:getCastingTime(abil) return 0 end
-
---- Should check if all conditions are correct.
----@param abil AbilityExt
----@return boolean
-function public:isEnabled(abil) return true end
-
----@param abil AbilityExt
----@param target any
----@return boolean
-function public:isTargetValid(abil, target) return true end
-
 -------------
 -- Targeting
 -------------
 
----@param abil AbilityExt
----@return boolean
-function public:targetingStart(abil) end
+function public:targetingStart(abil)
+    return private.data[self].targeting_type.start(abil)
+end
 
----@param abil AbilityExt
----@return any
-function public:targetingCancel(abil) end
+function public:targetingCancel(abil)
+    return private.data[self].targeting_type.cancel(abil)
+end
 
------------
--- Casting
------------
-
---- Should consume resources.
----@param abil AbilityExt
-function public:castingStart(abil) end
-
----@param abil AbilityExt
-function public:castingLoop(abil) end
-
----@param abil AbilityExt
-function public:castingCancel(abil) end
-
----@param abil AbilityExt
-function public:castingInterrupt(abil) end
-
----@param abil AbilityExt
-function public:castingFinish(abil) end
-
--------------
--- Callbacks
--------------
-
----@param abil AbilityExt
-function public:notEnoughCharges(abil) end
+function public:targetingFinish(abil, targ)
+    return private.data[self].targeting_type.finish(abil, targ)
+end
 
 --=========
 -- Private
 --=========
+
+private.data = setmetatable({}, {__mode = 'k'})
+
+---@param self AbilityExtType
+---@param targeting_type AbilityExtTypeTargetingClass
+---@param casting_type AbilityExtTypeCasting
+---@param data_type AbilityExtTypeData
+function private.newData(self, targeting_type, casting_type, data_type)
+    local priv = {
+        targeting_type = targeting_type,
+        casting_type = casting_type,
+        data_type = data_type
+    }
+    private.data[self] = priv
+end
+
+
 
 return static

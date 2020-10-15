@@ -101,6 +101,8 @@ FrameLib.Origin.ChatBox = require(path..'Origin.ChatBox') or error('')
 --- Can not be moved outside of default 0.8x0.6 box.
 ---@type FrameOriginChatEditBox
 FrameLib.Origin.ChatEditBox = require(path..'Origin.ChatEditBox') or error('')
+---@type FrameOriginCursor
+FrameLib.Origin.Cursor = require(path..'Origin.Cursor') or error('')
 ---@type FrameOriginInventory
 FrameLib.Origin.Inventory = require(path..'Origin.Inventory') or error('')
 ---@type FrameOriginGameUI

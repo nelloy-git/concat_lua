@@ -25,10 +25,13 @@ local AbilityExtCharges = require(lib_path..'Charges') or error('')
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
 local TargetingEvent = AbilityExtEventModule.TargetingEnum
 local CastingEvent = AbilityExtEventModule.CastingEnum
+
 ---@type AbilityExtTypeTargetingClass
 local AbilityExtTargetingType = require(lib_path..'Type.Targeting') or error('')
----@type AbilityExtTypeClass
-local AbilityExtType = require(lib_path..'Type') or error('')
+---@type AbilityExtTypeCastingClass
+local AbilityExtCastingType = require(lib_path..'Type.Casting') or error('')
+---@type AbilityExtTypeDataClass
+local AbilityExtDataType = require(lib_path..'Type.Data') or error('')
 
 --=======
 -- Class
@@ -48,18 +51,20 @@ local private = {}
 --=========
 
 ---@param owner Unit
----@param targeting_type AbilityExtTypeTargeting
----@param abil_type AbilityExtType
+---@param targeting_type AbilityExtTypeTargetingClass
+---@param casting_type AbilityExtTypeCasting
+---@param data_type AbilityExtTypeData
 ---@param child AbilityExt | nil
 ---@return AbilityExt
-function override.new(owner, targeting_type, abil_type, child)
+function override.new(owner, targeting_type, casting_type, data_type, child)
     isTypeErr(owner, Unit, 'owner')
-    isTypeErr(targeting_type, AbilityExtTargetingType, 'targeting_type')
-    isTypeErr(abil_type, AbilityExtType, 'abil_type')
+    -- TODO isTypeErr(targeting_type, AbilityExtTargetingType, 'targeting_type')
+    -- TODO isTypeErr(casting_type, AbilityExtCastingType, 'casting_type')
+    -- TODO isTypeErr(data_type, AbilityExtDataType, 'data_type')
     if child then isTypeErr(child, AbilityExt, 'child') end
 
     local instance = child or Class.allocate(AbilityExt)
-    private.newData(instance, owner, targeting_type, abil_type)
+    private.newData(instance, owner, targeting_type, casting_type, data_type)
 
     return instance
 end
@@ -69,7 +74,7 @@ end
 -- Public
 --========
 
----@return AbilityExtTypeTargeting
+---@return AbilityExtTypeTargetingClass
 function public:getTargetingType()
     return private.data[self].targeting_type
 end
@@ -84,15 +89,21 @@ end
 -------------
 
 function public:targetingStart()
-    private.data[self].targeting_type:start(self, nil, function() self:castingStart() end)
+    local priv = private.data[self]
+
+    if priv.data_type:checkConditions(self) then
+        priv.targeting_type.start(self,
+                                  private.targetingCancelCallback,
+                                  private.targetingFinishCallback)
+    end
 end
 
 function public:targetingCancel()
-    private.data[self].targeting_type:cancel()
+    private.data[self].targeting_type.cancel()
 end
 
 function public:targetingFinish()
-    private.data[self].targeting_type:finish()
+    private.data[self].targeting_type.finish()
 end
 
 -----------
@@ -107,19 +118,11 @@ end
 ---@param target any
 ---@return boolean
 function public:castingStart(target)
-    print('Casting started')
-    --[[
     local priv = private.data[self]
-    local atype = priv.abil_type
 
-    priv.target = target
-    if atype:isEnabled(self) then
-        priv.casting:start(atype:getCastingTime(self))
-        return true
+    if priv.data_type:checkConditions(self) then
+        priv.casting_type:start(self, nil, function() self:castingStart() end)
     end
-    priv.target = nil
-    return false
-    ]]
 end
 
 function public:castingCancel()
@@ -266,8 +269,9 @@ private.charges2ability = setmetatable({}, {__mode = 'k'})
 ---@param self AbilityExt
 ---@param owner Unit
 ---@param targeting_type AbilityExtTypeTargeting
----@param abil_type AbilityExtType
-function private.newData(self, owner, targeting_type, abil_type)
+---@param casting_type AbilityExtTypeCasting
+---@param data_type AbilityExtTypeData
+function private.newData(self, owner, targeting_type, casting_type, data_type)
     local priv = {
         target_unit = nil,
         target_x = 0,
@@ -275,7 +279,8 @@ function private.newData(self, owner, targeting_type, abil_type)
 
         owner = owner,
         targeting_type = targeting_type,
-        abil_type = abil_type,
+        casting_type = casting_type,
+        data_type = data_type,
 
         casting = TimedObj.new(),
         charges = AbilityExtCharges.new(),
@@ -335,6 +340,15 @@ private.chargesChanged = function(charges)
     ---@type AbilityExt
     local self = private.charges2ability[charges]
     private.data[self].abil_type:chargesChanged(self)
+end
+
+---@type AbilityExtTypeTargetingCancelCallback
+private.targetingCancelCallback = function(self)
+end
+
+---@type AbilityExtTypeTargetingFinishCallback
+private.targetingFinishCallback = function(self, target)
+    self:castingStart(target)
 end
 
 return static

@@ -5,10 +5,8 @@
 local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib)
----@type HandleLib
-local HandleLib = require(LibList.HandleLib) or error('')
-local Frame = HandleLib.Frame or error('')
-local FramePublic = Class.getPublic(Frame)
+local Image = FrameLib.Normal.Image
+local ImagePublic = Class.getPublic(Image)
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local Log = UtilsLib.Log or error('')
@@ -17,10 +15,10 @@ local Log = UtilsLib.Log or error('')
 -- Class
 --=======
 
-local InterfaceMinimap = Class.new('InterfaceMinimap', Frame)
----@class InterfaceMinimap : Frame
+local InterfaceMinimap = Class.new('InterfaceMinimap', Image)
+---@class InterfaceMinimap : Image
 local public = InterfaceMinimap.public
----@class InterfaceMinimapClass : FrameClass
+---@class InterfaceMinimapClass : ImageClass
 local static = InterfaceMinimap.static
 ---@type InterfaceMinimapClass
 local override = InterfaceMinimap.override
@@ -40,7 +38,7 @@ function override.new()
     end
 
     local instance = Class.allocate(InterfaceMinimap)
-    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
+    instance = Image.new(private.fdf, instance)
 
     private.newData(instance)
 
@@ -59,31 +57,14 @@ end
 -- Public
 --========
 
----@param x number
----@param y number
-function public:setPos(x, y)
-    local priv = private.data[self]
-    FramePublic.setPos(self, x, y)
-
-    priv.minimap:setPos(self:getAbsX() + 0.05 * self:getHeight(),
-                        self:getAbsY() + 0.05 * self:getHeight())
-end
-
 ---@param w number
 ---@param h number
 function public:setSize(w, h)
+    ImagePublic.setSize(self, w, h)
     local priv = private.data[self]
-    FramePublic.setSize(self, w, h)
 
-    priv.minimap:setSize(0.9 * h, 0.9 * h)
-end
-
----@param flag boolean
-function public:setVisible(flag)
-    local priv = private.data[self]
-    FramePublic.setVisible(self, flag)
-
-    priv.minimap:setVisible(flag)
+    priv.minimap:setSize(0.9 * w, 0.9 * h)
+    priv.minimap:setPos(0.05 * w, 0.05 * h)
 end
 
 --=========
@@ -98,6 +79,8 @@ function private.newData(self)
         minimap = FrameLib.Origin.Minimap,
     }
     private.data[self] = priv
+
+    priv.minimap:setParent(self)
 end
 
 private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceMinimapBorder')

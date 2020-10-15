@@ -6,46 +6,29 @@ local lib_path = Lib.curPath()
 local lib_dep = Lib.curDepencies()
 
 local Class = lib_dep.Class or error('')
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Timer = HandleLib.Timer
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
 local Action = UtilsLib.Action or error('')
-local isTypeErr = UtilsLib.isTypeErr or error('')
-local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
 --=======
 
 local AbilityExtTypeTargeting = Class.new('AbilityExtTypeTargeting')
----@class AbilityExtTypeTargeting
-local public = AbilityExtTypeTargeting.public
 ---@class AbilityExtTypeTargetingClass
 local static = AbilityExtTypeTargeting.static
 ---@type AbilityExtTypeTargetingClass
 local override = AbilityExtTypeTargeting.override
-local virtual = {}
 local private = {}
-private.virtual_functions = {}
 
 --========
 -- Static
 --========
 
-function override.new()
-    return Class.allocate(AbilityExtTypeTargeting)
-end
-
----@return AbilityExtTypeTargeting | nil
+---@return AbilityExt | nil
 function override.getCurrent()
-    return private.cur_targeting
+    return private.abil
 end
-
---========
--- Public
---========
 
 ---@alias AbilityExtTypeTargetingCancelCallback fun(abil:AbilityExt)
 ---@alias AbilityExtTypeTargetingFinishCallback fun(abil:AbilityExt, target:any)
@@ -53,31 +36,24 @@ end
 ---@param abil AbilityExt
 ---@param cancel_cb AbilityExtTypeTargetingCancelCallback | nil
 ---@param finish_cb AbilityExtTypeTargetingFinishCallback | nil
-function public:start(abil, cancel_cb, finish_cb)
-    if private.cur_targeting then
-        private.cur_targeting:cancel()
+function static.start(abil, cancel_cb, finish_cb)
+    if private.abil then
+        private.abil:targetingCancel(private.abil)
     end
 
-    private.cur_targeting = self
     private.abil = abil
     private.cancel_action = cancel_cb and Action.new(cancel_cb) or nil
     private.finish_action = finish_cb and Action.new(finish_cb) or nil
 end
 
----@return boolean
---function public:isTargeting()
---    return private.cur_targeting and true or false
---end
-
-function public:cancel()
-    if not private.cur_targeting then
+---@param abil AbilityExt
+function static.cancel(abil)
+    if abil ~= private.abil then
         return
     end
 
-    local abil = private.abil
     local cancel = private.cancel_action
 
-    private.cur_targeting = nil
     private.abil = nil
     private.cancel_action = nil
     private.finish_action = nil
@@ -87,16 +63,15 @@ function public:cancel()
     end
 end
 
+---@param abil AbilityExt
 ---@param target any
-function public:finish(target)
-    if not private.cur_targeting then
+function static.finish(abil, target)
+    if abil ~= private.abil then
         return
     end
 
-    local abil = private.abil
     local finish = private.finish_action
 
-    private.cur_targeting = nil
     private.abil = nil
     private.cancel_action = nil
     private.finish_action = nil
@@ -110,7 +85,6 @@ end
 -- Private
 --=========
 
-private.cur_targeting = nil
 private.abil = nil
 private.cancel_action = nil
 private.finish_action = nil
