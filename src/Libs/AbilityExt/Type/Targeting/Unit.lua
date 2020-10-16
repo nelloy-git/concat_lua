@@ -13,6 +13,8 @@ local Unit = HandleLib.Unit or error('')
 
 ---@type AbilityExtTypeTargetingClass
 local AbilityExtTypeTargeting = require(lib_path..'Type.Targeting')
+---@type AbilityExtSettings
+local Settings = require(lib_path..'Settings')
 
 --=======
 -- Class
@@ -46,7 +48,7 @@ function override.start(abil, cancel_cb, finish_cb)
     DestroyGroup(selected)
 
     private.mouse_action = private.trigger:addAction(private.mouseUpCallback)
-    ForceUIKey('A')
+    ForceUIKey(Settings.dummy_hotkey)
 end
 
 ---@param abil AbilityExt

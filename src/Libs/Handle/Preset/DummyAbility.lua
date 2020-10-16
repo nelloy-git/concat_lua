@@ -93,11 +93,6 @@ function public:setArea(area)
     end
 end
 
----@param range number
-function public:setRange(range)
-    BlzSetAbilityRealLevelField(self:getData(), ABILITY_RLF_CAST_RANGE, 0, range)
-end
-
 ---@param name string
 function public:setName(name)
     BlzSetAbilityTooltip(private.data[self].abil_dummy_type:getId(), name, 0)
@@ -148,6 +143,7 @@ end
 
 function public:destroy()
     local priv = private.data[self]
+    
     DummyAbilityPool.push(priv.hotkey, priv.abil_dummy_type)
     AbilityPublic.destroy()
 end

@@ -8,6 +8,7 @@ local lib_dep = Lib.curDepencies()
 local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
+local Ability = HandleLib.Ability or error('')
 local Unit = HandleLib.Unit or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
@@ -23,6 +24,8 @@ local Event = AbilityExtEventModule.Enum or error('')
 local AbilityExtTypeTargeting = require(lib_path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type')
+---@type AbilityExtSettings
+local Settings = require(lib_path..'Settings')
 
 --=======
 -- Class
@@ -48,6 +51,10 @@ function override.new(owner, child)
     isTypeErr(owner, Unit, 'owner')
     if child then isTypeErr(child, AbilityExtContainer, 'child') end
 
+    if private.owners[owner] ~= nil then
+        return private.owners[owner]
+    end
+
     local instance = child or Class.allocate(AbilityExtContainer)
     private.newData(instance, owner)
 
@@ -68,12 +75,10 @@ function public:getOwner()
 end
 
 ---@param pos number
----@param targeting_type AbilityExtTypeTargetingClass
 ---@param abil_type AbilityExtType | nil
-function public:set(pos, targeting_type, abil_type)
+function public:set(pos, abil_type)
     isTypeErr(pos, 'number', 'pos')
-    isTypeErr(targeting_type, AbilityExtTypeTargeting, 'targeting_type')
-    if abil_type then isTypeErr(abil_type, AbilityExtType, 'abil_type') end
+    isTypeErr(abil_type, AbilityExtType, 'abil_type')
 
     local priv = private.data[self]
 
@@ -84,7 +89,7 @@ function public:set(pos, targeting_type, abil_type)
 
     local abil = nil
     if abil_type then
-        abil = AbilityExt.new(priv.owner, targeting_type, abil_type)
+        abil = AbilityExt.new(priv.owner, abil_type)
     end
     priv.abil_list[pos] = abil
 end
@@ -107,6 +112,11 @@ function public:getAll()
     return copy
 end
 
+---@return Ability
+function public:getDummyAbility()
+    return private.data[self].dummy
+end
+
 --=========
 -- Private
 --=========
@@ -119,7 +129,9 @@ private.owners = setmetatable({}, {__mode = 'k'})
 function private.newData(self, owner)
     local priv = {
         owner = owner,
-        abil_list = {}
+        abil_list = {},
+
+        dummy = Ability.new(owner, Settings.dummy_type:getId())
     }
     private.data[self] = priv
     private.owners[owner] = self

@@ -4,7 +4,10 @@
 
 ---@type AbilityLib
 local AbilityLib = require(LibList.AbilityExtLib) or error('')
-local Event = AbilityLib.Event
+local TargetingUnit = AbilityLib.Targeting.Unit or error('')
+local Casting = AbilityLib.Casting.Type or error('')
+local Data = AbilityLib.Data.Type or error('')
+--local Event = AbilityLib.Event
 ---@type AssetLib
 local AssetLib = require(LibList.AssetLib) or error('')
 local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
@@ -32,7 +35,8 @@ local BonusPerMAtk = 0.01
 -- Module
 --========
 
-local LifeForceShield = AbilityLib.Type.new()
+local LifeForceShield = AbilityLib.Type.new(TargetingUnit, Casting, Data)
+--[[
 
 --local casting_period = AbilityLib.getLoopPeriod()
 --local percent_per_loop = DrainLifePerSec * casting_period
@@ -55,6 +59,7 @@ function LifeForceShield:getTooltip(owner)
            'At the end of the cast gives shield to the target for '..
            'drained life increased by '..Utils.colorScale(bonus, ParamType.MATK)..'%'
 end
+]]
 --[[
 ---@param owner Unit
 ---@return number
@@ -125,4 +130,4 @@ function LifeForceShield:getCallback(event)
 end
 --]]
 
-return LifeForceShield
+return AbilityLib.Type.new()

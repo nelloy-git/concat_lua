@@ -28,6 +28,14 @@ AbilityLibAPI.Targeting.Type = require(path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeTargetingUnitClass
 AbilityLibAPI.Targeting.Unit = require(path..'Type.Targeting.Unit') or error('')
 
+AbilityLibAPI.Casting = {}
+---@type AbilityExtTypeCastingClass
+AbilityLibAPI.Casting.Type = require(path..'Type.Casting') or error('')
+
+AbilityLibAPI.Data = {}
+---@type AbilityExtTypeDataClass
+AbilityLibAPI.Data.Type = require(path..'Type.Data') or error('')
+
 ---@type AbilityExtClass
 local Ability = require(path..'Ability') or error('')
 

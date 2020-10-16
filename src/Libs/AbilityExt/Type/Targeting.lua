@@ -42,8 +42,8 @@ function static.start(abil, cancel_cb, finish_cb)
     end
 
     private.abil = abil
-    private.cancel_action = cancel_cb and Action.new(cancel_cb) or nil
-    private.finish_action = finish_cb and Action.new(finish_cb) or nil
+    private.abil_cancel_action = cancel_cb and Action.new(cancel_cb) or nil
+    private.abil_finish_action = finish_cb and Action.new(finish_cb) or nil
 end
 
 ---@param abil AbilityExt
@@ -52,11 +52,11 @@ function static.cancel(abil)
         return
     end
 
-    local cancel = private.cancel_action
+    local cancel = private.abil_cancel_action
 
     private.abil = nil
-    private.cancel_action = nil
-    private.finish_action = nil
+    private.abil_cancel_action = nil
+    private.abil_finish_action = nil
 
     if cancel then
         cancel:run(abil)
@@ -70,11 +70,11 @@ function static.finish(abil, target)
         return
     end
 
-    local finish = private.finish_action
+    local finish = private.abil_finish_action
 
     private.abil = nil
-    private.cancel_action = nil
-    private.finish_action = nil
+    private.abil_cancel_action = nil
+    private.abil_finish_action = nil
 
     if finish then
         finish:run(abil, target)
@@ -86,7 +86,7 @@ end
 --=========
 
 private.abil = nil
-private.cancel_action = nil
-private.finish_action = nil
+private.abil_cancel_action = nil
+private.abil_finish_action = nil
 
 return static

@@ -18,28 +18,18 @@ local Param = ParameterLib.ParamType or error('')
 local UnitParam = ParameterLib.UnitContainer or error('')
 local Value = ParameterLib.ValueType or error('')
 
+
 ---@type BuffLib
 --local BuffLib = require(LibList.BuffLib)
 
 ---@type Interface
 local Interface = require('Interface.Init')
-
 ---@type CorruptedPriest
 local CorruptedPriest = require('Hero.CorruptedPriest.Unit')
 
 if IsCompiletime() then
     return
 end
-
-local arc = HandleLib.Figure.Arc.new()
-arc:setPosPolar(0, 0, 300, 0, math.pi/4)
-
-local line1 = HandleLib.Figure.Line.new()
-line1:setPosPolar(0, 0, 300, 0)
-
-local line2 = HandleLib.Figure.Line.new()
-line2:setPosPolar(0, 0, 300, math.pi/4)
-line2:setColor(0, 0, 0, 1)
 
 u = CorruptedPriest.new(0, 0, Player(0))
 u3 = CorruptedPriest.new(0, 0, Player(0))
