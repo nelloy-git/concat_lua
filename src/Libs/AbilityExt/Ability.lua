@@ -16,11 +16,9 @@ local InputLib = lib_dep.Input or error('')
 local DataSync = InputLib.DataSync or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
-local ActionList = UtilsLib.ActionList or error('')
 local isType = UtilsLib.isType or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-
-local Log = UtilsLib.Log or error('')
+local splitStr = UtilsLib.splitStr
 
 ---@type AbilityExtChargesClass
 local AbilityExtCharges = require(lib_path..'Charges') or error('')
@@ -132,12 +130,13 @@ function public:castingStart(target)
     end
 
     priv.target = target
-    priv.abil_type:castingStart(self)
+    priv.casting_timer:start(priv.abil_type:getCastingTime())
 end
 
 function public:castingCancel()
     local priv = private.data[self]
 
+    priv.casting_timer:cancel()
     priv.abil_type:castingCancel(self)
     priv.target = nil
 end
@@ -145,6 +144,7 @@ end
 function public:castingInterrupt()
     local priv = private.data[self]
 
+    priv.casting_timer:cancel()
     priv.abil_type:castingInterrupt(self)
     priv.target = nil
 end
@@ -152,7 +152,7 @@ end
 function public:castingFinish()
     local priv = private.data[self]
 
-    priv.abil_type:castingFinish(self)
+    priv.casting_timer:finish()
     priv.target = nil
 end
 
@@ -176,7 +176,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 private.id2abil = {}
-private.casting2ability = setmetatable({}, {__mode = 'k'})
+private.casting_timer2ability = setmetatable({}, {__mode = 'k'})
 private.charges2ability = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityExt
@@ -195,8 +195,13 @@ function private.newData(self, owner, abil_type)
     }
     private.data[self] = priv
     private.id2abil[priv.id] = self
-    private.casting2ability[priv.casting_timer] = self
+    private.casting_timer2ability[priv.casting_timer] = self
     private.charges2ability[priv.charges] = self
+
+    -- Link casting.
+    priv.casting_timer:addStartAction(private.castingStartCallback)
+    priv.casting_timer:addLoopAction(private.castingLoopCallback)
+    priv.casting_timer:addFinishAction(private.castingFinishCallback)
 end
 
 local cur_new_id = 0
@@ -222,21 +227,9 @@ private.targetingFinishCallback = function(self, target)
     private.target_sync:sendData(msg)
 end
 
-local function split(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-
-    local t = {}
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        table.insert(t, str)
-    end
-    return t
-end
-
 ---@type InputDataSyncCallback
 private.targetingSynced = function(source, msg)
-    local args = split(msg, ':')
+    local args = splitStr(msg, ':')
 
     local abil = private.id2abil[tonumber(args[1])]
     local target
@@ -247,6 +240,27 @@ private.targetingSynced = function(source, msg)
     end
 
     abil:castingStart(target)
+end
+
+---@type TimedObjCallback
+private.castingStartCallback = function(casting_timer)
+    ---@type AbilityExt
+    local self = private.casting_timer2ability[casting_timer]
+    private.data[self].abil_type:castingStart(self)
+end
+
+---@type TimedObjCallback
+private.castingLoopCallback = function(casting_timer)
+    ---@type AbilityExt
+    local self = private.casting_timer2ability[casting_timer]
+    private.data[self].abil_type:castingLoop(self)
+end
+
+---@type TimedObjCallback
+private.castingFinishCallback = function(casting_timer)
+    ---@type AbilityExt
+    local self = private.casting_timer2ability[casting_timer]
+    private.data[self].abil_type:castingFinish(self)
 end
 
 if not IsCompiletime() then

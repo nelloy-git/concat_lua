@@ -132,4 +132,5 @@ src\Interface\ParamList.lua
 src\Interface\ShowDamage.lua
 src\Hero\CorruptedPriest\Unit.lua
 src\Hero\CorruptedPriest\LifeForceShield.lua
+src\Hero\CorruptedPriest\LifeForceShieldBuff.lua
 src\Hero\CorruptedPriest\Settings.lua

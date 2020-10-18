@@ -66,21 +66,24 @@ end
 ---@param abil AbilityExt
 local function endCasting(abil)
     local owner = abil:getOwner()
-    local target = abil:getTargetUnit()
+    local target = abil:getTarget()
 
     local buffs = UnitBuffs.get(target)
     local matk = ParamUnit.get(owner):getResult(ParamType.MATK)
-    buffs:add(BuffEffect, owner, 10, drained_life[owner] * (1 + BonusPerMAtk * matk))
-    drained_life[owner] = nil
+    buffs:add(BuffEffect, owner, 10, LifeDrained[abil] * (1 + BonusPerMAtk * matk))
+    LifeDrained[abil] = nil
 end
 
 function CastingType:cancel(abil)
+    endCasting(abil)
 end
 
 function CastingType:interrupt(abil)
+    endCasting(abil)
 end
 
 function CastingType:finish(abil)
+    endCasting(abil)
 end
 
 --[[

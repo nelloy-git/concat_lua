@@ -81,11 +81,11 @@ function public:getMaxCharges(abil) return 1 end
 
 ---@param abil AbilityExt
 ---@return number
-function public:getCooldown(abil) return 0 end
+function public:getCooldown(abil) return 3 end
 
 ---@param abil AbilityExt
 ---@return number
-function public:getCastingTime(abil) return 0 end
+function public:getCastingTime(abil) return 1 end
 
 ---@param abil AbilityExt
 ---@return boolean

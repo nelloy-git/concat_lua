@@ -78,6 +78,22 @@ function public:castingStart(abil)
     return private.data[self].casting_type:start(abil)
 end
 
+function public:castingLoop(abil)
+    return private.data[self].casting_type:loop(abil)
+end
+
+function public:castingCancel(abil)
+    return private.data[self].casting_type:cancel(abil)
+end
+
+function public:castingInterrupt(abil)
+    return private.data[self].casting_type:interrupt(abil)
+end
+
+function public:castingFinish(abil)
+    return private.data[self].casting_type:finish(abil)
+end
+
 --------
 -- Data
 --------
@@ -88,6 +104,10 @@ end
 
 function public:checkTarget(abil, target)
     return private.data[self].data_type:checkTarget(abil, target)
+end
+
+function public:getCastingTime(abil)
+    return private.data[self].data_type:getCastingTime(abil)
 end
 
 --=========

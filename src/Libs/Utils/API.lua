@@ -25,6 +25,7 @@ UtilsLibAPI.isType = Functions.checkType or error('')
 UtilsLibAPI.isTypeErr = Functions.isTypeErr or error('')
 UtilsLibAPI.getEnum = Functions.getUniqueNumber or error('')
 UtilsLibAPI.pairsByKeys = Functions.pairsByKeys or error('')
+UtilsLibAPI.splitStr = Functions.splitStr or error('')
 ---@type UtilsSettings
 local Settings = require(path..'Settings') or error('')
 UtilsLibAPI.isDebug = Settings.isDebug or error('')
