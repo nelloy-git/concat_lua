@@ -17,7 +17,7 @@ local Log = UtilsLib.Log or error('')
 -- Module
 --========
 
----@class FrameKeyboard
+---@class InputKeyboard
 local Keyboard = {}
 
 local key2data = {

@@ -3,8 +3,8 @@ local AbilityLibAPI = {}
 Lib.start('AbilityLib', {
     Binary = Lib.load(LibList.BinaryLib),
     Class = Lib.load(LibList.ClassLib),
-    Frame = Lib.load(LibList.FrameLib),
     Handle = Lib.load(LibList.HandleLib),
+    Input = Lib.load(LibList.InputLib),
     Types = Lib.load(LibList.TypesLib),
     Utils = Lib.load(LibList.UtilsLib),
 })

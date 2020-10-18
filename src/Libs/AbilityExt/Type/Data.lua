@@ -94,7 +94,7 @@ function public:checkConditions(abil) return true end
 ---@param abil AbilityExt
 ---@param target any
 ---@return boolean
-function public:isTargetValid(abil, target) return true end
+function public:checkTarget(abil, target) return true end
 
 --=========
 -- Private

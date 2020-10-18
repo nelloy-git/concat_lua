@@ -86,6 +86,7 @@ function public:destroy()
     local priv = private.data[self]
 
     private.data2handle[priv.handle] = nil
+    private.id2handle[priv.id] = nil
     private.data[self] = nil
     if priv.handle then
         priv.destructor(priv.handle)

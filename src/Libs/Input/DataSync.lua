@@ -9,38 +9,35 @@ local Class = lib_dep.Class or error('')
 ---@type HandleLib
 local HandleLib = lib_dep.Handle or error('')
 local Trigger = HandleLib.Trigger or error('')
----@type ActionListClass
-local ActionList = require(lib_path..'ActionList') or error('')
----@type UtilsFunctions
-local Functions = require(lib_path..'Functions') or error('')
-local isTypeErr = Functions.isTypeErr or error('')
----@type UtilsSettings
-local Settings = require(lib_path..'Settings') or error('')
-local Log = Settings.default_logger or error('')
+---@type UtilsLib
+local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
+local isTypeErr = UtilsLib.isTypeErr or error('')
+local Log = UtilsLib.Log or error('')
 
 --=======
 -- Class
 --=======
 
-local DataSync = Class.new('DataSync')
----@class DataSync
-local public = DataSync.public
----@class DataSyncClass
-local static = DataSync.static
----@type DataSyncClass
-local override = DataSync.override
+local InputDataSync = Class.new('InputDataSync')
+---@class InputDataSync
+local public = InputDataSync.public
+---@class InputDataSyncClass
+local static = InputDataSync.static
+---@type InputDataSyncClass
+local override = InputDataSync.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child DataSync | nil
----@return DataSync
+---@param child InputDataSync | nil
+---@return InputDataSync
 function override.new(child)
-    if child then isTypeErr(child, DataSync, 'child') end
+    if child then isTypeErr(child, InputDataSync, 'child') end
 
-    local instance = child or Class.allocate(DataSync)
+    local instance = child or Class.allocate(InputDataSync)
     private.newData(instance)
 
     return instance
@@ -50,9 +47,9 @@ end
 -- Public
 --========
 
----@alias DataSyncCallback fun(source:player, data:string)
+---@alias InputDataSyncCallback fun(source:player, data:string)
 
----@param callback DataSyncCallback
+---@param callback InputDataSyncCallback
 ---@return Action
 function public:addAction(callback)
     local priv = private.data[self]
@@ -78,7 +75,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.id2obj = setmetatable({}, {__mode = 'v'})
 
----@param self DataSync
+---@param self InputDataSync
 function private.newData(self)
     local priv = {
         id = private.getId(),

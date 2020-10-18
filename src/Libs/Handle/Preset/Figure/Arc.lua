@@ -33,13 +33,14 @@ local private = {}
 -- Static
 --=========
 
+---@param pixel_count number
 ---@param child FigureArc | nil
 ---@return FigureArc
-function override.new(child)
+function override.new(pixel_count, child)
     if child then isTypeErr(child, FigureArc, 'child') end
 
     local instance = child or Class.allocate(FigureArc)
-    private.newData(instance)
+    private.newData(instance, pixel_count)
 
     return instance
 end
@@ -56,24 +57,10 @@ end
 function public:setPosPolar(x0, y0, range, start_angle, end_angle)
     local priv = private.data[self]
 
-    local length = (end_angle - start_angle) * range
-    local count = math.floor(length / private.step) + 1
-    while (count > #priv.pixels) do
-        local pixel = Pixel.new()
-        pixel:setColor(priv.color.r, priv.color.g, priv.color.b, priv.color.a)
-        pixel:renderAlways(priv.render_always)
-        pixel:setVisible(priv.is_visible)
-        table.insert(priv.pixels, pixel)
-    end
-    while (count < #priv.pixels) do
-        local pixel = table.remove(priv.pixels)
-        pixel:destroy()
-    end
-
     local a0 = start_angle
-    local step_a = (end_angle - start_angle) / count
-    for i = 1, count do
-        priv.pixels[i]:setPos(x0 + range * math.cos(a0), y0 + range * math.sin(a0), 0)
+    local step_a = (end_angle - start_angle) / #priv.pixels
+    for i = 1, #priv.pixels do
+        priv.pixels[i]:setPos(x0 + range * math.cos(a0), y0 + range * math.sin(a0), 25)
         a0 = a0 + step_a
     end
 end
@@ -128,7 +115,8 @@ private.data = setmetatable({}, {__mode = 'k'})
 private.step = Settings.FigurePixelSize / 2
 
 ---@param self FigureArc
-function private.newData(self)
+---@param pixel_count number
+function private.newData(self, pixel_count)
     local priv = {
         color = {r = 1, g = 1, b = 1, a = 1},
         render_always = true,
@@ -137,6 +125,15 @@ function private.newData(self)
         pixels = {}
     }
     private.data[self] = priv
+
+    for i = 1, pixel_count do
+        local pixel = Pixel.new()
+        pixel:setColor(priv.color.r, priv.color.g, priv.color.b, priv.color.a)
+        pixel:renderAlways(priv.render_always)
+        pixel:setVisible(priv.is_visible)
+
+        table.insert(priv.pixels, pixel)
+    end
 end
 
 return static

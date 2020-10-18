@@ -1,12 +1,9 @@
 ---@class InputLib
 local InputLibAPI = {}
-Lib.start('Buff', {
+Lib.start('Input', {
     Class = Lib.load(LibList.ClassLib) or error(''),
-    Damage = Lib.load(LibList.DamageLib) or error(''),
     Handle = Lib.load(LibList.HandleLib) or error(''),
-    Parameter = Lib.load(LibList.ParameterLib) or error(''),
-    Types = Lib.load(LibList.TypesLib) or error(''),
-    Utils = Lib.load(LibList.UtilsLib) or error('')
+    Utils = Lib.load(LibList.UtilsLib) or error(''),
 })
 local path = Lib.curPath()
 
@@ -14,6 +11,19 @@ local path = Lib.curPath()
 -- API
 --=====
 
+---@type InputDataSync
+InputLibAPI.DataSync = require(path..'DataSync') or error('')
+
+---@type InputMouse
+local Mouse = require(path..'Mouse') or error('')
+InputLibAPI.getMouseX = Mouse.getX or error('')
+InputLibAPI.getMouseY = Mouse.getY or error('')
+
+---@type InputSelection
+local Selection = require(path..'Selection') or error('')
+InputLibAPI.addSelectionAction = Selection.addAction or error('')
+InputLibAPI.removeSelectionAction = Selection.removeAction or error('')
+InputLibAPI.lockSelection = Selection.lock or error('')
 
 Lib.finish()
 

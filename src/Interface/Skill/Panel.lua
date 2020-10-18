@@ -9,8 +9,9 @@ local AbilContainer = AbilLib.Container or error('')
 local AbilEvent = AbilLib.Event or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
-local Image = FrameLib.Normal.Image or error('')
-local ImagePublic = Class.getPublic(Image) or error('')
+local FdfNormalImage = FrameLib.Fdf.Normal.Backdrop or error('')
+local NormalImage = FrameLib.Normal.Image or error('')
+local NormalImagePublic = Class.getPublic(NormalImage) or error('')
 local OriginTooltip = FrameLib.Origin.Tooltip or error('')
 local SimpleBar = FrameLib.Simple.StatusBar or error('')
 ---@type TypesLib
@@ -29,7 +30,7 @@ local SkillButton = require('Interface.Skill.Button') or error('')
 -- Class
 --=======
 
-local InterfaceSkillPanel = Class.new('InterfaceSkillPanel', Image)
+local InterfaceSkillPanel = Class.new('InterfaceSkillPanel', NormalImage)
 ---@class InterfaceSkillPanel : FrameNormalImage
 local public = InterfaceSkillPanel.public
 ---@class InterfaceSkillPanelClass : FrameNormalImageClass
@@ -54,7 +55,7 @@ function override.new(max_abils)
     end
 
     local instance = Class.allocate(InterfaceSkillPanel)
-    instance = Image.new(nil, instance)
+    instance = NormalImage.new(nil, instance)
 
     private.newData(instance, max_abils)
 
@@ -69,7 +70,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    ImagePublic.setSize(self, width, height)
+    NormalImagePublic.setSize(self, width, height)
     private.updatePos(self)
 end
 
@@ -103,31 +104,21 @@ function private.newData(self, max_abils)
         max_abils = max_abils,
         per_line = 10,
 
+        backgrouds = {},
         buttons = {},
-        --tooltip = OriginTooltip,
-        --cast_bar = SimpleBar.new()
     }
     private.data[self] = priv
-    self:setAlpha(0)
 
     for i = 1, max_abils do
-        local btn = SkillButton.new()
-        btn:setParent(self)
-        btn:setAlpha(1)
+        local back = NormalImage.new(private.fdf)
+        back:setParent(self)
+        priv.backgrouds[i] = back
 
+        local btn = SkillButton.new()
+        btn:setParent(back)
+        btn:setVisible(false)
         priv.buttons[i] = btn
     end
-
-    --priv.cast_bar:setBar('Replaceabletextures\\Teamcolor\\Teamcolor16.blp')
-    --priv.cast_bar:setSize(self:getWidth(), priv.buttons[1]:getHeight() / 4)
-    --priv.cast_bar:setPos(self:getAbsX(), self:getAbsY())
-    --priv.cast_bar:setVisible(false)
-
-    --priv.tooltip:setParent(self)
-    -- Native bind with bottom center point
-    --BlzFrameSetPoint(priv.tooltip:getData(), FRAMEPOINT_BOTTOM,
-    --                 self:getData(), FRAMEPOINT_TOP, 0, 0)
-    --priv.tooltip:setVisible(true)
 
     private.updatePos(self)
 end
@@ -159,9 +150,27 @@ function private.updatePos(self)
             l = l + 1
         end
 
-        priv.buttons[i]:setPos((p - 1) * w, self:getHeight() - l * h)
-        priv.buttons[i]:setSize(w, h)
+        local x = (p - 1) * w
+        local y = self:getHeight() - l * h
+
+        priv.backgrouds[i]:setPos(x, y)
+        priv.backgrouds[i]:setSize(w, h)
+
+        priv.buttons[i]:setPos(0.1 * w, 0.1 * h)
+        priv.buttons[i]:setSize(0.8 * w, 0.8 * h)
     end
 end
+
+private.fdf = FdfNormalImage.new('InterfaceSkillPanel')
+private.fdf:setWidth(0.01)
+private.fdf:setHeight(0.01)
+private.fdf:setBackgroundTileMode(true)
+private.fdf:setBackgroundTileSize(0.2)
+private.fdf:setBackground('UI\\Widgets\\ToolTips\\Human\\human-tooltip-background')
+private.fdf:setBlendAll(true)
+private.fdf:setInsets(0.01, 0.01, 0.01, 0.01)
+private.fdf:setCornerFlags('UL|UR|BL|BR|T|L|B|R')
+private.fdf:setCornerSize(0.0125)
+private.fdf:setEdgeFile('UI\\Widgets\\ToolTips\\Human\\human-tooltip-border')
 
 return static

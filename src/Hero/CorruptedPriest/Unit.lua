@@ -36,7 +36,6 @@ local CorruptedPriest = {}
 ---@return Unit
 function CorruptedPriest.new(x, y, owner)
     local unit = Unit.new(CorruptedPriest.Type:getId(), x, y, owner)
-    AbilLib.Container.new(unit)
     BuffLib.Container.new(unit)
 
     -- Params

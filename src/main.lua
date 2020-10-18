@@ -2,22 +2,13 @@ require('Libs.Lib')
 
 --local Class = require(LibList.ClassLib)
 
-
----@type AbilityLib
-local AbilityLib = require(LibList.AbilityExtLib) or error('')
----@type BuffLib
-local BuffLib = require(LibList.BuffLib) or error('')
----@type FrameLib
-local FrameLib = require(LibList.FrameLib) or error('')
----@type HandleLib
-local HandleLib = require(LibList.HandleLib) or error('')
-local Unit = HandleLib.Unit
 ---@type ParameterLib
 local ParameterLib = require(LibList.ParameterLib) or error('')
 local Param = ParameterLib.ParamType or error('')
 local UnitParam = ParameterLib.UnitContainer or error('')
 local Value = ParameterLib.ValueType or error('')
 
+local Input = require(LibList.InputLib) or error('')
 
 ---@type BuffLib
 --local BuffLib = require(LibList.BuffLib)

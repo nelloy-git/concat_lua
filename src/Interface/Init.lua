@@ -12,6 +12,8 @@ local FrameLib = require(LibList.FrameLib) or error('')
 local HandleLib = require(LibList.HandleLib) or error('')
 local Timer = HandleLib.Timer or error('')
 local Unit = HandleLib.Unit or error('')
+---@type InputLib
+local InputLib = require(LibList.InputLib) or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 local ParamUnitContainer = ParamLib.UnitContainer or error('')
@@ -21,8 +23,6 @@ local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceMinimapClass
 local InterfaceMinimap = require('Interface.Minimap') or error('')
----@type InterfaceSelection
-local InterfaceSelection = require('Interface.Selection') or error('')
 ---@type InterfaceSkillPanelClass
 local InterfaceSkillPanel = require('Interface.Skill.Panel') or error('')
 ---@type InterfaceUnitStatusClass
@@ -30,11 +30,6 @@ local InterfaceUnitStatus = require('Interface.UnitStatus') or error('')
 
 local DamageText = require('Interface.ShowDamage') or error('')
 
-
-
-
-
-local SkillButton = require('Interface.Skill.Button')
 
 --========
 -- Module
@@ -102,9 +97,13 @@ end)
 
 ---@type Unit
 local selected = nil
-InterfaceSelection.addAction(function(group)
+InputLib.addSelectionAction(function(group, pl)
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
     if #group == 1 then
-        local target = Unit.getLinked(group[1])
+        local target = group[1]
         if not target then Log:err('Can not find linked Unit') end
         selected = target
 
@@ -117,9 +116,6 @@ InterfaceSelection.addAction(function(group)
         Interface.UnitStatus:setParameters(params)
     else
         selected = nil
-
-        Interface.UnitStatus:setVisible(false)
-        Interface.UnitStatus:setBuffContainer(nil)
     end
 end)
 
@@ -140,17 +136,21 @@ end)
 -- Skill buttons --
 -------------------
 
-Interface.SkillsPanel = InterfaceSkillPanel.new(20)
-Interface.SkillsPanel:setSize(10 * 0.04, 2 * 0.04)
+Interface.SkillsPanel = InterfaceSkillPanel.new(10)
+Interface.SkillsPanel:setSize(10 * 0.04, 1 * 0.04)
 
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
     Interface.SkillsPanel:setPos(x0 + (w - Interface.SkillsPanel:getWidth()) / 2,
-                                   y0 + h - Interface.SkillsPanel:getHeight())
+                                 y0 + h - Interface.SkillsPanel:getHeight())
 end)
 
-InterfaceSelection.addAction(function(group)
+InputLib.addSelectionAction(function(group, pl)
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
     if #group == 1 then
-        local target = Unit.getLinked(group[1])
+        local target = group[1]
         if not target then Log:err('Can not find linked Unit') end
         selected = target
 
@@ -160,8 +160,6 @@ InterfaceSelection.addAction(function(group)
         selected = nil
     end
 end)
-
-
 
 --------------------------
 -- Damage Floating Text --

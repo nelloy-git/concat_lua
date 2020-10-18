@@ -37,10 +37,12 @@ private.virtual_functions = {}
 --========
 
 ---@param targeting_type AbilityExtTypeTargetingClass
----@param casting_type AbilityExtTypeCastingClass
----@param data_type AbilityExtTypeDataClass
+---@param casting_type AbilityExtTypeCasting
+---@param data_type AbilityExtTypeData
 ---@return AbilityExtType
 function override.new(targeting_type, casting_type, data_type)
+    isTypeErr(casting_type, AbilityExtCastingType, 'casting_type')
+    isTypeErr(data_type, AbilityExtDataType, 'data_type')
 
     local instance = Class.allocate(AbilityExtType)
     private.newData(instance, targeting_type, casting_type, data_type)
@@ -56,8 +58,8 @@ end
 -- Targeting
 -------------
 
-function public:targetingStart(abil)
-    return private.data[self].targeting_type.start(abil)
+function public:targetingStart(abil, cancel_cb, finish_cb)
+    return private.data[self].targeting_type.start(abil, cancel_cb, finish_cb)
 end
 
 function public:targetingCancel(abil)
@@ -66,6 +68,26 @@ end
 
 function public:targetingFinish(abil, targ)
     return private.data[self].targeting_type.finish(abil, targ)
+end
+
+-----------
+-- Casting
+-----------
+
+function public:castingStart(abil)
+    return private.data[self].casting_type:start(abil)
+end
+
+--------
+-- Data
+--------
+
+function public:checkConditions(abil)
+    return private.data[self].data_type:checkConditions(abil)
+end
+
+function public:checkTarget(abil, target)
+    return private.data[self].data_type:checkTarget(abil, target)
 end
 
 --=========

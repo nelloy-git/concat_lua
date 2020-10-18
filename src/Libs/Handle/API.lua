@@ -14,6 +14,8 @@ local path = Lib.curPath()
 
 ---@type AbilityClass
 HandleLibAPI.Ability = require(path..'Types.Ability') or error('')
+---@type HandleClass
+HandleLibAPI.Base = require(path..'Base') or error('')
 ---@type DestructableClass
 HandleLibAPI.Destructable = require(path..'Types.Destructable') or error('')
 ---@type DummyAbilityClass

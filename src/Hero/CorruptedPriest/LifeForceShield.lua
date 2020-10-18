@@ -7,13 +7,12 @@ local AbilityLib = require(LibList.AbilityExtLib) or error('')
 local TargetingUnit = AbilityLib.Targeting.Unit or error('')
 local Casting = AbilityLib.Casting.Type or error('')
 local Data = AbilityLib.Data.Type or error('')
---local Event = AbilityLib.Event
----@type AssetLib
-local AssetLib = require(LibList.AssetLib) or error('')
-local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
+---@type HandleLib
+local HandleLib = require(LibList.HandleLib) or error('')
+local TimedObj = HandleLib.TimedObj or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 local ParamUnit = ParamLib.UnitContainer or error('')
@@ -21,24 +20,71 @@ local ParamType = ParamLib.ParamType or error('')
 
 ---@type BuffType
 local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')
+
+--local Event = AbilityLib.Event
+---@type AssetLib
+--local AssetLib = require(LibList.AssetLib) or error('')
+--local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type HeroUtils
-local Utils = require('Hero.Utils') or error('')
+--local Utils = require('Hero.Utils') or error('')
 
 --==========
 -- Settings
 --==========
 
+local CastingPeriod = TimedObj.getPeriod()
+
 local DrainLifePerSec = 0.05
 local BonusPerMAtk = 0.01
+
+--======
+-- Data
+--======
+
+local LifeDrained = {}
 
 --========
 -- Module
 --========
 
-local LifeForceShield = AbilityLib.Type.new(TargetingUnit, Casting, Data)
+local DataType = Data.new()
+
+local CastingType = Casting.new()
+
+---@param abil AbilityExt
+function CastingType:loop(abil)
+    local target = abil:getTarget()
+
+    local hp = target:getHealth()
+    local max_hp = target:getMaxHealth()
+    local perc = hp / max_hp
+
+    LifeDrained[abil] = (LifeDrained[abil] or 0) + DrainLifePerSec * CastingPeriod * max_hp
+    target:setHealth((perc - DrainLifePerSec * CastingPeriod) * max_hp)
+end
+
+---@param abil AbilityExt
+local function endCasting(abil)
+    local owner = abil:getOwner()
+    local target = abil:getTargetUnit()
+
+    local buffs = UnitBuffs.get(target)
+    local matk = ParamUnit.get(owner):getResult(ParamType.MATK)
+    buffs:add(BuffEffect, owner, 10, drained_life[owner] * (1 + BonusPerMAtk * matk))
+    drained_life[owner] = nil
+end
+
+function CastingType:cancel(abil)
+end
+
+function CastingType:interrupt(abil)
+end
+
+function CastingType:finish(abil)
+end
+
 --[[
 
---local casting_period = AbilityLib.getLoopPeriod()
 --local percent_per_loop = DrainLifePerSec * casting_period
 local drained_life = {}
 
@@ -130,4 +176,4 @@ function LifeForceShield:getCallback(event)
 end
 --]]
 
-return AbilityLib.Type.new()
+return AbilityLib.Type.new(TargetingUnit, CastingType, DataType)
