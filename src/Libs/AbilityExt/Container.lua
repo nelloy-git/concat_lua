@@ -19,7 +19,8 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 local AbilityExt = require(lib_path..'Ability')
 ---@type AbilityExtEventModule
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
-local Event = AbilityExtEventModule.Enum or error('')
+local TargetingEvent = AbilityExtEventModule.TargetingEnum
+local CastingEvent = AbilityExtEventModule.CastingEnum
 ---@type AbilityExtTypeTargetingClass
 local AbilityExtTypeTargeting = require(lib_path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeClass

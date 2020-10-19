@@ -11,14 +11,11 @@ local HandleLib = lib_dep.Handle or error('')
 local Handle = HandleLib.Base or error('')
 local TimedObj = HandleLib.TimedObj or error('')
 local Unit = HandleLib.Unit or error('')
----@type InputLib
-local InputLib = lib_dep.Input or error('')
-local DataSync = InputLib.DataSync or error('')
 ---@type UtilsLib
 local UtilsLib = lib_dep.Utils or error('')
+local ActionList = UtilsLib.ActionList or error('')
 local isType = UtilsLib.isType or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
-local splitStr = UtilsLib.splitStr
 
 ---@type AbilityExtChargesClass
 local AbilityExtCharges = require(lib_path..'Charges') or error('')
@@ -26,6 +23,8 @@ local AbilityExtCharges = require(lib_path..'Charges') or error('')
 local AbilityExtEventModule = require(lib_path..'Event') or error('')
 local TargetingEvent = AbilityExtEventModule.TargetingEnum
 local CastingEvent = AbilityExtEventModule.CastingEnum
+---@type AbilityExtSyncTargetClass
+local AbilityExtSyncTarget = require(lib_path..'SyncTarget') or error('')
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type') or error('')
 
@@ -97,20 +96,34 @@ end
 
 function public:targetingStart()
     local priv = private.data[self]
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
+    local data_type = abil_type:getData()
 
-    if priv.abil_type:checkConditions(self) then
-        priv.abil_type:targetingStart(self,
-                                  private.targetingCancelCallback,
-                                  private.targetingFinishCallback)
+    if data_type:isAvailable(self) then
+        local targ_type = abil_type:getTargeting()
+        targ_type.start(self, nil, private.targetingFinishCallback)
+
+        priv.targ_actions[TargetingEvent.START]:run(self, TargetingEvent.START)
     end
 end
 
 function public:targetingCancel()
-    private.data[self].abil_type:targetingCancel()
+    local priv = private.data[self]
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
+    abil_type:getTargeting().cancel()
+
+    priv.targ_actions[TargetingEvent.CANCEL]:run(self, TargetingEvent.CANCEL)
 end
 
 function public:targetingFinish()
-    private.data[self].abil_type:targetingFinish()
+    local priv = private.data[self]
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
+    abil_type:getTargeting().finish(self)
+
+    priv.targ_actions[TargetingEvent.FINISH]:run(self, TargetingEvent.FINISH)
 end
 
 -----------
@@ -120,53 +133,91 @@ end
 ---@param target any
 function public:castingStart(target)
     local priv = private.data[self]
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
+    local data_type = abil_type:getData()
 
-    if not priv.abil_type:checkConditions(self) then
+    if not data_type:isAvailable(self) or
+       not data_type:checkTarget(self, target) then
         return
     end
-
-    if not priv.abil_type:checkTarget(self, target) then
-        return
-    end
+    data_type:consume(self)
 
     priv.target = target
-    priv.casting_timer:start(priv.abil_type:getCastingTime())
+    priv.casting_timer:start(data_type:getCastingTime())
+    priv.cast_actions[CastingEvent.START]:run(self, CastingEvent.START)
 end
 
 function public:castingCancel()
     local priv = private.data[self]
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
 
     priv.casting_timer:cancel()
-    priv.abil_type:castingCancel(self)
+    abil_type:getCasting():cancel(self)
+    priv.cast_actions[CastingEvent.CANCEL]:run(self, CastingEvent.CANCEL)
     priv.target = nil
 end
 
 function public:castingInterrupt()
     local priv = private.data[self]
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
 
     priv.casting_timer:cancel()
-    priv.abil_type:castingInterrupt(self)
+    abil_type:getCasting():interrupt(self)
+    priv.cast_actions[CastingEvent.INTERRUPT]:run(self, CastingEvent.INTERRUPT)
     priv.target = nil
 end
 
 function public:castingFinish()
     local priv = private.data[self]
 
+    -- Call private.castingFinishCallback
     priv.casting_timer:finish()
     priv.target = nil
 end
 
-------------------------
--- AbilityExtType hooks
-------------------------
+-----------
+-- Actions
+-----------
 
----@return number
-function public:getId()
-    return private.data[self].id
+---@alias AbilityExtTargetingCallback fun(abil:AbilityExt, event:AbilityExtTargetingEvent)
+
+---@param event AbilityExtTargetingEvent
+---@param callback AbilityExtTargetingCallback
+---@return Action
+function public:addTargetingAction(event, callback)
+    return private.data[self].targ_actions[event]:add(callback)
 end
 
-function public:getIcon()
-    return "ReplaceableTextures\\CommandButtons\\BTNAbsorbMagic.blp"
+---@alias AbilityExtCastingCallback fun(abil:AbilityExt, event:AbilityExtCastingEvent)
+
+---@param event AbilityExtCastingEvent
+---@param callback AbilityExtCastingCallback
+---@return Action
+function public:addCastingCallback(event, callback)
+    return private.data[self].cast_actions[event]:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function public:removeAction(action)
+    local priv = private.data[self]
+
+    for _, list in pairs(priv.targ_actions) do
+        if list:remove(action) then
+            return true
+        end
+    end
+
+    for _, list in pairs(priv.cast_actions) do
+        if list:remove(action) then
+            return true
+        end
+    end
+
+    return false
 end
 
 --=========
@@ -192,6 +243,9 @@ function private.newData(self, owner, abil_type)
 
         casting_timer = TimedObj.new(),
         charges = AbilityExtCharges.new(),
+
+        targ_actions = {},
+        cast_actions = {},
     }
     private.data[self] = priv
     private.id2abil[priv.id] = self
@@ -199,9 +253,16 @@ function private.newData(self, owner, abil_type)
     private.charges2ability[priv.charges] = self
 
     -- Link casting.
-    priv.casting_timer:addStartAction(private.castingStartCallback)
     priv.casting_timer:addLoopAction(private.castingLoopCallback)
     priv.casting_timer:addFinishAction(private.castingFinishCallback)
+
+    for _, event in pairs(TargetingEvent) do
+        priv.targ_actions[event] = ActionList.new(self)
+    end
+
+    for _, event in pairs(CastingEvent) do
+        priv.cast_actions[event] = ActionList.new(self)
+    end
 end
 
 local cur_new_id = 0
@@ -210,62 +271,51 @@ function private.newId()
     return cur_new_id
 end
 
----@type AbilityExtTypeTargetingCancelCallback
-private.targetingCancelCallback = function(self)
-end
-
 ---@type AbilityExtTypeTargetingFinishCallback
 private.targetingFinishCallback = function(self, target)
-    -- Send data to other players
-    local msg = tostring(self:getId())..':'
-    if isType(target, Handle) then
-        msg = msg..tostring(target:getId())
-    elseif type(target) == 'table' and target.x and target.y then
-        msg = msg..tostring(target.x)..':'..tostring(target.y)
+    local abil_id = private.data[self].id
+    if not isType(target, 'table') then
+        target = {target}
     end
 
-    private.target_sync:sendData(msg)
+    private.target_sync:send(abil_id, target)
 end
 
 ---@type InputDataSyncCallback
-private.targetingSynced = function(source, msg)
-    local args = splitStr(msg, ':')
+private.targetSynced = function(_, abil_id, targets, source)
+    local self = private.id2abil[abil_id]
 
-    local abil = private.id2abil[tonumber(args[1])]
-    local target
-    if #args == 2 then
-        target = Handle.getLinked(tonumber(args[2]))
-    elseif #args == 3 then
-        target = {x = tonumber(args[2]), y = tonumber(args[3])}
-    end
-
-    abil:castingStart(target)
-end
-
----@type TimedObjCallback
-private.castingStartCallback = function(casting_timer)
-    ---@type AbilityExt
-    local self = private.casting_timer2ability[casting_timer]
-    private.data[self].abil_type:castingStart(self)
+    if #targets <= 1 then targets = targets[1] end
+    self:castingStart(targets)
 end
 
 ---@type TimedObjCallback
 private.castingLoopCallback = function(casting_timer)
     ---@type AbilityExt
     local self = private.casting_timer2ability[casting_timer]
-    private.data[self].abil_type:castingLoop(self)
+    local priv = private.data[self]
+
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
+    abil_type:getCasting():loop(self)
+    priv.cast_actions[CastingEvent.LOOP]:run(self, CastingEvent.LOOP)
 end
 
 ---@type TimedObjCallback
 private.castingFinishCallback = function(casting_timer)
     ---@type AbilityExt
     local self = private.casting_timer2ability[casting_timer]
-    private.data[self].abil_type:castingFinish(self)
+    local priv = private.data[self]
+
+    ---@type AbilityExtType
+    local abil_type = priv.abil_type
+    abil_type:getCasting():finish(self)
+    priv.cast_actions[CastingEvent.FINISH]:run(self, CastingEvent.FINISH)
 end
 
 if not IsCompiletime() then
-    private.target_sync = DataSync.new()
-    private.target_sync:addAction(private.targetingSynced)
+    private.target_sync = AbilityExtSyncTarget.new()
+    private.target_sync:addAction(private.targetSynced)
 end
 
 return static

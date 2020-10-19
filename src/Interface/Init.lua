@@ -115,7 +115,7 @@ InputLib.addSelectionAction(function(group, pl)
         local params = ParamLib.UnitContainer.get(selected)
         Interface.UnitStatus:setParameters(params)
     else
-        selected = nil
+        --selected = nil
     end
 end)
 
@@ -157,7 +157,7 @@ InputLib.addSelectionAction(function(group, pl)
         local abils = AbilLib.Container.get(selected)
         Interface.SkillsPanel:setAbilContainer(abils)
     else
-        selected = nil
+        --selected = nil
     end
 end)
 

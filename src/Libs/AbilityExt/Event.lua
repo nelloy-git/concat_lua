@@ -42,29 +42,4 @@ Event.CastingEnum = {
     FINISH = getEnum(),
 }
 
----@alias AbilityExtEvent number
----@table <string, AbilityExtEvent>
-Event.Enum = {
-    ---@type AbilityExtEvent
-    CASTING_START = getEnum(),
-    ---@type AbilityExtEvent
-    CASTING_LOOP = getEnum(),
-    ---@type AbilityExtEvent
-    CASTING_CANCEL = getEnum(),
-    ---@type AbilityExtEvent
-    CASTING_INTERRUPT = getEnum(),
-    ---@type AbilityExtEvent
-    CASTING_FINISH = getEnum(),
-
-    ---@type AbilityExtEvent
-    COOLDOWN_LOOP = getEnum(),
-    ---@type AbilityExtEvent
-    CHARGES_CHANGED = getEnum(),
-
-    ---@type AbilityExtEvent
-    ERROR_ALREADY_CASTING = getEnum(),
-    ---@type AbilityExtEvent
-    ERROR_NO_CHARGES = getEnum(),
-}
-
 return Event

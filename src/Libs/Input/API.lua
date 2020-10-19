@@ -14,6 +14,10 @@ local path = Lib.curPath()
 ---@type InputDataSync
 InputLibAPI.DataSync = require(path..'DataSync') or error('')
 
+---@type InputKeyboard
+local Keyboard = require(path..'Keyboard') or error('')
+InputLibAPI.addKeyboardAction = Keyboard.addAction or error('')
+
 ---@type InputMouse
 local Mouse = require(path..'Mouse') or error('')
 InputLibAPI.getMouseX = Mouse.getX or error('')

@@ -18,6 +18,7 @@ local path = Lib.curPath()
 local ParameterTypeModule = require(path..'Type') or error('')
 ParameterLibAPI.ParamType = ParameterTypeModule.Enum or error('')
 ParameterLibAPI.paramToStr = ParameterTypeModule.toStr or error('')
+ParameterLibAPI.paramToColor = ParameterTypeModule.toColor or error('')
 ---@type ParameterValueTypeModule
 local ParameterValueTypeModule = require(path..'ValueType') or error('')
 ParameterLibAPI.ValueType = ParameterValueTypeModule.Enum

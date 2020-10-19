@@ -6,17 +6,14 @@ local Class = require(LibList.ClassLib) or error('')
 ---@type AbilityLib
 local AbilLib = require(LibList.AbilityExtLib) or error('')
 local AbilContainer = AbilLib.Container or error('')
-local AbilEvent = AbilLib.Event or error('')
+--local AbilEvent = AbilLib.Event or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
 local FdfNormalImage = FrameLib.Fdf.Normal.Backdrop or error('')
 local NormalImage = FrameLib.Normal.Image or error('')
 local NormalImagePublic = Class.getPublic(NormalImage) or error('')
-local OriginTooltip = FrameLib.Origin.Tooltip or error('')
-local SimpleBar = FrameLib.Simple.StatusBar or error('')
----@type TypesLib
-local TypesLib = require(LibList.TypesLib) or error('')
-local FrameEvent = TypesLib.FrameEventTypeEnum
+---@type InputLib
+local InputLib = require(LibList.InputLib) or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
@@ -24,7 +21,6 @@ local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceSkillButtonClass
 local SkillButton = require('Interface.Skill.Button') or error('')
-
 
 --=======
 -- Class
@@ -71,7 +67,7 @@ end
 ---@param height number
 function public:setSize(width, height)
     NormalImagePublic.setSize(self, width, height)
-    private.updatePos(self)
+    private.updateSize(self)
 end
 
 ---@param container AbilityExtContainer
@@ -120,7 +116,9 @@ function private.newData(self, max_abils)
         priv.buttons[i] = btn
     end
 
-    private.updatePos(self)
+    priv.hotkey_action = InputLib.addKeyboardAction('Q', function() priv.buttons[1]:click() end)
+
+    private.updateSize(self)
 end
 
 ---@param height number
@@ -133,7 +131,7 @@ function private.getLineHeight(height, max_frames, per_line)
     return height / i
 end
 
-function private.updatePos(self)
+function private.updateSize(self)
     local priv = private.data[self]
 
     local count = #priv.buttons

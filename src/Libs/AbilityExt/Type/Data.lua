@@ -89,7 +89,10 @@ function public:getCastingTime(abil) return 1 end
 
 ---@param abil AbilityExt
 ---@return boolean
-function public:checkConditions(abil) return true end
+function public:isAvailable(abil) return true end
+
+---@param abil AbilityExt
+function public:consume(abil) end
 
 ---@param abil AbilityExt
 ---@param target any

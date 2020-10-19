@@ -140,4 +140,31 @@ function ParameterType.toStr(param)
     return str
 end
 
+-- TODO
+local to_color = {
+    [ParameterType.Enum.PATK] = 'FFFFA0A0',
+    [ParameterType.Enum.PSPD] = 'FFFFFFFF',
+    [ParameterType.Enum.PDEF] = 'FFFFFFFF',
+    [ParameterType.Enum.PRES] = 'FFFFFFFF',
+    [ParameterType.Enum.MATK] = 'FFA0A0FF',
+    [ParameterType.Enum.MSPD] = 'FFFFFFFF',
+    [ParameterType.Enum.MDEF] = 'FFFFFFFF',
+    [ParameterType.Enum.MRES] = 'FFFFFFFF',
+    [ParameterType.Enum.CRIT] = 'FFFFFFFF',
+    [ParameterType.Enum.LIFE] = 'FFFFFFFF',
+    [ParameterType.Enum.REGE] = 'FFFFFFFF',
+    [ParameterType.Enum.MANA] = 'FFFFFFFF',
+    [ParameterType.Enum.RECO] = 'FFFFFFFF',
+    [ParameterType.Enum.MOVE] = 'FFFFFFFF',
+}
+
+---@param param ParameterType
+function ParameterType.toColor(param)
+    local str = to_color[param]
+    if not str then
+        Log:err('Unknown ParameterType.', 2)
+    end
+    return str
+end
+
 return ParameterType

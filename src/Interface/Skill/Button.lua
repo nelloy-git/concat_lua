@@ -79,7 +79,7 @@ function public:setAbility(abil)
         priv.charges:setCharges(abil:getCharges())
 
         self:setVisible(true)
-        self:setNormalTexture(abil:getIcon())
+        self:setNormalTexture(abil:getType():getData():getIcon(abil))
     else
         self:setVisible(false)
     end

@@ -36,16 +36,16 @@ private.virtual_functions = {}
 -- Static
 --========
 
----@param targeting_type AbilityExtTypeTargetingClass
----@param casting_type AbilityExtTypeCasting
+---@param targ_type AbilityExtTypeTargetingClass
+---@param cast_type AbilityExtTypeCasting
 ---@param data_type AbilityExtTypeData
 ---@return AbilityExtType
-function override.new(targeting_type, casting_type, data_type)
-    isTypeErr(casting_type, AbilityExtCastingType, 'casting_type')
+function override.new(targ_type, cast_type, data_type)
+    isTypeErr(cast_type, AbilityExtCastingType, 'cast_type')
     isTypeErr(data_type, AbilityExtDataType, 'data_type')
 
     local instance = Class.allocate(AbilityExtType)
-    private.newData(instance, targeting_type, casting_type, data_type)
+    private.newData(instance, targ_type, cast_type, data_type)
 
     return instance
 end
@@ -54,60 +54,19 @@ end
 -- Public
 --========
 
--------------
--- Targeting
--------------
-
-function public:targetingStart(abil, cancel_cb, finish_cb)
-    return private.data[self].targeting_type.start(abil, cancel_cb, finish_cb)
+---@return AbilityExtTypeTargetingClass
+function public:getTargeting()
+    return private.data[self].targ_type
 end
 
-function public:targetingCancel(abil)
-    return private.data[self].targeting_type.cancel(abil)
+---@return AbilityExtTypeCasting
+function public:getCasting()
+    return private.data[self].cast_type
 end
 
-function public:targetingFinish(abil, targ)
-    return private.data[self].targeting_type.finish(abil, targ)
-end
-
------------
--- Casting
------------
-
-function public:castingStart(abil)
-    return private.data[self].casting_type:start(abil)
-end
-
-function public:castingLoop(abil)
-    return private.data[self].casting_type:loop(abil)
-end
-
-function public:castingCancel(abil)
-    return private.data[self].casting_type:cancel(abil)
-end
-
-function public:castingInterrupt(abil)
-    return private.data[self].casting_type:interrupt(abil)
-end
-
-function public:castingFinish(abil)
-    return private.data[self].casting_type:finish(abil)
-end
-
---------
--- Data
---------
-
-function public:checkConditions(abil)
-    return private.data[self].data_type:checkConditions(abil)
-end
-
-function public:checkTarget(abil, target)
-    return private.data[self].data_type:checkTarget(abil, target)
-end
-
-function public:getCastingTime(abil)
-    return private.data[self].data_type:getCastingTime(abil)
+---@return AbilityExtTypeData
+function public:getData()
+    return private.data[self].data_type
 end
 
 --=========
@@ -117,13 +76,13 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 
 ---@param self AbilityExtType
----@param targeting_type AbilityExtTypeTargetingClass
----@param casting_type AbilityExtTypeCasting
+---@param targ_type AbilityExtTypeTargetingClass
+---@param cast_type AbilityExtTypeCasting
 ---@param data_type AbilityExtTypeData
-function private.newData(self, targeting_type, casting_type, data_type)
+function private.newData(self, targ_type, cast_type, data_type)
     local priv = {
-        targeting_type = targeting_type,
-        casting_type = casting_type,
+        targ_type = targ_type,
+        cast_type = cast_type,
         data_type = data_type
     }
     private.data[self] = priv

@@ -59,28 +59,44 @@ local key2data = {
     ['Z'] = OSKEY_Z,
 }
 
+local data2key = {}
+for key, data in pairs(key2data) do
+    data2key[data] = key
+end
+
 local actions = {}
 local trigger
-if not IsCompiletime() then
-    trigger = Trigger.new()
-end
 
 ---@param key string
 ---@param callback any
-function Keyboard:addAction(key, callback)
+function Keyboard.addAction(key, callback)
     local key_data = key2data[key]
     if not key_data then
         Log:err('Unavailable key.')
     end
 
-    if not actions[key] then
-        actions[key] = ActionList.new()
+    if not actions[key_data] then
+        actions[key_data] = ActionList.new()
 
         for i = 0, 3 do
-            trigger:addPlayerKeyEvent(GetLocalPlayer(), key_data, 2^i, true)
-            trigger:addPlayerKeyEvent(GetLocalPlayer(), key_data, 2^i, false)
+            trigger:addPlayerKeyEvent(GetLocalPlayer(), key_data, 0, true)
+            trigger:addPlayerKeyEvent(GetLocalPlayer(), key_data, 0, false)
         end
     end
+
+    actions[key_data]:add(callback)
+end
+
+local function runActions()
+    local key_data = BlzGetTriggerPlayerKey()
+    local is_down = BlzGetTriggerPlayerIsKeyDown
+
+    actions[key_data]:run(data2key[key_data], is_down)
+end
+
+if not IsCompiletime() then
+    trigger = Trigger.new()
+    trigger:addAction(runActions)
 end
 
 return Keyboard

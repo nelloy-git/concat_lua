@@ -47,7 +47,12 @@ end
 -- Public
 --========
 
----@alias InputDataSyncCallback fun(source:player, data:string)
+---@param msg string
+function public:send(msg)
+    BlzSendSyncData(private.data[self].id, msg)
+end
+
+---@alias InputDataSyncCallback fun(sync:InputDataSync, data:string, source:player)
 
 ---@param callback InputDataSyncCallback
 ---@return Action
@@ -61,11 +66,6 @@ end
 function public:removeAction(action)
     local priv = private.data[self]
     return priv.actions:remove(action)
-end
-
----@param data string
-function public:sendData(data)
-    BlzSendSyncData(private.data[self].id, data)
 end
 
 --=========
@@ -127,12 +127,11 @@ function private.getId()
 end
 
 function private.runActions()
-    local id = BlzGetTriggerSyncPrefix()
-    local priv = private.data[private.id2obj[id]]
+    local self = private.id2obj[BlzGetTriggerSyncPrefix()]
     local player = GetTriggerPlayer()
     local data = BlzGetTriggerSyncData()
 
-    priv.actions:run(player, data)
+    private.data[self].actions:run(self, data, player)
 end
 
 if not IsCompiletime() then

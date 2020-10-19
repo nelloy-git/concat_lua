@@ -7,6 +7,9 @@ local AbilityLib = require(LibList.AbilityExtLib) or error('')
 local TargetingUnit = AbilityLib.Targeting.Unit or error('')
 local Casting = AbilityLib.Casting.Type or error('')
 local Data = AbilityLib.Data.Type or error('')
+---@type AssetLib
+local AssetLib = require(LibList.AssetLib) or error('')
+local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
 local UnitBuffs = BuffLib.Container or error('')
@@ -16,17 +19,11 @@ local TimedObj = HandleLib.TimedObj or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 local ParamUnit = ParamLib.UnitContainer or error('')
+local paramToColor = ParamLib.paramToColor or error('')
 local ParamType = ParamLib.ParamType or error('')
 
 ---@type BuffType
 local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')
-
---local Event = AbilityLib.Event
----@type AssetLib
---local AssetLib = require(LibList.AssetLib) or error('')
---local Icon = AssetLib.IconDefault.BTNAbsorbMagic or error('')
----@type HeroUtils
---local Utils = require('Hero.Utils') or error('')
 
 --==========
 -- Settings
@@ -48,6 +45,36 @@ local LifeDrained = {}
 --========
 
 local DataType = Data.new()
+function DataType:getName(abil) return 'Life Force Shield' end
+function DataType:getIcon(abil) return Icon end
+function DataType:getTooltip(abil)
+    local percent = 100 * DrainLifePerSec
+    percent = percent - percent % 1
+    local bonus = 100 * BonusPerMAtk * ParamUnit.get(abil:getOwner()):getResult(ParamType.MATK)
+    bonus = bonus - bonus % 1 + 1
+
+    return 'Consumes '..tostring(percent)..'% of target ally unit per second.'..
+           'At the end of the cast gives shield to the target for '..
+           'drained life increased by |c'..paramToColor(ParamType.MATK)..tostring(bonus)..'|r%'
+end
+function DataType:getManaCost(abil) return 20 end
+function DataType:getCooldown(abil) return 10 end
+function DataType:getCastingTime(abil) return 5 end
+
+---@param abil AbilityExt
+function DataType:isAvailable(abil)
+    return (abil:getOwner():getMana() > self:getManaCost(abil)) and
+           (abil:getCharges():get() >= self:getChargesForUse(abil))
+end
+
+---@param abil AbilityExt
+function DataType:consume(abil)
+    local owner = abil:getOwner()
+    owner:setMana(owner:getMana() - self:getManaCost())
+
+    local charges = abil:getCharges()
+    charges:set(charges:get() - 1)
+end
 
 local CastingType = Casting.new()
 
