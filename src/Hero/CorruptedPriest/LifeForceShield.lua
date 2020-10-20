@@ -16,11 +16,15 @@ local UnitBuffs = BuffLib.Container or error('')
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
 local TimedObj = HandleLib.TimedObj or error('')
+local Unit = HandleLib.Unit or error('')
 ---@type ParameterLib
 local ParamLib = require(LibList.ParameterLib) or error('')
 local ParamUnit = ParamLib.UnitContainer or error('')
 local paramToColor = ParamLib.paramToColor or error('')
 local ParamType = ParamLib.ParamType or error('')
+---@type UtilsLib
+local UtilsLib = require(LibList.UtilsLib) or error('')
+local isType = UtilsLib.isType or error('')
 
 ---@type BuffType
 local BuffEffect = require('Hero.CorruptedPriest.LifeForceShieldBuff') or error('')
@@ -75,6 +79,22 @@ function DataType:consume(abil)
     local charges = abil:getCharges()
     charges:set(charges:get() - 1)
 end
+
+---@param abil AbilityExt
+function DataType:checkTarget(abil, target)
+    if isType(target, Unit) and
+       not abil:getOwner():isEnemy(target) then
+        return true
+    end
+    return false
+end
+
+
+
+
+
+
+
 
 local CastingType = Casting.new()
 

@@ -65,10 +65,14 @@ for key, data in pairs(key2data) do
 end
 
 local actions = {}
+local is_key_down = {}
 local trigger
 
+---@alias InputKeyboardCallback fun(key:string, is_down:boolean)
+
 ---@param key string
----@param callback any
+---@param callback InputKeyboardCallback
+---@return Action
 function Keyboard.addAction(key, callback)
     local key_data = key2data[key]
     if not key_data then
@@ -84,14 +88,31 @@ function Keyboard.addAction(key, callback)
         end
     end
 
-    actions[key_data]:add(callback)
+    return actions[key_data]:add(callback)
+end
+
+---@param action Action
+---@return boolean
+function Keyboard.removeAction(action)
+    for key_data, list in pairs(actions) do
+        if list:remove(action) then
+            return true
+        end
+    end
+    return false
 end
 
 local function runActions()
     local key_data = BlzGetTriggerPlayerKey()
-    local is_down = BlzGetTriggerPlayerIsKeyDown
+    local is_down = BlzGetTriggerPlayerIsKeyDown()
 
+    if is_down == is_key_down[key_data] then
+        return
+    end
+
+    print('Pressed: '..data2key[key_data])
     actions[key_data]:run(data2key[key_data], is_down)
+    is_key_down[key_data] = is_down
 end
 
 if not IsCompiletime() then

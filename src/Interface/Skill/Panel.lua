@@ -21,6 +21,8 @@ local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceSkillButtonClass
 local SkillButton = require('Interface.Skill.Button') or error('')
+---@type InterfaceSkillHotkeyClass
+local SkillHotkey = require('Interface.Skill.Hotkey') or error('')
 
 --=======
 -- Class
@@ -102,6 +104,7 @@ function private.newData(self, max_abils)
 
         backgrouds = {},
         buttons = {},
+        hotkeys = {},
     }
     private.data[self] = priv
 
@@ -114,9 +117,16 @@ function private.newData(self, max_abils)
         btn:setParent(back)
         btn:setVisible(false)
         priv.buttons[i] = btn
-    end
 
-    priv.hotkey_action = InputLib.addKeyboardAction('Q', function() priv.buttons[1]:click() end)
+        local hotkey = SkillHotkey.new()
+        hotkey:setParent(btn)
+        btn:setVisible(true)
+        hotkey:setPos(0, 0)
+        if i <= 9 then
+            hotkey:setHotkey(tostring(i), btn, true)
+        end
+        priv.hotkeys[i] = hotkey
+    end
 
     private.updateSize(self)
 end
@@ -156,6 +166,8 @@ function private.updateSize(self)
 
         priv.buttons[i]:setPos(0.1 * w, 0.1 * h)
         priv.buttons[i]:setSize(0.8 * w, 0.8 * h)
+
+        priv.hotkeys[i]:setSize(0.3 * w, 0.25 * h)
     end
 end
 

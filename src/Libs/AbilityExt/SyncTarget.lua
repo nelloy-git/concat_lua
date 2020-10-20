@@ -64,7 +64,6 @@ function public:send(abil_id, targets)
     local sep = private.sep
 
     local msg = tostring(abil_id)
-    print(targets)
     if not isType(targets, 'table') then
         Log:err(tostring(AbilityExtSyncTarget)..': \'targets\' must be a list of targets (table).')
     end
@@ -79,7 +78,7 @@ function public:send(abil_id, targets)
         end
     end
 
-    print('Sending '..msg)
+    print('Sending targets: '..msg)
     DataSyncPublic.send(self, msg)
 end
 
@@ -136,7 +135,7 @@ end
 function private.originCallback(self, msg, source)
     local priv = private.data[self]
 
-    print('Received '..msg)
+    print('Received targets: '..msg)
     local abil_id, targets = private.parse(msg)
     priv.actions:run(self, abil_id, targets, source)
 end

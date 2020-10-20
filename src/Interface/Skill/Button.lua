@@ -91,17 +91,10 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self FrameNormalButton
+---@param self InterfaceSkillButton
 function private.newData(self)
     local priv = {
         abil = nil,
-
-        --cd_mask = NormalImage.new(),
-        --cd_line = NormalImage.new(),
-        --cd_text = SimpleText.new(),
-
-        cd_left = 0,
-        cd_full = 1,
 
         charges = SkillCharges.new(),
     }
@@ -137,7 +130,11 @@ private.startTargeting = function(self, pl)
         return
     end
 
-    abil:targetingStart()
+    if abil:isTargeting() then
+        abil:targetingFinish()
+    else
+        abil:targetingStart()
+    end
 end
 
 return static

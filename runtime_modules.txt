@@ -80,8 +80,8 @@ src/Libs/AbilityExt/Charges.lua
 src/Libs/AbilityExt/Event.lua
 src/Libs/AbilityExt/SyncTarget.lua
 src/Libs/AbilityExt/Point.lua
-src/Libs/AbilityExt/Type.lua
 src/Libs/AbilityExt/Type/Targeting.lua
+src/Libs/AbilityExt/Type.lua
 src/Libs/AbilityExt/Type/Casting.lua
 src/Libs/AbilityExt/Type/Data.lua
 src/Libs/AbilityExt/Settings.lua
@@ -128,6 +128,7 @@ src/Interface/Skill/Panel.lua
 src/Interface/Skill/Button.lua
 src/Interface/Skill/ButtonFdf.lua
 src/Interface/Skill/Charges.lua
+src/Interface/Skill/Hotkey.lua
 src/Interface/UnitStatus.lua
 src/Interface/UnitBars.lua
 src/Interface/UnitBuffs.lua

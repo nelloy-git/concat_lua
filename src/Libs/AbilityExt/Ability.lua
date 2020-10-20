@@ -25,6 +25,8 @@ local TargetingEvent = AbilityExtEventModule.TargetingEnum
 local CastingEvent = AbilityExtEventModule.CastingEnum
 ---@type AbilityExtSyncTargetClass
 local AbilityExtSyncTarget = require(lib_path..'SyncTarget') or error('')
+---@type AbilityExtTypeTargetingClass
+local AbilityExtTypeTargeting = require(lib_path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeClass
 local AbilityExtType = require(lib_path..'Type') or error('')
 
@@ -118,12 +120,21 @@ function public:targetingCancel()
 end
 
 function public:targetingFinish()
+    if not self == AbilityExtTypeTargeting.getCurrent() then
+        return
+    end
+    print('here')
     local priv = private.data[self]
     ---@type AbilityExtType
     local abil_type = priv.abil_type
     abil_type:getTargeting().finish(self)
 
     priv.targ_actions[TargetingEvent.FINISH]:run(self, TargetingEvent.FINISH)
+end
+
+---@return boolean
+function public:isTargeting()
+    return self == AbilityExtTypeTargeting.getCurrent()
 end
 
 -----------

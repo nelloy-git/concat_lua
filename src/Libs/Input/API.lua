@@ -17,6 +17,7 @@ InputLibAPI.DataSync = require(path..'DataSync') or error('')
 ---@type InputKeyboard
 local Keyboard = require(path..'Keyboard') or error('')
 InputLibAPI.addKeyboardAction = Keyboard.addAction or error('')
+InputLibAPI.removeKeyboardAction = Keyboard.removeAction or error('')
 
 ---@type InputMouse
 local Mouse = require(path..'Mouse') or error('')
