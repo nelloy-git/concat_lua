@@ -42,26 +42,27 @@ local function onSelection()
 
     if not u then return end
 
-    local found = false
+    local found = -1
     for i = 1, #gr do
         if gr[i] == u then
-            found = true
+            found = i
             break
         end
     end
 
     if lock then
-        if not found and GetLocalPlayer() == pl then
+        if found < 0 and pl == GetLocalPlayer() then
             SelectUnit(u:getData(), false)
         end
     else
-        group[pl] = clearDead(group[pl])
+        --group[pl] = clearDead(group[pl])
 
-        if not found then
+        if found < 0 then
             table.insert(gr, u)
-        end
 
-        actions:run(gr, pl)
+            print('Selected')
+            actions:run(gr, pl)
+        end
     end
 end
 
@@ -72,37 +73,38 @@ local function onDeselection()
 
     if not u then return end
 
-    local found = false
+    local found = -1
     for i = 1, #gr do
         if gr[i] == u then
-            found = true
+            found = i
             break
         end
     end
 
     if lock then
-        if not found and GetLocalPlayer() == pl then
+        if found < 0 and pl == GetLocalPlayer() then
             SelectUnit(u:getData(), true)
         end
     else
-        group[pl] = clearDead(group[pl])
+        if found > 0 then
+            table.remove(gr, found)
 
-        if found then
-            for i = 1, #gr do
-                if gr[i] == u then
-                    table.remove(gr, i)
-                    break
-                end
-            end
+            print('Deselected')
+            actions:run(gr, pl)
         end
-
-        actions:run(gr, pl)
     end
 end
 
 ---@param flag boolean
-function Selection.lock(flag)
+---@param pl player | nil
+function Selection.lock(flag, pl)
+    if pl and pl ~= GetLocalPlayer() then
+        return
+    end
+
     lock = flag
+    EnableSelect(not flag, true)
+    EnableDragSelect(not flag, true)
 end
 
 ---@param callback InputSelectionCallback

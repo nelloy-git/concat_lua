@@ -83,6 +83,10 @@ function public:setAbilContainer(container)
         ---@type AbilityExt
         local abil = abil_list[i]
         priv.buttons[i]:setAbility(abil)
+
+        if i <= 9 then
+            priv.hotkeys[i]:setHotkey(tostring(i), abil, true)
+        end
     end
 end
 
@@ -122,9 +126,6 @@ function private.newData(self, max_abils)
         hotkey:setParent(btn)
         btn:setVisible(true)
         hotkey:setPos(0, 0)
-        if i <= 9 then
-            hotkey:setHotkey(tostring(i), btn, true)
-        end
         priv.hotkeys[i] = hotkey
     end
 

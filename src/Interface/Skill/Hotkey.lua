@@ -65,14 +65,14 @@ function public:setSize(width, height)
 end
 
 ---@param key string
----@param button FrameNormalButton
+---@param abil AbilityExt
 ---@param is_fast boolean
-function public:setHotkey(key, button, is_fast)
+function public:setHotkey(key, abil, is_fast)
     local priv = private.data[self]
 
     priv.key = key
     priv.text:setText(key)
-    priv.button = button
+    priv.abil = abil
     priv.is_fast = is_fast
     if priv.action then
         removeKeyboardAction(priv.action)
@@ -92,7 +92,7 @@ private.data = setmetatable({}, {__mode = 'k'})
 function private.newData(self)
     local priv = {
         key = nil,
-        button = nil,
+        abil = nil,
         is_fast = false,
         action = nil,
 
@@ -114,11 +114,23 @@ function private.keyPressedCallback(self, key, is_down)
         Log:err(tostring(self)..': called with wrong key.')
     end
 
+    if not priv.abil then
+        return
+    end
+
     if priv.is_fast then
-        priv.button:click()
+        if priv.abil:isTargeting() and not is_down then
+            priv.abil:targetingFinish()
+        elseif not priv.abil:isTargeting() and is_down then
+            priv.abil:targetingStart()
+        end
     else
-        if is_down == false then
-            priv.button:click()
+        if is_down then
+            if priv.abil:isTargeting() then
+                priv.abil:targetingFinish()
+            else
+                priv.abil:targetingStart()
+            end
         end
     end
 end

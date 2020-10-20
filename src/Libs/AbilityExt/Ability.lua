@@ -148,8 +148,8 @@ function public:castingStart(target)
     local abil_type = priv.abil_type
     local data_type = abil_type:getData()
 
-    if not data_type:isAvailable(self) or
-       not data_type:checkTarget(self, target) then
+    if not (data_type:isAvailable(self) and
+            data_type:checkTarget(self, target)) then
         return
     end
     data_type:consume(self)

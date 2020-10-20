@@ -45,8 +45,6 @@ function override.start(abil, cancel_cb, finish_cb)
 
     -- Disable unit selection
     Input.lockSelection(true)
-    EnableSelect(false, true)
-    EnableDragSelect(false, true)
 
     private.mouse_action = private.trigger:addAction(function() private.mouseUpCallback(abil) end)
     private.tracking = true
@@ -64,8 +62,6 @@ function override.cancel(abil)
     end
 
     Input.lockSelection(false)
-    EnableSelect(true, true)
-    EnableDragSelect(true, true)
 
     private.trigger:removeAction(private.mouse_action)
     private.tracking = false
@@ -85,8 +81,6 @@ function override.finish(abil)
     end
 
     Input.lockSelection(false)
-    EnableSelect(true, true)
-    EnableDragSelect(true, true)
 
     private.trigger:removeAction(private.mouse_action)
     private.tracking = false
