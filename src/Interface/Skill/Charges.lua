@@ -33,6 +33,7 @@ local private = {}
 -- Static
 --=========
 
+---@param child InterfaceSkillCharges | nil
 ---@return InterfaceSkillCharges
 function override.new(child)
     if child then isTypeErr(child, InterfaceSkillCharges, 'child') end
@@ -84,7 +85,7 @@ end
 --=========
 
 private.data = setmetatable({}, {__mode = 'k'})
-private.charges2frame = setmetatable({}, {__mode = 'v'})
+private.charges2frame = setmetatable({}, {__mode = 'kv'})
 
 ---@param self FrameNormalButton
 function private.newData(self)

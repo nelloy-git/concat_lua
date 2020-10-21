@@ -240,8 +240,12 @@ function private.containerChanged(container)
     private.updateBuffsList(self)
 end
 
----@param btn FrameNormalButton
-function private.mouseEnter(btn)
+---@type FrameCallback
+private.mouseEnter = function(btn, pl, event)
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
     ---@type InterfaceUnitBuffs
     local self = private.button2interface[btn]
     local priv = private.data[self]
@@ -255,12 +259,16 @@ function private.mouseEnter(btn)
     end
     priv.active_pos = pos
 
-    priv.tooltip:setVisible(true)
     private.updateTooltip(self)
+    priv.tooltip:setVisible(true)
 end
 
----@param btn FrameNormalButton
-function private.mouseLeave(btn)
+---@type FrameCallback
+private.mouseLeave = function(btn, pl, event)
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
     ---@type InterfaceUnitBuffs
     local self = private.button2interface[btn]
     local priv = private.data[self]

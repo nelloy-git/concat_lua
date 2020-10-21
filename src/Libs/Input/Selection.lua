@@ -58,7 +58,7 @@ local function onSelection()
         if found < 0 then
             table.insert(gr, u)
 
-            --print('Selected')
+            print('Selected')
             actions:run(gr, pl)
         end
     end
@@ -87,7 +87,7 @@ local function onDeselection()
         if found > 0 then
             table.remove(gr, found)
 
-            --print('Deselected')
+            print('Deselected')
             actions:run(gr, pl)
         end
     end

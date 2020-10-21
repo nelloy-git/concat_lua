@@ -142,7 +142,6 @@ end)
 -------------------
 -- Skill buttons --
 -------------------
-
 Interface.SkillsPanel = InterfaceSkillPanel.new(10)
 Interface.SkillsPanel:setSize(10 * 0.04, 1 * 0.04)
 

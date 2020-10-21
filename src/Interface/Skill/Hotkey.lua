@@ -77,8 +77,8 @@ function public:setHotkey(key, abil, is_fast)
     if priv.action then
         removeKeyboardAction(priv.action)
     end
-    priv.action = addKeyboardAction(key, function(key, is_down)
-        private.keyPressedCallback(self, key, is_down)
+    priv.action = addKeyboardAction(key, function(key, is_down, pl)
+        private.keyPressedCallback(self, key, is_down, pl)
     end)
 end
 
@@ -108,8 +108,12 @@ end
 ---@param self InterfaceSkillHotkey
 ---@param key string
 ---@param is_down boolean
-function private.keyPressedCallback(self, key, is_down)
+function private.keyPressedCallback(self, key, is_down, pl)
     local priv = private.data[self]
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
     if priv.key ~= key then
         Log:err(tostring(self)..': called with wrong key.')
     end

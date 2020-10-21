@@ -32,5 +32,3 @@ local param_container2 = UnitParam.get(u2)
 param_container2:add(Param.PATK, Value.BASE, 10)
 param_container2:add(Param.MDEF, Value.BASE, 5)
 param_container2:add(Param.LIFE, Value.BASE, 1000)
-
---Interface.SkillsBar:setSkill(1, abil_container:get(1))

@@ -8,8 +8,7 @@ local FrameLib = require(LibList.FrameLib) or error('')
 local NormalButton = FrameLib.Normal.Button or error('')
 local NormalButtonPublic = Class.getPublic(NormalButton) or error('')
 local NormalImage = FrameLib.Normal.Image or error('')
-local OriginGameUI = FrameLib.Origin.GameUI or error('')
-local SimpleText = FrameLib.Simple.Text or error('')
+local SimpleImage = FrameLib.Simple.Image or error('')
 ---@type TypesLib
 local TypesLib = require(LibList.TypesLib) or error('')
 local FrameEvemt = TypesLib.FrameEventTypeEnum
@@ -21,6 +20,8 @@ local isTypeErr = UtilsLib.isTypeErr or error('')
 local Fdf = require('Interface.Skill.ButtonFdf') or error('')
 ---@type InterfaceSkillChargesClass
 local SkillCharges = require('Interface.Skill.Charges') or error('')
+---@type InterfaceSkillCooldownClass
+local SkillCooldown = require('Interface.Skill.Cooldown') or error('')
 
 --=======
 -- Class
@@ -66,6 +67,8 @@ function public:setSize(width, height)
 
     priv.charges:setSize(width / 3, height / 4)
     priv.charges:setPos(0, 3 * height / 4)
+
+    priv.cooldown:setSize(width, height)
 end
 
 ---@param abil AbilityExt
@@ -78,11 +81,13 @@ function public:setAbility(abil)
     priv.abil = abil
     if abil then
         priv.charges:setCharges(abil:getCharges())
+        priv.cooldown:setCharges(abil:getCharges())
 
         self:setVisible(true)
         self:setNormalTexture(abil:getType():getData():getIcon(abil))
     else
         priv.charges:setCharges(nil)
+        priv.cooldown:setCharges(nil)
 
         self:setVisible(false)
     end
@@ -100,23 +105,15 @@ function private.newData(self)
         abil = nil,
 
         charges = SkillCharges.new(),
+        cooldown = SkillCooldown.new(),
     }
     private.data[self] = priv
 
-    --priv.cd_mask:setParent(self)
-    --priv.cd_mask:setPos(0, 0)
-    --priv.cd_mask:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
-    --priv.cd_mask:setAlpha(0.7)
-
-    --priv.cd_line:setParent(self)
-    --priv.cd_line:setPos(0, 0)
-    --priv.cd_line:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor14.blp')
-
-    --priv.cd_text:setParent(self)
-    --priv.cd_text:setPos(0, 0)
-
     priv.charges:setParent(self)
     priv.charges:setLevel(self:getLevel() + 1)
+
+    priv.cooldown:setParent(self)
+    priv.cooldown:setPos(0, 0)
 
     self:setSize(self:getWidth(), self:getHeight())
     self:addAction(FrameEvemt.MOUSE_CLICK, private.startTargeting)
