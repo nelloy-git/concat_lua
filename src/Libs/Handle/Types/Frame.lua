@@ -88,8 +88,7 @@ function public:setPos(x, y)
                             x, 0.6 - y)
     end
 
-    -- Adopted childrens
-    for child, _ in pairs(priv.adopted) do
+    for child, _ in pairs(priv.children) do
         child:setPos(child:getX(), child:getY())
     end
 end
@@ -109,8 +108,7 @@ end
 function public:getAbsX()
     local priv = private.data[self]
 
-    local parent = priv.parent
-    local parent_x = parent and parent:getAbsX() or 0
+    local parent_x = priv.parent and priv.parent:getAbsX() or 0
     local self_x = priv.x
 
     return self_x + parent_x
@@ -120,8 +118,7 @@ end
 function public:getAbsY()
     local priv = private.data[self]
 
-    local parent = priv.parent
-    local parent_y = parent and parent:getAbsY() or 0
+    local parent_y = priv.parent and priv.parent:getAbsY() or 0
     local self_y = priv.y
 
     return self_y + parent_y
@@ -161,24 +158,25 @@ end
 ---@param parent Frame | nil
 function public:setParent(parent)
     local priv = private.data[self]
-    local prev_parent = self:getParent()
 
-    -- If frame was adopted remove it from parent
-    if prev_parent then
-        private.data[prev_parent].adopted[self] = nil
+    -- Remove frame from previous parent.
+    if priv.parent then
+        local parent_priv = private.data[priv.parent]
+        parent_priv.children[self] = nil
     end
 
+    -- Setup new parent
     priv.parent = parent
-
-    -- If no new parent or both are simple or normal.
-    if not parent or self:isSimple() == parent:isSimple() then
-        BlzFrameSetParent(self:getData(), parent and parent:getData() or nil)
-        return
+    if parent then
+        local parent_priv = private.data[parent]
+        parent_priv.children[self] = true
+    else
+        BlzFrameSetParent(self:getData(), private.console_ui_backdrop)
     end
 
-    -- Adopted
-    private.data[parent].adopted[self] = true
-    parent:setPos(parent:getX(), parent:getY())
+    -- Update position
+    self:setPos(self:getX(), self:getY())
+    self:setVisible(self:isVisible())
 end
 
 function public:getLevel()
@@ -208,12 +206,28 @@ end
 
 ---@return boolean
 function public:isVisible()
-    return BlzFrameIsVisible(self:getData())
+    return private.data[self].visible
+    --return BlzFrameIsVisible(self:getData())
 end
 
----@param visible boolean
-function public:setVisible(visible)
-    BlzFrameSetVisible(self:getData(), visible)
+---@param flag boolean
+function public:setVisible(flag)
+    local priv = private.data[self]
+    priv.visible = flag
+
+    BlzFrameSetVisible(self:getData(), flag)
+    for child, _ in pairs(priv.children) do
+        if flag == false then
+            BlzFrameSetVisible(child:getData(), false)
+        else
+            BlzFrameSetVisible(child:getData(), child:isVisible())
+        end
+    end
+    
+    -- Adopted children
+    --for child, _ in pairs(private.data[self].adopted) do
+    --    child:setVisible(flag)
+    --end
 end
 
 ---@return Frame | nil
@@ -310,8 +324,10 @@ function private.newData(self, is_simple)
 
         level = 0,
         alpha = 0,
+        visible = true,
 
-        adopted = {},
+        children = {},
+        --adopted = {},
 
         ---@type table<frameeventtype, ActionList>
         actions = {}

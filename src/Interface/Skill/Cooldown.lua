@@ -21,13 +21,13 @@ local Log = UtilsLib.Log or error('')
 -- Class
 --=======
 
-local InterfaceSkillCastBar = Class.new('InterfaceSkillCastBar', Frame)
----@class InterfaceSkillCastBar : Frame
-local public = InterfaceSkillCastBar.public
----@class InterfaceSkillCastBarClass : FrameClass
-local static = InterfaceSkillCastBar.static
----@type InterfaceSkillCastBarClass
-local override = InterfaceSkillCastBar.override
+local InterfaceSkillCooldown = Class.new('InterfaceSkillCooldown', Frame)
+---@class InterfaceSkillCooldown : Frame
+local public = InterfaceSkillCooldown.public
+---@class InterfaceSkillCooldownClass : FrameClass
+local static = InterfaceSkillCooldown.static
+---@type InterfaceSkillCooldownClass
+local override = InterfaceSkillCooldown.override
 local private = {}
 
 --=========
@@ -36,14 +36,14 @@ local private = {}
 
 local static_instances = {}
 
----@return InterfaceSkillCastBar
+---@return InterfaceSkillCooldown
 function override.new(origin_id)
     if static_instances[origin_id] then
-        Log:wrn(tostring(InterfaceSkillCastBar)..': instance with selected origin_id already exist.')
+        Log:wrn(tostring(InterfaceSkillCooldown)..': instance with selected origin_id already exist.')
         return static_instances[origin_id]
     end
 
-    local instance = Class.allocate(InterfaceSkillCastBar)
+    local instance = Class.allocate(InterfaceSkillCooldown)
     instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
 
     private.newData(instance, origin_id)
@@ -71,7 +71,7 @@ end
 ---@param width number
 ---@param height number
 function public:setSize(width, height)
-    Log:wrn(tostring(InterfaceSkillCastBar)..': size can not be changed.')
+    Log:wrn(tostring(InterfaceSkillCooldown)..': size can not be changed.')
 end
 
 ---@param count number
@@ -96,7 +96,7 @@ end
 
 private.data = setmetatable({}, {__mode = 'k'})
 
----@param self InterfaceSkillCastBar
+---@param self InterfaceSkillCooldown
 ---@param origin_id number
 function private.newData(self, origin_id)
     local priv = {
@@ -131,7 +131,7 @@ function private.newData(self, origin_id)
     --priv.charges_text:setFont('fonts\\nim_____.ttf', 0.9 * priv.charges_text:getHeight(), 0)
 end
 
-private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceSkillCastBarBorder')
+private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfaceSkillCooldownBorder')
 private.fdf:setWidth(0.04)
 private.fdf:setHeight(0.04)
 private.fdf:setBackgroundTileMode(true)

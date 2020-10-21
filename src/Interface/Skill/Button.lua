@@ -8,6 +8,7 @@ local FrameLib = require(LibList.FrameLib) or error('')
 local NormalButton = FrameLib.Normal.Button or error('')
 local NormalButtonPublic = Class.getPublic(NormalButton) or error('')
 local NormalImage = FrameLib.Normal.Image or error('')
+local OriginGameUI = FrameLib.Origin.GameUI or error('')
 local SimpleText = FrameLib.Simple.Text or error('')
 ---@type TypesLib
 local TypesLib = require(LibList.TypesLib) or error('')
@@ -81,6 +82,8 @@ function public:setAbility(abil)
         self:setVisible(true)
         self:setNormalTexture(abil:getType():getData():getIcon(abil))
     else
+        priv.charges:setCharges(nil)
+
         self:setVisible(false)
     end
 end
@@ -113,6 +116,7 @@ function private.newData(self)
     --priv.cd_text:setPos(0, 0)
 
     priv.charges:setParent(self)
+    priv.charges:setLevel(self:getLevel() + 1)
 
     self:setSize(self:getWidth(), self:getHeight())
     self:addAction(FrameEvemt.MOUSE_CLICK, private.startTargeting)

@@ -42,11 +42,14 @@ if IsCompiletime() then
     return
 end
 
----------------
--- Inventory --
----------------
+----------------
+-- Hide origins
+----------------
 
 FrameLib.Origin.Inventory:setVisible(false)
+for pos, btn in pairs(FrameLib.Origin.SkillButton) do
+    btn:setVisible(false)
+end
 
 -------------
 -- Minimap --
@@ -54,8 +57,9 @@ FrameLib.Origin.Inventory:setVisible(false)
 
 Interface.Minimap = InterfaceMinimap.new()
 Interface.Minimap:setSize(0.15, 0.15)
-Interface.Minimap:setPos(0, 0)
+--Interface.Minimap:setPos(0.4, 0.3)
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    --Interface.Minimap:setPos(0.4, 0.3)
     Interface.Minimap:setPos(x0, y0 + h - Interface.Minimap:getHeight())
 end)
 
@@ -64,7 +68,8 @@ end)
 -----------------
 
 Interface.ChatEditBox = FrameLib.Origin.ChatEditBox
-Interface.ChatEditBox:setPos(0, 0)
+Interface.ChatEditBox:setVisible(false)
+--Interface.ChatEditBox:setPos(0, 0)
 Interface.ChatEditBox:setSize(0.3, 0.025)
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
     local map_w = Interface.Minimap:getWidth()
@@ -78,6 +83,7 @@ end)
 -------------
 
 Interface.ChatBox = FrameLib.Origin.ChatBox
+Interface.ChatBox:setVisible(false)
 Interface.ChatBox:setParent(Interface.ChatEditBox)
 Interface.ChatBox:setPos(0, Interface.ChatEditBox:getHeight() + Interface.ChatBox:getHeight())
 Interface.ChatBox:setSize(0.3, 0.25)
@@ -115,12 +121,13 @@ InputLib.addSelectionAction(function(group, pl)
         local params = ParamLib.UnitContainer.get(selected)
         Interface.UnitStatus:setParameters(params)
     else
-        --selected = nil
+        selected = nil
+        Interface.UnitStatus:setVisible(false)
     end
 end)
 
 local stats_time = Timer.new()
-stats_time:start(0.05, true, function()
+stats_time:start(0.01, true, function()
     if selected then
         if selected:getHealth() > 0.5 then
             Interface.UnitStatus:setShield(BuffLib.getShield(selected), BuffLib.getMaxShield(selected))
@@ -154,10 +161,13 @@ InputLib.addSelectionAction(function(group, pl)
         if not target then Log:err('Can not find linked Unit') end
         selected = target
 
+        Interface.SkillsPanel:setVisible(true)
+
         local abils = AbilLib.Container.get(selected)
         Interface.SkillsPanel:setAbilContainer(abils)
     else
-        --selected = nil
+        selected = nil
+        Interface.SkillsPanel:setVisible(false)
     end
 end)
 

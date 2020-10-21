@@ -73,9 +73,10 @@ function public:setCharges(charges)
     if charges then
         private.charges2frame[charges] = self
         priv.changed_action = charges:addChargesChangedAction(private.changedCallback)
+        private.changedCallback(charges)
+    else
+        self:setVisible(false)
     end
-
-    private.changedCallback(charges)
 end
 
 --=========
@@ -103,8 +104,6 @@ end
 ---@type AbilityExtChargesCallback
 private.changedCallback = function(charges)
     local self = private.charges2frame[charges]
-    local priv = private.data[self]
-
     local max = charges:getMax()
 
     if max <= 1 then
@@ -114,7 +113,7 @@ private.changedCallback = function(charges)
 
         local left = charges:get()
         local s_left = tostring(left - left % 1)
-        priv.charges_text:setText(s_left)
+        private.data[self].charges_text:setText(s_left)
     end
 end
 

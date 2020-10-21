@@ -63,10 +63,14 @@ function public:cancel(abil)
 end
 
 ---@param abil AbilityExt
-function public:interrupt(abil) end
+function public:interrupt(abil)
+    print('Casting interrupt')
+end
 
 ---@param abil AbilityExt
-function public:finish(abil) end
+function public:finish(abil)
+    print('Casting finish')
+end
 
 --=========
 -- Private

@@ -55,12 +55,10 @@ local function onSelection()
             SelectUnit(u:getData(), false)
         end
     else
-        --group[pl] = clearDead(group[pl])
-
         if found < 0 then
             table.insert(gr, u)
 
-            print('Selected')
+            --print('Selected')
             actions:run(gr, pl)
         end
     end
@@ -89,7 +87,7 @@ local function onDeselection()
         if found > 0 then
             table.remove(gr, found)
 
-            print('Deselected')
+            --print('Deselected')
             actions:run(gr, pl)
         end
     end
@@ -98,13 +96,19 @@ end
 ---@param flag boolean
 ---@param pl player | nil
 function Selection.lock(flag, pl)
-    if pl and pl ~= GetLocalPlayer() then
+    if pl ~= GetLocalPlayer() then
         return
     end
 
     lock = flag
     EnableSelect(not flag, true)
     EnableDragSelect(not flag, true)
+
+    ClearSelection()
+    local gr = group[pl]
+    for i = 1, #gr do
+        SelectUnit(gr[i], true)
+    end
 end
 
 ---@param callback InputSelectionCallback
