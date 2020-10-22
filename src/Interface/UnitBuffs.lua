@@ -221,10 +221,14 @@ function private.updateTooltip(self)
 
         -- Time
         local time = buff:getTimeLeft()
-        time = time - time % 0.1
+        time = math.floor(time/0.1)
         local s_time = tostring(time)
-        s_time = s_time:sub(1, s_time:find('%.') + 1)
-        tooltip:setRightText(s_time)
+        local len = s_time:len()
+        if len == 1 then
+            s_time = '0'..s_time
+            len = len + 1
+        end
+        tooltip:setRightText(s_time:sub(1, len - 1)..'.'..s_time:sub(len))
 
         -- Position
         local used_lines, f = math.modf(priv.container:count() / priv.per_line)

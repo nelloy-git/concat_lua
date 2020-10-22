@@ -206,8 +206,8 @@ end
 
 ---@return boolean
 function public:isVisible()
-    return private.data[self].visible
-    --return BlzFrameIsVisible(self:getData())
+    local priv = private.data[self]
+    return priv.visible
 end
 
 ---@param flag boolean
@@ -217,11 +217,7 @@ function public:setVisible(flag)
 
     BlzFrameSetVisible(self:getData(), flag)
     for child, _ in pairs(priv.children) do
-        if flag == false then
-            BlzFrameSetVisible(child:getData(), false)
-        else
-            BlzFrameSetVisible(child:getData(), child:isVisible())
-        end
+        child:setVisible(flag)
     end
     
     -- Adopted children

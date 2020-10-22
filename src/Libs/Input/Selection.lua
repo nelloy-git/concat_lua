@@ -96,6 +96,7 @@ end
 ---@param flag boolean
 ---@param pl player | nil
 function Selection.lock(flag, pl)
+    pl = pl or GetLocalPlayer()
     if pl ~= GetLocalPlayer() then
         return
     end
@@ -103,11 +104,11 @@ function Selection.lock(flag, pl)
     lock = flag
     EnableSelect(not flag, true)
     EnableDragSelect(not flag, true)
-
     ClearSelection()
+
     local gr = group[pl]
     for i = 1, #gr do
-        SelectUnit(gr[i], true)
+        SelectUnit(gr[i]:getData(), true)
     end
 end
 

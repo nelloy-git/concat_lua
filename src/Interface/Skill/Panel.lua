@@ -123,10 +123,8 @@ function private.newData(self, max_abils)
         priv.buttons[i] = btn
 
         local hotkey = SkillHotkey.new()
-        hotkey:setParent(btn)
+        hotkey:setParent(back)
         hotkey:setVisible(true)
-        hotkey:setLevel(btn:getLevel() + 100)
-        hotkey:setPos(0, 0)
         priv.hotkeys[i] = hotkey
     end
 

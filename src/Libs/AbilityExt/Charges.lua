@@ -132,7 +132,7 @@ end
 ---@param callback AbilityExtChargesCallback
 ---@return Action
 function public:addCooldownAction(callback)
-    private.data[self].cooldown_actions:add(callback)
+    return private.data[self].cooldown_actions:add(callback)
 end
 
 ---@param callback AbilityExtChargesCallback
