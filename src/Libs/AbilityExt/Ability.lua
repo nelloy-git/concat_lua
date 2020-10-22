@@ -123,7 +123,7 @@ function public:targetingFinish()
     if not self == AbilityExtTypeTargeting.getCurrent() then
         return
     end
-    print('here')
+
     local priv = private.data[self]
     ---@type AbilityExtType
     local abil_type = priv.abil_type
@@ -152,6 +152,8 @@ function public:castingStart(target)
             data_type:checkTarget(self, target)) then
         return
     end
+    -- Update cooldown
+    priv.charges:setCooldown(data_type:getCooldown(abil))
     data_type:consume(self)
 
     priv.target = target

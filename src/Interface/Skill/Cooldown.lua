@@ -7,6 +7,7 @@ local Class = require(LibList.ClassLib) or error('')
 local FrameLib = require(LibList.FrameLib) or error('')
 local SimpleImage = FrameLib.Simple.Image or error('')
 local SimpleImagePublic = Class.getPublic(SimpleImage) or error('')
+local SimpleText = FrameLib.Simple.Text or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local isTypeErr = UtilsLib.isTypeErr or error('')
@@ -52,6 +53,9 @@ function public:setSize(width, height)
 
     priv.width = width
     priv.height = height
+
+    priv.text:setSize(width, height)
+    priv.text:setFont('fonts\\nim_____.ttf', 0.35 * height)
 end
 
 ---@return number
@@ -80,6 +84,7 @@ function public:setCharges(charges)
         self:setVisible(false)
         return
     end
+    self:setVisible(true)
 
     private.charges2frame[charges] = self
     priv.changed_action = charges:addChargesChangedAction(private.changedCallback)
@@ -101,11 +106,17 @@ function private.newData(self)
         width = SimpleImagePublic.getWidth(self),
         height = SimpleImagePublic.getHeight(self),
 
+        text = SimpleText.new(),
+
         charges = nil,
         changed_action = nil,
         loop_action = nil,
     }
     private.data[self] = priv
+
+    priv.text:setParent(self)
+    priv.text:setPos(0, 0)
+    priv.text:setFont('fonts\\nim_____.ttf', 0.5 * self:getHeight())
 
     self:setTexture('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
 end
@@ -114,11 +125,14 @@ end
 private.changedCallback = function(charges)
     ---@type InterfaceSkillCooldown
     local self = private.charges2frame[charges]
+    local priv = private.data[self]
 
     if charges:get() < 1 then
-        self:setAlpha(0.25)
+        self:setAlpha(0.85)
+        priv.text:setAlpha(0.85)
     else
-        self:setAlpha(0.75)
+        self:setAlpha(0.25)
+        priv.text:setAlpha(0.25)
     end
 end
 
@@ -131,8 +145,16 @@ private.cooldownLoop = function(charges)
     local full = charges:getCooldown()
     local perc = cur / full
 
-    print(perc)
     SimpleImagePublic.setSize(self, perc * priv.width, priv.height)
+
+    cur = math.floor(cur/0.1)
+    local s_cur = tostring(cur)
+    local len = s_cur:len()
+    if len == 1 then
+        s_cur = '0'..s_cur
+        len = len + 1
+    end
+    priv.text:setText(s_cur:sub(1, len - 1)..'.'..s_cur:sub(len))
 end
 
 return static

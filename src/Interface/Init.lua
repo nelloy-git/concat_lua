@@ -142,8 +142,9 @@ end)
 -------------------
 -- Skill buttons --
 -------------------
+
 Interface.SkillsPanel = InterfaceSkillPanel.new(10)
-Interface.SkillsPanel:setSize(10 * 0.04, 1 * 0.04)
+Interface.SkillsPanel:setSize(10 * 0.05, 1 * 0.05)
 
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
     Interface.SkillsPanel:setPos(x0 + (w - Interface.SkillsPanel:getWidth()) / 2,

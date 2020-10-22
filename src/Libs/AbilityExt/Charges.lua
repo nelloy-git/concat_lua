@@ -48,9 +48,11 @@ end
 function public:set(charges, ignore_max)
     local priv = private.data[self]
 
+    print(charges, priv.max_charges)
+
     local prev_charges = priv.charges
 
-    if charges >= priv.max_charges then
+    if charges > priv.max_charges then
         priv.charges = ignore_max and charges or priv.max_charges
     elseif charges <= 0 then
         priv.charges = 0
