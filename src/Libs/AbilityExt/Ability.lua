@@ -153,7 +153,7 @@ function public:castingStart(target)
         return
     end
     -- Update cooldown
-    priv.charges:setCooldown(data_type:getCooldown(abil))
+    priv.charges:setCooldown(data_type:getCooldown(self))
     data_type:consume(self)
 
     priv.target = target

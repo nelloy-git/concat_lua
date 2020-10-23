@@ -5,19 +5,16 @@
 local Class = require(LibList.ClassLib) or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
----@type HandleLib
-local HandleLib = require(LibList.HandleLib) or error('')
-local Frame = HandleLib.Frame or error('')
-local FramePublic = Class.getPublic(Frame) or error('')
-local Screen = FrameLib.Screen or error('')
+local NormalImage = FrameLib.Normal.Image or error('')
+local NormalImagePublic = Class.getPublic(NormalImage) or error('')
 ---@type UtilsLib
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local Log = UtilsLib.Log or error('')
 
 ---@type InterfaceUnitBars
 local InterfaceUnitBars = require('Interface.UnitBars') or error('')
----@type InterfaceUnitBuffs
-local InterfaceUnitBuffs = require('Interface.UnitBuffs') or error('')
+---@type InterfaceBuffPanelClass
+local InterfaceBuffPanel = require('Interface.Buff.Panel') or error('')
 ---@type InterfaceParamListClass
 local InterfaceParamList = require('Interface.ParamList') or error('')
 
@@ -25,10 +22,10 @@ local InterfaceParamList = require('Interface.ParamList') or error('')
 -- Class
 --=======
 
-local InterfaceUnitStatus = Class.new('InterfaceUnitStatus', Frame)
----@class InterfaceUnitStatus : Frame
+local InterfaceUnitStatus = Class.new('InterfaceUnitStatus', NormalImage)
+---@class InterfaceUnitStatus : FrameNormalImage
 local public = InterfaceUnitStatus.public
----@class InterfaceUnitStatusClass : FrameClass
+---@class InterfaceUnitStatusClass : FrameNormalImageClass
 local static = InterfaceUnitStatus.static
 ---@type InterfaceUnitStatusClass
 local override = InterfaceUnitStatus.override
@@ -48,7 +45,7 @@ function override.new()
     end
 
     local instance = Class.allocate(InterfaceUnitStatus)
-    instance = Frame.new(private.fdf:getName(), private.fdf:isSimple(), instance)
+    instance = NormalImage.new(private.fdf, instance)
 
     private.newData(instance)
 
@@ -63,9 +60,10 @@ end
 ---@param x number
 ---@param y number
 function public:setPos(x, y)
+    NormalImagePublic.setPos(self, x, y)
     local priv = private.data[self]
-    FramePublic.setPos(self, x, y)
 
+    --[[
     priv.border:setPos(self:getAbsX(), self:getAbsY())
 
     priv.bars:setPos(self:getAbsX() + priv.border:getWidth(),
@@ -78,66 +76,71 @@ function public:setPos(x, y)
 
     priv.portrait:setPos(self:getAbsX() + 0.065 * self:getHeight(),
                          self:getAbsY() + 0.065 * self:getHeight())
+    ]]
 end
 
 ---@param w number
 ---@param h number
 function public:setSize(w, h)
+    NormalImagePublic.setSize(self, w, h)
     local priv = private.data[self]
-    FramePublic.setSize(self, w, h)
 
+    --[[
     priv.bars:setSize(w - h, h / 6)
     priv.border:setSize(h, h)
     priv.params:setSize(h, 2 * h)
     priv.portrait:setSize(0.87 * h, 0.87 * h)
 
-    local i, f = math.modf(priv.buffs:getMaxCount() / priv.buffs:getPerLine())
-    if f ~= 0 then i = i + 1 end
-    priv.buffs:setSize(w - h, i * (w - h) / priv.buffs:getPerLine())
+    --local i, f = math.modf(priv.buffs:getMaxCount() / priv.buffs:getPerLine())
+    --if f ~= 0 then i = i + 1 end
+    priv.buffs:setSize(w - h, w - h)
 
     self:setPos(self:getX(), self:getY())
+    ]]
 end
 
 ---@param flag boolean
 function public:setVisible(flag)
     local priv = private.data[self]
 
+    --[[
     priv.bars:setVisible(flag)
     priv.border:setVisible(flag)
     priv.buffs:setVisible(flag)
     priv.params:setVisible(flag)
     priv.portrait:setVisible(flag)
+    ]]
 end
 
 ---@param cur number
 ---@param max number
 function public:setShield(cur, max)
     local priv = private.data[self]
-    priv.bars:setShield(cur, max)
+    --priv.bars:setShield(cur, max)
 end
 
 ---@param cur number
 ---@param max number
 function public:setHealth(cur, max)
     local priv = private.data[self]
-    priv.bars:setHealth(cur, max)
+    --priv.bars:setHealth(cur, max)
 end
 
 ---@param cur number
 ---@param max number
 function public:setMana(cur, max)
     local priv = private.data[self]
-    priv.bars:setMana(cur, max)
+    --priv.bars:setMana(cur, max)
 end
 
 ---@param params ParameterContainer
 function public:setParameters(params)
-    private.data[self].params:setParamsContainer(params)
+    --private.data[self].params:setParamsContainer(params)
 end
 
 ---@param buffs BuffContainer
 function public:setBuffContainer(buffs)
-    private.data[self].buffs:setBuffContainer(buffs)
+    --private.data[self].buffs:setBuffContainer(buffs)
 end
 
 --=========
@@ -149,20 +152,18 @@ private.data = setmetatable({}, {__mode = 'k'})
 ---@param self InterfaceUnitStatus
 function private.newData(self)
     local priv = {
-        bars = InterfaceUnitBars.new(),
-        border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
-        buffs = InterfaceUnitBuffs.new(),
-        params = InterfaceParamList.new(),
+        --portrait_border = NormalImage.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
         portrait = FrameLib.Origin.Portrait,
+        --bars = InterfaceUnitBars.new(),
+
+        --border = Frame.new(private.fdf_border:getName(), private.fdf_border:isSimple()),
+        --buffs = InterfaceBuffPanel.new(20),
+        --params = InterfaceParamList.new(),
     }
     private.data[self] = priv
-end
 
-private.fdf = FrameLib.Fdf.Normal.Backdrop.new('InterfacePortrait')
-private.fdf:setBlendAll(true)
-private.fdf:setBackground('war3mapImported\\Icons\\Transparent32x32.tga')
-private.fdf:setWidth(0.1)
-private.fdf:setHeight(0.1)
+
+end
 
 private.fdf_border = FrameLib.Fdf.Normal.Backdrop.new('InterfacePortraitBorder')
 private.fdf_border:setWidth(0.04)

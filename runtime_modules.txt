@@ -132,7 +132,9 @@ src/Interface/Skill/Cooldown.lua
 src/Interface/Skill/Hotkey.lua
 src/Interface/UnitStatus.lua
 src/Interface/UnitBars.lua
-src/Interface/UnitBuffs.lua
+src/Interface/Buff/Panel.lua
+src/Interface/Buff/Button.lua
+src/Interface/Buff/ButtonFdf.lua
 src/Interface/ParamList.lua
 src/Interface/ShowDamage.lua
 src/Hero/CorruptedPriest/Unit.lua

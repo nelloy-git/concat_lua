@@ -28,9 +28,9 @@ local SkillCooldown = require('Interface.Skill.Cooldown') or error('')
 --=======
 
 local InterfaceSkillButton = Class.new('InterfaceSkillButton', NormalButton)
----@class InterfaceSkillButton : Frame
+---@class InterfaceSkillButton : FrameNormalButton
 local public = InterfaceSkillButton.public
----@class InterfaceSkillButtonClass : FrameClass
+---@class InterfaceSkillButtonClass : FrameNormalButtonClass
 local static = InterfaceSkillButton.static
 ---@type InterfaceSkillButtonClass
 local override = InterfaceSkillButton.override

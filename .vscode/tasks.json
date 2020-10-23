@@ -61,6 +61,7 @@
                 "export game_name='Warcraft 3'  &&",
                 "export WINEDLLOVERRIDES='api-ms-win-crt-private-l1-1-0,ucrtbase=n,b;d3d10,d3d10_1,d3d10core,d3d11,dxgi=n;d3d12,nvapi,nvapi64='  &&",
                 "export WC3_EXE=/opt/sda2/'Warcraft III'/_retail_/x86_64/'Warcraft III.exe'  &&",
+                //"$WINE /opt/sda2/'Warcraft III'/_retail_/x86_64/'Warcraft III.exe'"
                 "$WINE \"$WC3_EXE\" -launch -loadfile C:\\\\dst -windowmode windowed",
             ]
         }

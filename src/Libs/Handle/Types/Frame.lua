@@ -217,13 +217,10 @@ function public:setVisible(flag)
 
     BlzFrameSetVisible(self:getData(), flag)
     for child, _ in pairs(priv.children) do
-        child:setVisible(flag)
+        if not child:isTooltip() then
+            child:setVisible(flag)
+        end
     end
-    
-    -- Adopted children
-    --for child, _ in pairs(private.data[self].adopted) do
-    --    child:setVisible(flag)
-    --end
 end
 
 ---@return Frame | nil
@@ -235,24 +232,35 @@ end
 function public:setTooltip(tooltip)
     local priv = private.data[self]
 
-    if priv.is_simple then
-        -- Simple frame
-        if tooltip and not tooltip:isSimple() then
-            Log:err('Normal frame can not be a tooltip for simple frame.', 2)
-        end
-    else
-        -- Normal frame
-        if tooltip and tooltip:isSimple() then
-            Log:err('Simple frame can not be a parent of normal frame.', 2)
-        end
+    local prev = priv.tooltip
+    if prev then
+        private.data[prev].is_tooltip = false
+
+        self:removeAction(priv.tooltip_show_action)
+        self:removeAction(priv.tooltip_hide_action)
     end
-    local tooltip_handle = tooltip and tooltip:getData() or nil
 
     priv.tooltip = tooltip
-    BlzFrameSetTooltip(self:getData(), tooltip_handle)
-    --if priv.is_simple then
+    if tooltip then
+        private.data[tooltip].is_tooltip = true
+
+        priv.tooltip_show_action = priv.actions[FrameEventType.MOUSE_ENTER]:add(function(self, player)
+            if player == GetLocalPlayer() then
+                self:getTooltip():setVisible(true)
+            end
+        end)
+        priv.tooltip_hide_action = priv.actions[FrameEventType.MOUSE_LEAVE]:add(function(self, player)
+            if player == GetLocalPlayer() then
+                self:getTooltip():setVisible(false)
+            end
+        end)
         tooltip:setVisible(false)
-    --end
+    end
+end
+
+---@return boolean
+function public:isTooltip()
+    return private.data[self].is_tooltip
 end
 
 ---@return boolean
@@ -316,7 +324,11 @@ function private.newData(self, is_simple)
         y = 0,
         width = BlzFrameGetWidth(handle),
         height = BlzFrameGetHeight(handle),
+
         tooltip = nil,
+        tooltip_show_action = nil,
+        tooltip_hide_action = nil,
+        is_tooltip = false,
 
         level = 0,
         alpha = 0,
