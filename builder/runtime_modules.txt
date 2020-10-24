@@ -86,6 +86,7 @@ src\Libs\AbilityExt\Type\Casting.lua
 src\Libs\AbilityExt\Type\Data.lua
 src\Libs\AbilityExt\Settings.lua
 src\Libs\AbilityExt\Type\Targeting\Unit.lua
+src\Libs\AbilityExt\Type\Targeting\Friend.lua
 src\Libs\Buff\API.lua
 src\Libs\Buff\Container.lua
 src\Libs\Buff\Buff.lua
@@ -123,6 +124,9 @@ src\Libs\Frame\Origin\Minimap.lua
 src\Libs\Frame\Origin\Portrait.lua
 src\Libs\Frame\Origin\SkillButton.lua
 src\Libs\Frame\Origin\Tooltip.lua
+src\Interface\Buff\Panel.lua
+src\Interface\Buff\Button.lua
+src\Interface\Buff\ButtonFdf.lua
 src\Interface\Minimap.lua
 src\Interface\Skill\Panel.lua
 src\Interface\Skill\Button.lua
@@ -130,10 +134,9 @@ src\Interface\Skill\ButtonFdf.lua
 src\Interface\Skill\Charges.lua
 src\Interface\Skill\Cooldown.lua
 src\Interface\Skill\Hotkey.lua
-src\Interface\UnitStatus.lua
 src\Interface\UnitBars.lua
-src\Interface\UnitBuffs.lua
-src\Interface\ParamList.lua
+src\Interface\Utils\AutoBar.lua
+src\Interface\UnitPortrait.lua
 src\Interface\ShowDamage.lua
 src\Hero\CorruptedPriest\Unit.lua
 src\Hero\CorruptedPriest\LifeForceShield.lua

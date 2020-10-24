@@ -101,6 +101,9 @@ function UtilsFunctions.pairsByKeys(t, f)
     return iter
 end
 
+---@param str string
+---@param sep string
+---@return string
 function UtilsFunctions.splitStr(str, sep)
     if sep == nil then
         sep = "%s"
@@ -111,6 +114,21 @@ function UtilsFunctions.splitStr(str, sep)
         table.insert(t, part)
     end
     return t
+end
+
+---@param num number
+---@param precision integer
+---@return string
+function UtilsFunctions.num2str(num, precision)
+    num = math.floor(num * 10^precision)
+    local s_num = tostring(num)
+    local len = s_num:len()
+    if len == 1 then
+        s_num = '0'..s_num
+        len = len + 1
+    end
+
+    return s_num:sub(1, len - precision)..'.'..s_num:sub(len - precision + 1)
 end
 
 return UtilsFunctions

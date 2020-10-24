@@ -48,8 +48,6 @@ end
 function public:set(charges, ignore_max)
     local priv = private.data[self]
 
-    print(charges, priv.max_charges)
-
     local prev_charges = priv.charges
 
     if charges > priv.max_charges then

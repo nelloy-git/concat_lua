@@ -24,6 +24,7 @@ UtilsLibAPI.int2id = Functions.int2id or error('')
 UtilsLibAPI.isType = Functions.checkType or error('')
 UtilsLibAPI.isTypeErr = Functions.isTypeErr or error('')
 UtilsLibAPI.getEnum = Functions.getUniqueNumber or error('')
+UtilsLibAPI.num2str = Functions.num2str or error('')
 UtilsLibAPI.pairsByKeys = Functions.pairsByKeys or error('')
 UtilsLibAPI.splitStr = Functions.splitStr or error('')
 ---@type UtilsSettings

@@ -49,27 +49,22 @@ end
 --- Should consume resources.
 ---@param abil AbilityExt
 function public:start(abil)
-    print('Casting start')
 end
 
 ---@param abil AbilityExt
 function public:loop(abil)
-    print('Casting loop')
 end
 
 ---@param abil AbilityExt
 function public:cancel(abil)
-    print('Casting cancel')
 end
 
 ---@param abil AbilityExt
 function public:interrupt(abil)
-    print('Casting interrupt')
 end
 
 ---@param abil AbilityExt
 function public:finish(abil)
-    print('Casting finish')
 end
 
 --=========

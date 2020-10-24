@@ -67,13 +67,19 @@ function public:setBuffContainer(container)
     if container then isTypeErr(container, BuffContainer, 'container') end
     local priv = private.data[self]
 
-    local buff_list = container and container:getAll() or {}
-
-    for i = 1, priv.max_buffs do
-        ---@type Buff
-        local buff = buff_list[i]
-        priv.buttons[i]:setBuff(buff)
+    local prev = priv.container
+    if prev then
+        private.container2interface[prev] = nil
+        prev:removeAction(priv.changed_action)
     end
+
+    priv.container = container
+    if container then
+        private.container2interface[container] = self
+        priv.changed_action = container:addChangedAction(private.updateBuffs)
+    end
+
+    private.updateBuffs(container)
 end
 
 --=========
@@ -91,9 +97,13 @@ function private.newData(self, max_buffs)
         max_buffs = max_buffs,
         per_line = 10,
 
+        container = nil,
+        changed_action = nil,
+
         buttons = {},
     }
     private.data[self] = priv
+    self:setAlpha(0)
 
     for i = 1, max_buffs do
         local btn = BuffButton.new()
@@ -121,11 +131,11 @@ function private.updateSize(self)
     local height = self:getHeight()
 
     local count = priv.max_buffs
-    local w = 0.8 * width / priv.per_line
-    local h = private.getLineHeight(0.8 * height, priv.max_buffs, priv.per_line)
+    local w = width / priv.per_line
+    local h = private.getLineHeight(height, priv.max_buffs, priv.per_line)
 
     local p = 0
-    local l = 1
+    local l = 0
     for i = 1, count do
         p = p + 1
         if p > priv.per_line then
@@ -133,11 +143,29 @@ function private.updateSize(self)
             l = l + 1
         end
 
-        local x = 0.1 * width + (p - 1) * w
-        local y = 0.1 * height + l * h
+        local x = (p - 1) * w
+        local y = l * h
 
         priv.buttons[i]:setPos(x, y)
         priv.buttons[i]:setSize(w, h)
+    end
+end
+
+---@type BuffContainerCallback
+private.updateBuffs = function(container)
+    if not container then
+        return
+    end
+
+    ---@type InterfaceBuffPanel
+    local self = private.container2interface[container]
+    local priv = private.data[self]
+
+    local buff_list = container and container:getAll() or {}
+    for i = 1, priv.max_buffs do
+        ---@type Buff
+        local buff = buff_list[i]
+        priv.buttons[i]:setBuff(buff)
     end
 end
 

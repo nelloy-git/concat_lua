@@ -78,7 +78,6 @@ function public:send(abil_id, targets)
         end
     end
 
-    print('Sending targets: '..msg)
     DataSyncPublic.send(self, msg)
 end
 
@@ -135,7 +134,6 @@ end
 function private.originCallback(self, msg, source)
     local priv = private.data[self]
 
-    print('Received targets: '..msg)
     local abil_id, targets = private.parse(msg)
     priv.actions:run(self, abil_id, targets, source)
 end

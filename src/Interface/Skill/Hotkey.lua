@@ -110,7 +110,7 @@ end
 ---@param is_down boolean
 function private.keyPressedCallback(self, key, is_down, pl)
     local priv = private.data[self]
-    if pl ~= GetLocalPlayer() then
+    if pl ~= GetLocalPlayer() or not self:isVisible() then
         return
     end
 
@@ -142,13 +142,11 @@ end
 private.fdf = FdfNormalImage.new('InterfaceSkillHotkey')
 private.fdf:setWidth(0.01)
 private.fdf:setHeight(0.01)
---private.fdf:setBackgroundTileMode(true)
---private.fdf:setBackgroundTileSize(0.2)
 private.fdf:setBackground('Replaceabletextures\\Teamcolor\\Teamcolor27.blp')
 private.fdf:setBlendAll(true)
-private.fdf:setInsets(0.0005, 0.0005, 0.0005, 0.0005)
+private.fdf:setInsets(0, 0, 0, 0)
 private.fdf:setCornerFlags('UL|UR|BL|BR|T|L|B|R')
-private.fdf:setCornerSize(0.0025)
+private.fdf:setCornerSize(0.00125)
 private.fdf:setEdgeFile('UI\\Widgets\\ToolTips\\Human\\human-tooltip-border')
 
 return static

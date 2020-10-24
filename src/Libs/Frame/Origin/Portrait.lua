@@ -10,6 +10,9 @@ local Class = lib_dep.Class or error('')
 local HandleLib = lib_dep.Handle or error('')
 local Frame = HandleLib.Frame or error('')
 local FramePublic = Class.getPublic(Frame)
+---@type UtilsLib
+local UtilsLib = lib_dep.Utils or error('')
+local Log = UtilsLib.Log or error('')
 
 ---@type FrameScreen
 local Screen = require(lib_path..'Screen')
@@ -31,45 +34,77 @@ BlzFrameClearAllPoints(handle)
 ---@class FrameOriginPortrait
 local Portrait = Frame.link(handle, false)
 Portrait:setParent(nil)
-Portrait:setPos(0.4, 0.3)
-Portrait:setSize(0.1, 0.1)
-
----@param width number
----@param height number
-function Portrait:setSize(width, height)
-    width = 0.8 / Screen.getWidth() * width
-    FramePublic.setSize(self, width, height)
-end
-
----@return number
-function Portrait:getWidth()
-    return Screen.getWidth() / 0.8 * FramePublic.getWidth(Portrait)
-end
+local private = {
+    parent = nil,
+    x = 0,
+    y = 0,
+    w = 0,
+    h = 0
+}
 
 ---@param x number
 ---@param y number
 function Portrait:setPos(x, y)
-    x = 0.8 / Screen.getWidth() * (x - Screen.getX0())
-    FramePublic.setPos(self, x, y)
+    local parent = private.parent
+    private.x = parent and parent:getAbsX() + x or x
+    private.y = parent and parent:getAbsY() + y or y
+
+    local real_x = 0.8 / Screen.getWidth() * (x - Screen.getX0())
+    local real_y = y
+    local real_w = FramePublic.getWidth(self)
+    local real_h = FramePublic.getHeight(self)
+
+    real_x = real_x < 0.001 and 0.001 or real_x
+    real_y = real_y < 0.001 and 0.001 or real_y
+    real_x = (real_x + real_w) > 0.799 and 0.799 - real_w or real_x
+    real_y = (real_y + real_h) > 0.599 and 0.599 - real_h or real_y
+
+    FramePublic.setPos(self, real_x, real_y)
+    FramePublic.setSize(self, real_w, real_h)
 end
 
 ---@return number
 function Portrait:getX()
-    return Screen.getWidth() / 0.8 * FramePublic.getX(Portrait)
+    return private.x
 end
 
--- TODO getAbsX
+---@param width number
+---@param height number
+function Portrait:setSize(width, height)
+    private.w = width
+    private.h = height
 
-local prev_w = Screen.getWidth()
+    local real_x = FramePublic.getX(self)
+    local real_y = FramePublic.getY(self)
+    local real_w = 0.8 / Screen.getWidth() * width
+    local real_h = height
+
+    real_x = real_x < 0.001 and 0.001 or real_x
+    real_y = real_y < 0.001 and 0.001 or real_y
+    real_x = (real_x + real_w) > 0.799 and 0.799 - real_w or real_x
+    real_y = (real_y + real_h) > 0.599 and 0.599 - real_h or real_y
+
+    FramePublic.setPos(self, real_x, real_y)
+    FramePublic.setSize(self, real_w, real_h)
+end
+
+---@return number
+function Portrait:getWidth()
+    return private.w
+end
+
+--- Disabled
+---@param parent Frame
+function Portrait:setParent(parent)
+    Log:wrn('Portrait: setParent function is disabled.')
+end
+
 Screen.addChangedAction(function(x0, y0, w, h)
-    local k = prev_w / 0.8
-    prev_w = w
-
-    local real_w = k * FramePublic.getWidth(Portrait)
-    Portrait:setSize(real_w, Portrait:getHeight())
-
-    local real_x = k * FramePublic.getAbsX(Portrait)
-    Portrait:setPos(real_x, Portrait:getY())
+    Portrait:setSize(private.w, private.h)
+    Portrait:setPos(private.x, private.y)
 end)
+
+Portrait:setPos(private.x, private.y)
+Portrait:setSize(private.w, private.h)
 
 return Portrait

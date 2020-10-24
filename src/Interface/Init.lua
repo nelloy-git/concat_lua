@@ -6,6 +6,7 @@
 local AbilLib = require(LibList.AbilityExtLib) or error('')
 ---@type BuffLib
 local BuffLib = require(LibList.BuffLib) or error('')
+local BuffContainer = BuffLib.Container or error('')
 ---@type FrameLib
 local FrameLib = require(LibList.FrameLib) or error('')
 ---@type HandleLib
@@ -21,12 +22,16 @@ local ParamUnitContainer = ParamLib.UnitContainer or error('')
 local UtilsLib = require(LibList.UtilsLib) or error('')
 local Log = UtilsLib.Log or error('')
 
+---@type InterfaceBuffPanelClass
+local InterfaceBuffPanel = require('Interface.Buff.Panel') or error('')
 ---@type InterfaceMinimapClass
 local InterfaceMinimap = require('Interface.Minimap') or error('')
 ---@type InterfaceSkillPanelClass
 local InterfaceSkillPanel = require('Interface.Skill.Panel') or error('')
----@type InterfaceUnitStatusClass
-local InterfaceUnitStatus = require('Interface.UnitStatus') or error('')
+---@type InterfaceUnitBarsClass
+local InterfaceUnitBars = require('Interface.UnitBars') or error('')
+---@type InterfaceUnitPortraitClass
+local InterfaceUnitPortrait = require('Interface.UnitPortrait') or error('')
 
 local DamageText = require('Interface.ShowDamage') or error('')
 
@@ -51,25 +56,12 @@ for pos, btn in pairs(FrameLib.Origin.SkillButton) do
     btn:setVisible(false)
 end
 
--------------
--- Minimap --
--------------
-
-Interface.Minimap = InterfaceMinimap.new()
-Interface.Minimap:setSize(0.15, 0.15)
---Interface.Minimap:setPos(0.4, 0.3)
-FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
-    --Interface.Minimap:setPos(0.4, 0.3)
-    Interface.Minimap:setPos(x0, y0 + h - Interface.Minimap:getHeight())
-end)
-
 -----------------
 -- ChatEditBox --
 -----------------
 
 Interface.ChatEditBox = FrameLib.Origin.ChatEditBox
 Interface.ChatEditBox:setVisible(false)
---Interface.ChatEditBox:setPos(0, 0)
 Interface.ChatEditBox:setSize(0.3, 0.025)
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
     local map_w = Interface.Minimap:getWidth()
@@ -88,56 +80,83 @@ Interface.ChatBox:setParent(Interface.ChatEditBox)
 Interface.ChatBox:setPos(0, Interface.ChatEditBox:getHeight() + Interface.ChatBox:getHeight())
 Interface.ChatBox:setSize(0.3, 0.25)
 
+-------------
+-- Minimap --
+-------------
+
+Interface.Minimap = InterfaceMinimap.new()
+Interface.Minimap:setSize(0.12, 0.12)
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    Interface.Minimap:setPos(x0, y0 + h - Interface.Minimap:getHeight())
+end)
+
 --------------
 -- Portrait --
 --------------
 
-Interface.UnitStatus = InterfaceUnitStatus.new()
-Interface.UnitStatus:setSize(0.3, 0.08)
-Interface.UnitStatus:setPos(0, 0)
-Interface.UnitStatus:setVisible(false)
+Interface.UnitPortrait = InterfaceUnitPortrait.new()
+Interface.UnitPortrait:setPos(0, 0.03)
+Interface.UnitPortrait:setSize(0.075, 0.075)
+Interface.UnitPortrait:setVisible(false)
 
 FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
-    Interface.UnitStatus:setPos(x0, 0.03)
+    Interface.UnitPortrait:setPos(x0, 0.03)
 end)
 
----@type Unit
-local selected = nil
 InputLib.addSelectionAction(function(group, pl)
     if pl ~= GetLocalPlayer() then
         return
     end
 
-    if #group == 1 then
-        local target = group[1]
-        if not target then Log:err('Can not find linked Unit') end
-        selected = target
-
-        Interface.UnitStatus:setVisible(true)
-
-        local buffs = BuffLib.Container.get(selected)
-        Interface.UnitStatus:setBuffContainer(buffs)
-
-        local params = ParamLib.UnitContainer.get(selected)
-        Interface.UnitStatus:setParameters(params)
-    else
-        selected = nil
-        Interface.UnitStatus:setVisible(false)
-    end
+    Interface.UnitPortrait:setVisible(#group == 1)
 end)
 
-local stats_time = Timer.new()
-stats_time:start(0.01, true, function()
-    if selected then
-        if selected:getHealth() > 0.5 then
-            Interface.UnitStatus:setShield(BuffLib.getShield(selected), BuffLib.getMaxShield(selected))
-            Interface.UnitStatus:setHealth(selected:getHealth(), selected:getMaxHealth())
-            Interface.UnitStatus:setMana(selected:getMana(), selected:getMaxMana())
-        else
-            Interface.UnitStatus:setVisible(false)
-        end
-    end
+---------------
+-- Unit bars --
+---------------
+
+Interface.UnitBars = InterfaceUnitBars.new()
+Interface.UnitBars:setParent(Interface.UnitPortrait)
+Interface.UnitBars:setVisible(false)
+
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    Interface.UnitBars:setPos(Interface.UnitPortrait:getWidth(), 0)
+    Interface.UnitBars:setSize(2 * Interface.UnitPortrait:getWidth(),
+                               Interface.UnitPortrait:getHeight() / 3)
 end)
+
+InputLib.addSelectionAction(function(group, pl)
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
+    Interface.UnitBars:setVisible(#group == 1)
+    Interface.UnitBars:setTarget(#group == 1 and group[1] or nil)
+end)
+
+----------------
+-- Unit buffs --
+----------------
+
+Interface.UnitBuffs = InterfaceBuffPanel.new(20)
+Interface.UnitBuffs:setParent(Interface.UnitBars)
+Interface.UnitBuffs:setVisible(false)
+
+FrameLib.Screen.addChangedAction(function (x0, y0, w, h)
+    Interface.UnitBuffs:setPos(0, Interface.UnitBars:getHeight())
+    Interface.UnitBuffs:setSize(Interface.UnitBars:getWidth(),
+                                Interface.UnitBars:getWidth() / 5)
+end)
+
+InputLib.addSelectionAction(function(group, pl)
+    if pl ~= GetLocalPlayer() then
+        return
+    end
+
+    Interface.UnitBuffs:setVisible(#group == 1)
+    Interface.UnitBuffs:setBuffContainer(#group == 1 and BuffContainer.get(group[1]) or nil)
+end)
+
 
 -------------------
 -- Skill buttons --

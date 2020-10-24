@@ -27,6 +27,8 @@ AbilityLibAPI.Targeting = {}
 AbilityLibAPI.Targeting.Type = require(path..'Type.Targeting') or error('')
 ---@type AbilityExtTypeTargetingUnitClass
 AbilityLibAPI.Targeting.Unit = require(path..'Type.Targeting.Unit') or error('')
+---@type AbilityExtTypeTargetingFriendClass
+AbilityLibAPI.Targeting.Friend = require(path..'Type.Targeting.Friend') or error('')
 
 AbilityLibAPI.Casting = {}
 ---@type AbilityExtTypeCastingClass

@@ -30,9 +30,6 @@ function StringCommand.register(cmd_str, func)
 end
 
 --- Executes string cmd if registered.
---- Example:
---- StringCommand.register('-print', print)
---- StringCommand.execute('-print arg1 arg2 arg3')
 ---@param cmd string
 ---@return any
 function StringCommand.execute(cmd)

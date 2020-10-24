@@ -190,6 +190,11 @@ function public:setScale(scale)
     SetUnitScale(self:getData(), scale, scale, scale)
 end
 
+---@return number
+function public:getCollisionSize()
+    return BlzGetUnitCollisionSize(self:getData())
+end
+
 --=========
 -- Private
 --=========
