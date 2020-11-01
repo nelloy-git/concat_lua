@@ -6,7 +6,7 @@
         {
             "label": "Build Linux",
             "type": "shell",
-            "command": " lua5.3 ./builder/builder.lua src dst map_data"
+            "command": "lua5.3 ./builder/builder.lua src dst map_data"
         },
         {
             "label": "Build Windows",

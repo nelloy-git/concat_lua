@@ -11,9 +11,9 @@ local Stack = {
 }
 -- Created in compiletime.
 local all_paths = {}
-CompiletimeFinalToRuntime(function()
-    all_paths = Compiletime(all_paths)
-end)
+--CompiletimeFinalToRuntime(function()
+--    all_paths = Compiletime(all_paths)
+--end)
 
 ---@param lib_name string
 ---@return string

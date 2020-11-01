@@ -1,5 +1,15 @@
-require('Libs.Lib')
+if IsGame() then
+    return
+end
 
+LibManager = fake_require('LibManager.API')
+
+LibManager.init('Lib', false)
+local LuaClass = LibManager.load('https://github.com/nelloy-git/LuaClass.git')
+require(LuaClass)
+
+return
+--[[
 --local Class = require(LibList.ClassLib)
 
 ---@type ParameterLib
@@ -32,3 +42,4 @@ local param_container2 = UnitParam.get(u2)
 param_container2:add(Param.PATK, Value.BASE, 10)
 param_container2:add(Param.MDEF, Value.BASE, 5)
 param_container2:add(Param.LIFE, Value.BASE, 1000)
+]]

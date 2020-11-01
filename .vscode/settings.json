@@ -11,14 +11,11 @@
     },
     "Lua.workspace.preloadFileSize": 10000,
     "Lua.diagnostics.globals": [
-        "Compiletime",
-        "IsCompiletime",
-        "GetSrcDir",
-        "GetDstDir",
-        "CompileFinal",
-        "CompiletimeFinalToRuntime",
-        "Lib",
-        "LibList"
+        "IsGame",
+        "Macro",
+        "GetSrc",
+        "GetDst",
+        "fake_require"
     ],
     "files.associations": {
         "chrono": "cpp"
