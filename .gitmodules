@@ -1,0 +1,12 @@
+[submodule "wc3-builder"]
+	path = wc3-builder
+	url = https://github.com/nelloy-git/wc3-builder
+[submodule "src/luasocket"]
+	path = src/luasocket
+	url = https://github.com/diegonehab/luasocket.git
+[submodule "src/Lib/src\\Lib"]
+	path = src/Lib/src\\Lib
+	url = https://github.com/nelloy-git/LuaClass.git
+[submodule "src/Lib/LuaClass"]
+	path = src/Lib/LuaClass
+	url = https://github.com/nelloy-git/LuaClass.git
