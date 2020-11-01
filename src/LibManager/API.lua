@@ -71,7 +71,6 @@ function LibManager.load(url)
     if not found then
         GitUtils.clone(root, url)
         LibManager.updateRepos()
-        --os.execute('git submodule foreach "git fetch && git reset --hard origin/main"')
     end
     found = findName(url)
 

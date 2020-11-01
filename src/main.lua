@@ -5,8 +5,9 @@ end
 LibManager = fake_require('LibManager.API')
 
 LibManager.init('Lib', false)
-local LuaClass = LibManager.load('https://github.com/nelloy-git/LuaClass.git')
-require(LuaClass)
+local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass.git'))
+
+local Test = LuaClass.new('TestClass')
 
 return
 --[[
