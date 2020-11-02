@@ -4,3 +4,12 @@
 [submodule "src/Lib/LuaClass"]
 	path = src/Lib/LuaClass
 	url = https://github.com/nelloy-git/LuaClass.git
+[submodule "src/Lib/Wc3Utils"]
+	path = src/Lib/Wc3Utils
+	url = https://github.com/nelloy-git/Wc3Utils.git
+[submodule "src/Lib/Wc3Binary"]
+	path = src/Lib/Wc3Binary
+	url = https://github.com/nelloy-git/Wc3Binary.git
+[submodule "src/Lib/Wc3Input"]
+	path = src/Lib/Wc3Input
+	url = https://github.com/nelloy-git/Wc3Input.git

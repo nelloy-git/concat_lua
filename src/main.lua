@@ -6,8 +6,13 @@ LibManager = fake_require('LibManager.API')
 
 LibManager.init('Lib', false)
 local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass.git'))
+local Wc3Utils = require(LibManager.load('https://github.com/nelloy-git/Wc3Utils.git'))
+local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Binary.git'))
+local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
 
-local Test = LuaClass.new('TestClass')
+local function copyFile(path)
+    
+end
 
 return
 --[[

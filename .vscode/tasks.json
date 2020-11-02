@@ -6,12 +6,12 @@
         {
             "label": "Build Linux",
             "type": "shell",
-            "command": "lua5.3 ./builder/builder.lua src dst map_data"
+            "command": "lua5.3 ./wc3-builder/main.lua src dst"
         },
         {
             "label": "Build Windows",
             "type": "shell",
-            "command": "builder\\lua53.exe builder\\builder.lua src dst map_data"
+            "command": "wc3-builder\\lua53.exe wc3-builder\\main.lua src dst"
         },
         {
             "label": "Run",

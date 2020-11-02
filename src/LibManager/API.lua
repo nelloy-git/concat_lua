@@ -69,7 +69,7 @@ end
 function LibManager.load(url)
     local found = findName(url)
     if not found then
-        GitUtils.clone(root, url)
+        GitUtils.updateRepo(root, url)
         LibManager.updateRepos()
     end
     found = findName(url)
@@ -78,6 +78,7 @@ function LibManager.load(url)
 end
 
 local stack = {}
+local depencies = {}
 -- Override require
 local real_require = _G.require
 function require(package)
@@ -97,10 +98,24 @@ function LibManager.startLib(name)
     end
 
     table.insert(stack, root:sub(#GetSrc() + 2)..'.'..name)
+    table.insert(depencies, {})
+end
+
+function LibManager.getCurLib()
+    return stack[#stack]
+end
+
+function LibManager.addDepency(name, url)
+    depencies[#depencies][name] = LibManager.load(url)
+end
+
+function LibManager.getDepency(name)
+    return real_require(depencies[#depencies][name])
 end
 
 function LibManager.endLib()
     table.remove(stack, #stack)
+    table.remove(depencies, #depencies)
 end
 
 return LibManager

@@ -9,20 +9,9 @@ function GitUtils.mkdir(path)
     os.execute('mkdir '..path)
 end
 
-local function readGitmodules()
-    local tmp = 'tmp.txt'
-    GitUtils.writeFile('', tmp)
-    os.execute((sep == '/' and 'cat' or 'echo')..' > tmp.txt')
-    local res = GitUtils.readFile(tmp)
-    res = res:gsub('%s+', '')
-    os.execute((sep == '/' and 'rm ' or 'del ')..tmp)
-
-    return res
-end
-
 ---@param path string
 ---@param url string
-function GitUtils.clone(path, url)
+function GitUtils.updateRepo(path, url)
     local found = GitUtils.readFile('.gitmodules'):find(url, 1, true)
 
     if found then

@@ -2,8 +2,7 @@
     "Lua.workspace.ignoreDir": [
         ".vscode",
         "dst",
-        "builder",
-        "src/compiletime"
+        "wc3-builder"
     ],
     "Lua.workspace.library": {
         "./lib": true,
@@ -15,7 +14,8 @@
         "Macro",
         "GetSrc",
         "GetDst",
-        "fake_require"
+        "fake_require",
+        "BuildFinal"
     ],
     "files.associations": {
         "chrono": "cpp"
@@ -25,13 +25,17 @@
     "Lua.completion.callSnippet": "Both",
     "Lua.diagnostics.severity": {
         "redefined-local": "Warning",
-        "newfield-call": "Warning"
+        "newfield-call": "Warning",
+        "emmy-lua": "Warning"
     },
-    "Lua.workspace.maxPreload": 1000,
+    "Lua.workspace.maxPreload": 500,
     "Lua.runtime.path": [
         "?.lua",
         "?/init.lua",
         "?/?.lua",
         "./src/?"
     ],
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.workspace.ignoreSubmodules": false,
+    "Lua.workspace.useGitIgnore": false,
 }
