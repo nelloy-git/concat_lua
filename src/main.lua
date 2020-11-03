@@ -1,8 +1,8 @@
+LibManager = require('LibManager.API')
+
 if IsGame() then
     return
 end
-
-LibManager = fake_require('LibManager.API')
 
 LibManager.init('Lib', false)
 local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass.git'))
@@ -10,9 +10,29 @@ local Wc3Utils = require(LibManager.load('https://github.com/nelloy-git/Wc3Utils
 local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Binary.git'))
 local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
 
-local function copyFile(path)
-    
+local sep = package.config:sub(1,1)
+
+local function scanDir(path)
+    local pfile
+    if sep == '/' then
+        pfile = io.popen('ls -a "'..path..'"')
+    else
+        pfile = io.popen('dir '..path..' /b/a')
+    end
+
+    local list = {}
+    for filename in pfile:lines() do
+        table.insert(list, filename)
+    end
+    pfile:close()
+    return list
 end
+
+local files = scanDir('map_data')
+for i = 1, #files do
+    os.execute('copy map_data'..sep..files[i]..' '..GetDst()..sep..files[i]..' > NUL')
+end
+
 
 return
 --[[
