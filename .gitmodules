@@ -10,12 +10,12 @@
 [submodule "src/Lib/Wc3Binary"]
 	path = src/Lib/Wc3Binary
 	url = https://github.com/nelloy-git/Wc3Binary.git
-
-
-
-
-
-
 [submodule "src/Lib/Wc3Input"]
 	path = src/Lib/Wc3Input
 	url = https://github.com/nelloy-git/Wc3Input.git
+[submodule "src/Lib/Wc3Parameter"]
+	path = src/Lib/Wc3Parameter
+	url = https://github.com/nelloy-git/Wc3Parameter.git
+[submodule "src/Lib/Wc3Damage"]
+	path = src/Lib/Wc3Damage
+	url = https://github.com/nelloy-git/Wc3Damage.git

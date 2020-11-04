@@ -43,14 +43,14 @@ function GitUtils.removeRepo(path)
     local gitmodule = FileUtils.readFile('.gitmodules')
     local module_start = gitmodule:find('[submodule \"'..path..'\"]', 1, true)
     local module_end = gitmodule:find('[submodule', module_start + 1, true) or #gitmodule
-    gitmodule = gitmodule:sub(1, module_start - 1)..gitmodule:sub(module_end)
+    gitmodule = gitmodule:sub(1, module_start - 1)..gitmodule:sub(module_end + 1)
     FileUtils.writeFile(gitmodule, '.gitmodules')
 
     -- Remove from .git/confog
     local config = FileUtils.readFile('.git'..sep..'config')
     local config_start = config:find('[submodule \"'..path..'\"]', 1, true)
     local config_end = config:find('[submodule', config_start + 1, true) or #config
-    config = config:sub(1, config_start - 1)..config:sub(config_end)
+    config = config:sub(1, config_start - 1)..config:sub(config_end + 1)
     FileUtils.writeFile(config, '.git'..sep..'config')
 
     path = path:gsub('/', sep)

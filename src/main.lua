@@ -9,6 +9,7 @@ local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass
 local Wc3Utils = require(LibManager.load('https://github.com/nelloy-git/Wc3Utils.git'))
 local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Binary.git'))
 local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
+local Wc3Damage = require(LibManager.load('https://github.com/nelloy-git/Wc3Damage.git'))
 
 local sep = package.config:sub(1,1)
 
