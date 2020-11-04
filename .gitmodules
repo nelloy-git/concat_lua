@@ -19,3 +19,6 @@
 [submodule "src/Lib/Wc3Parameter"]
 	path = src/Lib/Wc3Parameter
 	url = https://github.com/nelloy-git/Wc3Parameter.git
+[submodule "src/Lib/Wc3Handle"]
+	path = src/Lib/Wc3Handle
+	url = https://github.com/nelloy-git/Wc3Handle.git

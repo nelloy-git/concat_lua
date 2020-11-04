@@ -11,6 +11,7 @@ local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Bina
 local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
 local Wc3Damage = require(LibManager.load('https://github.com/nelloy-git/Wc3Damage.git'))
 local Wc3Parameter = require(LibManager.load('https://github.com/nelloy-git/Wc3Parameter.git'))
+local Wc3Handle = require(LibManager.load('https://github.com/nelloy-git/Wc3Handle.git'))
 
 local sep = package.config:sub(1,1)
 
