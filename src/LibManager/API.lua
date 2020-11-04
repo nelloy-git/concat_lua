@@ -98,6 +98,9 @@ function LibManager.load(url)
         LibManager.updateRepos()
     end
     found = findName(url)
+    if not used[found] then
+        print('Using '..found)
+    end
     used[found] = true
 
     return apis[found]

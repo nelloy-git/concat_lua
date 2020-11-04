@@ -16,3 +16,6 @@
 [submodule "src/Lib/Wc3Damage"]
 	path = src/Lib/Wc3Damage
 	url = https://github.com/nelloy-git/Wc3Damage.git
+[submodule "src/Lib/Wc3Parameter"]
+	path = src/Lib/Wc3Parameter
+	url = https://github.com/nelloy-git/Wc3Parameter.git
