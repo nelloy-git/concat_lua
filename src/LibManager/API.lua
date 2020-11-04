@@ -98,7 +98,6 @@ function LibManager.load(url)
         LibManager.updateRepos()
     end
     found = findName(url)
-    print(found, url)
     used[found] = true
 
     return apis[found]
@@ -136,7 +135,11 @@ function LibManager.addDepency(name, url)
 end
 
 function LibManager.getDepency(name)
-    return real_require(depencies[#depencies][name])
+    local depency = depencies[#depencies][name]
+    if not depency then
+        error('LibManager: can not find depency', 2)
+    end
+    return real_require(depency)
 end
 
 function LibManager.endLib()
