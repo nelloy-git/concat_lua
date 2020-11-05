@@ -107,10 +107,10 @@ function private.newData(self)
     priv.hp_bar:setBorder('UI\\Feedback\\XPBar\\human-xpbar-border.blp')
     priv.hp_bar:setPrecision(0)
     priv.hp_bar:setUpdateCurFunc(function()
-        return priv.target and priv.target:getHealth() or 0
+        return priv.target and priv.target:getLife() or 0
     end)
     priv.hp_bar:setUpdateMaxFunc(function()
-        return priv.target and priv.target:getMaxHealth() or 0
+        return priv.target and priv.target:getMaxLife() or 0
     end)
 
     priv.mp_bar:setParent(priv.hp_bar)
