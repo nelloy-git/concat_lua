@@ -1,9 +1,5 @@
 LibManager = require('LibManager.API')
 
-if IsGame() then
-    return
-end
-
 LibManager.init('Lib', false)
 local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass.git'))
 local Wc3Utils = require(LibManager.load('https://github.com/nelloy-git/Wc3Utils.git'))
@@ -12,6 +8,10 @@ local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input
 local Wc3Damage = require(LibManager.load('https://github.com/nelloy-git/Wc3Damage.git'))
 local Wc3Parameter = require(LibManager.load('https://github.com/nelloy-git/Wc3Parameter.git'))
 local Wc3Handle = require(LibManager.load('https://github.com/nelloy-git/Wc3Handle.git'))
+
+if IsGame() then
+    return
+end
 
 local sep = package.config:sub(1,1)
 
@@ -31,9 +31,26 @@ local function scanDir(path)
     return list
 end
 
+local function isExist(path)
+    local ok, err, code = os.rename(path, path)
+    if not ok then
+       if code == 13 then
+          -- Permission denied, but it exists
+          return true
+       end
+    end
+    return ok, err
+end
+
 local files = scanDir('map_data')
 for i = 1, #files do
-    os.execute('copy map_data'..sep..files[i]..' '..GetDst()..sep..files[i]..' > NUL')
+    if sep == '\\' then
+        os.execute('copy map_data'..sep..files[i]..' '..GetDst()..sep..files[i]..' > NUL')
+    elseif sep == '/' then
+        if isExist('map_data'..sep..files[i]) then
+            os.execute('cp map_data'..sep..files[i]..' '..GetDst()..sep..files[i])
+        end
+    end
 end
 
 
