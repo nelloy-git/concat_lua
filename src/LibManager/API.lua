@@ -52,7 +52,7 @@ end)
 --- Initialize LibManager.
 ---@param libs_path string
 function LibManager.init(libs_path)
-    root = GetSrc()..sep..libs_path
+    root = (GetSrc and GetSrc()..sep or '')..libs_path
     if IsGame() then
         return
     end
