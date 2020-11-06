@@ -20,7 +20,7 @@ function GitUtils.updateRepo(path, url)
         else
             -- Windows
             os.execute('cd '..path..'&&'..
-                       'git submodule update > NUL')
+                       'git submodule update -q > NUL')
         end
     else
         if sep == '/' then
@@ -30,7 +30,7 @@ function GitUtils.updateRepo(path, url)
         else
             -- Windows
             os.execute('cd '..path..'&&'..
-                       'git submodule add '..url..' > NUL')
+                       'git submodule add -q '..url..' > NUL')
         end
     end
     os.execute('git add .gitmodules')
