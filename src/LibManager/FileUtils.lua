@@ -44,6 +44,18 @@ function LibManagerFileUtils.isDir(path)
     return LibManagerFileUtils.isExist(path..sep)
 end
 
+function LibManagerFileUtils.removeDir(path)
+    if sep == '/' then
+        -- Linux
+        os.execute('rm -rf '..path)
+    else
+        -- Windows
+        os.execute('cd '..path..'&&'..
+                   'del /F/S/Q *.* > NUL')
+        os.execute('rmdir /Q/S '..path)
+    end
+end
+
 ---@param path string
 ---@return string
 function LibManagerFileUtils.getFileDir(path)

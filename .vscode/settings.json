@@ -2,7 +2,11 @@
     "Lua.workspace.ignoreDir": [
         ".vscode",
         "dst",
-        "wc3-builder"
+        "wc3-builder",
+        "map",
+        "map_data",
+        "src/LibsOld",
+        "src/LibManager"
     ],
     "Lua.workspace.library": {
         "./lib": true,
@@ -28,7 +32,6 @@
         "newfield-call": "Warning",
         "emmy-lua": "Warning"
     },
-    "Lua.workspace.maxPreload": 500,
     "Lua.runtime.path": [
         "?.lua",
         "?/init.lua",
@@ -37,5 +40,4 @@
     ],
     "Lua.runtime.version": "Lua 5.3",
     "Lua.workspace.ignoreSubmodules": false,
-    "Lua.workspace.useGitIgnore": false,
 }

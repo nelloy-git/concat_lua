@@ -14,6 +14,9 @@ function GitUtils.updateRepo(path, url)
     if found then
         if sep == '/' then
             -- Linux
+            os.execute('cd '..path..'&&'..
+                       'git submodule update -q')
+
         else
             -- Windows
             os.execute('cd '..path..'&&'..
@@ -22,13 +25,13 @@ function GitUtils.updateRepo(path, url)
     else
         if sep == '/' then
             -- Linux
+            os.execute('cd '..path..'&&'..
+                       'git submodule add -q '..url)
         else
             -- Windows
             os.execute('cd '..path..'&&'..
                        'git submodule add '..url..' > NUL')
         end
-        --os.execute('cd '..path..'&&'..
-        --           'git submodule add '..url)
     end
     os.execute('git add .gitmodules')
 end
@@ -37,37 +40,45 @@ function GitUtils.removeRepo(path)
     if not GitUtils.isRepo(path) then
         error('LibManager: can not remove '..path..'. It is not a git repo.', 2)
     end
-    path = path:gsub('\\', '/')
+
+    local git_path = path:gsub('\\', '/')
 
     -- Remove from .gitsubmodules
     local gitmodule = FileUtils.readFile('.gitmodules')
-    local module_start = gitmodule:find('[submodule \"'..path..'\"]', 1, true)
-    local module_end = gitmodule:find('[submodule', module_start + 1, true) or #gitmodule
-    gitmodule = gitmodule:sub(1, module_start - 1)..gitmodule:sub(module_end + 1)
-    FileUtils.writeFile(gitmodule, '.gitmodules')
+    local module_start = gitmodule:find('[submodule \"'..git_path..'\"]', 1, true)
+    if module_start then
+        local module_end = gitmodule:find('[submodule', module_start + 1, true) or #gitmodule
+        gitmodule = gitmodule:sub(1, module_start - 1)..gitmodule:sub(module_end)
 
-    -- Remove from .git/confog
-    local config = FileUtils.readFile('.git'..sep..'config')
-    local config_start = config:find('[submodule \"'..path..'\"]', 1, true)
-    local config_end = config:find('[submodule', config_start + 1, true) or #config
-    config = config:sub(1, config_start - 1)..config:sub(config_end + 1)
-    FileUtils.writeFile(config, '.git'..sep..'config')
-
-    path = path:gsub('/', sep)
-
-    if sep == '/' then
-        -- Linux
-    else
-        -- Windows
+        local n
+        while true do
+            gitmodule, n = gitmodule:gsub("(\r?\n)%s*\r?\n", "%1")
+            if n == 0 then break end
+        end
+        FileUtils.writeFile(gitmodule, '.gitmodules')
         os.execute('git add .gitmodules')
-        os.execute('git rm --cached '..path..' > NUL')
-        os.execute('cd '..path..'&&'..
-                   'del /F/S/Q *.* > NUL')
-        os.execute('rmdir /Q/S '..path..' > NUL')
+    end
 
-        os.execute('cd '..'.git'..sep..'modules'..sep..path..'&&'..
-                   'del /F/S/Q *.* > NUL')
-                   os.execute('rmdir /Q/S '..'.git'..sep..'modules'..sep..path)
+    -- Remove from .git/config
+    local config = FileUtils.readFile('.git'..sep..'config')
+    local config_start = config:find('[submodule \"'..git_path..'\"]', 1, true)
+    if config_start then
+        local config_end = config:find('[submodule', config_start + 1, true) or #config
+        config = config:sub(1, config_start - 1)..config:sub(config_end)
+        FileUtils.writeFile(config, '.git'..sep..'config')
+    end
+
+    -- Remove cached
+    os.execute('git rm --cached '..path..(sep == '/' and ' > /dev/null' or ' > NUL'))
+
+    -- Remove from project
+    if FileUtils.isDir(path) then
+        FileUtils.removeDir(path)
+    end
+
+    -- Remove from .git/modules/
+    if FileUtils.isDir('.git'..sep..'modules'..sep..path) then
+        FileUtils.removeDir('.git'..sep..'modules'..sep..path)
     end
 end
 

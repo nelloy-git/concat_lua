@@ -5,9 +5,9 @@
 -- Include
 --=========
 
-local Class = LibManager.getDepency('LuaClass') or error('')
+local Class = require(LibManager.getDepency('LuaClass')) or error('')
 ---@type Wc3Utils
-local Wc3Utils = LibManager.getDepency('Wc3Utils') or error('')
+local Wc3Utils = require(LibManager.getDepency('Wc3Utils')) or error('')
 ---@type BinaryLib
 local BinaryLib = lib_dep.Binary or error('')
 local BinaryUnit = BinaryLib.Unit or error('')
