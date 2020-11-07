@@ -125,7 +125,8 @@ function LibManager.startLib(name)
         end
     end
 
-    table.insert(stack, root:sub(#GetSrc() + 2)..'.'..name)
+    local src = GetSrc and root:sub(#GetSrc() + 2) or root
+    table.insert(stack, src..'.'..name)
     table.insert(depencies, {})
 end
 
