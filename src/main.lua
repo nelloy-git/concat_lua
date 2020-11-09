@@ -7,6 +7,7 @@ local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Bina
 local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
 local Wc3Damage = require(LibManager.load('https://github.com/nelloy-git/Wc3Damage.git'))
 local Wc3Parameter = require(LibManager.load('https://github.com/nelloy-git/Wc3Parameter.git'))
+local Wc3FrameExt = require(LibManager.load('https://github.com/nelloy-git/Wc3FrameExt.git'))
 
 ---@type Wc3Handle
 local Wc3Handle = require(LibManager.load('https://github.com/nelloy-git/Wc3Handle.git'))
