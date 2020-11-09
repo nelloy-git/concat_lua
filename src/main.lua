@@ -1,15 +1,26 @@
 LibManager = require('LibManager.API')
 
 LibManager.init('Lib', false)
---local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass.git'))
---local Wc3Utils = require(LibManager.load('https://github.com/nelloy-git/Wc3Utils.git'))
---local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Binary.git'))
---local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
---local Wc3Damage = require(LibManager.load('https://github.com/nelloy-git/Wc3Damage.git'))
---local Wc3Parameter = require(LibManager.load('https://github.com/nelloy-git/Wc3Parameter.git'))
+local LuaClass = require(LibManager.load('https://github.com/nelloy-git/LuaClass.git'))
+local Wc3Utils = require(LibManager.load('https://github.com/nelloy-git/Wc3Utils.git'))
+local Wc3Binary = require(LibManager.load('https://github.com/nelloy-git/Wc3Binary.git'))
+local Wc3Input = require(LibManager.load('https://github.com/nelloy-git/Wc3Input.git'))
+local Wc3Damage = require(LibManager.load('https://github.com/nelloy-git/Wc3Damage.git'))
+local Wc3Parameter = require(LibManager.load('https://github.com/nelloy-git/Wc3Parameter.git'))
+
+---@type Wc3Handle
 local Wc3Handle = require(LibManager.load('https://github.com/nelloy-git/Wc3Handle.git'))
 
 if IsGame() then
+    SetCameraBounds(-3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
+    SetDayNightModels("Environment\\DNC\\DNCLordaeron\\DNCLordaeronTerrain\\DNCLordaeronTerrain.mdl", "Environment\\DNC\\DNCLordaeron\\DNCLordaeronUnit\\DNCLordaeronUnit.mdl")
+    --NewSoundEnvironment("Default")
+    --SetAmbientDaySound("LordaeronSummerDay")
+    --SetAmbientNightSound("LordaeronSummerNight")
+    --SetMapMusic("Music", true, 0)
+    InitBlizzard()
+
+    Wc3Handle.Unit.new(FourCC('hfoo'), 0, 0, Player(0))
     return
 end
 
