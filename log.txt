@@ -1,0 +1,7 @@
+[0.014] {Msg} Created new FdfFile 'FrameExtDefaultFdf' containing:     FrameExtBackdrop
+    FrameExtGlueTextButton
+    FrameExtHighlight
+    FrameExtSimpleFrame
+    FrameExtSimpleStatusBar
+    FrameExtSimpleText
+    FrameExtText
