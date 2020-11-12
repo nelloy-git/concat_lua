@@ -31,3 +31,6 @@
 [submodule "src/Lib/Wc3AbilityExt"]
 	path = src/Lib/Wc3AbilityExt
 	url = https://github.com/nelloy-git/Wc3AbilityExt.git
+[submodule "src/Lib/Wc3BuffExt"]
+	path = src/Lib/Wc3BuffExt
+	url = https://github.com/nelloy-git/Wc3BuffExt.git
