@@ -13,6 +13,8 @@ local Wc3FrameExt = require(LibManager.load('https://github.com/nelloy-git/Wc3Fr
 local Wc3Handle = require(LibManager.load('https://github.com/nelloy-git/Wc3Handle.git'))
 ---@type Wc3AbilityExt
 local Wc3AbilityExt = require(LibManager.load('https://github.com/nelloy-git/Wc3AbilityExt.git'))
+---@type Wc3BuffExt
+local Wc3BuffExt = require(LibManager.load('https://github.com/nelloy-git/Wc3BuffExt.git'))
 
 if IsGame() then
     SetCameraBounds(-3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
