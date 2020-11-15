@@ -15,22 +15,26 @@ function GitUtils.updateRepo(path, url)
         if sep == '/' then
             -- Linux
             os.execute('cd '..path..'&&'..
-                       'git submodule update -q')
+                       'git submodule update -q &&'..
+                       'git submodule init')
 
         else
             -- Windows
             os.execute('cd '..path..'&&'..
-                       'git submodule update -q > NUL')
+                       'git submodule update -q > NUL &&'..
+                       'git submodule init')
         end
     else
         if sep == '/' then
             -- Linux
             os.execute('cd '..path..'&&'..
-                       'git submodule add -q '..url)
+                       'git submodule add -q '..url..' &&'..
+                       'git submodule init')
         else
             -- Windows
             os.execute('cd '..path..'&&'..
-                       'git submodule add -q '..url..' > NUL')
+                       'git submodule add -q '..url..' > NUL &&'..
+                       'git submodule init')
         end
     end
     os.execute('git add .gitmodules')
