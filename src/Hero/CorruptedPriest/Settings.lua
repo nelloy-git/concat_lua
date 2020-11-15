@@ -21,7 +21,7 @@ local Settings = {}
 Settings.Name = 'Corrupted priest'
 Settings.BaseId = id2int('Hpal')
 Settings.Id = BinaryLib.getUnitId()
-Settings.Icon = Compiletime('ReplaceableTextures\\\\CommandButtons\\\\BTNPriest.blp')
+Settings.Icon = Macro('ReplaceableTextures\\\\CommandButtons\\\\BTNPriest.blp')
 
 ----------------
 -- Parameters --

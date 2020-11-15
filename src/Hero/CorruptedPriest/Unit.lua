@@ -2,10 +2,12 @@
 -- Include
 --=========
 
----@type AbilityLib
-local AbilLib = require(LibList.AbilityExtLib) or error('')
+---@type Wc3AbilityExt
+local Wc3AbilityExt = require(LibManager.load('https://github.com/nelloy-git/Wc3AbilityExt.git'))
+local AbilUnitContainer = Wc3AbilityExt
 ---@type BinaryLib
-local BinaryLib = require(LibList.BinaryLib) or error('')
+local BinaryLib = require(LibManager.load('https://github.com/nelloy-git/Wc3Binary.git'))
+local BinaryUnit = 
 ---@type HandleLib
 local HandleLib = require(LibList.HandleLib) or error('')
 local Unit = HandleLib.Unit or error('')
@@ -57,11 +59,11 @@ function CorruptedPriest.new(x, y, owner)
     return unit
 end
 
-CorruptedPriest.Type = BinaryLib.Unit.new(Settings.Id, Settings.BaseId, Settings.Name)
-CorruptedPriest.Type:setName(Settings.Name)
-CorruptedPriest.Type:setIconGameInterface(Settings.Icon)
-CorruptedPriest.Type:setMana(100)
-CorruptedPriest.Type:setManaRegeneration(1)
-CorruptedPriest.Type:setNormalAbilities({})
+CorruptedPriest.Binary = BinaryLib.Unit.new(Settings.Id, Settings.BaseId, Settings.Name)
+CorruptedPriest.Binary:setName(Settings.Name)
+CorruptedPriest.Binary:setIconGameInterface(Settings.Icon)
+CorruptedPriest.Binary:setMana(100)
+CorruptedPriest.Binary:setManaRegeneration(1)
+CorruptedPriest.Binary:setNormalAbilities({})
 
 return CorruptedPriest
