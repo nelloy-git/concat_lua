@@ -13,24 +13,21 @@
 [submodule "src/Lib/Wc3Utils"]
 	path = src/Lib/Wc3Utils
 	url = https://github.com/nelloy-git/Wc3Utils.git
-[submodule "src/Lib/Wc3Binary"]
-	path = src/Lib/Wc3Binary
-	url = https://github.com/nelloy-git/Wc3Binary.git
-[submodule "src/Lib/Wc3Input"]
-	path = src/Lib/Wc3Input
-	url = https://github.com/nelloy-git/Wc3Input.git
-[submodule "src/Lib/Wc3Damage"]
-	path = src/Lib/Wc3Damage
-	url = https://github.com/nelloy-git/Wc3Damage.git
-[submodule "src/Lib/Wc3Parameter"]
-	path = src/Lib/Wc3Parameter
-	url = https://github.com/nelloy-git/Wc3Parameter.git
-[submodule "src/Lib/Wc3FrameExt"]
-	path = src/Lib/Wc3FrameExt
-	url = https://github.com/nelloy-git/Wc3FrameExt.git
+[submodule "src/Lib/AbilityList"]
+	path = src/Lib/AbilityList
+	url = https://github.com/nelloy-git/AbilityList.git
 [submodule "src/Lib/Wc3AbilityExt"]
 	path = src/Lib/Wc3AbilityExt
 	url = https://github.com/nelloy-git/Wc3AbilityExt.git
-[submodule "src/Lib/Wc3BuffExt"]
-	path = src/Lib/Wc3BuffExt
-	url = https://github.com/nelloy-git/Wc3BuffExt.git
+[submodule "src/Lib/Wc3Parameter"]
+	path = src/Lib/Wc3Parameter
+	url = https://github.com/nelloy-git/Wc3Parameter.git
+[submodule "src/Lib/Wc3Input"]
+	path = src/Lib/Wc3Input
+	url = https://github.com/nelloy-git/Wc3Input.git
+[submodule "src/Lib/UnitList"]
+	path = src/Lib/UnitList
+	url = https://github.com/nelloy-git/UnitList.git
+[submodule "src/Lib/Wc3Binary"]
+	path = src/Lib/Wc3Binary
+	url = https://github.com/nelloy-git/Wc3Binary.git
