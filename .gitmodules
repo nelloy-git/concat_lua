@@ -31,3 +31,9 @@
 [submodule "src/Lib/Wc3Binary"]
 	path = src/Lib/Wc3Binary
 	url = https://github.com/nelloy-git/Wc3Binary.git
+[submodule "src/Lib/MapInterface"]
+	path = src/Lib/MapInterface
+	url = https://github.com/nelloy-git/MapInterface.git
+[submodule "src/Lib/Wc3FrameExt"]
+	path = src/Lib/Wc3FrameExt
+	url = https://github.com/nelloy-git/Wc3FrameExt.git

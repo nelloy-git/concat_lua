@@ -1,5 +1,4 @@
 LibManager = require('LibManager.API')
-
 LibManager.init('Lib', false)
 
 ---@type Wc3Handle
@@ -9,6 +8,8 @@ local Wc3Handle = require(LibManager.load('https://github.com/nelloy-git/Wc3Hand
 local AbilityList = require(LibManager.load('https://github.com/nelloy-git/AbilityList.git'))
 ---@type UnitList
 local UnitList = require(LibManager.load('https://github.com/nelloy-git/UnitList.git'))
+---@type MapInterface
+local MapInterface = require(LibManager.load('https://github.com/nelloy-git/MapInterface.git'))
 
 if IsGame() then
     SetCameraBounds(-3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), -3328.0 + GetCameraMargin(CAMERA_MARGIN_LEFT), 3072.0 - GetCameraMargin(CAMERA_MARGIN_TOP), 3328.0 - GetCameraMargin(CAMERA_MARGIN_RIGHT), -3584.0 + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
